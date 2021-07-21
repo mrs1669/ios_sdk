@@ -133,24 +133,21 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
 
 + (NSDateFormatter *)getDateFormatter {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    if ([NSCalendar instancesRespondToSelector:@selector(calendarWithIdentifier:)]) {
-        // http://stackoverflow.com/a/3339787
-        NSString *calendarIdentifier;
+    [dateFormatter setCalendar:[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
+    [dateFormatter setDateFormat:kDateFormat];
+
+    Class class = NSClassFromString([NSString adjJoin:@"N", @"S", @"locale", nil]);
+    if (class != nil) {
+        NSString *keyLwli = [NSString adjJoin:@"locale", @"with", @"locale", @"identifier:", nil];
+        SEL selLwli = NSSelectorFromString(keyLwli);
+        if ([class respondsToSelector:selLwli]) {
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wtautological-pointer-compare"
-        if (&NSCalendarIdentifierGregorian != NULL) {
-#pragma clang diagnostic pop
-            calendarIdentifier = NSCalendarIdentifierGregorian;
-        } else {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunreachable-code"
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            calendarIdentifier = NSGregorianCalendar;
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            id loc = [class performSelector:selLwli withObject:@"en_US"];
+            [dateFormatter setLocale:loc];
 #pragma clang diagnostic pop
         }
-        dateFormatter.calendar = [NSCalendar calendarWithIdentifier:calendarIdentifier];
     }
-    [dateFormatter setDateFormat:kDateFormat];
 
     return dateFormatter;
 }
@@ -1471,7 +1468,6 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
             pathToCheck = [[NSBundle mainBundle] bundlePath];
         }
 
-        installTime = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToCheck error:nil][NSFileCreationDate];
         __autoreleasing NSError *error;
         __autoreleasing NSError **errorPointer = &error;
         Class class = NSClassFromString([NSString adjJoin:@"N", @"S", @"file", @"manager", nil]);
