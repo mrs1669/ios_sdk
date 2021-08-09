@@ -847,12 +847,16 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
     if (![man respondsToSelector:selExi]) {
         return NO;
     }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    BOOL exists = [[man performSelector:selExi withObject:filePath] boolValue];
-#pragma clang diagnostic pop
+
+    NSMethodSignature *msExi = [man methodSignatureForSelector:selExi];
+    NSInvocation *invExi = [NSInvocation invocationWithMethodSignature:msExi];
+    [invExi setSelector:selExi];
+    [invExi setTarget:man];
+    [invExi setArgument:&filePath atIndex:2];
+    [invExi invoke];
+    BOOL exists;
+    [invExi getReturnValue:&exists];
     if (!exists) {
-        // [[ADJAdjustFactory logger] verbose:@"File does not exist at path %@", filePath];
         return YES;
     }
 
@@ -1032,7 +1036,7 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
     
     Class skAdNetwork = NSClassFromString(@"SKAdNetwork");
     if (skAdNetwork == nil) {
-        [logger warn:@"StoreKit framework not found in user's app (SKAdNetwork not found)"];
+        [logger warn:@"StoreKit framework not found in the app (SKAdNetwork not found)"];
         return;
     }
     
@@ -1087,7 +1091,14 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
     if (![manager respondsToSelector:selEnabled]) {
         return NO;
     }
-    BOOL enabled = [[manager performSelector:selEnabled] boolValue];
+    
+    NSMethodSignature *msEnabled = [manager methodSignatureForSelector:selEnabled];
+    NSInvocation *invEnabled = [NSInvocation invocationWithMethodSignature:msEnabled];
+    [invEnabled setSelector:selEnabled];
+    [invEnabled setTarget:manager];
+    [invEnabled invoke];
+    BOOL enabled;
+    [invEnabled getReturnValue:&enabled];
     return enabled;
 #pragma clang diagnostic pop
 #endif
@@ -1249,11 +1260,14 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
         NSString *keyAuthorization = [NSString adjJoin:@"tracking", @"authorization", @"status", nil];
         SEL selAuthorization = NSSelectorFromString(keyAuthorization);
         if ([appTrackingClass respondsToSelector:selAuthorization]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            return [[appTrackingClass performSelector:selAuthorization] intValue];
-#pragma clang diagnostic pop
+            NSMethodSignature *msAuthorization = [appTrackingClass methodSignatureForSelector:selAuthorization];
+            NSInvocation *invAuthorization = [NSInvocation invocationWithMethodSignature:msAuthorization];
+            [invAuthorization setSelector:selAuthorization];
+            [invAuthorization invokeWithTarget:appTrackingClass];
+            [invAuthorization invoke];
+            NSUInteger status;
+            [invAuthorization getReturnValue:&status];
+            return (int)status;
         }
     }
     return -1;
@@ -1265,7 +1279,7 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
     // [AAAttribution attributionTokenWithError:...]
     Class attributionClass = NSClassFromString(@"AAAttribution");
     if (attributionClass == nil) {
-        [logger warn:@"AdServices framework not found in user's app (AAAttribution not found)"];
+        [logger warn:@"AdServices framework not found in the app (AAAttribution class not found)"];
         if (errorPtr) {
             *errorPtr = [NSError errorWithDomain:@"com.adjust.sdk.adServices"
                                             code:100
@@ -1276,6 +1290,7 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
 
     SEL attributionTokenSelector = NSSelectorFromString(@"attributionTokenWithError:");
     if (![attributionClass respondsToSelector:attributionTokenSelector]) {
+        [logger warn:@"AdServices framework not found in the app (attributionTokenWithError: method not found)"];
         if (errorPtr) {
             *errorPtr = [NSError errorWithDomain:@"com.adjust.sdk.adServices"
                                             code:100
@@ -1301,6 +1316,7 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
         return nil;
     }
 
+    [logger debug:@"AdServices framework successfully found in the app"];
     NSString * __unsafe_unretained tmpToken = nil;
     [tokenInvocation getReturnValue:&tmpToken];
     NSString *token = tmpToken;
@@ -1320,22 +1336,22 @@ static NSString * const kDateFormat                 = @"yyyy-MM-dd'T'HH:mm:ss.SS
     // [[ADClient sharedClient] ...]
     Class ADClientClass = NSClassFromString(@"ADClient");
     if (ADClientClass == nil) {
-        [logger warn:@"iAd framework not found in user's app (ADClientClass not found)"];
+        [logger warn:@"iAd framework not found in the app (ADClientClass not found)"];
         return;
     }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL sharedClientSelector = NSSelectorFromString(@"sharedClient");
     if (![ADClientClass respondsToSelector:sharedClientSelector]) {
-        [logger warn:@"iAd framework not found in user's app (sharedClient method not found)"];
+        [logger warn:@"iAd framework not found in the app (sharedClient method not found)"];
         return;
     }
     id ADClientSharedClientInstance = [ADClientClass performSelector:sharedClientSelector];
     if (ADClientSharedClientInstance == nil) {
-        [logger warn:@"iAd framework not found in user's app (ADClientSharedClientInstance is nil)"];
+        [logger warn:@"iAd framework not found in the app (ADClientSharedClientInstance is nil)"];
         return;
     }
-    [logger debug:@"iAd framework successfully found in user's app"];
+    [logger debug:@"iAd framework successfully found in the app"];
     BOOL iAdInformationAvailable = [ADJUtil setiAdWithDetails:activityHandler
                                        adClientSharedInstance:ADClientSharedClientInstance
                                                         queue:queue];
