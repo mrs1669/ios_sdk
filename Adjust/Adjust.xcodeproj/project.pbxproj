@@ -6,6 +6,19 @@
 	objectVersion = 53;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		075D903D28745D32005019E3 /* AdjustStatic */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 075D903E28745D32005019E3 /* Build configuration list for PBXAggregateTarget "AdjustStatic" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = AdjustStatic;
+			productName = AdjustStatic;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		075D8FCB28731314005019E3 /* Adjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 075D8FCA28731314005019E3 /* Adjust.m */; };
 		075D8FCC28731314005019E3 /* Adjust.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 075D8FC928731314005019E3 /* Adjust.h */; };
@@ -200,6 +213,9 @@
 					075D903528744D17005019E3 = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
+					075D903D28745D32005019E3 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 				};
 			};
 			buildConfigurationList = 075D8FC128731314005019E3 /* Build configuration list for PBXProject "Adjust" */;
@@ -216,6 +232,7 @@
 			projectRoot = "";
 			targets = (
 				075D8FC528731314005019E3 /* Adjust */,
+				075D903D28745D32005019E3 /* AdjustStatic */,
 				075D901228731C2D005019E3 /* AdjustSdk */,
 				075D903528744D17005019E3 /* AdjustSdkTv */,
 			);
@@ -515,6 +532,22 @@
 			};
 			name = Release;
 		};
+		075D903F28745D32005019E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		075D904028745D32005019E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -550,6 +583,15 @@
 			buildConfigurations = (
 				075D903B28744D17005019E3 /* Debug */,
 				075D903C28744D17005019E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		075D903E28745D32005019E3 /* Build configuration list for PBXAggregateTarget "AdjustStatic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				075D903F28745D32005019E3 /* Debug */,
+				075D904028745D32005019E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
