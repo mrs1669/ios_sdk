@@ -24,6 +24,7 @@
 		075D8FCC28731314005019E3 /* Adjust.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 075D8FC928731314005019E3 /* Adjust.h */; };
 		075D901628731C2D005019E3 /* AdjustSdk.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D901528731C2D005019E3 /* AdjustSdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075D903928744D17005019E3 /* AdjustSdkTv.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D903828744D17005019E3 /* AdjustSdkTv.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		075D905528745EBB005019E3 /* AdjustSdkIm.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D905428745EBB005019E3 /* AdjustSdkIm.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +48,8 @@
 		075D901528731C2D005019E3 /* AdjustSdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdjustSdk.h; sourceTree = "<group>"; };
 		075D903628744D17005019E3 /* AdjustSdkTv.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdjustSdkTv.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		075D903828744D17005019E3 /* AdjustSdkTv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdjustSdkTv.h; sourceTree = "<group>"; };
+		075D905228745EBB005019E3 /* AdjustSdkIm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdjustSdkIm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		075D905428745EBB005019E3 /* AdjustSdkIm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdjustSdkIm.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +74,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		075D904F28745EBB005019E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -80,6 +90,7 @@
 				075D8FC828731314005019E3 /* Adjust */,
 				075D901428731C2D005019E3 /* AdjustSdk */,
 				075D903728744D17005019E3 /* AdjustSdkTv */,
+				075D905328745EBB005019E3 /* AdjustSdkIm */,
 				075D8FC728731314005019E3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +101,7 @@
 				075D8FC628731314005019E3 /* libAdjust.a */,
 				075D901328731C2D005019E3 /* AdjustSdk.framework */,
 				075D903628744D17005019E3 /* AdjustSdkTv.framework */,
+				075D905228745EBB005019E3 /* AdjustSdkIm.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,6 +131,14 @@
 			path = AdjustSdkTv;
 			sourceTree = "<group>";
 		};
+		075D905328745EBB005019E3 /* AdjustSdkIm */ = {
+			isa = PBXGroup;
+			children = (
+				075D905428745EBB005019E3 /* AdjustSdkIm.h */,
+			);
+			path = AdjustSdkIm;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -135,6 +155,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				075D903928744D17005019E3 /* AdjustSdkTv.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		075D904D28745EBB005019E3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				075D905528745EBB005019E3 /* AdjustSdkIm.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +222,24 @@
 			productReference = 075D903628744D17005019E3 /* AdjustSdkTv.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		075D905128745EBB005019E3 /* AdjustSdkIm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 075D905628745EBB005019E3 /* Build configuration list for PBXNativeTarget "AdjustSdkIm" */;
+			buildPhases = (
+				075D904D28745EBB005019E3 /* Headers */,
+				075D904E28745EBB005019E3 /* Sources */,
+				075D904F28745EBB005019E3 /* Frameworks */,
+				075D905028745EBB005019E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AdjustSdkIm;
+			productName = AdjustSdkIm;
+			productReference = 075D905228745EBB005019E3 /* AdjustSdkIm.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -216,6 +262,9 @@
 					075D903D28745D32005019E3 = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
+					075D905128745EBB005019E3 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 				};
 			};
 			buildConfigurationList = 075D8FC128731314005019E3 /* Build configuration list for PBXProject "Adjust" */;
@@ -235,6 +284,7 @@
 				075D903D28745D32005019E3 /* AdjustStatic */,
 				075D901228731C2D005019E3 /* AdjustSdk */,
 				075D903528744D17005019E3 /* AdjustSdkTv */,
+				075D905128745EBB005019E3 /* AdjustSdkIm */,
 			);
 		};
 /* End PBXProject section */
@@ -248,6 +298,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		075D903428744D17005019E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		075D905028745EBB005019E3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -273,6 +330,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		075D903228744D17005019E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		075D904E28745EBB005019E3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -548,6 +612,64 @@
 			};
 			name = Release;
 		};
+		075D905728745EBB005019E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Adjust GmbH. All rights reserved.";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.AdjustSdkIm;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		075D905828745EBB005019E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Adjust GmbH. All rights reserved.";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.AdjustSdkIm;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -592,6 +714,15 @@
 			buildConfigurations = (
 				075D903F28745D32005019E3 /* Debug */,
 				075D904028745D32005019E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		075D905628745EBB005019E3 /* Build configuration list for PBXNativeTarget "AdjustSdkIm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				075D905728745EBB005019E3 /* Debug */,
+				075D905828745EBB005019E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
