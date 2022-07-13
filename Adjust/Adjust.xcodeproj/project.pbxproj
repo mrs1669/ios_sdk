@@ -25,6 +25,12 @@
 		075D901628731C2D005019E3 /* AdjustSdk.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D901528731C2D005019E3 /* AdjustSdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075D903928744D17005019E3 /* AdjustSdkTv.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D903828744D17005019E3 /* AdjustSdkTv.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075D905528745EBB005019E3 /* AdjustSdkIm.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D905428745EBB005019E3 /* AdjustSdkIm.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		07FC0808287F3959008F4489 /* ADJAdjust.h in Headers */ = {isa = PBXBuildFile; fileRef = 07FC0806287F3959008F4489 /* ADJAdjust.h */; };
+		07FC0809287F3959008F4489 /* ADJAdjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 07FC0807287F3959008F4489 /* ADJAdjust.m */; };
+		07FC080D287F3968008F4489 /* ADJAdjust.h in Headers */ = {isa = PBXBuildFile; fileRef = 07FC080B287F3968008F4489 /* ADJAdjust.h */; };
+		07FC080E287F3968008F4489 /* ADJAdjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 07FC080C287F3968008F4489 /* ADJAdjust.m */; };
+		07FC0812287F3974008F4489 /* ADJAdjust.h in Headers */ = {isa = PBXBuildFile; fileRef = 07FC0810287F3974008F4489 /* ADJAdjust.h */; };
+		07FC0813287F3974008F4489 /* ADJAdjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 07FC0811287F3974008F4489 /* ADJAdjust.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +67,12 @@
 		075D905228745EBB005019E3 /* AdjustSdkIm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdjustSdkIm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		075D905428745EBB005019E3 /* AdjustSdkIm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdjustSdkIm.h; sourceTree = "<group>"; };
 		07FC07FB287F3786008F4489 /* AdjustExample-ObjC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "AdjustExample-ObjC.xcodeproj"; path = "examples/AdjustExample-ObjC/AdjustExample-ObjC.xcodeproj"; sourceTree = "<group>"; };
+		07FC0806287F3959008F4489 /* ADJAdjust.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjust.h; sourceTree = "<group>"; };
+		07FC0807287F3959008F4489 /* ADJAdjust.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJAdjust.m; sourceTree = "<group>"; };
+		07FC080B287F3968008F4489 /* ADJAdjust.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjust.h; sourceTree = "<group>"; };
+		07FC080C287F3968008F4489 /* ADJAdjust.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJAdjust.m; sourceTree = "<group>"; };
+		07FC0810287F3974008F4489 /* ADJAdjust.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjust.h; sourceTree = "<group>"; };
+		07FC0811287F3974008F4489 /* ADJAdjust.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJAdjust.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				075D901528731C2D005019E3 /* AdjustSdk.h */,
+				07FC0805287F3959008F4489 /* Adjust */,
 			);
 			path = AdjustSdk;
 			sourceTree = "<group>";
@@ -139,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				075D903828744D17005019E3 /* AdjustSdkTv.h */,
+				07FC080A287F3968008F4489 /* Adjust */,
 			);
 			path = AdjustSdkTv;
 			sourceTree = "<group>";
@@ -147,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				075D905428745EBB005019E3 /* AdjustSdkIm.h */,
+				07FC080F287F3974008F4489 /* Adjust */,
 			);
 			path = AdjustSdkIm;
 			sourceTree = "<group>";
@@ -167,6 +182,33 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		07FC0805287F3959008F4489 /* Adjust */ = {
+			isa = PBXGroup;
+			children = (
+				07FC0806287F3959008F4489 /* ADJAdjust.h */,
+				07FC0807287F3959008F4489 /* ADJAdjust.m */,
+			);
+			path = Adjust;
+			sourceTree = SOURCE_ROOT;
+		};
+		07FC080A287F3968008F4489 /* Adjust */ = {
+			isa = PBXGroup;
+			children = (
+				07FC080B287F3968008F4489 /* ADJAdjust.h */,
+				07FC080C287F3968008F4489 /* ADJAdjust.m */,
+			);
+			path = Adjust;
+			sourceTree = SOURCE_ROOT;
+		};
+		07FC080F287F3974008F4489 /* Adjust */ = {
+			isa = PBXGroup;
+			children = (
+				07FC0810287F3974008F4489 /* ADJAdjust.h */,
+				07FC0811287F3974008F4489 /* ADJAdjust.m */,
+			);
+			path = Adjust;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -175,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				075D901628731C2D005019E3 /* AdjustSdk.h in Headers */,
+				07FC0808287F3959008F4489 /* ADJAdjust.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				075D903928744D17005019E3 /* AdjustSdkTv.h in Headers */,
+				07FC080D287F3968008F4489 /* ADJAdjust.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				075D905528745EBB005019E3 /* AdjustSdkIm.h in Headers */,
+				07FC0812287F3974008F4489 /* ADJAdjust.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +415,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07FC0809287F3959008F4489 /* ADJAdjust.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +423,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07FC080E287F3968008F4489 /* ADJAdjust.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +431,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07FC0813287F3974008F4489 /* ADJAdjust.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
