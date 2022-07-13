@@ -1,3 +1,18 @@
-PODFILE CHECKSUM: ebc7ea450ca72d7feca828a5c9f1f8d5a03a1aaa
+PODS:
+  - Adjust (5.0.0):
+    - Adjust/Core (= 5.0.0)
+  - Adjust/Core (5.0.0)
+
+DEPENDENCIES:
+  - Adjust (from `/Users/aditiagrawal/Work/Adjust/ios_sdk_dev`)
+
+EXTERNAL SOURCES:
+  Adjust:
+    :path: "/Users/aditiagrawal/Work/Adjust/ios_sdk_dev"
+
+SPEC CHECKSUMS:
+  Adjust: c8e867451264ad759e0b959bf2bbe183243a4c6d
+
+PODFILE CHECKSUM: bb8e6acc1d941eb0df4be46958b2e17d34789693
 
 COCOAPODS: 1.11.3
