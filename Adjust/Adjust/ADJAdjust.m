@@ -5,8 +5,8 @@
 //  Created by Aditi Agrawal on 04/07/22.
 //
 
-#import "Adjust.h"
+#import "ADJAdjust.h"
 
-@implementation Adjust
+@implementation ADJAdjust
 
 @end

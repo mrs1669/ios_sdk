@@ -7,6 +7,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Adjust : NSObject
+@interface ADJAdjust : NSObject
 
 @end
