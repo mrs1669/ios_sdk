@@ -1,0 +1,387 @@
+//
+//  ADJSQLiteStoragePropertiesBase.m
+//  Adjust
+//
+//  Created by Aditi Agrawal on 19/07/22.
+//  Copyright © 2022 Adjust GmbH. All rights reserved.
+//
+
+#import "ADJSQLiteStoragePropertiesBase.h"
+
+#import "ADJIoDataBuilder.h"
+#import "ADJConstants.h"
+#import "ADJSQLiteStatement.h"
+#import "ADJUtilSys.h"
+
+#pragma mark Fields
+#pragma mark - Protected properties
+/* ADJSQLiteStorageBase.h
+ @property (nullable, readonly, weak, nonatomic) ADJSingleThreadExecutor *storageExecutorWeak;
+ @property (nullable, readonly, weak, nonatomic)
+     id<ADJSQLiteDatabaseProvider> sqliteDatabaseProviderWeak;
+ @property (nonnull, readonly, strong, nonatomic) NSString *tableName;
+ @property (nonnull, readonly, strong, nonatomic) NSString *metadataTypeValue;
+
+ @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *selectSql;
+ @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *insertSql;
+ */
+
+#pragma mark - Private constants
+static NSString *const kColumnMapName = @"map_name";
+static NSString *const kColumnKey = @"key";
+static NSString *const kColumnValue = @"value";
+
+@interface ADJSQLiteStoragePropertiesBase ()
+#pragma mark - Internal variables
+@property (nonnull, readwrite, strong, nonatomic) id inMemoryDataValue;
+@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *deleteSql;
+
+@end
+
+@implementation ADJSQLiteStoragePropertiesBase
+#pragma mark Instantiation
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    source:(nonnull NSString *)source
+    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+    sqliteController:(nonnull ADJSQLiteController *)sqliteController
+    tableName:(nonnull NSString *)tableName
+    metadataTypeValue:(nonnull NSString *)metadataTypeValue
+    initialDefaultDataValue:(nonnull id)initialDefaultDataValue
+{
+    // prevents direct creation of instance, needs to be invoked by subclass
+    if ([self isMemberOfClass:[ADJSQLiteStoragePropertiesBase class]]) {
+        [self doesNotRecognizeSelector:_cmd];
+        return nil;
+    }
+
+    self = [super initWithLoggerFactory:loggerFactory
+                                 source:source
+                        storageExecutor:storageExecutor
+                 sqliteDatabaseProvider:sqliteController
+                              tableName:tableName
+                      metadataTypeValue:metadataTypeValue];
+
+    _inMemoryDataValue = initialDefaultDataValue;
+
+    _deleteSql =
+        [[ADJNonEmptyString alloc]
+         initWithConstStringValue:[NSString stringWithFormat:@"DELETE FROM %@",
+                                       self.tableName]];
+
+    return self;
+}
+
+#pragma mark Public API
+- (nonnull id)readOnlyStoredDataValue {
+    return self.inMemoryDataValue;
+}
+
+- (void)updateWithNewDataValue:(nonnull id)newDataValue {
+    [self updateInMemoryOnlyWithNewDataValue:newDataValue];
+
+    [self updateInStorageOnlyWithNewDataValue:newDataValue];
+}
+
+- (void)updateInMemoryOnlyWithNewDataValue:(nonnull id)newDataValue {
+    [self.logger debug:@"Updating value in memory"];
+    [self.logger debug:@"Current value: %@", self.inMemoryDataValue];
+    [self.logger debug:@"New value: %@", newDataValue];
+
+    self.inMemoryDataValue = newDataValue;
+}
+
+- (void)updateInStorageOnlyWithNewDataValue:(nonnull id)newDataValue {
+    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
+    if (storageExecutor == nil) {
+        [self.logger error:@"Cannot update new value in storage"
+            " without a reference to storage executor"];
+        return;
+    }
+
+    id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
+        self.sqliteDatabaseProviderWeak;
+    if (sqliteDatabaseProvider == nil) {
+        [self.logger error:@"Cannot update new value in storage"
+            " without a reference to sqliteDatabaseProvider"];
+        return;
+    }
+
+    ADJSQLiteDb *_Nullable sqliteDb = sqliteDatabaseProvider.sqliteDb;
+    if (sqliteDb == nil) {
+        [self.logger error:@"Cannot update new value in storage"
+            " without a reference to sqliteDb"];
+        return;
+    }
+
+    __typeof(self) __weak weakSelf = self;
+    [storageExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        [strongSelf updateInStorageSyncWithSqliteDb:sqliteDb
+                                       newDataValue:newDataValue];
+    }];
+}
+
+- (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb
+                            newDataValue:(nonnull id)newDataValue
+{
+    //[self printRowNumberWithSQLiteDb:sqliteDb];
+    // delete all rows
+    BOOL deletedSuccess = [self deleteAllInTransactionWithDb:sqliteDb];
+    if (! deletedSuccess) {
+        return NO;
+    }
+    [self.logger debug:@"Deleted all rows in update transaction"];
+
+    //[self printRowNumberWithSQLiteDb:sqliteDb];
+
+    BOOL insertedSuccess =
+        [self insertValueInTransactionToDb:sqliteDb newDataValue:newDataValue];
+
+    if (! insertedSuccess) {
+        return NO;
+    }
+    [self.logger debug:@"Inserted new data values in update transaction"];
+
+    return YES;
+}
+
+#pragma mark Protected Methods
+#pragma mark - Concrete ADJSQLiteStorageBase
+- (void)concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:
+    (nonnull ADJSQLiteDb *)sqliteDb
+{
+    // write the initial default set in the constructor in memory
+    [self updateInStorageSyncWithSqliteDb:sqliteDb
+                             newDataValue:self.inMemoryDataValue];
+}
+
+- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:
+    (nonnull ADJSQLiteStatement *)selectStatement
+{
+    ADJIoDataBuilder *_Nonnull ioDataBuilder =
+        [[ADJIoDataBuilder alloc]
+            initWithMetadataTypeValue:self.metadataTypeValue];
+
+    do {
+        [self readFromSelectStatementIntoBuildingData:selectStatement
+                                        ioDataBuilder:ioDataBuilder];
+    } while ([selectStatement nextInQueryStatementWithLogger:self.logger]);
+
+    ADJIoData *_Nonnull ioData =
+        [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+
+    _Nullable id valueFromIoData = [self concreteGenerateValueFromIoData:ioData];
+
+    [self.logger debug:@"Data successfully read with value: %@", valueFromIoData];
+
+    if (valueFromIoData != nil) {
+        _inMemoryDataValue = valueFromIoData;
+    } else {
+        [self.logger debug:@"Cannot set generated value from io data"];
+    }
+
+    return valueFromIoData != nil;
+}
+
+- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:
+    (nonnull NSString *)tableName
+{
+    return [[ADJNonEmptyString alloc]
+                initWithConstStringValue:
+                    [NSString stringWithFormat:@"SELECT %@, %@, %@ FROM %@",
+                        kColumnMapName,
+                        kColumnKey,
+                        kColumnValue,
+                        tableName]];
+}
+static int const kSelectMapNameFieldIndex = 0;
+static int const kSelectKeyFieldIndex = 1;
+static int const kSelectValueFieldIndex = 2;
+
+- (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:
+    (nonnull NSString *)tableName
+{
+    return [[ADJNonEmptyString alloc]
+                initWithConstStringValue:
+                    [NSString stringWithFormat:@"INSERT INTO %@ (%@, %@, %@) VALUES (?, ?, ?)",
+                        tableName,
+                        kColumnMapName,
+                        kColumnKey,
+                        kColumnValue]];
+}
+static int const kInsertMapNameFieldPosition = 1;
+static int const kInsertKeyFieldPosition = 2;
+static int const kInsertValueFieldPosition = 3;
+
+- (nonnull NSString *)concreteGenerateCreateTableFieldsSql {
+    return [NSString stringWithFormat:@"%@ TEXT NOT NULL, %@ TEXT NOT NULL, %@ TEXT",
+                kColumnMapName,
+                kColumnKey,
+                kColumnValue];
+}
+
+- (nonnull NSString *)concreteGenerateCreateTablePrimaryKeySql {
+    return [NSString stringWithFormat:@"PRIMARY KEY(%@, %@)",
+                kColumnMapName,
+                kColumnKey];
+}
+
+#pragma mark - Abstract
+- (nullable id)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull id)dataValue {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+#pragma mark Internal Methods
+- (void)updateInStorageSyncWithSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb
+                           newDataValue:(nonnull id)newDataValue
+{
+    [sqliteDb beginTransaction];
+
+    [self updateInTransactionWithsSQLiteDb:sqliteDb newDataValue:newDataValue];
+
+    [sqliteDb commit];
+
+    [self.logger debug:@"Updated in db"];
+}
+
+- (BOOL)deleteAllInTransactionWithDb:(nonnull ADJSQLiteDb *)sqliteDb {
+    ADJSQLiteStatement *_Nullable deleteAllStatement =
+        [sqliteDb prepareStatementWithSqlString:self.deleteAllSql.stringValue];
+
+    if (deleteAllStatement == nil) {
+        [self.logger error:@"Cannot remove all in sqliteDb"
+            " without a prepared statement"];
+        return NO;
+    }
+
+    BOOL deleteAllSuccess =
+        [deleteAllStatement executeUpdatePreparedStatementWithLogger:self.logger];
+
+    [deleteAllStatement closeStatement];
+
+    return deleteAllSuccess;
+}
+
+- (BOOL)insertValueInTransactionToDb:(nonnull ADJSQLiteDb *)sqliteDb
+                        newDataValue:(nonnull id)newDataValue
+{
+    ADJSQLiteStatement *_Nullable insertStatement =
+        [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
+
+    if (insertStatement == nil) {
+        [self.logger error:@"Cannot insert value to db without a prepared statement"];
+        return NO;
+    }
+
+    ADJIoData *_Nonnull newValueIoData = [self concreteGenerateIoDataFromValue:newDataValue];
+
+    BOOL success = [self insertValueInTransactionWithStatement:insertStatement
+                                                newValueIoData:newValueIoData];
+
+    [insertStatement closeStatement];
+
+    return success;
+}
+
+- (BOOL)insertValueInTransactionWithStatement:(nonnull ADJSQLiteStatement *)insertStatement
+                               newValueIoData:(nonnull ADJIoData *)newValueIoData
+{
+    BOOL success = YES;
+
+    for (NSString *_Nonnull mapName in newValueIoData.mapCollectionByName) {
+        ADJStringMap *_Nonnull stringMap = [newValueIoData mapWithName:mapName];
+
+        for (NSString *_Nonnull key in stringMap.map) {
+            ADJNonEmptyString *_Nonnull value =
+                [stringMap.map objectForKey:key];
+
+            // clear bindings
+            [insertStatement resetStatement];
+
+            [insertStatement bindString:mapName columnIndex:kInsertMapNameFieldPosition];
+            [insertStatement bindString:key columnIndex:kInsertKeyFieldPosition];
+            [insertStatement bindString:value.stringValue columnIndex:kInsertValueFieldPosition];
+
+            success = [insertStatement executeUpdatePreparedStatementWithLogger:self.logger];
+
+            if (! success) {
+                return NO;
+            }
+        }
+    }
+
+    return YES;
+}
+
+- (void)readFromSelectStatementIntoBuildingData:(nonnull ADJSQLiteStatement *)selectStatement
+                                  ioDataBuilder:(nonnull ADJIoDataBuilder *)ioDataBuilder
+{
+    ADJNonEmptyString *_Nullable mapName =
+        [self stringFromSelectStatement:selectStatement
+                            columnIndex:kSelectMapNameFieldIndex
+                              fieldName:kColumnMapName];
+    if (mapName == nil) {
+        return;
+    }
+
+    ADJNonEmptyString *_Nullable key =
+        [self stringFromSelectStatement:selectStatement
+                            columnIndex:kSelectKeyFieldIndex
+                              fieldName:kColumnKey];
+    if (key == nil) {
+        return;
+    }
+
+    ADJNonEmptyString *_Nullable value =
+        [self stringFromSelectStatement:selectStatement
+                            columnIndex:kSelectValueFieldIndex
+                              fieldName:kColumnValue];
+    if (value == nil) {
+        return;
+    }
+
+    [ioDataBuilder addEntryToMapByName:mapName.stringValue
+                                   key:key.stringValue
+                                 value:value];
+}
+
+- (void)printRowNumberWithSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb {
+    NSString *selectCountSql =
+        [NSString stringWithFormat: @"select count(*) from %@", self.tableName];
+
+    ADJSQLiteStatement *_Nullable selectCountStatement =
+        [sqliteDb prepareStatementWithSqlString:selectCountSql];
+
+    if (selectCountStatement == nil) {
+        [self.logger error:@"Cannot count rows"
+            " without a prepared statement from the select query: %@", selectCountSql];
+        return;
+    }
+
+    BOOL wasAbleToStepToFirstRow =
+        [selectCountStatement nextInQueryStatementWithLogger:self.logger];
+
+
+    if (! wasAbleToStepToFirstRow) {
+        [self.logger debug:@"Cannot count rows from Select queryCursor"
+            "without a queryCursor from the select query: %@", selectCountSql];
+        [selectCountStatement closeStatement];
+        return;
+    }
+
+    NSNumber *_Nullable countNumber = [selectCountStatement numberIntForColumnIndex:0];
+
+    [self.logger debug:@"table with name %@ with %@ rows", self.tableName, countNumber];
+
+    [selectCountStatement closeStatement];
+}
+
+@end
