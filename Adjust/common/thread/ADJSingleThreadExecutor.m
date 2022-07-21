@@ -6,6 +6,7 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
+#import "ADJSingleThreadExecutor.h"
 #import "ADJUtilSys.h"
 
 #pragma mark Fields

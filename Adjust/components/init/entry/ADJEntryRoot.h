@@ -16,7 +16,7 @@
 #import "ADJSingleThreadExecutor.h"
 #import "ADJLogger.h"
 #import "ADJPreSdkInitRootController.h"
-#import "ADJPostSdkInitRootController.h"
+//#import "ADJPostSdkInitRootController.h"
 #import "ADJClientAPI.h"
 #import "ADJClientConfigData.h"
 #import "ADJLogController.h"
@@ -49,18 +49,18 @@
 // - built in client context
 @property (nullable, readonly, strong, nonatomic)
     ADJPreSdkInitRootController *preSdkInitRootController;
-@property (nullable, readonly, strong, nonatomic)
-    ADJPostSdkInitRootController *postSdkInitRootController;
+//@property (nullable, readonly, strong, nonatomic)
+//    ADJPostSdkInitRootController *postSdkInitRootController;
 
 // public api
 + (void)executeBlockInClientContext:
     (nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))
         blockInClientContext;
 
-- (nonnull ADJPostSdkInitRootController *)
-    ccCreatePostSdkInitRootControllerWithClientConfigData:
-        (nonnull ADJClientConfigData *)clientConfigData
-    preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
+//- (nonnull ADJPostSdkInitRootController *)
+//    ccCreatePostSdkInitRootControllerWithClientConfigData:
+//        (nonnull ADJClientConfigData *)clientConfigData
+//    preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
 
 - (nonnull id<ADJClientReturnExecutor>)clientReturnExecutor;
 

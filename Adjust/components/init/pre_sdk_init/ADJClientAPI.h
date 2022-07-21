@@ -11,7 +11,7 @@
 #import "ADJClientConfigData.h"
 #import "ADJAdjustAttributionCallback.h"
 #import "ADJAdjustDeviceIdsCallback.h"
-#import "ADJClientActionsAPI.h"
+//#import "ADJClientActionsAPI.h"
 
 @protocol ADJClientAPI <NSObject>
 
@@ -33,7 +33,7 @@
 - (void)ccDeviceIdsWithCallback:
     (nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 
-- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source;
+//- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source;
 
 
 @end
