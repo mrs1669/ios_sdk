@@ -1,5 +1,5 @@
 //
-//  ADJPublishingGatePublisher.h
+//  ADJPublishingGateSubscriber.h
 //  Adjust
 //
 //  Created by Aditi Agrawal on 20/07/22.

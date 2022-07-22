@@ -25,7 +25,7 @@
 //#import "ADJPluginController.h"
 
 //#import "ADJPostSdkInitRootController.h"
-//@class ADJPostSdkInitRootController;
+@class ADJPostSdkInitRootController;
 //#import "ADJEntryRoot.h"
 @class ADJEntryRoot;
 
@@ -35,11 +35,11 @@
     ADJPublishingGateSubscriber
 //    ADJGdprForgetSubscriber
 >
-//- (void)
-//    ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:(nonnull ADJEntryRoot *) entryRoot
-//    postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController
-//    sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-//    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
+- (void)
+    ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:(nonnull ADJEntryRoot *) entryRoot
+    postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController
+    sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 // publishers
 @property (nonnull, readonly, strong, nonatomic)
     ADJSdkActivePublisher *sdkActivePublisher;
@@ -50,8 +50,8 @@
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
-//@property (nonnull, readonly, strong, nonatomic)
-//    ADJStorageRootController *storageRootController;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJStorageRootController *storageRootController;
 //@property (nonnull, readonly, strong, nonatomic)
 //    ADJGdprForgetController *gdprForgetController;
 //@property (nonnull, readonly, strong, nonatomic)

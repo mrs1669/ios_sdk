@@ -16,7 +16,7 @@
 @protocol ADJClientAPI <NSObject>
 
 - (void)ccSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData;
-
+/*
 - (void)ccInactivateSdk;
 - (void)ccReactivateSdk;
 
@@ -33,7 +33,7 @@
 - (void)ccDeviceIdsWithCallback:
     (nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 
-//- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source;
-
+- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source;
+*/
 
 @end

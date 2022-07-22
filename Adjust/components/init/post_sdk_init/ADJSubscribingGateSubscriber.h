@@ -1,8 +1,8 @@
 //
-//  ADJSubscribingGatePublisher.h
+//  ADJSubscribingGateSubscriber.h
 //  Adjust
 //
-//  Created by Aditi Agrawal on 20/07/22.
+//  Created by Pedro Silva on 22.07.22.
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
