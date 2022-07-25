@@ -68,11 +68,11 @@
     } else {
         _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
     }
-/*
+
     if (_sdkConfigData.assumeSandboxEnvironmentForLogging) {
         [_logController setEnvironmentToSandbox];
     }
-*/
+
     _preSdkInitRootController = nil;
 
     _postSdkInitRootController = nil;

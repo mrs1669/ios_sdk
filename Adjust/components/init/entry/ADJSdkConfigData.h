@@ -33,9 +33,9 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic)
     id<ADJClientReturnExecutor> clientReturnExecutorOverwrite;
 @property (nonnull, readonly, strong, nonatomic)
-    ADJTimeLengthMilli *minSdkSessionIntervalMilli;
+    ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
 @property (nullable, readonly, strong, nonatomic)
-    ADJTimeLengthMilli *overwriteFirstSdkSessionIntervalMilli;
+    ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
 @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
 @property (nonnull, readonly, strong, nonatomic)
     ADJTimeLengthMilli *foregroundTimerIntervalMilli;

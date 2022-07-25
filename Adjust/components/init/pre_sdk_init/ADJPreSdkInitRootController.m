@@ -73,12 +73,12 @@
 //            threadExecutorFactory:entryRoot.threadController
 //            gdprForgetBackoffStrategy:entryRoot.sdkConfigData.gdprForgetBackoffStrategy];
 //
-//    _lifecycleController = [[ADJLifecycleController alloc]
-//                                initWithLoggerFactory:loggerFactory
-//                                threadController:entryRoot.threadController
-//                                doNotReadCurrentLifecycleStatus:
-//                                    entryRoot.sdkConfigData.doNotReadCurrentLifecycleStatus];
-//
+    _lifecycleController = [[ADJLifecycleController alloc]
+                                initWithLoggerFactory:loggerFactory
+                                threadController:entryRoot.threadController
+                                doNotReadCurrentLifecycleStatus:
+                                    entryRoot.sdkConfigData.doNotReadCurrentLifecycleStatus];
+
 //    _offlineController = [[ADJOfflineController alloc] initWithLoggerFactory:loggerFactory];
 //
 //    _clientActionController = [[ADJClientActionController alloc]
@@ -366,11 +366,11 @@
         loggerFactory:entryRoot.logController
         threadpool:entryRoot.threadController
         sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
-
+*/
     // subscribing to publishers
     [self.lifecycleController
         ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
-
+/*
     [self.offlineController
         ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
 
@@ -395,8 +395,9 @@
         lifecyclePublisher:self.lifecycleController.lifecyclePublisher];
 
     // subscribe self to publishers
+*/
     [publishingGatePublisher addSubscriber:self];
-
+/*
     [self.gdprForgetController.gdprForgetPublisher addSubscriber:self];
      */
 }

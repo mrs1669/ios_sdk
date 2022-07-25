@@ -36,7 +36,7 @@
  @property (nonnull, readonly, strong, nonatomic)
      ADJSdkActiveStateStorage *sdkActiveStateStorage;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJSdkSessionStateStorage *sdkSessionStateStorage;
+     ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
  */
 @interface ADJStorageRootController ()
 #pragma mark - Internal variables
@@ -82,7 +82,7 @@
 //    buildAndInjectStorage(logQueueStorage, ADJLogQueueStorage);
 //    buildAndInjectStorage(mainQueueStorage, ADJMainQueueStorage);
 //    buildAndInjectStorage(sdkActiveStateStorage, ADJSdkActiveStateStorage);
-//    buildAndInjectStorage(sdkSessionStateStorage, ADJSdkSessionStateStorage);
+    buildAndInjectStorage(measurementSessionStateStorage, ADJMeasurementSessionStateStorage);
 
     [self.sqliteController readAllIntoMemorySync];
 

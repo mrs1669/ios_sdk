@@ -23,9 +23,9 @@
  @property (nonnull, readwrite, strong, nonatomic)
      ADJBackoffStrategy *mainQueueBackoffStrategy;
  @property (nonnull, readwrite, strong, nonatomic)
-     ADJTimeLengthMilli *minSdkSessionIntervalMilli;
+     ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
  @property (nullable, readwrite, strong, nonatomic)
-     ADJTimeLengthMilli *overwriteFirstSdkSessionIntervalMilli;
+     ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
  @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
  @property (nonnull, readwrite, strong, nonatomic)
      ADJTimeLengthMilli *foregroundTimerIntervalMilli;
@@ -89,9 +89,9 @@
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
             [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJThirtyMinutesMilli]];
 
-    _minSdkSessionIntervalMilli = thirtyMinutesLength;
+    _minMeasurementSessionIntervalMilli = thirtyMinutesLength;
 
-    _overwriteFirstSdkSessionIntervalMilli = nil;
+    _overwriteFirstMeasurementSessionIntervalMilli = nil;
 
     ADJTimeLengthMilli *_Nonnull oneMinuteLength =
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:

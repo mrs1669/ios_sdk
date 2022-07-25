@@ -23,9 +23,9 @@
  @property (nullable, readonly, strong, nonatomic)
      id<ADJClientReturnExecutor> clientReturnExecutorOverwrite;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJTimeLengthMilli *minSdkSessionIntervalMilli;
+     ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
  @property (nullable, readonly, strong, nonatomic)
-     ADJTimeLengthMilli *overwriteFirstSdkSessionIntervalMilli;
+     ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
  @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
  @property (nonnull, readonly, strong, nonatomic)
      ADJTimeLengthMilli *foregroundTimerIntervalMilli;
@@ -53,9 +53,9 @@
     _gdprForgetBackoffStrategy = sdkConfigDataBuilder.gdprForgetBackoffStrategy;
     _mainQueueBackoffStrategy = sdkConfigDataBuilder.mainQueueBackoffStrategy;
     _clientReturnExecutorOverwrite = sdkConfigDataBuilder.clientReturnExecutorOverwrite;
-    _minSdkSessionIntervalMilli = sdkConfigDataBuilder.minSdkSessionIntervalMilli;
-    _overwriteFirstSdkSessionIntervalMilli =
-        sdkConfigDataBuilder.overwriteFirstSdkSessionIntervalMilli;
+    _minMeasurementSessionIntervalMilli = sdkConfigDataBuilder.minMeasurementSessionIntervalMilli;
+    _overwriteFirstMeasurementSessionIntervalMilli =
+        sdkConfigDataBuilder.overwriteFirstMeasurementSessionIntervalMilli;
     _foregroundTimerStartMilli = sdkConfigDataBuilder.foregroundTimerStartMilli;
     _foregroundTimerIntervalMilli = sdkConfigDataBuilder.foregroundTimerIntervalMilli;
     _assumeSandboxEnvironmentForLogging = sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging;

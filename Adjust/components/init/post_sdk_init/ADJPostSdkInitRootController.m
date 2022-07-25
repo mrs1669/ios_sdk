@@ -86,7 +86,7 @@
     _subscribingGatePublisher = [[ADJSubscribingGatePublisher alloc] init];
 
     _publishingGatePublisher = [[ADJPublishingGatePublisher alloc] init];
-/*
+
     _clientConfigData = clientConfigData;
 
     _sdkInitPublisher = [[ADJSdkInitPublisher alloc] init];
@@ -97,7 +97,7 @@
         preSdkInitRootController.storageRootController;
 
     ADJSdkConfigData *_Nonnull sdkConfigData = entryRoot.sdkConfigData;
-
+/*
     _globalCallbackParametersController =
         [[ADJGlobalCallbackParametersController alloc]
             initWithLoggerFactory:loggerFactory
@@ -138,7 +138,7 @@
                 clock:preSdkInitRootController.clock
                 backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
                 sdkPackageSenderFactory:self.sdkPackageSenderController];
-
+*/
     _measurementSessionController = [[ADJMeasurementSessionController alloc]
                                 initWithLoggerFactory:loggerFactory
                                 minMeasurementSessionIntervalMilli:
@@ -146,12 +146,12 @@
                                 overwriteFirstMeasurementSessionIntervalMilli:
                                     sdkConfigData.overwriteFirstMeasurementSessionIntervalMilli
                                 clientExecutor:entryRoot.clientExecutor
-                                sdkPackageBuilder:self.sdkPackageBuilder
+                                sdkPackageBuilder:nil//self.sdkPackageBuilder
                                 measurementSessionStateStorage:
                                     storageRootController.measurementSessionStateStorage
-                                mainQueueController:self.mainQueueController
+                                mainQueueController:nil//self.mainQueueController
                                 clock:preSdkInitRootController.clock];
-
+/*
     _adRevenueController = [[ADJAdRevenueController alloc]
                                 initWithLoggerFactory:loggerFactory
                                 sdkPackageBuilder:self.sdkPackageBuilder
@@ -456,16 +456,15 @@
     [self.reachabilityController
         ccSubscribeToPublishersWithmeasurementSessionStartPublisher:
             self.measurementSessionController.measurementSessionStartPublisher];
-
+*/
     [self.measurementSessionController
         ccSubscribeToPublishersWithSdkActivePublisher:preSdkInitRootController.sdkActivePublisher
         sdkInitPublisher:self.sdkInitPublisher
-        keepAlivePublisher:self.keepAliveController.keepAlivePublisher
+        keepAlivePublisher:nil//self.keepAliveController.keepAlivePublisher
         lifecyclePublisher:preSdkInitRootController.lifecycleController.lifecyclePublisher];
 
     // subscribe self to publishers
     [self.measurementSessionController.measurementSessionStartPublisher addSubscriber:self];
-     */
 }
  
 /*

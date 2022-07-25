@@ -17,9 +17,9 @@
 #import "ADJPreFirstMeasurementSessionStartSubscriber.h"
 #import "ADJTimeLengthMilli.h"
 #import "ADJSingleThreadExecutor.h"
-//#import "ADJSdkPackageBuilder.h"
+#import "ADJSdkPackageBuilder.h"
 #import "ADJMeasurementSessionStateStorage.h"
-//#import "ADJMainQueueController.h"
+#import "ADJMainQueueController.h"
 #import "ADJClock.h"
 #import "ADJMeasurementSessionStateData.h"
 #import "ADJLogger.h"
@@ -51,9 +51,9 @@
     overwriteFirstMeasurementSessionIntervalMilli:
         (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
     clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-    //sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
     measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-    //mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
     clock:(nonnull ADJClock *)clock;
 
 // public api

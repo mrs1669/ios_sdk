@@ -6,7 +6,7 @@ target 'AdjustExample-ObjC' do
   use_frameworks!
   
   # Pods for AdjustExample-ObjC
-  pod 'Adjust', :path => '/Users/aditiagrawal/Work/Adjust/ios_sdk_dev'
+  pod 'Adjust', :path => '../../'
   
 end
 

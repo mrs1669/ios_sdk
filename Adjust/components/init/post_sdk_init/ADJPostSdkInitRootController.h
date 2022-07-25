@@ -14,11 +14,11 @@
 #import "ADJSubscribingGateSubscriber.h"
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJSdkInitSubscriber.h"
+#import "ADJMeasurementSessionController.h"
 
 /*
 #import "ADJClientConfigData.h"
 #import "ADJSdkPackageBuilder.h"
-#import "ADJMeasurementSessionController.h"
 #import "ADJAdRevenueController.h"
 #import "ADJAttributionController.h"
 #import "ADJBillingSubscriptionController.h"
@@ -64,9 +64,9 @@
     preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfigData;
+@property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionController *measurementSessionController;
 /*
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilder;
-@property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionController *measurementSessionController;
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJAttributionController *attributionController;

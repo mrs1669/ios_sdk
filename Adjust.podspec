@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = { 'BITCODE_GENERATION_MODE' => 'bitcode' }
 
   s.subspec 'Core' do |co|
-    co.source_files   = 'Adjust/*.{h,m}'
+    co.source_files   =  'Adjust/**/*.{h,m}'
   end
   
 end

@@ -30,11 +30,11 @@
 @property (nullable, readwrite, strong, nonatomic)
     ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
 @property (nullable, readonly, weak, nonatomic) ADJSingleThreadExecutor *clientExecutorWeak;
-//@property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
+@property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
 @property (nullable, readonly, weak, nonatomic)
     ADJMeasurementSessionStateStorage *measurementSessionStateStorageWeak;
-//@property (nullable, readonly, weak, nonatomic)
-//    ADJMainQueueController *mainQueueControllerWeak;
+@property (nullable, readonly, weak, nonatomic)
+    ADJMainQueueController *mainQueueControllerWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
 
 #pragma mark - Internal variables
@@ -50,17 +50,17 @@
     overwriteFirstMeasurementSessionIntervalMilli:
         (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
     clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-    //sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
     measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-    //mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
     clock:(nonnull ADJClock *)clock
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionController"];
     _overwriteFirstMeasurementSessionIntervalMilli = overwriteFirstMeasurementSessionIntervalMilli;
     _clientExecutorWeak = clientExecutor;
-    //_sdkPackageBuilderWeak = sdkPackageBuilder;
+    _sdkPackageBuilderWeak = sdkPackageBuilder;
     _measurementSessionStateStorageWeak = measurementSessionStateStorage;
-    //_mainQueueControllerWeak = mainQueueController;
+    _mainQueueControllerWeak = mainQueueController;
     _clockWeak = clock;
 
     _preFirstMeasurementSessionStartPublisher = [[ADJPreFirstMeasurementSessionStartPublisher alloc] init];

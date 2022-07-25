@@ -16,7 +16,7 @@
 #import "ADJClock.h"
 #import "ADJStorageRootController.h"
 //#import "ADJGdprForgetController.h"
-//#import "ADJLifecycleController.h"
+#import "ADJLifecycleController.h"
 //#import "ADJOfflineController.h"
 //#import "ADJClientActionController.h"
 //#import "ADJDeviceController.h"
@@ -54,8 +54,8 @@
     ADJStorageRootController *storageRootController;
 //@property (nonnull, readonly, strong, nonatomic)
 //    ADJGdprForgetController *gdprForgetController;
-//@property (nonnull, readonly, strong, nonatomic)
-//    ADJLifecycleController *lifecycleController;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJLifecycleController *lifecycleController;
 //@property (nonnull, readonly, strong, nonatomic)
 //    ADJOfflineController *offlineController;
 //@property (nonnull, readonly, strong, nonatomic)
