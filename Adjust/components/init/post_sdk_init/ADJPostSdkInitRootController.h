@@ -15,10 +15,12 @@
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJSdkInitSubscriber.h"
 #import "ADJMeasurementSessionController.h"
-
-/*
 #import "ADJClientConfigData.h"
 #import "ADJSdkPackageBuilder.h"
+#import "ADJSdkPackageSenderController.h"
+#import "ADJMainQueueController.h"
+
+/*
 #import "ADJAdRevenueController.h"
 #import "ADJAttributionController.h"
 #import "ADJBillingSubscriptionController.h"
@@ -28,8 +30,6 @@
 #import "ADJKeepAliveController.h"
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
-#import "ADJSdkPackageSenderController.h"
-#import "ADJMainQueueController.h"
 #import "ADJReachabilityController.h"
 #import "ADJPausingController.h"
 #import "ADJThirdPartySharingController.h"
@@ -65,8 +65,12 @@
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfigData;
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionController *measurementSessionController;
-/*
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilder;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJSdkPackageSenderController *sdkPackageSenderController;
+@property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
+
+/*
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJAttributionController *attributionController;
@@ -81,9 +85,6 @@
     ADJGlobalCallbackParametersController *globalCallbackParametersController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJGlobalPartnerParametersController *globalPartnerParametersController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJSdkPackageSenderController *sdkPackageSenderController;
-@property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJReachabilityController *reachabilityController;
 @property (nonnull, readonly, strong, nonatomic)

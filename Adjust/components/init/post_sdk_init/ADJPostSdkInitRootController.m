@@ -107,19 +107,19 @@
         [[ADJGlobalPartnerParametersController alloc]
             initWithLoggerFactory:loggerFactory
             storage:storageRootController.globalPartnerParametersStorage];
-
+*/
     _sdkPackageBuilder =
         [[ADJSdkPackageBuilder alloc]
             initWithLoggerFactory:loggerFactory
             clock:preSdkInitRootController.clock
             clientSdk:ADJClientSdk
             clientConfigData:clientConfigData
-            deviceController:preSdkInitRootController.deviceController
-            globalCallbackParametersStorage:
-                preSdkInitRootController.storageRootController.globalCallbackParametersStorage
-            globalPartnerParametersStorage:
-                preSdkInitRootController.storageRootController.globalPartnerParametersStorage
-            eventStateStorage:preSdkInitRootController.storageRootController.eventStateStorage
+            deviceController:nil//preSdkInitRootController.deviceController
+            globalCallbackParametersStorage:nil
+                //preSdkInitRootController.storageRootController.globalCallbackParametersStorage
+            globalPartnerParametersStorage:nil
+                //preSdkInitRootController.storageRootController.globalPartnerParametersStorage
+            eventStateStorage:nil//preSdkInitRootController.storageRootController.eventStateStorage
             measurementSessionStateStorage:
                 preSdkInitRootController.storageRootController.measurementSessionStateStorage];
 
@@ -138,7 +138,7 @@
                 clock:preSdkInitRootController.clock
                 backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
                 sdkPackageSenderFactory:self.sdkPackageSenderController];
-*/
+
     _measurementSessionController = [[ADJMeasurementSessionController alloc]
                                 initWithLoggerFactory:loggerFactory
                                 minMeasurementSessionIntervalMilli:
@@ -146,10 +146,10 @@
                                 overwriteFirstMeasurementSessionIntervalMilli:
                                     sdkConfigData.overwriteFirstMeasurementSessionIntervalMilli
                                 clientExecutor:entryRoot.clientExecutor
-                                sdkPackageBuilder:nil//self.sdkPackageBuilder
+                                sdkPackageBuilder:self.sdkPackageBuilder
                                 measurementSessionStateStorage:
                                     storageRootController.measurementSessionStateStorage
-                                mainQueueController:nil//self.mainQueueController
+                                mainQueueController:self.mainQueueController
                                 clock:preSdkInitRootController.clock];
 /*
     _adRevenueController = [[ADJAdRevenueController alloc]

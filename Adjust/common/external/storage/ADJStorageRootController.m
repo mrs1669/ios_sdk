@@ -80,7 +80,7 @@
 //    buildAndInjectStorage(globalCallbackParametersStorage, ADJGlobalCallbackParametersStorage);
 //    buildAndInjectStorage(globalPartnerParametersStorage, ADJGlobalPartnerParametersStorage);
 //    buildAndInjectStorage(logQueueStorage, ADJLogQueueStorage);
-//    buildAndInjectStorage(mainQueueStorage, ADJMainQueueStorage);
+    buildAndInjectStorage(mainQueueStorage, ADJMainQueueStorage);
 //    buildAndInjectStorage(sdkActiveStateStorage, ADJSdkActiveStateStorage);
     buildAndInjectStorage(measurementSessionStateStorage, ADJMeasurementSessionStateStorage);
 
