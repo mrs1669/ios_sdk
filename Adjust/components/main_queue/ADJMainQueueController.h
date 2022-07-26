@@ -20,13 +20,15 @@
 #import "ADJNetworkEndpointData.h"
 #import "ADJBackoffStrategy.h"
 #import "ADJClientConfigData.h"
+/*
 #import "ADJAdRevenuePackageData.h"
 #import "ADJBillingSubscriptionPackageData.h"
 #import "ADJClickPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJInfoResponseData.h"
-#import "ADJSessionPackageData.h"
 #import "ADJThirdPartySharingPackageData.h"
+*/
+#import "ADJSessionPackageData.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,

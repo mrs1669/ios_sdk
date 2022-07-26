@@ -91,11 +91,11 @@
     NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy =
         [mainQueueStorage copyElementList];
 
-    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
-        if ([self isAsaClickPackageWithData:sdkPackageData]) {
-            return YES;
-        }
-    }
+//    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
+//        if ([self isAsaClickPackageWithData:sdkPackageData]) {
+//            return YES;
+//        }
+//    }
 
     return NO;
 }
@@ -321,6 +321,7 @@
     return [sessionPackageData isFirstSession];
 }
 
+/*
 - (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
     if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
         return NO;
@@ -334,6 +335,8 @@
 
     return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
 }
+ 
+*/
 
 - (void)handleSdkInit {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
@@ -391,11 +394,11 @@
     if (mainQueueResponseProcessingData.removePackageAtFront) {
         [self removePackageAtFrontWithStorage:mainQueueStorage];
     }
-
-    if (mainQueueResponseProcessingData.delayData != nil) {
-        [self delaySendWithData:mainQueueResponseProcessingData.delayData];
-        return;
-    }
+//
+//    if (mainQueueResponseProcessingData.delayData != nil) {
+//        [self delaySendWithData:mainQueueResponseProcessingData.delayData];
+//        return;
+//    }
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
 
@@ -420,17 +423,17 @@
     }
  }
 
-- (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
-    __typeof(self) __weak weakSelf = self;
-    [self.executor
-        scheduleInSequenceWithBlock:^{
-            __typeof(weakSelf) __strong strongSelf = weakSelf;
-            if (strongSelf == nil) { return; }
-
-            [strongSelf handleDelayEndWithSource:delayData.source];
-        }
-        delayTimeMilli:delayData.delay];
-}
+//- (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
+//    __typeof(self) __weak weakSelf = self;
+//    [self.executor
+//        scheduleInSequenceWithBlock:^{
+//            __typeof(weakSelf) __strong strongSelf = weakSelf;
+//            if (strongSelf == nil) { return; }
+//
+//            [strongSelf handleDelayEndWithSource:delayData.source];
+//        }
+//        delayTimeMilli:delayData.delay];
+//}
 
 - (void)handleDelayEndWithSource:(nonnull NSString *)source
 {

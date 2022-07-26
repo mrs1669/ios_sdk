@@ -105,6 +105,10 @@
 		078844A02886D388001814F7 /* ADJSQLiteDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788449E2886D388001814F7 /* ADJSQLiteDb.m */; };
 		078844A32886D43F001814F7 /* ADJSQLiteDbMessageProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844A22886D43F001814F7 /* ADJSQLiteDbMessageProvider.h */; };
 		07D58CBD2888289300CE84BB /* ADJPublishingGateSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 07D58CBC2888289300CE84BB /* ADJPublishingGateSubscriber.h */; };
+		07D5C365289024040022F31F /* ADJMainQueueStateAndTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 07D5C363289024040022F31F /* ADJMainQueueStateAndTracker.h */; };
+		07D5C366289024040022F31F /* ADJMainQueueStateAndTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */; };
+		07D5C369289025240022F31F /* ADJDelayData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07D5C367289025240022F31F /* ADJDelayData.h */; };
+		07D5C36A289025240022F31F /* ADJDelayData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C368289025240022F31F /* ADJDelayData.m */; };
 		07F3A7D92888314600A572C6 /* ADJRelativeTimestamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F3A7D72888314600A572C6 /* ADJRelativeTimestamp.h */; };
 		07F3A7DA2888314600A572C6 /* ADJRelativeTimestamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F3A7D82888314600A572C6 /* ADJRelativeTimestamp.m */; };
 		07F8F5C72886DDC20089653A /* ADJV4ActivityPackage.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8F5C52886DDC20089653A /* ADJV4ActivityPackage.h */; };
@@ -356,6 +360,10 @@
 		0788449E2886D388001814F7 /* ADJSQLiteDb.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSQLiteDb.m; sourceTree = "<group>"; };
 		078844A22886D43F001814F7 /* ADJSQLiteDbMessageProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSQLiteDbMessageProvider.h; sourceTree = "<group>"; };
 		07D58CBC2888289300CE84BB /* ADJPublishingGateSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJPublishingGateSubscriber.h; sourceTree = "<group>"; };
+		07D5C363289024040022F31F /* ADJMainQueueStateAndTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJMainQueueStateAndTracker.h; sourceTree = "<group>"; };
+		07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJMainQueueStateAndTracker.m; sourceTree = "<group>"; };
+		07D5C367289025240022F31F /* ADJDelayData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJDelayData.h; sourceTree = "<group>"; };
+		07D5C368289025240022F31F /* ADJDelayData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJDelayData.m; sourceTree = "<group>"; };
 		07F3A7D72888314600A572C6 /* ADJRelativeTimestamp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJRelativeTimestamp.h; sourceTree = "<group>"; };
 		07F3A7D82888314600A572C6 /* ADJRelativeTimestamp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJRelativeTimestamp.m; sourceTree = "<group>"; };
 		07F8F5C52886DDC20089653A /* ADJV4ActivityPackage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJV4ActivityPackage.h; sourceTree = "<group>"; };
@@ -919,6 +927,15 @@
 			path = client_info;
 			sourceTree = "<group>";
 		};
+		07D5C3622890236F0022F31F /* domain */ = {
+			isa = PBXGroup;
+			children = (
+				07D5C363289024040022F31F /* ADJMainQueueStateAndTracker.h */,
+				07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */,
+			);
+			path = domain;
+			sourceTree = "<group>";
+		};
 		07FC078F287F3669008F4489 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
@@ -1082,6 +1099,8 @@
 			children = (
 				6FAC56FD288FE80D0070F564 /* ADJSessionResponseData.h */,
 				6FAC56FE288FE80D0070F564 /* ADJSessionResponseData.m */,
+				07D5C367289025240022F31F /* ADJDelayData.h */,
+				07D5C368289025240022F31F /* ADJDelayData.m */,
 			);
 			path = responses;
 			sourceTree = "<group>";
@@ -1136,6 +1155,7 @@
 		6FE447AC288E8D4400FF06E0 /* main_queue */ = {
 			isa = PBXGroup;
 			children = (
+				07D5C3622890236F0022F31F /* domain */,
 				6FE447AD288E8D5600FF06E0 /* ADJMainQueueController.h */,
 				6FE447AE288E8D5600FF06E0 /* ADJMainQueueController.m */,
 				6FAC56D4288FE4530070F564 /* ADJMainQueueStorage.h */,
@@ -1177,6 +1197,7 @@
 				0788449F2886D388001814F7 /* ADJSQLiteDb.h in Headers */,
 				071E44B82886DBD400695D89 /* ADJSQLiteStatement.h in Headers */,
 				6FAC56FB288FE7DB0070F564 /* ADJUnknownResponseData.h in Headers */,
+				07D5C369289025240022F31F /* ADJDelayData.h in Headers */,
 				6F5A9C71288FEC1300E8265A /* ADJOfflineSubscriber.h in Headers */,
 				6FE44797288AE4E800FF06E0 /* ADJNetworkEndpointData.h in Headers */,
 				6F214E75288ACFB6002319D7 /* ADJPreFirstMeasurementSessionStartSubscriber.h in Headers */,
@@ -1212,6 +1233,7 @@
 				6FAC56E7288FE6170070F564 /* ADJSdkPackageSendingSubscriber.h in Headers */,
 				6F214E5B288A9EF6002319D7 /* ADJAdjustInternal.h in Headers */,
 				6FAC56EB288FE6450070F564 /* ADJSdkResponseSubscriber.h in Headers */,
+				07D5C365289024040022F31F /* ADJMainQueueStateAndTracker.h in Headers */,
 				078844962886D223001814F7 /* ADJClientReturnExecutor.h in Headers */,
 				6FAC56D2288FE2650070F564 /* ADJEventStateStorage.h in Headers */,
 				071E44BE2886DC5800695D89 /* ADJV4FilesData.h in Headers */,
@@ -1461,6 +1483,7 @@
 				078844842886B4CE001814F7 /* ADJTimestampMilli.m in Sources */,
 				078844912886CC66001814F7 /* ADJNonNegativeInt.m in Sources */,
 				0737C207287F3E2A004C7D59 /* ADJSingleThreadExecutor.m in Sources */,
+				07D5C36A289025240022F31F /* ADJDelayData.m in Sources */,
 				6FE44798288AE4E800FF06E0 /* ADJNetworkEndpointData.m in Sources */,
 				6FAC5714288FE9E20070F564 /* ADJSdkPackageSenderController.m in Sources */,
 				071E44C72886DCFC00695D89 /* ADJV4Attribution.m in Sources */,
@@ -1475,6 +1498,7 @@
 				078844892886C963001814F7 /* ADJSQLiteStoragePropertiesBase.m in Sources */,
 				6FAC5708288FE8FD0070F564 /* ADJTimerOnce.m in Sources */,
 				6FAC56F8288FE7530070F564 /* ADJSdkResponseDataBuilder.m in Sources */,
+				07D5C366289024040022F31F /* ADJMainQueueStateAndTracker.m in Sources */,
 				6FAC5704288FE8900070F564 /* ADJSdkPackageSenderPinningDelegate.m in Sources */,
 				6F214E60288AA43F002319D7 /* ADJPostSdkInitRootController.m in Sources */,
 				0737C2352885846A004C7D59 /* ADJNonEmptyString.m in Sources */,
