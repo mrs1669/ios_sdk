@@ -11,6 +11,7 @@
 #import "ADJUtilObj.h"
 
 #pragma mark Fields
+
 #pragma mark - Public properties
 /* .h
  @property (nullable, readonly, strong, nonatomic) NSData *dataPushToken;
@@ -18,6 +19,7 @@
  */
 
 @implementation ADJAdjustPushToken
+
 #pragma mark Instantiation
 - (nonnull instancetype)initWithDataPushToken:(nonnull NSData *)dataPushToken {
     return [self initWithDataPushToken:dataPushToken stringPushToken:nil];
@@ -32,16 +34,17 @@
     return nil;
 }
 
+
 #pragma mark - Private Constructors
 - (nonnull instancetype)initWithDataPushToken:(nullable NSData *)dataPushToken
                               stringPushToken:(nullable NSString *)stringPushToken
 {
     self = [super init];
-
+    
     _dataPushToken = [ADJUtilObj copyObjectWithInput:dataPushToken
-                                        classObject:[NSData class]];
+                                         classObject:[NSData class]];
     _stringPushToken = [ADJUtilObj copyStringWithInput:stringPushToken];
-
+    
     return self;
 }
 

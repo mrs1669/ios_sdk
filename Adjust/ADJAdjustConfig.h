@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_END
 // instantiation
 - (nonnull instancetype)initWithAppToken:(nonnull NSString *)appToken
                              environment:(nonnull NSString *)environment
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_END
 - (void)allowSendingFromBackground;
 - (void)setEventIdDeduplicationMaxCapacity:(int)eventIdDeduplicationMaxCapacity;
 - (void)setAdjustAttributionSubscriber:
-    (nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber;
+(nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber;
 - (void)setAdjustLogSubscriber:(nonnull id<ADJAdjustLogSubscriber>)adjustLogSubscriber;
 
 // public properties
@@ -50,15 +50,11 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
-@property (nullable, readonly, strong, nonatomic)
-    NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
+@property (nullable, readonly, strong, nonatomic) NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
-@property (nullable, readonly, strong, nonatomic)
-    NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
-@property (nullable, readonly, strong, nonatomic)
-    id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
-@property (nullable, readonly, strong, nonatomic)
-    id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+@property (nullable, readonly, strong, nonatomic) NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
+@property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+@property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
 
 @end
 

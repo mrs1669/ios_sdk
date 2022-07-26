@@ -14,7 +14,7 @@
 // instantiation
 - (nonnull instancetype)initWithSource:(nonnull NSString *)source
                           logCollector:(nonnull id<ADJLogCollector>)logCollector
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 @property (nonnull, readonly, strong, nonatomic) NSString *source;

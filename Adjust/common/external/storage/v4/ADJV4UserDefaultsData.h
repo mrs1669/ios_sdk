@@ -13,7 +13,7 @@
 @interface ADJV4UserDefaultsData : NSObject
 // instantiation
 - (nonnull instancetype)initWithLogger:(nonnull ADJLogger *)logger
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -25,8 +25,7 @@
 @property (nullable, readonly, strong, nonatomic) NSURL *deeplinkUrl;
 @property (nullable, readonly, strong, nonatomic) NSDate *deeplinkClickTime;
 @property (nullable, readonly, strong, nonatomic) NSNumber *disableThirdPartySharingNumberBool;
-@property (nullable, readonly, strong, nonatomic)
-    NSDictionary<NSString *, NSNumber *> *iAdErrors;
+@property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSNumber *> *iAdErrors;
 @property (nullable, readonly, strong, nonatomic) NSNumber *adServicesTrackedNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSDate * skadRegisterCallTimestamp;
 

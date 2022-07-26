@@ -25,10 +25,9 @@
 }
 
 - (nonnull instancetype)initWithTimespec:(struct timespec *_Nullable)timespecPtr
-                                 timeval:(struct timeval *_Nullable)timevalPtr
-{
+                                 timeval:(struct timeval *_Nullable)timevalPtr {
     self = [super init];
-
+    
     if (timespecPtr) {
         *_timespecPtr = *timespecPtr;
         _timevalPtr = NULL;
@@ -36,21 +35,20 @@
         _timespecPtr = NULL;
         *_timevalPtr = *timevalPtr;
     }
-
+    
     return self;
 }
 
 #pragma mark Public API
 - (BOOL)hasEnoughTimePassedSince:(nonnull ADJRelativeTimestamp *)sinceTime
-                enoughTimeLength:(nonnull ADJTimeLengthMilli *)enoughTimeLength
-{
+                enoughTimeLength:(nonnull ADJTimeLengthMilli *)enoughTimeLength {
     NSNumber *_Nullable millisecondsDiffSinceUIntegerNumber = [self millisecondsDiffSince:sinceTime];
     if (millisecondsDiffSinceUIntegerNumber == nil) {
         return NO;
     }
-
+    
     return millisecondsDiffSinceUIntegerNumber.unsignedIntegerValue
-        >= enoughTimeLength.millisecondsSpan.uIntegerValue;
+    >= enoughTimeLength.millisecondsSpan.uIntegerValue;
 }
 
 #pragma mark Internal Methods
@@ -64,15 +62,15 @@
         {
             return nil;
         }
-
+        
         struct timespec diff = {
             _timespecPtr->tv_sec - sinceTime->_timespecPtr->tv_sec,
             _timespecPtr->tv_nsec - sinceTime->_timespecPtr->tv_nsec
         };
-
+        
         return @(
-            ((NSUInteger)diff.tv_sec) * ADJOneSecondMilli +
-            ((NSUInteger)diff.tv_nsec) / ADJMilliToNano
+        ((NSUInteger)diff.tv_sec) * ADJOneSecondMilli +
+        ((NSUInteger)diff.tv_nsec) / ADJMilliToNano
         );
     } else {
         if (_timevalPtr->tv_sec < sinceTime->_timevalPtr->tv_sec) {
@@ -83,15 +81,15 @@
         {
             return nil;
         }
-
+        
         struct timeval diff = {
             _timevalPtr->tv_sec - sinceTime->_timevalPtr->tv_sec,
             _timevalPtr->tv_usec - sinceTime->_timevalPtr->tv_usec
         };
-
+        
         return @(
-            ((NSUInteger)diff.tv_sec) * ADJOneSecondMilli +
-            ((NSUInteger)diff.tv_usec) / ADJMilliToMicro
+        ((NSUInteger)diff.tv_sec) * ADJOneSecondMilli +
+        ((NSUInteger)diff.tv_usec) / ADJMilliToMicro
         );
     }
 }

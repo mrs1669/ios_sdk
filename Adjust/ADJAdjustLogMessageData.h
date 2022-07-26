@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelDebug;
@@ -21,8 +20,8 @@ NS_ASSUME_NONNULL_END
 // instantiation
 - (nonnull instancetype)initWithLogMessage:(nonnull NSString *)logMessage
                                     source:(nonnull NSString *)source
-                            messageLogLevel:(nonnull NSString *)messageLogLevel
-    NS_DESIGNATED_INITIALIZER;
+                           messageLogLevel:(nonnull NSString *)messageLogLevel
+NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties

@@ -23,13 +23,13 @@
  @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
  @property (nullable, readonly, strong, nonatomic)
-     NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
+ NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
  @property (nullable, readonly, strong, nonatomic)
-     NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
+ NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
  @property (nullable, readonly, strong, nonatomic)
-     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
  @property (nullable, readonly, strong, nonatomic)
-     id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+ id<ADJAdjustLogSubscriber> adjustLogSubscriber;
  */
 
 #pragma mark - Public constants
@@ -39,17 +39,18 @@ NSString *const ADJUrlStategyChina = @"CHINA";
 NSString *const ADJUrlStategyIndia = @"INDIA";
 
 @implementation ADJAdjustConfig
+
 #pragma mark Instantiation
 - (nonnull instancetype)initWithAppToken:(nonnull NSString *)appToken
                              environment:(nonnull NSString *)environment
 {
     self = [super init];
-
     _appToken = [ADJUtilObj copyStringWithInput:appToken];
     _environment = [ADJUtilObj copyStringWithInput:environment];
-
+    
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -91,9 +92,7 @@ NSString *const ADJUrlStategyIndia = @"INDIA";
     _eventIdDeduplicationMaxCapacityNumberInt = @(eventIdDeduplicationMaxCapacity);
 }
 
-- (void)setAdjustAttributionSubscriber:
-    (nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
-{
+- (void)setAdjustAttributionSubscriber:(nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber {
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
 }
 

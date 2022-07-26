@@ -21,16 +21,13 @@
     ADJSdkResponseSubscriber
 >
 // publishers
-@property (nonnull, readonly, strong, nonatomic)
-    ADJSdkPackageSendingPublisher *sdkPackageSendingPublisher;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJSdkResponsePublisher *sdkResponsePublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSendingPublisher *sdkPackageSendingPublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkResponsePublisher *sdkResponsePublisher;
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                          networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
+                            adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData;
 
 @end

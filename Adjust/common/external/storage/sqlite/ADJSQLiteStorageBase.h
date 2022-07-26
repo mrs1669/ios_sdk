@@ -18,18 +18,16 @@
 
 @interface ADJSQLiteStorageBase : ADJCommonBase<ADJSQLiteStorage>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    source:(nonnull NSString *)source
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
-    tableName:(nonnull NSString *)tableName
-    metadataTypeValue:(nonnull NSString *)metadataTypeValue;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                       source:(nonnull NSString *)source
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                       sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
+                                    tableName:(nonnull NSString *)tableName
+                            metadataTypeValue:(nonnull NSString *)metadataTypeValue;
 
 // protected
 @property (nullable, readonly, weak, nonatomic) ADJSingleThreadExecutor *storageExecutorWeak;
-@property (nullable, readonly, weak, nonatomic)
-    id<ADJSQLiteDatabaseProvider> sqliteDatabaseProviderWeak;
+@property (nullable, readonly, weak, nonatomic) id<ADJSQLiteDatabaseProvider> sqliteDatabaseProviderWeak;
 @property (nonnull, readonly, strong, nonatomic) NSString *tableName;
 @property (nonnull, readonly, strong, nonatomic) NSString *metadataTypeValue;
 
@@ -37,24 +35,18 @@
 @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *insertSql;
 @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *deleteAllSql;
 
-- (nullable ADJNonEmptyString *)
-    stringFromSelectStatement:
-        (nonnull ADJSQLiteStatement *)selectStatement
-    columnIndex:(int)columnIndex
-    fieldName:(nonnull NSString *)fieldName;
+- (nullable ADJNonEmptyString *)stringFromSelectStatement:(nonnull ADJSQLiteStatement *)selectStatement
+                                              columnIndex:(int)columnIndex
+                                                fieldName:(nonnull NSString *)fieldName;
 
 // protected abstract
-- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:
-    (nonnull NSString *)tableName;
-- (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:
-    (nonnull NSString *)tableName;
+- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:(nonnull NSString *)tableName;
+- (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:(nonnull NSString *)tableName;
 
-- (void)concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:
-    (nonnull ADJSQLiteDb *)sqliteDb;
+- (void)concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb;
 
 - (nonnull NSString *)concreteGenerateCreateTableFieldsSql;
 - (nonnull NSString *)concreteGenerateCreateTablePrimaryKeySql;
-- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:
-    (nonnull ADJSQLiteStatement *)selectStatement;
+- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:(nonnull ADJSQLiteStatement *)selectStatement;
 @end
 

@@ -19,103 +19,100 @@
 #import "ADJMeasurementSessionStateStorage.h"
 #import "ADJSdkPackageCreatingSubscriber.h"
 /*
-#import "ADJAdRevenuePackageData.h"
-#import "ADJClientAdRevenueData.h"
-#import "ADJAttributionPackageData.h"
-#import "ADJBillingSubscriptionPackageData.h"
-#import "ADJClientBillingSubscriptionData.h"
-#import "ADJClickPackageData.h"
-#import "ADJClientLaunchedDeeplinkData.h"
-#import "ADJEventPackageData.h"
-#import "ADJClientEventData.h"
-#import "ADJInfoPackageData.h"
-#import "ADJClientPushTokenData.h"
-#import "ADJLogPackageData.h"
+ #import "ADJAdRevenuePackageData.h"
+ #import "ADJClientAdRevenueData.h"
+ #import "ADJAttributionPackageData.h"
+ #import "ADJBillingSubscriptionPackageData.h"
+ #import "ADJClientBillingSubscriptionData.h"
+ #import "ADJClickPackageData.h"
+ #import "ADJClientLaunchedDeeplinkData.h"
+ #import "ADJEventPackageData.h"
+ #import "ADJClientEventData.h"
+ #import "ADJInfoPackageData.h"
+ #import "ADJClientPushTokenData.h"
+ #import "ADJLogPackageData.h"
  */
 #import "ADJSessionPackageData.h"
 /*
-#import "ADJClientThirdPartySharingData.h"
-#import "ADJThirdPartySharingPackageData.h"
-#import "ADJGdprForgetPackageData.h"
+ #import "ADJClientThirdPartySharingData.h"
+ #import "ADJThirdPartySharingPackageData.h"
+ #import "ADJGdprForgetPackageData.h"
  */
 #import "ADJPackageSessionData.h"
 
 @interface ADJSdkPackageBuilder : ADJCommonBase
 // publishers
 @property (nonnull, readonly, strong, nonatomic)
-    ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
+ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
 
 // instantiation
 - (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    clock:(nonnull ADJClock *)clock
-    clientSdk:(nonnull NSString *)clientSdk
-    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-    deviceController:(nonnull ADJDeviceController *)deviceController
-    globalCallbackParametersStorage:
-        (nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
-    globalPartnerParametersStorage:
-        (nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
-    eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-    measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
+initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+clock:(nonnull ADJClock *)clock
+clientSdk:(nonnull NSString *)clientSdk
+clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+deviceController:(nonnull ADJDeviceController *)deviceController
+globalCallbackParametersStorage:
+(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
+globalPartnerParametersStorage:
+(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
+eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
 
 // public api
 /*
-- (nonnull ADJAdRevenuePackageData *)
-    buildAdRevenueWithClientData:
-        (nonnull ADJClientAdRevenueData *)clientAdRevenueData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
-- (nonnull ADJAttributionPackageData *)
-    buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
-
-- (nonnull ADJBillingSubscriptionPackageData *)
-    buildBillingSubscriptionWithClientData:
-        (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
-- (nonnull ADJClickPackageData *)
-    buildLaunchedDeeplinkClickWithClientData:
-        (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
-- (nonnull ADJClickPackageData *)
-    buildAsaAttributionClickWithToken:
-        (nonnull ADJNonEmptyString *)asaAttibutionToken
-    asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
-
-- (nonnull ADJEventPackageData *)
-    buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
-- (nonnull ADJInfoPackageData *)
-    buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
-- (nonnull ADJLogPackageData *)
-    buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
-    logLevel:(nonnull NSString *)logLevel
-    logSource:(nonnull NSString *)logSource;
-*/
-- (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:
-    (nonnull ADJPackageSessionData *)packageSessionDataToOverwrite;
+ - (nonnull ADJAdRevenuePackageData *)
+ buildAdRevenueWithClientData:
+ (nonnull ADJClientAdRevenueData *)clientAdRevenueData
+ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+ 
+ - (nonnull ADJAttributionPackageData *)
+ buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
+ 
+ - (nonnull ADJBillingSubscriptionPackageData *)
+ buildBillingSubscriptionWithClientData:
+ (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
+ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+ 
+ - (nonnull ADJClickPackageData *)
+ buildLaunchedDeeplinkClickWithClientData:
+ (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
+ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+ 
+ - (nonnull ADJClickPackageData *)
+ buildAsaAttributionClickWithToken:
+ (nonnull ADJNonEmptyString *)asaAttibutionToken
+ asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
+ 
+ - (nonnull ADJEventPackageData *)
+ buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
+ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+ 
+ - (nonnull ADJInfoPackageData *)
+ buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
+ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+ 
+ - (nonnull ADJLogPackageData *)
+ buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
+ logLevel:(nonnull NSString *)logLevel
+ logSource:(nonnull NSString *)logSource;
+ */
+- (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataToOverwrite;
 /*
-- (nonnull ADJThirdPartySharingPackageData *)
-    buildThirdPartySharingWithClientData:
-        (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
-- (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage;
-*/
+ - (nonnull ADJThirdPartySharingPackageData *)
+ buildThirdPartySharingWithClientData:
+ (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+ 
+ - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage;
+ */
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                           sentAtTimestamp:(nullable ADJTimestampMilli *)sentAtTimestamp;
 
 + (void)injectAttemptsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                    attempts:(nullable ADJNonNegativeInt *)attempts;
 
-+ (void)
-    injectRemainingQueuSizeWithParametersBuilder:
-        (nonnull ADJStringMapBuilder *)parametersBuilder
-    remainingQueueSize:(nullable ADJNonNegativeInt *)remainingQueueSize;
++ (void)injectRemainingQueuSizeWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                  remainingQueueSize:(nullable ADJNonNegativeInt *)remainingQueueSize;
 
 @end

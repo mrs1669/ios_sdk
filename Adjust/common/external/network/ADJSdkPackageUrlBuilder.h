@@ -13,11 +13,10 @@
 
 @interface ADJSdkPackageUrlBuilder : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithUrlOverwrite:(nullable NSString *)urlOverwrite
-    extraPath:(nullable NSString *)extraPath
-    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-    clientCustomEndpointUrl:(nullable ADJNonEmptyString *)clientCustomEndpointUrl;
+- (nonnull instancetype)initWithUrlOverwrite:(nullable NSString *)urlOverwrite
+                                   extraPath:(nullable NSString *)extraPath
+                           adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+                     clientCustomEndpointUrl:(nullable ADJNonEmptyString *)clientCustomEndpointUrl;
 
 // public api
 - (nonnull NSString *)targetUrlWithPath:(nonnull NSString *)path

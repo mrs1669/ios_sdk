@@ -14,10 +14,10 @@
                                   identifierForVendor:(nullable NSString *)identifierForVendor
 {
     self = [super init];
-
+    
     _advertisingIdentifier = advertisingIdentifier;
     _identifierForVendor = identifierForVendor;
-
+    
     return self;
 }
 

@@ -45,111 +45,105 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
 
 @implementation ADJSdkPackageUrlBuilder
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithUrlOverwrite:(nullable NSString *)urlOverwrite
-    extraPath:(nullable NSString *)extraPath
-    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-    clientCustomEndpointUrl:(nullable ADJNonEmptyString *)clientCustomEndpointUrl
-{
+- (nonnull instancetype)initWithUrlOverwrite:(nullable NSString *)urlOverwrite
+                                   extraPath:(nullable NSString *)extraPath
+                           adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+                     clientCustomEndpointUrl:(nullable ADJNonEmptyString *)clientCustomEndpointUrl {
     self = [super init];
     _urlOverwrite = urlOverwrite;
     _extraPath = extraPath;
-
+    
     NSString *_Nullable adjustUrlStrategyString =
-        adjustUrlStrategy != nil ? adjustUrlStrategy.stringValue : nil;
-
+    adjustUrlStrategy != nil ? adjustUrlStrategy.stringValue : nil;
+    
     _baseUrlChoicesArray =
-        [[self class] baseUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
-
+    [[self class] baseUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
+    
     _gdprUrlChoicesArray =
-        [[self class] gdprUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
-
+    [[self class] gdprUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
+    
     _subscriptionUrlChoicesArray =
-        [[self class] subscriptionUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
-
+    [[self class] subscriptionUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
+    
     //_wasLastAttemptSuccess = NO;
-
+    
     _choiceIndex = 0;
-
+    
     _startingChoiceIndex = 0;
-
+    
     return self;
 }
 
 #pragma mark - Private constructors
 + (nonnull NSArray<NSString *> *)baseUrlChoicesWithUrlStrategy:
-    (nullable NSString *)adjustUrlStrategy
-{
+(nullable NSString *)adjustUrlStrategy {
     if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
         return @[kBaseUrlIndia, kBaseUrl];
     }
-
+    
     if ([ADJUrlStategyChina isEqual:adjustUrlStrategy]) {
         return @[kBaseUrlChina, kBaseUrl];
     }
-
+    
     return @[kBaseUrl, kBaseUrlIndia, kBaseUrlChina];
 }
 
 + (nonnull NSArray<NSString *> *)gdprUrlChoicesWithUrlStrategy:
-    (nullable NSString *)adjustUrlStrategy
-{
+(nullable NSString *)adjustUrlStrategy {
     if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
         return @[kGdprUrlIndia, kGdprUrl];
     }
-
+    
     if ([ADJUrlStategyChina isEqual:adjustUrlStrategy]) {
         return @[kGdprUrlChina, kGdprUrl];
     }
-
+    
     return @[kGdprUrl, kGdprUrlIndia, kGdprUrlChina];
 }
 
 + (nonnull NSArray<NSString *> *)subscriptionUrlChoicesWithUrlStrategy:
-    (nullable NSString *)adjustUrlStrategy
-{
+(nullable NSString *)adjustUrlStrategy {
     if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
         return @[kSubscriptionUrlIndia, kSubscriptionUrl];
     }
-
+    
     if ([ADJUrlStategyChina isEqual:adjustUrlStrategy]) {
         return @[kSubscriptionUrlChina, kSubscriptionUrl];
     }
-
+    
     return @[kSubscriptionUrl, kSubscriptionUrlIndia, kSubscriptionUrlChina];
 }
 
 #pragma mark Public API
 - (nonnull NSString *)targetUrlWithPath:(nonnull NSString *)path
-                      sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-{
+                      sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters {
     NSString *_Nonnull urlByPath = [self chooseUrlWithPath:path];
-
+    
     NSString *_Nonnull url = [self chooseUrlByPriorityWithUrlPath:urlByPath
                                                 sendingParameters:sendingParameters];
-
+    
     // extra path, if present, has the format '/X/Y'
     if (self.extraPath != nil) {
         return [NSString stringWithFormat:@"%@%@", url, self.extraPath];
     }
-
+    
     return url;
 }
 
 - (BOOL)shouldRetryAfterNetworkFailure {
     NSUInteger nextChoiceIndex = (self.choiceIndex + 1) % self.baseUrlChoicesArray.count;
     self.choiceIndex = nextChoiceIndex;
-
+    
     //self.wasLastAttemptSuccess = NO;
-
+    
     BOOL nextChoiceHasNotReturnedToStartingChoice = nextChoiceIndex != self.startingChoiceIndex;
-
+    
     return nextChoiceHasNotReturnedToStartingChoice;
 }
 
 - (void)resetAfterNetworkNotFailing {
     self.startingChoiceIndex = self.choiceIndex;
-
+    
     //self.wasLastAttemptSuccess = YES;
 }
 
@@ -157,63 +151,61 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
     if (self.urlOverwrite != nil) {
         return self.urlOverwrite;
     }
-
+    
     if (self.clientCustomEndpointUrl != nil) {
         return self.clientCustomEndpointUrl.stringValue;
     }
-
+    
     return [self.baseUrlChoicesArray objectAtIndex:0];
 }
 
 - (NSUInteger)urlCountWithPath:(nonnull NSString *)path {
     /*
-    if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
-        return self.gdprUrlChoicesArray.count;
-    }
-
-    if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
-        return self.subscriptionUrlChoicesArray.count;
-    }
-*/
+     if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
+     return self.gdprUrlChoicesArray.count;
+     }
+     
+     if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
+     return self.subscriptionUrlChoicesArray.count;
+     }
+     */
     return self.baseUrlChoicesArray.count;
 }
 
 #pragma mark Internal Methods
 - (nonnull NSString *)chooseUrlWithPath:(nonnull NSString *)path {
     /*
-    if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
-        return [self.gdprUrlChoicesArray objectAtIndex:self.choiceIndex];
-    }
-
-    if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
-        return [self.subscriptionUrlChoicesArray objectAtIndex:self.choiceIndex];
-    }
-*/
+     if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
+     return [self.gdprUrlChoicesArray objectAtIndex:self.choiceIndex];
+     }
+     
+     if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
+     return [self.subscriptionUrlChoicesArray objectAtIndex:self.choiceIndex];
+     }
+     */
     return [self.baseUrlChoicesArray objectAtIndex:self.choiceIndex];
 }
 
-- (nonnull NSString *)
-    chooseUrlByPriorityWithUrlPath:(nonnull NSString *)urlByPath
-    sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-{
+- (nonnull NSString *)chooseUrlByPriorityWithUrlPath:(nonnull NSString *)urlByPath
+                                   sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters {
     if (self.urlOverwrite != nil) {
         [sendingParameters
-            addPairWithConstValue:urlByPath
-            key:ADJParamTestServerAdjustEndPointKey];
-
+         addPairWithConstValue:urlByPath
+         key:ADJParamTestServerAdjustEndPointKey];
+        
         if (self.clientCustomEndpointUrl != nil) {
             [sendingParameters
-                 addPairWithValue:self.clientCustomEndpointUrl
-                 key:ADJParamTestServerCustomEndPointKey];
+             addPairWithValue:self.clientCustomEndpointUrl
+             key:ADJParamTestServerCustomEndPointKey];
         }
-
+        
         return self.urlOverwrite;
     }
-
+    
     if (self.clientCustomEndpointUrl != nil) {
         return self.clientCustomEndpointUrl.stringValue;
     }
-
+    
     return urlByPath;
 }
 

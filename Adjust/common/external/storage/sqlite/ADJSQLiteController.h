@@ -21,8 +21,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJSQLiteController : ADJCommonBase<ADJSQLiteDatabaseProvider>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
 
 // public api
 - (void)addSqlStorage:(nonnull id<ADJSQLiteStorage>)sqlStorage;

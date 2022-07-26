@@ -10,15 +10,13 @@
 
 @implementation ADJSessionResponseData
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-    sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
-    logger:(nonnull ADJLogger *)logger
-{
+- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+                     sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
+                                 logger:(nonnull ADJLogger *)logger {
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:sessionPackageData
                            logger:logger];
-
+    
     return self;
 }
 

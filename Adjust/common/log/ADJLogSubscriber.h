@@ -17,11 +17,11 @@
                    source:(nonnull NSString *)source
            adjustLogLevel:(nonnull NSString *)adjustLogLevel;
 
-- (void)didLogMessagesPreInitWithArray:
-    (nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray;
+- (void)didLogMessagesPreInitWithArray:(nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray;
 
 @end
 
 @interface ADJLogPublisher : ADJPublisherBase<id<ADJLogSubscriber>>
+
 @end
 

@@ -15,9 +15,7 @@
 
 + (nonnull ADJEntryRoot *)rootInstance;
 
-+ (nonnull NSString *)
-    teardownWithShouldClearStorage:(BOOL)shouldClearStorage
-    sdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder;
++ (nonnull NSString *)teardownWithShouldClearStorage:(BOOL)shouldClearStorage sdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder;
 
 + (nonnull NSString *)sdkVersion;
 

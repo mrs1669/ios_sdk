@@ -15,7 +15,7 @@
 - (nonnull instancetype)initWithExtraPath:(nullable NSString *)extraPath
                              urlOverwrite:(nullable NSString *)urlOverwrite
                              timeoutMilli:(nonnull ADJTimeLengthMilli *)timeoutMilli
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

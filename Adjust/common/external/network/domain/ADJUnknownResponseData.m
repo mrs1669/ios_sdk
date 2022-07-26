@@ -9,4 +9,5 @@
 #import "ADJUnknownResponseData.h"
 
 @implementation ADJUnknownResponseData
+
 @end

@@ -69,11 +69,11 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
 #pragma mark Instantiation
 - (id)init {
     self = [super init];
-
+    
     if (self == nil) {
         return nil;
     }
-
+    
     return self;
 }
 #pragma mark - NSCoding
@@ -82,29 +82,29 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
     if (self == nil) {
         return nil;
     }
-
+    
     if ([decoder containsValueForKey:kEventCountKey]) {
         _eventCountNumberInt = [NSNumber numberWithInt:[decoder decodeIntForKey:kEventCountKey]];
     }
     if ([decoder containsValueForKey:kSessionCountKey]) {
         _sessionCountNumberInt =
-            [NSNumber numberWithInt:[decoder decodeIntForKey:kSessionCountKey]];
+        [NSNumber numberWithInt:[decoder decodeIntForKey:kSessionCountKey]];
     }
     if ([decoder containsValueForKey:kSubsessionCountKey]) {
         _subsessionCountNumberInt =
-            [NSNumber numberWithInt:[decoder decodeIntForKey:kSubsessionCountKey]];
+        [NSNumber numberWithInt:[decoder decodeIntForKey:kSubsessionCountKey]];
     }
     if ([decoder containsValueForKey:kSessionLengthKey]) {
         _sessionLengthNumberDouble =
-            [NSNumber numberWithInt:[decoder decodeDoubleForKey:kSessionLengthKey]];
+        [NSNumber numberWithInt:[decoder decodeDoubleForKey:kSessionLengthKey]];
     }
     if ([decoder containsValueForKey:kTimeSpentKey]) {
         _timeSpentNumberDouble =
-            [NSNumber numberWithInt:[decoder decodeDoubleForKey:kTimeSpentKey]];
+        [NSNumber numberWithInt:[decoder decodeDoubleForKey:kTimeSpentKey]];
     }
     if ([decoder containsValueForKey:kLastActivityKey]) {
         _lastActivityNumberDouble =
-            [NSNumber numberWithInt:[decoder decodeDoubleForKey:kLastActivityKey]];
+        [NSNumber numberWithInt:[decoder decodeDoubleForKey:kLastActivityKey]];
     }
     if ([decoder containsValueForKey:kUuidKey]) {
         _uuid = [decoder decodeObjectForKey:kUuidKey];
@@ -117,22 +117,22 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
     }
     if ([decoder containsValueForKey:kIsGdprForgottenKey]) {
         _isGdprForgottenNumberBool =
-            [NSNumber numberWithBool:[decoder decodeBoolForKey:kIsGdprForgottenKey]];
+        [NSNumber numberWithBool:[decoder decodeBoolForKey:kIsGdprForgottenKey]];
     }
     if ([decoder containsValueForKey:kAskingAttributionKey]) {
         _askingAttributionNumberBool =
-            [NSNumber numberWithBool:[decoder decodeBoolForKey:kAskingAttributionKey]];
+        [NSNumber numberWithBool:[decoder decodeBoolForKey:kAskingAttributionKey]];
     }
     if ([decoder containsValueForKey:kIsThirdPartySharingDisabledKey]) {
         _isThirdPartySharingDisabledNumberBool =
-            [NSNumber numberWithBool:[decoder decodeBoolForKey:kIsThirdPartySharingDisabledKey]];
+        [NSNumber numberWithBool:[decoder decodeBoolForKey:kIsThirdPartySharingDisabledKey]];
     }
     if ([decoder containsValueForKey:kDeviceTokenKey]) {
         _deviceToken = [decoder decodeObjectForKey:kDeviceTokenKey];
     }
     if ([decoder containsValueForKey:kUpdatePackagesKey]) {
         _updatePackagesNumberBool =
-            [NSNumber numberWithBool:[decoder decodeBoolForKey:kUpdatePackagesKey]];
+        [NSNumber numberWithBool:[decoder decodeBoolForKey:kUpdatePackagesKey]];
     }
     if ([decoder containsValueForKey:kAdidKey]) {
         _adid = [decoder decodeObjectForKey:kAdidKey];
@@ -140,36 +140,36 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
     if ([decoder containsValueForKey:kAttributionDetailsKey]) {
         _attributionDetails = [decoder decodeObjectForKey:kAttributionDetailsKey];
     }
-
+    
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-
+    
 }
 
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                @"ADJV4ActivityState",
-                    kEnabledKey, self.enableNumberBool,
-                    kEnabledKey, self.enableNumberBool,
-                    kIsGdprForgottenKey, self.isGdprForgottenNumberBool,
-                    kAskingAttributionKey, self.askingAttributionNumberBool,
-                    kIsThirdPartySharingDisabledKey, self.isThirdPartySharingDisabledNumberBool,
-                    kUuidKey, self.uuid,
-                    kDeviceTokenKey, self.deviceToken,
-                    kUpdatePackagesKey, self.updatePackagesNumberBool,
-                    kAdidKey, self.adid,
-                    kAttributionDetailsKey, self.attributionDetails,
-                    kEventCountKey, self.eventCountNumberInt,
-                    kSessionCountKey, self.sessionCountNumberInt,
-                    kSubsessionCountKey, self.subsessionCountNumberInt,
-                    kTimeSpentKey, self.timeSpentNumberDouble,
-                    kLastActivityKey, self.lastActivityNumberDouble,
-                    kSessionLengthKey, self.sessionLengthNumberDouble,
-                    kTransactionIdsKey, self.transactionIds,
-                nil];
+            @"ADJV4ActivityState",
+            kEnabledKey, self.enableNumberBool,
+            kEnabledKey, self.enableNumberBool,
+            kIsGdprForgottenKey, self.isGdprForgottenNumberBool,
+            kAskingAttributionKey, self.askingAttributionNumberBool,
+            kIsThirdPartySharingDisabledKey, self.isThirdPartySharingDisabledNumberBool,
+            kUuidKey, self.uuid,
+            kDeviceTokenKey, self.deviceToken,
+            kUpdatePackagesKey, self.updatePackagesNumberBool,
+            kAdidKey, self.adid,
+            kAttributionDetailsKey, self.attributionDetails,
+            kEventCountKey, self.eventCountNumberInt,
+            kSessionCountKey, self.sessionCountNumberInt,
+            kSubsessionCountKey, self.subsessionCountNumberInt,
+            kTimeSpentKey, self.timeSpentNumberDouble,
+            kLastActivityKey, self.lastActivityNumberDouble,
+            kSessionLengthKey, self.sessionLengthNumberDouble,
+            kTransactionIdsKey, self.transactionIds,
+            nil];
 }
 
 @end

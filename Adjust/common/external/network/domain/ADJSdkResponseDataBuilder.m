@@ -10,28 +10,28 @@
 
 #import "ADJUtilF.h"
 /*
-#import "ADJAdRevenuePackageData.h"
-#import "ADJAdRevenueResponseData.h"
-#import "ADJAttributionPackageData.h"
-#import "ADJAttributionResponseData.h"
-#import "ADJBillingSubscriptionPackageData.h"
-#import "ADJBillingSubscriptionResponseData.h"
-#import "ADJClickPackageData.h"
-#import "ADJClickResponseData.h"
-#import "ADJEventPackageData.h"
-#import "ADJEventResponseData.h"
-#import "ADJGdprForgetPackageData.h"
-#import "ADJGdprForgetResponseData.h"
-#import "ADJInfoPackageData.h"
-#import "ADJInfoResponseData.h"
-#import "ADJLogPackageData.h"
-#import "ADJLogResponseData.h"
+ #import "ADJAdRevenuePackageData.h"
+ #import "ADJAdRevenueResponseData.h"
+ #import "ADJAttributionPackageData.h"
+ #import "ADJAttributionResponseData.h"
+ #import "ADJBillingSubscriptionPackageData.h"
+ #import "ADJBillingSubscriptionResponseData.h"
+ #import "ADJClickPackageData.h"
+ #import "ADJClickResponseData.h"
+ #import "ADJEventPackageData.h"
+ #import "ADJEventResponseData.h"
+ #import "ADJGdprForgetPackageData.h"
+ #import "ADJGdprForgetResponseData.h"
+ #import "ADJInfoPackageData.h"
+ #import "ADJInfoResponseData.h"
+ #import "ADJLogPackageData.h"
+ #import "ADJLogResponseData.h"
  */
 #import "ADJSessionPackageData.h"
 #import "ADJSessionResponseData.h"
 /*
-#import "ADJThirdPartySharingPackageData.h"
-#import "ADJThirdPartySharingResponseData.h"
+ #import "ADJThirdPartySharingPackageData.h"
+ #import "ADJThirdPartySharingResponseData.h"
  */
 #import "ADJUnknownResponseData.h"
 
@@ -41,7 +41,7 @@
  @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
  @property (nonnull, readonly, strong, nonatomic) ADJStringMapBuilder *sendingParameters;
  @property (nonnull, readonly, strong, nonatomic)
-     id<ADJSdkResponseCallbackSubscriber> sourceCallback;
+ id<ADJSdkResponseCallbackSubscriber> sourceCallback;
  @property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
  */
 
@@ -59,27 +59,25 @@
 
 @implementation ADJSdkResponseDataBuilder
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
-    sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-    sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
-    previousErrorMessages:(nullable NSString *)previousErrorMessages;
-{
+- (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
+                               sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
+                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
+                           previousErrorMessages:(nullable NSString *)previousErrorMessages {
     self = [super init];
     _sourcePackage = sourcePackage;
     _sendingParameters = sendingParameters;
     _sourceCallback = sourceCallback;
-
+    
     _jsonDictionary = nil;
-
+    
     _failedToProcessLocally = NO;
-
+    
     _okResponseCode = NO;
-
+    
     //_jsonResponseFoundation = nil;
-
+    
     _errorMessages = previousErrorMessages;
-
+    
     return self;
 }
 
@@ -90,24 +88,23 @@
 
 - (void)logErrorWithLogger:(nullable ADJLogger *)logger
                    nsError:(nullable NSError *)nsError
-              errorMessage:(nonnull NSString *)errorMessage
-{
+              errorMessage:(nonnull NSString *)errorMessage {
     if (nsError != nil) {
         if (logger != nil) {
             [logger errorWithNSError:nsError message:@"%@", errorMessage];
         }
-
+        
         [self appendErrorWithMessage:
-            [NSString stringWithFormat:@"%@, with NSError: %@",
-                errorMessage,
-                [ADJUtilF errorFormat:nsError]]];
+         [NSString stringWithFormat:@"%@, with NSError: %@",
+          errorMessage,
+          [ADJUtilF errorFormat:nsError]]];
     } else {
         if (logger != nil) {
             [logger error:@"%@", errorMessage];
         }
-
+        
         [self appendErrorWithMessage:
-            [NSString stringWithFormat:@"Without NSError, %@", errorMessage]];
+         [NSString stringWithFormat:@"Without NSError, %@", errorMessage]];
     }
 }
 
@@ -124,46 +121,46 @@
 }
 
 #define tryBuildResponse(packageClassType, responseClassType, packageDataName)  \
-    if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {          \
-        return [[responseClassType alloc]                                       \
-                    initWithBuilder:self                                        \
-                    packageDataName:(packageClassType *)self.sourcePackage      \
-                    logger:logger];                                             \
-    }                                                                           \
+if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {          \
+return [[responseClassType alloc]                                       \
+initWithBuilder:self                                        \
+packageDataName:(packageClassType *)self.sourcePackage      \
+logger:logger];                                             \
+}                                                                           \
 
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger {
     /*
-    tryBuildResponse(ADJAttributionPackageData, ADJAttributionResponseData, attributionPackageData)
-    tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
-    tryBuildResponse(ADJBillingSubscriptionPackageData,
-                     ADJBillingSubscriptionResponseData,
-                     billingSubscriptionPackageData)
-    tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
-    tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
-    tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
-    tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
-    tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
+     tryBuildResponse(ADJAttributionPackageData, ADJAttributionResponseData, attributionPackageData)
+     tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
+     tryBuildResponse(ADJBillingSubscriptionPackageData,
+     ADJBillingSubscriptionResponseData,
+     billingSubscriptionPackageData)
+     tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
+     tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
+     tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
+     tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
+     tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
      */
     tryBuildResponse(ADJSessionPackageData, ADJSessionResponseData, sessionPackageData)
     /*
-    tryBuildResponse(ADJThirdPartySharingPackageData,
-                     ADJThirdPartySharingResponseData,
-                     thirdPartySharingPackageData)
-*/
+     tryBuildResponse(ADJThirdPartySharingPackageData,
+     ADJThirdPartySharingResponseData,
+     thirdPartySharingPackageData)
+     */
     if (logger != nil) {
         [logger error:@"Could not match source sdk package of: %@, to one of the know types."
-            " Will still be created with unknown type", self.sourcePackage];
+         " Will still be created with unknown type", self.sourcePackage];
     }
-
+    
     return [[ADJUnknownResponseData alloc] initWithBuilder:self
-                                             sdkPackageData:self.sourcePackage
-                                                     logger:logger];
+                                            sdkPackageData:self.sourcePackage
+                                                    logger:logger];
 }
 
 - (void)appendErrorWithMessage:(nonnull NSString *)errorMessage {
     if (self.errorMessages != nil) {
         self.errorMessages =
-            [NSString stringWithFormat:@"%@\n%@", self.errorMessages, errorMessage];
+        [NSString stringWithFormat:@"%@\n%@", self.errorMessages, errorMessage];
     } else {
         self.errorMessages = errorMessage;
     }

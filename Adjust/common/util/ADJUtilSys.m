@@ -17,31 +17,31 @@
     // TODO figure out if this is the "right" way
     //  like for example using NSFileManager URLsForDirectory:inDomains:
     NSArray *_Nonnull paths =
-        NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     if (paths.count == 0) {
         return nil;
     }
-
+    
     NSString *_Nonnull documentsDirPath = [paths objectAtIndex:0];
     NSString *_Nonnull filePath = [documentsDirPath stringByAppendingPathComponent:fileName];
-
+    
     return filePath;
 }
 
 + (nullable NSString *)getFilePathInAppSupportDir:(NSString *)fileName {
     NSArray *_Nonnull paths =
-        NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
-                                            NSUserDomainMask,
-                                            YES);
+    NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
+                                        NSUserDomainMask,
+                                        YES);
     if (paths.count == 0) {
         return nil;
     }
-
+    
     NSString *_Nonnull appSupportDirPath = [paths objectAtIndex:0];
     NSString *_Nonnull adjustAppSupportDirPath =
-        [appSupportDirPath stringByAppendingPathComponent:@"Adjust"];
+    [appSupportDirPath stringByAppendingPathComponent:@"Adjust"];
     NSString *_Nonnull filePath =
-        [adjustAppSupportDirPath stringByAppendingPathComponent:fileName];
+    [adjustAppSupportDirPath stringByAppendingPathComponent:fileName];
     
     return filePath;
 }
@@ -55,10 +55,10 @@
     if (paths.count == 0) {
         return NO;
     }
-
+    
     NSString *_Nonnull appSupportDirPath = [paths objectAtIndex:0];
     NSString *_Nonnull adjustAppSupportDirPath =
-        [appSupportDirPath stringByAppendingPathComponent:@"Adjust"];
+    [appSupportDirPath stringByAppendingPathComponent:@"Adjust"];
     NSError *_Nullable error = nil;
     [[NSFileManager defaultManager] createDirectoryAtPath:adjustAppSupportDirPath
                               withIntermediateDirectories:YES
@@ -69,13 +69,13 @@
         //NSLog(@"Error: %@", error);
         return NO;
     }
-
+    
     return YES;
 }
 
 + (nonnull ADJNonEmptyString *)generateUuid {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
-                [[[NSUUID UUID] UUIDString] lowercaseString]];
+            [[[NSUUID UUID] UUIDString] lowercaseString]];
 }
 
 + (dispatch_time_t)dispatchTimeWithMilli:(NSUInteger)milli {
@@ -90,7 +90,7 @@
     if (runtimeFinalizer == nil) {
         return;
     }
-
+    
     [runtimeFinalizer finalizeAtRuntime];
 }
 

@@ -14,19 +14,19 @@
 #import "ADJNonEmptyString.h"
 
 @interface ADJNonNegativeInt : NSObject<
-    NSCopying,
-    ADJPackageParamValueSerializable,
-    ADJIoValueSerializable
+NSCopying,
+ADJPackageParamValueSerializable,
+ADJIoValueSerializable
 >
 // instantiation
 + (nonnull instancetype)instanceAtZero;
 + (nonnull instancetype)instanceAtOne;
 
 + (nullable instancetype)instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
-                                        logger:(nonnull ADJLogger *)logger;
+                                            logger:(nonnull ADJLogger *)logger;
 
 + (nullable instancetype)instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber
-                                                logger:(nonnull ADJLogger *)logger;
+                                                    logger:(nonnull ADJLogger *)logger;
 
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
                                           logger:(nonnull ADJLogger *)logger;
@@ -35,7 +35,7 @@
                                                   logger:(nonnull ADJLogger *)logger;
 
 - (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties

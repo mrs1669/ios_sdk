@@ -14,13 +14,11 @@
 
 @interface ADJStringMap : NSObject<ADJPackageParamValueSerializable>
 // instantiation
-- (nonnull instancetype)initWithStringMapBuilder:
-    (nonnull ADJStringMapBuilder *)stringMapBuilder;
+- (nonnull instancetype)initWithStringMapBuilder:(nonnull ADJStringMapBuilder *)stringMapBuilder;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nonnull, readwrite, strong, nonatomic)
-    NSDictionary<NSString *, ADJNonEmptyString *> *map;
+@property (nonnull, readwrite, strong, nonatomic) NSDictionary<NSString *, ADJNonEmptyString *> *map;
 
 // public api
 - (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull NSString *)key;

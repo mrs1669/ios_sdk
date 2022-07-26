@@ -17,15 +17,15 @@
  @property (readonly, assign, nonatomic) BOOL shouldRetry;
  @property (readonly, assign, nonatomic) BOOL processedByServer;
  @property (readonly, assign, nonatomic) BOOL hasBeenOptOut;
-
+ 
  @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
-
+ 
  @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *retryIn;
  @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *continueIn;
  @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *askIn;
-
+ 
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adid;
-
+ 
  @property (nullable, strong, nonatomic) NSDictionary *attributionJson;
  */
 
@@ -57,104 +57,102 @@
 @synthesize attributionJson = _attributionJson;
 
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    logger:(nonnull ADJLogger *)logger
-{
+- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+                         sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+                                 logger:(nonnull ADJLogger *)logger {
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSdkResponseBaseData class]]) {
         [self doesNotRecognizeSelector:_cmd];
         return nil;
     }
-
+    
     self = [super init];
-
+    
     _sourcePackage = sdkPackageData;
     _sendingParameters = sdkResponseDataBuilder.sendingParameters;
     _failedToProcessLocally = [sdkResponseDataBuilder failedToProcessLocally];
     _errorMessages = [sdkResponseDataBuilder errorMessages];
-
+    
     _jsonDictionary = sdkResponseDataBuilder.jsonDictionary;
-
+    
     _serverMessage = [ADJNonEmptyString
-                        instanceFromOptionalString:
-                            [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                                      key:ADJParamMessageKey]
-                        sourceDescription:@"response message"
-                        logger:logger];
-
+                      instanceFromOptionalString:
+                          [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
+                                                                   key:ADJParamMessageKey]
+                      sourceDescription:@"response message"
+                      logger:logger];
+    
     _adid = [ADJNonEmptyString
-                instanceFromOptionalString:
-                    [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                              key:ADJParamAdidKey]
-                sourceDescription:@"response adid"
-                logger:logger];
-
+             instanceFromOptionalString:
+                 [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
+                                                          key:ADJParamAdidKey]
+             sourceDescription:@"response adid"
+             logger:logger];
+    
     _trackingState =
-        [ADJNonEmptyString
-            instanceFromOptionalString:
-                [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                          key:ADJParamTrackingStateKey]
-            sourceDescription:@"response tracking state"
-            logger:logger];
-
+    [ADJNonEmptyString
+     instanceFromOptionalString:
+         [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
+                                                  key:ADJParamTrackingStateKey]
+     sourceDescription:@"response tracking state"
+     logger:logger];
+    
     _timestampString =
-        [ADJNonEmptyString
-            instanceFromOptionalString:
-                [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                          key:ADJParamTimeSpentKey]
-            sourceDescription:@"response timestamp"
-            logger:logger];
-
+    [ADJNonEmptyString
+     instanceFromOptionalString:
+         [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
+                                                  key:ADJParamTimeSpentKey]
+     sourceDescription:@"response timestamp"
+     logger:logger];
+    
     _askInIntMilli =
-        [ADJNonNegativeInt
-            instanceFromOptionalIntegerNumber:
-                [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
-                                                        key:ADJParamAskInKey]
-            logger:logger];
-
+    [ADJNonNegativeInt
+     instanceFromOptionalIntegerNumber:
+         [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
+                                                    key:ADJParamAskInKey]
+     logger:logger];
+    
     _askIn = _askInIntMilli != nil ?
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_askInIntMilli] : nil;
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_askInIntMilli] : nil;
+    
     _continueInIntMilli =
-        [ADJNonNegativeInt
-            instanceFromOptionalIntegerNumber:
-                [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
-                                                        key:ADJParamContinueInKey]
-            logger:logger];
-
+    [ADJNonNegativeInt
+     instanceFromOptionalIntegerNumber:
+         [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
+                                                    key:ADJParamContinueInKey]
+     logger:logger];
+    
     _continueIn = _continueInIntMilli != nil ?
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_continueInIntMilli] : nil;
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_continueInIntMilli] : nil;
+    
     _retryInIntMilli =
-        [ADJNonNegativeInt
-            instanceFromOptionalIntegerNumber:
-                [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
-                                                        key:ADJParamRetryInKey]
-            logger:logger];
-
+    [ADJNonNegativeInt
+     instanceFromOptionalIntegerNumber:
+         [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
+                                                    key:ADJParamRetryInKey]
+     logger:logger];
+    
     _retryIn = _retryInIntMilli != nil ?
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_retryInIntMilli] : nil;
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_retryInIntMilli] : nil;
+    
     _attributionJson =
-        [ADJUtilMap extractDictionaryValueWithDictionary:_jsonDictionary
-                                                      key:ADJParamAttributionKey];
-
+    [ADJUtilMap extractDictionaryValueWithDictionary:_jsonDictionary
+                                                 key:ADJParamAttributionKey];
+    
     // is only considered processed by with a valid JSON
     //  AND if it did not received "retry_in"
     _processedByServer = _jsonDictionary != nil && _retryIn == nil;
-
+    
     NSString *_Nonnull responseMessage = _serverMessage != nil ?
-        [NSString stringWithFormat:@"Response message: %@", _serverMessage]
-        : @"Without response message";
-
+    [NSString stringWithFormat:@"Response message: %@", _serverMessage]
+    : @"Without response message";
+    
     if ([sdkResponseDataBuilder okResponseCode]) {
         [logger info:@"%@", responseMessage];
     } else {
         [logger error:@"%@", responseMessage];
     }
-
+    
     return self;
 }
 
@@ -171,7 +169,7 @@
     if (self.failedToProcessLocally) {
         return NO;
     }
-
+    
     return ! self.processedByServer;
 }
 
@@ -179,28 +177,28 @@
     if (self.trackingState == nil) {
         return NO;
     }
-
+    
     return [ADJParamOptOutValue isEqualToString:self.trackingState.stringValue];
 }
 
 - (nonnull ADJNonEmptyString *)generateSentShortDescription {
     NSMutableString *_Nonnull sb =
-        [NSMutableString stringWithFormat:@"Package %@%@ processed",
-            [self.sourcePackage generateShortDescription],
-            self.processedByServer ? @"": @" not"];
-
+    [NSMutableString stringWithFormat:@"Package %@%@ processed",
+     [self.sourcePackage generateShortDescription],
+     self.processedByServer ? @"": @" not"];
+    
     if (self.serverMessage != nil) {
         [sb appendFormat:@" with response message: %@", self.serverMessage];
     } else {
         [sb appendString:@" without response message"];
     }
-
+    
     if (self.errorMessages != nil) {
         [sb appendFormat:@" and with local error message(s):\n%@", self.errorMessages];
     } else {
         [sb appendString:@" and without local error messages"];
     }
-
+    
     return [[ADJNonEmptyString alloc] initWithConstStringValue:(NSString *_Nonnull)sb];
 }
 

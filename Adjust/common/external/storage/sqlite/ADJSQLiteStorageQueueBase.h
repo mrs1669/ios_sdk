@@ -18,13 +18,12 @@
 
 @interface ADJSQLiteStorageQueueBase<E> : ADJSQLiteStorageBase
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    source:(nonnull NSString *)source
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController
-    tableName:(nonnull NSString *)tableName
-    metadataTypeValue:(nonnull NSString *)metadataTypeValue;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                       source:(nonnull NSString *)source
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+                                    tableName:(nonnull NSString *)tableName
+                            metadataTypeValue:(nonnull NSString *)metadataTypeValue;
 
 // protected abstract
 - (nullable E)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData;
@@ -41,15 +40,13 @@
 - (nonnull NSArray<ADJNonNegativeInt *> *)copySortedElementPositionList;
 - (nonnull NSDictionary<ADJNonNegativeInt *, E> *)copyElementWithPositionList;
 
-- (nonnull ADJNonNegativeInt *)
-    enqueueElementToLast:(nonnull E)newElement
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+- (nonnull ADJNonNegativeInt *)enqueueElementToLast:(nonnull E)newElement
+                                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 - (nullable E)removeElementAtFront;
 - (nullable E)removeElementByPosition:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
 - (BOOL)removeElementByPositionInTransaction:(nonnull ADJNonNegativeInt *)elementPositionToRemove
                                     sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb;
-- (nullable E)removeElementByPositionInMemoryOnly:
-    (nonnull ADJNonNegativeInt *)elementPositionToRemove;
+- (nullable E)removeElementByPositionInMemoryOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
 - (void)removeElementByPositionInStorageOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
 - (void)removeAllElements;
 

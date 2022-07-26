@@ -44,7 +44,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 - (id)initWithCoder:(NSCoder *)decoder {
     self = [super init];
     if (self == nil) return nil;
-
+    
     if ([decoder containsValueForKey:kTrackerTokenKey]) {
         _trackerToken = [decoder decodeObjectForKey:kTrackerTokenKey];
     }
@@ -78,7 +78,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     if ([decoder containsValueForKey:kCostCurrencyKey]) {
         _costCurrency = [decoder decodeObjectForKey:kCostCurrencyKey];
     }
-
+    
     return self;
 }
 
@@ -88,19 +88,19 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                @"ADJV4Attribution",
-                    kTrackerTokenKey, self.trackerToken,
-                    kTrackerNameKey, self.trackerName,
-                    kNetworkKey, self.network,
-                    kCampaignKey, self.campaign,
-                    kAdgroupKey, self.adgroup,
-                    kCreativeKey, self.creative,
-                    kClickLabelKey, self.clickLabel,
-                    kAdidKey, self.adid,
-                    kCostTypeKey, self.costType,
-                    kCostAmountKey, self.costAmount,
-                    kCostCurrencyKey, self.costCurrency,
-                nil];
+            @"ADJV4Attribution",
+            kTrackerTokenKey, self.trackerToken,
+            kTrackerNameKey, self.trackerName,
+            kNetworkKey, self.network,
+            kCampaignKey, self.campaign,
+            kAdgroupKey, self.adgroup,
+            kCreativeKey, self.creative,
+            kClickLabelKey, self.clickLabel,
+            kAdidKey, self.adid,
+            kCostTypeKey, self.costType,
+            kCostAmountKey, self.costAmount,
+            kCostCurrencyKey, self.costCurrency,
+            nil];
 }
 
 @end

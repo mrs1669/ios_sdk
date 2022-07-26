@@ -12,11 +12,10 @@
 
 @interface ADJExternalConfigData : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithTimeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
-    libraryMaxReadAttempts:(nullable ADJNonNegativeInt *)libraryMaxReadAttempts
-    delayBetweenAttempts:(nullable ADJTimeLengthMilli *)delayBetweenAttempts
-    cacheValidityPeriod:(nullable ADJTimeLengthMilli *)cacheValidityPeriod;
+- (nonnull instancetype)initWithTimeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
+                           libraryMaxReadAttempts:(nullable ADJNonNegativeInt *)libraryMaxReadAttempts
+                             delayBetweenAttempts:(nullable ADJTimeLengthMilli *)delayBetweenAttempts
+                              cacheValidityPeriod:(nullable ADJTimeLengthMilli *)cacheValidityPeriod;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

@@ -15,23 +15,21 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *libraryMaxReadAttempts;
  @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *delayBetweenAttempts;
  @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *cacheValidityPeriod;
-*/
+ */
 
 @implementation ADJExternalConfigData
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithTimeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
-    libraryMaxReadAttempts:(nullable ADJNonNegativeInt *)libraryMaxReadAttempts
-    delayBetweenAttempts:(nullable ADJTimeLengthMilli *)delayBetweenAttempts
-    cacheValidityPeriod:(nullable ADJTimeLengthMilli *)cacheValidityPeriod
-{
+- (nonnull instancetype)initWithTimeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
+                           libraryMaxReadAttempts:(nullable ADJNonNegativeInt *)libraryMaxReadAttempts
+                             delayBetweenAttempts:(nullable ADJTimeLengthMilli *)delayBetweenAttempts
+                              cacheValidityPeriod:(nullable ADJTimeLengthMilli *)cacheValidityPeriod {
     self = [super init];
-
+    
     _timeoutPerAttempt = timeoutPerAttempt;
     _libraryMaxReadAttempts = libraryMaxReadAttempts;
     _delayBetweenAttempts = delayBetweenAttempts;
     _cacheValidityPeriod = cacheValidityPeriod;
-
+    
     return self;
 }
 

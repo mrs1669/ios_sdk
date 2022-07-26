@@ -24,17 +24,18 @@ NSString *const ADJAdjustLogLevelInfo = @"Info";
 NSString *const ADJAdjustLogLevelError = @"Error";
 
 @implementation ADJAdjustLogMessageData
+
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLogMessage:(nonnull NSString *)logMessage
                                     source:(nonnull NSString *)source
-                            messageLogLevel:(nonnull NSString *)messageLogLevel
+                           messageLogLevel:(nonnull NSString *)messageLogLevel
 {
     self = [super init];
-
+    
     _logMessage = logMessage;
     _source = source;
     _messageLogLevel = messageLogLevel;
-
+    
     return self;
 }
 - (nullable instancetype)init {
@@ -45,8 +46,8 @@ NSString *const ADJAdjustLogLevelError = @"Error";
 #pragma mark Public API
 - (nonnull NSString *)generateFullLog {
     return [ADJAdjustLogMessageData generateFullLogWithMessage:self.logMessage
-                                                         source:self.source
-                                                messageLogLevel:self.messageLogLevel];
+                                                        source:self.source
+                                               messageLogLevel:self.messageLogLevel];
 }
 
 + (nonnull NSString *)generateFullLogWithMessage:(nonnull NSString *)logMessage

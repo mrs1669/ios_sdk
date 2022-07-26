@@ -27,13 +27,11 @@
     return [self oneInstance];
 }
 
-+ (nullable instancetype)instanceFromOptionalNonNegativeInt:
-    (nullable ADJNonNegativeInt *)nonNegativeInt
-{
++ (nullable instancetype)instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt {
     if (nonNegativeInt == nil) {
         return nil;
     }
-
+    
     return [[self alloc] initWithCountValue:nonNegativeInt];
 }
 
@@ -42,7 +40,7 @@
 {
     return [self instanceFromOptionalNonNegativeInt:
             [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
-                                                 logger:logger]];
+                                                logger:logger]];
 }
 
 + (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
@@ -50,14 +48,14 @@
 {
     return [self instanceFromOptionalNonNegativeInt:
             [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
-                                                         logger:logger]];
+                                                        logger:logger]];
 }
 
 - (nonnull instancetype)initWithCountValue:(nonnull ADJNonNegativeInt *)countValue {
     self = [super init];
-
+    
     _countValue = countValue;
-
+    
     return self;
 }
 - (nullable instancetype)init {
@@ -88,7 +86,7 @@
 - (nonnull ADJTallyCounter *)generateIncrementedCounter {
     return [[ADJTallyCounter alloc] initWithCountValue:
             [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                self.countValue.uIntegerValue + 1]];
+             self.countValue.uIntegerValue + 1]];
 }
 
 #pragma mark - ADJPackageParamValueSerializable
@@ -114,9 +112,9 @@
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + [self.countValue hash];
-
+    
     return hashCode;
 }
 
@@ -124,11 +122,11 @@
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJTallyCounter class]]) {
         return NO;
     }
-
+    
     ADJTallyCounter *other = (ADJTallyCounter *)object;
     return [ADJUtilObj objectEquals:self.countValue other:other.countValue];
 }

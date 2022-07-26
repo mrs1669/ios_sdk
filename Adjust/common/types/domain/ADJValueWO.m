@@ -19,10 +19,10 @@
 #pragma mark Instantiation
 - (nonnull instancetype)init {
     self = [super init];
-
+    
     _changedValue = nil;
     _valueChanged = NO;
-
+    
     return self;
 }
 

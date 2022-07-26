@@ -14,13 +14,11 @@
 
 @interface ADJSdkPackageSenderPinningDelegate : ADJCommonBase<NSURLSessionDelegate>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    publicKeyHash:(nonnull ADJNonEmptyString *)publicKeyHash;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                publicKeyHash:(nonnull ADJNonEmptyString *)publicKeyHash;
 
 // public api
-- (void)setRequestDataWeakRefWithBuilder:
-    (nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder;
+- (void)setRequestDataWeakRefWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder;
 
 - (void)clearRequestDataWeakRef;
 

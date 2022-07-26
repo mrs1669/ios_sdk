@@ -29,48 +29,43 @@
     return [self oneMilliInstance];
 }
 
-+ (nullable instancetype)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+                                                  logger:(nonnull ADJLogger *)logger {
     return [self instanceFromOptionalNonNegativeInt:
             [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
-                                                         logger:logger]];
+                                                        logger:logger]];
 }
 
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger
-{
+                                          logger:(nonnull ADJLogger *)logger {
     return [self instanceFromOptionalNonNegativeInt:
             [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
-                                                 logger:logger]];
+                                                logger:logger]];
 }
 
-+ (nullable instancetype)
-    instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
+                                                          logger:(nonnull ADJLogger *)logger {
     if (numberDoubleSeconds == nil) {
         return nil;
     }
-
+    
     ADJNonNegativeInt *_Nullable millisecondsSpan =
-        [ADJNonNegativeInt
-            instanceFromIntegerNumber:@(numberDoubleSeconds.doubleValue * ADJSecondToMilliDouble)
-            logger:logger];
-
+    [ADJNonNegativeInt
+     instanceFromIntegerNumber:@(numberDoubleSeconds.doubleValue * ADJSecondToMilliDouble)
+     logger:logger];
+    
     if (millisecondsSpan == nil) {
         return nil;
     }
-
+    
     return [[self alloc] initWithMillisecondsSpan:millisecondsSpan];
 }
 
 - (nonnull instancetype)initWithMillisecondsSpan:(nonnull ADJNonNegativeInt *)millisecondsSpan {
     self = [super init];
-
+    
     _millisecondsSpan = millisecondsSpan;
-
+    
     return self;
 }
 
@@ -80,13 +75,11 @@
 }
 
 #pragma mark - Private constructors
-+ (nullable instancetype)
-    instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt
-{
++ (nullable instancetype)instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt {
     if (nonNegativeInt == nil) {
         return nil;
     }
-
+    
     return [[self alloc] initWithMillisecondsSpan:nonNegativeInt];
 }
 
@@ -109,15 +102,12 @@
 }
 
 #pragma mark Public API
-- (nonnull ADJTimeLengthMilli *)
-    generateTimeLengthWithAddedTimeLength:
-        (nonnull ADJTimeLengthMilli *)timeLengthToAdd
-{
+- (nonnull ADJTimeLengthMilli *)generateTimeLengthWithAddedTimeLength:(nonnull ADJTimeLengthMilli *)timeLengthToAdd {
     ADJNonNegativeInt *_Nonnull addedLengthMilli =
-        [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-            self.millisecondsSpan.uIntegerValue
-            + timeLengthToAdd.millisecondsSpan.uIntegerValue];
-
+    [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+     self.millisecondsSpan.uIntegerValue
+     + timeLengthToAdd.millisecondsSpan.uIntegerValue];
+    
     return [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:addedLengthMilli];
 }
 
@@ -131,8 +121,8 @@
 
 - (nonnull NSString *)secondsDescription {
     return [NSString stringWithFormat:@"%@ second(s)",
-                [ADJUtilF secondsFormat:
-                    [NSNumber numberWithDouble:[self secondsInterval]]]];
+            [ADJUtilF secondsFormat:
+             [NSNumber numberWithDouble:[self secondsInterval]]]];
 }
 
 - (BOOL)isZero {
@@ -166,9 +156,9 @@
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + [self.millisecondsSpan hash];
-
+    
     return hashCode;
 }
 
@@ -176,11 +166,11 @@
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJTimeLengthMilli class]]) {
         return NO;
     }
-
+    
     ADJTimeLengthMilli *other = (ADJTimeLengthMilli *)object;
     return [ADJUtilObj objectEquals:self.millisecondsSpan other:other.millisecondsSpan];
 }

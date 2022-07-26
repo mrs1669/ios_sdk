@@ -22,11 +22,11 @@
         [self doesNotRecognizeSelector:_cmd];
         return nil;
     }
-
+    
     self = [super init];
-
+    
     _subscriberSet = [NSHashTable weakObjectsHashTable];
-
+    
     return self;
 }
 
@@ -42,18 +42,13 @@
 - (BOOL)hasSubscribers {
     return self.subscriberSet.count != 0;
 }
-- (void)
-    notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(id _Nonnull subscriber))subscriberBlock
-{
-    [ADJPublisherBase
-        notifySubscribersWithSubscriberBlock:subscriberBlock
-        subscriberSet:self.subscriberSet];
+- (void)notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(id _Nonnull subscriber))subscriberBlock {
+    [ADJPublisherBase notifySubscribersWithSubscriberBlock:subscriberBlock
+                                             subscriberSet:self.subscriberSet];
 }
 
-+ (void)
-    notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(id _Nonnull subscriber))subscriberBlock
-    subscriberSet:(nonnull NSHashTable *)subscriberSet
-{
++ (void)notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(id _Nonnull subscriber))subscriberBlock
+                               subscriberSet:(nonnull NSHashTable *)subscriberSet {
     for (id subscriber in subscriberSet) {
         // TODO: figure out if released references still show up in fast enumeration
         if (subscriber) {

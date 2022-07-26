@@ -21,8 +21,7 @@
 // - implemented by final class
 - (nullable NSString *)sqlStringForOnUpgrade:(int)oldVersion;
 
-- (void)
-    migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-    v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData;
+- (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData;
 
 @end

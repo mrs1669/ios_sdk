@@ -24,7 +24,7 @@
 
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
-    NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
+NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
 
 @property (nonnull, readonly, strong, nonatomic) ADJConsoleLogger *consoleLogger;
 
@@ -35,15 +35,15 @@
 #pragma mark Instantiation
 - (nonnull instancetype)init {
     self = [super init];
-
+    
     _logPublisher = [[ADJLogPublisher alloc] init];
-
+    
     _logMessageDataArray = [NSMutableArray array];
-
+    
     _consoleLogger = [[ADJConsoleLogger alloc] init];
-
+    
     _canPublish = NO;
-
+    
     return self;
 }
 
@@ -59,36 +59,35 @@
 #pragma mark - ADJLogCollector
 - (void)collectLogMessage:(nonnull NSString *)logMessage
                    source:(nonnull NSString *)source
-           messageLogLevel:(nonnull NSString *)messageLogLevel
-{
+          messageLogLevel:(nonnull NSString *)messageLogLevel {
     __typeof(self) __weak weakSelf = self;
     void (^_Nonnull publishLogMessageBlock)(void)  = ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         [strongSelf.consoleLogger didLogMessage:logMessage
                                          source:source
                                 messageLogLevel:messageLogLevel];
-
+        
         if (strongSelf.canPublish) {
             [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
-                ^(id<ADJLogSubscriber> _Nonnull subscriber)
-            {
+             ^(id<ADJLogSubscriber> _Nonnull subscriber)
+             {
                 [subscriber didLogWithMessage:logMessage
                                        source:source
                                adjustLogLevel:messageLogLevel];
             }];
         } else {
             [strongSelf.logMessageDataArray addObject:
-                [[ADJAdjustLogMessageData alloc]
-                     initWithLogMessage:[NSString stringWithFormat:@"[PreInit]%@", logMessage]
-                     source:source
-                 messageLogLevel:messageLogLevel]];
+             [[ADJAdjustLogMessageData alloc]
+              initWithLogMessage:[NSString stringWithFormat:@"[PreInit]%@", logMessage]
+              source:source
+              messageLogLevel:messageLogLevel]];
         }
     };
-
+    
     ADJSingleThreadExecutor *_Nullable commonExecutor = self.commonExecutorWeak;
-
+    
     if (commonExecutor != nil) {
         [commonExecutor executeInSequenceWithBlock:publishLogMessageBlock];
     } else {
@@ -99,14 +98,12 @@
 #pragma mark - ADJLoggerFactory
 - (nonnull ADJLogger *)createLoggerWithSource:(nonnull NSString *)source {
     return [[ADJLogger alloc] initWithSource:source
-                                 logCollector:self];
+                                logCollector:self];
 }
 
 #pragma mark - Subscriptions
-- (void)
-    ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-{
+- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                            publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
     [sdkInitPublisher addSubscriber:self];
     [publishingGatePublisher addSubscriber:self];
 }
@@ -117,15 +114,15 @@
     void (^_Nonnull sdkInitBlock)(void)  = ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         [strongSelf.consoleLogger
-            didSdkInitWithIsSandboxEnvironment:
-                clientConfigData.isSandboxEnvironmentOrElseProduction
-            logLevel:clientConfigData.logLevel];
+         didSdkInitWithIsSandboxEnvironment:
+             clientConfigData.isSandboxEnvironmentOrElseProduction
+         logLevel:clientConfigData.logLevel];
     };
-
+    
     ADJSingleThreadExecutor *_Nullable commonExecutor = self.commonExecutorWeak;
-
+    
     if (commonExecutor != nil) {
         [commonExecutor executeInSequenceWithBlock:sdkInitBlock];
     } else {
@@ -139,24 +136,24 @@
     void (^_Nonnull canPublish)(void)  = ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         strongSelf.canPublish = YES;
-
+        
         NSArray<ADJAdjustLogMessageData *> *_Nonnull preInitLogMessageArray =
-            [strongSelf.logMessageDataArray copy];
-
+        [strongSelf.logMessageDataArray copy];
+        
         [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
-            ^(id<ADJLogSubscriber> _Nonnull subscriber)
-        {
+         ^(id<ADJLogSubscriber> _Nonnull subscriber)
+         {
             [subscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
         }];
-
+        
         // can flush memory stored logs
         [strongSelf.logMessageDataArray removeAllObjects];
     };
-
+    
     ADJSingleThreadExecutor *_Nullable commonExecutor = self.commonExecutorWeak;
-
+    
     if (commonExecutor != nil) {
         [commonExecutor executeInSequenceWithBlock:canPublish];
     } else {

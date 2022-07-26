@@ -24,12 +24,10 @@
 
 - (BOOL)hasSubscribers;
 
-- (void)
-    notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(T _Nonnull subscriber))subscriberBlock;
+- (void)notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(T _Nonnull subscriber))subscriberBlock;
 
-+ (void)
-    notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(T _Nonnull subscriber))subscriberBlock
-    subscriberSet:(nonnull NSHashTable<T> *)subscriberSet;
++ (void)notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(T _Nonnull subscriber))subscriberBlock
+                               subscriberSet:(nonnull NSHashTable<T> *)subscriberSet;
 
 @end
 

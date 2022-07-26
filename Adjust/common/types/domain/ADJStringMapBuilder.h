@@ -24,17 +24,17 @@
 
 // public api  
 - (nullable ADJNonEmptyString *)addPairWithValue:(nonnull ADJNonEmptyString *)value
-                                              key:(nonnull NSString *)key;
+                                             key:(nonnull NSString *)key;
 
 - (nullable ADJNonEmptyString *)
-    addPairWithConstValue:(nonnull NSString *)constValue
-    key:(nonnull NSString *)key;
+addPairWithConstValue:(nonnull NSString *)constValue
+key:(nonnull NSString *)key;
 
 - (nullable ADJNonEmptyString *)pairValueWithKey:
-    (nonnull NSString *)key;
+(nonnull NSString *)key;
 
 - (nullable ADJNonEmptyString *)removePairWithKey:
-    (nonnull NSString *)key;
+(nonnull NSString *)key;
 
 - (void)addAllPairsWithStringMap:(nonnull ADJStringMap *)stringMap;
 

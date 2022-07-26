@@ -16,20 +16,19 @@
  //public @NonNull final ConnectionOptions connectionOptions;
  //public @NonNull final HttpsURLConnectionProvider httpsURLConnectionProvider;
  @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *timeoutMilli;
-*/
+ */
 
 @implementation ADJNetworkEndpointData
 #pragma mark Instantiation
 - (nonnull instancetype)initWithExtraPath:(nullable NSString *)extraPath
                              urlOverwrite:(nullable NSString *)urlOverwrite
-                             timeoutMilli:(nonnull ADJTimeLengthMilli *)timeoutMilli
-{
+                             timeoutMilli:(nonnull ADJTimeLengthMilli *)timeoutMilli {
     self = [super init];
-
+    
     _extraPath = extraPath;
     _urlOverwrite = urlOverwrite;
     _timeoutMilli = timeoutMilli;
-
+    
     return self;
 }
 

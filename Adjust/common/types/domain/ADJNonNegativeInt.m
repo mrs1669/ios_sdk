@@ -33,17 +33,17 @@
                                             logger:(nonnull ADJLogger *)logger
 {
     return [self instanceFromIntegerNumber:integerNumber
-                                  logger:logger
-                              isOptional:NO];
+                                    logger:logger
+                                isOptional:NO];
 }
 
 + (nullable instancetype)instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber
                                                     logger:(nonnull ADJLogger *)logger
 {
     return [self instanceFromIntegerNumber:integerNumber
-                               logger:logger
-                           isOptional:YES];
-
+                                    logger:logger
+                                isOptional:YES];
+    
 }
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
                                           logger:(nonnull ADJLogger *)logger
@@ -63,9 +63,9 @@
 
 - (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue {
     self = [super init];
-
+    
     _uIntegerValue = uIntegerValue;
-
+    
     return self;
 }
 
@@ -103,13 +103,13 @@
         }
         return nil;
     }
-
+    
     if (integerNumber.integerValue < 0) {
         [logger error:@"Cannot create non negative int with negative %@ value",
-            [ADJUtilF integerFormat:integerNumber.integerValue]];
+         [ADJUtilF integerFormat:integerNumber.integerValue]];
         return nil;
     }
-
+    
     return [[self alloc] initWithUIntegerValue:integerNumber.unsignedIntegerValue];
 }
 
@@ -123,11 +123,11 @@
         }
         return nil;
     }
-
+    
     return [self instanceFromIntegerNumber:
             [ADJUtilConv convertToIntegerNumberWithStringValue:ioDataValue.stringValue]
-                                  logger:logger
-                              isOptional:isOptional];
+                                    logger:logger
+                                isOptional:isOptional];
 }
 
 #pragma mark Public API
@@ -173,9 +173,9 @@
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + (NSUInteger)self.uIntegerValue;
-
+    
     return hashCode;
 }
 
@@ -183,11 +183,11 @@
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJNonNegativeInt class]]) {
         return NO;
     }
-
+    
     ADJNonNegativeInt *other = (ADJNonNegativeInt *)object;
     return self.uIntegerValue == other.uIntegerValue;
 }

@@ -26,15 +26,14 @@
 
 @interface ADJSdkPackageSender : ADJCommonBase<NSURLSessionDelegate>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    sourceDescription:(nonnull NSString *)sourceDescription
-    threadpool:(nonnull id<ADJThreadPool>)threadpool
-    sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
-    sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
-    networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                            sourceDescription:(nonnull NSString *)sourceDescription
+                                   threadpool:(nonnull id<ADJThreadPool>)threadpool
+                   sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
+                         sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
+                          networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
+                            adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData;
 
 // public api
 - (void)sendSdkPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData

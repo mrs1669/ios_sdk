@@ -13,10 +13,9 @@
 
 @interface ADJSessionResponseData : ADJSdkResponseBaseData
 // instantiation
-- (nonnull instancetype)
-    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-    sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
-    logger:(nonnull ADJLogger *)logger;
+- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+                     sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
+                                 logger:(nonnull ADJLogger *)logger;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJSessionPackageData *sourceSessionPackage;

@@ -18,7 +18,6 @@
 - (nonnull instancetype)initWithLongWait;
 
 // public api
-- (nonnull ADJTimeLengthMilli *)calculateBackoffTimeWithRetries:
-    (nonnull ADJNonNegativeInt *)retries;
+- (nonnull ADJTimeLengthMilli *)calculateBackoffTimeWithRetries:(nonnull ADJNonNegativeInt *)retries;
 
 @end

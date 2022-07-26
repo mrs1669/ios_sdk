@@ -9,6 +9,7 @@
 #import "ADJCommonBase.h"
 
 @implementation ADJCommonBase
+
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                        source:(nonnull NSString *)source
@@ -18,12 +19,12 @@
         [self doesNotRecognizeSelector:_cmd];
         return nil;
     }
-
+    
     self = [super init];
-
+    
     _logger = [loggerFactory createLoggerWithSource:source];
     _source = source;
-
+    
     return self;
 }
 

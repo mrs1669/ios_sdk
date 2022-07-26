@@ -27,7 +27,7 @@
                                              logger:(nonnull ADJLogger *)logger;
 
 - (nonnull instancetype)initWithConstStringValue:(nonnull NSString *)constStringValue
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

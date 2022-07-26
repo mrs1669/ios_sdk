@@ -42,28 +42,28 @@ static NSString *const kKindKey = @"kind";
  @property (nullable, readonly, strong, nonatomic) NSDictionary *callbackParameters;
  @property (nullable, readonly, strong, nonatomic) NSString *suffix;
  @property (nullable, readonly, strong, nonatomic) NSString *kind;
-
+ 
  */
 @implementation ADJV4ActivityPackage
 #pragma mark Instantiation
 - (id)init {
     self = [super init];
-
+    
     if (self == nil) {
         return nil;
     }
-
+    
     return self;
 }
 
 #pragma mark - NSCoding
 - (id)initWithCoder:(NSCoder *)decoder {
     self = [super init];
-
+    
     if (self == nil) {
         return self;
     }
-
+    
     if ([decoder containsValueForKey:kPathKey]) {
         _path = [decoder decodeObjectForKey:kPathKey];
     }
@@ -88,11 +88,12 @@ static NSString *const kKindKey = @"kind";
     if ([decoder containsValueForKey:kKindKey]) {
         _kind = [decoder decodeObjectForKey:kKindKey];
     }
-
+    
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
+    
 }
 
 @end

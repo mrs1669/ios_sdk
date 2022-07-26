@@ -34,14 +34,14 @@ static NSUInteger kLongMaxWaitHours = 24;
 #pragma mark Instantiation
 - (nonnull instancetype)initWithShortWait {
     ADJTimeLengthMilli *_Nonnull milliMultiplier =
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:kShortMilliMultiplier]];
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+     [[ADJNonNegativeInt alloc] initWithUIntegerValue:kShortMilliMultiplier]];
+    
     ADJTimeLengthMilli *_Nonnull maxWaitMilli =
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                kShortMaxHourCount * ADJOneHourMilli]];
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+     [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+      kShortMaxHourCount * ADJOneHourMilli]];
+    
     return [self initWithMinRetriesBeforeBackoff:[ADJNonNegativeInt instanceAtOne]
                                       multiplier:milliMultiplier
                                          maxWait:maxWaitMilli];
@@ -49,15 +49,15 @@ static NSUInteger kLongMaxWaitHours = 24;
 
 - (nonnull instancetype)initWithMediumWait {
     ADJTimeLengthMilli *_Nonnull milliMultiplier =
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-             kMediumSecondsMultiplier * ADJOneSecondMilli]];
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+     [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+      kMediumSecondsMultiplier * ADJOneSecondMilli]];
+    
     ADJTimeLengthMilli *_Nonnull maxWaitMilli =
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                kMediumMaxHourCount * ADJOneHourMilli]];
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+     [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+      kMediumMaxHourCount * ADJOneHourMilli]];
+    
     return [self initWithMinRetriesBeforeBackoff:[ADJNonNegativeInt instanceAtOne]
                                       multiplier:milliMultiplier
                                          maxWait:maxWaitMilli];
@@ -65,70 +65,66 @@ static NSUInteger kLongMaxWaitHours = 24;
 
 - (nonnull instancetype)initWithLongWait {
     ADJTimeLengthMilli *_Nonnull milliMultiplier =
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                kLongMinutesMultiplier * ADJOneMinuteMilli]];
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+     [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+      kLongMinutesMultiplier * ADJOneMinuteMilli]];
+    
     ADJTimeLengthMilli *_Nonnull maxWaitMilli =
-        [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                kLongMaxWaitHours * ADJOneHourMilli]];
-
+    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+     [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+      kLongMaxWaitHours * ADJOneHourMilli]];
+    
     return [self initWithMinRetriesBeforeBackoff:[ADJNonNegativeInt instanceAtOne]
                                       multiplier:milliMultiplier
                                          maxWait:maxWaitMilli];
 }
 
 #pragma mark - Private constructors
-- (nonnull instancetype)
-    initWithMinRetriesBeforeBackoff:(nonnull ADJNonNegativeInt *)minRetriesBeforeBackoff
-    multiplier:(nonnull ADJTimeLengthMilli *)multiplier
-    maxWait:(nonnull ADJTimeLengthMilli *)maxWait
-{
+- (nonnull instancetype)initWithMinRetriesBeforeBackoff:(nonnull ADJNonNegativeInt *)minRetriesBeforeBackoff
+                                             multiplier:(nonnull ADJTimeLengthMilli *)multiplier
+                                                maxWait:(nonnull ADJTimeLengthMilli *)maxWait {
     self = [super init];
-
+    
     _minRetriesBeforeBackoff = minRetriesBeforeBackoff;
     _multiplier = multiplier;
     _maxWait = maxWait;
-
+    
     return self;
 }
 
 #pragma mark Public API
-- (nonnull ADJTimeLengthMilli *)calculateBackoffTimeWithRetries:
-    (nonnull ADJNonNegativeInt *)retries
-{
+- (nonnull ADJTimeLengthMilli *)calculateBackoffTimeWithRetries:(nonnull ADJNonNegativeInt *)retries {
     if (retries.uIntegerValue < self.minRetriesBeforeBackoff.uIntegerValue) {
         return [ADJTimeLengthMilli instanceWithoutTimeSpan];
     }
-
+    
     // start with base 0 and increment by 1 for each call
     NSUInteger exponentBase =
-        retries.uIntegerValue - self.minRetriesBeforeBackoff.uIntegerValue;
-
+    retries.uIntegerValue - self.minRetriesBeforeBackoff.uIntegerValue;
+    
     // get the exponential time from the power of 2: 1, 2, 4, 8, 16, ...
     double powerMultipler = powl(2.0, (long) exponentBase);
-
+    
     // calculate exponential time by multiplying the power value * with the multiplier
     NSUInteger exponentialMili =
-        self.multiplier.millisecondsSpan.uIntegerValue * (NSUInteger)powerMultipler;
-
+    self.multiplier.millisecondsSpan.uIntegerValue * (NSUInteger)powerMultipler;
+    
     // return max allowed time to wait if calculated exponential time is already larger
     if (exponentialMili > self.maxWait.millisecondsSpan.uIntegerValue) {
         return self.maxWait;
     }
-
+    
     // generate jitter value from 1 to exponentialMili
     unsigned int randomJitterToAdd = arc4random_uniform((unsigned int)exponentialMili) + 1;
-
+    
     NSUInteger waitingTimeWithJitter = exponentialMili + (NSUInteger)randomJitterToAdd;
-
+    
     if (waitingTimeWithJitter > self.maxWait.millisecondsSpan.uIntegerValue) {
         return self.maxWait;
     }
-
+    
     return [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-                [[ADJNonNegativeInt alloc] initWithUIntegerValue:waitingTimeWithJitter]];
+            [[ADJNonNegativeInt alloc] initWithUIntegerValue:waitingTimeWithJitter]];
 }
 
 @end

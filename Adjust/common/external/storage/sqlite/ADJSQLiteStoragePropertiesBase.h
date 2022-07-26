@@ -15,14 +15,13 @@
 
 @interface ADJSQLiteStoragePropertiesBase<D> : ADJSQLiteStorageBase
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    source:(nonnull NSString *)source
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController
-    tableName:(nonnull NSString *)tableName
-    metadataTypeValue:(nonnull NSString *)metadataTypeValue
-    initialDefaultDataValue:(nonnull D)initialDefaultDataValue;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                       source:(nonnull NSString *)source
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+                                    tableName:(nonnull NSString *)tableName
+                            metadataTypeValue:(nonnull NSString *)metadataTypeValue
+                      initialDefaultDataValue:(nonnull D)initialDefaultDataValue;
 
 // public api
 - (nonnull D)readOnlyStoredDataValue;

@@ -15,10 +15,9 @@
 
 @interface ADJSQLiteStatement : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithSqliteStatement:(nonnull sqlite3_stmt *)sqliteStatement
-    sqlString:(nonnull NSString *)sqlString
-    sqiteDbMessageProvider:(nonnull id<ADJSQLiteDbMessageProvider>)sqiteDbMessageProvider;
+- (nonnull instancetype)initWithSqliteStatement:(nonnull sqlite3_stmt *)sqliteStatement
+                                      sqlString:(nonnull NSString *)sqlString
+                         sqiteDbMessageProvider:(nonnull id<ADJSQLiteDbMessageProvider>)sqiteDbMessageProvider;
 
 // public api
 - (void)resetStatement;

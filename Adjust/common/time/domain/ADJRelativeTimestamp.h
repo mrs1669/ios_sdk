@@ -18,7 +18,6 @@
 
 - (nonnull instancetype)initWithTimeval:(struct timeval)timevalValue;
 
-
 - (BOOL)hasEnoughTimePassedSince:(nonnull ADJRelativeTimestamp *)sinceTime
                 enoughTimeLength:(nonnull ADJTimeLengthMilli *)enoughTimeLength;
 

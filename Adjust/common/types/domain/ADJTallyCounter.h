@@ -23,7 +23,7 @@
 + (nonnull instancetype)instanceStartingAtOne;
 
 + (nullable instancetype)instanceFromOptionalNonNegativeInt:
-    (nullable ADJNonNegativeInt *)nonNegativeInt;
+(nullable ADJNonNegativeInt *)nonNegativeInt;
 
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
                                           logger:(nonnull ADJLogger *)logger;
@@ -32,7 +32,7 @@
                                                   logger:(nonnull ADJLogger *)logger;
 
 - (nonnull instancetype)initWithCountValue:(nonnull ADJNonNegativeInt *)countValue
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties

@@ -16,7 +16,7 @@
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readwrite, strong, nonatomic)
-     NSDictionary<NSString *, ADJNonEmptyString*> *map;
+ NSDictionary<NSString *, ADJNonEmptyString*> *map;
  */
 
 @interface ADJStringMap ()
@@ -24,7 +24,7 @@
 #pragma mark - Internal variables
 @property (nullable, readwrite, strong, nonatomic) ADJNonEmptyString *cachedJsonString;
 @property (nullable, readwrite, strong, nonatomic)
-    NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
+NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
 
 @end
 
@@ -35,7 +35,7 @@
 
 #pragma mark Instantiation
 - (nonnull instancetype)initWithStringMapBuilder:
-    (nonnull ADJStringMapBuilder *)stringMapBuilder
+(nonnull ADJStringMapBuilder *)stringMapBuilder
 {
     return [self initWithMap:[stringMapBuilder mapCopy]];
 }
@@ -47,15 +47,15 @@
 
 #pragma mark - Private constructors
 - (nonnull instancetype)initWithMap:
-    (nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)map
+(nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)map
 {
     self = [super init];
-
+    
     _map = map;
     _cachedJsonString = nil;
     _cachedFoundationStringMap = nil;
     _cachedJsonStringToken = 0;
-
+    
     return self;
 }
 
@@ -86,14 +86,14 @@
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:@""
-                                  stringKeyDictionary:self.map];
+                                 stringKeyDictionary:self.map];
 }
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + [self.map hash];
-
+    
     return hashCode;
 }
 
@@ -101,11 +101,11 @@
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJStringMap class]]) {
         return NO;
     }
-
+    
     ADJStringMap *other = (ADJStringMap *)object;
     return [ADJUtilObj objectEquals:self.map other:other.map];
 }
@@ -114,10 +114,10 @@
 - (void)injectCachedProperties {
     dispatch_once(&(self->_cachedJsonStringToken), ^{
         self.cachedFoundationStringMap = [self convertToFoundationStringMap];
-
+        
         NSString *_Nullable stringValue =
-            [ADJUtilF jsonFoundationValueFormat:self.cachedFoundationStringMap];
-
+        [ADJUtilF jsonFoundationValueFormat:self.cachedFoundationStringMap];
+        
         if (stringValue != nil) {
             self.cachedJsonString = [[ADJNonEmptyString alloc] initWithConstStringValue:stringValue];
         }
@@ -126,13 +126,13 @@
 
 - (nonnull NSDictionary<NSString *, NSString *> *)convertToFoundationStringMap {
     NSMutableDictionary<NSString *, NSString *> *_Nonnull foundationStringMap =
-        [NSMutableDictionary dictionaryWithCapacity:self.map.count];
-
+    [NSMutableDictionary dictionaryWithCapacity:self.map.count];
+    
     for (NSString *_Nonnull key in self.map) {
         ADJNonEmptyString *_Nonnull value = [self.map objectForKey:key];
         [foundationStringMap setObject:value.stringValue forKey:key];
     }
-
+    
     return foundationStringMap;
 }
 

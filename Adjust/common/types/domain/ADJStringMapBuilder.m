@@ -12,13 +12,13 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
-// @property (nonnull, readwrite, strong, nonatomic)
-//     NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
+ // @property (nonnull, readwrite, strong, nonatomic)
+ //     NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
  */
 @interface ADJStringMapBuilder ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
-    NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
+NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
 
 @end
 
@@ -30,7 +30,7 @@
 
 - (nonnull instancetype)initWithStringMap:(nonnull ADJStringMap *)stringMap {
     return [self initWithMapBuilderDictionary:
-                [[NSMutableDictionary alloc] initWithDictionary:stringMap.map]];
+            [[NSMutableDictionary alloc] initWithDictionary:stringMap.map]];
 }
 
 - (nullable instancetype)init {
@@ -40,30 +40,30 @@
 
 #pragma mark - Private constructors
 - (nonnull instancetype)initWithMapBuilderDictionary:
-    (nonnull NSMutableDictionary<NSString *, ADJNonEmptyString*> *)mapBuilder
+(nonnull NSMutableDictionary<NSString *, ADJNonEmptyString*> *)mapBuilder
 {
     self = [super init];
-
+    
     _mapBuilder = mapBuilder;
-
+    
     return self;
 }
 
 #pragma mark Public API
 - (nullable ADJNonEmptyString *)addPairWithValue:(nonnull ADJNonEmptyString *)value
-                                              key:(nonnull NSString *)key
+                                             key:(nonnull NSString *)key
 {
     ADJNonEmptyString *_Nullable previousValue =
-        [self pairValueWithKey:key];
-
+    [self pairValueWithKey:key];
+    
     [self.mapBuilder setObject:value forKey:key];
-
+    
     return previousValue;
 }
 
 - (nullable ADJNonEmptyString *)
-    addPairWithConstValue:(nonnull NSString *)constValue
-    key:(nonnull NSString *)key
+addPairWithConstValue:(nonnull NSString *)constValue
+key:(nonnull NSString *)key
 {
     return [self addPairWithValue:
             [[ADJNonEmptyString alloc] initWithConstStringValue:constValue]
@@ -71,18 +71,18 @@
 }
 
 - (nullable ADJNonEmptyString *)pairValueWithKey:
-    (nonnull NSString *)key
+(nonnull NSString *)key
 {
     return [self.mapBuilder objectForKey:key];
 }
 
 - (nullable ADJNonEmptyString *)removePairWithKey:
-    (nonnull NSString *)key
+(nonnull NSString *)key
 {
     ADJNonEmptyString *_Nullable previousValue = [self pairValueWithKey:key];
-
+    
     [self.mapBuilder removeObjectForKey:key];
-
+    
     return previousValue;
 }
 
@@ -109,8 +109,8 @@
 #pragma mark - NSCopying
 - (id)copyWithZone:(nullable NSZone *)zone {
     return [[ADJStringMapBuilder allocWithZone:zone]
-                initWithMapBuilderDictionary:
-                    [[NSMutableDictionary alloc] initWithDictionary:self.mapBuilder]];
+            initWithMapBuilderDictionary:
+                [[NSMutableDictionary alloc] initWithDictionary:self.mapBuilder]];
 }
 
 @end

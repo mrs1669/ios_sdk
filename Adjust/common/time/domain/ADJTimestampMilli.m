@@ -23,60 +23,51 @@
 @implementation ADJTimestampMilli
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger
-{
+                                                  logger:(nonnull ADJLogger *)logger {
     return [self instanceWithOptionalMillisecondsSince1970NonNegativeInt:
-                [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
-                                                     logger:logger]];
+            [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
+                                                        logger:logger]];
 }
 
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger
-{
+                                          logger:(nonnull ADJLogger *)logger {
     return [self instanceWithOptionalMillisecondsSince1970NonNegativeInt:
-                [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
-                                                     logger:logger]];
+            [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
+                                                logger:logger]];
 }
 
-+ (nullable instancetype)
-    instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970
+                                                           logger:(nonnull ADJLogger *)logger {
     NSNumber *_Nonnull milliSince1970Number =
-        [NSNumber numberWithDouble:timeIntervalSecondsSince1970 * ADJSecondToMilliDouble];
-
+    [NSNumber numberWithDouble:timeIntervalSecondsSince1970 * ADJSecondToMilliDouble];
+    
     ADJNonNegativeInt *_Nullable milliSince1970Int =
-        [ADJNonNegativeInt instanceFromIntegerNumber:milliSince1970Number
-                                           logger:logger];
-
+    [ADJNonNegativeInt instanceFromIntegerNumber:milliSince1970Number
+                                          logger:logger];
+    
     if (milliSince1970Int == nil) {
         return nil;
     }
-
+    
     return [[self alloc] initWithMillisecondsSince1970Int:milliSince1970Int];
 }
 
-+ (nullable instancetype)
-    instanceWithOptionalNumberDoubleSecondsSince1970:
-        (nullable NSNumber *)numberDoubleSecondsSince1970
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceWithOptionalNumberDoubleSecondsSince1970:(nullable NSNumber *)numberDoubleSecondsSince1970
+                                                                   logger:(nonnull ADJLogger *)logger {
     if (numberDoubleSecondsSince1970 == nil) {
         return nil;
     }
-
+    
     return [self instanceWithTimeIntervalSecondsSince1970:numberDoubleSecondsSince1970.doubleValue
                                                    logger:logger];
 }
 
-+ (nullable instancetype)
-    instanceWithNSDateValue:(nullable NSDate *)nsDateValue
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceWithNSDateValue:(nullable NSDate *)nsDateValue
+                                          logger:(nonnull ADJLogger *)logger {
     if (nsDateValue == nil) {
         return nil;
     }
-
+    
     return [self instanceWithTimeIntervalSecondsSince1970:nsDateValue.timeIntervalSince1970
                                                    logger:logger];
 }
@@ -87,55 +78,47 @@
 }
 
 #pragma mark - Private constructors
-+ (nullable instancetype)instanceWithOptionalMillisecondsSince1970NonNegativeInt:
-    (nullable ADJNonNegativeInt *)millisecondsSince1970NonNegativeInt
-{
++ (nullable instancetype)instanceWithOptionalMillisecondsSince1970NonNegativeInt:(nullable ADJNonNegativeInt *)millisecondsSince1970NonNegativeInt {
     if (millisecondsSince1970NonNegativeInt == nil) {
         return nil;
     }
-
+    
     return [[self alloc] initWithMillisecondsSince1970Int:millisecondsSince1970NonNegativeInt];
 }
 
- - (nonnull instancetype)initWithMillisecondsSince1970Int:
-    (nonnull ADJNonNegativeInt *)millisecondsSince1970Int
-{
+- (nonnull instancetype)initWithMillisecondsSince1970Int:(nonnull ADJNonNegativeInt *)millisecondsSince1970Int {
     self = [super init];
-
+    
     _millisecondsSince1970Int = millisecondsSince1970Int;
-
+    
     return self;
 }
 
 #pragma mark Public API
-- (nullable ADJTimeLengthMilli *)timeLengthDifferenceWithLaterTimestamp:
-    (nonnull ADJTimestampMilli *)laterTimestamp
-{
+- (nullable ADJTimeLengthMilli *)timeLengthDifferenceWithLaterTimestamp:(nonnull ADJTimestampMilli *)laterTimestamp {
     if (self.millisecondsSince1970Int.uIntegerValue >
         laterTimestamp.millisecondsSince1970Int.uIntegerValue)
     {
         return nil;
     }
-
+    
     NSUInteger millisecondsDifference =
-        laterTimestamp.millisecondsSince1970Int.uIntegerValue -
-        self.millisecondsSince1970Int.uIntegerValue;
-
+    laterTimestamp.millisecondsSince1970Int.uIntegerValue -
+    self.millisecondsSince1970Int.uIntegerValue;
+    
     return [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-                [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                    millisecondsDifference]];
+            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+             millisecondsDifference]];
 }
 
-- (nonnull ADJTimestampMilli *)
-    generateTimestampWithAddedTimeLength:(nonnull ADJTimeLengthMilli *)timeLengthToAdd
-{
+- (nonnull ADJTimestampMilli *)generateTimestampWithAddedTimeLength:(nonnull ADJTimeLengthMilli *)timeLengthToAdd {
     NSUInteger addedMillisecondsSince1970 =
-        self.millisecondsSince1970Int.uIntegerValue +
-        timeLengthToAdd.millisecondsSpan.uIntegerValue;
-
+    self.millisecondsSince1970Int.uIntegerValue +
+    timeLengthToAdd.millisecondsSpan.uIntegerValue;
+    
     return [[ADJTimestampMilli alloc] initWithMillisecondsSince1970Int:
-                [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                    addedMillisecondsSince1970]];
+            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+             addedMillisecondsSince1970]];
 }
 
 - (nonnull NSString *)dateFormattedDescription {
@@ -150,7 +133,7 @@
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     return [[ADJNonEmptyString alloc]
-                initWithConstStringValue:[self dateFormattedDescription]];
+            initWithConstStringValue:[self dateFormattedDescription]];
 }
 
 #pragma mark - NSCopying
@@ -166,9 +149,9 @@
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + [self.millisecondsSince1970Int hash];
-
+    
     return hashCode;
 }
 
@@ -176,14 +159,14 @@
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJTimestampMilli class]]) {
         return NO;
     }
-
+    
     ADJTimestampMilli *other = (ADJTimestampMilli *)object;
     return [ADJUtilObj objectEquals:self.millisecondsSince1970Int
-                               other:other.millisecondsSince1970Int];
+                              other:other.millisecondsSince1970Int];
 }
 
 @end

@@ -16,17 +16,15 @@
 
 @interface ADJSdkResponseDataBuilder : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
-    sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-    sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
-    previousErrorMessages:(nullable NSString *)previousErrorMessages;
+- (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
+                               sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
+                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
+                           previousErrorMessages:(nullable NSString *)previousErrorMessages;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
 @property (nonnull, readonly, strong, nonatomic) ADJStringMapBuilder *sendingParameters;
-@property (nonnull, readonly, strong, nonatomic)
-    id<ADJSdkResponseCallbackSubscriber> sourceCallback;
+@property (nonnull, readonly, strong, nonatomic) id<ADJSdkResponseCallbackSubscriber> sourceCallback;
 @property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
 
 // public api

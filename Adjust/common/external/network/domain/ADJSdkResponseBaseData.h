@@ -15,10 +15,9 @@
 
 @interface ADJSdkResponseBaseData : NSObject<ADJSdkResponseData>
 // instantiation
-- (nonnull instancetype)
-    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    logger:(nonnull ADJLogger *)logger
+- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+                         sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+                                 logger:(nonnull ADJLogger *)logger
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

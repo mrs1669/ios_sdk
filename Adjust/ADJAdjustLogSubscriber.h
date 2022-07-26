@@ -12,7 +12,6 @@
 
 - (void)didLogWithMessage:(nonnull NSString *)logMessage;
 
-- (void)didLogMessagesPreInitWithArray:
-    (nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray;
+- (void)didLogMessagesPreInitWithArray:(nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray;
 
 @end

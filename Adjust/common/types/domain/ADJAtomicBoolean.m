@@ -17,34 +17,35 @@
     volatile atomic_bool _atomicB;
     memory_order _memoryOrder;
 }
+
 #pragma mark Instantiation
 /*
-- (nonnull instancetype)initWithRelaxedValue:(BOOL)value {
-    return [self initWithValue:value memoryOrder:__ATOMIC_RELAXED];
-}
-
-- (nonnull instancetype)initWithSeqCstValue:(BOOL)value {
-    return [self initWithValue:value memoryOrder:__ATOMIC_SEQ_CST];
-}
-*/
+ - (nonnull instancetype)initWithRelaxedValue:(BOOL)value {
+ return [self initWithValue:value memoryOrder:__ATOMIC_RELAXED];
+ }
+ 
+ - (nonnull instancetype)initWithSeqCstValue:(BOOL)value {
+ return [self initWithValue:value memoryOrder:__ATOMIC_SEQ_CST];
+ }
+ */
 - (nonnull instancetype)initSeqCstMemoryOrderWithInitialBoolValue:(BOOL)initialBoolValue {
     return [self initWithInitialBoolValue:initialBoolValue memoryOrder:__ATOMIC_SEQ_CST];
 }
 
 #pragma mark - Private Constructors
 - (nonnull instancetype)initWithInitialBoolValue:(BOOL)initialBoolValue
-                          memoryOrder:(memory_order)memoryOrder
+                                     memoryOrder:(memory_order)memoryOrder
 {
     self = [super init];
-
+    
     if (initialBoolValue) {
         atomic_init(&_atomicB, true);
     } else {
         atomic_init(&_atomicB, false);
     }
-
+    
     _memoryOrder = memoryOrder;
-
+    
     return self;
 }
 #pragma mark Public API
@@ -65,23 +66,23 @@
 - (BOOL)compareTo:(BOOL)expected andSetDesired:(BOOL)desired {
     bool expectedB = expected ? true : false;
     bool desiredB = desired ? true : false;
-
+    
     return
-        atomic_compare_exchange_strong_explicit(&_atomicB,
-                                                &expectedB,
-                                                desiredB,
-                                                _memoryOrder,
-                                                _memoryOrder)
+    atomic_compare_exchange_strong_explicit(&_atomicB,
+                                            &expectedB,
+                                            desiredB,
+                                            _memoryOrder,
+                                            _memoryOrder)
     ? YES : NO;
     /* The behavior of atomic_compare_exchange_* family is
      as if the following was executed atomically:
-
+     
      if (memcmp(obj, expected, sizeof *obj) == 0) {
-         memcpy(obj, &desired, sizeof *obj);
-         return true;
+     memcpy(obj, &desired, sizeof *obj);
+     return true;
      } else {
-         memcpy(expected, obj, sizeof *obj);
-         return false;
+     memcpy(expected, obj, sizeof *obj);
+     return false;
      }
      */
 }

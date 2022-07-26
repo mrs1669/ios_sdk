@@ -14,9 +14,8 @@
 
 @protocol ADJSdkPackageSenderFactory <NSObject>
 
-- (nonnull ADJSdkPackageSender *)
-    createSdkPacakgeSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    sourceDescription:(nonnull NSString *)sourceDescription
-    threadpool:(nonnull id<ADJThreadPool>)threadpool;
+- (nonnull ADJSdkPackageSender *) createSdkPacakgeSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                                        sourceDescription:(nonnull NSString *)sourceDescription
+                                                               threadpool:(nonnull id<ADJThreadPool>)threadpool;
 
 @end

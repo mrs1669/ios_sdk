@@ -23,27 +23,23 @@
 + (nonnull instancetype)instanceWithoutTimeSpan;
 + (nonnull instancetype)instanceWithOneMilliSpan;
 
-+ (nullable instancetype)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-    logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+                                                  logger:(nonnull ADJLogger *)logger;
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
                                           logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)
-    instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
-    logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
+                                                          logger:(nonnull ADJLogger *)logger;
 
 - (nonnull instancetype)initWithMillisecondsSpan:(nonnull ADJNonNegativeInt *)millisecondsSpan
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJNonNegativeInt *millisecondsSpan;
 
 // public api
-- (nonnull ADJTimeLengthMilli *)
-    generateTimeLengthWithAddedTimeLength:
-        (nonnull ADJTimeLengthMilli *)timeLengthToAdd;
+- (nonnull ADJTimeLengthMilli *)generateTimeLengthWithAddedTimeLength:(nonnull ADJTimeLengthMilli *)timeLengthToAdd;
 
 - (NSTimeInterval)secondsInterval;
 
