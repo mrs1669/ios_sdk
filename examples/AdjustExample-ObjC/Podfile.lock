@@ -4,15 +4,15 @@ PODS:
   - Adjust/Core (5.0.0)
 
 DEPENDENCIES:
-  - Adjust (from `/Users/aditiagrawal/Work/Adjust/ios_sdk_dev`)
+  - Adjust (from `../../`)
 
 EXTERNAL SOURCES:
   Adjust:
-    :path: "/Users/aditiagrawal/Work/Adjust/ios_sdk_dev"
+    :path: "../../"
 
 SPEC CHECKSUMS:
-  Adjust: bd8810d462d7df57d6d1f80ced7f496ff73fc399
+  Adjust: 80f792410c23ef2a655db5930f870d536099c119
 
-PODFILE CHECKSUM: bb8e6acc1d941eb0df4be46958b2e17d34789693
+PODFILE CHECKSUM: cd271c219c5c2320dcac67c88218bb597e1fb752
 
 COCOAPODS: 1.11.3
