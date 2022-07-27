@@ -394,11 +394,11 @@
     if (mainQueueResponseProcessingData.removePackageAtFront) {
         [self removePackageAtFrontWithStorage:mainQueueStorage];
     }
-//
-//    if (mainQueueResponseProcessingData.delayData != nil) {
-//        [self delaySendWithData:mainQueueResponseProcessingData.delayData];
-//        return;
-//    }
+
+    if (mainQueueResponseProcessingData.delayData != nil) {
+        [self delaySendWithData:mainQueueResponseProcessingData.delayData];
+        return;
+    }
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
 
@@ -423,20 +423,19 @@
     }
  }
 
-//- (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
-//    __typeof(self) __weak weakSelf = self;
-//    [self.executor
-//        scheduleInSequenceWithBlock:^{
-//            __typeof(weakSelf) __strong strongSelf = weakSelf;
-//            if (strongSelf == nil) { return; }
-//
-//            [strongSelf handleDelayEndWithSource:delayData.source];
-//        }
-//        delayTimeMilli:delayData.delay];
-//}
+- (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor
+        scheduleInSequenceWithBlock:^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
 
-- (void)handleDelayEndWithSource:(nonnull NSString *)source
-{
+            [strongSelf handleDelayEndWithSource:delayData.source];
+        }
+        delayTimeMilli:delayData.delay];
+}
+
+- (void)handleDelayEndWithSource:(nonnull NSString *)source {
     [self.logger debug:@"Delay due to %@ ended", source];
 
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;

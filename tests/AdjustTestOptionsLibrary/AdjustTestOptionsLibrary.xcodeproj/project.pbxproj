@@ -1,0 +1,360 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6F9720112891369A0055FD32 /* ATOAdjustTestOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F97200D2891369A0055FD32 /* ATOAdjustTestOptions.m */; };
+		6F9720122891369A0055FD32 /* ATOLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F9720102891369A0055FD32 /* ATOLogger.m */; };
+		6F972014289136A90055FD32 /* ATOAdjustTestOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F97200F2891369A0055FD32 /* ATOAdjustTestOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A7637621901D49BAF7A6498F /* Pods_AdjustTestOptionsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283F3F585F7506B34E07FB3A /* Pods_AdjustTestOptionsLibrary.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6F971FCB289133440055FD32 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		283F3F585F7506B34E07FB3A /* Pods_AdjustTestOptionsLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdjustTestOptionsLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F971FCD289133440055FD32 /* libAdjustTestOptionsLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAdjustTestOptionsLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F97200D2891369A0055FD32 /* ATOAdjustTestOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATOAdjustTestOptions.m; sourceTree = "<group>"; };
+		6F97200E2891369A0055FD32 /* ATOLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATOLogger.h; sourceTree = "<group>"; };
+		6F97200F2891369A0055FD32 /* ATOAdjustTestOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATOAdjustTestOptions.h; sourceTree = "<group>"; };
+		6F9720102891369A0055FD32 /* ATOLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATOLogger.m; sourceTree = "<group>"; };
+		7C9C91B33BD75B5A6D7BAF65 /* Pods-AdjustTestOptionsLibrary.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustTestOptionsLibrary.release.xcconfig"; path = "Target Support Files/Pods-AdjustTestOptionsLibrary/Pods-AdjustTestOptionsLibrary.release.xcconfig"; sourceTree = "<group>"; };
+		B4B76E8A5F7FC19D8F638B7D /* Pods-AdjustTestOptionsLibrary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustTestOptionsLibrary.debug.xcconfig"; path = "Target Support Files/Pods-AdjustTestOptionsLibrary/Pods-AdjustTestOptionsLibrary.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6F971FCA289133440055FD32 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7637621901D49BAF7A6498F /* Pods_AdjustTestOptionsLibrary.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6F971FC4289133440055FD32 = {
+			isa = PBXGroup;
+			children = (
+				6F971FCF289133440055FD32 /* AdjustTestOptionsLibrary */,
+				6F971FCE289133440055FD32 /* Products */,
+				AD81DE05D50D751C4FC55608 /* Pods */,
+				F6ABE9DEAA74E454B6F53E66 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		6F971FCE289133440055FD32 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6F971FCD289133440055FD32 /* libAdjustTestOptionsLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6F971FCF289133440055FD32 /* AdjustTestOptionsLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				6F97200F2891369A0055FD32 /* ATOAdjustTestOptions.h */,
+				6F97200D2891369A0055FD32 /* ATOAdjustTestOptions.m */,
+				6F97200E2891369A0055FD32 /* ATOLogger.h */,
+				6F9720102891369A0055FD32 /* ATOLogger.m */,
+			);
+			path = AdjustTestOptionsLibrary;
+			sourceTree = "<group>";
+		};
+		AD81DE05D50D751C4FC55608 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B4B76E8A5F7FC19D8F638B7D /* Pods-AdjustTestOptionsLibrary.debug.xcconfig */,
+				7C9C91B33BD75B5A6D7BAF65 /* Pods-AdjustTestOptionsLibrary.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F6ABE9DEAA74E454B6F53E66 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				283F3F585F7506B34E07FB3A /* Pods_AdjustTestOptionsLibrary.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		6F972013289136A10055FD32 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F972014289136A90055FD32 /* ATOAdjustTestOptions.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		6F971FCC289133440055FD32 /* AdjustTestOptionsLibrary */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6F971FD6289133440055FD32 /* Build configuration list for PBXNativeTarget "AdjustTestOptionsLibrary" */;
+			buildPhases = (
+				0385234B9F3055F9AF8A4861 /* [CP] Check Pods Manifest.lock */,
+				6F972013289136A10055FD32 /* Headers */,
+				6F971FC9289133440055FD32 /* Sources */,
+				6F971FCA289133440055FD32 /* Frameworks */,
+				6F971FCB289133440055FD32 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AdjustTestOptionsLibrary;
+			productName = AdjustTestOptionsLibrary;
+			productReference = 6F971FCD289133440055FD32 /* libAdjustTestOptionsLibrary.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6F971FC5289133440055FD32 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					6F971FCC289133440055FD32 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 6F971FC8289133440055FD32 /* Build configuration list for PBXProject "AdjustTestOptionsLibrary" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6F971FC4289133440055FD32;
+			productRefGroup = 6F971FCE289133440055FD32 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6F971FCC289133440055FD32 /* AdjustTestOptionsLibrary */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0385234B9F3055F9AF8A4861 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AdjustTestOptionsLibrary-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6F971FC9289133440055FD32 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F9720122891369A0055FD32 /* ATOLogger.m in Sources */,
+				6F9720112891369A0055FD32 /* ATOAdjustTestOptions.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6F971FD4289133440055FD32 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		6F971FD5289133440055FD32 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6F971FD7289133440055FD32 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4B76E8A5F7FC19D8F638B7D /* Pods-AdjustTestOptionsLibrary.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QGUGW9AUMK;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6F971FD8289133440055FD32 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C9C91B33BD75B5A6D7BAF65 /* Pods-AdjustTestOptionsLibrary.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QGUGW9AUMK;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6F971FC8289133440055FD32 /* Build configuration list for PBXProject "AdjustTestOptionsLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F971FD4289133440055FD32 /* Debug */,
+				6F971FD5289133440055FD32 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6F971FD6289133440055FD32 /* Build configuration list for PBXNativeTarget "AdjustTestOptionsLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F971FD7289133440055FD32 /* Debug */,
+				6F971FD8289133440055FD32 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6F971FC5289133440055FD32 /* Project object */;
+}

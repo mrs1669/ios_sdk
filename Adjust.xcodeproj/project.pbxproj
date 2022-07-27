@@ -826,7 +826,6 @@
 				075D901428731C2D005019E3 /* AdjustSdk */,
 				075D903728744D17005019E3 /* AdjustSdkTv */,
 				075D905328745EBB005019E3 /* AdjustSdkIm */,
-				07FC078F287F3669008F4489 /* Examples */,
 				075D8FC728731314005019E3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -934,13 +933,6 @@
 				07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */,
 			);
 			path = domain;
-			sourceTree = "<group>";
-		};
-		07FC078F287F3669008F4489 /* Examples */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Examples;
 			sourceTree = "<group>";
 		};
 		07FC0805287F3959008F4489 /* Adjust */ = {

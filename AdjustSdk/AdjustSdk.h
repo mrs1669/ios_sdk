@@ -17,3 +17,4 @@ FOUNDATION_EXPORT const unsigned char AdjustSdkVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <AdjustSdk/PublicHeader.h>
 
 #import <AdjustSdk/ADJAdjust.h>
+#import <AdjustSdk/ADJSdkConfigDataBuilder.h>
