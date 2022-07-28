@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+
+#import "ADJClientEventData.h"
+
 /*
 #import "ADJClientAdRevenueData.h"
 #import "ADJClientBillingSubscriptionData.h"
 #import "ADJClientLaunchedDeeplinkData.h"
-#import "ADJClientEventData.h"
 #import "ADJClientPushTokenData.h"
 #import "ADJClientAddGlobalParameterData.h"
 #import "ADJClientRemoveGlobalParameterData.h"
@@ -19,6 +21,9 @@
 #import "ADJClientThirdPartySharingData.h"
 */
 @protocol ADJClientActionsAPI <NSObject>
+
+- (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData;
+
 /*
 - (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
 
@@ -27,8 +32,6 @@
 
 - (void)ccTrackLaunchedDeeplinkWithClientData:
     (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
-
-- (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData;
 
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
 

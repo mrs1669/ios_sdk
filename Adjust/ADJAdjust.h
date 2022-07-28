@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJAdjustConfig.h"
+#import "ADJAdjustEvent.h"
 
 @interface ADJAdjust : NSObject
 
@@ -16,6 +17,8 @@
 
 // public api
 + (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig;
+
++ (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
 
 /// We can figure out below API later, once `sdkInitWithAdjustConfig` works well.
 //+ (void)inactivateSdk;

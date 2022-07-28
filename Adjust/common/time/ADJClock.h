@@ -1,5 +1,5 @@
 //
-//  ADJ5Clock.h
+//  ADJClock.h
 //  Adjust
 //
 //  Created by Aditi Agrawal on 20/07/22.

@@ -53,4 +53,29 @@
 //    }];
 //}
 
+
++ (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionsWithSource:@"trackEvent"];
+
+        if (clientActionsAPI == nil) {
+            return;
+        }
+
+        ADJClientEventData *_Nullable clientEventData =
+            [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
+                                                            logger:apiLogger];
+
+        if (clientEventData == nil) {
+            return;
+        }
+
+        [clientActionsAPI ccTrackEventWithClientData:clientEventData];
+    }];
+}
+
+
 @end
