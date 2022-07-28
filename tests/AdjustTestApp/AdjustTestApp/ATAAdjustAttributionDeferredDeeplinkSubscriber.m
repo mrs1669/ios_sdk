@@ -1,21 +1,20 @@
 //
-//  ATA5AdjustAttributionDeferredDeeplinkSubscriber.m
+//  ATAAdjustAttributionDeferredDeeplinkSubscriber.m
 //  AdjustTestApp
 //
-//  Created by Pedro S. on 17.05.21.
-//  Copyright © 2021 adjust. All rights reserved.
+//  Created by Pedro Silva on 28.07.22.
 //
 
-#import "ATA5AdjustAttributionDeferredDeeplinkSubscriber.h"
+#import "ATAAdjustAttributionDeferredDeeplinkSubscriber.h"
 
-@interface ATA5AdjustAttributionDeferredDeeplinkSubscriber ()
+@interface ATAAdjustAttributionDeferredDeeplinkSubscriber ()
 
 @property (nullable, readonly, weak, nonatomic) ATLTestLibrary *testLibraryWeak;
 @property (nonnull, readonly, strong, nonatomic) NSString *extraPath;
 
 @end
 
-@implementation ATA5AdjustAttributionDeferredDeeplinkSubscriber
+@implementation ATAAdjustAttributionDeferredDeeplinkSubscriber
 #pragma mark Instantiation
 - (nonnull instancetype)initWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
                                   extraPath:(nonnull NSString *)extraPath
@@ -29,9 +28,9 @@
 }
 
 #pragma mark Public API
-#pragma mark - ADJ5AdjustAttributionSubscriber
+#pragma mark - ADJAdjustAttributionSubscriber
 
-- (void)didChangeWithAdjustAttribution:(nonnull ADJ5AdjustAttribution *)adjustAttribution {
+- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self logDebug:@"did change attribution: %@", adjustAttribution];
 
     ATLTestLibrary *_Nullable testLibrary = self.testLibraryWeak;
@@ -49,7 +48,7 @@
     [testLibrary sendInfoToServer:self.extraPath];
 }
 
-- (void)didReadWithAdjustAttribution:(nonnull ADJ5AdjustAttribution *)adjustAttribution {
+- (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self logDebug:@"did read attribution: %@", adjustAttribution];
 }
 
@@ -60,14 +59,14 @@
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
 
-    NSLog(@"\t[ATA5AdjustAttributionDeferredDeeplinkSubscriber][Debug] %@", logMessage);
+    NSLog(@"\t[ATAAdjustAttributionDeferredDeeplinkSubscriber][Debug] %@", logMessage);
 }
 - (void)logError:(nonnull NSString *)message, ... {
     va_list parameters; va_start(parameters, message);
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
 
-    NSLog(@"\t[ATA5AdjustAttributionDeferredDeeplinkSubscriber][Error] %@", logMessage);
+    NSLog(@"\t[ATAAdjustAttributionDeferredDeeplinkSubscriber][Error] %@", logMessage);
 }
 
 @end

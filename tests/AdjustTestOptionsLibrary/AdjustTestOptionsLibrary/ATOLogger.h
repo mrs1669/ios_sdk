@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJ5Logger.h"
-#import "ADJ5LogCollector.h"
+#import "ADJLogger.h"
+#import "ADJLogCollector.h"
 
-@interface ATOLogger : ADJ5Logger<ADJ5LogCollector>
+@interface ATOLogger : ADJLogger<ADJLogCollector>
 
 + (nonnull instancetype)sharedInstance;
 

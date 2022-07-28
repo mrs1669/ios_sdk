@@ -9,7 +9,7 @@
 #import "ATOLogger.h"
 
 #import <os/log.h>
-#import "ADJ5AdjustLogMessageData.h"
+#import "ADJAdjustLogMessageData.h"
 
 @interface ATOLogger ()
 
@@ -41,7 +41,7 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
     return self;
 }
 
-// copied from ADJ5ConsoleLogger
+// copied from ADJConsoleLogger
 - (void)collectLogMessage:(nonnull NSString *)logMessage
                    source:(nonnull NSString *)source
            messageLogLevel:(nonnull NSString *)messageLogLevel
@@ -50,15 +50,15 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
         NSString *fullLogMessage =
             [NSString stringWithFormat:@"[%@][%@] %@",
                 messageLogLevel, source, logMessage];
-        if (messageLogLevel == ADJ5AdjustLogLevelDebug) {
+        if (messageLogLevel == ADJAdjustLogLevelDebug) {
             os_log_debug(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
-        } else if (messageLogLevel == ADJ5AdjustLogLevelInfo) {
+        } else if (messageLogLevel == ADJAdjustLogLevelInfo) {
             os_log_info(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
-        } else if (messageLogLevel == ADJ5AdjustLogLevelError) {
+        } else if (messageLogLevel == ADJAdjustLogLevelError) {
             os_log_error(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
         }
     } else {
-        NSLog(@"%@", [ADJ5AdjustLogMessageData
+        NSLog(@"%@", [ADJAdjustLogMessageData
                         generateFullLogWithMessage:logMessage
                         source:source
                         messageLogLevel:messageLogLevel]);

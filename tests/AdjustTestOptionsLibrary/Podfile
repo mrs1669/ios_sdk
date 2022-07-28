@@ -6,6 +6,6 @@ target 'AdjustTestOptionsLibrary' do
   use_frameworks!
 
   # Pods for AdjustTestOptionsLibrary
-  pod 'Adjust', :path => '../../'
+  #pod 'Adjust', :path => '../../'
 
 end

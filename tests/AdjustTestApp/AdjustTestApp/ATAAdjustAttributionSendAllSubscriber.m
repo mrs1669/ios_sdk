@@ -1,21 +1,21 @@
 //
-//  ATA5AdjustAttributionSendAllSubscriber.m
+//  ATAAdjustAttributionSendAllSubscriber.m
 //  AdjustTestApp
 //
-//  Created by Pedro S. on 17.05.21.
-//  Copyright © 2021 adjust. All rights reserved.
+//  Created by Pedro Silva on 28.07.22.
 //
 
-#import "ATA5AdjustAttributionSendAllSubscriber.h"
+#import "ATAAdjustAttributionSendAllSubscriber.h"
 
-@interface ATA5AdjustAttributionSendAllSubscriber ()
+
+@interface ATAAdjustAttributionSendAllSubscriber ()
 
 @property (nullable, readonly, weak, nonatomic) ATLTestLibrary *testLibraryWeak;
 @property (nonnull, readonly, strong, nonatomic) NSString *extraPath;
 
 @end
 
-@implementation ATA5AdjustAttributionSendAllSubscriber
+@implementation ATAAdjustAttributionSendAllSubscriber
 #pragma mark Instantiation
 - (nonnull instancetype)initWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
                                   extraPath:(nonnull NSString *)extraPath
@@ -30,14 +30,14 @@
 
 
 #pragma mark Public API
-#pragma mark - ADJ5AdjustAttributionSubscriber
+#pragma mark - ADJAdjustAttributionSubscriber
 
 #define addWhenValid(key,valueName)                                             \
     if (adjustAttribution.valueName.length > 0) {                               \
         [testLibrary addInfoToSend:@#key value:adjustAttribution.valueName];    \
     }
 
-- (void)didChangeWithAdjustAttribution:(nonnull ADJ5AdjustAttribution *)adjustAttribution {
+- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self logDebug:@"did change attribution: %@", adjustAttribution];
 
     ATLTestLibrary *_Nullable testLibrary = self.testLibraryWeak;
@@ -66,7 +66,7 @@
     [testLibrary sendInfoToServer:self.extraPath];
 }
 
-- (void)didReadWithAdjustAttribution:(nonnull ADJ5AdjustAttribution *)adjustAttribution {
+- (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self logDebug:@"did read attribution: %@", adjustAttribution];
 }
 
@@ -76,14 +76,14 @@
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
 
-    NSLog(@"\t[ATA5AdjustAttributionSendAllSubscriber][Debug] %@", logMessage);
+    NSLog(@"\t[ATAAdjustAttributionSendAllSubscriber][Debug] %@", logMessage);
 }
 - (void)logError:(nonnull NSString *)message, ... {
     va_list parameters; va_start(parameters, message);
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
 
-    NSLog(@"\t[ATA5AdjustAttributionSendAllSubscriber][Error] %@", logMessage);
+    NSLog(@"\t[ATAAdjustAttributionSendAllSubscriber][Error] %@", logMessage);
 }
 
 @end

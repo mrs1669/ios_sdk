@@ -10,6 +10,6 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
   s.requires_arc           = true
   s.pod_target_xcconfig    = { 'BITCODE_GENERATION_MODE' => 'bitcode' }
-  s.source_files           = 'AdjustTestOptionsLibrary/**/*.{h,m}'
+  s.source_files           = 'AdjustTestOptionsLibrary/**/*.{h,m}', '../../Adjust/**/*.{h,m}'
 
 end

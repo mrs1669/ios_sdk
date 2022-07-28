@@ -1,26 +1,25 @@
 //
-//  ATA5AdjustCommandExecutor.m
+//  ATAAdjustCommandExecutor.m
 //  AdjustTestApp
 //
-//  Created by Pedro S. on 06.05.21.
-//  Copyright © 2021 adjust. All rights reserved.
+//  Created by Pedro Silva on 28.07.22.
 //
 
-#import "ATA5AdjustCommandExecutor.h"
+#import "ATAAdjustCommandExecutor.h"
 
 #import "ATAAdjustCommandExecutor.h"
 #import "ATOAdjustTestOptions.h"
-#import "ATA5AdjustAttributionDeferredDeeplinkSubscriber.h"
-#import "ATA5AdjustAttributionSendAllSubscriber.h"
-#import "ADJ5AdjustConfig.h"
-#import "ADJ5Adjust.h"
+#import "ATAAdjustAttributionDeferredDeeplinkSubscriber.h"
+#import "ATAAdjustAttributionSendAllSubscriber.h"
+#import "ADJAdjustConfig.h"
+#import "ADJAdjust.h"
 
-@interface ATA5AdjustCommandExecutor ()
+@interface ATAAdjustCommandExecutor ()
 
 @property (nonnull, readonly, nonatomic, strong) NSString *url;
 @property (nonnull, readonly, nonatomic, strong) ATLTestLibrary *testLibrary;
-@property (nonnull, readonly, nonatomic, strong)
-    ATAAdjustCommandExecutor *adjustV4CommandExecutor;
+//@property (nonnull, readonly, nonatomic, strong)
+//    ATAAdjustCommandExecutor *adjustV4CommandExecutor;
 
 @property (nullable, readwrite, nonatomic, strong)
     NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
@@ -28,7 +27,7 @@
 
 @end
 
-@implementation ATA5AdjustCommandExecutor
+@implementation ATAAdjustCommandExecutor
 
 - (nonnull instancetype)initWithUrl:(nonnull NSString *)url
                         testLibrary:(nonnull ATLTestLibrary *)testLibrary
@@ -37,8 +36,8 @@
 
     _url = url;
     _testLibrary = testLibrary;
-    _adjustV4CommandExecutor = [[ATAAdjustCommandExecutor alloc] initWithUrl:url];
-    [self.adjustV4CommandExecutor setTestLibrary:testLibrary];
+    //_adjustV4CommandExecutor = [[ATAAdjustCommandExecutor alloc] initWithUrl:url];
+    //[self.adjustV4CommandExecutor setTestLibrary:testLibrary];
 
     return self;
 }
@@ -53,9 +52,11 @@
         [self executeAdjustCommandWithMethodName:methodName
                             dictionaryParameters:dictionaryParameters];
     } else if ([className isEqualToString:@"AdjustV4"]) {
+        /*
         [self.adjustV4CommandExecutor executeCommand:className
                                           methodName:methodName
                                           parameters:dictionaryParameters];
+         */
     } else if ([className isEqualToString:@"TestOptions"]) {
         if (! [methodName isEqualToString:@"teardown"]) {
             [self logError:@"TestOption only method should be 'teardown'. %@ is not supported",
@@ -110,8 +111,8 @@
     NSString *_Nullable environment = [self firstParameterValueWithKey:@"environment"];
     NSString *_Nullable appToken = [self firstParameterValueWithKey:@"appToken"];
 
-    ADJ5AdjustConfig *_Nonnull adjustConfig =
-        [[ADJ5AdjustConfig alloc] initWithAppToken:appToken
+    ADJAdjustConfig *_Nonnull adjustConfig =
+        [[ADJAdjustConfig alloc] initWithAppToken:appToken
                                        environment:environment];
 
     if ([self containsKey:@"defaultTracker"]) {
@@ -128,14 +129,14 @@
         }
 
         [adjustConfig setAdjustAttributionSubscriber:
-            [[ATA5AdjustAttributionDeferredDeeplinkSubscriber alloc]
+            [[ATAAdjustAttributionDeferredDeeplinkSubscriber alloc]
                 initWithTestLibrary:self.testLibrary
                 extraPath:self.extraPathTestOptions]];
     }
 
     if ([self containsKey:@"attributionCallbackSendAll"]) {
         [adjustConfig setAdjustAttributionSubscriber:
-            [[ATA5AdjustAttributionSendAllSubscriber alloc]
+            [[ATAAdjustAttributionSendAllSubscriber alloc]
                 initWithTestLibrary:self.testLibrary
                 extraPath:self.extraPathTestOptions]];
     }
@@ -177,7 +178,7 @@
         [adjustConfig doNotReadAppleSearchAdsAttribution];
     }
 
-    [ADJ5Adjust sdkInitWithAdjustConfig:adjustConfig];
+    [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 }
 /*
      if (parameters.containsKey("defaultTracker")) {
@@ -186,18 +187,19 @@
      }
  */
 - (void)resume {
-    [ADJ5Adjust appWentToTheForegroundManualCall];
+    //[ADJAdjust appWentToTheForegroundManualCall];
 }
 
 - (void)pause {
-    [ADJ5Adjust appWentToTheBackgroundManualCall];
+    //[ADJAdjust appWentToTheBackgroundManualCall];
 }
 
 - (void)trackEvent {
+    /*
     NSString *_Nullable eventToken = [self firstParameterValueWithKey:@"eventToken"];
 
-    ADJ5AdjustEvent *_Nonnull adjustEvent =
-        [[ADJ5AdjustEvent alloc] initWithEventId:eventToken];
+    ADJAdjustEvent *_Nonnull adjustEvent =
+        [[ADJAdjustEvent alloc] initWithEventId:eventToken];
 
     if ([self containsKey:@"currencyAndRevenue"]) {
         NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
@@ -235,18 +237,20 @@
         [adjustEvent setDeduplicationId:deduplicationId];
     }
 
-    [ADJ5Adjust trackEvent:adjustEvent];
+    [ADJAdjust trackEvent:adjustEvent];
+     */
 }
 
 - (void)stop {
-    [ADJ5Adjust inactivateSdk];
+    //[ADJAdjust inactivateSdk];
 }
 
 - (void)restart {
-    [ADJ5Adjust reactivateSdk];
+    //[ADJAdjust reactivateSdk];
 }
 
 - (void)setOfflineMode {
+    /*
     if (! [self containsKey:@"enabled"]) {
         [self logError:@"setOfflineMode without expected enabled key"];
         return;
@@ -261,86 +265,102 @@
     }
 
     if (strictEnabledValue.boolValue) {
-        [ADJ5Adjust switchToOfflineMode];
+        [ADJAdjust switchToOfflineMode];
     } else {
-        [ADJ5Adjust switchBackToOnlineMode];
+        [ADJAdjust switchBackToOnlineMode];
     }
+     */
 }
 
 - (void)addGlobalCallbackParameter {
+    /*
     [self iterateWithKey:@"keyValuePairs"
                   source:@"add global callback"
        keyValueBlock:
      ^(NSString * _Nonnull key, NSString * _Nonnull value)
     {
-        [ADJ5Adjust addGlobalCallbackParameterWithKey:key value:value];
+        [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
     }];
+     */
 }
 
 - (void)addGlobalPartnerParameter {
+    /*
     [self iterateWithKey:@"keyValuePairs"
                   source:@"add global partner"
        keyValueBlock:
      ^(NSString * _Nonnull key, NSString * _Nonnull value)
     {
-        [ADJ5Adjust addGlobalPartnerParameterWithKey:key value:value];
+        [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
     }];
+     */
 
 }
 - (void)removeGlobalCallbackParameter {
+    /*
     [self iterateWithKey:@"key"
                   source:@"remove global callback"
                 keyBlock:^(NSString * _Nonnull key)
     {
-        [ADJ5Adjust removeGlobalCallbackParameterByKey:key];
+        [ADJAdjust removeGlobalCallbackParameterByKey:key];
     }];
+     */
 }
 
 - (void)removeGlobalPartnerParameter {
+    /*
     [self iterateWithKey:@"key"
                   source:@"remove global partner"
                 keyBlock:^(NSString * _Nonnull key)
     {
-        [ADJ5Adjust removeGlobalPartnerParameterByKey:key];
+        [ADJAdjust removeGlobalPartnerParameterByKey:key];
     }];
+     */
 }
 
 - (void)clearGlobalCallbackParameters {
-    [ADJ5Adjust clearAllGlobalCallbackParameters];
+    /*
+    [ADJAdjust clearAllGlobalCallbackParameters];
+     */
 }
 
 - (void)clearGlobalPartnerParameters {
-    [ADJ5Adjust clearAllGlobalPartnerParameters];
+    //[ADJAdjust clearAllGlobalPartnerParameters];
 }
 
 - (void)setPushToken {
+    /*
     NSString *_Nullable pushToken = [self firstParameterValueWithKey:@"pushToken"];
 
-    ADJ5AdjustPushToken *_Nonnull adjustPushToken =
-        [[ADJ5AdjustPushToken alloc] initWithStringPushToken:pushToken];
+    ADJAdjustPushToken *_Nonnull adjustPushToken =
+        [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
 
-    [ADJ5Adjust trackPushToken:adjustPushToken];
+    [ADJAdjust trackPushToken:adjustPushToken];
+     */
 }
 
 - (void)openDeeplink {
+    /*
     NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
 
-    ADJ5AdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
-        [[ADJ5AdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
+    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
+        [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
 
-    [ADJ5Adjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
+    [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
+     */
 }
 
 - (void)gdprForgetMe {
-    [ADJ5Adjust gdprForgetDevice];
+    //[ADJAdjust gdprForgetDevice];
 }
 
 - (void)trackAdRevenue {
+    /*
     NSString *_Nullable adRevenueSource =
         [self firstParameterValueWithKey:@"adRevenueSource"];
 
-    ADJ5AdjustAdRevenue *_Nonnull adjustAdRevenue =
-        [[ADJ5AdjustAdRevenue alloc] initWithSource:adRevenueSource];
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
+        [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
 
     if ([self containsKey:@"currencyAndRevenue"]) {
         NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
@@ -394,12 +414,14 @@
                                               value:value];
     }];
 
-    [ADJ5Adjust trackAdRevenue:adjustAdRevenue];
+    [ADJAdjust trackAdRevenue:adjustAdRevenue];
+     */
 }
 
 - (void)thirdPartySharing {
-    ADJ5AdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
-        [[ADJ5AdjustThirdPartySharing alloc] init];
+    /*
+    ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
+        [[ADJAdjustThirdPartySharing alloc] init];
 
     NSNumber *_Nullable sharingEnabledNumberBool =
         [self strictParseNumberBoolWithKey:@"enableOrElseDisable"];
@@ -427,7 +449,8 @@
         }];
     }
 
-    [ADJ5Adjust trackThirdPartySharing:adjustThirdPartySharing];
+    [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
+     */
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {
@@ -600,7 +623,7 @@
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
 
-    NSLog(@"\t[ATA5AdjustCommandExecutor][Debug] %@", logMessage);
+    NSLog(@"\t[ATAAdjustCommandExecutor][Debug] %@", logMessage);
 }
 
 - (void)logError:(nonnull NSString *)message, ... {
@@ -608,7 +631,7 @@
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
 
-    NSLog(@"\t[ATA5AdjustCommandExecutor][Error] %@", logMessage);
+    NSLog(@"\t[ATAAdjustCommandExecutor][Error] %@", logMessage);
 }
 
 - (BOOL)isNull:(nullable id)value {
