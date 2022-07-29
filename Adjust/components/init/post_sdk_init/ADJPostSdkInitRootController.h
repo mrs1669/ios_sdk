@@ -102,5 +102,5 @@
     ccSdkInitWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
     preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
 
-//- (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPI;
+- (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPI;
 @end

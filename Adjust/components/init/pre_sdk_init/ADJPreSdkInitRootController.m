@@ -315,37 +315,38 @@
 //    [self.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
 //}
 //
-//- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source {
-//    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-//        self.storageRootController.sdkActiveStateStorage;
-//
-//    NSString *_Nullable cannotPerformActionMessage =
-//        [self.sdkActiveState
-//            canPerformActiveActionWithCurrentSdkActiveStateData:
-//                [sdkActiveStateStorage readOnlyStoredDataValue]
-//            source:source];
-//
-//    if (cannotPerformActionMessage != nil) {
-//        ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//
-//        if (entryRoot == nil) {
-//            [self.logger error:@"%@", cannotPerformActionMessage];
-//        } else {
-//            [entryRoot.adjustApiLogger error:@"%@", cannotPerformActionMessage];
-//        }
-//
-//        return nil;
-//    }
-//
-//    id<ADJClientActionsAPI> _Nullable sdkStartClientActionAPI =
-//        [self sdkStartClientActionAPIwithSource:source];
-//
-//    if (sdkStartClientActionAPI != nil) {
-//        return sdkStartClientActionAPI;
-//    } else {
-//        return self.clientActionController;
-//    }
-//}
+- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source {
+ /*   ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
+        self.storageRootController.sdkActiveStateStorage;
+
+    NSString *_Nullable cannotPerformActionMessage =
+        [self.sdkActiveState
+            canPerformActiveActionWithCurrentSdkActiveStateData:
+                [sdkActiveStateStorage readOnlyStoredDataValue]
+            source:source];
+
+    if (cannotPerformActionMessage != nil) {
+        ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+
+        if (entryRoot == nil) {
+            [self.logger error:@"%@", cannotPerformActionMessage];
+        } else {
+            [entryRoot.adjustApiLogger error:@"%@", cannotPerformActionMessage];
+        }
+
+        return nil;
+    }
+ */
+
+    id<ADJClientActionsAPI> _Nullable sdkStartClientActionAPI =
+        [self sdkStartClientActionAPIwithSource:source];
+
+    if (sdkStartClientActionAPI != nil) {
+        return sdkStartClientActionAPI;
+    } else {
+        return self.clientActionController;
+    }
+}
 
 #pragma mark - Subscriptions
 - (void)
@@ -478,22 +479,22 @@
 //    }];
 //}
 //
-//- (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPIwithSource:(nonnull NSString *)source {
-//    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//
-//    if (entryRoot == nil) {
-//        [self.logger error:@"Cannot %@ without a reference to entry root", source];
-//        return nil;
-//    }
-//
-//    ADJPostSdkInitRootController *_Nullable postSdkInitRootController =
-//        entryRoot.postSdkInitRootController;
-//
-//    if (postSdkInitRootController == nil) {
-//        return nil;
-//    }
-//
-//    return [postSdkInitRootController sdkStartClientActionAPI];
-//}
+- (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPIwithSource:(nonnull NSString *)source {
+    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+
+    if (entryRoot == nil) {
+        [self.logger error:@"Cannot %@ without a reference to entry root", source];
+        return nil;
+    }
+
+    ADJPostSdkInitRootController *_Nullable postSdkInitRootController =
+        entryRoot.postSdkInitRootController;
+
+    if (postSdkInitRootController == nil) {
+        return nil;
+    }
+
+    return [postSdkInitRootController sdkStartClientActionAPI];
+}
 
 @end

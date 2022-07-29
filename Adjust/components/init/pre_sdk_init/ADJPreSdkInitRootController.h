@@ -18,7 +18,7 @@
 //#import "ADJGdprForgetController.h"
 #import "ADJLifecycleController.h"
 //#import "ADJOfflineController.h"
-//#import "ADJClientActionController.h"
+#import "ADJClientActionController.h"
 //#import "ADJDeviceController.h"
 #import "ADJSdkActiveSubscriber.h"
 //#import "ADJClientCallbacksController.h"
@@ -58,8 +58,7 @@
     ADJLifecycleController *lifecycleController;
 //@property (nonnull, readonly, strong, nonatomic)
 //    ADJOfflineController *offlineController;
-//@property (nonnull, readonly, strong, nonatomic)
-//    ADJClientActionController *clientActionController;
+@property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
 //@property (nonnull, readonly, strong, nonatomic)
 //    ADJDeviceController *deviceController;
 //@property (nonnull, readonly, strong, nonatomic)

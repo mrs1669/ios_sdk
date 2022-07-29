@@ -291,7 +291,7 @@
         [subscriber ccOnSdkInitWithClientConfigData:self.clientConfigData];
     }];
 }
-/*
+
 - (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPI {
     if (self.hasMeasurementSessionStart) {
         return self;
@@ -299,8 +299,6 @@
         return nil;
     }
 }
- */
- 
 
 #pragma mark - Subscriptions
 - (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:
