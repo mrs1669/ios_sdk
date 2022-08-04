@@ -24,7 +24,9 @@
 #import "ADJAdRevenuePackageData.h"
 #import "ADJBillingSubscriptionPackageData.h"
 #import "ADJClickPackageData.h"
+*/
 #import "ADJEventPackageData.h"
+/*
 #import "ADJInfoResponseData.h"
 #import "ADJThirdPartySharingPackageData.h"
 */
@@ -69,11 +71,13 @@
 - (void)
     addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+*/
 
 - (void)
     addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
+/*
 - (void)
     addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;

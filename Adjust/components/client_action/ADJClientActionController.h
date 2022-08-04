@@ -25,7 +25,7 @@ ADJMeasurementSessionStartSubscriber
 >
 // subscriptions and dependencies
 - (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController: (nonnull ADJPostSdkInitRootController *)postSdkInitRootController;
-- (void)ccSubscribeToPublishersWithPreFirstSdkSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstSdkSessionStartPublisher
+- (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher
                                            sdkSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
 
 // instantiation

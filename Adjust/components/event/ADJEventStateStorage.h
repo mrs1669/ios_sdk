@@ -8,10 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "ADJSQLiteStoragePropertiesBase.h"
+#import "ADJEventStateData.h"
+#import "ADJSQLiteStorage.h"
 
-@interface ADJEventStateStorage : NSObject
+@interface ADJEventStateStorage : ADJSQLiteStoragePropertiesBase<ADJEventStateData *>
+// instantiation
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+    sqliteController:(nonnull ADJSQLiteController *)sqliteController;
 
 @end
-
-NS_ASSUME_NONNULL_END

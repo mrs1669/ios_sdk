@@ -18,6 +18,9 @@
 #import "ADJEventStateStorage.h"
 #import "ADJMeasurementSessionStateStorage.h"
 #import "ADJSdkPackageCreatingSubscriber.h"
+#import "ADJEventPackageData.h"
+#import "ADJClientEventData.h"
+
 /*
  #import "ADJAdRevenuePackageData.h"
  #import "ADJClientAdRevenueData.h"
@@ -26,8 +29,6 @@
  #import "ADJClientBillingSubscriptionData.h"
  #import "ADJClickPackageData.h"
  #import "ADJClientLaunchedDeeplinkData.h"
- #import "ADJEventPackageData.h"
- #import "ADJClientEventData.h"
  #import "ADJInfoPackageData.h"
  #import "ADJClientPushTokenData.h"
  #import "ADJLogPackageData.h"
@@ -59,6 +60,9 @@ globalPartnerParametersStorage:
 eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
 measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
 
+- (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
+apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+
 // public api
 /*
  - (nonnull ADJAdRevenuePackageData *)
@@ -83,10 +87,6 @@ measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)meas
  buildAsaAttributionClickWithToken:
  (nonnull ADJNonEmptyString *)asaAttibutionToken
  asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
- 
- - (nonnull ADJEventPackageData *)
- buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
  
  - (nonnull ADJInfoPackageData *)
  buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData

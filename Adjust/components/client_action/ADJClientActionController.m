@@ -44,14 +44,12 @@
     self.postSdkInitRootControllerWeak = postSdkInitRootController;
 }
 
-- (void)
-    ccSubscribeToPublishersWithPreFirstSdkSessionStartPublisher:
-        (nonnull ADJPreFirstSdkSessionStartPublisher *)preFirstSdkSessionStartPublisher
-    sdkSessionStartPublisher:
-        (nonnull ADJSdkSessionStartPublisher *)sdkSessionStartPublisher
-{
-    [preFirstSdkSessionStartPublisher addSubscriber:self];
-    [sdkSessionStartPublisher addSubscriber:self];
+- (void)ccSubscribeToPublishersWithPreFirstSessionStartPublisher:
+(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher
+                                        sdkSessionStartPublisher:
+(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher {
+    [preFirstMeasurementSessionStartPublisher addSubscriber:self];
+    [measurementSessionStartPublisher addSubscriber:self];
 }
 
 #pragma mark Instantiation
@@ -81,31 +79,32 @@
 }
 
 #pragma mark - ADJClientActionsAPI
-- (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData {
-    [self ccSaveClientActionWithIoInjectable:clientAdRevenueData
-                       clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
-}
-
-- (void)ccTrackBillingSubscriptionWithClientData:
-    (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
-{
-    [self
-        ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
-        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
-}
-
-- (void)ccTrackLaunchedDeeplinkWithClientData:
-    (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
-{
-    [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
-                       clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
-}
+//- (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData {
+//    [self ccSaveClientActionWithIoInjectable:clientAdRevenueData
+//                       clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
+//}
+//
+//- (void)ccTrackBillingSubscriptionWithClientData:
+//    (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
+//{
+//    [self
+//        ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
+//        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
+//}
+//
+//- (void)ccTrackLaunchedDeeplinkWithClientData:
+//    (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
+//{
+//    [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
+//                       clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
+//}
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData {
     [self ccSaveClientActionWithIoInjectable:clientEventData
                        clientActionHandlerId:ADJEventControllerClientActionHandlerId];
 }
 
+/*
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
     [self ccSaveClientActionWithIoInjectable:clientPushTokenData
                        clientActionHandlerId:ADJPushTokenControllerClientActionHandlerId];
@@ -161,6 +160,7 @@
         ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
         clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
+*/
 
 #pragma mark Internal Methods
 - (void)
@@ -252,22 +252,24 @@
             continue;
         }
 
-        ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =
-            [[ADJClientActionRemoveStorageAction alloc]
-                 initWithClientActionStorage:clientActionStorage
-                 elementPosition:elementPosition];
-
-        [clientActionHandler
-            ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
-            apiTimestamp:clientActionData.apiTimestamp
-            clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+//        ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =
+//            [[ADJClientActionRemoveStorageAction alloc]
+//                 initWithClientActionStorage:clientActionStorage
+//                 elementPosition:elementPosition];
+//
+//        [clientActionHandler
+//            ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
+//            apiTimestamp:clientActionData.apiTimestamp
+//            clientActionRemoveStorageAction:clientActionRemoveStorageAction];
     }
 }
+
 
 - (nullable id<ADJClientActionHandler>)
     clientActionHandlerWithId:(nonnull ADJNonEmptyString *)clientActionHandlerId
     postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController
 {
+    /*
     if ([ADJAdRevenueControllerClientActionHandlerId
          isEqualToString:clientActionHandlerId.stringValue])
     {
@@ -283,11 +285,13 @@
     {
         return postSdkInitRootController.launchedDeeplinkController;
     }
+     */
     if ([ADJEventControllerClientActionHandlerId
          isEqualToString:clientActionHandlerId.stringValue])
     {
         return postSdkInitRootController.eventController;
     }
+    /*
     if ([ADJPushTokenControllerClientActionHandlerId
         isEqualToString:clientActionHandlerId.stringValue])
     {
@@ -308,8 +312,10 @@
     {
         return postSdkInitRootController.thirdPartySharingController;
     }
+     */
 
     return nil;
 }
+ 
 
 @end

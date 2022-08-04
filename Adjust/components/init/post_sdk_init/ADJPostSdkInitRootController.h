@@ -19,13 +19,13 @@
 #import "ADJSdkPackageBuilder.h"
 #import "ADJSdkPackageSenderController.h"
 #import "ADJMainQueueController.h"
+#import "ADJEventController.h"
 
 /*
 #import "ADJAdRevenueController.h"
 #import "ADJAttributionController.h"
 #import "ADJBillingSubscriptionController.h"
 #import "ADJLaunchedDeeplinkController.h"
-#import "ADJEventController.h"
 #import "ADJPushTokenController.h"
 #import "ADJKeepAliveController.h"
 #import "ADJGlobalCallbackParametersController.h"
@@ -69,6 +69,8 @@
 @property (nonnull, readonly, strong, nonatomic)
     ADJSdkPackageSenderController *sdkPackageSenderController;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
+@property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
+
 
 /*
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
@@ -78,7 +80,6 @@
     ADJBillingSubscriptionController *billingSubscriptionController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJLaunchedDeeplinkController *launchedDeeplinkController;
-@property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
 @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
 @property (nonnull, readonly, strong, nonatomic)
