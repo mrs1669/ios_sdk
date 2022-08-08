@@ -42,9 +42,10 @@
 
 + (nullable NSString *)urlReservedEncodeWithSpaceAsPlus:(nonnull NSString *)stringToEncode;
 
-+ (nonnull NSString *)joinString:(nonnull NSString *)first;
++ (nonnull NSString *)joinString:(nonnull NSString *)first, ...;
 
-//+ (nullable NSString *)stringValueOrNil:(nullable NonEmptyString *)value;
+// TODO: (Gena) Why this method declaration was commented out? It's used ADJSessionDeviceIdsData.
++ (nullable NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value;
 
 //+ (void)
 //    transferExternalParametersWithFoundationMapToRead:

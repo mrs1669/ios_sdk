@@ -93,8 +93,7 @@
 
     _hasMeasurementSessionStart = NO;
 
-    ADJStorageRootController *_Nonnull storageRootController =
-        preSdkInitRootController.storageRootController;
+    ADJStorageRootController *_Nonnull storageRootController = preSdkInitRootController.storageRootController;
 
     ADJSdkConfigData *_Nonnull sdkConfigData = entryRoot.sdkConfigData;
 /*
@@ -114,14 +113,13 @@
             clock:preSdkInitRootController.clock
             clientSdk:ADJClientSdk
             clientConfigData:clientConfigData
-            deviceController:nil//preSdkInitRootController.deviceController
+            deviceController:preSdkInitRootController.deviceController
             globalCallbackParametersStorage:nil
                 //preSdkInitRootController.storageRootController.globalCallbackParametersStorage
             globalPartnerParametersStorage:nil
                 //preSdkInitRootController.storageRootController.globalPartnerParametersStorage
-            eventStateStorage:nil//preSdkInitRootController.storageRootController.eventStateStorage
-            measurementSessionStateStorage:
-                preSdkInitRootController.storageRootController.measurementSessionStateStorage];
+            eventStateStorage:preSdkInitRootController.storageRootController.eventStateStorage
+            measurementSessionStateStorage:preSdkInitRootController.storageRootController.measurementSessionStateStorage];
 
     _sdkPackageSenderController =
         [[ADJSdkPackageSenderController alloc]
@@ -179,7 +177,7 @@
         [[ADJLaunchedDeeplinkController alloc] initWithLoggerFactory:loggerFactory
                                                     sdkPackageBuilder:self.sdkPackageBuilder
                                                   mainQueueController:self.mainQueueController];
-
+*/
     _eventController = [[ADJEventController alloc]
                             initWithLoggerFactory:loggerFactory
                             sdkPackageBuilder:self.sdkPackageBuilder
@@ -189,7 +187,7 @@
                             mainQueueController:self.mainQueueController
                             maxCapacityEventDeduplication:
                                 clientConfigData.eventIdDeduplicationMaxCapacity];
-
+/*
     _pushTokenController = [[ADJPushTokenController alloc]
                                 initWithLoggerFactory:loggerFactory
                                 sdkPackageBuilder:self.sdkPackageBuilder
@@ -201,19 +199,15 @@
             threadExecutorFactory:entryRoot.threadController
             foregroundTimerStartMilli:sdkConfigData.foregroundTimerStartMilli
             foregroundTimerIntervalMilli:sdkConfigData.foregroundTimerIntervalMilli];
+ */
 
-    _reachabilityController =
-        [[ADJReachabilityController alloc]
-            initWithLoggerFactory:loggerFactory
-            threadController:entryRoot.threadController
-            targetEndpoint:[self.mainQueueController defaultTargetUrl]];
-
-    _pausingController =
-        [[ADJPausingController alloc]
-            initWithLoggerFactory:loggerFactory
-            threadExecutorFactory:entryRoot.threadController
-            canSendInBackground:clientConfigData.canSendInBackground];
-
+    _reachabilityController = [[ADJReachabilityController alloc] initWithLoggerFactory:loggerFactory
+                                                                      threadController:entryRoot.threadController
+                                                                        targetEndpoint:[self.mainQueueController defaultTargetUrl]];
+    _pausingController = [[ADJPausingController alloc] initWithLoggerFactory:loggerFactory
+                                                       threadExecutorFactory:entryRoot.threadController
+                                                         canSendInBackground:clientConfigData.canSendInBackground];
+/*
     _thirdPartySharingController =
         [[ADJThirdPartySharingController alloc]
              initWithLoggerFactory:loggerFactory
@@ -330,11 +324,13 @@
     [self.launchedDeeplinkController
         ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
 }
+*/
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData {
     [self.eventController ccTrackEventWithClientData:clientEventData];
 }
 
+/*
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
     [self.pushTokenController ccTrackPushTokenWithClientData:clientPushTokenData];
 }
@@ -387,19 +383,16 @@
 }
 */
 #pragma mark Internal Methods
-- (void)
-    ccSubscribeAllWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
-    preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController
-{
-    [entryRoot
-        ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:self.sdkInitPublisher
-        publishingGatePublisher:self.publishingGatePublisher];
+- (void)ccSubscribeAllWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
+           preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController {
 
-    [preSdkInitRootController
-        ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:entryRoot
-        postSdkInitRootController:self
-        sdkInitPublisher:self.sdkInitPublisher
-        publishingGatePublisher:self.publishingGatePublisher];
+    [entryRoot ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:self.sdkInitPublisher
+                                                    publishingGatePublisher:self.publishingGatePublisher];
+
+    [preSdkInitRootController ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:entryRoot
+                                                          postSdkInitRootController:self
+                                                                   sdkInitPublisher:self.sdkInitPublisher
+                                                            publishingGatePublisher:self.publishingGatePublisher];
 
     [self ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:entryRoot
                                        preSdkInitRootController:preSdkInitRootController];
@@ -437,7 +430,7 @@
     [self.logQueueController
          ccSubscribeToPublishersWithSdkInitPublisher:self.sdkInitPublisher
          pausingPublisher:self.pausingController.pausingPublisher];
-
+*/
     [self.mainQueueController
          ccSubscribeToPublishersWithSdkInitPublisher:self.sdkInitPublisher
          pausingPublisher:self.pausingController.pausingPublisher
@@ -450,7 +443,7 @@
          lifecyclePublisher:preSdkInitRootController.lifecycleController.lifecyclePublisher
          measurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
          sdkActivePublisher:preSdkInitRootController.sdkActivePublisher];
-
+/*
     [self.reachabilityController
         ccSubscribeToPublishersWithmeasurementSessionStartPublisher:
             self.measurementSessionController.measurementSessionStartPublisher];

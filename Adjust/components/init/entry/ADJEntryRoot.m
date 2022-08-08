@@ -101,6 +101,7 @@
 {
     ADJEntryRoot *_Nonnull root = [ADJAdjustInternal rootInstance];
 
+    // TODO: (Gena) Why do we need ths check👇🏻? ('preSdkInitRootController' is created by ADJEntryRoot initializer)
     // no weak/strong self needed since it does not use self inside
     [root.clientExecutor executeInSequenceWithBlock:^{
         if (root.preSdkInitRootController == nil) {

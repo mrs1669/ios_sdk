@@ -42,11 +42,8 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 }
 
 #pragma mark Public API
-- (BOOL)
-    sdkInitWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger
-{
+- (BOOL)sdkInitWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                             adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger {
     if (self.hasSdkInit) {
         [adjustApiLogger error:@"Sdk is already init"];
         return NO;
@@ -154,7 +151,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 
     if (ADJSdkActiveStatusInactive == currentSdkActiveStatus) {
         return [NSString stringWithFormat:
-                    @"Sdk cannot perform %@. Sdk was forgotten in accordance to GDPR law",
+                    @"Sdk cannot perform %@. Sdk is currently inactive",
                     source];
     }
 

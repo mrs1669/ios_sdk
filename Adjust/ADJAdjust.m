@@ -21,6 +21,7 @@
 
 #pragma mark Public API
 + (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig {
+
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
@@ -37,21 +38,34 @@
     }];
 }
 
-//+ (void)inactivateSdk {
-//    [ADJEntryRoot executeBlockInClientContext:
-//        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-//    {
-//        [adjustAPI ccInactivateSdk];
-//    }];
-//}
-//
-//+ (void)reactivateSdk {
-//    [ADJEntryRoot executeBlockInClientContext:
-//        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-//    {
-//        [adjustAPI ccReactivateSdk];
-//    }];
-//}
++ (void)switchToOfflineMode {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        [adjustAPI ccPutSdkOffline];
+    }];
+}
++ (void)switchBackToOnlineMode {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        [adjustAPI ccPutSdkOnline];
+    }];
+}
+
++ (void)inactivateSdk {
+    [ADJEntryRoot executeBlockInClientContext:
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
+        [adjustAPI ccInactivateSdk];
+    }];
+}
+
++ (void)reactivateSdk {
+    [ADJEntryRoot executeBlockInClientContext:
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
+        [adjustAPI ccReactivateSdk];
+    }];
+}
 
 
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {

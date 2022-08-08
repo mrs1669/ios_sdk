@@ -73,9 +73,8 @@
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 */
 
-- (void)
-    addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+- (void) addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
+                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 /*
 - (void)

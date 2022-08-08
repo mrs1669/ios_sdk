@@ -83,9 +83,7 @@
                                                   source:@"when delay ended"];
 }
 
-- (nonnull ADJMainQueueResponseProcessingData *)
-    processReceivedSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponse
-{
+- (nonnull ADJMainQueueResponseProcessingData *) processReceivedSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponse {
     // received sdk response implies that is no longer sending
     self.isSending = NO;
 
@@ -150,6 +148,7 @@
         return NO;
     }
 
+    // TODO: (Gena) Why cannot we add this code to 'hasPackageAtFront' check above?
     if (! hasPackageAtFront) {
         [self.logger debug:@"Cannot send package at front because it's empty"];
         return NO;

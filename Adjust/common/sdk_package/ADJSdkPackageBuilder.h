@@ -47,18 +47,15 @@
 ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
 
 // instantiation
-- (nonnull instancetype)
-initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-clock:(nonnull ADJClock *)clock
-clientSdk:(nonnull NSString *)clientSdk
-clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-deviceController:(nonnull ADJDeviceController *)deviceController
-globalCallbackParametersStorage:
-(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
-globalPartnerParametersStorage:
-(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
-eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                        clock:(nonnull ADJClock *)clock
+                                    clientSdk:(nonnull NSString *)clientSdk
+                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+                             deviceController:(nonnull ADJDeviceController *)deviceController
+              globalCallbackParametersStorage:(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
+               globalPartnerParametersStorage:(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
+                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
 
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;

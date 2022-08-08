@@ -44,9 +44,9 @@
     self.postSdkInitRootControllerWeak = postSdkInitRootController;
 }
 
-- (void)ccSubscribeToPublishersWithPreFirstSessionStartPublisher:
+- (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:
 (nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher
-                                        sdkSessionStartPublisher:
+                                        measurementSessionStartPublisher:
 (nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher {
     [preFirstMeasurementSessionStartPublisher addSubscriber:self];
     [measurementSessionStartPublisher addSubscriber:self];
@@ -68,13 +68,13 @@
 }
 
 #pragma mark Public API
-#pragma mark - ADJPreFirstSdkSessionStartSubscriber
-- (void)ccPreFirstSdkSessionStart:(BOOL)hasFirstSessionHappened {
+#pragma mark - ADJPreFirstMeasurementSessionStartSubscriber
+- (void)ccPreFirstMeasurementSessionStart:(BOOL)hasFirstSessionHappened {
     [self ccProcessClientActionsWithIsPreFirstSession:! hasFirstSessionHappened];
 }
 
-#pragma mark - ADJSdkSessionStartSubscriber
-- (void)ccSdkSessionStartWithStatus:(nonnull NSString *)sdkSessionStartStatus {
+#pragma mark - ADJMeasurementSessionStartSubscriber
+- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
     [self ccProcessClientActionsWithIsPreFirstSession:NO];
 }
 

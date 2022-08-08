@@ -434,7 +434,6 @@
     updateMeasurementSessionStateStorageAction:
         (nullable ADJMeasurementSessionStateStorageAction *)updateMeasurementSessionStateStorageAction
 {
-    /*
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger error:@"Cannot Build and Send Session Package"
@@ -456,7 +455,6 @@
 
     [mainQueueController addSessionPackageToSendWithData:sessionPackageData
                                      sqliteStorageAction:updateMeasurementSessionStateStorageAction];
-     */
 }
 
 - (void)sdkBecameActive {

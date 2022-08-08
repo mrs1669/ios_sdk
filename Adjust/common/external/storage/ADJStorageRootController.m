@@ -59,9 +59,8 @@
 {
     self = [super init];
 
-    _storageExecutor =
-        [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                         sourceDescription:@"storageExecutor"];
+    _storageExecutor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                                                                        sourceDescription:@"storageExecutor"];
 
     _keychainStorage = [[ADJKeychainStorage alloc] initWithLoggerFactory:loggerFactory];
 
@@ -72,16 +71,16 @@
 
 //    buildAndInjectStorage(attributionStateStorage, ADJAttributionStateStorage);
 //    buildAndInjectStorage(asaAttributionStateStorage, ADJAsaAttributionStateStorage);
-//    buildAndInjectStorage(clientActionStorage, ADJClientActionStorage);
-//    buildAndInjectStorage(deviceIdsStorage, ADJDeviceIdsStorage);
-//    buildAndInjectStorage(eventStateStorage, ADJEventStateStorage);
-//    buildAndInjectStorage(eventDeduplicationStorage, ADJEventDeduplicationStorage);
+    buildAndInjectStorage(clientActionStorage, ADJClientActionStorage);
+    buildAndInjectStorage(deviceIdsStorage, ADJDeviceIdsStorage);
+    buildAndInjectStorage(eventStateStorage, ADJEventStateStorage);
+    buildAndInjectStorage(eventDeduplicationStorage, ADJEventDeduplicationStorage);
 //    buildAndInjectStorage(gdprForgetStateStorage, ADJGdprForgetStateStorage);
 //    buildAndInjectStorage(globalCallbackParametersStorage, ADJGlobalCallbackParametersStorage);
 //    buildAndInjectStorage(globalPartnerParametersStorage, ADJGlobalPartnerParametersStorage);
 //    buildAndInjectStorage(logQueueStorage, ADJLogQueueStorage);
     buildAndInjectStorage(mainQueueStorage, ADJMainQueueStorage);
-//    buildAndInjectStorage(sdkActiveStateStorage, ADJSdkActiveStateStorage);
+    buildAndInjectStorage(sdkActiveStateStorage, ADJSdkActiveStateStorage);
     buildAndInjectStorage(measurementSessionStateStorage, ADJMeasurementSessionStateStorage);
 
     [self.sqliteController readAllIntoMemorySync];

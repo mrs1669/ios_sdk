@@ -20,24 +20,15 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
- @property (nonnull, readonly, strong, nonatomic)
-    ADJSdkActiveStatePublisher *sdkActiveStatePublisher;
-
+ @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStatePublisher *sdkActiveStatePublisher;
  @property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
- @property (nonnull, readonly, strong, nonatomic)
-    ADJStorageRootController *storageRootController;
- @property (nonnull, readonly, strong, nonatomic)
-     ADJGdprForgetController *gdprForgetController;
- @property (nonnull, readonly, strong, nonatomic)
-     ADJLifecycleController *lifecycleController;
- @property (nonnull, readonly, strong, nonatomic)
-     ADJOfflineController *offlineController;
- @property (nonnull, readonly, strong, nonatomic)
-     ADJClientActionController *clientActionController;
- @property (nonnull, readonly, strong, nonatomic)
-     ADJDeviceController *deviceController;
- @property (nonnull, readonly, strong, nonatomic)
-     ADJClientCallbacksController *clientCallbacksController;
+ @property (nonnull, readonly, strong, nonatomic) ADJStorageRootController *storageRootController;
+ @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetController *gdprForgetController;
+ @property (nonnull, readonly, strong, nonatomic) ADJLifecycleController *lifecycleController;
+ @property (nonnull, readonly, strong, nonatomic) ADJOfflineController *offlineController;
+ @property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
+ @property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
+ @property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
  @property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
 */
 
@@ -62,9 +53,8 @@
 
     _clock = [[ADJClock alloc] init];
 
-    _storageRootController = [[ADJStorageRootController alloc]
-                                initWithLoggerFactory:loggerFactory
-                                threadExecutorFactory:entryRoot.threadController];
+    _storageRootController = [[ADJStorageRootController alloc] initWithLoggerFactory:loggerFactory
+                                                               threadExecutorFactory:entryRoot.threadController];
 
 //    _gdprForgetController =
 //        [[ADJGdprForgetController alloc]
@@ -79,34 +69,30 @@
                                 doNotReadCurrentLifecycleStatus:
                                     entryRoot.sdkConfigData.doNotReadCurrentLifecycleStatus];
 
-//    _offlineController = [[ADJOfflineController alloc] initWithLoggerFactory:loggerFactory];
-//
-//    _clientActionController = [[ADJClientActionController alloc]
-//                                    initWithLoggerFactory:loggerFactory
-//                                    clientActionStorage:
-//                                        self.storageRootController.clientActionStorage
-//                                    clock:self.clock];
-//
-//    _deviceController = [[ADJDeviceController alloc]
-//                            initWithLoggerFactory:loggerFactory
-//                                threadPool:entryRoot.threadController
-//                                clock:self.clock
-//                                deviceIdsStorage:self.storageRootController.deviceIdsStorage
-//                                keychainStorage:self.storageRootController.keychainStorage
-//                                deviceIdsConfigData:entryRoot.sdkConfigData.sessionDeviceIdsConfigData];
-//
+    _offlineController = [[ADJOfflineController alloc] initWithLoggerFactory:loggerFactory];
+
+    _clientActionController = [[ADJClientActionController alloc] initWithLoggerFactory:loggerFactory
+                                                                   clientActionStorage:self.storageRootController.clientActionStorage
+                                                                                 clock:self.clock];
+
+    _deviceController = [[ADJDeviceController alloc]
+                            initWithLoggerFactory:loggerFactory
+                                threadPool:entryRoot.threadController
+                                clock:self.clock
+                                deviceIdsStorage:self.storageRootController.deviceIdsStorage
+                                keychainStorage:self.storageRootController.keychainStorage
+                                deviceIdsConfigData:entryRoot.sdkConfigData.sessionDeviceIdsConfigData];
+
 //    _clientCallbacksController =
 //        [[ADJClientCallbacksController alloc]
 //            initWithLoggerFactory:loggerFactory
 //            attributionStateStorage:self.storageRootController.attributionStateStorage
 //            clientReturnExecutor:[entryRoot clientReturnExecutor]
 //            deviceController:self.deviceController];
-//
-//    _sdkActiveState =
-//        [[ADJSdkActiveState alloc]
-//            initWithLoggerFactory:loggerFactory
-//            isGdprForgotten:[self.gdprForgetController isForgotten]];
-//
+
+    _sdkActiveState = [[ADJSdkActiveState alloc] initWithLoggerFactory:loggerFactory
+                                                       isGdprForgotten:NO]; //TODO: (Gena)Uncomment //[self.gdprForgetController isForgotten]];
+
 //    _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
 
     return self;
@@ -121,83 +107,67 @@
         [self.logger error:@"Cannot ccSdkInit without a reference to entry root"];
         return;
     }
-/*
-    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-        self.storageRootController.sdkActiveStateStorage;
 
-    BOOL canSdkInit = [self.sdkActiveState
-        sdkInitWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
-        adjustApiLogger:entryRoot.adjustApiLogger];
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
 
+    BOOL canSdkInit = [self.sdkActiveState sdkInitWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
+                                                                adjustApiLogger:entryRoot.adjustApiLogger];
     if (! canSdkInit) {
         return;
     }
-*/
-    ADJPostSdkInitRootController *_Nonnull postSdkInitRootController =
-        [entryRoot ccCreatePostSdkInitRootControllerWithClientConfigData:clientConfigData
-                                                preSdkInitRootController:self];
 
-    [postSdkInitRootController ccSdkInitWithEntryRoot:entryRoot
-                                                    preSdkInitRootController:self];
+    ADJPostSdkInitRootController *_Nonnull postSdkInitRootController = [entryRoot ccCreatePostSdkInitRootControllerWithClientConfigData:clientConfigData
+                                                                                                               preSdkInitRootController:self];
+    [postSdkInitRootController ccSdkInitWithEntryRoot:entryRoot preSdkInitRootController:self];
 }
 
-//- (void)ccInactivateSdk {
-//    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//
-//    if (entryRoot == nil) {
-//        [self.logger error:@"Cannot ccInactivateSdk without a reference to entry root"];
-//        return;
-//    }
-//
-//    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-//        self.storageRootController.sdkActiveStateStorage;
-//
-//    ADJValueWO<ADJSdkActiveStateData *> *_Nonnull changedSdkActiveStateDataWO =
-//        [[ADJValueWO alloc] init];
-//    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
-//
-//    [self.sdkActiveState
-//        inactivateSdkWithCurrentSdkActiveStateData:
-//            [sdkActiveStateStorage readOnlyStoredDataValue]
-//        sdkActiveStatusEventWO:sdkActiveStatusEventWO
-//        changedSdkActiveStateDataWO:changedSdkActiveStateDataWO
-//        adjustApiLogger:entryRoot.adjustApiLogger];
-//
-//    [self
-//        handleStateSideEffectsWithSdkActiveStateStorage:sdkActiveStateStorage
-//        changedSdkActiveStateData:changedSdkActiveStateDataWO.changedValue
-//        sdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
-//        source:@"ccInactivateSdk"];
-//}
-//
-//- (void)ccReactivateSdk {
-//    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//    if (entryRoot == nil) {
-//        [self.logger error:@"Cannot ccReactivateSdk without a reference to entry root"];
-//        return;
-//    }
-//
-//    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-//        self.storageRootController.sdkActiveStateStorage;
-//
-//    ADJValueWO<ADJSdkActiveStateData *> *_Nonnull changedSdkActiveStateDataWO =
-//        [[ADJValueWO alloc] init];
-//    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
-//
-//    [self.sdkActiveState
-//        reactivateSdkWithCurrentSdkActiveStateData:
-//            [sdkActiveStateStorage readOnlyStoredDataValue]
-//        sdkActiveStatusEventWO:sdkActiveStatusEventWO
-//        changedSdkActiveStateDataWO:changedSdkActiveStateDataWO
-//        adjustApiLogger:entryRoot.adjustApiLogger];
-//
-//    [self
-//        handleStateSideEffectsWithSdkActiveStateStorage:sdkActiveStateStorage
-//        changedSdkActiveStateData:changedSdkActiveStateDataWO.changedValue
-//        sdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
-//        source:@"ccReactivateSdk"];
-//}
-//
+- (void)ccInactivateSdk {
+    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+
+    if (entryRoot == nil) {
+        [self.logger error:@"Cannot ccInactivateSdk without a reference to entry root"];
+        return;
+    }
+
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
+
+    ADJValueWO<ADJSdkActiveStateData *> *_Nonnull changedSdkActiveStateDataWO = [[ADJValueWO alloc] init];
+    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
+
+    [self.sdkActiveState inactivateSdkWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
+                                             sdkActiveStatusEventWO:sdkActiveStatusEventWO
+                                        changedSdkActiveStateDataWO:changedSdkActiveStateDataWO
+                                                    adjustApiLogger:entryRoot.adjustApiLogger];
+
+    [self handleStateSideEffectsWithSdkActiveStateStorage:sdkActiveStateStorage
+                                changedSdkActiveStateData:changedSdkActiveStateDataWO.changedValue
+                                     sdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
+                                                   source:@"ccInactivateSdk"];
+}
+
+- (void)ccReactivateSdk {
+    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+    if (entryRoot == nil) {
+        [self.logger error:@"Cannot ccReactivateSdk without a reference to entry root"];
+        return;
+    }
+
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
+
+    ADJValueWO<ADJSdkActiveStateData *> *_Nonnull changedSdkActiveStateDataWO = [[ADJValueWO alloc] init];
+    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
+
+    [self.sdkActiveState reactivateSdkWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
+                                             sdkActiveStatusEventWO:sdkActiveStatusEventWO
+                                        changedSdkActiveStateDataWO:changedSdkActiveStateDataWO
+                                                    adjustApiLogger:entryRoot.adjustApiLogger];
+
+    [self handleStateSideEffectsWithSdkActiveStateStorage:sdkActiveStateStorage
+                                changedSdkActiveStateData:changedSdkActiveStateDataWO.changedValue
+                                     sdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
+                                                   source:@"ccReactivateSdk"];
+}
+
 //- (void)ccGdprForgetDevice {
 //    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
 //    if (entryRoot == nil) {
@@ -224,55 +194,47 @@
 //    [self handleSdkActiveStatusEvent:[sdkActiveStatusEventWO changedValue]
 //                              source:@"ccGdprForgetDevice"];
 //}
-//
-//- (void)ccPutSdkOffline {
-//    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-//        self.storageRootController.sdkActiveStateStorage;
-//
-//    NSString *_Nullable cannotPerformActionMessage =
-//        [self.sdkActiveState
-//            canPerformActiveActionWithCurrentSdkActiveStateData:
-//                [sdkActiveStateStorage readOnlyStoredDataValue]
-//            source:@"switchToOfflineMode"];
-//
-//    if (cannotPerformActionMessage != nil) {
-//        ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//        if (entryRoot == nil) {
-//            [self.logger error:@"%@", cannotPerformActionMessage];
-//        } else {
-//            [entryRoot.adjustApiLogger error:@"%@", cannotPerformActionMessage];
-//        }
-//
-//        return;
-//    }
-//
-//    [self.offlineController ccPutSdkOffline];
-//}
-//
-//- (void)ccPutSdkOnline {
-//    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-//        self.storageRootController.sdkActiveStateStorage;
-//
-//    NSString *_Nullable cannotPerformActionMessage =
-//        [self.sdkActiveState
-//            canPerformActiveActionWithCurrentSdkActiveStateData:
-//                [sdkActiveStateStorage readOnlyStoredDataValue]
-//            source:@"switchBackToOnlineMode"];
-//
-//    if (cannotPerformActionMessage != nil) {
-//        ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//        if (entryRoot == nil) {
-//            [self.logger error:@"%@", cannotPerformActionMessage];
-//        } else {
-//            [entryRoot.adjustApiLogger error:@"%@", cannotPerformActionMessage];
-//        }
-//
-//        return;
-//    }
-//
-//    [self.offlineController ccPutSdkOnline];
-//}
-//
+
+- (void)ccPutSdkOffline {
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
+
+    NSString *_Nullable cannotPerformActionMessage = [self.sdkActiveState canPerformActiveActionWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
+                                                                                                                       source:@"switchToOfflineMode"];
+
+    if (cannotPerformActionMessage != nil) {
+        ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+        if (entryRoot == nil) {
+            [self.logger error:@"%@", cannotPerformActionMessage];
+        } else {
+            [entryRoot.adjustApiLogger error:@"%@", cannotPerformActionMessage];
+        }
+
+        return;
+    }
+
+    [self.offlineController ccPutSdkOffline];
+}
+
+- (void)ccPutSdkOnline {
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
+
+    NSString *_Nullable cannotPerformActionMessage = [self.sdkActiveState canPerformActiveActionWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
+                                                                                                                       source:@"switchBackToOnlineMode"];
+
+    if (cannotPerformActionMessage != nil) {
+        ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+        if (entryRoot == nil) {
+            [self.logger error:@"%@", cannotPerformActionMessage];
+        } else {
+            [entryRoot.adjustApiLogger error:@"%@", cannotPerformActionMessage];
+        }
+
+        return;
+    }
+
+    [self.offlineController ccPutSdkOnline];
+}
+
 //- (void)ccForeground {
 //    [self.lifecycleController ccForeground];
 //
@@ -285,7 +247,7 @@
 //        return;
 //    }
 //
-//    [entryRoot.postSdkInitRootController.sdkSessionController ccForeground];
+//    [entryRoot.postSdkInitRootController.measurementSessionController ccForeground];
 //}
 //
 //- (void)ccBackground {
@@ -300,7 +262,7 @@
 //        return;
 //    }
 //
-//    [entryRoot.postSdkInitRootController.sdkSessionController ccBackground];
+//    [entryRoot.postSdkInitRootController.measurementSessionController ccBackground];
 //}
 //
 //- (void)ccAttributionWithCallback:
@@ -316,15 +278,10 @@
 //}
 //
 - (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source {
- /*   ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-        self.storageRootController.sdkActiveStateStorage;
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
 
-    NSString *_Nullable cannotPerformActionMessage =
-        [self.sdkActiveState
-            canPerformActiveActionWithCurrentSdkActiveStateData:
-                [sdkActiveStateStorage readOnlyStoredDataValue]
-            source:source];
-
+    NSString *_Nullable cannotPerformActionMessage = [self.sdkActiveState canPerformActiveActionWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
+                                                                                                                       source:source];
     if (cannotPerformActionMessage != nil) {
         ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
 
@@ -336,7 +293,6 @@
 
         return nil;
     }
- */
 
     id<ADJClientActionsAPI> _Nullable sdkStartClientActionAPI =
         [self sdkStartClientActionAPIwithSource:source];
@@ -349,41 +305,36 @@
 }
 
 #pragma mark - Subscriptions
-- (void)
-    ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
-    postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController
-    sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-{
-    /*
+- (void)ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
+                                    postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController
+                                             sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                                      publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
     // inject post sdk init dependencies
-    [self.clientActionController
-        ccSetDependenciesAtSdkInitWithPostSdkInitRootController:postSdkInitRootController];
+    [self.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:postSdkInitRootController];
 
-    [self.gdprForgetController
-        ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
-            postSdkInitRootController.sdkPackageBuilder
-        clock:self.clock
-        loggerFactory:entryRoot.logController
-        threadpool:entryRoot.threadController
-        sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
-*/
+/** /
+    [self.gdprForgetController ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
+                                                                         clock:self.clock
+                                                                 loggerFactory:entryRoot.logController
+                                                                    threadpool:entryRoot.threadController
+                                                       sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
+/**/
+
     // subscribing to publishers
     [self.lifecycleController
         ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
-/*
     [self.offlineController
         ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
 
-    [self.clientActionController
-        ccSubscribeToPublishersWithPreFirstSdkSessionStartPublisher:
-            postSdkInitRootController.sdkSessionController.preFirstSdkSessionStartPublisher
-        sdkSessionStartPublisher:
-            postSdkInitRootController.sdkSessionController.sdkSessionStartPublisher];
+    [self.clientActionController ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:
+            postSdkInitRootController.measurementSessionController.preFirstMeasurementSessionStartPublisher
+                                                                    measurementSessionStartPublisher:
+            postSdkInitRootController.measurementSessionController.measurementSessionStartPublisher];
 
     [self.deviceController ccSubscribeToPublishersWithLifecylePublisher:
         self.lifecycleController.lifecyclePublisher];
-
+    
+/*
     [self.gdprForgetController
         ccSubscribeToPublishersWithSdkInitPublisher:postSdkInitRootController.sdkInitPublisher
         publishingGatePublisher:publishingGatePublisher
@@ -405,19 +356,14 @@
 
 #pragma mark - ADJPublishingGateSubscriber
 - (void)ccAllowedToPublishNotifications {
-    /*
-    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-        self.storageRootController.sdkActiveStateStorage;
-
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
     ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
 
-    [self.sdkActiveState
-         canNowPublishWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
-         sdkActiveStatusEventWO:sdkActiveStatusEventWO];
+    [self.sdkActiveState canNowPublishWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
+                                             sdkActiveStatusEventWO:sdkActiveStatusEventWO];
 
     [self handleSdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
                               source:@"ccAllowedToPublishNotifications"];
-     */
 }
 
 //#pragma mark - ADJGdprForgetSubscriber
@@ -449,36 +395,31 @@
 //    [self handleSdkActiveStatusEvent:[sdkActiveStatusEventWO changedValue]
 //                              source:@"GdprForgetEvent"];
 //}
-//
-//- (void)
-//    handleStateSideEffectsWithSdkActiveStateStorage:
-//        (nonnull ADJSdkActiveStateStorage *)sdkActiveStateStorage
-//    changedSdkActiveStateData:(nullable ADJSdkActiveStateData *)changedSdkActiveStateData
-//    sdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
-//    source:(nonnull NSString *)source
-//{
-//    if (changedSdkActiveStateData != nil) {
-//        [sdkActiveStateStorage updateWithNewDataValue:changedSdkActiveStateData];
-//    }
-//
-//    [self handleSdkActiveStatusEvent:sdkActiveStatusEvent
-//                              source:source];
-//}
-//
-//- (void)handleSdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
-//                            source:(nonnull NSString *)source
-//{
-//    if (sdkActiveStatusEvent == nil) {
-//        return;
-//    }
-//
-//    [self.sdkActivePublisher notifySubscribersWithSubscriberBlock:
-//     ^(id<ADJSdkActiveSubscriber> _Nonnull subscriber)
-//    {
-//        [subscriber ccSdkActiveWithStatus:sdkActiveStatusEvent];
-//    }];
-//}
-//
+
+- (void)handleStateSideEffectsWithSdkActiveStateStorage:(nonnull ADJSdkActiveStateStorage *)sdkActiveStateStorage
+                              changedSdkActiveStateData:(nullable ADJSdkActiveStateData *)changedSdkActiveStateData
+                                   sdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
+                                                 source:(nonnull NSString *)source {
+    if (changedSdkActiveStateData != nil) {
+        [sdkActiveStateStorage updateWithNewDataValue:changedSdkActiveStateData];
+    }
+
+    [self handleSdkActiveStatusEvent:sdkActiveStatusEvent
+                              source:source];
+}
+
+- (void)handleSdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
+                            source:(nonnull NSString *)source {
+    if (sdkActiveStatusEvent == nil) {
+        return;
+    }
+
+    [self.sdkActivePublisher notifySubscribersWithSubscriberBlock:
+     ^(id<ADJSdkActiveSubscriber> _Nonnull subscriber) {
+        [subscriber ccSdkActiveWithStatus:sdkActiveStatusEvent];
+    }];
+}
+
 - (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPIwithSource:(nonnull NSString *)source {
     ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
 

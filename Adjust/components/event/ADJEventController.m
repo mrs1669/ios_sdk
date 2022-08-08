@@ -120,9 +120,8 @@ clientActionRemoveStorageAction:
         return;
     }
 
-    ADJEventPackageData *_Nonnull eventPackageData =
-    [sdkPackageBuilder buildEventPackageWithClientData:clientEventData
-                                          apiTimestamp:apiTimestamp];
+    ADJEventPackageData *_Nonnull eventPackageData = [sdkPackageBuilder buildEventPackageWithClientData:clientEventData
+                                                                                           apiTimestamp:apiTimestamp];
 
     [mainQueueController addEventPackageToSendWithData:eventPackageData
                                    sqliteStorageAction:clientActionRemoveStorageAction];

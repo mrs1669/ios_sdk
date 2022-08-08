@@ -25,8 +25,7 @@
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSender *sender;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJMainQueueStateAndTracker *mainQueueStateAndTracker;
+@property (nonnull, readonly, strong, nonatomic) ADJMainQueueStateAndTracker *mainQueueStateAndTracker;
 
 @end
 
@@ -88,8 +87,7 @@
         return NO;
     }
 
-    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy =
-        [mainQueueStorage copyElementList];
+    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
 
 //    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
 //        if ([self isAsaClickPackageWithData:sdkPackageData]) {
@@ -143,11 +141,10 @@
                             sqliteStorageAction:sqliteStorageAction];
     }];
 }
+*/
 
-- (void)
-    addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+- (void) addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
+                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -158,6 +155,7 @@
     }];
 }
 
+/*
 - (void)
     addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
@@ -362,16 +360,13 @@
 - (void)handleResumeSending {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot handle resuming sending"
-            " without a reference to the storage"];
+        [self.logger error:@"Cannot handle resuming sending without a reference to the storage"];
         return;
     }
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
 
-    BOOL sendPackageAtFront =
-        [self.mainQueueStateAndTracker
-            sendWhenResumeSendingWithHasPackageAtFront:packageAtFront != nil];
+    BOOL sendPackageAtFront = [self.mainQueueStateAndTracker sendWhenResumeSendingWithHasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
@@ -383,8 +378,7 @@
 - (void)handleResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot handle response"
-            " without a reference to the storage"];
+        [self.logger error:@"Cannot handle response without a reference to the storage"];
         return;
     }
 

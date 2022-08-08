@@ -30,8 +30,10 @@
 #import "ADJKeepAliveController.h"
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
+*/
 #import "ADJReachabilityController.h"
 #import "ADJPausingController.h"
+/*
 #import "ADJThirdPartySharingController.h"
 #import "ADJClientSubscriptionsController.h"
 #import "ADJLogQueueController.h"
@@ -57,43 +59,34 @@
 @property (nonnull, readonly, strong, nonatomic) ADJSdkInitPublisher *sdkInitPublisher;
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-    entryRoot:(nonnull ADJEntryRoot *)entryRoot
-    preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
+- (nonnull instancetype) initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+                                     entryRoot:(nonnull ADJEntryRoot *)entryRoot
+                      preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfigData;
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionController *measurementSessionController;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilder;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJSdkPackageSenderController *sdkPackageSenderController;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSenderController *sdkPackageSenderController;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
 @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
 
 
 /*
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJAttributionController *attributionController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJBillingSubscriptionController *billingSubscriptionController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJLaunchedDeeplinkController *launchedDeeplinkController;
+@property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
+@property (nonnull, readonly, strong, nonatomic) ADJBillingSubscriptionController *billingSubscriptionController;
+@property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
 @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJGlobalCallbackParametersController *globalCallbackParametersController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJGlobalPartnerParametersController *globalPartnerParametersController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJReachabilityController *reachabilityController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJPausingController *pausingController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJThirdPartySharingController *thirdPartySharingController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJClientSubscriptionsController *clientSubscriptionsController;
+@property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersController *globalCallbackParametersController;
+@property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersController *globalPartnerParametersController;
+*/
+@property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
+@property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
+/*
+@property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
+@property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
 @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
 @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionController *asaAttributionController;
  */

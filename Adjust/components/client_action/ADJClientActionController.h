@@ -24,9 +24,9 @@ ADJPreFirstMeasurementSessionStartSubscriber,
 ADJMeasurementSessionStartSubscriber
 >
 // subscriptions and dependencies
-- (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController: (nonnull ADJPostSdkInitRootController *)postSdkInitRootController;
+- (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController;
 - (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher
-                                           sdkSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
+                                           measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
