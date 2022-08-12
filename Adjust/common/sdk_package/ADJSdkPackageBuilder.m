@@ -314,9 +314,7 @@
  return [[ADJInfoPackageData alloc] initWithClientSdk:self.clientSdk
  parameters:parameters];
  }
- /**/
 
-/** /
  - (nonnull ADJLogPackageData *)
  buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
  logLevel:(nonnull NSString *)logLevel
@@ -344,22 +342,18 @@
  return [[ADJLogPackageData alloc] initWithClientSdk:self.clientSdk
  parameters:parameters];
  }
- /**/
+ */
 
-/**/
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataOverwrite {
-    ADJStringMapBuilder *_Nonnull parametersBuilder =
-    [self generateParametersBuilderWithPath:ADJSessionPackageDataPath
-                packageSessionDataOverwrite:packageSessionDataOverwrite];
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJSessionPackageDataPath
+                                                                  packageSessionDataOverwrite:packageSessionDataOverwrite];
     
-    ADJStringMap *_Nonnull parameters =
-    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
-                                                       path:ADJSessionPackageDataPath];
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJSessionPackageDataPath];
     
     return [[ADJSessionPackageData alloc] initWithClientSdk:self.clientSdk
                                                  parameters:parameters];
 }
-/**/
 
 /** /
  - (nonnull ADJThirdPartySharingPackageData *)
@@ -402,9 +396,7 @@
  return [[ADJThirdPartySharingPackageData alloc] initWithClientSdk:self.clientSdk
  parameters:parameters];
  }
- /**/
 
-/** /
  - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
  ADJStringMapBuilder *_Nonnull parametersBuilder =
  [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
@@ -416,7 +408,7 @@
  return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
  parameters:parameters];
  }
- /**/
+ */
 
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                           sentAtTimestamp:(nullable ADJTimestampMilli *)sentAtTimestamp {
@@ -505,13 +497,13 @@
     [self injectEventStateFieldsWithParametersBuilder:parametersBuilder
                                                  path:path];
     
-    [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
-                                                         path:path
-                                  callbackParametersOverwrite:callbackParametersOverwrite];
+//    [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
+//                                                         path:path
+//                                  callbackParametersOverwrite:callbackParametersOverwrite];
     
-    [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
-                                                        path:path
-                                  partnerParametersOverwrite:partnerParametersOverwrite];
+//    [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
+//                                                        path:path
+//                                  partnerParametersOverwrite:partnerParametersOverwrite];
     
     [self injectMeasurementSessionFieldsWithParametersBuilder:parametersBuilder
                                                          path:path
@@ -680,12 +672,13 @@
      */
 }
 
+/*
 - (void)injectCallbackParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                        path:(nullable NSString *)path
                                 callbackParametersOverwrite:(nullable ADJStringMap *)callbackParametersOverwrite {
     
     ADJGlobalCallbackParametersStorage *_Nullable globalCallbackParametersStorage = self.globalCallbackParametersStorageWeak;
-    /*
+    
      ADJStringMap *_Nullable globalCallbackParametersMap;
      
      if (globalCallbackParametersStorage == nil) {
@@ -702,16 +695,16 @@
      overwritingMap:callbackParametersOverwrite
      baseMap:globalCallbackParametersMap
      mapKey:ADJParamCallbackParamsKey];
-     */
 }
+*/
 
+/*
 - (void)injectPartnerParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                       path:(nullable NSString *)path
                                 partnerParametersOverwrite:(nullable ADJStringMap *)partnerParametersOverwrite {
     
     ADJGlobalPartnerParametersStorage *_Nullable globalPartnerParametersStorage = self.globalPartnerParametersStorageWeak;
     
-    /*
      ADJStringMap *_Nullable globalPartnerParametersMap;
      
      if (globalPartnerParametersStorage == nil) {
@@ -728,8 +721,8 @@
      overwritingMap:partnerParametersOverwrite
      baseMap:globalPartnerParametersMap
      mapKey:ADJParamPartnerParamsKey];
-     */
 }
+*/
 
 - (void)injectMapParametersWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                   overwritingMap:(nullable ADJStringMap *)overwritingMap

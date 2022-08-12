@@ -25,8 +25,7 @@ ADJMeasurementSessionStartSubscriber
 >
 // subscriptions and dependencies
 - (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController;
-- (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher
-                                           measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
+- (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -39,6 +38,6 @@ ADJMeasurementSessionStartSubscriber
  {
  postSdkInitControllerWeakRef = new WeakReference<>(postSdkInitRootController);
  }
-
+ 
  */
 @end
