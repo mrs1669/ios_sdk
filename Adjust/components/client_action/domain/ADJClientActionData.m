@@ -32,50 +32,47 @@ static NSString *const kIoDataKey = @"ioData";
 @implementation ADJClientActionData
 #pragma mark Instantiation
 + (nullable instancetype)instanceWithIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     ADJStringMap *_Nonnull metadataMap = ioData.metadataMap;
-
+    
     ADJNonEmptyString *_Nullable clientActionHandlerId =
-        [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
-
+    [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
+    
     if (clientActionHandlerId == nil) {
         [logger error:@"Cannot create client action data without client action handler"];
         return nil;
     }
-
+    
     ADJTimestampMilli *_Nullable apiTimestamp =
-        [ADJTimestampMilli
-            instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]
-            logger:logger];
-
+    [ADJTimestampMilli
+     instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]
+     logger:logger];
+    
     if (apiTimestamp == nil) {
         [logger error:@"Cannot create client action data without api timestamp"];
         return nil;
     }
-
+    
     return [[self alloc] initWithClientActionHandlerId:clientActionHandlerId
                                           apiTimestamp:apiTimestamp
                                                 ioData:ioData];
 }
 
-- (nonnull instancetype)
-    initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId
-    nowTimestamp:(nonnull ADJTimestampMilli *)nowTimestamp
-    ioDataBuilder:(nonnull ADJIoDataBuilder *)ioDataBuilder
-{
+- (nonnull instancetype)initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId
+                                         nowTimestamp:(nonnull ADJTimestampMilli *)nowTimestamp
+                                        ioDataBuilder:(nonnull ADJIoDataBuilder *)ioDataBuilder {
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.metadataMapBuilder
-                          key:kClientActionHandlerIdKey
-                        ioValueSerializable:clientActionHandlerId];
-
+                                       key:kClientActionHandlerIdKey
+                       ioValueSerializable:clientActionHandlerId];
+    
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.metadataMapBuilder
-                          key:kApiTimestampKey
-                        ioValueSerializable:nowTimestamp];
-
+                                       key:kApiTimestampKey
+                       ioValueSerializable:nowTimestamp];
+    
     return [self initWithClientActionHandlerId:clientActionHandlerId
                                   apiTimestamp:nowTimestamp
                                         ioData:[[ADJIoData alloc] initWithIoDataBuider:
-                                                    ioDataBuilder]];
+                                                ioDataBuilder]];
 }
 
 - (nullable instancetype)init {
@@ -84,17 +81,15 @@ static NSString *const kIoDataKey = @"ioData";
 }
 
 #pragma mark - Private constructors
-- (nonnull instancetype)
-    initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId
-    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-    ioData:(nonnull ADJIoData *)ioData
-{
+- (nonnull instancetype)initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId
+                                         apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                                               ioData:(nonnull ADJIoData *)ioData {
     self = [super init];
-
+    
     _clientActionHandlerId = clientActionHandlerId;
     _apiTimestamp = apiTimestamp;
     _ioData = ioData;
-
+    
     return self;
 }
 
@@ -102,20 +97,20 @@ static NSString *const kIoDataKey = @"ioData";
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                ADJClientActionDataMetadataTypeValue,
-                    kClientActionHandlerIdKey, self.clientActionHandlerId,
-                    kApiTimestampKey, self.apiTimestamp,
-                    kIoDataKey, self.ioData,
-                nil];
+            ADJClientActionDataMetadataTypeValue,
+            kClientActionHandlerIdKey, self.clientActionHandlerId,
+            kApiTimestampKey, self.apiTimestamp,
+            kIoDataKey, self.ioData,
+            nil];
 }
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + [self.clientActionHandlerId hash];
     hashCode = ADJHashCodeMultiplier * hashCode + [self.apiTimestamp hash];
     hashCode = ADJHashCodeMultiplier * hashCode + [self.ioData hash];
-
+    
     return hashCode;
 }
 
@@ -123,15 +118,15 @@ static NSString *const kIoDataKey = @"ioData";
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJClientActionData class]]) {
         return NO;
     }
-
+    
     ADJClientActionData *other = (ADJClientActionData *)object;
     return [ADJUtilObj objectEquals:self.clientActionHandlerId other:other.clientActionHandlerId]
-        && [ADJUtilObj objectEquals:self.apiTimestamp other:other.apiTimestamp]
-        && [ADJUtilObj objectEquals:self.ioData other:other.ioData];
+    && [ADJUtilObj objectEquals:self.apiTimestamp other:other.apiTimestamp]
+    && [ADJUtilObj objectEquals:self.ioData other:other.ioData];
 }
 
 @end

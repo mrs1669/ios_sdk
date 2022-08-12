@@ -27,10 +27,9 @@ NS_ASSUME_NONNULL_END
 + (nullable instancetype)instanceWithIoData:(nonnull ADJIoData *)ioData
                                      logger:(nonnull ADJLogger *)logger;
 
-- (nonnull instancetype)
-    initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId
-    nowTimestamp:(nonnull ADJTimestampMilli *)nowTimestamp
-    ioDataBuilder:(nonnull ADJIoDataBuilder *)ioDataBuilder;
+- (nonnull instancetype)initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId
+                                         nowTimestamp:(nonnull ADJTimestampMilli *)nowTimestamp
+                                        ioDataBuilder:(nonnull ADJIoDataBuilder *)ioDataBuilder;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
