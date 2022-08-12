@@ -13,26 +13,26 @@
 #import "ADJThreadExecutorFactory.h"
 #import "ADJKeychainStorage.h"
 #import "ADJSQLiteController.h"
-
-//#import "ADJAttributionStateStorage.h"
-//#import "ADJAsaAttributionStateStorage.h"
 #import "ADJClientActionStorage.h"
 #import "ADJDeviceIdsStorage.h"
 #import "ADJEventStateStorage.h"
 #import "ADJEventDeduplicationStorage.h"
-//#import "ADJGdprForgetStateStorage.h"
-//#import "ADJGlobalCallbackParametersStorage.h"
-//#import "ADJGlobalPartnerParametersStorage.h"
-//#import "ADJLogQueueStorage.h"
+/*
+ #import "ADJAttributionStateStorage.h"
+ #import "ADJAsaAttributionStateStorage.h"
+ #import "ADJGdprForgetStateStorage.h"
+ #import "ADJGlobalCallbackParametersStorage.h"
+ #import "ADJGlobalPartnerParametersStorage.h"
+ #import "ADJLogQueueStorage.h"
+ */
 #import "ADJMainQueueStorage.h"
 #import "ADJSdkActiveStateStorage.h"
 #import "ADJMeasurementSessionStateStorage.h"
 
 @interface ADJStorageRootController : NSObject<ADJTeardownFinalizer>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

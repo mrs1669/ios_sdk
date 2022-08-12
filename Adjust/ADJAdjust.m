@@ -19,16 +19,16 @@
 
 #pragma mark - Internal Constructors
 
-#pragma mark Public API
-+ (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig {
+#pragma mark - Public API
 
+#pragma mark Initialize SDK Config
+
++ (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig {
     [ADJEntryRoot executeBlockInClientContext:
-     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-     {
-        ADJClientConfigData *_Nullable clientConfigData =
-        [ADJClientConfigData instanceFromClientWithAdjustConfig:adjustConfig
-                                                         logger:apiLogger];
-        
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
+        ADJClientConfigData *_Nullable clientConfigData = [ADJClientConfigData
+                                                           instanceFromClientWithAdjustConfig:adjustConfig
+                                                           logger:apiLogger];
         if (clientConfigData == nil) {
             [apiLogger error:@"Cannot init SDK without valid adjust config"];
             return;
@@ -38,20 +38,22 @@
     }];
 }
 
+#pragma mark Offline/ Online Methods
+
 + (void)switchToOfflineMode {
     [ADJEntryRoot executeBlockInClientContext:
-        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-    {
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
         [adjustAPI ccPutSdkOffline];
     }];
 }
 + (void)switchBackToOnlineMode {
     [ADJEntryRoot executeBlockInClientContext:
-        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-    {
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
         [adjustAPI ccPutSdkOnline];
     }];
 }
+
+#pragma mark Inactive/ Reactive SDK Methods
 
 + (void)inactivateSdk {
     [ADJEntryRoot executeBlockInClientContext:
@@ -67,29 +69,28 @@
     }];
 }
 
+#pragma mark Track Event Method
 
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
     [ADJEntryRoot executeBlockInClientContext:
-        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-    {
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
         id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-            [adjustAPI ccClientActionsWithSource:@"trackEvent"];
-
+        [adjustAPI ccClientActionsWithSource:@"trackEvent"];
+        
         if (clientActionsAPI == nil) {
             return;
         }
-
+        
         ADJClientEventData *_Nullable clientEventData =
-            [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
-                                                            logger:apiLogger];
-
+        [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
+                                                       logger:apiLogger];
+        
         if (clientEventData == nil) {
             return;
         }
-
+        
         [clientActionsAPI ccTrackEventWithClientData:clientEventData];
     }];
 }
-
 
 @end

@@ -13,8 +13,7 @@
 // TODO move to generic storage Component
 @interface ADJKeychainStorage : ADJCommonBase
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
 
 // public api
 - (nullable ADJNonEmptyString *)valueInGenericPasswordKeychainWithKey:(nonnull NSString *)key

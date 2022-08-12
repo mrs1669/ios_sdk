@@ -43,8 +43,7 @@
 
 @interface ADJSdkPackageBuilder : ADJCommonBase
 // publishers
-@property (nonnull, readonly, strong, nonatomic)
-ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -58,7 +57,7 @@ ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
                measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
 
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
-apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+                                                    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
 // public api
 /*
