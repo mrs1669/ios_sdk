@@ -16,11 +16,10 @@
 
 @interface ADJSessionDeviceIdsController : ADJCommonBase
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadPool:(nonnull id<ADJThreadPool>)threadPool
-    timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
-    canCacheData:(BOOL)canCacheData;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                            timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
+                                 canCacheData:(BOOL)canCacheData;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

@@ -12,8 +12,6 @@
 
 @interface ADJAppleAttributionController : ADJCommonBase
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
-
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
 
 @end

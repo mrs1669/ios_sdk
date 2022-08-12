@@ -29,22 +29,20 @@
     volatile BOOL _canUseCacheData;
 }
 
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadPool:(nonnull id<ADJThreadPool>)threadPool
-    timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
-    canCacheData:(BOOL)canCacheData
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                            timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
+                                 canCacheData:(BOOL)canCacheData {
     self = [super initWithLoggerFactory:loggerFactory source:@"SessionDeviceIdsController"];
     _threadPoolWeak = threadPool;
     _timeoutPerAttempt = timeoutPerAttempt;
     _canCacheData = canCacheData;
-
+    
     _sessionDeviceIdsDataCached = nil;
     _identifierForVendorCached = nil;
-
+    
     _canUseCacheData = NO;
-
+    
     return self;
 }
 
@@ -62,38 +60,38 @@
     if (_canUseCacheData) {
         return self.sessionDeviceIdsDataCached;
     }
-
+    
     if (self.timeoutPerAttempt == nil) {
         return [self returnFailed:@"without timeout per attempt"];
     }
-
+    
     id<ADJThreadPool> _Nullable threadPool = self.threadPoolWeak;
     if (threadPool == nil) {
         return [self returnFailed:@"without reference to thread pool"];
     }
-
+    
     ADJNonEmptyString *_Nullable identifierForVendor =
-        [self getIdentifierForVendorWithThreadPool:threadPool
-                                 timeoutPerAttempt:self.timeoutPerAttempt];
-
+    [self getIdentifierForVendorWithThreadPool:threadPool
+                             timeoutPerAttempt:self.timeoutPerAttempt];
+    
     ADJNonEmptyString *_Nullable advertisingIdentifier =
-        [self getAdvertisingIdentifierWithThreadPool:threadPool
-                                   timeoutPerAttempt:self.timeoutPerAttempt];
-
+    [self getAdvertisingIdentifierWithThreadPool:threadPool
+                               timeoutPerAttempt:self.timeoutPerAttempt];
+    
     if (identifierForVendor == nil && advertisingIdentifier == nil) {
         return [self returnFailed:@"either session device ids"];
     }
-
+    
     ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
-        [[ADJSessionDeviceIdsData alloc]
-            initWithAdvertisingIdentifier:advertisingIdentifier
-            identifierForVendor:identifierForVendor];
-
+    [[ADJSessionDeviceIdsData alloc]
+     initWithAdvertisingIdentifier:advertisingIdentifier
+     identifierForVendor:identifierForVendor];
+    
     if (self.canCacheData) {
         self.sessionDeviceIdsDataCached = sessionDeviceIdsData;
         _canUseCacheData = YES;
     }
-
+    
     return sessionDeviceIdsData;
 }
 
@@ -103,65 +101,61 @@
     return [[ADJSessionDeviceIdsData alloc] initWithFailMessage:failReason];
 }
 
-- (nullable ADJNonEmptyString *)
-    getIdentifierForVendorWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
-    timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
-{
+- (nullable ADJNonEmptyString *)getIdentifierForVendorWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
+                                                   timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt {
     if (self.identifierForVendorCached != nil) {
         return self.identifierForVendorCached;
     }
-
+    
     __typeof(self) __weak weakSelf = self;
-
+    
     __block ADJValueWO<ADJNonEmptyString *> *_Nonnull identifierForVendorWO =
-        [[ADJValueWO alloc] init];
-
+    [[ADJValueWO alloc] init];
+    
     BOOL readIdentifierForVendorFinishedSuccessfully =
-        [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                     blockToExecute:
-         ^{
-            __typeof(weakSelf) __strong strongSelf = weakSelf;
-            if (strongSelf == nil) { return; }
-
-            UIDevice *_Nonnull currentDevice = UIDevice.currentDevice;
-
-            ADJNonEmptyString *_Nullable identifierForVendor =
-                [self readIdentifierForVendorWithCurrentDevice:currentDevice];
-            [identifierForVendorWO setNewValue:identifierForVendor];
-        }];
-
+    [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                 blockToExecute:
+     ^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+        
+        UIDevice *_Nonnull currentDevice = UIDevice.currentDevice;
+        
+        ADJNonEmptyString *_Nullable identifierForVendor =
+        [self readIdentifierForVendorWithCurrentDevice:currentDevice];
+        [identifierForVendorWO setNewValue:identifierForVendor];
+    }];
+    
     if (! readIdentifierForVendorFinishedSuccessfully) {
         return nil;
     }
-
+    
     return [identifierForVendorWO changedValue];
 }
 
-- (nullable ADJNonEmptyString *)
-    getAdvertisingIdentifierWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
-    timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
-{
+- (nullable ADJNonEmptyString *)getAdvertisingIdentifierWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
+                                                     timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt {
     __typeof(self) __weak weakSelf = self;
-
+    
     __block ADJValueWO<ADJNonEmptyString *> *_Nonnull advertisingIdentifierWO =
-        [[ADJValueWO alloc] init];
-
+    [[ADJValueWO alloc] init];
+    
     BOOL readAdvertisingIdentifierFinishedSuccessfully =
-        [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                     blockToExecute:
-         ^{
-            __typeof(weakSelf) __strong strongSelf = weakSelf;
-            if (strongSelf == nil) { return; }
-
-            ADJNonEmptyString *_Nullable advertisingIdentifier =
-                [strongSelf readAdvertisingIdentifier];
-            [advertisingIdentifierWO setNewValue:advertisingIdentifier];
-        }];
-
+    [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                 blockToExecute:
+     ^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+        
+        ADJNonEmptyString *_Nullable advertisingIdentifier =
+        [strongSelf readAdvertisingIdentifier];
+        [advertisingIdentifierWO setNewValue:advertisingIdentifier];
+    }];
+    
     if (! readAdvertisingIdentifierFinishedSuccessfully) {
         return  nil;
     }
-
+    
     // TODO add idfa zeros check
     return [advertisingIdentifierWO changedValue];
 }
@@ -169,13 +163,13 @@
 // return [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
 - (nullable ADJNonEmptyString *)readAdvertisingIdentifier {
     NSString *_Nonnull className =
-        [ADJUtilF joinString:@"A", @"S", @"identifier", @"manager", nil];
-
+    [ADJUtilF joinString:@"A", @"S", @"identifier", @"manager", nil];
+    
     Class _Nullable adSupportClass = NSClassFromString(className);
     if (adSupportClass == nil) {
         return nil;
     }
-
+    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     NSString *_Nonnull keyManager = [ADJUtilF joinString:@"shared", @"manager", nil];
@@ -183,29 +177,29 @@
     if (![adSupportClass respondsToSelector:selManager]) {
         return nil;
     }
-
+    
     id _Nullable manager = [adSupportClass performSelector:selManager];
     if (manager == nil) {
         return nil;
     }
-
+    
     NSString *_Nonnull keyIdentifier = [ADJUtilF joinString:@"advertising", @"identifier", nil];
     SEL selIdentifier = NSSelectorFromString(keyIdentifier);
     if (![manager respondsToSelector:selIdentifier]) {
         return nil;
     }
-
+    
     id _Nullable identifier = [manager performSelector:selIdentifier];
     if (identifier == nil) {
         return nil;
     }
-
+    
     NSString *_Nonnull keyString = [ADJUtilF joinString:@"UUID", @"string", nil];
     SEL selString = NSSelectorFromString(keyString);
     if (![identifier respondsToSelector:selString]) {
         return nil;
     }
-
+    
     id _Nullable idForAdvertisersString = [identifier performSelector:selString];
 #pragma clang diagnostic pop
     if (idForAdvertisersString == nil
@@ -213,19 +207,17 @@
     {
         return nil;
     }
-
+    
     return [ADJNonEmptyString instanceFromOptionalString:(NSString *)idForAdvertisersString
-                                        sourceDescription:@"Advertising Identifier"
-                                                   logger:self.logger];
+                                       sourceDescription:@"Advertising Identifier"
+                                                  logger:self.logger];
 }
 
-- (nullable ADJNonEmptyString *)readIdentifierForVendorWithCurrentDevice:
-    (nonnull UIDevice *)currentDevice
-{
+- (nullable ADJNonEmptyString *)readIdentifierForVendorWithCurrentDevice:(nonnull UIDevice *)currentDevice {
     return [ADJNonEmptyString
-                instanceFromOptionalString:[UIDevice.currentDevice.identifierForVendor UUIDString]
-                sourceDescription:@"Identifier For Vendor"
-                logger:self.logger];
+            instanceFromOptionalString:[UIDevice.currentDevice.identifierForVendor UUIDString]
+            sourceDescription:@"Identifier For Vendor"
+            logger:self.logger];
 }
 
 @end

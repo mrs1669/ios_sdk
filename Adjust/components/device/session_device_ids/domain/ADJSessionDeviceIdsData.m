@@ -20,10 +20,8 @@
 
 @implementation ADJSessionDeviceIdsData
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithAdvertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
-    identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor
-{
+- (nonnull instancetype)initWithAdvertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
+                                  identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor {
     return [self initWithFailMessage:nil
                advertisingIdentifier:advertisingIdentifier
                  identifierForVendor:identifierForVendor];
@@ -39,25 +37,23 @@
     return nil;
 }
 
-- (nonnull instancetype)
-    initWithFailMessage:(nullable NSString *)failMessage
-    advertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
-    identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor
-{
+- (nonnull instancetype)initWithFailMessage:(nullable NSString *)failMessage
+                      advertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
+                        identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor {
     self = [super init];
-
+    
     _failMessage = failMessage;
     _advertisingIdentifier = advertisingIdentifier;
     _identifierForVendor = identifierForVendor;
-
+    
     return self;
 }
 
 #pragma mark Public API
 - (nonnull ADJAdjustDeviceIds *)toAdjustDeviceIds {
     return [[ADJAdjustDeviceIds alloc]
-                initWithAdvertisingIdentifier:[ADJUtilF stringValueOrNil:self.advertisingIdentifier]
-                identifierForVendor:[ADJUtilF stringValueOrNil:self.identifierForVendor]];
+            initWithAdvertisingIdentifier:[ADJUtilF stringValueOrNil:self.advertisingIdentifier]
+            identifierForVendor:[ADJUtilF stringValueOrNil:self.identifierForVendor]];
 }
 
 @end

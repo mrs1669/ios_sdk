@@ -13,9 +13,8 @@
 
 @interface ADJSessionDeviceIdsData : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithAdvertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
-    identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor;
+- (nonnull instancetype)initWithAdvertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
+                                  identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor;
 
 - (nonnull instancetype)initWithFailMessage:(nullable NSString *)failMessage;
 

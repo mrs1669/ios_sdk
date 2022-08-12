@@ -18,33 +18,27 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 
 @implementation ADJDeviceIdsStorage
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController
-{
-     self = [super initWithLoggerFactory:loggerFactory
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+    self = [super initWithLoggerFactory:loggerFactory
                                  source:@"DeviceIdsStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kDeviceIdsStorageTableName
                       metadataTypeValue:ADJDeviceIdsDataMetadataTypeValue
                 initialDefaultDataValue:[[ADJDeviceIdsData alloc] initWithInitialState]];
-
+    
     return self;
 }
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJDeviceIdsData *)concreteGenerateValueFromIoData:
-    (nonnull ADJIoData *)ioData
-{
+- (nullable ADJDeviceIdsData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
     return [ADJDeviceIdsData instanceFromIoData:ioData
-                                          logger:self.logger];
+                                         logger:self.logger];
 }
-- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:
-    (nonnull ADJDeviceIdsData *)dataValue
-{
+- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJDeviceIdsData *)dataValue {
     return [dataValue toIoData];
 }
 
@@ -55,26 +49,24 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
     return nil;
 }
 
-- (void)
-    migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-    v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+- (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
         [self.logger debug:@"Activity state v4 file not found"];
         return;
     }
-
+    
     [self.logger debug:@"Read v4 activity state: %@", v4ActivityState];
-
+    
     ADJNonEmptyString *_Nullable v4Uuid =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid
-                                     sourceDescription:@"v4 uuid"
-                                                logger:self.logger];
-
+    [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid
+                                sourceDescription:@"v4 uuid"
+                                           logger:self.logger];
+    
     ADJDeviceIdsData *_Nonnull v4DeviceIdsData =
-        [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
-
+    [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
+    
     [self updateWithNewDataValue:v4DeviceIdsData];
 }
 

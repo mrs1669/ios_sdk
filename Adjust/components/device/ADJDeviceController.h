@@ -21,11 +21,10 @@
 #import "ADJSessionDeviceIdsData.h"
 
 @interface ADJDeviceController : ADJCommonBase<
-    // subscriptions
-    ADJLifecycleSubscriber
+// subscriptions
+ADJLifecycleSubscriber
 >
-- (void)ccSubscribeToPublishersWithLifecylePublisher:
-    (nonnull ADJLifecyclePublisher *)lifecyclePublisher;
+- (void)ccSubscribeToPublishersWithLifecylePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
