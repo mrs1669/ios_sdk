@@ -79,6 +79,7 @@
     return NO;
 }
 
+/*
 - (BOOL)containsAsaClickPackage {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
@@ -89,16 +90,16 @@
 
     NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
 
-//    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
-//        if ([self isAsaClickPackageWithData:sdkPackageData]) {
-//            return YES;
-//        }
-//    }
+    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
+        if ([self isAsaClickPackageWithData:sdkPackageData]) {
+            return YES;
+        }
+    }
 
     return NO;
 }
-/*
-- (void)
+
+ - (void)
     addAdRevenuePackageToSendWithData:
         (nonnull ADJAdRevenuePackageData *)adRevenuePackageData
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction

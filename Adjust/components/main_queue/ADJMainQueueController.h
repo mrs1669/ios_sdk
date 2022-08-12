@@ -56,7 +56,7 @@
 
 // public api
 - (BOOL)containsFirstSessionPackage;
-- (BOOL)containsAsaClickPackage;
+//- (BOOL)containsAsaClickPackage;
 /*
 - (void)
     addAdRevenuePackageToSendWithData:

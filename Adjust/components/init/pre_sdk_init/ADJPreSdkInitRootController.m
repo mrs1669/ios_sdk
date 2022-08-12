@@ -312,13 +312,13 @@
     // inject post sdk init dependencies
     [self.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:postSdkInitRootController];
 
-/** /
+/*
     [self.gdprForgetController ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
                                                                          clock:self.clock
                                                                  loggerFactory:entryRoot.logController
                                                                     threadpool:entryRoot.threadController
                                                        sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
-/**/
+*/
 
     // subscribing to publishers
     [self.lifecycleController

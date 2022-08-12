@@ -52,4 +52,5 @@
 - (void)ccClearGlobalPartnerParametersWithClientData:
     (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData;
 */
+
 @end
