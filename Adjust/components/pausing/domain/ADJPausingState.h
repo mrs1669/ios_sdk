@@ -13,8 +13,8 @@
 @interface ADJPausingState : ADJCommonBase
 // instantiation
 - (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    canSendInBackground:(BOOL)canSendInBackground;
+initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+canSendInBackground:(BOOL)canSendInBackground;
 
 // public api
 - (BOOL)ignoringForegroundOrBackground;

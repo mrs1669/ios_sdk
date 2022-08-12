@@ -1260,10 +1260,10 @@
 		6F5A9C69288FEB7E00E8265A /* pausing */ = {
 			isa = PBXGroup;
 			children = (
+				6F5A9C6A288FEBB400E8265A /* ADJPausingSubscriber.h */,
 				0AB23CF5289BEF08008B1835 /* ADJPausingController.h */,
 				0AB23CF6289BEF08008B1835 /* ADJPausingController.m */,
 				0AB23CF4289BEECC008B1835 /* domain */,
-				6F5A9C6A288FEBB400E8265A /* ADJPausingSubscriber.h */,
 			);
 			path = pausing;
 			sourceTree = "<group>";
@@ -1271,9 +1271,9 @@
 		6F5A9C6E288FEC0000E8265A /* offline */ = {
 			isa = PBXGroup;
 			children = (
+				6F5A9C6F288FEC1200E8265A /* ADJOfflineSubscriber.h */,
 				0AB23CF0289BEE4F008B1835 /* ADJOfflineController.h */,
 				0AB23CF1289BEE4F008B1835 /* ADJOfflineController.m */,
-				6F5A9C6F288FEC1200E8265A /* ADJOfflineSubscriber.h */,
 			);
 			path = offline;
 			sourceTree = "<group>";

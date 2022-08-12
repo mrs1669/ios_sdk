@@ -17,22 +17,19 @@
 //- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus;
 
 @interface ADJReachabilityController : ADJCommonBase<
-    ADJTeardownFinalizer,
-    // subscriptions
-    ADJMeasurementSessionStartSubscriber
+ADJTeardownFinalizer,
+// subscriptions
+ADJMeasurementSessionStartSubscriber
 >
-- (void)
-    ccSubscribeToPublishersWithMeasurementSessionStartPublisher:
-        (nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
+- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:
+(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
 
 // publishers
-@property (nonnull, readonly, strong, nonatomic)
-    ADJReachabilityPublisher *reachabilityPublisher;
+@property (nonnull, readonly, strong, nonatomic)ADJReachabilityPublisher *reachabilityPublisher;
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadController:(nonnull ADJThreadController *)threadController
-    targetEndpoint:(nonnull NSString *)targetEndpoint;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             threadController:(nonnull ADJThreadController *)threadController
+                               targetEndpoint:(nonnull NSString *)targetEndpoint;
 
 @end

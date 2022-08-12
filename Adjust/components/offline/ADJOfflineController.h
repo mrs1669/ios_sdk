@@ -13,18 +13,15 @@
 #import "ADJOfflineSubscriber.h"
 
 @interface ADJOfflineController : ADJCommonBase<
-    // subscriptions
-    ADJPublishingGateSubscriber
+// subscriptions
+ADJPublishingGateSubscriber
 >
-- (void)
-    ccSubscribeToPublishersWithPublishingGatePublisher:
-        (nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
+- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJOfflinePublisher *offlinePublisher;
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
 
 // public api
 - (void)ccPutSdkOffline;

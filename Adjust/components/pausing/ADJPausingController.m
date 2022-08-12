@@ -42,22 +42,20 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 
 @implementation ADJPausingController
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    canSendInBackground:(BOOL)canSendInBackground
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+                          canSendInBackground:(BOOL)canSendInBackground {
     self = [super initWithLoggerFactory:loggerFactory source:@"PausingController"];
     _canSendInBackground = canSendInBackground;
-
+    
     _pausingPublisher = [[ADJPausingPublisher alloc] init];
-
+    
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
-
+    
     _pausingState = [[ADJPausingState alloc] initWithLoggerFactory:loggerFactory
-                                                canSendInBackground:canSendInBackground];
-
+                                               canSendInBackground:canSendInBackground];
+    
     return self;
 }
 
@@ -68,10 +66,10 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishPauseOrElseResume =
-            [strongSelf.pausingState publishPauseOrElseResumeWhenCanPublish];
-
+        [strongSelf.pausingState publishPauseOrElseResumeWhenCanPublish];
+        
         if (publishPauseOrElseResume) {
             [strongSelf publishPauseSendingWithSource:ADJFromCanPublish];
         } else {
@@ -86,10 +84,10 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishResume =
-            [strongSelf.pausingState publishResumeWhenOnlineWithSource:ADJResumeFromSdkOnline];
-
+        [strongSelf.pausingState publishResumeWhenOnlineWithSource:ADJResumeFromSdkOnline];
+        
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkOnline];
         }
@@ -100,10 +98,10 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishPause =
-            [strongSelf.pausingState publishPauseWhenOfflineWithSource:ADJPauseFromSdkOffline];
-
+        [strongSelf.pausingState publishPauseWhenOfflineWithSource:ADJPauseFromSdkOffline];
+        
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromSdkOffline];
         }
@@ -116,26 +114,27 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishResume =
-            [strongSelf.pausingState
-                publishResumeWhenNetworkIsReachableWithSource:ADJResumeFromNetworkReachable];
-
+        [strongSelf.pausingState
+         publishResumeWhenNetworkIsReachableWithSource:ADJResumeFromNetworkReachable];
+        
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromNetworkReachable];
         }
     }];
 }
+
 - (void)didBecomeUnreachable {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishPause =
-            [strongSelf.pausingState
-                publishPauseWhenNetworkIsUnreachableWithSource:ADJPauseFromNetworkUnreachable];
-
+        [strongSelf.pausingState
+         publishPauseWhenNetworkIsUnreachableWithSource:ADJPauseFromNetworkUnreachable];
+        
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromNetworkUnreachable];
         }
@@ -147,35 +146,36 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     if ([self.pausingState ignoringForegroundOrBackground]) {
         return;
     }
-
+    
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishResume =
-            [strongSelf.pausingState
-                publishResumeWhenForegroundWithSource:ADJResumeFromForeground];
-
+        [strongSelf.pausingState
+         publishResumeWhenForegroundWithSource:ADJResumeFromForeground];
+        
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromForeground];
         }
     }];
 }
+
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
     if ([self.pausingState ignoringForegroundOrBackground]) {
         return;
     }
-
+    
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishPause =
-            [strongSelf.pausingState
-                publishPauseWhenBackgroundWithSource:ADJPauseFromBackground];
-
+        [strongSelf.pausingState
+         publishPauseWhenBackgroundWithSource:ADJPauseFromBackground];
+        
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromBackground];
         }
@@ -188,11 +188,11 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         BOOL publishResume =
-            [strongSelf.pausingState
-                publishResumeWhenSdkStartWithSource:ADJResumeFromSdkStart];
-
+        [strongSelf.pausingState
+         publishResumeWhenSdkStartWithSource:ADJResumeFromSdkStart];
+        
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkStart];
         }
@@ -205,20 +205,20 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         if ([ADJSdkActiveStatusActive isEqualToString:status]) {
             BOOL publishResume =
-                [strongSelf.pausingState
-                    publishResumeWhenSdkActiveWithSource:ADJResumeFromSdkActive];
-
+            [strongSelf.pausingState
+             publishResumeWhenSdkActiveWithSource:ADJResumeFromSdkActive];
+            
             if (publishResume) {
                 [self publishResumeSendingWithSource:ADJResumeFromSdkActive];
             }
         } else {
             BOOL publishPause =
-                [strongSelf.pausingState
-                    publishPauseWhenSdkNotActiveWithSource:ADJPauseFromSdkNotActive];
-
+            [strongSelf.pausingState
+             publishPauseWhenSdkNotActiveWithSource:ADJPauseFromSdkNotActive];
+            
             if (publishPause) {
                 [self publishPauseSendingWithSource:ADJPauseFromSdkNotActive];
             }
@@ -244,16 +244,16 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 #pragma mark Internal Methods
 - (void)publishPauseSendingWithSource:(nonnull NSString *)source {
     [self.pausingPublisher notifySubscribersWithSubscriberBlock:
-        ^(id<ADJPausingSubscriber> _Nonnull subscriber)
-    {
+     ^(id<ADJPausingSubscriber> _Nonnull subscriber)
+     {
         [subscriber didPauseSendingWithSource:source];
     }];
 }
 
 - (void)publishResumeSendingWithSource:(nonnull NSString *)source {
     [self.pausingPublisher notifySubscribersWithSubscriberBlock:
-        ^(id<ADJPausingSubscriber> _Nonnull subscriber)
-    {
+     ^(id<ADJPausingSubscriber> _Nonnull subscriber)
+     {
         [subscriber didResumeSendingWithSource:source];
     }];
 }
