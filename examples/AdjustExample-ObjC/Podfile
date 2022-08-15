@@ -7,7 +7,7 @@ target 'AdjustExample-ObjC' do
   
   # Pods for AdjustExample-ObjC
   pod 'Adjust', :path => '../../'
-  
+
 end
 
 

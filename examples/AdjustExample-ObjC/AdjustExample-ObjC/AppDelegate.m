@@ -23,9 +23,9 @@
                                                                            environment:ADJEnvironmentSandbox];
     [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 
-//    [self testTrackEventAsync];
+    [self testTrackEventAsync];
 //    [self testOfflineOnlineAsync];
-    [self testActivationAsync];
+//    [self testActivationAsync];
 
     return YES;
 }
