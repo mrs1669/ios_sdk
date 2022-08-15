@@ -2,10 +2,11 @@
 //  AppDelegate.m
 //  AdjustTestApp
 //
-//  Created by Pedro Silva on 27.07.22.
+//  Created by Genady Buchatsky on 27.07.22.
 //
 
 #import "AppDelegate.h"
+//#import 
 
 @interface AppDelegate ()
 
@@ -19,11 +20,11 @@
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
-{
-    //[Adjust appWillOpenUrl:url];
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+//    [Adjust appWillOpenUrl:url];
     return YES;
 }
+
 
 
 
