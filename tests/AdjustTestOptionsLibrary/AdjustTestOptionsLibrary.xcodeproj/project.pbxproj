@@ -13,44 +13,6 @@
 		0AB7AFCB2892AF2400FE60CF /* ATOLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AB7AFC62892AED900FE60CF /* ATOLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		0A7ED7ED2893254800CC20DE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 075D8FC628731314005019E3;
-			remoteInfo = Adjust;
-		};
-		0A7ED7EF2893254800CC20DE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 075D901328731C2D005019E3;
-			remoteInfo = AdjustSdk;
-		};
-		0A7ED7F12893254800CC20DE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 075D903628744D17005019E3;
-			remoteInfo = AdjustSdkTv;
-		};
-		0A7ED7F32893254800CC20DE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 075D905228745EBB005019E3;
-			remoteInfo = AdjustSdkIm;
-		};
-		0A7ED7F52893254F00CC20DE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 075D8FC528731314005019E3;
-			remoteInfo = Adjust;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		0AB7AFB52892AEAA00FE60CF /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -64,7 +26,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Adjust.xcodeproj; path = ../../Adjust.xcodeproj; sourceTree = "<group>"; };
 		0AB7AFB72892AEAA00FE60CF /* libAdjustTestOptionsLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAdjustTestOptionsLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AB7AFC32892AED900FE60CF /* ATOAdjustTestOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATOAdjustTestOptions.m; sourceTree = "<group>"; };
 		0AB7AFC42892AED900FE60CF /* ATOLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATOLogger.m; sourceTree = "<group>"; };
@@ -83,21 +44,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0A7ED7E62893254800CC20DE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0A7ED7EE2893254800CC20DE /* libAdjust.a */,
-				0A7ED7F02893254800CC20DE /* AdjustSdk.framework */,
-				0A7ED7F22893254800CC20DE /* AdjustSdkTv.framework */,
-				0A7ED7F42893254800CC20DE /* AdjustSdkIm.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		0AB7AFAE2892AEAA00FE60CF = {
 			isa = PBXGroup;
 			children = (
-				0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */,
 				0AB7AFB92892AEAA00FE60CF /* AdjustTestOptionsLibrary */,
 				0AB7AFB82892AEAA00FE60CF /* Products */,
 			);
@@ -149,7 +98,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				0A7ED7F62893254F00CC20DE /* PBXTargetDependency */,
 			);
 			name = AdjustTestOptionsLibrary;
 			productName = AdjustTestOptionsLibrary;
@@ -181,49 +129,12 @@
 			mainGroup = 0AB7AFAE2892AEAA00FE60CF;
 			productRefGroup = 0AB7AFB82892AEAA00FE60CF /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 0A7ED7E62893254800CC20DE /* Products */;
-					ProjectRef = 0A7ED7E52893254800CC20DE /* Adjust.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				0AB7AFB62892AEAA00FE60CF /* AdjustTestOptionsLibrary */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		0A7ED7EE2893254800CC20DE /* libAdjust.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libAdjust.a;
-			remoteRef = 0A7ED7ED2893254800CC20DE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A7ED7F02893254800CC20DE /* AdjustSdk.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AdjustSdk.framework;
-			remoteRef = 0A7ED7EF2893254800CC20DE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A7ED7F22893254800CC20DE /* AdjustSdkTv.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AdjustSdkTv.framework;
-			remoteRef = 0A7ED7F12893254800CC20DE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A7ED7F42893254800CC20DE /* AdjustSdkIm.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AdjustSdkIm.framework;
-			remoteRef = 0A7ED7F32893254800CC20DE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0AB7AFB32892AEAA00FE60CF /* Sources */ = {
@@ -236,14 +147,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		0A7ED7F62893254F00CC20DE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Adjust;
-			targetProxy = 0A7ED7F52893254F00CC20DE /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0AB7AFBE2892AEAA00FE60CF /* Debug */ = {
