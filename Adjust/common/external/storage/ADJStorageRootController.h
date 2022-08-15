@@ -64,3 +64,4 @@ NS_DESIGNATED_INITIALIZER;
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end
+

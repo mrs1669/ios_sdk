@@ -33,3 +33,4 @@ ADJMeasurementSessionStartSubscriber
                                targetEndpoint:(nonnull NSString *)targetEndpoint;
 
 @end
+

@@ -34,3 +34,4 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *uuid;
 
 @end
+

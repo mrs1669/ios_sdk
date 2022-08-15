@@ -17,9 +17,10 @@
 
 // public api
 - (nullable ADJNonEmptyString *)valueInGenericPasswordKeychainWithKey:(nonnull NSString *)key
-                                                               service:(nonnull NSString *)service;
+                                                              service:(nonnull NSString *)service;
 - (BOOL)setGenericPasswordKeychainWithKey:(nonnull NSString *)key
                                   service:(nonnull NSString *)service
                                     value:(nonnull ADJNonEmptyString *)value;
 
 @end
+

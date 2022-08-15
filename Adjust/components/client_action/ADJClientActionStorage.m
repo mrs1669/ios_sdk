@@ -23,7 +23,7 @@ static NSString *const kClientActionStorageTableName = @"client_action";
                        sqliteController:sqliteController
                               tableName:kClientActionStorageTableName
                       metadataTypeValue:ADJClientActionDataMetadataTypeValue];
-    
+
     return self;
 }
 

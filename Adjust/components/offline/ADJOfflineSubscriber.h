@@ -19,3 +19,4 @@
 
 @interface ADJOfflinePublisher : ADJPublisherBase<id<ADJOfflineSubscriber>>
 @end
+

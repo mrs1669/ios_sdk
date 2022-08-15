@@ -33,3 +33,4 @@
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *osBuild;
 
 @end
+

@@ -33,10 +33,10 @@ static NSString *const kUuidKey = @"uuid";
     {
         return nil;
     }
-    
+
     ADJNonEmptyString *_Nullable uuid =
     [ioData.propertiesMap pairValueWithKey:kUuidKey];
-    
+
     return [[self alloc] initWithUuid:uuid];
 }
 
@@ -46,9 +46,9 @@ static NSString *const kUuidKey = @"uuid";
 
 - (nonnull instancetype)initWithUuid:(nullable ADJNonEmptyString *)uuid {
     self = [super init];
-    
+
     _uuid = uuid;
-    
+
     return self;
 }
 
@@ -63,11 +63,11 @@ static NSString *const kUuidKey = @"uuid";
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
     [[ADJIoDataBuilder alloc]
      initWithMetadataTypeValue:ADJDeviceIdsDataMetadataTypeValue];
-    
+
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
                                        key:kUuidKey
                        ioValueSerializable:self.uuid];
-    
+
     return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
 }
 
@@ -81,9 +81,9 @@ static NSString *const kUuidKey = @"uuid";
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-    
+
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.uuid];
-    
+
     return hashCode;
 }
 
@@ -91,13 +91,16 @@ static NSString *const kUuidKey = @"uuid";
     if (self == object) {
         return YES;
     }
-    
+
     if (![object isKindOfClass:[ADJDeviceIdsData class]]) {
         return NO;
     }
-    
+
     ADJDeviceIdsData *other = (ADJDeviceIdsData *)object;
     return [ADJUtilObj objectEquals:self.uuid other:other.uuid];
 }
 
 @end
+
+
+

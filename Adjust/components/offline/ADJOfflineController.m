@@ -30,13 +30,13 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
     self = [super initWithLoggerFactory:loggerFactory source:@"ADJOfflineController"];
-    
+
     _offlinePublisher = [[ADJOfflinePublisher alloc] init];
-    
+
     _isOffline = ADJIsSdkOfflineWhenStarting;
-    
+
     _canPublish = NO;
-    
+
     return self;
 }
 
@@ -46,10 +46,10 @@
         [self.logger info:@"Cannot put sdk offline, since it's already offline"];
         return;
     }
-    
+
     self.isOffline = YES;
     [self.logger debug:@"Sdk was put offline"];
-    
+
     [self publishDidSdkBecomeOffline];
 }
 
@@ -58,10 +58,10 @@
         [self.logger info:@"Cannot put sdk online, since it's already online"];
         return;
     }
-    
+
     self.isOffline = NO;
     [self.logger debug:@"Sdk was put back online"];
-    
+
     [self publishDidSdkBecomeOnline];
 }
 
@@ -74,7 +74,7 @@
 #pragma mark - ADJPublishingGateSubscriber
 - (void)ccAllowedToPublishNotifications {
     self.canPublish = YES;
-    
+
     if (self.isOffline) {
         [self publishDidSdkBecomeOffline];
     } else {
@@ -87,7 +87,7 @@
     if (! self.canPublish) {
         return;
     }
-    
+
     [self.offlinePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJOfflineSubscriber> _Nonnull subscriber)
      {
@@ -99,7 +99,7 @@
     if (! self.canPublish) {
         return;
     }
-    
+
     [self.offlinePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJOfflineSubscriber> _Nonnull subscriber)
      {
@@ -108,3 +108,4 @@
 }
 
 @end
+

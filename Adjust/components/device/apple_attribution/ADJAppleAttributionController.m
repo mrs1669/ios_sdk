@@ -18,9 +18,10 @@
     return self;
 }
 
-// return 
+// return
 - (nullable ADJNonEmptyString *)readAdsAttributionToken {
     return nil;
 }
 
 @end
+

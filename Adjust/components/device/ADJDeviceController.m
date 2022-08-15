@@ -50,23 +50,23 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     _clockWeak = clock;
     _deviceIdsStorageWeak = deviceIdsStorage;
     _deviceIdsConfigData = deviceIdsConfigData;
-    
+
     _deviceInfoData = [[ADJDeviceInfoData alloc] initWithLogger:self.logger];
-    
+
     _sessionDeviceIdsController =
     [[ADJSessionDeviceIdsController alloc]
      initWithLoggerFactory:loggerFactory
      threadPool:threadPool
      timeoutPerAttempt:deviceIdsConfigData.timeoutPerAttempt
      canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
-    
+
     _uuidKeychainCache =
     [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger
                                              deviceIdsStorage:deviceIdsStorage
                                               keychainStorage:keychainStorage];
-    
+
     _backgroundTimestamp = nil;
-    
+
     return self;
 }
 
@@ -80,7 +80,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     if (deviceIdsStorage == nil) {
         return nil;
     }
-    
+
     return [deviceIdsStorage readOnlyStoredDataValue].uuid;
 }
 
@@ -103,38 +103,38 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
         [self.logger error:@"Lifecycle should not be subscribed without a cached timeLength"];
         return;
     }
-    
+
     if ([self.deviceIdsConfigData.cacheValidityPeriod isZero]) {
         [self.logger debug:@"Cache is invalidated with 0 cached timeLength"];
         [self.sessionDeviceIdsController invalidateCache];
         return;
     }
-    
+
     ADJRelativeTimestamp *backgroundTimestampLocal = self.backgroundTimestamp;
     self.backgroundTimestamp = nil;
-    
+
     if (backgroundTimestampLocal == nil) {
         [self.logger debug:@"Cache cannot be invalidated without a background timestamp"];
         return;
     }
-    
+
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
         [self.logger error:@"Cache cannot be invalidated without a reference to clock"];
         return;
     }
-    
+
     ADJRelativeTimestamp *_Nullable foregroundTimestamp = [clock monotonicRelativeTimestamp];
     if (foregroundTimestamp == nil) {
         [self.logger error:@"Cache cannot be invalidated without a current timestamp"];
         return;
     }
-    
+
     BOOL hasBackgroundCachedTimeLimitExpired =
     [foregroundTimestamp
      hasEnoughTimePassedSince:backgroundTimestampLocal
      enoughTimeLength:self.deviceIdsConfigData.cacheValidityPeriod];
-    
+
     if (hasBackgroundCachedTimeLimitExpired) {
         [self.logger debug:@"Cache will be invalidated when enough time has passed in the background"];
         [self.sessionDeviceIdsController invalidateCache];
@@ -149,19 +149,19 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
         [self.logger error:@"Lifecycle should not be subscribed without a cached timeLength"];
         return;
     }
-    
+
     if ([self.deviceIdsConfigData.cacheValidityPeriod isZero]) {
         [self.logger debug:@"Background timestamp does not need to be taken"
          " with 0 cached timeLength"];
         return;
     }
-    
+
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
         [self.logger error:@"Background timestamp cannot be taken without a reference to clock"];
         return;
     }
-    
+
     self.backgroundTimestamp = [clock monotonicRelativeTimestamp];
 }
 
@@ -172,10 +172,10 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     ADJNonEmptyString *_Nullable uuidKeychain =
     [keychainStorage valueInGenericPasswordKeychainWithKey:kUuidKey
                                                    service:kKeychainServiceKey];
-    
+
     ADJNonEmptyString *_Nullable currentStorageUuid =
     [deviceIdsStorage readOnlyStoredDataValue].uuid;
-    
+
     if (uuidKeychain != nil && currentStorageUuid != nil) {
         if ([currentStorageUuid isEqual:uuidKeychain]) {
             [logger debug:@"Uuid already sync between keychain and device ids storage"];
@@ -187,7 +187,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
         }
         return uuidKeychain;
     }
-    
+
     if (uuidKeychain != nil && currentStorageUuid == nil) {
         [logger info:@"Detected uuid in keychain but not device ids storage,"
          " will write from keychain to device ids storage"];
@@ -195,23 +195,23 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
          [[ADJDeviceIdsData alloc] initWithUuid:uuidKeychain]];
         return uuidKeychain;
     }
-    
+
     if (uuidKeychain == nil && currentStorageUuid != nil) {
         [logger info:@"Detected uuid in device ids storage but not keychain,"
          " will write from device ids storage to keychain"];
-        
+
         return [self setAndGetSavedUuidKeychainWithStorage:keychainStorage
                                                  uuidValue:currentStorageUuid];
     }
-    
+
     [logger info:@"Detected no uuid either in keychain or device ids storage,"
      " will write new one to both"];
-    
+
     ADJNonEmptyString *_Nonnull newUuid = [ADJUtilSys generateUuid];
-    
+
     [deviceIdsStorage updateWithNewDataValue:
      [[ADJDeviceIdsData alloc] initWithUuid:newUuid]];
-    
+
     return [self setAndGetSavedUuidKeychainWithStorage:keychainStorage
                                              uuidValue:newUuid];
 }
@@ -222,7 +222,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     [keychainStorage setGenericPasswordKeychainWithKey:kUuidKey
                                                service:kKeychainServiceKey
                                                  value:uuidValue];
-    
+
     if (uuidWasSet) {
         return uuidValue;
     } else {
@@ -231,3 +231,4 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 }
 
 @end
+

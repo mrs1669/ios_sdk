@@ -29,14 +29,12 @@ ADJMainQueueController *mainQueueControllerWeak;
 
 @implementation ADJEventController
 #pragma mark Instantiation
-- (nonnull instancetype)
-initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+                maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication {
     self = [super initWithLoggerFactory:loggerFactory source:@"EventController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _eventStateStorageWeak = eventStateStorage;
@@ -64,13 +62,9 @@ maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDedup
     return ! isPreFirstSession;
 }
 
-- (void)
-ccHandleClientActionWithClientActionIoInjectedData:
-(nonnull ADJIoData *)clientActionIoInjectedData
-apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-clientActionRemoveStorageAction:
-(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     ADJClientEventData *_Nullable clientEventData =
     [ADJClientEventData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
@@ -87,12 +81,9 @@ clientActionRemoveStorageAction:
 }
 
 #pragma mark Internal Methods
-- (void)
-trackEventWithClientData:(nonnull ADJClientEventData *)clientEventData
-apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-clientActionRemoveStorageAction:
-(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)trackEventWithClientData:(nonnull ADJClientEventData *)clientEventData
+                    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+ clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     [self.logger debug:@"Trying to track event with id: %@", clientEventData.eventId];
 
     if (! [self canTrackEventWithDeduplicationId:clientEventData.deduplicationId]) {
@@ -166,3 +157,5 @@ clientActionRemoveStorageAction:
 }
 
 @end
+
+

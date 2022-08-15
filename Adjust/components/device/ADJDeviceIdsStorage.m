@@ -28,7 +28,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
                               tableName:kDeviceIdsStorageTableName
                       metadataTypeValue:ADJDeviceIdsDataMetadataTypeValue
                 initialDefaultDataValue:[[ADJDeviceIdsData alloc] initWithInitialState]];
-    
+
     return self;
 }
 
@@ -56,18 +56,20 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
         [self.logger debug:@"Activity state v4 file not found"];
         return;
     }
-    
+
     [self.logger debug:@"Read v4 activity state: %@", v4ActivityState];
-    
+
     ADJNonEmptyString *_Nullable v4Uuid =
     [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid
                                 sourceDescription:@"v4 uuid"
                                            logger:self.logger];
-    
+
     ADJDeviceIdsData *_Nonnull v4DeviceIdsData =
     [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
-    
+
     [self updateWithNewDataValue:v4DeviceIdsData];
 }
 
 @end
+
+

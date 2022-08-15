@@ -19,3 +19,4 @@
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController;
 
 @end
+

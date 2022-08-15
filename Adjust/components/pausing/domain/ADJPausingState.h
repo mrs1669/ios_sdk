@@ -36,3 +36,4 @@ canSendInBackground:(BOOL)canSendInBackground;
 - (BOOL)publishResumeWhenSdkStartWithSource:(nonnull NSString *)source;
 
 @end
+
