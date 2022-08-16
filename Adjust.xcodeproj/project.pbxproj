@@ -82,6 +82,8 @@
 		07926DB0289A7E0200260E25 /* ADJEventStateData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07926DAE289A7E0200260E25 /* ADJEventStateData.m */; };
 		07926DB4289A806000260E25 /* ADJClientAddGlobalParameterData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07926DB2289A806000260E25 /* ADJClientAddGlobalParameterData.h */; };
 		07926DB5289A806000260E25 /* ADJClientAddGlobalParameterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07926DB3289A806000260E25 /* ADJClientAddGlobalParameterData.m */; };
+		079A5CD628ABDCF500A4D6AA /* ADJEventResponseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 079A5CD428ABDCF500A4D6AA /* ADJEventResponseData.h */; };
+		079A5CD728ABDCF500A4D6AA /* ADJEventResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 079A5CD528ABDCF500A4D6AA /* ADJEventResponseData.m */; };
 		07D5C366289024040022F31F /* ADJMainQueueStateAndTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */; };
 		07D5C36A289025240022F31F /* ADJDelayData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C368289025240022F31F /* ADJDelayData.m */; };
 		07F3A7DA2888314600A572C6 /* ADJRelativeTimestamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F3A7D82888314600A572C6 /* ADJRelativeTimestamp.m */; };
@@ -464,6 +466,8 @@
 		07926DAE289A7E0200260E25 /* ADJEventStateData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJEventStateData.m; sourceTree = "<group>"; };
 		07926DB2289A806000260E25 /* ADJClientAddGlobalParameterData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClientAddGlobalParameterData.h; sourceTree = "<group>"; };
 		07926DB3289A806000260E25 /* ADJClientAddGlobalParameterData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClientAddGlobalParameterData.m; sourceTree = "<group>"; };
+		079A5CD428ABDCF500A4D6AA /* ADJEventResponseData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJEventResponseData.h; sourceTree = "<group>"; };
+		079A5CD528ABDCF500A4D6AA /* ADJEventResponseData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJEventResponseData.m; sourceTree = "<group>"; };
 		07D58CBC2888289300CE84BB /* ADJPublishingGateSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJPublishingGateSubscriber.h; sourceTree = "<group>"; };
 		07D5C363289024040022F31F /* ADJMainQueueStateAndTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJMainQueueStateAndTracker.h; sourceTree = "<group>"; };
 		07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJMainQueueStateAndTracker.m; sourceTree = "<group>"; };
@@ -1370,6 +1374,8 @@
 			children = (
 				6FAC56FD288FE80D0070F564 /* ADJSessionResponseData.h */,
 				6FAC56FE288FE80D0070F564 /* ADJSessionResponseData.m */,
+				079A5CD428ABDCF500A4D6AA /* ADJEventResponseData.h */,
+				079A5CD528ABDCF500A4D6AA /* ADJEventResponseData.m */,
 				07D5C367289025240022F31F /* ADJDelayData.h */,
 				07D5C368289025240022F31F /* ADJDelayData.m */,
 			);
@@ -1582,6 +1588,7 @@
 				0A7ED76D2892B11B00CC20DE /* ADJMeasurementSessionData.h in Headers */,
 				0A7ED76E2892B11B00CC20DE /* ADJMeasurementSessionDataBuilder.h in Headers */,
 				0A7ED76F2892B11B00CC20DE /* ADJPackageSessionData.h in Headers */,
+				079A5CD628ABDCF500A4D6AA /* ADJEventResponseData.h in Headers */,
 				0A7ED7702892B11B00CC20DE /* ADJMeasurementSessionStateStorage.h in Headers */,
 				0A7ED7712892B11B00CC20DE /* ADJMeasurementSessionStateStorageAction.h in Headers */,
 				0A7ED7722892B11B00CC20DE /* ADJMeasurementSessionController.h in Headers */,
@@ -1845,6 +1852,7 @@
 				0AB23D31289E94EB008B1835 /* ADJSessionDeviceIdsController.m in Sources */,
 				0AA5A5D82893D32C00CD9EA1 /* ADJClientActionController.m in Sources */,
 				0AB23CFC289BEF10008B1835 /* ADJPausingState.m in Sources */,
+				079A5CD728ABDCF500A4D6AA /* ADJEventResponseData.m in Sources */,
 				071E44C72886DCFC00695D89 /* ADJV4Attribution.m in Sources */,
 				0737C205287F3E2A004C7D59 /* ADJConsoleLogger.m in Sources */,
 				6FAC56DB288FE4AA0070F564 /* ADJSQLiteStorageQueueBase.m in Sources */,

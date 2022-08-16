@@ -17,12 +17,13 @@
 #import "ADJAttributionPackageData.h"
 #import "ADJBillingSubscriptionPackageData.h"
 #import "ADJClickPackageData.h"
-#import "ADJEventPackageData.h"
 #import "ADJGdprForgetPackageData.h"
 #import "ADJInfoPackageData.h"
 #import "ADJLogPackageData.h"
  */
 #import "ADJSessionPackageData.h"
+#import "ADJEventPackageData.h"
+
 //#import "ADJThirdPartySharingPackageData.h"
 
 #pragma mark Fields
@@ -94,12 +95,13 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     pathToPackage(ADJAttributionPackageData)
     pathToPackage(ADJBillingSubscriptionPackageData)
     pathToPackage(ADJClickPackageData)
-    pathToPackage(ADJEventPackageData)
     pathToPackage(ADJGdprForgetPackageData)
     pathToPackage(ADJInfoPackageData)
     pathToPackage(ADJLogPackageData)
  */
     pathToPackage(ADJSessionPackageData)
+    pathToPackage(ADJEventPackageData)
+
     //pathToPackage(ADJThirdPartySharingPackageData)
 
     [logger error:@"Cannot create instance from Io data"
