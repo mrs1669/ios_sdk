@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,16 +17,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Buq-st-L2b" userLabel="btnStartTestSession">
-                                <rect key="frame" x="136.5" y="437.5" width="141" height="31"/>
+                                <rect key="frame" x="115" y="434.5" width="184" height="37"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Start Test Session"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Start Test Session">
+                                    <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="19"/>
+                                </buttonConfiguration>
                                 <connections>
                                     <action selector="onBtnStartTestSessionPressDidReceive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YEN-8o-LMO"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemPinkColor"/>
                         <constraints>
                             <constraint firstItem="Buq-st-L2b" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="PQV-y4-9of"/>
                             <constraint firstItem="Buq-st-L2b" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="pNA-0h-hfP"/>
@@ -42,9 +42,4 @@
             <point key="canvasLocation" x="132" y="87"/>
         </scene>
     </scenes>
-    <resources>
-        <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-    </resources>
 </document>
