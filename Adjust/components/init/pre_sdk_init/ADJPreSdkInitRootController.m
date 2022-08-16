@@ -235,36 +235,36 @@
     [self.offlineController ccPutSdkOnline];
 }
 
-//- (void)ccForeground {
-//    [self.lifecycleController ccForeground];
-//
-//    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//    if (entryRoot == nil) {
-//        return;
-//    }
-//
-//    if (entryRoot.postSdkInitRootController == nil) {
-//        return;
-//    }
-//
-//    [entryRoot.postSdkInitRootController.measurementSessionController ccForeground];
-//}
-//
-//- (void)ccBackground {
-//    [self.lifecycleController ccBackground];
-//
-//    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//    if (entryRoot == nil) {
-//        return;
-//    }
-//
-//    if (entryRoot.postSdkInitRootController == nil) {
-//        return;
-//    }
-//
-//    [entryRoot.postSdkInitRootController.measurementSessionController ccBackground];
-//}
-//
+- (void)ccForeground {
+    [self.lifecycleController ccForeground];
+
+    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+    if (entryRoot == nil) {
+        return;
+    }
+
+    if (entryRoot.postSdkInitRootController == nil) {
+        return;
+    }
+
+    [entryRoot.postSdkInitRootController.measurementSessionController ccForeground];
+}
+
+- (void)ccBackground {
+    [self.lifecycleController ccBackground];
+
+    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+    if (entryRoot == nil) {
+        return;
+    }
+
+    if (entryRoot.postSdkInitRootController == nil) {
+        return;
+    }
+
+    [entryRoot.postSdkInitRootController.measurementSessionController ccBackground];
+}
+
 //- (void)ccAttributionWithCallback:
 //    (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
 //{

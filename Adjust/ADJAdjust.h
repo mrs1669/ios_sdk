@@ -26,5 +26,8 @@
 + (void)switchToOfflineMode;
 + (void)switchBackToOnlineMode;
 
++ (void)appWentToTheForegroundManualCall;
++ (void)appWentToTheBackgroundManualCall;
+
 
 @end

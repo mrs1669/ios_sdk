@@ -46,7 +46,7 @@
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];
 
-    _sender = [sdkPackageSenderFactory createSdkPacakgeSenderWithLoggerFactory:loggerFactory
+    _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
                                                              sourceDescription:self.source
                                                                     threadpool:threadController];
 

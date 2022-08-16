@@ -93,4 +93,20 @@
     }];
 }
 
++ (void)appWentToTheForegroundManualCall {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        [adjustAPI ccForeground];
+    }];
+
+}
++ (void)appWentToTheBackgroundManualCall {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        [adjustAPI ccBackground];
+    }];
+}
+
 @end

@@ -25,11 +25,12 @@
 - (void)ccPutSdkOffline;
 - (void)ccPutSdkOnline;
 
+- (void)ccForeground;
+- (void)ccBackground;
+
 /*
 - (void)ccGdprForgetDevice;
  
-- (void)ccForeground;
-- (void)ccBackground;
 
 - (void)ccAttributionWithCallback:
     (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;

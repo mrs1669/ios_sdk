@@ -33,12 +33,12 @@ NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
                         testLibrary:(nonnull ATLTestLibrary *)testLibrary
 {
     self = [super init];
-    
+
     _url = url;
     _testLibrary = testLibrary;
     //_adjustV4CommandExecutor = [[ATAAdjustCommandExecutor alloc] initWithUrl:url];
     //[self.adjustV4CommandExecutor setTestLibrary:testLibrary];
-    
+
     return self;
 }
 
@@ -63,12 +63,12 @@ methodName:(nonnull NSString *)methodName
              methodName];
             return;
         }
-        
+
         self.extraPathTestOptions =
         [ATOAdjustTestOptions
          teardownAndExecuteTestOptionsCommandWithUrlOverwrite:self.url
          commandParameters:dictionaryParameters];
-        
+
     } else {
         [self logError:@"Could not find %@ to execute", className];
     }
@@ -85,7 +85,7 @@ dictionaryParameters:
 (nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters
 {
     self.commandParameters = dictionaryParameters;
-    
+
     adjustCommand(start)
     adjustCommand(resume)
     adjustCommand(pause)
@@ -110,43 +110,43 @@ dictionaryParameters:
 - (void)start {
     NSString *_Nullable environment = [self firstParameterValueWithKey:@"environment"];
     NSString *_Nullable appToken = [self firstParameterValueWithKey:@"appToken"];
-    
+
     ADJAdjustConfig *_Nonnull adjustConfig =
     [[ADJAdjustConfig alloc] initWithAppToken:appToken
                                   environment:environment];
-    
+
     if ([self containsKey:@"defaultTracker"]) {
         [adjustConfig setDefaultTracker:[self firstParameterValueWithKey:@"defaultTracker"]];
     }
-    
+
     if ([self isValueTrueWithKey:@"sendInBackground"]) {
         [adjustConfig allowSendingFromBackground];
     }
-    
+
     if ([self containsKey:@"deferredDeeplinkCallback"]) {
         if (! [self isValueTrueWithKey:@"deferredDeeplinkCallback"]) {
             [adjustConfig preventOpenDeferredDeeplink];
         }
-        
+
         [adjustConfig setAdjustAttributionSubscriber:
          [[ATAAdjustAttributionDeferredDeeplinkSubscriber alloc]
           initWithTestLibrary:self.testLibrary
           extraPath:self.extraPathTestOptions]];
     }
-    
+
     if ([self containsKey:@"attributionCallbackSendAll"]) {
         [adjustConfig setAdjustAttributionSubscriber:
          [[ATAAdjustAttributionSendAllSubscriber alloc]
           initWithTestLibrary:self.testLibrary
           extraPath:self.extraPathTestOptions]];
     }
-    
+
     if ([self containsKey:@"configureEventDeduplication"]) {
         NSString *_Nullable eventDeduplicationString =
         [self firstParameterValueWithKey:@"configureEventDeduplication"];
         NSNumber *_Nullable eventDeduplicationIntNumber =
         [self strictParseNumberIntWithString:eventDeduplicationString];
-        
+
         if (eventDeduplicationIntNumber != nil) {
             [adjustConfig setEventIdDeduplicationMaxCapacity:
              eventDeduplicationIntNumber.intValue];
@@ -155,7 +155,7 @@ dictionaryParameters:
              eventDeduplicationString];
         }
     }
-    
+
     if ([self containsKey:@"customEndpointUrl"]
         || [self containsKey:@"customEndpointPublicKeyHash"]
         || [self containsKey:@"testServerBaseUrlEndpointUrl"])
@@ -166,18 +166,18 @@ dictionaryParameters:
         } else {
             customEndpointUrl = [self firstParameterValueWithKey:@"customEndpointUrl"];
         }
-        
+
         NSString *_Nullable customEndpointPublicKeyHash =
         [self firstParameterValueWithKey:@"customEndpointPublicKeyHash"];
-        
+
         [adjustConfig setCustomEndpointWithUrl:customEndpointUrl
                       optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
     }
-    
+
     if ([self isValueTrueWithKey:@"doNotReadAppleSearchAdsAttribution"]) {
         [adjustConfig doNotReadAppleSearchAdsAttribution];
     }
-    
+
     [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 }
 /*
@@ -187,31 +187,31 @@ dictionaryParameters:
  }
  */
 - (void)resume {
-    //[ADJAdjust appWentToTheForegroundManualCall];
+    [ADJAdjust appWentToTheForegroundManualCall];
 }
 
 - (void)pause {
-    //[ADJAdjust appWentToTheBackgroundManualCall];
+    [ADJAdjust appWentToTheBackgroundManualCall];
 }
 
 - (void)trackEvent {
     /*
      NSString *_Nullable eventToken = [self firstParameterValueWithKey:@"eventToken"];
-     
+
      ADJAdjustEvent *_Nonnull adjustEvent =
      [[ADJAdjustEvent alloc] initWithEventId:eventToken];
-     
+
      if ([self containsKey:@"currencyAndRevenue"]) {
      NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
      index:0];
      NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
      index:1];
      NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
-     
+
      [adjustEvent setRevenueWithDoubleNumber:revenueNumber
      currency:currency];
      }
-     
+
      if ([self containsKey:@"callbackParams"]) {
      [self iterateWithKey:@"callbackParams"
      source:@"event callback"
@@ -220,7 +220,7 @@ dictionaryParameters:
      [adjustEvent addCallbackParameterWithKey:key value:value];
      }];
      }
-     
+
      if ([self containsKey:@"partnerParams"]) {
      [self iterateWithKey:@"partnerParams"
      source:@"event partner"
@@ -229,14 +229,14 @@ dictionaryParameters:
      [adjustEvent addPartnerParameterWithKey:key value:value];
      }];
      }
-     
+
      if ([self containsKey:@"deduplicationId"]) {
      NSString *_Nullable deduplicationId =
      [self firstParameterValueWithKey:@"deduplicationId"];
-     
+
      [adjustEvent setDeduplicationId:deduplicationId];
      }
-     
+
      [ADJAdjust trackEvent:adjustEvent];
      */
 }
@@ -255,15 +255,15 @@ dictionaryParameters:
      [self logError:@"setOfflineMode without expected enabled key"];
      return;
      }
-     
+
      NSNumber *_Nullable strictEnabledValue = [self strictParseNumberBoolWithKey:@"enabled"];
-     
+
      if (strictEnabledValue == nil) {
      [self logError:@"setOfflineMode without non valid enabled value: %@",
      [self firstParameterValueWithKey:@"enabled"]];
      return;
      }
-     
+
      if (strictEnabledValue.boolValue) {
      [ADJAdjust switchToOfflineMode];
      } else {
@@ -294,7 +294,7 @@ dictionaryParameters:
      [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
      }];
      */
-    
+
 }
 - (void)removeGlobalCallbackParameter {
     /*
@@ -331,10 +331,10 @@ dictionaryParameters:
 - (void)setPushToken {
     /*
      NSString *_Nullable pushToken = [self firstParameterValueWithKey:@"pushToken"];
-     
+
      ADJAdjustPushToken *_Nonnull adjustPushToken =
      [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
-     
+
      [ADJAdjust trackPushToken:adjustPushToken];
      */
 }
@@ -342,10 +342,10 @@ dictionaryParameters:
 - (void)openDeeplink {
     /*
      NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
-     
+
      ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
      [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
-     
+
      [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
      */
 }
@@ -358,46 +358,46 @@ dictionaryParameters:
     /*
      NSString *_Nullable adRevenueSource =
      [self firstParameterValueWithKey:@"adRevenueSource"];
-     
+
      ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
      [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
-     
+
      if ([self containsKey:@"currencyAndRevenue"]) {
      NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
      index:0];
      NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
      index:1];
      NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
-     
+
      [adjustAdRevenue setRevenueWithDoubleNumber:revenueNumber
      currency:currency];
      }
-     
+
      if ([self containsKey:@"adImpressionsCount"]) {
      NSString *_Nullable adImpressionsCountString =
      [self firstParameterValueWithKey:@"adImpressionsCount"];
      NSNumber *_Nullable adImpressionsCountIntNumber =
      [self strictParseNumberIntWithString:adImpressionsCountString];
-     
+
      if (adImpressionsCountIntNumber != nil) {
      [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCountIntNumber];
      } else {
      [self logError:@"Could not parse adImpressionsCount value: %@", adImpressionsCountString];
      }
      }
-     
+
      if ([self containsKey:@"adRevenueNetwork"]) {
      [adjustAdRevenue setAdRevenueNetwork:[self firstParameterValueWithKey:@"adRevenueNetwork"]];
      }
-     
+
      if ([self containsKey:@"adRevenueUnit"]) {
      [adjustAdRevenue setAdRevenueUnit:[self firstParameterValueWithKey:@"adRevenueUnit"]];
      }
-     
+
      if ([self containsKey:@"adRevenuePlacement"]) {
      [adjustAdRevenue setAdRevenuePlacement:[self firstParameterValueWithKey:@"adRevenuePlacement"]];
      }
-     
+
      [self iterateWithKey:@"callbackParams"
      source:@"ad revenue callback params"
      keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
@@ -405,7 +405,7 @@ dictionaryParameters:
      [adjustAdRevenue addCallbackParameterWithKey:key
      value:value];
      }];
-     
+
      [self iterateWithKey:@"partnerParams"
      source:@"ad revenue partner params"
      keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
@@ -413,7 +413,7 @@ dictionaryParameters:
      [adjustAdRevenue addPartnerParameterWithKey:key
      value:value];
      }];
-     
+
      [ADJAdjust trackAdRevenue:adjustAdRevenue];
      */
 }
@@ -422,10 +422,10 @@ dictionaryParameters:
     /*
      ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
      [[ADJAdjustThirdPartySharing alloc] init];
-     
+
      NSNumber *_Nullable sharingEnabledNumberBool =
      [self strictParseNumberBoolWithKey:@"enableOrElseDisable"];
-     
+
      if (sharingEnabledNumberBool != nil) {
      if (sharingEnabledNumberBool.boolValue) {
      [adjustThirdPartySharing enableThirdPartySharing];
@@ -433,7 +433,7 @@ dictionaryParameters:
      [adjustThirdPartySharing disableThirdPartySharing];
      }
      }
-     
+
      if ([self containsKey:@"granularOptions"]) {
      [self iterateWithKey:@"granularOptions"
      source:@"third party granular options"
@@ -448,7 +448,7 @@ dictionaryParameters:
      value:value];
      }];
      }
-     
+
      [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
      */
 }
@@ -468,29 +468,29 @@ dictionaryParameters:
     if ([self isNull:valueArray] || index >= valueArray.count ) {
         return nil;
     }
-    
+
     NSString *_Nullable value = [valueArray objectAtIndex:index];
-    
+
     if ([self isNull:value]) {
         return nil;
     }
-    
+
     return value;
 }
 
 - (nullable NSNumber *)strictParseNumberBoolWithKey:(nonnull NSString *)key {
     NSString *_Nullable firstParameterValue = [self firstParameterValueWithKey:key];
-    
+
     return [ATOAdjustTestOptions strictParseNumberBooleanWithString:firstParameterValue];
 }
 
 - (BOOL)isValueTrueWithKey:(nonnull NSString *)key {
     NSNumber *_Nullable strictBooleanValue = [self strictParseNumberBoolWithKey:key];
-    
+
     if (strictBooleanValue == nil) {
         return NO;
     }
-    
+
     return strictBooleanValue.boolValue;
 }
 
@@ -498,18 +498,18 @@ dictionaryParameters:
     if (stringValue == nil) {
         return nil;
     }
-    
+
     if ([@"0" isEqualToString:stringValue]) {
         return @(0);
     }
-    
+
     int intValue = [stringValue intValue];
-    
+
     // 0 value means it could not parse it
     if (intValue == 0) {
         return nil;
     }
-    
+
     return @(intValue);
 }
 
@@ -517,21 +517,21 @@ dictionaryParameters:
     if (stringValue == nil) {
         return nil;
     }
-    
+
     if ([@"0" isEqualToString:stringValue]
         || [@"0.0" isEqualToString:stringValue]
         || [@"0,0" isEqualToString:stringValue])
     {
         return @(0.0);
     }
-    
+
     double doubleValue = [stringValue doubleValue];
-    
+
     // 0 value means it could not parse it
     if (doubleValue == 0.0) {
         return nil;
     }
-    
+
     return @(doubleValue);
 }
 
@@ -542,17 +542,17 @@ keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
 {
     NSArray<NSString *> *_Nullable array =
     [self.commandParameters objectForKey:key];
-    
+
     if (array == nil) {
         [self logError:@"%@ is null", source];
         return;
     }
-    
+
     [self logDebug:@"iterating %@ with %@ keys", source, @(array.count)];
-    
+
     for (NSUInteger i = 0; i < array.count ; i = i + 1) {
         NSString *_Nonnull key = [array objectAtIndex:i];
-        
+
         keyBlock(key);
     }
 }
@@ -565,23 +565,23 @@ keyValueBlock:
 {
     NSArray<NSString *> *_Nullable array =
     [self.commandParameters objectForKey:key];
-    
+
     if (array == nil) {
         [self logError:@"%@ is null", source];
         return;
     }
-    
+
     if ((array.count % 2) != 0) {
         [self logError:@"%@ has uneven count: %@", source, @(array.count)];
         return;
     }
-    
+
     [self logDebug:@"iterating %@ with %@ key value", source, @(array.count / 2)];
-    
+
     for (NSUInteger i = 0; i < array.count ; i = i + 2) {
         NSString *_Nonnull key = [array objectAtIndex:i];
         NSString *_Nonnull value = [array objectAtIndex:(i + 1)];
-        
+
         keyValueBlock(key, value);
     }
 }
@@ -596,24 +596,24 @@ nameKeyValueBlock:
 {
     NSArray<NSString *> *_Nullable array =
     [self.commandParameters objectForKey:key];
-    
+
     if (array == nil) {
         [self logError:@"%@ is null", source];
         return;
     }
-    
+
     if ((array.count % 3) != 0) {
         [self logError:@"%@ has non 3 multiple count: %@", source, @(array.count)];
         return;
     }
-    
+
     [self logDebug:@"iterating %@ with %@ name-key-value", source, @(array.count / 3)];
-    
+
     for (NSUInteger i = 0; i < array.count ; i = i + 2) {
         NSString *_Nonnull name = [array objectAtIndex:i];
         NSString *_Nonnull key = [array objectAtIndex:(i + 1)];
         NSString *_Nonnull value = [array objectAtIndex:(i + 2)];
-        
+
         nameKeyValueBlock(name, key, value);
     }
 }
@@ -622,7 +622,7 @@ nameKeyValueBlock:
     va_list parameters; va_start(parameters, message);
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
-    
+
     NSLog(@"\t[ATAAdjustCommandExecutor][Debug] %@", logMessage);
 }
 
@@ -630,7 +630,7 @@ nameKeyValueBlock:
     va_list parameters; va_start(parameters, message);
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
-    
+
     NSLog(@"\t[ATAAdjustCommandExecutor][Error] %@", logMessage);
 }
 
@@ -639,3 +639,4 @@ nameKeyValueBlock:
 }
 
 @end
+

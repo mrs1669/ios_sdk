@@ -69,16 +69,12 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     return YES;
 }
 
-- (void)
-    inactivateSdkWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-    changedSdkActiveStateDataWO:
-        (nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger
-{
-    NSString *_Nonnull currentSdkActiveStatus =
-        [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
+- (void)inactivateSdkWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                            sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
+                       changedSdkActiveStateDataWO:(nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
+                                   adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger {
+
+    NSString *_Nonnull currentSdkActiveStatus = [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
 
     if (ADJSdkActiveStatusForgotten == currentSdkActiveStatus) {
         [adjustApiLogger error:@"Sdk was already inactive by being"
@@ -93,8 +89,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 
     [adjustApiLogger info:@"Sdk will be inactivated"];
 
-    ADJSdkActiveStateData *_Nonnull inactiveSdkStateData =
-        [[ADJSdkActiveStateData alloc] initWithInactiveSdk];
+    ADJSdkActiveStateData *_Nonnull inactiveSdkStateData = [[ADJSdkActiveStateData alloc] initWithInactiveSdk];
     [changedSdkActiveStateDataWO setNewValue:inactiveSdkStateData];
 
     if (self.canPublish) {
@@ -102,16 +97,12 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     }
 }
 
-- (void)
-    reactivateSdkWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-    changedSdkActiveStateDataWO:
-        (nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger
-{
-    NSString *_Nonnull currentSdkActiveStatus =
-        [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
+- (void)reactivateSdkWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                            sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
+                       changedSdkActiveStateDataWO:(nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
+                                   adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger {
+
+    NSString *_Nonnull currentSdkActiveStatus = [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
 
     if (ADJSdkActiveStatusForgotten == currentSdkActiveStatus) {
         [adjustApiLogger error:@"Sdk cannot be reactivated"
@@ -120,14 +111,13 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     }
 
     if (ADJSdkActiveStatusActive == currentSdkActiveStatus) {
-        [adjustApiLogger error:@"Sdk cannot be reactivated, since it already inactive"];
+        [adjustApiLogger error:@"Sdk cannot be reactivated, since it already active"];
         return;
     }
 
     [adjustApiLogger info:@"Sdk will be reactivated"];
 
-    ADJSdkActiveStateData *_Nonnull activeSdkStateData =
-        [[ADJSdkActiveStateData alloc] initWithActiveSdk];
+    ADJSdkActiveStateData *_Nonnull activeSdkStateData = [[ADJSdkActiveStateData alloc] initWithActiveSdk];
     [changedSdkActiveStateDataWO setNewValue:activeSdkStateData];
 
     if (self.canPublish) {
