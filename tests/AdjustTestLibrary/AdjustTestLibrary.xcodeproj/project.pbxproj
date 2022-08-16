@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -227,6 +227,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1330;
+				ORGANIZATIONNAME = "Adjust GmbH";
 				TargetAttributes = {
 					0A530E802891509700FD7EFB = {
 						CreatedOnToolsVersion = 13.3;
@@ -234,7 +235,7 @@
 				};
 			};
 			buildConfigurationList = 0A530E7C2891509700FD7EFB /* Build configuration list for PBXProject "AdjustTestLibrary" */;
-			compatibilityVersion = "Xcode 13.0";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
