@@ -3,199 +3,333 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6F971F8328912DAB0055FD32 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F971F8228912DAB0055FD32 /* AppDelegate.m */; };
-		6F971F8928912DAB0055FD32 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F971F8828912DAB0055FD32 /* ViewController.m */; };
-		6F971F8C28912DAB0055FD32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F971F8A28912DAB0055FD32 /* Main.storyboard */; };
-		6F971F8E28912DAC0055FD32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F971F8D28912DAC0055FD32 /* Assets.xcassets */; };
-		6F971F9128912DAC0055FD32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F971F8F28912DAC0055FD32 /* LaunchScreen.storyboard */; };
-		6F971F9428912DAC0055FD32 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F971F9328912DAC0055FD32 /* main.m */; };
-		6F97202028927D990055FD32 /* ATAAdjustCommandExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F97201F28927D990055FD32 /* ATAAdjustCommandExecutor.m */; };
-		6F97202328927DA60055FD32 /* ATAAdjustAttributionSendAllSubscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F97202228927DA60055FD32 /* ATAAdjustAttributionSendAllSubscriber.m */; };
-		6F97202928927DC30055FD32 /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F97202828927DC30055FD32 /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */; };
-		E169F2A0A7C2ACC975BA1629 /* Pods_AdjustTestApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E252D7F4CEB2A7538C1C5776 /* Pods_AdjustTestApp.framework */; };
+		0A530ED02891524E00FD7EFB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530ECF2891524E00FD7EFB /* AppDelegate.m */; };
+		0A530ED62891524E00FD7EFB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530ED52891524E00FD7EFB /* ViewController.m */; };
+		0A530ED92891524E00FD7EFB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A530ED72891524E00FD7EFB /* Main.storyboard */; };
+		0A530EDB2891524F00FD7EFB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A530EDA2891524F00FD7EFB /* Assets.xcassets */; };
+		0A530EDE2891524F00FD7EFB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A530EDC2891524F00FD7EFB /* LaunchScreen.storyboard */; };
+		0A530EE12891524F00FD7EFB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530EE02891524F00FD7EFB /* main.m */; };
+		0A7ED6F42892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED6EE2892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m */; };
+		0A7ED6F52892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED6F02892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */; };
+		0A7ED6F62892B07F00CC20DE /* ATAAdjustCommandExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED6F22892B07F00CC20DE /* ATAAdjustCommandExecutor.m */; };
+		0A7ED78C2892B35F00CC20DE /* libAdjust.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A530EFE289152A000FD7EFB /* libAdjust.a */; };
+		0A7ED78D2892B35F00CC20DE /* libAdjustTestLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A530EEC2891526800FD7EFB /* libAdjustTestLibrary.a */; };
+		0A7ED78E2892B35F00CC20DE /* libAdjustTestOptionsLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7ED6ED2892B05600CC20DE /* libAdjustTestOptionsLibrary.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0A530EEB2891526800FD7EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EE72891526800FD7EFB /* AdjustTestLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A530E812891509700FD7EFB;
+			remoteInfo = AdjustTestLibrary;
+		};
+		0A530EFD289152A000FD7EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D8FC628731314005019E3;
+			remoteInfo = Adjust;
+		};
+		0A530EFF289152A000FD7EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D901328731C2D005019E3;
+			remoteInfo = AdjustSdk;
+		};
+		0A530F01289152A000FD7EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D903628744D17005019E3;
+			remoteInfo = AdjustSdkTv;
+		};
+		0A530F03289152A000FD7EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D905228745EBB005019E3;
+			remoteInfo = AdjustSdkIm;
+		};
+		0A530F0A289152BB00FD7EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EE72891526800FD7EFB /* AdjustTestLibrary.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A530E802891509700FD7EFB;
+			remoteInfo = AdjustTestLibrary;
+		};
+		0A5310452891609300FD7EFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 075D8FC528731314005019E3;
+			remoteInfo = Adjust;
+		};
+		0A7ED6EC2892B05600CC20DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A7ED6E82892B05600CC20DE /* AdjustTestOptionsLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0AB7AFB72892AEAA00FE60CF;
+			remoteInfo = AdjustTestOptionsLibrary;
+		};
+		0A7ED6F72892B09D00CC20DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A7ED6E82892B05600CC20DE /* AdjustTestOptionsLibrary.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AB7AFB62892AEAA00FE60CF;
+			remoteInfo = AdjustTestOptionsLibrary;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		2A9867DC926A68302FD1054C /* Pods-AdjustTestApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustTestApp.debug.xcconfig"; path = "Target Support Files/Pods-AdjustTestApp/Pods-AdjustTestApp.debug.xcconfig"; sourceTree = "<group>"; };
-		6F971F7E28912DAB0055FD32 /* AdjustTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdjustTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F971F8128912DAB0055FD32 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		6F971F8228912DAB0055FD32 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		6F971F8728912DAB0055FD32 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		6F971F8828912DAB0055FD32 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		6F971F8B28912DAB0055FD32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		6F971F8D28912DAC0055FD32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		6F971F9028912DAC0055FD32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		6F971F9228912DAC0055FD32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6F971F9328912DAC0055FD32 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6F97201E28927D990055FD32 /* ATAAdjustCommandExecutor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATAAdjustCommandExecutor.h; sourceTree = "<group>"; };
-		6F97201F28927D990055FD32 /* ATAAdjustCommandExecutor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustCommandExecutor.m; sourceTree = "<group>"; };
-		6F97202128927DA60055FD32 /* ATAAdjustAttributionSendAllSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATAAdjustAttributionSendAllSubscriber.h; sourceTree = "<group>"; };
-		6F97202228927DA60055FD32 /* ATAAdjustAttributionSendAllSubscriber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustAttributionSendAllSubscriber.m; sourceTree = "<group>"; };
-		6F97202728927DC30055FD32 /* ATAAdjustAttributionDeferredDeeplinkSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATAAdjustAttributionDeferredDeeplinkSubscriber.h; sourceTree = "<group>"; };
-		6F97202828927DC30055FD32 /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustAttributionDeferredDeeplinkSubscriber.m; sourceTree = "<group>"; };
-		AD71522617656DFE7EA1211D /* Pods-AdjustTestApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustTestApp.release.xcconfig"; path = "Target Support Files/Pods-AdjustTestApp/Pods-AdjustTestApp.release.xcconfig"; sourceTree = "<group>"; };
-		E252D7F4CEB2A7538C1C5776 /* Pods_AdjustTestApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdjustTestApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A530ECB2891524E00FD7EFB /* AdjustTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdjustTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A530ECE2891524E00FD7EFB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		0A530ECF2891524E00FD7EFB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0A530ED42891524E00FD7EFB /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		0A530ED52891524E00FD7EFB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		0A530ED82891524E00FD7EFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0A530EDA2891524F00FD7EFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0A530EDD2891524F00FD7EFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0A530EDF2891524F00FD7EFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A530EE02891524F00FD7EFB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0A530EE72891526800FD7EFB /* AdjustTestLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestLibrary.xcodeproj; path = ../AdjustTestLibrary/AdjustTestLibrary.xcodeproj; sourceTree = "<group>"; };
+		0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Adjust.xcodeproj; path = ../../Adjust.xcodeproj; sourceTree = "<group>"; };
+		0A7ED6E82892B05600CC20DE /* AdjustTestOptionsLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestOptionsLibrary.xcodeproj; path = ../AdjustTestOptionsLibrary/AdjustTestOptionsLibrary.xcodeproj; sourceTree = "<group>"; };
+		0A7ED6EE2892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustAttributionSendAllSubscriber.m; sourceTree = "<group>"; };
+		0A7ED6EF2892B07F00CC20DE /* ATAAdjustCommandExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATAAdjustCommandExecutor.h; sourceTree = "<group>"; };
+		0A7ED6F02892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustAttributionDeferredDeeplinkSubscriber.m; sourceTree = "<group>"; };
+		0A7ED6F12892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATAAdjustAttributionDeferredDeeplinkSubscriber.h; sourceTree = "<group>"; };
+		0A7ED6F22892B07F00CC20DE /* ATAAdjustCommandExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustCommandExecutor.m; sourceTree = "<group>"; };
+		0A7ED6F32892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATAAdjustAttributionSendAllSubscriber.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		6F971F7B28912DAB0055FD32 /* Frameworks */ = {
+		0A530EC82891524E00FD7EFB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E169F2A0A7C2ACC975BA1629 /* Pods_AdjustTestApp.framework in Frameworks */,
+				0A7ED78D2892B35F00CC20DE /* libAdjustTestLibrary.a in Frameworks */,
+				0A7ED78E2892B35F00CC20DE /* libAdjustTestOptionsLibrary.a in Frameworks */,
+				0A7ED78C2892B35F00CC20DE /* libAdjust.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4456FE832C6B306502C6C57A /* Frameworks */ = {
+		0A530EC22891524E00FD7EFB = {
 			isa = PBXGroup;
 			children = (
-				E252D7F4CEB2A7538C1C5776 /* Pods_AdjustTestApp.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		6F971F7528912DAB0055FD32 = {
-			isa = PBXGroup;
-			children = (
-				6F971F8028912DAB0055FD32 /* AdjustTestApp */,
-				6F971F7F28912DAB0055FD32 /* Products */,
-				D84EFBE9AD7F313CA0EC3D1C /* Pods */,
-				4456FE832C6B306502C6C57A /* Frameworks */,
+				0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */,
+				0A530EE72891526800FD7EFB /* AdjustTestLibrary.xcodeproj */,
+				0A7ED6E82892B05600CC20DE /* AdjustTestOptionsLibrary.xcodeproj */,
+				0A530ECD2891524E00FD7EFB /* AdjustTestApp */,
+				0A530ECC2891524E00FD7EFB /* Products */,
+				0A7ED7872892B35F00CC20DE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		6F971F7F28912DAB0055FD32 /* Products */ = {
+		0A530ECC2891524E00FD7EFB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6F971F7E28912DAB0055FD32 /* AdjustTestApp.app */,
+				0A530ECB2891524E00FD7EFB /* AdjustTestApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6F971F8028912DAB0055FD32 /* AdjustTestApp */ = {
+		0A530ECD2891524E00FD7EFB /* AdjustTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				6F971F8128912DAB0055FD32 /* AppDelegate.h */,
-				6F971F8228912DAB0055FD32 /* AppDelegate.m */,
-				6F971F8728912DAB0055FD32 /* ViewController.h */,
-				6F971F8828912DAB0055FD32 /* ViewController.m */,
-				6F971F8A28912DAB0055FD32 /* Main.storyboard */,
-				6F971F8D28912DAC0055FD32 /* Assets.xcassets */,
-				6F971F8F28912DAC0055FD32 /* LaunchScreen.storyboard */,
-				6F971F9228912DAC0055FD32 /* Info.plist */,
-				6F971F9328912DAC0055FD32 /* main.m */,
-				6F97201E28927D990055FD32 /* ATAAdjustCommandExecutor.h */,
-				6F97201F28927D990055FD32 /* ATAAdjustCommandExecutor.m */,
-				6F97202128927DA60055FD32 /* ATAAdjustAttributionSendAllSubscriber.h */,
-				6F97202228927DA60055FD32 /* ATAAdjustAttributionSendAllSubscriber.m */,
-				6F97202728927DC30055FD32 /* ATAAdjustAttributionDeferredDeeplinkSubscriber.h */,
-				6F97202828927DC30055FD32 /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */,
+				0A7ED6F12892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.h */,
+				0A7ED6F02892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */,
+				0A7ED6F32892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.h */,
+				0A7ED6EE2892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m */,
+				0A7ED6EF2892B07F00CC20DE /* ATAAdjustCommandExecutor.h */,
+				0A7ED6F22892B07F00CC20DE /* ATAAdjustCommandExecutor.m */,
+				0A530ECE2891524E00FD7EFB /* AppDelegate.h */,
+				0A530ECF2891524E00FD7EFB /* AppDelegate.m */,
+				0A530ED42891524E00FD7EFB /* ViewController.h */,
+				0A530ED52891524E00FD7EFB /* ViewController.m */,
+				0A530ED72891524E00FD7EFB /* Main.storyboard */,
+				0A530EDA2891524F00FD7EFB /* Assets.xcassets */,
+				0A530EDC2891524F00FD7EFB /* LaunchScreen.storyboard */,
+				0A530EDF2891524F00FD7EFB /* Info.plist */,
+				0A530EE02891524F00FD7EFB /* main.m */,
 			);
 			path = AdjustTestApp;
 			sourceTree = "<group>";
 		};
-		D84EFBE9AD7F313CA0EC3D1C /* Pods */ = {
+		0A530EE82891526800FD7EFB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2A9867DC926A68302FD1054C /* Pods-AdjustTestApp.debug.xcconfig */,
-				AD71522617656DFE7EA1211D /* Pods-AdjustTestApp.release.xcconfig */,
+				0A530EEC2891526800FD7EFB /* libAdjustTestLibrary.a */,
 			);
-			path = Pods;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A530EF6289152A000FD7EFB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A530EFE289152A000FD7EFB /* libAdjust.a */,
+				0A530F00289152A000FD7EFB /* AdjustSdk.framework */,
+				0A530F02289152A000FD7EFB /* AdjustSdkTv.framework */,
+				0A530F04289152A000FD7EFB /* AdjustSdkIm.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A7ED6E92892B05600CC20DE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A7ED6ED2892B05600CC20DE /* libAdjustTestOptionsLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A7ED7872892B35F00CC20DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6F971F7D28912DAB0055FD32 /* AdjustTestApp */ = {
+		0A530ECA2891524E00FD7EFB /* AdjustTestApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F971F9728912DAC0055FD32 /* Build configuration list for PBXNativeTarget "AdjustTestApp" */;
+			buildConfigurationList = 0A530EE42891524F00FD7EFB /* Build configuration list for PBXNativeTarget "AdjustTestApp" */;
 			buildPhases = (
-				C5F87D1D1DEB0DCD1BA4E384 /* [CP] Check Pods Manifest.lock */,
-				6F971F7A28912DAB0055FD32 /* Sources */,
-				6F971F7B28912DAB0055FD32 /* Frameworks */,
-				6F971F7C28912DAB0055FD32 /* Resources */,
-				37F517C9F19910B12B942B9F /* [CP] Embed Pods Frameworks */,
+				0A7ED7FF289326D600CC20DE /* ShellScript */,
+				0A530EC72891524E00FD7EFB /* Sources */,
+				0A530EC82891524E00FD7EFB /* Frameworks */,
+				0A530EC92891524E00FD7EFB /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0A5310462891609300FD7EFB /* PBXTargetDependency */,
+				0A7ED6F82892B09D00CC20DE /* PBXTargetDependency */,
+				0A530F0B289152BB00FD7EFB /* PBXTargetDependency */,
 			);
 			name = AdjustTestApp;
 			productName = AdjustTestApp;
-			productReference = 6F971F7E28912DAB0055FD32 /* AdjustTestApp.app */;
+			productReference = 0A530ECB2891524E00FD7EFB /* AdjustTestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		6F971F7628912DAB0055FD32 /* Project object */ = {
+		0A530EC32891524E00FD7EFB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1330;
+				ORGANIZATIONNAME = "Adjust GmbH";
 				TargetAttributes = {
-					6F971F7D28912DAB0055FD32 = {
-						CreatedOnToolsVersion = 13.4.1;
+					0A530ECA2891524E00FD7EFB = {
+						CreatedOnToolsVersion = 13.3;
 					};
 				};
 			};
-			buildConfigurationList = 6F971F7928912DAB0055FD32 /* Build configuration list for PBXProject "AdjustTestApp" */;
-			compatibilityVersion = "Xcode 13.0";
+			buildConfigurationList = 0A530EC62891524E00FD7EFB /* Build configuration list for PBXProject "AdjustTestApp" */;
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 6F971F7528912DAB0055FD32;
-			productRefGroup = 6F971F7F28912DAB0055FD32 /* Products */;
+			mainGroup = 0A530EC22891524E00FD7EFB;
+			productRefGroup = 0A530ECC2891524E00FD7EFB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0A530EF6289152A000FD7EFB /* Products */;
+					ProjectRef = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+				},
+				{
+					ProductGroup = 0A530EE82891526800FD7EFB /* Products */;
+					ProjectRef = 0A530EE72891526800FD7EFB /* AdjustTestLibrary.xcodeproj */;
+				},
+				{
+					ProductGroup = 0A7ED6E92892B05600CC20DE /* Products */;
+					ProjectRef = 0A7ED6E82892B05600CC20DE /* AdjustTestOptionsLibrary.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
-				6F971F7D28912DAB0055FD32 /* AdjustTestApp */,
+				0A530ECA2891524E00FD7EFB /* AdjustTestApp */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		0A530EEC2891526800FD7EFB /* libAdjustTestLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustTestLibrary.a;
+			remoteRef = 0A530EEB2891526800FD7EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A530EFE289152A000FD7EFB /* libAdjust.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjust.a;
+			remoteRef = 0A530EFD289152A000FD7EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A530F00289152A000FD7EFB /* AdjustSdk.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdk.framework;
+			remoteRef = 0A530EFF289152A000FD7EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A530F02289152A000FD7EFB /* AdjustSdkTv.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdkTv.framework;
+			remoteRef = 0A530F01289152A000FD7EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A530F04289152A000FD7EFB /* AdjustSdkIm.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdkIm.framework;
+			remoteRef = 0A530F03289152A000FD7EFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A7ED6ED2892B05600CC20DE /* libAdjustTestOptionsLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustTestOptionsLibrary.a;
+			remoteRef = 0A7ED6EC2892B05600CC20DE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
-		6F971F7C28912DAB0055FD32 /* Resources */ = {
+		0A530EC92891524E00FD7EFB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F971F9128912DAC0055FD32 /* LaunchScreen.storyboard in Resources */,
-				6F971F8E28912DAC0055FD32 /* Assets.xcassets in Resources */,
-				6F971F8C28912DAB0055FD32 /* Main.storyboard in Resources */,
+				0A530EDE2891524F00FD7EFB /* LaunchScreen.storyboard in Resources */,
+				0A530EDB2891524F00FD7EFB /* Assets.xcassets in Resources */,
+				0A530ED92891524E00FD7EFB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		37F517C9F19910B12B942B9F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AdjustTestApp/Pods-AdjustTestApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AdjustTestApp/Pods-AdjustTestApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdjustTestApp/Pods-AdjustTestApp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C5F87D1D1DEB0DCD1BA4E384 /* [CP] Check Pods Manifest.lock */ = {
+		0A7ED7FF289326D600CC20DE /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -203,51 +337,64 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AdjustTestApp-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nenv\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6F971F7A28912DAB0055FD32 /* Sources */ = {
+		0A530EC72891524E00FD7EFB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F97202028927D990055FD32 /* ATAAdjustCommandExecutor.m in Sources */,
-				6F971F8928912DAB0055FD32 /* ViewController.m in Sources */,
-				6F971F8328912DAB0055FD32 /* AppDelegate.m in Sources */,
-				6F971F9428912DAC0055FD32 /* main.m in Sources */,
-				6F97202928927DC30055FD32 /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m in Sources */,
-				6F97202328927DA60055FD32 /* ATAAdjustAttributionSendAllSubscriber.m in Sources */,
+				0A7ED6F62892B07F00CC20DE /* ATAAdjustCommandExecutor.m in Sources */,
+				0A530ED62891524E00FD7EFB /* ViewController.m in Sources */,
+				0A7ED6F52892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m in Sources */,
+				0A530ED02891524E00FD7EFB /* AppDelegate.m in Sources */,
+				0A530EE12891524F00FD7EFB /* main.m in Sources */,
+				0A7ED6F42892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		0A530F0B289152BB00FD7EFB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AdjustTestLibrary;
+			targetProxy = 0A530F0A289152BB00FD7EFB /* PBXContainerItemProxy */;
+		};
+		0A5310462891609300FD7EFB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Adjust;
+			targetProxy = 0A5310452891609300FD7EFB /* PBXContainerItemProxy */;
+		};
+		0A7ED6F82892B09D00CC20DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AdjustTestOptionsLibrary;
+			targetProxy = 0A7ED6F72892B09D00CC20DE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
-		6F971F8A28912DAB0055FD32 /* Main.storyboard */ = {
+		0A530ED72891524E00FD7EFB /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				6F971F8B28912DAB0055FD32 /* Base */,
+				0A530ED82891524E00FD7EFB /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		6F971F8F28912DAC0055FD32 /* LaunchScreen.storyboard */ = {
+		0A530EDC2891524F00FD7EFB /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				6F971F9028912DAC0055FD32 /* Base */,
+				0A530EDD2891524F00FD7EFB /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -255,7 +402,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		6F971F9528912DAC0055FD32 /* Debug */ = {
+		0A530EE22891524F00FD7EFB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -305,7 +452,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -313,7 +460,7 @@
 			};
 			name = Debug;
 		};
-		6F971F9628912DAC0055FD32 /* Release */ = {
+		0A530EE32891524F00FD7EFB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -357,7 +504,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -365,9 +512,8 @@
 			};
 			name = Release;
 		};
-		6F971F9828912DAC0055FD32 /* Debug */ = {
+		0A530EE52891524F00FD7EFB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2A9867DC926A68302FD1054C /* Pods-AdjustTestApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -381,21 +527,23 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.AdjustTestApp;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.tests.AdjustTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(TARGET_BUILD_DIR)/usr/local/include";
 			};
 			name = Debug;
 		};
-		6F971F9928912DAC0055FD32 /* Release */ = {
+		0A530EE62891524F00FD7EFB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AD71522617656DFE7EA1211D /* Pods-AdjustTestApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -409,40 +557,43 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.AdjustTestApp;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.tests.AdjustTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(TARGET_BUILD_DIR)/usr/local/include";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F971F7928912DAB0055FD32 /* Build configuration list for PBXProject "AdjustTestApp" */ = {
+		0A530EC62891524E00FD7EFB /* Build configuration list for PBXProject "AdjustTestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6F971F9528912DAC0055FD32 /* Debug */,
-				6F971F9628912DAC0055FD32 /* Release */,
+				0A530EE22891524F00FD7EFB /* Debug */,
+				0A530EE32891524F00FD7EFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6F971F9728912DAC0055FD32 /* Build configuration list for PBXNativeTarget "AdjustTestApp" */ = {
+		0A530EE42891524F00FD7EFB /* Build configuration list for PBXNativeTarget "AdjustTestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6F971F9828912DAC0055FD32 /* Debug */,
-				6F971F9928912DAC0055FD32 /* Release */,
+				0A530EE52891524F00FD7EFB /* Debug */,
+				0A530EE62891524F00FD7EFB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 6F971F7628912DAB0055FD32 /* Project object */;
+	rootObject = 0A530EC32891524E00FD7EFB /* Project object */;
 }

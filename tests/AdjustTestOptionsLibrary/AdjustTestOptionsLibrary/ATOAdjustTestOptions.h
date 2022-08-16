@@ -12,13 +12,10 @@
 
 + (void)addToOptionsSetWithKey:(nonnull NSString *)key value:(nonnull NSString *)value;
 
-+ (nullable NSString *)
-    teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:(nonnull NSString *)urlOverwrite;
++ (nullable NSString *)teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:(nonnull NSString *)urlOverwrite;
 
-+ (nullable NSString *)
-    teardownAndExecuteTestOptionsCommandWithUrlOverwrite:(nonnull NSString *)urlOverwrite
-    commandParameters:
-        (nonnull NSDictionary<NSString *, NSArray<NSString* > *> *)commandParameters;
++ (nullable NSString *)teardownAndExecuteTestOptionsCommandWithUrlOverwrite:(nonnull NSString *)urlOverwrite
+                                                          commandParameters:(nonnull NSDictionary<NSString *, NSArray<NSString* > *> *)commandParameters;
 
 + (nullable NSNumber *)strictParseNumberBooleanWithString:(nullable NSString *)stringValue;
 

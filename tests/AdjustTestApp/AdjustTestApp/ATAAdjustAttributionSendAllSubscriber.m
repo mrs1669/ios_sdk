@@ -33,9 +33,9 @@
 #pragma mark - ADJAdjustAttributionSubscriber
 
 #define addWhenValid(key,valueName)                                             \
-    if (adjustAttribution.valueName.length > 0) {                               \
-        [testLibrary addInfoToSend:@#key value:adjustAttribution.valueName];    \
-    }
+if (adjustAttribution.valueName.length > 0) {                               \
+[testLibrary addInfoToSend:@#key value:adjustAttribution.valueName];    \
+}
 
 - (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self logDebug:@"did change attribution: %@", adjustAttribution];
@@ -78,6 +78,7 @@
 
     NSLog(@"\t[ATAAdjustAttributionSendAllSubscriber][Debug] %@", logMessage);
 }
+
 - (void)logError:(nonnull NSString *)message, ... {
     va_list parameters; va_start(parameters, message);
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];

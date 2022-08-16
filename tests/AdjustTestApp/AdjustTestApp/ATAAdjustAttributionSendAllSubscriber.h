@@ -10,8 +10,7 @@
 #import "ADJAdjustAttributionSubscriber.h"
 #import "ATLTestLibrary.h"
 
-@interface ATAAdjustAttributionSendAllSubscriber :
-    NSObject<ADJAdjustAttributionSubscriber>
+@interface ATAAdjustAttributionSendAllSubscriber : NSObject<ADJAdjustAttributionSubscriber>
 
 - (nonnull instancetype)initWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
                                   extraPath:(nonnull NSString *)extraPath;

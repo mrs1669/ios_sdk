@@ -2,14 +2,14 @@
 //  ViewController.m
 //  AdjustTestApp
 //
-//  Created by Pedro Silva on 27.07.22.
+//  Created by Genady Buchatsky on 27.07.22.
 //
 
 #import "ViewController.h"
 
-#import <AdjustTestLibrary/ATLTestLibrary.h>
-#import <ADJAdjustInternal.h>>
-#import "ATA5AdjustCommandExecutor.h"
+#import "ATLTestLibrary.h"
+#import "ADJAdjustInternal.h"
+#import "ATAAdjustCommandExecutor.h"
 
 // simulator
 static NSString * baseUrl = @"http://127.0.0.1:8080";
@@ -23,9 +23,9 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 
 @interface ViewController ()
 
+@property (weak, nonatomic) IBOutlet UIButton *btnStartTestSession;
 @property (nonatomic, strong) ATLTestLibrary *testLibrary;
-//@property (nonatomic, strong) ATAAdjustCommandExecutor *adjustCommandExecutor;
-@property (nonatomic, strong) ATA5AdjustCommandExecutor *adjustV5CommandExecutor;
+@property (nonatomic, strong) ATAAdjustCommandExecutor *adjustCommandExecutor;
 
 @end
 
@@ -42,19 +42,18 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     self.testLibrary = [[ATLTestLibrary alloc] initWithBaseUrl:baseUrl
                                                     controlUrl:controlUrl];
 
-    self.adjustV5CommandExecutor =
-        [[ATA5AdjustCommandExecutor alloc] initWithUrl:baseUrl
-                                           testLibrary:self.testLibrary];
+    self.adjustCommandExecutor =
+    [[ATAAdjustCommandExecutor alloc] initWithUrl:baseUrl
+                                      testLibrary:self.testLibrary];
 
-    self.testLibrary.dictionaryParametersDelegate = self.adjustV5CommandExecutor;
+    self.testLibrary.dictionaryParametersDelegate = self.adjustCommandExecutor;
 
     //[self.testLibrary addTest:@"Test_GlobalParameters_clear"];
     //[self.testLibrary addTestDirectory:@"gdpr"];
 }
 
-- (IBAction)clickv5StartTestSession:(UIButton *)sender {
+- (IBAction)onBtnStartTestSessionPressDidReceive:(UIButton *)sender {
     [self.testLibrary startTestSession:[ADJAdjustInternal sdkVersion]];
 }
-
 
 @end
