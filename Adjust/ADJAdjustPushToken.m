@@ -37,8 +37,7 @@
 
 #pragma mark - Private Constructors
 - (nonnull instancetype)initWithDataPushToken:(nullable NSData *)dataPushToken
-                              stringPushToken:(nullable NSString *)stringPushToken
-{
+                              stringPushToken:(nullable NSString *)stringPushToken {
     self = [super init];
     
     _dataPushToken = [ADJUtilObj copyObjectWithInput:dataPushToken

@@ -20,9 +20,7 @@
 #pragma mark - Internal Constructors
 
 #pragma mark - Public API
-
 #pragma mark Initialize SDK Config
-
 + (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
@@ -33,13 +31,12 @@
             [apiLogger error:@"Cannot init SDK without valid adjust config"];
             return;
         }
-
+        
         [adjustAPI ccSdkInitWithClientConfigData:clientConfigData];
     }];
 }
 
 #pragma mark Offline/ Online Methods
-
 + (void)switchToOfflineMode {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
@@ -54,7 +51,6 @@
 }
 
 #pragma mark Inactive/ Reactive SDK Methods
-
 + (void)inactivateSdk {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
@@ -70,7 +66,6 @@
 }
 
 #pragma mark Track Event Method
-
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
@@ -93,18 +88,20 @@
     }];
 }
 
+#pragma mark Lifecycle Methods
 + (void)appWentToTheForegroundManualCall {
     [ADJEntryRoot executeBlockInClientContext:
-        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-    {
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+     {
         [adjustAPI ccForeground];
     }];
 
 }
+
 + (void)appWentToTheBackgroundManualCall {
     [ADJEntryRoot executeBlockInClientContext:
-        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
-    {
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+     {
         [adjustAPI ccBackground];
     }];
 }

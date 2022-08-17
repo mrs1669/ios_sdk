@@ -26,8 +26,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 @implementation ADJSdkActiveState
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                              isGdprForgotten:(BOOL)isGdprForgotten
-{
+                              isGdprForgotten:(BOOL)isGdprForgotten {
     self = [super initWithLoggerFactory:loggerFactory source:@"5SdkActiveState"];
 
     _isSdkForgotten = isGdprForgotten;
@@ -50,15 +49,15 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     }
 
     NSString *_Nonnull currentSdkActiveStatus =
-        [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
+    [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
 
     if (ADJSdkActiveStatusForgotten == currentSdkActiveStatus) {
         [adjustApiLogger info:@"Sdk will initialize, but it was forgotten to GDPR law."
-            " It will remain inactive"];
+         " It will remain inactive"];
     }
     if (ADJSdkActiveStatusInactive == currentSdkActiveStatus) {
         [adjustApiLogger info:@"Sdk will initialize, but will be inactive."
-            " It can be reactivated"];
+         " It can be reactivated"];
     }
     if (ADJSdkActiveStatusActive == currentSdkActiveStatus) {
         [adjustApiLogger info:@"Sdk will initialize"];
@@ -78,7 +77,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 
     if (ADJSdkActiveStatusForgotten == currentSdkActiveStatus) {
         [adjustApiLogger error:@"Sdk was already inactive by being"
-            " forgotten in accordance to GDPR law"];
+         " forgotten in accordance to GDPR law"];
         return;
     }
 
@@ -106,7 +105,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 
     if (ADJSdkActiveStatusForgotten == currentSdkActiveStatus) {
         [adjustApiLogger error:@"Sdk cannot be reactivated"
-            " This device was forgotten in accordance to GDPR law"];
+         " This device was forgotten in accordance to GDPR law"];
         return;
     }
 
@@ -125,48 +124,39 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     }
 }
 
-- (nonnull NSString *)
-    canPerformActiveActionWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    source:(nonnull NSString *)source
-{
+- (nonnull NSString *)canPerformActiveActionWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                                                                   source:(nonnull NSString *)source {
     NSString *_Nonnull currentSdkActiveStatus =
-        [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
+    [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
 
     if (ADJSdkActiveStatusForgotten == currentSdkActiveStatus) {
         return [NSString stringWithFormat:
-                    @"Sdk cannot perform %@. Sdk was forgotten in accordance to GDPR law",
-                    source];
+                @"Sdk cannot perform %@. Sdk was forgotten in accordance to GDPR law",
+                source];
     }
 
     if (ADJSdkActiveStatusInactive == currentSdkActiveStatus) {
         return [NSString stringWithFormat:
-                    @"Sdk cannot perform %@. Sdk is currently inactive",
-                    source];
+                @"Sdk cannot perform %@. Sdk is currently inactive",
+                source];
     }
 
     return nil;
 }
 
-- (void)
-    canNowPublishWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-{
+- (void)canNowPublishWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                            sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO {
     self.canPublish = YES;
 
     NSString *_Nonnull currentSdkActiveStatus =
-        [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
+    [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
 
     [self.logger debug:@"Sdk Active State: %@, when can now publish", currentSdkActiveStatus];
 
     [sdkActiveStatusEventWO setNewValue:currentSdkActiveStatus];
 }
 
-- (void)
-    gdprForgetEventReceivedWithSdkActiveStatusEventWO:
-        (nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-{
+- (void)gdprForgetEventReceivedWithSdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO {
     // gdprForgetStatus value is ignored since
     //  both possible values: ASKED_TO_FORGET or FORGOTTEN_BY_BACKEND
     //  are the same for SdkActiveStatus purpose
@@ -182,14 +172,11 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     }
 }
 
-- (BOOL)
-    tryForgetDeviceWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger
-{
+- (BOOL)tryForgetDeviceWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                              sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
+                                     adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger {
     NSString *_Nonnull currentSdkActiveStatus =
-        [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
+    [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
 
     if (currentSdkActiveStatus == ADJSdkActiveStatusForgotten) {
         [adjustApiLogger error:@"Sdk was already forgotten in accordance to GDPR law"];
@@ -210,9 +197,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 }
 
 #pragma mark Internal Methods
-- (nonnull NSString *)currentSdkActiveStatusWithStateData:
-    (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-{
+- (nonnull NSString *)currentSdkActiveStatusWithStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData {
     if (self.isSdkForgotten) {
         return ADJSdkActiveStatusForgotten;
     }

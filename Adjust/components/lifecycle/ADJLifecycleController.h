@@ -15,21 +15,18 @@
 #import "ADJThreadController.h"
 
 @interface ADJLifecycleController : ADJCommonBase<
-    //ADJTeardownFinalizer,
-    // subscriptions
-    ADJPublishingGateSubscriber
+//ADJTeardownFinalizer,
+// subscriptions
+ADJPublishingGateSubscriber
 >
-- (void)
-    ccSubscribeToPublishersWithPublishingGatePublisher:
-        (nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
+- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJLifecyclePublisher *lifecyclePublisher;
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadController:(nonnull ADJThreadController *)threadController
-    doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             threadController:(nonnull ADJThreadController *)threadController
+              doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus;
 
 // public api
 - (void)ccForeground;

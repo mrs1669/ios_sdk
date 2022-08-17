@@ -62,10 +62,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 }
 
 // Resets the sdk state, as if it was not initialized or used before.
-+ (nonnull NSString *)
-teardownWithShouldClearStorage:(BOOL)shouldClearStorage
-sdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
-{
++ (nonnull NSString *)teardownWithShouldClearStorage:(BOOL)shouldClearStorage sdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     // restrict teardown to debug builds
 #ifndef DEBUG
     return @"Teardown cannot be done in non-debug mode";
@@ -100,9 +97,7 @@ sdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
 #endif
 }
 
-+ (void)teardownWithoutClearingStorageWithReturnMessage:
-(nonnull NSMutableString *)returnMessage
-{
++ (void)teardownWithoutClearingStorageWithReturnMessage:(nonnull NSMutableString *)returnMessage {
     if (entryRootInstance == nil) {
         [returnMessage appendString:
          @". No singleton root instance to null without clearing storage"];

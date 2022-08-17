@@ -28,8 +28,7 @@ NSString *const ADJAdjustLogLevelError = @"Error";
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLogMessage:(nonnull NSString *)logMessage
                                     source:(nonnull NSString *)source
-                           messageLogLevel:(nonnull NSString *)messageLogLevel
-{
+                           messageLogLevel:(nonnull NSString *)messageLogLevel {
     self = [super init];
     
     _logMessage = logMessage;
@@ -52,8 +51,7 @@ NSString *const ADJAdjustLogLevelError = @"Error";
 
 + (nonnull NSString *)generateFullLogWithMessage:(nonnull NSString *)logMessage
                                           source:(nonnull NSString *)source
-                                 messageLogLevel:(nonnull NSString *)messageLogLevel
-{
+                                 messageLogLevel:(nonnull NSString *)messageLogLevel {
     return [NSString stringWithFormat:@"[%@][%@][%@] %@",
             ADJAdjustCategory, messageLogLevel, source, logMessage];
 }

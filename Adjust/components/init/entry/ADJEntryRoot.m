@@ -90,8 +90,7 @@
 }
 
 #pragma mark Public API
-+ (void)executeBlockInClientContext:(nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))
-blockInClientContext {
++ (void)executeBlockInClientContext:(nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))blockInClientContext {
     ADJEntryRoot *_Nonnull root = [ADJAdjustInternal rootInstance];
 
     // TODO: (Gena) Why do we need ths check👇🏻? ('preSdkInitRootController' is created by ADJEntryRoot initializer)
@@ -161,4 +160,5 @@ blockInClientContext {
 }
 
 @end
+
 

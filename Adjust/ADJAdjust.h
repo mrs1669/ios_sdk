@@ -29,5 +29,4 @@
 + (void)appWentToTheForegroundManualCall;
 + (void)appWentToTheBackgroundManualCall;
 
-
 @end

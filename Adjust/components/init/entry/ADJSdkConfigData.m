@@ -15,24 +15,24 @@
  @property (nonnull, readonly, strong, nonatomic) ADJExternalConfigData *sessionDeviceIdsConfigData;
  @property (nonnull, readonly, strong, nonatomic) ADJExternalConfigData *asaAttributionConfigData;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJBackoffStrategy *attributionBackoffStrategy;
+ ADJBackoffStrategy *attributionBackoffStrategy;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJBackoffStrategy *gdprForgetBackoffStrategy;
+ ADJBackoffStrategy *gdprForgetBackoffStrategy;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJBackoffStrategy *mainQueueBackoffStrategy;
+ ADJBackoffStrategy *mainQueueBackoffStrategy;
  @property (nullable, readonly, strong, nonatomic)
-     id<ADJClientReturnExecutor> clientReturnExecutorOverwrite;
+ id<ADJClientReturnExecutor> clientReturnExecutorOverwrite;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
+ ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
  @property (nullable, readonly, strong, nonatomic)
-     ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
+ ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
  @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJTimeLengthMilli *foregroundTimerIntervalMilli;
+ ADJTimeLengthMilli *foregroundTimerIntervalMilli;
  @property (readonly, assign, nonatomic) BOOL assumeSandboxEnvironmentForLogging;
  @property (readonly, assign, nonatomic) BOOL doNotReadCurrentLifecycleStatus;
  @property (readonly, assign, nonatomic) BOOL doNotInitiateAttributionFromSdk;
-*/
+ */
 
 @implementation ADJSdkConfigData
 #pragma mark Instantiation
@@ -41,11 +41,9 @@
             [[ADJSdkConfigDataBuilder alloc] initWithDefaultValues]];
 }
 
-- (nonnull instancetype)initWithBuilderData:
-    (nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
-{
+- (nonnull instancetype)initWithBuilderData: (nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     self = [super init];
-
+    
     _networkEndpointData = sdkConfigDataBuilder.networkEndpointData;
     _sessionDeviceIdsConfigData = sdkConfigDataBuilder.sessionDeviceIdsConfigData;
     _asaAttributionConfigData = sdkConfigDataBuilder.asaAttributionConfigData;
@@ -55,14 +53,14 @@
     _clientReturnExecutorOverwrite = sdkConfigDataBuilder.clientReturnExecutorOverwrite;
     _minMeasurementSessionIntervalMilli = sdkConfigDataBuilder.minMeasurementSessionIntervalMilli;
     _overwriteFirstMeasurementSessionIntervalMilli =
-        sdkConfigDataBuilder.overwriteFirstMeasurementSessionIntervalMilli;
+    sdkConfigDataBuilder.overwriteFirstMeasurementSessionIntervalMilli;
     _foregroundTimerStartMilli = sdkConfigDataBuilder.foregroundTimerStartMilli;
     _foregroundTimerIntervalMilli = sdkConfigDataBuilder.foregroundTimerIntervalMilli;
     _assumeSandboxEnvironmentForLogging = sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging;
     _doNotReadCurrentLifecycleStatus =
-        sdkConfigDataBuilder.doNotReadCurrentLifecycleStatus;
+    sdkConfigDataBuilder.doNotReadCurrentLifecycleStatus;
     _doNotInitiateAttributionFromSdk = sdkConfigDataBuilder.doNotInitiateAttributionFromSdk;
-
+    
     return self;
 }
 

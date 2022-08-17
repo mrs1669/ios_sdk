@@ -114,8 +114,7 @@
                                                            eventStateStorage:storageRootController.eventStateStorage
                                               measurementSessionStateStorage:storageRootController.measurementSessionStateStorage];
 
-    _sdkPackageSenderController =
-    [[ADJSdkPackageSenderController alloc]
+    _sdkPackageSenderController = [[ADJSdkPackageSenderController alloc]
      initWithLoggerFactory:loggerFactory
      networkEndpointData:sdkConfigData.networkEndpointData
      adjustUrlStrategy:clientConfigData.urlStrategy

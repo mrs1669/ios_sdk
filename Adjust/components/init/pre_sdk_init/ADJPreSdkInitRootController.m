@@ -30,7 +30,7 @@
  @property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
  @property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
  @property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
-*/
+ */
 
 @interface ADJPreSdkInitRootController ()
 #pragma mark - Injected dependencies
@@ -44,8 +44,7 @@
 @implementation ADJPreSdkInitRootController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                    entryRoot:(nonnull ADJEntryRoot *)entryRoot
-{
+                                    entryRoot:(nonnull ADJEntryRoot *)entryRoot {
     self = [super initWithLoggerFactory:loggerFactory source:@"PreSdkInitRootController"];
     _entryRootWeak = entryRoot;
 
@@ -56,18 +55,18 @@
     _storageRootController = [[ADJStorageRootController alloc] initWithLoggerFactory:loggerFactory
                                                                threadExecutorFactory:entryRoot.threadController];
 
-//    _gdprForgetController =
-//        [[ADJGdprForgetController alloc]
-//            initWithLoggerFactory:loggerFactory
-//            gdprForgetStateStorage:self.storageRootController.gdprForgetStateStorage
-//            threadExecutorFactory:entryRoot.threadController
-//            gdprForgetBackoffStrategy:entryRoot.sdkConfigData.gdprForgetBackoffStrategy];
-//
+    //    _gdprForgetController =
+    //        [[ADJGdprForgetController alloc]
+    //            initWithLoggerFactory:loggerFactory
+    //            gdprForgetStateStorage:self.storageRootController.gdprForgetStateStorage
+    //            threadExecutorFactory:entryRoot.threadController
+    //            gdprForgetBackoffStrategy:entryRoot.sdkConfigData.gdprForgetBackoffStrategy];
+    //
     _lifecycleController = [[ADJLifecycleController alloc]
-                                initWithLoggerFactory:loggerFactory
-                                threadController:entryRoot.threadController
-                                doNotReadCurrentLifecycleStatus:
-                                    entryRoot.sdkConfigData.doNotReadCurrentLifecycleStatus];
+                            initWithLoggerFactory:loggerFactory
+                            threadController:entryRoot.threadController
+                            doNotReadCurrentLifecycleStatus:
+                                entryRoot.sdkConfigData.doNotReadCurrentLifecycleStatus];
 
     _offlineController = [[ADJOfflineController alloc] initWithLoggerFactory:loggerFactory];
 
@@ -76,24 +75,24 @@
                                                                                  clock:self.clock];
 
     _deviceController = [[ADJDeviceController alloc]
-                            initWithLoggerFactory:loggerFactory
-                                threadPool:entryRoot.threadController
-                                clock:self.clock
-                                deviceIdsStorage:self.storageRootController.deviceIdsStorage
-                                keychainStorage:self.storageRootController.keychainStorage
-                                deviceIdsConfigData:entryRoot.sdkConfigData.sessionDeviceIdsConfigData];
+                         initWithLoggerFactory:loggerFactory
+                         threadPool:entryRoot.threadController
+                         clock:self.clock
+                         deviceIdsStorage:self.storageRootController.deviceIdsStorage
+                         keychainStorage:self.storageRootController.keychainStorage
+                         deviceIdsConfigData:entryRoot.sdkConfigData.sessionDeviceIdsConfigData];
 
-//    _clientCallbacksController =
-//        [[ADJClientCallbacksController alloc]
-//            initWithLoggerFactory:loggerFactory
-//            attributionStateStorage:self.storageRootController.attributionStateStorage
-//            clientReturnExecutor:[entryRoot clientReturnExecutor]
-//            deviceController:self.deviceController];
+    //    _clientCallbacksController =
+    //        [[ADJClientCallbacksController alloc]
+    //            initWithLoggerFactory:loggerFactory
+    //            attributionStateStorage:self.storageRootController.attributionStateStorage
+    //            clientReturnExecutor:[entryRoot clientReturnExecutor]
+    //            deviceController:self.deviceController];
 
     _sdkActiveState = [[ADJSdkActiveState alloc] initWithLoggerFactory:loggerFactory
                                                        isGdprForgotten:NO]; //TODO: (Gena)Uncomment //[self.gdprForgetController isForgotten]];
 
-//    _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
+    //    _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
 
     return self;
 }
@@ -280,8 +279,7 @@
 - (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source {
     ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
 
-    NSString *_Nullable cannotPerformActionMessage = [self.sdkActiveState canPerformActiveActionWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue]
-                                                                                                                       source:source];
+    NSString *_Nullable cannotPerformActionMessage = [self.sdkActiveState canPerformActiveActionWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue] source:source];
     if (cannotPerformActionMessage != nil) {
         ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
 
@@ -295,7 +293,7 @@
     }
 
     id<ADJClientActionsAPI> _Nullable sdkStartClientActionAPI =
-        [self sdkStartClientActionAPIwithSource:source];
+    [self sdkStartClientActionAPIwithSource:source];
 
     if (sdkStartClientActionAPI != nil) {
         return sdkStartClientActionAPI;
@@ -312,45 +310,45 @@
     // inject post sdk init dependencies
     [self.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:postSdkInitRootController];
 
-/*
-    [self.gdprForgetController ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
-                                                                         clock:self.clock
-                                                                 loggerFactory:entryRoot.logController
-                                                                    threadpool:entryRoot.threadController
-                                                       sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
-*/
+    /*
+     [self.gdprForgetController ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
+     clock:self.clock
+     loggerFactory:entryRoot.logController
+     threadpool:entryRoot.threadController
+     sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
+     */
 
     // subscribing to publishers
     [self.lifecycleController
-        ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
+     ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
     [self.offlineController
-        ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
+     ccSubscribeToPublishersWithPublishingGatePublisher:publishingGatePublisher];
 
     [self.clientActionController ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:
-            postSdkInitRootController.measurementSessionController.preFirstMeasurementSessionStartPublisher
+     postSdkInitRootController.measurementSessionController.preFirstMeasurementSessionStartPublisher
                                                                     measurementSessionStartPublisher:
-            postSdkInitRootController.measurementSessionController.measurementSessionStartPublisher];
+     postSdkInitRootController.measurementSessionController.measurementSessionStartPublisher];
 
     [self.deviceController ccSubscribeToPublishersWithLifecylePublisher:
-        self.lifecycleController.lifecyclePublisher];
-    
-/*
-    [self.gdprForgetController
-        ccSubscribeToPublishersWithSdkInitPublisher:postSdkInitRootController.sdkInitPublisher
-        publishingGatePublisher:publishingGatePublisher
-        lifecyclePublisher:self.lifecycleController.lifecyclePublisher
-        sdkResponsePublisher:postSdkInitRootController.sdkPackageSenderController.sdkResponsePublisher];
+     self.lifecycleController.lifecyclePublisher];
 
-    [self.pluginController
-        ccSubscribeToPublishersWithSdkPackageSendingPublisher:
-            postSdkInitRootController.sdkPackageSenderController.sdkPackageSendingPublisher
-        lifecyclePublisher:self.lifecycleController.lifecyclePublisher];
+    /*
+     [self.gdprForgetController
+     ccSubscribeToPublishersWithSdkInitPublisher:postSdkInitRootController.sdkInitPublisher
+     publishingGatePublisher:publishingGatePublisher
+     lifecyclePublisher:self.lifecycleController.lifecyclePublisher
+     sdkResponsePublisher:postSdkInitRootController.sdkPackageSenderController.sdkResponsePublisher];
 
-    // subscribe self to publishers
-*/
+     [self.pluginController
+     ccSubscribeToPublishersWithSdkPackageSendingPublisher:
+     postSdkInitRootController.sdkPackageSenderController.sdkPackageSendingPublisher
+     lifecyclePublisher:self.lifecycleController.lifecyclePublisher];
+
+     // subscribe self to publishers
+     */
     [publishingGatePublisher addSubscriber:self];
-/*
-    [self.gdprForgetController.gdprForgetPublisher addSubscriber:self];
+    /*
+     [self.gdprForgetController.gdprForgetPublisher addSubscriber:self];
      */
 }
 
@@ -429,7 +427,7 @@
     }
 
     ADJPostSdkInitRootController *_Nullable postSdkInitRootController =
-        entryRoot.postSdkInitRootController;
+    entryRoot.postSdkInitRootController;
 
     if (postSdkInitRootController == nil) {
         return nil;
@@ -439,3 +437,5 @@
 }
 
 @end
+
+
