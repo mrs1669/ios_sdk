@@ -30,8 +30,7 @@ NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
 @implementation ATAAdjustCommandExecutor
 
 - (nonnull instancetype)initWithUrl:(nonnull NSString *)url
-                        testLibrary:(nonnull ATLTestLibrary *)testLibrary
-{
+                        testLibrary:(nonnull ATLTestLibrary *)testLibrary {
     self = [super init];
 
     _url = url;
@@ -42,12 +41,9 @@ NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
     return self;
 }
 
-- (void)
-executeCommandWithDictionaryParameters:
-(nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters
-className:(nonnull NSString *)className
-methodName:(nonnull NSString *)methodName
-{
+- (void)executeCommandWithDictionaryParameters:(nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters
+                                     className:(nonnull NSString *)className
+                                    methodName:(nonnull NSString *)methodName {
     if ([className isEqualToString:@"Adjust"]) {
         [self executeAdjustCommandWithMethodName:methodName
                             dictionaryParameters:dictionaryParameters];
@@ -79,11 +75,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 [self adjustMethod];                                \
 } else                                                  \
 
-- (void)
-executeAdjustCommandWithMethodName:(NSString *)methodName
-dictionaryParameters:
-(nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters
-{
+- (void)executeAdjustCommandWithMethodName:(NSString *)methodName
+                      dictionaryParameters:(nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters {
     self.commandParameters = dictionaryParameters;
 
     adjustCommand(start)
@@ -195,81 +188,77 @@ dictionaryParameters:
 }
 
 - (void)trackEvent {
-    /*
-     NSString *_Nullable eventToken = [self firstParameterValueWithKey:@"eventToken"];
+    NSString *_Nullable eventToken = [self firstParameterValueWithKey:@"eventToken"];
 
-     ADJAdjustEvent *_Nonnull adjustEvent =
-     [[ADJAdjustEvent alloc] initWithEventId:eventToken];
+    ADJAdjustEvent *_Nonnull adjustEvent =
+    [[ADJAdjustEvent alloc] initWithEventId:eventToken];
 
-     if ([self containsKey:@"currencyAndRevenue"]) {
-     NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
-     index:0];
-     NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
-     index:1];
-     NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
+    if ([self containsKey:@"currencyAndRevenue"]) {
+        NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
+                                                             index:0];
+        NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
+                                                                  index:1];
+        NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
 
-     [adjustEvent setRevenueWithDoubleNumber:revenueNumber
-     currency:currency];
-     }
+        [adjustEvent setRevenueWithDoubleNumber:revenueNumber
+                                       currency:currency];
+    }
 
-     if ([self containsKey:@"callbackParams"]) {
-     [self iterateWithKey:@"callbackParams"
-     source:@"event callback"
-     keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-     {
-     [adjustEvent addCallbackParameterWithKey:key value:value];
-     }];
-     }
+    if ([self containsKey:@"callbackParams"]) {
+        [self iterateWithKey:@"callbackParams"
+                      source:@"event callback"
+               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
+         {
+            [adjustEvent addCallbackParameterWithKey:key value:value];
+        }];
+    }
 
-     if ([self containsKey:@"partnerParams"]) {
-     [self iterateWithKey:@"partnerParams"
-     source:@"event partner"
-     keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-     {
-     [adjustEvent addPartnerParameterWithKey:key value:value];
-     }];
-     }
+    if ([self containsKey:@"partnerParams"]) {
+        [self iterateWithKey:@"partnerParams"
+                      source:@"event partner"
+               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
+         {
+            [adjustEvent addPartnerParameterWithKey:key value:value];
+        }];
+    }
 
-     if ([self containsKey:@"deduplicationId"]) {
-     NSString *_Nullable deduplicationId =
-     [self firstParameterValueWithKey:@"deduplicationId"];
+    if ([self containsKey:@"deduplicationId"]) {
+        NSString *_Nullable deduplicationId =
+        [self firstParameterValueWithKey:@"deduplicationId"];
 
-     [adjustEvent setDeduplicationId:deduplicationId];
-     }
+        [adjustEvent setDeduplicationId:deduplicationId];
+    }
 
-     [ADJAdjust trackEvent:adjustEvent];
-     */
+    [ADJAdjust trackEvent:adjustEvent];
 }
 
 - (void)stop {
-    //[ADJAdjust inactivateSdk];
+    [ADJAdjust inactivateSdk];
 }
 
 - (void)restart {
-    //[ADJAdjust reactivateSdk];
+    [ADJAdjust reactivateSdk];
 }
 
 - (void)setOfflineMode {
-    /*
-     if (! [self containsKey:@"enabled"]) {
-     [self logError:@"setOfflineMode without expected enabled key"];
-     return;
-     }
+    if (! [self containsKey:@"enabled"]) {
+        [self logError:@"setOfflineMode without expected enabled key"];
+        return;
+    }
 
-     NSNumber *_Nullable strictEnabledValue = [self strictParseNumberBoolWithKey:@"enabled"];
+    NSNumber *_Nullable strictEnabledValue = [self strictParseNumberBoolWithKey:@"enabled"];
 
-     if (strictEnabledValue == nil) {
-     [self logError:@"setOfflineMode without non valid enabled value: %@",
-     [self firstParameterValueWithKey:@"enabled"]];
-     return;
-     }
+    if (strictEnabledValue == nil) {
+        [self logError:@"setOfflineMode without non valid enabled value: %@",
+         [self firstParameterValueWithKey:@"enabled"]];
+        return;
+    }
 
-     if (strictEnabledValue.boolValue) {
-     [ADJAdjust switchToOfflineMode];
-     } else {
-     [ADJAdjust switchBackToOnlineMode];
-     }
-     */
+    if (strictEnabledValue.boolValue) {
+        [ADJAdjust switchToOfflineMode];
+    } else {
+        [ADJAdjust switchBackToOnlineMode];
+    }
 }
 
 - (void)addGlobalCallbackParameter {
@@ -557,12 +546,9 @@ keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
     }
 }
 
-- (void)
-iterateWithKey:(nonnull NSString *)key
-source:(nonnull NSString *)source
-keyValueBlock:
-(nonnull void (^)(NSString *_Nonnull key, NSString *_Nonnull value))keyValueBlock
-{
+- (void)iterateWithKey:(nonnull NSString *)key
+                source:(nonnull NSString *)source
+         keyValueBlock:(nonnull void (^)(NSString *_Nonnull key, NSString *_Nonnull value))keyValueBlock{
     NSArray<NSString *> *_Nullable array =
     [self.commandParameters objectForKey:key];
 
@@ -586,14 +572,11 @@ keyValueBlock:
     }
 }
 
-- (void)
-iterateWithKey:(nonnull NSString *)key
-source:(nonnull NSString *)source
-nameKeyValueBlock:
-(nonnull void (^)(NSString *_Nonnull name,
-                  NSString *_Nonnull key,
-                  NSString *_Nonnull value))nameKeyValueBlock
-{
+- (void)iterateWithKey:(nonnull NSString *)key
+                source:(nonnull NSString *)source
+     nameKeyValueBlock:(nonnull void (^)(NSString *_Nonnull name,
+                                         NSString *_Nonnull key,
+                                         NSString *_Nonnull value))nameKeyValueBlock {
     NSArray<NSString *> *_Nullable array =
     [self.commandParameters objectForKey:key];
 
