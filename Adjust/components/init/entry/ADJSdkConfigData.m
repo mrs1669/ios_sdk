@@ -53,7 +53,7 @@
     _clientReturnExecutorOverwrite = sdkConfigDataBuilder.clientReturnExecutorOverwrite;
     _minMeasurementSessionIntervalMilli = sdkConfigDataBuilder.minMeasurementSessionIntervalMilli;
     _overwriteFirstMeasurementSessionIntervalMilli =
-    sdkConfigDataBuilder.overwriteFirstMeasurementSessionIntervalMilli;
+    sdkConfigDataBuilder.overwriteFirstSdkSessionInterval;
     _foregroundTimerStartMilli = sdkConfigDataBuilder.foregroundTimerStartMilli;
     _foregroundTimerIntervalMilli = sdkConfigDataBuilder.foregroundTimerIntervalMilli;
     _assumeSandboxEnvironmentForLogging = sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging;

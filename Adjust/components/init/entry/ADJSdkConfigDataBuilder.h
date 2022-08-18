@@ -28,7 +28,8 @@
 @property (nonnull, readwrite, strong, nonatomic) ADJBackoffStrategy *mainQueueBackoffStrategy;
 @property (nullable, readwrite, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutorOverwrite;
 @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
-@property (nullable, readwrite, strong, nonatomic) ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
+@property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *minClientConfigSendInterval;
+@property (nullable, readwrite, strong, nonatomic) ADJTimeLengthMilli *overwriteFirstSdkSessionInterval;
 @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
 @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerIntervalMilli;
 @property (readwrite, assign, nonatomic) BOOL assumeSandboxEnvironmentForLogging;

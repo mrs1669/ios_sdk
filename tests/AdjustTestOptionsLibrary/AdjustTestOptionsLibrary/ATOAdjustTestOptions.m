@@ -22,8 +22,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
 @property (nullable, readwrite, strong, nonatomic) NSString *extraPath;
 @property (nullable, readwrite, strong, nonatomic) NSNumber *foregroundTimerIntervalMilli;
 @property (nullable, readwrite, strong, nonatomic) NSNumber *foregroundTimerStartMilli;
-@property (nullable, readwrite, strong, nonatomic) NSNumber *minMeasurementSessionIntervalMilli;
-@property (nullable, readwrite, strong, nonatomic) NSNumber *overwriteFirstMeasurementSessionIntervalMilli;
+@property (nullable, readwrite, strong, nonatomic) NSNumber *minSdkSessionIntervalMilli;
+@property (nullable, readwrite, strong, nonatomic) NSNumber *minLifecycleIntervalMilli;
+@property (nullable, readwrite, strong, nonatomic) NSNumber *overwriteFirstSdkSessionIntervalMilli;
 
 @property (readwrite, assign, nonatomic) BOOL clearStorage;
 @property (readwrite, assign, nonatomic) BOOL doNotReadCurrentLifecycleStatus;
@@ -205,31 +206,46 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
             }
         }
 
-        if ([@"minMeasurementSessionIntervalMilli" isEqual:key]) {
-            NSNumber *_Nullable minMeasurementSessionIntervalMilliNumber =
+        if ([@"minSdkSessionIntervalMilli" isEqual:key]) {
+            NSNumber *_Nullable minSdkSessionIntervalMilliNumber =
                 [self convertToNSNumberIntWithStringValue:value];
 
-            if (minMeasurementSessionIntervalMilliNumber != nil) {
+            if (minSdkSessionIntervalMilliNumber != nil) {
                 [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet minMeasurementSessionIntervalMilli %@",
-                    minMeasurementSessionIntervalMilliNumber];
-                adjustTestOptions.minMeasurementSessionIntervalMilli = minMeasurementSessionIntervalMilliNumber;
+                    @"mergeIntoTestOptionsWithSet minSdkSessionIntervalMilli %@",
+                 minSdkSessionIntervalMilliNumber];
+                adjustTestOptions.minSdkSessionIntervalMilli = minSdkSessionIntervalMilliNumber;
             } else {
                 [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet minMeasurementSessionIntervalMilli %@ unread", value];
+                    @"mergeIntoTestOptionsWithSet minSdkSessionIntervalMilli %@ unread", value];
+            }
+        }
+        
+        if ([@"minLifecycleIntervalMilli" isEqual:key]) {
+            NSNumber *_Nullable minLifecycleIntervalMilliNumber =
+                [self convertToNSNumberIntWithStringValue:value];
+
+            if (minLifecycleIntervalMilliNumber != nil) {
+                [[ATOLogger sharedInstance] debug:
+                    @"mergeIntoTestOptionsWithSet minLifecycleIntervalMilli %@",
+                 minLifecycleIntervalMilliNumber];
+                adjustTestOptions.minLifecycleIntervalMilli = minLifecycleIntervalMilliNumber;
+            } else {
+                [[ATOLogger sharedInstance] error:
+                    @"mergeIntoTestOptionsWithSet minLifecycleIntervalMilli %@ unread", value];
             }
         }
 
-        if ([@"overwriteFirstMeasurementSessionIntervalMilli" isEqual:key]) {
-            NSNumber *_Nullable overwriteFirstMeasurementSessionIntervalMilliNumber =
+        if ([@"overwriteFirstSdkSessionIntervalMilli" isEqual:key]) {
+            NSNumber *_Nullable overwriteFirstSdkSessionIntervalMilliNumber =
                 [self convertToNSNumberIntWithStringValue:value];
 
-            if (overwriteFirstMeasurementSessionIntervalMilliNumber != nil) {
+            if (overwriteFirstSdkSessionIntervalMilliNumber != nil) {
                 [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet overwriteFirstMeasurementSessionIntervalMilli %@",
-                    overwriteFirstMeasurementSessionIntervalMilliNumber];
-                adjustTestOptions.overwriteFirstMeasurementSessionIntervalMilli =
-                    overwriteFirstMeasurementSessionIntervalMilliNumber;
+                    @"mergeIntoTestOptionsWithSet overwriteFirstSdkSessionIntervalMilli %@",
+                 overwriteFirstSdkSessionIntervalMilliNumber];
+                adjustTestOptions.overwriteFirstSdkSessionIntervalMilli =
+                overwriteFirstSdkSessionIntervalMilliNumber;
             } else {
                 [[ATOLogger sharedInstance] error:
                     @"mergeIntoTestOptionsWithSet overwriteFirstMeasurementSessionIntervalMilli %@ unread",
@@ -381,17 +397,23 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
         cachedTestOptions.foregroundTimerStartMilli = adjustTestOptions.foregroundTimerStartMilli;
     }
 
-    if (adjustTestOptions.minMeasurementSessionIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions minMeasurementSessionIntervalMilli %@",
-            adjustTestOptions.minMeasurementSessionIntervalMilli];
-        cachedTestOptions.minMeasurementSessionIntervalMilli = adjustTestOptions.minMeasurementSessionIntervalMilli;
+    if (adjustTestOptions.minSdkSessionIntervalMilli != nil) {
+        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions minSdkSessionIntervalMilli %@",
+            adjustTestOptions.minSdkSessionIntervalMilli];
+        cachedTestOptions.minSdkSessionIntervalMilli = adjustTestOptions.minSdkSessionIntervalMilli;
+    }
+    
+    if (adjustTestOptions.minLifecycleIntervalMilli != nil) {
+        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions minLifecycleIntervalMilli %@",
+            adjustTestOptions.minLifecycleIntervalMilli];
+        cachedTestOptions.minLifecycleIntervalMilli = adjustTestOptions.minLifecycleIntervalMilli;
     }
 
-    if (adjustTestOptions.overwriteFirstMeasurementSessionIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions overwriteFirstMeasurementSessionIntervalMilli %@",
-            adjustTestOptions.overwriteFirstMeasurementSessionIntervalMilli];
-        cachedTestOptions.overwriteFirstMeasurementSessionIntervalMilli =
-            adjustTestOptions.overwriteFirstMeasurementSessionIntervalMilli;
+    if (adjustTestOptions.overwriteFirstSdkSessionIntervalMilli != nil) {
+        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions overwriteFirstSdkSessionIntervalMilli %@",
+            adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
+        cachedTestOptions.overwriteFirstSdkSessionIntervalMilli =
+            adjustTestOptions.overwriteFirstSdkSessionIntervalMilli;
     }
 
     // ...
@@ -492,35 +514,53 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
         }
     }
 
-    if (adjustTestOptions.minMeasurementSessionIntervalMilli != nil) {
+    if (adjustTestOptions.minSdkSessionIntervalMilli != nil) {
         [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions minMeasurementSessionIntervalMilli: %@",
-            adjustTestOptions.minMeasurementSessionIntervalMilli];
+            @"mergeIntoSdkConfigWithAdjustTestOptions minSdkSessionIntervalMilli: %@",
+            adjustTestOptions.minSdkSessionIntervalMilli];
 
-        ADJNonNegativeInt *_Nullable minMeasurementSessionIntervalMilliNumber =
-            [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.minMeasurementSessionIntervalMilli
+        ADJNonNegativeInt *_Nullable minSdkSessionIntervalMilliNumber =
+            [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.minSdkSessionIntervalMilli
                                                logger:[ATOLogger sharedInstance]];
 
-        if (minMeasurementSessionIntervalMilliNumber != nil) {
+        if (minSdkSessionIntervalMilliNumber != nil) {
             sdkConfigDataBuilder.minMeasurementSessionIntervalMilli =
-                [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:minMeasurementSessionIntervalMilliNumber];
+                [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:minSdkSessionIntervalMilliNumber];
         }
     }
-
-    if (adjustTestOptions.overwriteFirstMeasurementSessionIntervalMilli != nil) {
+    
+    // TODO: is this needed for iOS having in mind that we don't have activity switching issue on that platform?
+    /*
+    if (adjustTestOptions.minLifecycleIntervalMilli != nil) {
         [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions overwriteFirstMeasurementSessionIntervalMilli: %@",
-            adjustTestOptions.overwriteFirstMeasurementSessionIntervalMilli];
+            @"mergeIntoSdkConfigWithAdjustTestOptions minLifecycleIntervalMilli: %@",
+            adjustTestOptions.minLifecycleIntervalMilli];
 
-        ADJNonNegativeInt *_Nullable overwriteFirstMeasurementSessionIntervalMilliNumber =
+        ADJNonNegativeInt *_Nullable minLifecycleIntervalMilliNumber =
+            [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.minLifecycleIntervalMilli
+                                               logger:[ATOLogger sharedInstance]];
+
+        if (minLifecycleIntervalMilliNumber != nil) {
+            sdkConfigDataBuilder.lifecycleBackgroundDelayChangeTimeout =
+                [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:minLifecycleIntervalMilliNumber];
+        }
+    }
+    */
+
+    if (adjustTestOptions.overwriteFirstSdkSessionIntervalMilli != nil) {
+        [[ATOLogger sharedInstance] debug:
+            @"mergeIntoSdkConfigWithAdjustTestOptions overwriteFirstSdkSessionIntervalMilli: %@",
+            adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
+
+        ADJNonNegativeInt *_Nullable overwriteFirstSdkSessionIntervalMilliNumber =
             [ADJNonNegativeInt
-                instanceFromIntegerNumber:adjustTestOptions.overwriteFirstMeasurementSessionIntervalMilli
+                instanceFromIntegerNumber:adjustTestOptions.overwriteFirstSdkSessionIntervalMilli
                 logger:[ATOLogger sharedInstance]];
 
-        if (overwriteFirstMeasurementSessionIntervalMilliNumber != nil) {
-            sdkConfigDataBuilder.overwriteFirstMeasurementSessionIntervalMilli =
+        if (overwriteFirstSdkSessionIntervalMilliNumber != nil) {
+            sdkConfigDataBuilder.overwriteFirstSdkSessionInterval =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-                    overwriteFirstMeasurementSessionIntervalMilliNumber];
+                 overwriteFirstSdkSessionIntervalMilliNumber];
         }
     }
 
@@ -688,8 +728,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     self.extraPath = nil;
     self.foregroundTimerIntervalMilli = nil;
     self.foregroundTimerStartMilli = nil;
-    self.minMeasurementSessionIntervalMilli = nil;
-    self.overwriteFirstMeasurementSessionIntervalMilli = nil;
+    self.minLifecycleIntervalMilli = nil;
+    self.minSdkSessionIntervalMilli = nil;
+    self.overwriteFirstSdkSessionIntervalMilli = nil;
     self.doNotReadCurrentLifecycleStatus = NO;
     self.doNotInitiateAttributionFromSdk = NO;
     self.doCreateEntryRootInstance = NO;

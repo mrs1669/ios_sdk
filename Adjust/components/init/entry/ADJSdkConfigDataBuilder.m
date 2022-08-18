@@ -90,8 +90,7 @@
      [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJThirtyMinutesMilli]];
 
     _minMeasurementSessionIntervalMilli = thirtyMinutesLength;
-
-    _overwriteFirstMeasurementSessionIntervalMilli = nil;
+    _overwriteFirstSdkSessionInterval = nil;
 
     ADJTimeLengthMilli *_Nonnull oneMinuteLength =
     [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
