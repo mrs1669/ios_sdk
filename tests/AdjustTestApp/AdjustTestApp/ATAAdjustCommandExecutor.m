@@ -64,7 +64,6 @@ NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
         [ATOAdjustTestOptions
          teardownAndExecuteTestOptionsCommandWithUrlOverwrite:self.url
          commandParameters:dictionaryParameters];
-
     } else {
         [self logError:@"Could not find %@ to execute", className];
     }
@@ -198,10 +197,11 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                                                              index:0];
         NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
                                                                   index:1];
-        NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
-
-        [adjustEvent setRevenueWithDoubleNumber:revenueNumber
-                                       currency:currency];
+        // TODO: not sure if clients will be using NSNumber over double approach
+        // NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
+        // [adjustEvent setRevenueWithDoubleNumber:revenueNumber
+        //                                currency:currency];
+        [adjustEvent setRevenueWithDouble:[revenueString doubleValue] currency:currency];
     }
 
     if ([self containsKey:@"callbackParams"]) {
