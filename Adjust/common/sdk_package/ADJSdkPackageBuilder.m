@@ -287,6 +287,13 @@
                                                        key:ADJParamEventCurrencyKey
                              packageParamValueSerializable:clientEventData.revenue.currency];
     }
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamCallbackParamsKey
+                         packageParamValueSerializable:clientEventData.callbackParameters];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamPartnerParamsKey
+                         packageParamValueSerializable:clientEventData.partnerParameters];
 
     ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                                                            path:ADJEventPackageDataPath];
@@ -497,13 +504,13 @@
     [self injectEventStateFieldsWithParametersBuilder:parametersBuilder
                                                  path:path];
 
-    //    [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
-    //                                                         path:path
-    //                                  callbackParametersOverwrite:callbackParametersOverwrite];
+    // [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
+    //                                                      path:path
+    //                               callbackParametersOverwrite:callbackParametersOverwrite];
 
-    //    [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
-    //                                                        path:path
-    //                                  partnerParametersOverwrite:partnerParametersOverwrite];
+    // [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
+    //                                                     path:path
+    //                               partnerParametersOverwrite:partnerParametersOverwrite];
 
     [self injectMeasurementSessionFieldsWithParametersBuilder:parametersBuilder
                                                          path:path
@@ -654,75 +661,64 @@
 
 - (void)injectEventStateFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                path:(nullable NSString *)path {
-
     ADJEventStateStorage *_Nullable eventStateStorage = self.eventStateStorageWeak;
 
     if (eventStateStorage == nil) {
         [self.logger error:@"Cannot inject event data"
          "for package with %@ path without a reference to event state storage", path];
-
         return;
     }
-    /*
-     ADJEventStateData *_Nonnull eventStateData = [eventStateStorage readOnlyStoredDataValue];
 
-     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-     key:ADJParamEventCountKey
-     packageParamValueSerializable:eventStateData.eventCount];
-     */
+    ADJEventStateData *_Nonnull eventStateData = [eventStateStorage readOnlyStoredDataValue];
+
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamEventCountKey
+                         packageParamValueSerializable:eventStateData.eventCount];
 }
 
 /*
- - (void)injectCallbackParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
- path:(nullable NSString *)path
- callbackParametersOverwrite:(nullable ADJStringMap *)callbackParametersOverwrite {
+- (void)injectCallbackParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                                       path:(nullable NSString *)path
+                                callbackParametersOverwrite:(nullable ADJStringMap *)callbackParametersOverwrite {
+    ADJGlobalCallbackParametersStorage *_Nullable globalCallbackParametersStorage = self.globalCallbackParametersStorageWeak;
+    ADJStringMap *_Nullable globalCallbackParametersMap;
+    
+    if (globalCallbackParametersStorage == nil) {
+        [self.logger error:@"Cannot inject global callback parameters for package with %@ path"
+         " without a reference to global callback parameters storage", path];
+        globalCallbackParametersMap = nil;
+    } else {
+        // TODO: ADJGlobalCallbackParametersStorage still not alive
+        // globalCallbackParametersMap = [globalCallbackParametersStorage allPairs];
+    }
+    
+    [self injectMapParametersWithParametersBuilder:parametersBuilder
+                                    overwritingMap:callbackParametersOverwrite
+                                           baseMap:globalCallbackParametersMap
+                                            mapKey:ADJParamCallbackParamsKey];
+}
 
- ADJGlobalCallbackParametersStorage *_Nullable globalCallbackParametersStorage = self.globalCallbackParametersStorageWeak;
-
- ADJStringMap *_Nullable globalCallbackParametersMap;
-
- if (globalCallbackParametersStorage == nil) {
- [self.logger error:@"Cannot inject global callback parameters for package with %@ path"
- " without a reference to global callback parameters storage",
- path];
-
- globalCallbackParametersMap = nil;
- } else {
- globalCallbackParametersMap = [globalCallbackParametersStorage allPairs];
- }
-
- [self injectMapParametersWithParametersBuilder:parametersBuilder
- overwritingMap:callbackParametersOverwrite
- baseMap:globalCallbackParametersMap
- mapKey:ADJParamCallbackParamsKey];
- }
- */
-
-/*
- - (void)injectPartnerParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
- path:(nullable NSString *)path
- partnerParametersOverwrite:(nullable ADJStringMap *)partnerParametersOverwrite {
-
- ADJGlobalPartnerParametersStorage *_Nullable globalPartnerParametersStorage = self.globalPartnerParametersStorageWeak;
-
- ADJStringMap *_Nullable globalPartnerParametersMap;
-
- if (globalPartnerParametersStorage == nil) {
- [self.logger error:@"Cannot inject global partner parameters for package with %@ path"
- " without a reference to global partner parameters storage",
- path];
-
- globalPartnerParametersMap = nil;
- } else {
- globalPartnerParametersMap = [globalPartnerParametersStorage allPairs];
- }
-
- [self injectMapParametersWithParametersBuilder:parametersBuilder
- overwritingMap:partnerParametersOverwrite
- baseMap:globalPartnerParametersMap
- mapKey:ADJParamPartnerParamsKey];
- }
- */
+- (void)injectPartnerParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                                      path:(nullable NSString *)path
+                                partnerParametersOverwrite:(nullable ADJStringMap *)partnerParametersOverwrite {
+    ADJGlobalPartnerParametersStorage *_Nullable globalPartnerParametersStorage = self.globalPartnerParametersStorageWeak;
+    ADJStringMap *_Nullable globalPartnerParametersMap;
+    
+    if (globalPartnerParametersStorage == nil) {
+        [self.logger error:@"Cannot inject global partner parameters for package with %@ path"
+         " without a reference to global partner parameters storage", path];
+        globalPartnerParametersMap = nil;
+    } else {
+        // TODO: ADJGlobalPartnerParametersStorage still not alive
+        // globalPartnerParametersMap = [globalPartnerParametersStorage allPairs];
+    }
+    
+    [self injectMapParametersWithParametersBuilder:parametersBuilder
+                                    overwritingMap:partnerParametersOverwrite
+                                           baseMap:globalPartnerParametersMap
+                                            mapKey:ADJParamPartnerParamsKey];
+}
+*/
 
 - (void)injectMapParametersWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                   overwritingMap:(nullable ADJStringMap *)overwritingMap
