@@ -10,14 +10,13 @@
 
 #import "ADJCommonBase.h"
 #import "ADJLifecycleSubscriber.h"
-//#import "ADJTeardownFinalizer.h"
+#import "ADJTeardownFinalizer.h"
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJThreadController.h"
 
 @interface ADJLifecycleController : ADJCommonBase<
-//ADJTeardownFinalizer,
-// subscriptions
-ADJPublishingGateSubscriber
+    ADJTeardownFinalizer,
+    ADJPublishingGateSubscriber
 >
 - (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 // publishers

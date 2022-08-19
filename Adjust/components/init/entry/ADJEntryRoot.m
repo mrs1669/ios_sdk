@@ -130,21 +130,17 @@
     BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        /*
-         if (strongSelf.preSdkInitRootController != nil) {
-         //[self.preSdkInitRootController.storageRootController.sqliteController.sqliteDb
-         //    finalizeAtTeardown];
-         [strongSelf.preSdkInitRootController.storageRootController
-         finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
-         [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
-         }
+        if (strongSelf.preSdkInitRootController != nil) {
+            [self.preSdkInitRootController.storageRootController.sqliteController.sqliteDb finalizeAtTeardown];
+            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+            [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
+        }
 
-         if (strongSelf.postSdkInitRootController != nil) {
-         [strongSelf.postSdkInitRootController.reachabilityController finalizeAtTeardown];
-         }
+        if (strongSelf.postSdkInitRootController != nil) {
+            [strongSelf.postSdkInitRootController.reachabilityController finalizeAtTeardown];
+        }
 
-         [strongSelf.threadController finalizeAtTeardown];
-         */
+        [strongSelf.threadController finalizeAtTeardown];
     }];
 
     if (! canExecuteTask && closeStorageBlock != nil) {

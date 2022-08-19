@@ -17,9 +17,9 @@
 //- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus;
 
 @interface ADJReachabilityController : ADJCommonBase<
-ADJTeardownFinalizer,
-// subscriptions
-ADJMeasurementSessionStartSubscriber
+   ADJTeardownFinalizer,
+   // subscriptions
+   ADJMeasurementSessionStartSubscriber
 >
 - (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:
 (nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;

@@ -43,6 +43,7 @@
         [adjustAPI ccPutSdkOffline];
     }];
 }
+
 + (void)switchBackToOnlineMode {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {

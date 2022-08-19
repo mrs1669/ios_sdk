@@ -10,10 +10,10 @@
 
 #import "ADJCommonBase.h"
 #import "ADJSQLiteDbMessageProvider.h"
-//#import "ADJTeardownFinalizer.h"
+#import "ADJTeardownFinalizer.h"
 #import "ADJSQLiteStatement.h"
 
-@interface ADJSQLiteDb : ADJCommonBase<ADJSQLiteDbMessageProvider>//, ADJTeardownFinalizer>
+@interface ADJSQLiteDb : ADJCommonBase<ADJSQLiteDbMessageProvider, ADJTeardownFinalizer>
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                  databasePath:(nullable NSString *)databasePath;
