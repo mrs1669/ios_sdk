@@ -43,25 +43,21 @@
 
 @interface ADJSdkPackageBuilder : ADJCommonBase
 // publishers
-@property (nonnull, readonly, strong, nonatomic)
-ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
 
 // instantiation
-- (nonnull instancetype)
-initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-clock:(nonnull ADJClock *)clock
-clientSdk:(nonnull NSString *)clientSdk
-clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-deviceController:(nonnull ADJDeviceController *)deviceController
-globalCallbackParametersStorage:
-(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
-globalPartnerParametersStorage:
-(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
-eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                        clock:(nonnull ADJClock *)clock
+                                    clientSdk:(nonnull NSString *)clientSdk
+                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+                             deviceController:(nonnull ADJDeviceController *)deviceController
+              globalCallbackParametersStorage:(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
+               globalPartnerParametersStorage:(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
+                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
 
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
-apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+                                                    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
 // public api
 /*
@@ -69,29 +65,29 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
  buildAdRevenueWithClientData:
  (nonnull ADJClientAdRevenueData *)clientAdRevenueData
  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
- 
+
  - (nonnull ADJAttributionPackageData *)
  buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
- 
+
  - (nonnull ADJBillingSubscriptionPackageData *)
  buildBillingSubscriptionWithClientData:
  (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
- 
+
  - (nonnull ADJClickPackageData *)
  buildLaunchedDeeplinkClickWithClientData:
  (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
- 
+
  - (nonnull ADJClickPackageData *)
  buildAsaAttributionClickWithToken:
  (nonnull ADJNonEmptyString *)asaAttibutionToken
  asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
- 
+
  - (nonnull ADJInfoPackageData *)
  buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
- 
+
  - (nonnull ADJLogPackageData *)
  buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
  logLevel:(nonnull NSString *)logLevel
@@ -103,7 +99,7 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
  buildThirdPartySharingWithClientData:
  (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
- 
+
  - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage;
  */
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

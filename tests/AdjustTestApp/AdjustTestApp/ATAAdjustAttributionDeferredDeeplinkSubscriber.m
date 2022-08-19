@@ -61,6 +61,7 @@
 
     NSLog(@"\t[ATAAdjustAttributionDeferredDeeplinkSubscriber][Debug] %@", logMessage);
 }
+
 - (void)logError:(nonnull NSString *)message, ... {
     va_list parameters; va_start(parameters, message);
     NSString *logMessage = [[NSString alloc] initWithFormat:message arguments:parameters];

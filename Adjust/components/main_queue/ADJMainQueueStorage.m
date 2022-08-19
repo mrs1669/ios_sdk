@@ -15,10 +15,11 @@
 /*
 #import "ADJAdRevenuePackageData.h"
 #import "ADJBillingSubscriptionPackageData.h"
-#import "ADJEventPackageData.h"
 #import "ADJInfoPackageData.h"
  */
 #import "ADJSessionPackageData.h"
+#import "ADJEventPackageData.h"
+
 //#import "ADJThirdPartySharingPackageData.h"
 
 #pragma mark Fields
@@ -178,11 +179,12 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 /*
     v4PathToPackage(ADJV4AdRevenuePath, ADJAdRevenuePackageData)
     v4PathToPackage(ADJV4PurchasePath, ADJBillingSubscriptionPackageData)
-    v4PathToPackage(ADJV4EventPath, ADJEventPackageData)
     v4PathToPackage(ADJV4InfoPath, ADJInfoPackageData)
     // TODO do ADJV4MeasuringConsentPath
  */
     v4PathToPackage(ADJV4SessionPath, ADJSessionPackageData)
+    v4PathToPackage(ADJV4EventPath, ADJEventPackageData)
+
     //v4PathToPackage(ADJV4ThirdPartySharingPath, ADJThirdPartySharingPackageData)
     // there are no attribution, click or gdpr packages in v4 main queue
 /*

@@ -11,8 +11,7 @@
 @implementation ADJAdjustDeviceIds
 
 - (nonnull instancetype)initWithAdvertisingIdentifier:(nullable NSString *)advertisingIdentifier
-                                  identifierForVendor:(nullable NSString *)identifierForVendor
-{
+                                  identifierForVendor:(nullable NSString *)identifierForVendor {
     self = [super init];
     
     _advertisingIdentifier = advertisingIdentifier;

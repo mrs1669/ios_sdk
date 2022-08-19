@@ -13,7 +13,7 @@
 		07FC07EF287F376B008F4489 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07FC07EE287F376B008F4489 /* Assets.xcassets */; };
 		07FC07F2287F376B008F4489 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07FC07F0287F376B008F4489 /* LaunchScreen.storyboard */; };
 		07FC07F5287F376B008F4489 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 07FC07F4287F376B008F4489 /* main.m */; };
-		164559EF4B7DEB02B223C900 /* Pods_AdjustExample_ObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CA0EDCE5920E6D11A27C26D /* Pods_AdjustExample_ObjC.framework */; };
+		D974846A01BBA4C9ED07E3D1 /* Pods_AdjustExample_ObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C991B3A077019CE02200F869 /* Pods_AdjustExample_ObjC.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,9 +27,9 @@
 		07FC07F1287F376B008F4489 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		07FC07F3287F376B008F4489 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07FC07F4287F376B008F4489 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0CA0EDCE5920E6D11A27C26D /* Pods_AdjustExample_ObjC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdjustExample_ObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BFFC5B30D527225F1C801537 /* Pods-AdjustExample-ObjC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-ObjC.release.xcconfig"; path = "Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC.release.xcconfig"; sourceTree = "<group>"; };
-		E1E9552D80FAE5A20C26E45F /* Pods-AdjustExample-ObjC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-ObjC.debug.xcconfig"; path = "Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC.debug.xcconfig"; sourceTree = "<group>"; };
+		67D97D2C010E3E3AC899FD93 /* Pods-AdjustExample-ObjC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-ObjC.release.xcconfig"; path = "Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC.release.xcconfig"; sourceTree = "<group>"; };
+		C991B3A077019CE02200F869 /* Pods_AdjustExample_ObjC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdjustExample_ObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD6399E79CA22EE205938939 /* Pods-AdjustExample-ObjC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-ObjC.debug.xcconfig"; path = "Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				164559EF4B7DEB02B223C900 /* Pods_AdjustExample_ObjC.framework in Frameworks */,
+				D974846A01BBA4C9ED07E3D1 /* Pods_AdjustExample_ObjC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,7 +50,7 @@
 				07FC07E1287F376B008F4489 /* AdjustExample-ObjC */,
 				07FC07E0287F376B008F4489 /* Products */,
 				4E1A3C085833EFBCCA3545CB /* Pods */,
-				93D2AC1AAFB170DEBC0E9F44 /* Frameworks */,
+				0E7D884CB0F6ECBEBD965BDD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -78,22 +78,21 @@
 			path = "AdjustExample-ObjC";
 			sourceTree = "<group>";
 		};
+		0E7D884CB0F6ECBEBD965BDD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C991B3A077019CE02200F869 /* Pods_AdjustExample_ObjC.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4E1A3C085833EFBCCA3545CB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				E1E9552D80FAE5A20C26E45F /* Pods-AdjustExample-ObjC.debug.xcconfig */,
-				BFFC5B30D527225F1C801537 /* Pods-AdjustExample-ObjC.release.xcconfig */,
+				DD6399E79CA22EE205938939 /* Pods-AdjustExample-ObjC.debug.xcconfig */,
+				67D97D2C010E3E3AC899FD93 /* Pods-AdjustExample-ObjC.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		93D2AC1AAFB170DEBC0E9F44 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0CA0EDCE5920E6D11A27C26D /* Pods_AdjustExample_ObjC.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -103,11 +102,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 07FC07F8287F376B008F4489 /* Build configuration list for PBXNativeTarget "AdjustExample-ObjC" */;
 			buildPhases = (
-				4951ED87A1D4B162DC69B91C /* [CP] Check Pods Manifest.lock */,
+				76B589148CF51668F66F0870 /* [CP] Check Pods Manifest.lock */,
 				07FC07DB287F376B008F4489 /* Sources */,
 				07FC07DC287F376B008F4489 /* Frameworks */,
 				07FC07DD287F376B008F4489 /* Resources */,
-				170F15432D54C1BD4FB0E5F0 /* [CP] Embed Pods Frameworks */,
+				B4AF10E41D8EFCDC10D8E84C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -164,24 +163,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		170F15432D54C1BD4FB0E5F0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4951ED87A1D4B162DC69B91C /* [CP] Check Pods Manifest.lock */ = {
+		76B589148CF51668F66F0870 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -201,6 +183,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B4AF10E41D8EFCDC10D8E84C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-ObjC/Pods-AdjustExample-ObjC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -288,7 +287,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -340,7 +339,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -350,12 +349,13 @@
 		};
 		07FC07F9287F376B008F4489 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E1E9552D80FAE5A20C26E45F /* Pods-AdjustExample-ObjC.debug.xcconfig */;
+			baseConfigurationReference = DD6399E79CA22EE205938939 /* Pods-AdjustExample-ObjC.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QGUGW9AUMK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "AdjustExample-ObjC/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -368,7 +368,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aditi.test.AdjustExample-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.adjust.examples.AdjustExample-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -377,12 +377,13 @@
 		};
 		07FC07FA287F376B008F4489 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BFFC5B30D527225F1C801537 /* Pods-AdjustExample-ObjC.release.xcconfig */;
+			baseConfigurationReference = 67D97D2C010E3E3AC899FD93 /* Pods-AdjustExample-ObjC.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QGUGW9AUMK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "AdjustExample-ObjC/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -395,7 +396,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.aditi.test.AdjustExample-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.adjust.examples.AdjustExample-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -42,8 +42,7 @@ NSString *const ADJUrlStategyIndia = @"INDIA";
 
 #pragma mark Instantiation
 - (nonnull instancetype)initWithAppToken:(nonnull NSString *)appToken
-                             environment:(nonnull NSString *)environment
-{
+                             environment:(nonnull NSString *)environment {
     self = [super init];
     _appToken = [ADJUtilObj copyStringWithInput:appToken];
     _environment = [ADJUtilObj copyStringWithInput:environment];

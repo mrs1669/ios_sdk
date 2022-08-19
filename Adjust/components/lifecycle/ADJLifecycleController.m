@@ -6,17 +6,19 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+
 #import "ADJLifecycleController.h"
 
-// TODO: check that we can replace this different import
-@import UIKit;
 #import "ADJSingleThreadExecutor.h"
 #import "ADJAtomicBoolean.h"
 #import "ADJUtilF.h"
 #import "ADJConstants.h"
 
 #pragma mark Private class
-@implementation ADJLifecyclePublisher @end
+@implementation ADJLifecyclePublisher
+
+@end
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -30,25 +32,17 @@ NSString *const kClientBackground = @"ClientBackground";
 NSString *const kSdkInitForeground = @"SdkInitForeground";
 NSString *const kSdkInitBackground = @"SdkInitBackground";
 
-NSString *const kApplicationDidBecomeActiveNotification =
-    @"ApplicationDidBecomeActiveNotification";
-NSString *const kApplicationWillResignActiveNotification =
-    @"ApplicationWillResignActiveNotification";
+NSString *const kApplicationDidBecomeActiveNotification = @"ApplicationDidBecomeActiveNotification";
+NSString *const kApplicationWillResignActiveNotification = @"ApplicationWillResignActiveNotification";
 
-NSString *const kApplicationWillEnterForegroundNotification =
-    @"ApplicationWillEnterForegroundNotification";
-NSString *const kApplicationDidEnterBackgroundNotification =
-    @"ApplicationDidEnterBackgroundNotification";
+NSString *const kApplicationWillEnterForegroundNotification = @"ApplicationWillEnterForegroundNotification";
+NSString *const kApplicationDidEnterBackgroundNotification = @"ApplicationDidEnterBackgroundNotification";
 
-NSString *const kSceneDidActivateNotification =
-    @"SceneDidActivateNotification";
-NSString *const kSceneWillDeactivateNotification =
-    @"SceneWillDeactivateNotification";
+NSString *const kSceneDidActivateNotification = @"SceneDidActivateNotification";
+NSString *const kSceneWillDeactivateNotification = @"SceneWillDeactivateNotification";
 
-NSString *const kSceneWillEnterForegroundNotification =
-    @"SceneWillEnterForegroundNotification";
-NSString *const kSceneDidEnterBackgroundNotification =
-    @"SceneDidEnterBackgroundNotification";
+NSString *const kSceneWillEnterForegroundNotification = @"SceneWillEnterForegroundNotification";
+NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackgroundNotification";
 
 #pragma mark - Public properties
 /* .h
@@ -72,11 +66,9 @@ NSString *const kSceneDidEnterBackgroundNotification =
 }
 
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadController:(nonnull ADJThreadController *)threadController
-    doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             threadController:(nonnull ADJThreadController *)threadController
+              doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus {
     self = [super initWithLoggerFactory:loggerFactory source:@"LifecycleController"];
     _threadControllerWeak = threadController;
 
@@ -86,9 +78,9 @@ NSString *const kSceneDidEnterBackgroundNotification =
                                                             sourceDescription:self.source];
 
     _isInForegroundAtomic = [[ADJAtomicBoolean alloc]
-                                //initWithRelaxedValue:ADJIsSdkInForegroundWhenStarting];
-                                initSeqCstMemoryOrderWithInitialBoolValue:
-                                    ADJIsSdkInForegroundWhenStarting];
+                             //initWithRelaxedValue:ADJIsSdkInForegroundWhenStarting];
+                             initSeqCstMemoryOrderWithInitialBoolValue:
+                                 ADJIsSdkInForegroundWhenStarting];
 
     //_canPublishAtomic = [[ADJAtomicBoolean alloc] initWithRelaxedValue:NO];
     _canPublishAtomic = [[ADJAtomicBoolean alloc] initSeqCstMemoryOrderWithInitialBoolValue:NO];
@@ -118,12 +110,14 @@ NSString *const kSceneDidEnterBackgroundNotification =
 #pragma mark - NSNotificationCenter subscriptions
 // Application DidFinishLaunching Notification
 - (void)applicationDidFinishLaunchingNotification {
+
 }
 
 // Application DidBecomeActive/WillResignActive Notification
 - (void)applicationDidBecomeActiveNotification {
     //[self didForegroundWithSource:kApplicationDidBecomeActiveNotification];
 }
+
 - (void)applicationWillResignActiveNotification {
     // It can be inactive in the foreground, so do not consider it for lifecycle change
     //[self didBackgroundWithSource:kApplicationWillResignActiveNotification];
@@ -149,18 +143,18 @@ NSString *const kSceneDidEnterBackgroundNotification =
 // Scene WillEnterForeground/DidEnterBackground Notification
 - (void)sceneWillEnterForegroundNotification {
     [self didForegroundWithSource:kSceneWillEnterForegroundNotification];
-
 }
+
 - (void)sceneDidEnterBackgroundNotification {
     [self didBackgroundWithSource:kSceneDidEnterBackgroundNotification];
 }
 /*
-- (void)applicationWillTerminateNotification {
-    [self.logger debug:@"Removing observing of lifecycle notifications"];
+ - (void)applicationWillTerminateNotification {
+ [self.logger debug:@"Removing observing of lifecycle notifications"];
 
-    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
-    [center removeObserver:self];
-}
+ NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+ [center removeObserver:self];
+ }
  */
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -175,10 +169,7 @@ NSString *const kSceneDidEnterBackgroundNotification =
 }
 
 #pragma mark - Subscriptions
-- (void)
-    ccSubscribeToPublishersWithPublishingGatePublisher:
-        (nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-{
+- (void)ccSubscribeToPublishersWithPublishingGatePublisher: (nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
     [publishingGatePublisher addSubscriber:self];
 }
 
@@ -192,7 +183,7 @@ NSString *const kSceneDidEnterBackgroundNotification =
     [self finalizeAtTeardown];
 }
 
-#pragma mark Internal Methods
+#pragma mark - Internal Methods
 - (void)didForegroundWithSource:(nonnull NSString *)source {
     if (self->_cachedLifecycleStateChangeSource == nil) {
         @synchronized (self) {
@@ -212,8 +203,8 @@ NSString *const kSceneDidEnterBackgroundNotification =
         [self publishDidForegroundAfterSdkInitWithSource:source];
     } else {
         [self.logger debug:
-            @"Did not change to the foreground from %@, since it did previously from %@",
-            source, self->_cachedLifecycleStateChangeSource];
+         @"Did not change to the foreground from %@, since it did previously from %@",
+         source, self->_cachedLifecycleStateChangeSource];
     }
 }
 
@@ -226,7 +217,7 @@ NSString *const kSceneDidEnterBackgroundNotification =
 
             [strongSelf.lifecyclePublisher notifySubscribersWithSubscriberBlock:
              ^(id<ADJLifecycleSubscriber> _Nonnull subscriber)
-            {
+             {
                 [subscriber onForegroundWithIsFromClientContext:source == kClientForeground];
             }];
         }];
@@ -255,8 +246,8 @@ NSString *const kSceneDidEnterBackgroundNotification =
         [self publishDidBackgroundAfterSdkInitWithSource:source];
     } else {
         [self.logger debug:
-            @"Did not change to the background from %@, since it did previously from %@",
-            source, self->_cachedLifecycleStateChangeSource];
+         @"Did not change to the background from %@, since it did previously from %@",
+         source, self->_cachedLifecycleStateChangeSource];
     }
 }
 
@@ -269,7 +260,7 @@ NSString *const kSceneDidEnterBackgroundNotification =
 
             [strongSelf.lifecyclePublisher notifySubscribersWithSubscriberBlock:
              ^(id<ADJLifecycleSubscriber> _Nonnull subscriber)
-            {
+             {
                 [subscriber onBackgroundWithIsFromClientContext:source == kClientBackground];
             }];
         }];
@@ -293,13 +284,13 @@ NSString *const kSceneDidEnterBackgroundNotification =
     if (self.isInForegroundAtomic.boolValue) {
         [self.lifecyclePublisher notifySubscribersWithSubscriberBlock:
          ^(id<ADJLifecycleSubscriber> _Nonnull subscriber)
-        {
+         {
             [subscriber onForegroundWithIsFromClientContext:NO];
         }];
     } else {
         [self.lifecyclePublisher notifySubscribersWithSubscriberBlock:
          ^(id<ADJLifecycleSubscriber> _Nonnull subscriber)
-        {
+         {
             [subscriber onBackgroundWithIsFromClientContext:NO];
         }];
     }
@@ -359,10 +350,10 @@ NSString *const kSceneDidEnterBackgroundNotification =
 
     // Application WillTerminate Notification
     /*
-    [center addObserver:self
-               selector:@selector(applicationWillTerminateNotification)
-                   name:UIApplicationWillTerminateNotification
-                 object:nil];
+     [center addObserver:self
+     selector:@selector(applicationWillTerminateNotification)
+     name:UIApplicationWillTerminateNotification
+     object:nil];
      */
 
     // TODO detect if it started in viewController/AppDelegate
@@ -373,7 +364,7 @@ NSString *const kSceneDidEnterBackgroundNotification =
 
     if (threadController == nil) {
         [self.logger error:@"Cannot read initial application state"
-            " without thread controller reference"];
+         " without thread controller reference"];
         return;
     }
 
@@ -400,10 +391,11 @@ NSString *const kSceneDidEnterBackgroundNotification =
             [strongSelf didForegroundWithSource:kApplicationStateInactive];
         } else {
             [strongSelf.logger debug:
-                @"Could not detect applicationState from main thread with value %@",
-                [ADJUtilF integerFormat:applicationState]];
+             @"Could not detect applicationState from main thread with value %@",
+             [ADJUtilF integerFormat:applicationState]];
         }
     }];
 }
 
 @end
+

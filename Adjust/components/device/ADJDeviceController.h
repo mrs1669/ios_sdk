@@ -2,16 +2,46 @@
 //  ADJDeviceController.h
 //  Adjust
 //
-//  Created by Pedro Silva on 26.07.22.
-//  Copyright © 2022 Adjust GmbH. All rights reserved.
+//  Created by Pedro S. on 16.02.21.
+//  Copyright © 2021 adjust GmbH. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "ADJCommonBase.h"
+#import "ADJLifecycleSubscriber.h"
+#import "ADJThreadPool.h"
+#import "ADJClock.h"
+#import "ADJSdkInitSubscriber.h"
+#import "ADJDeviceIdsStorage.h"
+#import "ADJKeychainStorage.h"
+#import "ADJExternalConfigData.h"
+#import "ADJNonEmptyString.h"
+#import "ADJDeviceInfoData.h"
+#import "ADJSessionDeviceIdsData.h"
 
-@interface ADJDeviceController : NSObject
+@interface ADJDeviceController : ADJCommonBase<
+// subscriptions
+ADJLifecycleSubscriber
+>
+- (void)ccSubscribeToPublishersWithLifecylePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
+
+// instantiation
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                                        clock:(nonnull ADJClock *)clock
+                             deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
+                              keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
+                          deviceIdsConfigData:(nonnull ADJExternalConfigData *)deviceIdsConfigData;
+
+// public api
+- (nullable ADJNonEmptyString *)keychainUuid;
+- (nullable ADJNonEmptyString *)nonKeychainUuid;
+
+@property (nonnull, readonly, strong, nonatomic) ADJDeviceInfoData *deviceInfoData;
+
+- (nonnull ADJSessionDeviceIdsData *)getSessionDeviceIdsSync;
 
 @end
 
-NS_ASSUME_NONNULL_END
+

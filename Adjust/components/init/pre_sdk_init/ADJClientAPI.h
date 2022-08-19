@@ -19,17 +19,18 @@
 
 - (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source;
 
-/*
 - (void)ccInactivateSdk;
 - (void)ccReactivateSdk;
-
-- (void)ccGdprForgetDevice;
 
 - (void)ccPutSdkOffline;
 - (void)ccPutSdkOnline;
 
 - (void)ccForeground;
 - (void)ccBackground;
+
+/*
+- (void)ccGdprForgetDevice;
+ 
 
 - (void)ccAttributionWithCallback:
     (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;

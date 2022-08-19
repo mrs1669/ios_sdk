@@ -56,7 +56,7 @@
 
 // public api
 - (BOOL)containsFirstSessionPackage;
-- (BOOL)containsAsaClickPackage;
+//- (BOOL)containsAsaClickPackage;
 /*
 - (void)
     addAdRevenuePackageToSendWithData:
@@ -73,9 +73,8 @@
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 */
 
-- (void)
-    addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+- (void) addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
+                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 /*
 - (void)

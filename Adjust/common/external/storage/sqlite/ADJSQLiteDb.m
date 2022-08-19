@@ -237,12 +237,12 @@
     [self.openStatementValueSet removeObject:statementValue];
 }
 
-/*
- #pragma mark - ADJTeardownFinalizer
- - (void)finalizeAtTeardown {
- [self close];
- }
- */
+
+#pragma mark - ADJTeardownFinalizer
+- (void)finalizeAtTeardown {
+    [self close];
+}
+
 #pragma mark - NSObject
 - (void)dealloc {
     [self close];

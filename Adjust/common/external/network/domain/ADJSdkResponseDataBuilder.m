@@ -18,8 +18,6 @@
  #import "ADJBillingSubscriptionResponseData.h"
  #import "ADJClickPackageData.h"
  #import "ADJClickResponseData.h"
- #import "ADJEventPackageData.h"
- #import "ADJEventResponseData.h"
  #import "ADJGdprForgetPackageData.h"
  #import "ADJGdprForgetResponseData.h"
  #import "ADJInfoPackageData.h"
@@ -29,6 +27,9 @@
  */
 #import "ADJSessionPackageData.h"
 #import "ADJSessionResponseData.h"
+#import "ADJEventPackageData.h"
+#import "ADJEventResponseData.h"
+
 /*
  #import "ADJThirdPartySharingPackageData.h"
  #import "ADJThirdPartySharingResponseData.h"
@@ -136,12 +137,13 @@ logger:logger];                                             \
      ADJBillingSubscriptionResponseData,
      billingSubscriptionPackageData)
      tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
-     tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
      tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
      tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
      tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
      */
     tryBuildResponse(ADJSessionPackageData, ADJSessionResponseData, sessionPackageData)
+    tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
+
     /*
      tryBuildResponse(ADJThirdPartySharingPackageData,
      ADJThirdPartySharingResponseData,

@@ -14,11 +14,9 @@ static NSString *const kClientActionStorageTableName = @"client_action";
 
 @implementation ADJClientActionStorage
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"ClientActionStorage"
                         storageExecutor:storageExecutor
@@ -47,8 +45,7 @@ static NSString *const kClientActionStorageTableName = @"client_action";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-    v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     // nothing to migrate from
 }
 

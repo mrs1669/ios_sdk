@@ -19,7 +19,7 @@
 // instantiation
 - (nonnull instancetype)initWithUrl:(nonnull ADJNonEmptyString *)url
                       publicKeyHash:(nullable ADJNonEmptyString *)publicKeyHash
-    NS_DESIGNATED_INITIALIZER;
+NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -31,9 +31,8 @@
 
 @interface ADJClientConfigData : NSObject
 // instantiation
-+ (nullable instancetype)
-    instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
-    logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
+                                                     logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -44,16 +43,16 @@
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *logLevel;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategy;
 @property (nullable, readonly, strong, nonatomic)
-    ADJClientCustomEndpointData *clientCustomEndpointData;
+ADJClientCustomEndpointData *clientCustomEndpointData;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
 @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
 @property (readonly, assign, nonatomic) BOOL canSendInBackground;
 @property (nullable, readonly, strong, nonatomic)
-    ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
 @property (nullable, readonly, strong, nonatomic)
-    id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic)
-    id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+id<ADJAdjustLogSubscriber> adjustLogSubscriber;
 
 // public api
 - (nonnull ADJNonEmptyString *)environment;

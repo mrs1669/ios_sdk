@@ -10,26 +10,22 @@
 
 #import "ADJCommonBase.h"
 #import "ADJLifecycleSubscriber.h"
-//#import "ADJTeardownFinalizer.h"
+#import "ADJTeardownFinalizer.h"
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJThreadController.h"
 
 @interface ADJLifecycleController : ADJCommonBase<
-    //ADJTeardownFinalizer,
-    // subscriptions
+    ADJTeardownFinalizer,
     ADJPublishingGateSubscriber
 >
-- (void)
-    ccSubscribeToPublishersWithPublishingGatePublisher:
-        (nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
+- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJLifecyclePublisher *lifecyclePublisher;
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadController:(nonnull ADJThreadController *)threadController
-    doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             threadController:(nonnull ADJThreadController *)threadController
+              doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus;
 
 // public api
 - (void)ccForeground;

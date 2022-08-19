@@ -20,8 +20,13 @@
 
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
 
-/// We can figure out below API later, once `sdkInitWithAdjustConfig` works well.
-//+ (void)inactivateSdk;
-//+ (void)reactivateSdk;
++ (void)inactivateSdk;
++ (void)reactivateSdk;
+
++ (void)switchToOfflineMode;
++ (void)switchBackToOnlineMode;
+
++ (void)appWentToTheForegroundManualCall;
++ (void)appWentToTheBackgroundManualCall;
 
 @end

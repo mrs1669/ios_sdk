@@ -54,7 +54,7 @@
 
 #pragma mark Public API
 #pragma mark - ADJSdkPackageSenderFactory
-- (nonnull ADJSdkPackageSender *)createSdkPacakgeSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+- (nonnull ADJSdkPackageSender *)createSdkPackageSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                                        sourceDescription:(nonnull NSString *)sourceDescription
                                                               threadpool:(nonnull id<ADJThreadPool>)threadpool {
     return [[ADJSdkPackageSender alloc] initWithLoggerFactory:loggerFactory

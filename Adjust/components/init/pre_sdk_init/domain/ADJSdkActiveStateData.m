@@ -28,20 +28,15 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 @implementation ADJSdkActiveStateData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
-           logger:logger])
-    {
+                                     logger:(nonnull ADJLogger *)logger {
+    if (! [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
+                                       logger:logger]) {
         return nil;
     }
 
     ADJBooleanWrapper *_Nullable isSdkActive =
-        [ADJBooleanWrapper
-            instanceFromIoValue:
-                [ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]
-            logger:logger];
+    [ADJBooleanWrapper instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]
+                                    logger:logger];
 
     if (isSdkActive == nil) {
         [logger error:@"Cannot create instance from Io data without valid %@", kIsSdkActiveKey];
@@ -81,13 +76,13 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 #pragma mark - ADJIoDataSerializable
 - (nonnull ADJIoData *)toIoData {
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
-        [[ADJIoDataBuilder alloc]
-            initWithMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
+    [[ADJIoDataBuilder alloc]
+     initWithMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
 
     [ADJUtilMap
-        injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
-        key:kIsSdkActiveKey
-        ioValueSerializable:[ADJBooleanWrapper instanceFromBool:self.isSdkActive]];
+     injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
+     key:kIsSdkActiveKey
+     ioValueSerializable:[ADJBooleanWrapper instanceFromBool:self.isSdkActive]];
 
     return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
 }
@@ -95,9 +90,9 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                ADJSdkActiveStateDataMetadataTypeValue,
-                    kIsSdkActiveKey, @(self.isSdkActive),
-                nil];
+            ADJSdkActiveStateDataMetadataTypeValue,
+            kIsSdkActiveKey, @(self.isSdkActive),
+            nil];
 }
 
 - (NSUInteger)hash {

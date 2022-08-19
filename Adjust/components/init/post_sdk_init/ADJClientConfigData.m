@@ -19,33 +19,31 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *logLevel;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategy;
  @property (nullable, readonly, strong, nonatomic)
-     ADJClientCustomEndpointData *clientCustomEndpointData;
+ ADJClientCustomEndpointData *clientCustomEndpointData;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
  @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
  @property (readonly, assign, nonatomic) BOOL canSendInBackground;
  @property (nullable, readonly, strong, nonatomic)
-     ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+ ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
  @property (nullable, readonly, strong, nonatomic)
-     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
  @property (nullable, readonly, strong, nonatomic)
-     id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+ id<ADJAdjustLogSubscriber> adjustLogSubscriber;
  */
 
 @implementation ADJClientConfigData
 #pragma mark Instantiation
-+ (nullable instancetype)
-    instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
+                                                     logger:(nonnull ADJLogger *)logger {
     if (adjustConfig == nil) {
         [logger error:@"Cannot create config with null adjust config value"];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable appToken =
-        [ADJNonEmptyString instanceFromString:adjustConfig.appToken
-                             sourceDescription:@"app token"
-                                        logger:logger];
+    [ADJNonEmptyString instanceFromString:adjustConfig.appToken
+                        sourceDescription:@"app token"
+                                   logger:logger];
 
     if (appToken == nil) {
         [logger error:@"Cannot create config with invalid app token value"];
@@ -53,9 +51,9 @@
     }
 
     ADJNonEmptyString *_Nullable environment =
-        [ADJNonEmptyString instanceFromString:adjustConfig.environment
-                             sourceDescription:@"environment"
-                                        logger:logger];
+    [ADJNonEmptyString instanceFromString:adjustConfig.environment
+                        sourceDescription:@"environment"
+                                   logger:logger];
 
     if (environment == nil) {
         [logger error:@"Cannot create config with invalid environment value"];
@@ -63,18 +61,18 @@
     }
 
     ADJNonEmptyString *_Nullable defaultTracker =
-        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.defaultTracker
-                                     sourceDescription:@"default tracker"
-                                                logger:logger];
+    [ADJNonEmptyString instanceFromOptionalString:adjustConfig.defaultTracker
+                                sourceDescription:@"default tracker"
+                                           logger:logger];
 
     BOOL isSandboxEnvironment = [environment.stringValue isEqualToString:ADJEnvironmentSandbox];
     BOOL isProductionEnvironment =
-        [environment.stringValue isEqualToString:ADJEnvironmentProduction];
+    [environment.stringValue isEqualToString:ADJEnvironmentProduction];
 
     if (! isSandboxEnvironment && ! isProductionEnvironment) {
         [logger error:@"Cannot create config with environment value %@,"
-            " different than expected %@ or %@",
-            environment, ADJEnvironmentSandbox, ADJEnvironmentProduction];
+         " different than expected %@ or %@",
+         environment, ADJEnvironmentSandbox, ADJEnvironmentProduction];
         return nil;
     }
 
@@ -85,7 +83,7 @@
             || [ADJAdjustLogLevelError isEqualToString:adjustConfig.logLevel])
         {
             loglevel = [[ADJNonEmptyString alloc]
-                            initWithConstStringValue:adjustConfig.logLevel];
+                        initWithConstStringValue:adjustConfig.logLevel];
         } else {
             [logger error:@"Cannot set log level with unknown value: %@", adjustConfig.logLevel];
         }
@@ -97,52 +95,52 @@
             || [ADJUrlStategyIndia isEqualToString:adjustConfig.urlStrategy])
         {
             urlStrategy = [[ADJNonEmptyString alloc]
-                                initWithConstStringValue:adjustConfig.urlStrategy];
+                           initWithConstStringValue:adjustConfig.urlStrategy];
         } else {
             [logger error:@"Cannot set url strategy with unknown value: %@",
-                adjustConfig.urlStrategy];
+             adjustConfig.urlStrategy];
         }
     }
 
 
     ADJNonEmptyString *_Nullable customEndpointUrl =
-        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointUrl
-                                     sourceDescription:@"custom endpoint url"
-                                                logger:logger];
+    [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointUrl
+                                sourceDescription:@"custom endpoint url"
+                                           logger:logger];
 
     ADJNonEmptyString *_Nullable customEndpointPublicKeyHash =
-        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointPublicKeyHash
-                                     sourceDescription:@"custom endpoint public key hash"
-                                                logger:logger];
+    [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointPublicKeyHash
+                                sourceDescription:@"custom endpoint public key hash"
+                                           logger:logger];
 
     ADJClientCustomEndpointData *_Nullable clientCustomEndpointData = nil;
     if (customEndpointPublicKeyHash != nil
         && customEndpointUrl == nil)
     {
         [logger error:@"Cannot configure certificate pinning"
-            " without a custom endpoint"];
+         " without a custom endpoint"];
     } else if (customEndpointUrl != nil) {
         clientCustomEndpointData = [[ADJClientCustomEndpointData alloc]
-                                        initWithUrl:customEndpointUrl
-                                        publicKeyHash:customEndpointPublicKeyHash];
+                                    initWithUrl:customEndpointUrl
+                                    publicKeyHash:customEndpointPublicKeyHash];
     }
 
     BOOL doNotOpenDeferredDeeplink =
-        adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
-        && adjustConfig.doNotOpenDeferredDeeplinkNumberBool.boolValue;
+    adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
+    && adjustConfig.doNotOpenDeferredDeeplinkNumberBool.boolValue;
 
     BOOL doNotReadAsaAttribution =
-        adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool != nil
-        && adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool.boolValue;
+    adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool != nil
+    && adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool.boolValue;
 
     BOOL canSendInBackground =
-        adjustConfig.canSendInBackgroundNumberBool != nil
-        && adjustConfig.canSendInBackgroundNumberBool.boolValue;
+    adjustConfig.canSendInBackgroundNumberBool != nil
+    && adjustConfig.canSendInBackgroundNumberBool.boolValue;
 
     ADJNonNegativeInt *_Nullable eventIdDeduplicationMaxCapacity =
-        [ADJNonNegativeInt
-            instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt
-            logger:logger];
+    [ADJNonNegativeInt
+     instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt
+     logger:logger];
 
     return [[self alloc] initWithAppToken:appToken
      isSandboxEnvironmentOrElseProduction:isSandboxEnvironment
@@ -164,22 +162,18 @@
 }
 
 #pragma mark - Private constructors
-- (nonnull instancetype)
-    initWithAppToken:(nonnull ADJNonEmptyString *)appToken
+- (nonnull instancetype)initWithAppToken:(nonnull ADJNonEmptyString *)appToken
     isSandboxEnvironmentOrElseProduction:(BOOL)isSandboxEnvironmentOrElseProduction
-    defaultTracker:(nullable ADJNonEmptyString *)defaultTracker
-    logLevel:(nullable ADJNonEmptyString *)logLevel
-    urlStrategy:(nullable ADJNonEmptyString *)urlStrategy
-    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
-    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
-    doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
-    canSendInBackground:(BOOL)canSendInBackground
-    eventIdDeduplicationMaxCapacity:
-        (nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
-    adjustAttributionSubscriber:
-        (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
-    adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
-{
+                          defaultTracker:(nullable ADJNonEmptyString *)defaultTracker
+                                logLevel:(nullable ADJNonEmptyString *)logLevel
+                             urlStrategy:(nullable ADJNonEmptyString *)urlStrategy
+                clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+               doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
+                 doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
+                     canSendInBackground:(BOOL)canSendInBackground
+         eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
+             adjustAttributionSubscriber:(nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
+                     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber {
     self = [super init];
 
     _appToken = appToken;
@@ -201,7 +195,7 @@
 #pragma mark Public API
 - (nonnull ADJNonEmptyString *)environment {
     return self.isSandboxEnvironmentOrElseProduction ?
-        [ADJClientConfigData sandboxEnvironment] : [ADJClientConfigData productionEnvironment];
+    [ADJClientConfigData sandboxEnvironment] : [ADJClientConfigData productionEnvironment];
 }
 
 #pragma mark Internal Methods
@@ -210,7 +204,7 @@
     static id sandboxEnvironment;
     dispatch_once(&sandboxEnvironmentToken, ^{
         sandboxEnvironment = [[ADJNonEmptyString alloc]
-                                initWithConstStringValue:ADJEnvironmentSandbox];
+                              initWithConstStringValue:ADJEnvironmentSandbox];
     });
     return sandboxEnvironment;
 }
@@ -220,7 +214,7 @@
     static id productionEnvironment;
     dispatch_once(&productionEnvironmentToken, ^{
         productionEnvironment = [[ADJNonEmptyString alloc]
-                                    initWithConstStringValue:ADJEnvironmentProduction];
+                                 initWithConstStringValue:ADJEnvironmentProduction];
     });
     return productionEnvironment;
 }
@@ -236,8 +230,7 @@
 @implementation ADJClientCustomEndpointData
 #pragma mark Instantiation
 - (nonnull instancetype)initWithUrl:(nonnull ADJNonEmptyString *)url
-                      publicKeyHash:(nullable ADJNonEmptyString *)publicKeyHash
-{
+                      publicKeyHash:(nullable ADJNonEmptyString *)publicKeyHash {
     self = [super init];
 
     _url = url;
@@ -252,3 +245,4 @@
 }
 
 @end
+

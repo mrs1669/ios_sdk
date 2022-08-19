@@ -22,27 +22,22 @@
 
  // - built in client context
  @property (nullable, readonly, strong, nonatomic)
-     ADJPreSdkInitRootController *preSdkInitRootController;
+ ADJPreSdkInitRootController *preSdkInitRootController;
  @property (nullable, readonly, strong, nonatomic)
-    ADJPostSdkInitRootController *postSdkInitRootController;
+ ADJPostSdkInitRootController *postSdkInitRootController;
  */
 
 @interface ADJEntryRoot ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *rootLogger;
-
-@property (nullable, readwrite, strong, nonatomic)
-    ADJPreSdkInitRootController *preSdkInitRootController;
-@property (nullable, readwrite, strong, nonatomic)
-    ADJPostSdkInitRootController *postSdkInitRootController;
+@property (nullable, readwrite, strong, nonatomic) ADJPreSdkInitRootController *preSdkInitRootController;
+@property (nullable, readwrite, strong, nonatomic)ADJPostSdkInitRootController *postSdkInitRootController;
 
 @end
 
 @implementation ADJEntryRoot
 #pragma mark Instantiation
-- (nonnull instancetype)initWithSdkConfigDataBuilder:
-    (nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
-{
+- (nonnull instancetype)initWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     self = [super init];
 
     _logController = [[ADJLogController alloc] init];
@@ -50,12 +45,12 @@
     _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
 
     _clientExecutor =
-        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                     sourceDescription:@"clientExecutor"];
+    [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
+                                                 sourceDescription:@"clientExecutor"];
 
     _commonExecutor =
-        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                     sourceDescription:@"commonExecutor"];
+    [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
+                                                 sourceDescription:@"commonExecutor"];
 
     [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
 
@@ -83,8 +78,8 @@
         if (strongSelf == nil) { return; }
 
         strongSelf.preSdkInitRootController =
-            [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
-                                                              entryRoot:strongSelf];
+        [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
+                                                         entryRoot:strongSelf];
     }];
 
     return self;
@@ -95,17 +90,15 @@
 }
 
 #pragma mark Public API
-+ (void)executeBlockInClientContext:
-    (nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))
-        blockInClientContext
-{
++ (void)executeBlockInClientContext:(nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))blockInClientContext {
     ADJEntryRoot *_Nonnull root = [ADJAdjustInternal rootInstance];
 
+    // TODO: (Gena) Why do we need ths check👇🏻? ('preSdkInitRootController' is created by ADJEntryRoot initializer)
     // no weak/strong self needed since it does not use self inside
     [root.clientExecutor executeInSequenceWithBlock:^{
         if (root.preSdkInitRootController == nil) {
             [root.adjustApiLogger error:
-                @"Cannot execute in client context without pre sdk init controller"];
+             @"Cannot execute in client context without pre sdk init controller"];
             return;
         }
 
@@ -113,16 +106,13 @@
     }];
 }
 
-- (nonnull ADJPostSdkInitRootController *)
-    ccCreatePostSdkInitRootControllerWithClientConfigData:
-        (nonnull ADJClientConfigData *)clientConfigData
-    preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController
-{
+- (nonnull ADJPostSdkInitRootController *)ccCreatePostSdkInitRootControllerWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+                                                                       preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController {
     self.postSdkInitRootController =
-        [[ADJPostSdkInitRootController alloc] initWithLoggerFactory:self.logController
-                                                    clientConfigData:clientConfigData
-                                                           entryRoot:self
-                                            preSdkInitRootController:preSdkInitRootController];
+    [[ADJPostSdkInitRootController alloc] initWithLoggerFactory:self.logController
+                                               clientConfigData:clientConfigData
+                                                      entryRoot:self
+                                       preSdkInitRootController:preSdkInitRootController];
 
     return self.postSdkInitRootController;
 }
@@ -140,12 +130,9 @@
     BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-/*
         if (strongSelf.preSdkInitRootController != nil) {
-            //[self.preSdkInitRootController.storageRootController.sqliteController.sqliteDb
-            //    finalizeAtTeardown];
-            [strongSelf.preSdkInitRootController.storageRootController
-                finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+            [self.preSdkInitRootController.storageRootController.sqliteController.sqliteDb finalizeAtTeardown];
+            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
             [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
         }
 
@@ -154,7 +141,6 @@
         }
 
         [strongSelf.threadController finalizeAtTeardown];
- */
     }];
 
     if (! canExecuteTask && closeStorageBlock != nil) {
@@ -163,13 +149,12 @@
 }
 
 #pragma mark - Subscriptions
-- (void)
-    ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:
-        (nonnull ADJSdkInitPublisher *)sdkInitPublisher
-    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-{
+- (void)ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                                             publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
     [self.logController ccSubscribeToPublishersWithSdkInitPublisher:sdkInitPublisher
-                                          publishingGatePublisher:publishingGatePublisher];
+                                            publishingGatePublisher:publishingGatePublisher];
 }
 
 @end
+
+

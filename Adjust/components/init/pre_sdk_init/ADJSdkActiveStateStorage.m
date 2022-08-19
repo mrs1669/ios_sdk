@@ -14,34 +14,28 @@ static NSString *const kSdkActiveStateStorageTableName = @"sdk_active_state";
 
 @implementation ADJSdkActiveStateStorage
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController
-{
-     self = [super initWithLoggerFactory:loggerFactory
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+    self = [super initWithLoggerFactory:loggerFactory
                                  source:@"SdkActiveStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kSdkActiveStateStorageTableName
                       metadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
                 initialDefaultDataValue:
-                    [[ADJSdkActiveStateData alloc] initWithInitialState]];
+            [[ADJSdkActiveStateData alloc] initWithInitialState]];
 
     return self;
 }
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJSdkActiveStateData *)concreteGenerateValueFromIoData:
-    (nonnull ADJIoData *)ioData
-{
+- (nullable ADJSdkActiveStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
     return [ADJSdkActiveStateData instanceFromIoData:ioData
-                                                    logger:self.logger];
+                                              logger:self.logger];
 }
-- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:
-    (nonnull ADJSdkActiveStateData *)dataValue
-{
+- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJSdkActiveStateData *)dataValue {
     return [dataValue toIoData];
 }
 
@@ -52,10 +46,8 @@ static NSString *const kSdkActiveStateStorageTableName = @"sdk_active_state";
     return nil;
 }
 
-- (void)
-    migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-    v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+- (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
         [self.logger debug:@"Activity state v4 file not found"];

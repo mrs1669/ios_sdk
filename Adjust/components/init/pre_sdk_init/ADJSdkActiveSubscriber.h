@@ -25,4 +25,5 @@ NS_ASSUME_NONNULL_END
 @end
 
 @interface ADJSdkActivePublisher : ADJPublisherBase<id<ADJSdkActiveSubscriber>>
+
 @end

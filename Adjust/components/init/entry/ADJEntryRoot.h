@@ -27,14 +27,11 @@
 
 @interface ADJEntryRoot : NSObject
 // subscriptions
-- (void)
-    ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:
-        (nonnull ADJSdkInitPublisher *)sdkInitPublisher
-    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
+- (void)ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                                             publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 
 // instantiation
-- (nonnull instancetype)initWithSdkConfigDataBuilder:
-    (nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -47,20 +44,14 @@
 @property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 
 // - built in client context
-@property (nullable, readonly, strong, nonatomic)
-    ADJPreSdkInitRootController *preSdkInitRootController;
-@property (nullable, readonly, strong, nonatomic)
-    ADJPostSdkInitRootController *postSdkInitRootController;
+@property (nullable, readonly, strong, nonatomic) ADJPreSdkInitRootController *preSdkInitRootController;
+@property (nullable, readonly, strong, nonatomic) ADJPostSdkInitRootController *postSdkInitRootController;
 
 // public api
-+ (void)executeBlockInClientContext:
-    (nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))
-        blockInClientContext;
++ (void)executeBlockInClientContext:(nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))blockInClientContext;
 
-- (nonnull ADJPostSdkInitRootController *)
-    ccCreatePostSdkInitRootControllerWithClientConfigData:
-        (nonnull ADJClientConfigData *)clientConfigData
-    preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
+- (nonnull ADJPostSdkInitRootController *)ccCreatePostSdkInitRootControllerWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+                                                                       preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
 
 - (nonnull id<ADJClientReturnExecutor>)clientReturnExecutor;
 
