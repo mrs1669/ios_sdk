@@ -23,18 +23,7 @@
                                                                            environment:ADJEnvironmentSandbox];
     [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 
-    [self testTrackEventAsync];
-//    [self testOfflineOnlineAsync];
-//    [self testActivationAsync];
-
     return YES;
-}
-
-- (void)testTrackEventAsync {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        ADJAdjustEvent *event = [[ADJAdjustEvent alloc] initWithEventId:@"g3mfiw"];
-        [ADJAdjust trackEvent:event];
-    });
 }
 
 - (void)testOfflineOnlineAsync {
@@ -78,7 +67,6 @@
         ADJAdjustEvent *event = [[ADJAdjustEvent alloc] initWithEventId:@"g3mfiw"];
         [ADJAdjust trackEvent:event];
     });
-
 
 }
 
