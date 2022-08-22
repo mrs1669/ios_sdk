@@ -6,14 +6,22 @@
 //
 
 import UIKit
+import Adjust
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        let appToken = "36wbd8gmlvsw"
+        let environment = ADJEnvironmentSandbox
+        let adjustConfig = ADJAdjustConfig(appToken: appToken, environment: environment)
+
+        ADJAdjust .sdkInit(with: adjustConfig)
+
+        let event = ADJAdjustEvent.init(eventId: "d8bf3k")
+        ADJAdjust.trackEvent(event)
         return true
     }
 
