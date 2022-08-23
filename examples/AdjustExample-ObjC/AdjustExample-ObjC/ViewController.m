@@ -38,12 +38,12 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
 - (void)loadData {
     self.featuresList = [[NSMutableArray alloc] initWithObjects:@"Event Tracking",
+                         @"Track Ad-Revenue",
                          @"Event and Session callbacks",
                          @"Deep linking",
                          @"Session Parameters",
                          @"App Tracking Transparency framework",
                          @"Attribution Callbacks",
-                         @"Track Ad-Revenue",
                          @"Track subscriptions",
                          @"Set Push Token",
                          @"Set SDK Online",
@@ -77,7 +77,10 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
     switch(indexPath.row){
         case 0:
-            [self trackEventTapped];
+            [self trackEvent];
+            break;
+        case 1:
+            [self trackAdRevenue];
             break;
         case 9:
             [self goOnline];
@@ -96,9 +99,28 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
     }
 }
 
-- (void)trackEventTapped {
+- (void)trackEvent {
     ADJAdjustEvent *event = [[ADJAdjustEvent alloc] initWithEventId:@"g3mfiw"];
     [ADJAdjust trackEvent:event];
+}
+
+- (void)trackAdRevenue {
+    // initilise ADJAdRevenue instance with appropriate ad revenue source
+    ADJAdjustAdRevenue *adRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:@"ADJAdRevenueSourceAppLovinMax"];
+    // pass revenue and currency values
+    [adRevenue setRevenueWithDouble:3.0 currency:@"USD"];
+
+    // pass optional parameters
+    [adRevenue setAdImpressionsCountWithInteger:3];
+//    [adRevenue setAdRevenueUnit:adRevenueUnit];
+//    [adRevenue setAdRevenuePlacement:adRevenuePlacement];
+//    [adRevenue setAdRevenueNetwork:adRevenueNetwork];
+    // attach callback and/or partner parameter if needed
+    [adRevenue addPartnerParameterWithKey:@"partner" value:@"partnerValue"];
+    [adRevenue addCallbackParameterWithKey:@"callback" value:@"callbackValue"];
+
+    // track ad revenue
+    [ADJAdjust trackAdRevenue:adRevenue];
 }
 
 - (void)goOnline {
