@@ -17,14 +17,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="tst-iQ-wan">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="BxK-70-u01">
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="featureCell" id="pcS-AQ-6Nu">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="featureCell" id="ygE-ct-QVG">
                                         <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pcS-AQ-6Nu" id="5tN-w5-Tzo">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ygE-ct-QVG" id="XDE-mY-eeD">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
@@ -35,19 +35,19 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="tst-iQ-wan" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="2g6-b9-dpX"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="tst-iQ-wan" secondAttribute="trailing" id="fxu-tG-KUa"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="tst-iQ-wan" secondAttribute="bottom" id="kkY-2c-dfv"/>
-                            <constraint firstItem="tst-iQ-wan" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="mYw-U6-byU"/>
+                            <constraint firstItem="BxK-70-u01" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Teu-7l-FBN"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="BxK-70-u01" secondAttribute="bottom" id="UEo-DP-LGv"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="BxK-70-u01" secondAttribute="trailing" id="V5J-Zq-0Ob"/>
+                            <constraint firstItem="BxK-70-u01" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="VSK-Cq-wxK"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="featuresTableView" destination="tst-iQ-wan" id="HeV-3b-Wl3"/>
+                        <outlet property="featuresTableView" destination="BxK-70-u01" id="jkd-5U-wfu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="94"/>
+            <point key="canvasLocation" x="61" y="23"/>
         </scene>
     </scenes>
     <resources>

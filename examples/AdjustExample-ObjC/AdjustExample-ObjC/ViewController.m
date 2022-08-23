@@ -2,13 +2,13 @@
 //  ViewController.m
 //  AdjustExample-ObjC
 //
-//  Created by Aditi Agrawal on 13/07/22.
+//  Created by Aditi Agrawal on 23/08/22.
 //
 
 #import "ViewController.h"
 
-#import <Adjust/ADJAdjust.h>
-#import <Adjust/ADJAdjustEvent.h>
+#import "ADJAdjust.h"
+#import "ADJAdjustEvent.h"
 
 NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
