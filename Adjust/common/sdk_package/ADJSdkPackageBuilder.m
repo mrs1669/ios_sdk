@@ -67,63 +67,53 @@
 }
 
 #pragma mark Public API
-/*
- - (nonnull ADJAdRevenuePackageData *)
- buildAdRevenueWithClientData:
- (nonnull ADJClientAdRevenueData *)clientAdRevenueData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJAdRevenuePackageDataPath
- apiTimestamp:apiTimestamp
- callbackParametersOverwrite:clientAdRevenueData.callbackParameters
- partnerParametersOverwrite:clientAdRevenueData.partnerParameters];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAdRevenueSourceKey
- packageParamValueSerializable:clientAdRevenueData.source];
+- (nonnull ADJAdRevenuePackageData *)buildAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
+                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJAdRevenuePackageDataPath
+                               apiTimestamp:apiTimestamp
+                callbackParametersOverwrite:clientAdRevenueData.callbackParameters
+                 partnerParametersOverwrite:clientAdRevenueData.partnerParameters];
 
- if (clientAdRevenueData.revenue != nil) {
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAdRevenueRevenueKey
- packageParamValueSerializable:clientAdRevenueData.revenue.amount];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamAdRevenueSourceKey
+                         packageParamValueSerializable:clientAdRevenueData.source];
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAdRevenueCurrencyKey
- packageParamValueSerializable:clientAdRevenueData.revenue.currency];
- }
+    if (clientAdRevenueData.revenue != nil) {
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamAdRevenueRevenueKey
+                             packageParamValueSerializable:clientAdRevenueData.revenue.amount];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAdRevenueAdImpressionsCountKey
- packageParamValueSerializable:clientAdRevenueData.adImpressionsCount];
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamAdRevenueCurrencyKey
+                             packageParamValueSerializable:clientAdRevenueData.revenue.currency];
+    }
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAdRevenueNetworkKey
- packageParamValueSerializable:clientAdRevenueData.adRevenueNetwork];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamAdRevenueAdImpressionsCountKey
+                         packageParamValueSerializable:clientAdRevenueData.adImpressionsCount];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAdRevenueUnitKey
- packageParamValueSerializable:clientAdRevenueData.adRevenueUnit];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamAdRevenueNetworkKey
+                         packageParamValueSerializable:clientAdRevenueData.adRevenueNetwork];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAdRevenuePlacementKey
- packageParamValueSerializable:clientAdRevenueData.adRevenuePlacement];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamAdRevenueUnitKey
+                         packageParamValueSerializable:clientAdRevenueData.adRevenueUnit];
 
- ADJStringMap *_Nonnull parameters =
- [self
- publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJAdRevenuePackageDataPath];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamAdRevenuePlacementKey
+                         packageParamValueSerializable:clientAdRevenueData.adRevenuePlacement];
 
- return [[ADJAdRevenuePackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJAdRevenuePackageDataPath];
 
- */
+    return [[ADJAdRevenuePackageData alloc] initWithClientSdk:self.clientSdk
+                                                   parameters:parameters];
+}
+
+
 
 /** /
  - (nonnull ADJAttributionPackageData *)

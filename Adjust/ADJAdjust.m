@@ -107,4 +107,27 @@
     }];
 }
 
++ (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue {
+    [ADJEntryRoot executeBlockInClientContext:
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+     {
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [adjustAPI ccClientActionsWithSource:@"trackAdRevenue"];
+
+        if (clientActionsAPI == nil) {
+            return;
+        }
+
+        ADJClientAdRevenueData *_Nullable clientAdRevenueData = [ADJClientAdRevenueData instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
+                                                                                                                       logger:apiLogger];
+
+        if (clientAdRevenueData == nil) {
+            return;
+        }
+
+        [clientActionsAPI ccTrackAdRevenueWithClientData:clientAdRevenueData];
+    }];
+}
+
+
 @end

@@ -74,11 +74,11 @@
 }
 
 #pragma mark - ADJClientActionsAPI
-//- (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData {
-//    [self ccSaveClientActionWithIoInjectable:clientAdRevenueData
-//                       clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
-//}
-//
+- (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData {
+    [self ccSaveClientActionWithIoInjectable:clientAdRevenueData
+                       clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
+}
+
 //- (void)ccTrackBillingSubscriptionWithClientData:
 //    (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
 //{

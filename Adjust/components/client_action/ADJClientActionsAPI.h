@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJClientEventData.h"
+#import "ADJClientAdRevenueData.h"
 
 /*
- #import "ADJClientAdRevenueData.h"
  #import "ADJClientBillingSubscriptionData.h"
  #import "ADJClientLaunchedDeeplinkData.h"
  #import "ADJClientPushTokenData.h"
@@ -24,8 +24,10 @@
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData;
 
+- (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
+
+
 /*
- - (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
 
  - (void)ccTrackBillingSubscriptionWithClientData:
  (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;

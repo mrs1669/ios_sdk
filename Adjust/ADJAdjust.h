@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
 
@@ -19,6 +20,8 @@
 + (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig;
 
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
+
++ (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue;
 
 + (void)inactivateSdk;
 + (void)reactivateSdk;

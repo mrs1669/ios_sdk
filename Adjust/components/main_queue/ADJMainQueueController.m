@@ -98,22 +98,21 @@
 
     return NO;
 }
+ */
 
- - (void)
-    addAdRevenuePackageToSendWithData:
-        (nonnull ADJAdRevenuePackageData *)adRevenuePackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+- (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
+                      sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
+        
         [strongSelf addSdkPackageToSendWithData:adRevenuePackageData
                             sqliteStorageAction:sqliteStorageAction];
     }];
 }
 
+/*
 - (void)
     addBillingSubscriptionPackageToSendWithData:
         (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData

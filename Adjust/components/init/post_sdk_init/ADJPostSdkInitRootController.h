@@ -20,9 +20,9 @@
 #import "ADJSdkPackageSenderController.h"
 #import "ADJMainQueueController.h"
 #import "ADJEventController.h"
+#import "ADJAdRevenueController.h"
 
 /*
- #import "ADJAdRevenueController.h"
  #import "ADJAttributionController.h"
  #import "ADJBillingSubscriptionController.h"
  #import "ADJLaunchedDeeplinkController.h"
@@ -67,10 +67,10 @@ ADJMeasurementSessionStartSubscriber
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSenderController *sdkPackageSenderController;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
 @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
+@property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
 
 
 /*
- @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
  @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
  @property (nonnull, readonly, strong, nonatomic) ADJBillingSubscriptionController *billingSubscriptionController;
  @property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
