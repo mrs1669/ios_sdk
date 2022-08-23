@@ -106,12 +106,12 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
 - (void)trackAdRevenue {
     // initilise ADJAdRevenue instance with appropriate ad revenue source
-    ADJAdjustAdRevenue *adRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:@"ADJAdRevenueSourceAppLovinMax"];
+    ADJAdjustAdRevenue *adRevenue = [[ADJAdjustAdRevenue alloc] initWithSource: ADJAdRevenueSourceMopub];
     // pass revenue and currency values
     [adRevenue setRevenueWithDouble:3.0 currency:@"USD"];
 
     // pass optional parameters
-    [adRevenue setAdImpressionsCountWithInteger:3];
+//    [adRevenue setAdImpressionsCountWithInteger:3];
 //    [adRevenue setAdRevenueUnit:adRevenueUnit];
 //    [adRevenue setAdRevenuePlacement:adRevenuePlacement];
 //    [adRevenue setAdRevenueNetwork:adRevenueNetwork];
