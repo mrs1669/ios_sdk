@@ -94,6 +94,8 @@
 		07DD775C28B4EF7C005A2245 /* ADJClientAdRevenueData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DD775A28B4EF7C005A2245 /* ADJClientAdRevenueData.m */; };
 		07DD775F28B4F298005A2245 /* ADJAdRevenuePackageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD775D28B4F298005A2245 /* ADJAdRevenuePackageData.h */; };
 		07DD776028B4F298005A2245 /* ADJAdRevenuePackageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DD775E28B4F298005A2245 /* ADJAdRevenuePackageData.m */; };
+		07DD776E28B50BDE005A2245 /* ADJAdRevenueResponseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD776C28B50BDE005A2245 /* ADJAdRevenueResponseData.h */; };
+		07DD776F28B50BDE005A2245 /* ADJAdRevenueResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DD776D28B50BDE005A2245 /* ADJAdRevenueResponseData.m */; };
 		07F3A7DA2888314600A572C6 /* ADJRelativeTimestamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F3A7D82888314600A572C6 /* ADJRelativeTimestamp.m */; };
 		07F8025A2892867A0068902F /* ADJAdjustEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F802582892867A0068902F /* ADJAdjustEvent.m */; };
 		07F8025F289287B30068902F /* ADJClientEventData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8025D289287B30068902F /* ADJClientEventData.m */; };
@@ -489,6 +491,8 @@
 		07DD775A28B4EF7C005A2245 /* ADJClientAdRevenueData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClientAdRevenueData.m; sourceTree = "<group>"; };
 		07DD775D28B4F298005A2245 /* ADJAdRevenuePackageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAdRevenuePackageData.h; sourceTree = "<group>"; };
 		07DD775E28B4F298005A2245 /* ADJAdRevenuePackageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJAdRevenuePackageData.m; sourceTree = "<group>"; };
+		07DD776C28B50BDE005A2245 /* ADJAdRevenueResponseData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAdRevenueResponseData.h; sourceTree = "<group>"; };
+		07DD776D28B50BDE005A2245 /* ADJAdRevenueResponseData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJAdRevenueResponseData.m; sourceTree = "<group>"; };
 		07F3A7D72888314600A572C6 /* ADJRelativeTimestamp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJRelativeTimestamp.h; sourceTree = "<group>"; };
 		07F3A7D82888314600A572C6 /* ADJRelativeTimestamp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJRelativeTimestamp.m; sourceTree = "<group>"; };
 		07F802572892867A0068902F /* ADJAdjustEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAdjustEvent.h; sourceTree = "<group>"; };
@@ -1416,6 +1420,8 @@
 				6FAC56FE288FE80D0070F564 /* ADJSessionResponseData.m */,
 				079A5CD428ABDCF500A4D6AA /* ADJEventResponseData.h */,
 				079A5CD528ABDCF500A4D6AA /* ADJEventResponseData.m */,
+				07DD776C28B50BDE005A2245 /* ADJAdRevenueResponseData.h */,
+				07DD776D28B50BDE005A2245 /* ADJAdRevenueResponseData.m */,
 				07D5C367289025240022F31F /* ADJDelayData.h */,
 				07D5C368289025240022F31F /* ADJDelayData.m */,
 			);
@@ -1641,6 +1647,7 @@
 				0A7ED7782892B11B00CC20DE /* ADJPreSdkInitRootController.h in Headers */,
 				0A7ED7792892B11B00CC20DE /* ADJSdkActiveStateStorage.h in Headers */,
 				0A7ED77A2892B11B00CC20DE /* ADJSdkActiveSubscriber.h in Headers */,
+				07DD776E28B50BDE005A2245 /* ADJAdRevenueResponseData.h in Headers */,
 				07DD775F28B4F298005A2245 /* ADJAdRevenuePackageData.h in Headers */,
 				0A7ED77B2892B11B00CC20DE /* ADJSdkActiveState.h in Headers */,
 				0A7ED77C2892B11B00CC20DE /* ADJSdkActiveStateData.h in Headers */,
@@ -1843,6 +1850,7 @@
 				0737C1AE287F3E18004C7D59 /* ADJAdjustConfig.m in Sources */,
 				0737C1FC287F3E2A004C7D59 /* ADJConstantsSys.m in Sources */,
 				0724D53928995FB80050E2C4 /* ADJEventDeduplicationController.m in Sources */,
+				07DD776F28B50BDE005A2245 /* ADJAdRevenueResponseData.m in Sources */,
 				0737C226288558E0004C7D59 /* ADJIoData.m in Sources */,
 				07615EFF288810A300CE57FC /* ADJAdjustPushToken.m in Sources */,
 				0787C287288838EB00B1DD52 /* ADJStorageRootController.m in Sources */,
