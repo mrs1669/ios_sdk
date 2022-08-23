@@ -40,20 +40,17 @@ ADJSdkInitSubscriber,
 ADJPausingSubscriber,
 ADJOfflineSubscriber
 >
-- (void)
-ccSubscribeToPublishersWithSdkInitPublisher:
-(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
-offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher;
+- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                                   pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
+                                   offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher;
 
 // instantiation
-- (nonnull instancetype)
-initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-threadController:(nonnull ADJThreadController *)threadController
-clock:(nonnull ADJClock *)clock
-backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
+                             threadController:(nonnull ADJThreadController *)threadController
+                                        clock:(nonnull ADJClock *)clock
+                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
 // public api
 - (BOOL)containsFirstSessionPackage;
@@ -93,4 +90,6 @@ sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSender
 - (nonnull NSString *)defaultTargetUrl;
 
 @end
+
+
 

@@ -31,14 +31,12 @@
 
 @implementation ADJMainQueueController
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-    threadController:(nonnull ADJThreadController *)threadController
-    clock:(nonnull ADJClock *)clock
-    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
+                             threadController:(nonnull ADJThreadController *)threadController
+                                        clock:(nonnull ADJClock *)clock
+                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
     self = [super initWithLoggerFactory:loggerFactory source:@"MainQueueController"];
     _mainQueueStorageWeak = mainQueueStorage;
     _clockWeak = clock;
@@ -50,9 +48,8 @@
                                                              sourceDescription:self.source
                                                                     threadpool:threadController];
 
-    _mainQueueStateAndTracker =
-        [[ADJMainQueueStateAndTracker alloc] initWithLoggerFactory:loggerFactory
-                                                    backoffStrategy:backoffStrategy];
+    _mainQueueStateAndTracker = [[ADJMainQueueStateAndTracker alloc] initWithLoggerFactory:loggerFactory
+                                                                           backoffStrategy:backoffStrategy];
 
     return self;
 }
@@ -63,12 +60,12 @@
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
         [self.logger error:@"Cannot determine if it contains first session package"
-            " without a reference to storage"];
+         " without a reference to storage"];
         return NO;
     }
 
     NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy =
-        [mainQueueStorage copyElementList];
+    [mainQueueStorage copyElementList];
 
     for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
         if ([self isFirstSessionPackageWithSdkPackage:sdkPackageData]) {
@@ -80,24 +77,24 @@
 }
 
 /*
-- (BOOL)containsAsaClickPackage {
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot determine if it contains first session package"
-            " without a reference to storage"];
-        return NO;
-    }
+ - (BOOL)containsAsaClickPackage {
+ ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
+ if (mainQueueStorage == nil) {
+ [self.logger error:@"Cannot determine if it contains first session package"
+ " without a reference to storage"];
+ return NO;
+ }
 
-    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
+ NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
 
-    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
-        if ([self isAsaClickPackageWithData:sdkPackageData]) {
-            return YES;
-        }
-    }
+ for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
+ if ([self isAsaClickPackageWithData:sdkPackageData]) {
+ return YES;
+ }
+ }
 
-    return NO;
-}
+ return NO;
+ }
  */
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
@@ -106,45 +103,45 @@
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
+
         [strongSelf addSdkPackageToSendWithData:adRevenuePackageData
                             sqliteStorageAction:sqliteStorageAction];
     }];
 }
 
 /*
-- (void)
-    addBillingSubscriptionPackageToSendWithData:
-        (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
-    __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
+ - (void)
+ addBillingSubscriptionPackageToSendWithData:
+ (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+ {
+ __typeof(self) __weak weakSelf = self;
+ [self.executor executeInSequenceWithBlock:^{
+ __typeof(weakSelf) __strong strongSelf = weakSelf;
+ if (strongSelf == nil) { return; }
 
-        [strongSelf addSdkPackageToSendWithData:billingSubscriptionPackageData
-                            sqliteStorageAction:sqliteStorageAction];
-    }];
-}
+ [strongSelf addSdkPackageToSendWithData:billingSubscriptionPackageData
+ sqliteStorageAction:sqliteStorageAction];
+ }];
+ }
 
-- (void)
-    addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
-    __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
+ - (void)
+ addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
+ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+ {
+ __typeof(self) __weak weakSelf = self;
+ [self.executor executeInSequenceWithBlock:^{
+ __typeof(weakSelf) __strong strongSelf = weakSelf;
+ if (strongSelf == nil) { return; }
 
-        [strongSelf addSdkPackageToSendWithData:clickPackageData
-                            sqliteStorageAction:sqliteStorageAction];
-    }];
-}
-*/
+ [strongSelf addSdkPackageToSendWithData:clickPackageData
+ sqliteStorageAction:sqliteStorageAction];
+ }];
+ }
+ */
 
-- (void) addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
-                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -156,24 +153,22 @@
 }
 
 /*
-- (void)
-    addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
-    __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
+ - (void)
+ addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
+ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+ {
+ __typeof(self) __weak weakSelf = self;
+ [self.executor executeInSequenceWithBlock:^{
+ __typeof(weakSelf) __strong strongSelf = weakSelf;
+ if (strongSelf == nil) { return; }
 
-        [strongSelf addSdkPackageToSendWithData:infoPackageData
-                            sqliteStorageAction:sqliteStorageAction];
-    }];
-}
-*/
-- (void)
-    addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+ [strongSelf addSdkPackageToSendWithData:infoPackageData
+ sqliteStorageAction:sqliteStorageAction];
+ }];
+ }
+ */
+- (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
+                    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -184,21 +179,21 @@
     }];
 }
 /*
-- (void)
-    addThirdPartySharingPackageToSendWithData:
-        (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
-    __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
+ - (void)
+ addThirdPartySharingPackageToSendWithData:
+ (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+ {
+ __typeof(self) __weak weakSelf = self;
+ [self.executor executeInSequenceWithBlock:^{
+ __typeof(weakSelf) __strong strongSelf = weakSelf;
+ if (strongSelf == nil) { return; }
 
-        [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
-                            sqliteStorageAction:sqliteStorageAction];
-    }];
-}
-*/
+ [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
+ sqliteStorageAction:sqliteStorageAction];
+ }];
+ }
+ */
 - (nonnull NSString *)defaultTargetUrl {
     return [self.sender defaultTargetUrl];
 }
@@ -263,26 +258,21 @@
 }
 
 #pragma mark - Subscriptions
-- (void)
-    ccSubscribeToPublishersWithSdkInitPublisher:
-        (nonnull ADJSdkInitPublisher *)sdkInitPublisher
-    pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
-    offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher
-{
+- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                                   pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
+                                   offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher {
     [sdkInitPublisher addSubscriber:self];
     [pausingPublisher addSubscriber:self];
     [offlinePublisher addSubscriber:self];
 }
 
 #pragma mark Internal Methods
-- (void)
-    addSdkPackageToSendWithData:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+- (void)addSdkPackageToSendWithData:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
+                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
         [self.logger error:@"Cannot add sdk package to send"
-            " without a reference to the storage"];
+         " without a reference to the storage"];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
@@ -293,9 +283,9 @@
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
 
     BOOL sendPackageAtFront =
-        [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
-                                              mainQueueSdkPackageCount:[mainQueueStorage count]
-                                                     hasPackageAtFront:packageAtFront != nil];
+    [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
+                                          mainQueueSdkPackageCount:[mainQueueStorage count]
+                                                 hasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         NSString *_Nonnull source = [NSString stringWithFormat:@"%@ added",
@@ -320,35 +310,35 @@
 }
 
 /*
-- (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
-    if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
-        return NO;
-    }
+ - (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
+ if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
+ return NO;
+ }
 
-    ADJNonEmptyString *_Nullable clickSourceValue =
-        [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
-    if (clickSourceValue == nil) {
-        return NO;
-    }
+ ADJNonEmptyString *_Nullable clickSourceValue =
+ [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
+ if (clickSourceValue == nil) {
+ return NO;
+ }
 
-    return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
-}
- 
-*/
+ return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
+ }
+
+ */
 
 - (void)handleSdkInit {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
         [self.logger error:@"Cannot handle sdk init"
-            " without a reference to the storage"];
+         " without a reference to the storage"];
         return;
     }
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
 
     BOOL sendPackageAtFront =
-        [self.mainQueueStateAndTracker
-            sendWhenSdkInitWithHasPackageAtFront:packageAtFront != nil];
+    [self.mainQueueStateAndTracker
+     sendWhenSdkInitWithHasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
@@ -383,7 +373,7 @@
     }
 
     ADJMainQueueResponseProcessingData *_Nonnull mainQueueResponseProcessingData =
-        [self.mainQueueStateAndTracker processReceivedSdkResponseWithData:sdkResponseData];
+    [self.mainQueueStateAndTracker processReceivedSdkResponseWithData:sdkResponseData];
 
     if (mainQueueResponseProcessingData.removePackageAtFront) {
         [self removePackageAtFrontWithStorage:mainQueueStorage];
@@ -397,8 +387,8 @@
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
 
     BOOL sendPackageAtFront =
-        [self.mainQueueStateAndTracker
-            sendAfterProcessingSdkResponseWithHasPackageAtFront:packageAtFront != nil];
+    [self.mainQueueStateAndTracker
+     sendAfterProcessingSdkResponseWithHasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
@@ -415,18 +405,18 @@
     } else {
         [self.logger debug:@"Package at front removed"];
     }
- }
+}
 
 - (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
     __typeof(self) __weak weakSelf = self;
     [self.executor
-        scheduleInSequenceWithBlock:^{
-            __typeof(weakSelf) __strong strongSelf = weakSelf;
-            if (strongSelf == nil) { return; }
+     scheduleInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
-            [strongSelf handleDelayEndWithSource:delayData.source];
-        }
-        delayTimeMilli:delayData.delay];
+        [strongSelf handleDelayEndWithSource:delayData.source];
+    }
+     delayTimeMilli:delayData.delay];
 }
 
 - (void)handleDelayEndWithSource:(nonnull NSString *)source {
@@ -435,15 +425,15 @@
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
         [self.logger error:@"Cannot handle delay end"
-            " without a reference to the storage"];
+         " without a reference to the storage"];
         return;
     }
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
 
     BOOL sendPackageAtFront =
-        [self.mainQueueStateAndTracker
-            sendWhenDelayEndedWithHasPackageAtFront:packageAtFront != nil];
+    [self.mainQueueStateAndTracker
+     sendWhenDelayEndedWithHasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
@@ -454,60 +444,58 @@
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
            mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-                     source:(nonnull NSString *)source
-{
+                     source:(nonnull NSString *)source {
     if (packageToSend == nil) {
         [self.logger error:@"Cannot send package from %@ when it is nil", source];
         return;
     }
 
     [self.logger debug:@"To send sdk package %@ from %@",
-        [packageToSend generateShortDescription],
-        source];
+     [packageToSend generateShortDescription],
+     source];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
-        [self generateSendingParametersWithStorage:mainQueueStorage];
+    [self generateSendingParametersWithStorage:mainQueueStorage];
 
     [self.sender sendSdkPackageWithData:packageToSend
                       sendingParameters:sendingParameters
                        responseCallback:self];
 }
 
-- (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:
-    (nonnull ADJMainQueueStorage *)mainQueueStorage
-{
+- (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage {
     ADJStringMapBuilder *_Nonnull sendingParameters =
-        [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock != nil) {
         [ADJSdkPackageBuilder
-             injectSentAtWithParametersBuilder:sendingParameters
-             sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
+         injectSentAtWithParametersBuilder:sendingParameters
+         sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
     } else {
         [self.logger error:@"Cannot inject sent at without a reference to clock"];
     }
 
     [ADJSdkPackageBuilder
-        injectAttemptsWithParametersBuilder:sendingParameters
-        attempts:[self.mainQueueStateAndTracker retriesSinceLastSuccessSend]];
+     injectAttemptsWithParametersBuilder:sendingParameters
+     attempts:[self.mainQueueStateAndTracker retriesSinceLastSuccessSend]];
 
     ADJNonNegativeInt *_Nonnull currentQueueSize = [mainQueueStorage count];
 
     if (currentQueueSize.uIntegerValue > 0) {
         ADJNonNegativeInt *_Nonnull remaingQueueSize =
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-                currentQueueSize.uIntegerValue - 1];
+        [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+         currentQueueSize.uIntegerValue - 1];
 
         [ADJSdkPackageBuilder
-            injectRemainingQueuSizeWithParametersBuilder:sendingParameters
-            remainingQueueSize:remaingQueueSize];
+         injectRemainingQueuSizeWithParametersBuilder:sendingParameters
+         remainingQueueSize:remaingQueueSize];
     } else {
         [self.logger error:@"Cannot inject remaining queue sizy"
-            " when its empty"];
+         " when its empty"];
     }
 
     return sendingParameters;
 }
 
 @end
+
