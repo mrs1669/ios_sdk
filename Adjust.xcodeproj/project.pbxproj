@@ -86,7 +86,7 @@
 		079A5CD728ABDCF500A4D6AA /* ADJEventResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 079A5CD528ABDCF500A4D6AA /* ADJEventResponseData.m */; };
 		07D5C366289024040022F31F /* ADJMainQueueStateAndTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */; };
 		07D5C36A289025240022F31F /* ADJDelayData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C368289025240022F31F /* ADJDelayData.m */; };
-		07DD775128B4E2E0005A2245 /* ADJAdjustAdRevenue.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD774F28B4E2E0005A2245 /* ADJAdjustAdRevenue.h */; };
+		07DD775128B4E2E0005A2245 /* ADJAdjustAdRevenue.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD774F28B4E2E0005A2245 /* ADJAdjustAdRevenue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07DD775228B4E2E0005A2245 /* ADJAdjustAdRevenue.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DD775028B4E2E0005A2245 /* ADJAdjustAdRevenue.m */; };
 		07DD775728B4EE24005A2245 /* ADJAdRevenueController.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD775528B4EE24005A2245 /* ADJAdRevenueController.h */; };
 		07DD775828B4EE24005A2245 /* ADJAdRevenueController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DD775628B4EE24005A2245 /* ADJAdRevenueController.m */; };
@@ -1509,6 +1509,7 @@
 				0A7ED6FC2892B11B00CC20DE /* ADJAdjustAttributionSubscriber.h in Headers */,
 				0A7ED7012892B11B00CC20DE /* ADJAdjustLogMessageData.h in Headers */,
 				0A7ED6FD2892B11B00CC20DE /* ADJAdjustLogSubscriber.h in Headers */,
+				07DD775128B4E2E0005A2245 /* ADJAdjustAdRevenue.h in Headers */,
 				0A7ED7352892B11B00CC20DE /* ADJBackoffStrategy.h in Headers */,
 				0AA5A5D72893D32C00CD9EA1 /* ADJClientActionController.h in Headers */,
 				0724D53428995F4F0050E2C4 /* ADJEventDeduplicationData.h in Headers */,
@@ -1593,7 +1594,6 @@
 				0A7ED7462892B11B00CC20DE /* ADJSQLiteDatabaseProvider.h in Headers */,
 				0A7ED7472892B11B00CC20DE /* ADJSQLiteStoragePropertiesBase.h in Headers */,
 				0A7ED7482892B11B00CC20DE /* ADJSQLiteStorageBase.h in Headers */,
-				07DD775128B4E2E0005A2245 /* ADJAdjustAdRevenue.h in Headers */,
 				0A7ED7492892B11B00CC20DE /* ADJSQLiteStorage.h in Headers */,
 				0A7ED74A2892B11B00CC20DE /* ADJSQLiteDb.h in Headers */,
 				0A7ED74B2892B11B00CC20DE /* ADJSQLiteDbMessageProvider.h in Headers */,

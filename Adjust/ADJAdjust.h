@@ -7,9 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustAdRevenue.h"
 
 @interface ADJAdjust : NSObject
 
