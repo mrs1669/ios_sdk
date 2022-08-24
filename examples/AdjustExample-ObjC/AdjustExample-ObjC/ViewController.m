@@ -108,7 +108,7 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
     // initilise ADJAdRevenue instance with appropriate ad revenue source
     ADJAdjustAdRevenue *adRevenue = [[ADJAdjustAdRevenue alloc] initWithSource: ADJAdRevenueSourceMopub];
     // pass revenue and currency values
-    [adRevenue setRevenueWithDouble:3.0 currency:@"USD"];
+    [adRevenue setRevenueWithDoubleNumber:@0.000001234 currency:@"EUR"];
 
     // pass optional parameters
 //    [adRevenue setAdImpressionsCountWithInteger:3];
