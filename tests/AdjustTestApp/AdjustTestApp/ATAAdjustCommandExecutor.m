@@ -344,67 +344,60 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)trackAdRevenue {
-    /*
-     NSString *_Nullable adRevenueSource =
-     [self firstParameterValueWithKey:@"adRevenueSource"];
 
-     ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
-     [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
+    NSString *_Nullable adRevenueSource = [self firstParameterValueWithKey:@"adRevenueSource"];
 
-     if ([self containsKey:@"currencyAndRevenue"]) {
-     NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
-     index:0];
-     NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
-     index:1];
-     NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
 
-     [adjustAdRevenue setRevenueWithDoubleNumber:revenueNumber
-     currency:currency];
-     }
+    if ([self containsKey:@"currencyAndRevenue"]) {
+        NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
+                                                             index:0];
+        NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
+                                                                  index:1];
+        NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
 
-     if ([self containsKey:@"adImpressionsCount"]) {
-     NSString *_Nullable adImpressionsCountString =
-     [self firstParameterValueWithKey:@"adImpressionsCount"];
-     NSNumber *_Nullable adImpressionsCountIntNumber =
-     [self strictParseNumberIntWithString:adImpressionsCountString];
+        [adjustAdRevenue setRevenueWithDoubleNumber:revenueNumber
+                                           currency:currency];
+    }
 
-     if (adImpressionsCountIntNumber != nil) {
-     [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCountIntNumber];
-     } else {
-     [self logError:@"Could not parse adImpressionsCount value: %@", adImpressionsCountString];
-     }
-     }
+    if ([self containsKey:@"adImpressionsCount"]) {
+        NSString *_Nullable adImpressionsCountString = [self firstParameterValueWithKey:@"adImpressionsCount"];
+        NSNumber *_Nullable adImpressionsCountIntNumber = [self strictParseNumberIntWithString:adImpressionsCountString];
 
-     if ([self containsKey:@"adRevenueNetwork"]) {
-     [adjustAdRevenue setAdRevenueNetwork:[self firstParameterValueWithKey:@"adRevenueNetwork"]];
-     }
+        if (adImpressionsCountIntNumber != nil) {
+            [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCountIntNumber];
+        } else {
+            [self logError:@"Could not parse adImpressionsCount value: %@", adImpressionsCountString];
+        }
+    }
 
-     if ([self containsKey:@"adRevenueUnit"]) {
-     [adjustAdRevenue setAdRevenueUnit:[self firstParameterValueWithKey:@"adRevenueUnit"]];
-     }
+    if ([self containsKey:@"adRevenueNetwork"]) {
+        [adjustAdRevenue setAdRevenueNetwork:[self firstParameterValueWithKey:@"adRevenueNetwork"]];
+    }
 
-     if ([self containsKey:@"adRevenuePlacement"]) {
-     [adjustAdRevenue setAdRevenuePlacement:[self firstParameterValueWithKey:@"adRevenuePlacement"]];
-     }
+    if ([self containsKey:@"adRevenueUnit"]) {
+        [adjustAdRevenue setAdRevenueUnit:[self firstParameterValueWithKey:@"adRevenueUnit"]];
+    }
 
-     [self iterateWithKey:@"callbackParams"
-     source:@"ad revenue callback params"
-     keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-     {
-     [adjustAdRevenue addCallbackParameterWithKey:key
-     value:value];
-     }];
+    if ([self containsKey:@"adRevenuePlacement"]) {
+        [adjustAdRevenue setAdRevenuePlacement:[self firstParameterValueWithKey:@"adRevenuePlacement"]];
+    }
 
-     [self iterateWithKey:@"partnerParams"
-     source:@"ad revenue partner params"
-     keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-     {
-     [adjustAdRevenue addPartnerParameterWithKey:key
-     value:value];
-     }];
+    [self iterateWithKey:@"callbackParams"
+                  source:@"ad revenue callback params"
+           keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value) {
+        [adjustAdRevenue addCallbackParameterWithKey:key
+                                               value:value];
+    }];
 
-     [ADJAdjust trackAdRevenue:adjustAdRevenue];
-     */
+    [self iterateWithKey:@"partnerParams"
+                  source:@"ad revenue partner params"
+           keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value) {
+        [adjustAdRevenue addPartnerParameterWithKey:key
+                                              value:value];
+    }];
+
+    [ADJAdjust trackAdRevenue:adjustAdRevenue];
 }
 
 - (void)thirdPartySharing {
@@ -622,4 +615,5 @@ keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
 }
 
 @end
+
 
