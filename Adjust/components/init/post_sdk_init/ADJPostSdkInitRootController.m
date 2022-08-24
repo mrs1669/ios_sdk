@@ -114,19 +114,17 @@
                                                            eventStateStorage:storageRootController.eventStateStorage
                                               measurementSessionStateStorage:storageRootController.measurementSessionStateStorage];
 
-    _sdkPackageSenderController = [[ADJSdkPackageSenderController alloc]
-                                   initWithLoggerFactory:loggerFactory
-                                   networkEndpointData:sdkConfigData.networkEndpointData
-                                   adjustUrlStrategy:clientConfigData.urlStrategy
-                                   clientCustomEndpointData:clientConfigData.clientCustomEndpointData];
+    _sdkPackageSenderController = [[ADJSdkPackageSenderController alloc] initWithLoggerFactory:loggerFactory
+                                                                           networkEndpointData:sdkConfigData.networkEndpointData
+                                                                             adjustUrlStrategy:clientConfigData.urlStrategy
+                                                                      clientCustomEndpointData:clientConfigData.clientCustomEndpointData];
 
-    _mainQueueController = [[ADJMainQueueController alloc]
-                            initWithLoggerFactory:loggerFactory
-                            mainQueueStorage:storageRootController.mainQueueStorage
-                            threadController:entryRoot.threadController
-                            clock:preSdkInitRootController.clock
-                            backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
-                            sdkPackageSenderFactory:self.sdkPackageSenderController];
+    _mainQueueController = [[ADJMainQueueController alloc] initWithLoggerFactory:loggerFactory
+                                                                mainQueueStorage:storageRootController.mainQueueStorage
+                                                                threadController:entryRoot.threadController
+                                                                           clock:preSdkInitRootController.clock
+                                                                 backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
+                                                         sdkPackageSenderFactory:self.sdkPackageSenderController];
 
     _measurementSessionController = [[ADJMeasurementSessionController alloc] initWithLoggerFactory:loggerFactory
                                                                 minMeasurementSessionIntervalMilli:sdkConfigData.minMeasurementSessionIntervalMilli
@@ -137,10 +135,9 @@
                                                                                mainQueueController:self.mainQueueController
                                                                                              clock:preSdkInitRootController.clock];
 
-    _adRevenueController = [[ADJAdRevenueController alloc]
-                            initWithLoggerFactory:loggerFactory
-                            sdkPackageBuilder:self.sdkPackageBuilder
-                            mainQueueController:self.mainQueueController];
+    _adRevenueController = [[ADJAdRevenueController alloc] initWithLoggerFactory:loggerFactory
+                                                               sdkPackageBuilder:self.sdkPackageBuilder
+                                                             mainQueueController:self.mainQueueController];
 
     /*
      _attributionController =
@@ -490,7 +487,3 @@
 }
 
 @end
-
-
-
-

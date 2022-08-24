@@ -20,10 +20,8 @@
  @property (nullable, readonly, strong, nonatomic) NSString *adRevenueNetwork;
  @property (nullable, readonly, strong, nonatomic) NSString *adRevenueUnit;
  @property (nullable, readonly, strong, nonatomic) NSString *adRevenuePlacement;
- @property (nullable, readonly, strong, nonatomic)
- NSArray<NSString *> *callbackParameterKeyValueArray;
- @property (nullable, readonly, strong, nonatomic)
- NSArray<NSString *> *partnerParameterKeyValueArray;
+ @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *callbackParameterKeyValueArray;
+ @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *partnerParameterKeyValueArray;
  */
 
 @interface ADJAdjustAdRevenue ()
@@ -69,6 +67,7 @@
 - (void)setAdImpressionsCountWithInteger:(NSInteger)adImpressionsCount {
     _adImpressionsCountIntegerNumber = @(adImpressionsCount);
 }
+
 - (void)setAdImpressionsCountWithIntegerNumber:(nonnull NSNumber *)adImpressionsCountIntegerNumber {
     _adImpressionsCountIntegerNumber = [ADJUtilObj copyObjectWithInput:adImpressionsCountIntegerNumber
                                                            classObject:[NSNumber class]];
@@ -90,8 +89,7 @@
                               value:(nonnull NSString *)value {
     @synchronized (self.callbackParametersMut) {
         [self.callbackParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:key]];
-        [self.callbackParametersMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:value]];
+        [self.callbackParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:value]];
     }
 }
 
@@ -99,8 +97,7 @@
                              value:(nonnull NSString *)value {
     @synchronized (self.partnerParametersMut) {
         [self.partnerParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:key]];
-        [self.partnerParametersMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:value]];
+        [self.partnerParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:value]];
     }
 }
 
