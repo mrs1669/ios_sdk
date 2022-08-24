@@ -105,15 +105,8 @@
                                                    key:ADJParamAdRevenuePlacementKey
                          packageParamValueSerializable:clientAdRevenueData.adRevenuePlacement];
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamCallbackParamsKey
-                         packageParamValueSerializable:clientAdRevenueData.callbackParameters];
-    
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamPartnerParamsKey
-                         packageParamValueSerializable:clientAdRevenueData.partnerParameters];
-
-    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                        path:ADJAdRevenuePackageDataPath];
 
     return [[ADJAdRevenuePackageData alloc] initWithClientSdk:self.clientSdk
