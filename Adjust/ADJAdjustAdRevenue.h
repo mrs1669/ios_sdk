@@ -10,10 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceAppLovinMax;
+FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceAppLovinMAX;
 FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceMopub;
-FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceAdmob;
-FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceIronsource;
+FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceAdMob;
+FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceIronSource;
+FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceAdMost;
+FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceUnity;
+FOUNDATION_EXPORT NSString *const ADJAdRevenueSourceHeliumChartboost;
+FOUNDATION_EXPORT NSString *const ADJAdRevenueSourcePublisher;
 
 NS_ASSUME_NONNULL_END
 

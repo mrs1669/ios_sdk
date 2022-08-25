@@ -73,10 +73,14 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
     dispatch_once(&adRevenueSourceSetOnceToken, ^{
         adRevenueSourceSet = [NSSet setWithObjects:
-                              ADJAdRevenueSourceAppLovinMax,
+                              ADJAdRevenueSourceAppLovinMAX,
                               ADJAdRevenueSourceMopub,
-                              ADJAdRevenueSourceAdmob,
-                              ADJAdRevenueSourceIronsource,
+                              ADJAdRevenueSourceAdMob,
+                              ADJAdRevenueSourceIronSource,
+                              ADJAdRevenueSourceAdMost,
+                              ADJAdRevenueSourceUnity,
+                              ADJAdRevenueSourceHeliumChartboost,
+                              ADJAdRevenueSourcePublisher,
                               nil];
     });
 
@@ -146,7 +150,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
     ADJNonEmptyString *_Nullable revenueAmountIoValue = [propertiesMap pairValueWithKey:kRevenueAmountKey];
     ADJMoneyAmountBase *_Nullable revenueAmount = [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue
-                                             logger:logger];
+                                                                                           logger:logger];
     ADJNonEmptyString *_Nullable revenueCurrency =
     [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
     if (revenueAmount != nil || revenueCurrency != nil) {
@@ -376,4 +380,5 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 }
 
 @end
+
 
