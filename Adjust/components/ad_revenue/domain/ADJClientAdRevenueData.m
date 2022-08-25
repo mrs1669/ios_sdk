@@ -85,7 +85,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     });
 
     if (![adRevenueSourceSet containsObject:source.stringValue]) {
-        [logger info:@"Cannot match ad revenue source to an expected one,"
+        [logger error:@"Cannot match ad revenue source to an expected one,"
          " but will be used as is"];
     }
 
