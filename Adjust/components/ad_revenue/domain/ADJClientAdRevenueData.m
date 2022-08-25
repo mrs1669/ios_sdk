@@ -30,10 +30,14 @@
 #pragma mark - Public constants
 NSString *const ADJClientAdRevenueDataMetadataTypeValue = @"ClientAdRevenueData";
 
-NSString *const ADJAdRevenueSourceAppLovinMax = @"applovin_max_sdk";
+NSString *const ADJAdRevenueSourceAppLovinMAX = @"applovin_max_sdk";
 NSString *const ADJAdRevenueSourceMopub = @"mopub";
-NSString *const ADJAdRevenueSourceAdmob = @"admob";
-NSString *const ADJAdRevenueSourceIronsource = @"ironsource_sdk";
+NSString *const ADJAdRevenueSourceAdMob = @"admob_sdk";
+NSString *const ADJAdRevenueSourceIronSource = @"ironsource_sdk";
+NSString *const ADJAdRevenueSourceAdMost = @"admost_sdk";
+NSString *const ADJAdRevenueSourceUnity = @"unity_sdk";
+NSString *const ADJAdRevenueSourceHeliumChartboost = @"helium_chartboost_sdk";
+NSString *const ADJAdRevenueSourcePublisher = @"publisher_sdk";
 
 #pragma mark - Private constants
 static NSString *const kSourceKey = @"source";
