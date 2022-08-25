@@ -354,21 +354,14 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                                                              index:0];
         NSString *_Nullable revenueString = [self parameterValueWithKey:@"currencyAndRevenue"
                                                                   index:1];
-        NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
-
-        [adjustAdRevenue setRevenueWithDoubleNumber:revenueNumber
+        [adjustAdRevenue setRevenueWithDouble:[revenueString doubleValue]
                                            currency:currency];
     }
 
     if ([self containsKey:@"adImpressionsCount"]) {
         NSString *_Nullable adImpressionsCountString = [self firstParameterValueWithKey:@"adImpressionsCount"];
-        NSNumber *_Nullable adImpressionsCountIntNumber = [self strictParseNumberIntWithString:adImpressionsCountString];
-
-        if (adImpressionsCountIntNumber != nil) {
-            [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCountIntNumber];
-        } else {
-            [self logError:@"Could not parse adImpressionsCount value: %@", adImpressionsCountString];
-        }
+        NSInteger adImpressionsCountInteger = [adImpressionsCountString integerValue];
+        [adjustAdRevenue setAdImpressionsCountWithInteger:adImpressionsCountInteger];
     }
 
     if ([self containsKey:@"adRevenueNetwork"]) {
