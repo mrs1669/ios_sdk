@@ -144,17 +144,14 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
     [[ADJAdjustAdRevenue alloc] initWithSource:source != nil ? source.stringValue : nil];
 
-    ADJNonEmptyString *_Nullable revenueAmountIoValue =
-    [propertiesMap pairValueWithKey:kRevenueAmountKey];
-    ADJMoneyAmountBase *_Nullable revenueAmount =
-    [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue
+    ADJNonEmptyString *_Nullable revenueAmountIoValue = [propertiesMap pairValueWithKey:kRevenueAmountKey];
+    ADJMoneyAmountBase *_Nullable revenueAmount = [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue
                                              logger:logger];
     ADJNonEmptyString *_Nullable revenueCurrency =
     [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
     if (revenueAmount != nil || revenueCurrency != nil) {
-        [adjustAdRevenue
-         setRevenueWithDoubleNumber:revenueAmount != nil? revenueAmount.numberValue : nil
-         currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
+        [adjustAdRevenue setRevenueWithDouble:revenueAmount.doubleValue
+                                     currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
     }
 
     ADJNonEmptyString *_Nullable adImpressionsCountIoValue =
