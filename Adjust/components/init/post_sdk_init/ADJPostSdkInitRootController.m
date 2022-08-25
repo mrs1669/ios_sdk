@@ -318,47 +318,38 @@
  [self.thirdPartySharingController
  ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
  }
+*/
+- (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
+    [self.globalCallbackParametersController
+     ccAddGlobalCallbackParameterWithClientData:clientAddGlobalCallbackParameterActionData];
+}
 
- - (void)ccAddGlobalCallbackParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData
- {
- [self.globalCallbackParametersController
- ccAddGlobalCallbackParameterWithClientData:clientAddGlobalCallbackParameterActionData];
- }
- - (void)ccRemoveGlobalCallbackParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData
- {
- [self.globalCallbackParametersController
- ccRemoveGlobalCallbackParameterWithClientData:
- clientRemoveGlobalCallbackParameterActionData];
- }
- - (void)ccClearGlobalCallbackParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData
- {
- [self.globalCallbackParametersController
- ccClearGlobalCallbackParameterWithClientData:
- clientClearGlobalCallbackParametersActionData];
- }
+- (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
+    [self.globalCallbackParametersController
+     ccRemoveGlobalCallbackParameterWithClientData:
+         clientRemoveGlobalCallbackParameterActionData];
+}
 
- - (void)ccAddGlobalPartnerParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData
- {
- [self.globalPartnerParametersController
- ccAddGlobalPartnerParameterWithClientData:clientAddGlobalPartnerParameterActionData];
- }
- - (void)ccRemoveGlobalPartnerParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData
- {
- [self.globalPartnerParametersController
- ccRemoveGlobalPartnerParameterWithClientData:clientRemoveGlobalPartnerParameterActionData];
- }
- - (void)ccClearGlobalPartnerParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData
- {
- [self.globalPartnerParametersController
- ccClearGlobalPartnerParameterWithClientData:clientClearGlobalPartnerParametersActionData];
- }
- */
+- (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
+    [self.globalCallbackParametersController
+     ccClearGlobalCallbackParameterWithClientData:
+         clientClearGlobalCallbackParametersActionData];
+}
+
+- (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData{
+    [self.globalPartnerParametersController
+     ccAddGlobalPartnerParameterWithClientData:clientAddGlobalPartnerParameterActionData];
+}
+
+- (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
+    [self.globalPartnerParametersController
+     ccRemoveGlobalPartnerParameterWithClientData:clientRemoveGlobalPartnerParameterActionData];
+}
+- (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
+    [self.globalPartnerParametersController
+     ccClearGlobalPartnerParameterWithClientData:clientClearGlobalPartnerParametersActionData];
+}
+
 #pragma mark Internal Methods
 - (void)ccSubscribeAllWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
            preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController {
