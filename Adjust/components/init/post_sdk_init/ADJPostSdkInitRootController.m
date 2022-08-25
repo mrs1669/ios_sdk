@@ -93,24 +93,22 @@
     ADJStorageRootController *_Nonnull storageRootController = preSdkInitRootController.storageRootController;
 
     ADJSdkConfigData *_Nonnull sdkConfigData = entryRoot.sdkConfigData;
-    /*
-     _globalCallbackParametersController =
-     [[ADJGlobalCallbackParametersController alloc]
-     initWithLoggerFactory:loggerFactory
-     storage:storageRootController.globalCallbackParametersStorage];
 
-     _globalPartnerParametersController =
-     [[ADJGlobalPartnerParametersController alloc]
-     initWithLoggerFactory:loggerFactory
-     storage:storageRootController.globalPartnerParametersStorage];
-     */
+    _globalCallbackParametersController = [[ADJGlobalCallbackParametersController alloc]
+                                           initWithLoggerFactory:loggerFactory
+                                           storage:storageRootController.globalCallbackParametersStorage];
+
+    _globalPartnerParametersController = [[ADJGlobalPartnerParametersController alloc]
+                                          initWithLoggerFactory:loggerFactory
+                                          storage:storageRootController.globalPartnerParametersStorage];
+
     _sdkPackageBuilder = [[ADJSdkPackageBuilder alloc] initWithLoggerFactory:loggerFactory
                                                                        clock:preSdkInitRootController.clock
                                                                    clientSdk:ADJClientSdk
                                                             clientConfigData:clientConfigData
                                                             deviceController:preSdkInitRootController.deviceController
-                                             globalCallbackParametersStorage:nil //storageRootController.globalCallbackParametersStorage
-                                              globalPartnerParametersStorage:nil //storageRootController.globalPartnerParametersStorage
+                                             globalCallbackParametersStorage:storageRootController.globalCallbackParametersStorage
+                                              globalPartnerParametersStorage:storageRootController.globalPartnerParametersStorage
                                                            eventStateStorage:storageRootController.eventStateStorage
                                               measurementSessionStateStorage:storageRootController.measurementSessionStateStorage];
 

@@ -494,13 +494,13 @@
     [self injectEventStateFieldsWithParametersBuilder:parametersBuilder
                                                  path:path];
 
-    // [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
-    //                                                      path:path
-    //                               callbackParametersOverwrite:callbackParametersOverwrite];
+    [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
+                                                          path:path
+                                   callbackParametersOverwrite:callbackParametersOverwrite];
 
-    // [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
-    //                                                     path:path
-    //                               partnerParametersOverwrite:partnerParametersOverwrite];
+    [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
+                                                         path:path
+                                   partnerParametersOverwrite:partnerParametersOverwrite];
 
     [self injectMeasurementSessionFieldsWithParametersBuilder:parametersBuilder
                                                          path:path
@@ -666,7 +666,7 @@
                          packageParamValueSerializable:eventStateData.eventCount];
 }
 
-/*
+
 - (void)injectCallbackParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                        path:(nullable NSString *)path
                                 callbackParametersOverwrite:(nullable ADJStringMap *)callbackParametersOverwrite {
@@ -708,7 +708,6 @@
                                            baseMap:globalPartnerParametersMap
                                             mapKey:ADJParamPartnerParamsKey];
 }
-*/
 
 - (void)injectMapParametersWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                   overwritingMap:(nullable ADJStringMap *)overwritingMap

@@ -21,6 +21,8 @@
 #import "ADJMainQueueController.h"
 #import "ADJEventController.h"
 #import "ADJAdRevenueController.h"
+#import "ADJGlobalCallbackParametersController.h"
+#import "ADJGlobalPartnerParametersController.h"
 
 /*
  #import "ADJAttributionController.h"
@@ -28,8 +30,6 @@
  #import "ADJLaunchedDeeplinkController.h"
  #import "ADJPushTokenController.h"
  #import "ADJKeepAliveController.h"
- #import "ADJGlobalCallbackParametersController.h"
- #import "ADJGlobalPartnerParametersController.h"
  */
 #import "ADJReachabilityController.h"
 #import "ADJPausingController.h"
@@ -46,7 +46,7 @@
 
 @interface ADJPostSdkInitRootController : ADJCommonBase<ADJClientActionsAPI,
 // subscriptions
-ADJMeasurementSessionStartSubscriber
+   ADJMeasurementSessionStartSubscriber
 >
 
 - (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
@@ -76,9 +76,9 @@ ADJMeasurementSessionStartSubscriber
  @property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
  @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
  @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
- @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersController *globalCallbackParametersController;
- @property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersController *globalPartnerParametersController;
  */
+@property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersController *globalCallbackParametersController;
+@property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersController *globalPartnerParametersController;
 @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
 @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
 /*
