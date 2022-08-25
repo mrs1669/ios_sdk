@@ -111,51 +111,38 @@
  [self ccSaveClientActionWithIoInjectable:clientThirdPartySharingData
  clientActionHandlerId:ADJThirdPartySharingControllerClientActionHandlerId];
  }
-
- - (void)ccAddGlobalCallbackParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientAddGlobalCallbackParameterActionData
- clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
- }
- - (void)ccRemoveGlobalCallbackParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientRemoveGlobalCallbackParameterActionData
- clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
- }
- - (void)ccClearGlobalCallbackParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientClearGlobalCallbackParametersActionData
- clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
- }
-
- - (void)ccAddGlobalPartnerParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientAddGlobalPartnerParameterActionData
- clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
- }
- - (void)ccRemoveGlobalPartnerParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientRemoveGlobalPartnerParameterActionData
- clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
- }
- - (void)ccClearGlobalPartnerParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
- clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
- }
  */
+
+- (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientAddGlobalCallbackParameterActionData
+     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+}
+
+- (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalCallbackParameterActionData
+     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+}
+
+- (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
+    [self ccSaveClientActionWithIoInjectable:clientClearGlobalCallbackParametersActionData
+     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+}
+
+- (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientAddGlobalPartnerParameterActionData
+     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+}
+
+- (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalPartnerParameterActionData
+     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+}
+
+- (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
+    [self ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
+     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+}
+
 
 #pragma mark Internal Methods
 

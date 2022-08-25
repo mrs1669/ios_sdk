@@ -32,4 +32,14 @@
 + (void)appWentToTheForegroundManualCall;
 + (void)appWentToTheBackgroundManualCall;
 
++ (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key
+                                    value:(nonnull NSString *)value;
++ (void)removeGlobalCallbackParameterByKey:(nonnull NSString *)key;
++ (void)clearAllGlobalCallbackParameters;
+
++ (void)addGlobalPartnerParameterWithKey:(nonnull NSString *)key
+                                    value:(nonnull NSString *)value;
++ (void)removeGlobalPartnerParameterByKey:(nonnull NSString *)key;
++ (void)clearAllGlobalPartnerParameters;
+
 @end
