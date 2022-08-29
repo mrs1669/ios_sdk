@@ -16,19 +16,15 @@
  @property (nullable, readonly, strong, nonatomic) NSString *eventId;
  @property (nullable, readonly, strong, nonatomic) NSDecimalNumber *revenueAmountDecimalNumber;
  @property (nullable, readonly, strong, nonatomic) NSString *revenueCurrency;
- @property (nullable, readonly, strong, nonatomic)
- NSArray<NSString *> *callbackParameterKeyValueArray;
- @property (nullable, readonly, strong, nonatomic)
- NSArray<NSString *> *partnerParameterKeyValueArray;
+ @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *callbackParameterKeyValueArray;
+ @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *partnerParameterKeyValueArray;
  @property (nullable, readonly, strong, nonatomic) NSString *deduplicationId;
  */
 
 @interface ADJAdjustEvent ()
 #pragma mark - Internal variables
-@property (nonnull, readwrite, strong, nonatomic)
-NSMutableArray *callbackParametersMut;
-@property (nonnull, readwrite, strong, nonatomic)
-NSMutableArray *partnerParametersMut;
+@property (nonnull, readwrite, strong, nonatomic) NSMutableArray *callbackParametersMut;
+@property (nonnull, readwrite, strong, nonatomic) NSMutableArray *partnerParametersMut;
 
 @end
 
@@ -76,8 +72,7 @@ NSMutableArray *partnerParametersMut;
                               value:(nonnull NSString *)value {
     @synchronized (self.callbackParametersMut) {
         [self.callbackParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:key]];
-        [self.callbackParametersMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:value]];
+        [self.callbackParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:value]];
     }
 }
 
@@ -85,8 +80,7 @@ NSMutableArray *partnerParametersMut;
                              value:(nonnull NSString *)value {
     @synchronized (self.partnerParametersMut) {
         [self.partnerParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:key]];
-        [self.partnerParametersMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:value]];
+        [self.partnerParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:value]];
     }
 }
 

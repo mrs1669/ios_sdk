@@ -101,6 +101,8 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
 - (void)trackEvent {
     ADJAdjustEvent *event = [[ADJAdjustEvent alloc] initWithEventId:@"g3mfiw"];
+    [event addCallbackParameterWithKey:@"partner" value:@"partnerValue"];
+    [event addCallbackParameterWithKey:@"callback" value:@"callbackValue"];
     [ADJAdjust trackEvent:event];
 }
 

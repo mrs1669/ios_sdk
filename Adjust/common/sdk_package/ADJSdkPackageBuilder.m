@@ -263,7 +263,7 @@
                                                                                  apiTimestamp:apiTimestamp
                                                                   callbackParametersOverwrite:clientEventData.callbackParameters
                                                                    partnerParametersOverwrite:clientEventData.partnerParameters];
-
+    
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamEventTokenKey
                          packageParamValueSerializable:clientEventData.eventId];
@@ -277,13 +277,6 @@
                                                        key:ADJParamEventCurrencyKey
                              packageParamValueSerializable:clientEventData.revenue.currency];
     }
-    
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamCallbackParamsKey
-                         packageParamValueSerializable:clientEventData.callbackParameters];
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamPartnerParamsKey
-                         packageParamValueSerializable:clientEventData.partnerParameters];
 
     ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                                                            path:ADJEventPackageDataPath];
@@ -678,8 +671,7 @@
          " without a reference to global callback parameters storage", path];
         globalCallbackParametersMap = nil;
     } else {
-        // TODO: ADJGlobalCallbackParametersStorage still not alive
-        // globalCallbackParametersMap = [globalCallbackParametersStorage allPairs];
+         globalCallbackParametersMap = [globalCallbackParametersStorage allPairs];
     }
     
     [self injectMapParametersWithParametersBuilder:parametersBuilder
@@ -699,8 +691,7 @@
          " without a reference to global partner parameters storage", path];
         globalPartnerParametersMap = nil;
     } else {
-        // TODO: ADJGlobalPartnerParametersStorage still not alive
-        // globalPartnerParametersMap = [globalPartnerParametersStorage allPairs];
+         globalPartnerParametersMap = [globalPartnerParametersStorage allPairs];
     }
     
     [self injectMapParametersWithParametersBuilder:parametersBuilder
