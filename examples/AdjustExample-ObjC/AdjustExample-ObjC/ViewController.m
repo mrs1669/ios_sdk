@@ -39,17 +39,16 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 - (void)loadData {
     self.featuresList = [[NSMutableArray alloc] initWithObjects:@"Event Tracking",
                          @"Track Ad-Revenue",
-                         @"Event and Session callbacks",
-                         @"Deep linking",
-                         @"Session Parameters",
-                         @"App Tracking Transparency framework",
-                         @"Attribution Callbacks",
-                         @"Track subscriptions",
-                         @"Set Push Token",
                          @"Set SDK Online",
                          @"Set SDK Offline",
                          @"Enable SDK",
-                         @"Disable SDK", nil];
+                         @"Disable SDK",
+                         @"Add Global Callback Parameters",
+                         @"Remove Global Callback Parameters",
+                         @"Clear All Global Callback Parameters",
+                         @"Add Global Partner Parameters",
+                         @"Remove Global Partner Parameters",
+                         @"Clear All Global Partner Parameters",nil];
 }
 
 
@@ -82,18 +81,36 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
         case 1:
             [self trackAdRevenue];
             break;
-        case 9:
+        case 2:
             [self goOnline];
             break;
-         case 10:
+        case 3:
             [self goOffline];
             break;
+        case 4:
+            [self reactivateAdjustSDK];
+            break;
+        case 5:
+            [self inactivateAdjustSDK];
+            break;
+        case 6:
+            [self addGlobalCallbackParameters];
+            break;
+        case 7:
+            [self removeGlobalCallbackParameters];
+            break;
+        case 8:
+            [self clearAllGlobalCallbackParameters];
+            break;
+        case 9:
+            [self addGlobalPartnerParameters];
+            break;
+        case 10:
+            [self removeGlobalPartnerParameters];
+            break;
         case 11:
-           [self reactivateAdjustSDK];
-           break;
-        case 12:
-           [self inactivateAdjustSDK];
-           break;
+            [self clearAllGlobalPartnerParameters];
+            break;
         default :
             NSLog(@"No functionality has been added.");
     }
@@ -113,10 +130,10 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
     [adRevenue setRevenueWithDouble:3.0 currency:@"USD"];
 
     // pass optional parameters
-//    [adRevenue setAdImpressionsCountWithInteger:3];
-//    [adRevenue setAdRevenueUnit:adRevenueUnit];
-//    [adRevenue setAdRevenuePlacement:adRevenuePlacement];
-//    [adRevenue setAdRevenueNetwork:adRevenueNetwork];
+    //    [adRevenue setAdImpressionsCountWithInteger:3];
+    //    [adRevenue setAdRevenueUnit:adRevenueUnit];
+    //    [adRevenue setAdRevenuePlacement:adRevenuePlacement];
+    //    [adRevenue setAdRevenueNetwork:adRevenueNetwork];
     // attach callback and/or partner parameter if needed
     [adRevenue addPartnerParameterWithKey:@"partner" value:@"partnerValue"];
     [adRevenue addCallbackParameterWithKey:@"callback" value:@"callbackValue"];
@@ -139,6 +156,30 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
 - (void)inactivateAdjustSDK {
     [ADJAdjust inactivateSdk];
+}
+
+- (void)addGlobalCallbackParameters {
+    [ADJAdjust addGlobalCallbackParameterWithKey:@"foo" value:@"bar"];
+}
+
+- (void)removeGlobalCallbackParameters {
+    [ADJAdjust removeGlobalCallbackParameterByKey:@"foo"];
+}
+
+- (void)clearAllGlobalCallbackParameters {
+    [ADJAdjust clearAllGlobalCallbackParameters];
+}
+
+- (void)addGlobalPartnerParameters {
+    [ADJAdjust addGlobalPartnerParameterWithKey:@"foo" value:@"bar"];
+}
+
+- (void)removeGlobalPartnerParameters {
+    [ADJAdjust removeGlobalPartnerParameterByKey:@"foo"];
+}
+
+- (void)clearAllGlobalPartnerParameters {
+    [ADJAdjust clearAllGlobalPartnerParameters];
 }
 
 @end
