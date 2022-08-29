@@ -200,10 +200,10 @@ static int const kInsertValueFieldPosition = 2;
 
 #pragma mark Internal Methods
 - (nonnull ADJNonEmptyString *)generateDeleteWhereKeySqlWithTableName:(nonnull NSString *)tableName {
-    return [[ADJNonEmptyString alloc]
-            initWithConstStringValue:
-                [NSString stringWithFormat:@"%@ = ?",
-                 kColumnKey]];
+    return [[ADJNonEmptyString alloc] initWithConstStringValue:
+            [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?",
+             tableName,
+             kColumnKey]];
 }
 static int const kDeleteKeyFieldPosition = 1;
 

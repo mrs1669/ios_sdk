@@ -106,6 +106,8 @@
     ADJNonEmptyString *_Nullable removedValue = [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove.stringValue
                                                        sqliteStorageAction:clientActionRemoveStorageActionData];
 
+
+    // TODO: Aditi, Logger condition looks wrong, probably opposite. 
     if (removedValue != nil) {
         [self.logger info:
          @"Cannot remove global %@ parameter without key being present",
