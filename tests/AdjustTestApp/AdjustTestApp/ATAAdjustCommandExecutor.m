@@ -18,11 +18,9 @@
 
 @property (nonnull, readonly, nonatomic, strong) NSString *url;
 @property (nonnull, readonly, nonatomic, strong) ATLTestLibrary *testLibrary;
-//@property (nonnull, readonly, nonatomic, strong)
-//    ATAAdjustCommandExecutor *adjustV4CommandExecutor;
+//@property (nonnull, readonly, nonatomic, strong) ATAAdjustCommandExecutor *adjustV4CommandExecutor;
 
-@property (nullable, readwrite, nonatomic, strong)
-NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
+@property (nullable, readwrite, nonatomic, strong) NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
 @property (nullable, readwrite, nonatomic, strong) NSString *extraPathTestOptions;
 
 @end
@@ -262,59 +260,48 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)addGlobalCallbackParameter {
-    /*
-     [self iterateWithKey:@"keyValuePairs"
-     source:@"add global callback"
-     keyValueBlock:
-     ^(NSString * _Nonnull key, NSString * _Nonnull value)
+    [self iterateWithKey:@"keyValuePairs"
+                  source:@"add global callback"
+           keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
      {
-     [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
-     }];
-     */
+        [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
+    }];
 }
 
 - (void)addGlobalPartnerParameter {
-    /*
-     [self iterateWithKey:@"keyValuePairs"
-     source:@"add global partner"
-     keyValueBlock:
-     ^(NSString * _Nonnull key, NSString * _Nonnull value)
+    [self iterateWithKey:@"keyValuePairs"
+                  source:@"add global partner"
+           keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
      {
-     [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
-     }];
-     */
+        [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
+    }];
 
 }
+
 - (void)removeGlobalCallbackParameter {
-    /*
-     [self iterateWithKey:@"key"
-     source:@"remove global callback"
-     keyBlock:^(NSString * _Nonnull key)
+    [self iterateWithKey:@"key"
+                  source:@"remove global callback"
+                keyBlock:^(NSString * _Nonnull key)
      {
-     [ADJAdjust removeGlobalCallbackParameterByKey:key];
-     }];
-     */
+        [ADJAdjust removeGlobalCallbackParameterByKey:key];
+    }];
 }
 
 - (void)removeGlobalPartnerParameter {
-    /*
-     [self iterateWithKey:@"key"
-     source:@"remove global partner"
-     keyBlock:^(NSString * _Nonnull key)
+    [self iterateWithKey:@"key"
+                  source:@"remove global partner"
+                keyBlock:^(NSString * _Nonnull key)
      {
-     [ADJAdjust removeGlobalPartnerParameterByKey:key];
-     }];
-     */
+        [ADJAdjust removeGlobalPartnerParameterByKey:key];
+    }];
 }
 
 - (void)clearGlobalCallbackParameters {
-    /*
-     [ADJAdjust clearAllGlobalCallbackParameters];
-     */
+    [ADJAdjust clearAllGlobalCallbackParameters];
 }
 
 - (void)clearGlobalPartnerParameters {
-    //[ADJAdjust clearAllGlobalPartnerParameters];
+    [ADJAdjust clearAllGlobalPartnerParameters];
 }
 
 - (void)setPushToken {
@@ -608,5 +595,6 @@ keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
 }
 
 @end
+
 
 
