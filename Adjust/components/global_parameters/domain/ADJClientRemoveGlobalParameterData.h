@@ -21,7 +21,7 @@ FOUNDATION_EXPORT NSString *const ADJClientRemoveGlobalParameterDataMetadataType
 NS_ASSUME_NONNULL_END
 
 @interface ADJClientRemoveGlobalParameterData : NSObject<NSCopying,
-ADJClientActionIoDataInjectable
+   ADJClientActionIoDataInjectable
 >
 // instantiation
 + (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToRemove:(nullable NSString *)keyToRemove

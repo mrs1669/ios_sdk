@@ -107,7 +107,7 @@
                                                        sqliteStorageAction:clientActionRemoveStorageActionData];
 
 
-    // TODO: Aditi, Logger condition looks wrong, probably opposite. 
+    // TODO: Aditi, Logger condition looks wrong, probably opposite.
     if (removedValue != nil) {
         [self.logger info:
          @"Cannot remove global %@ parameter without key being present",
@@ -123,7 +123,6 @@
 - (BOOL)ccClearGlobalParameterWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalParametersData
                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
          clientActionRemoveStorageActionData:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData {
-
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
@@ -209,3 +208,4 @@
 }
 
 @end
+

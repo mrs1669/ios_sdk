@@ -20,7 +20,7 @@ FOUNDATION_EXPORT NSString *const ADJClientClearGlobalParametersDataMetadataType
 NS_ASSUME_NONNULL_END
 
 @interface ADJClientClearGlobalParametersData : NSObject<NSCopying,
-ADJClientActionIoDataInjectable
+   ADJClientActionIoDataInjectable
 >
 
 // instantiation

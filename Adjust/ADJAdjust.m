@@ -130,6 +130,8 @@
     }];
 }
 
+#pragma mark Global Parameters Methods
+
 + (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key
                                     value:(nonnull NSString *)value {
     [ADJEntryRoot executeBlockInClientContext:

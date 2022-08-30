@@ -275,7 +275,7 @@
 //{
 //    [self.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
 //}
-//
+
 - (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source {
     ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
 

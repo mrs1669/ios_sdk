@@ -21,8 +21,7 @@
  */
 
 #pragma mark - Public constants
-NSString *const ADJClientAddGlobalParameterDataMetadataTypeValue =
-    @"ClientAddGlobalParameterData";
+NSString *const ADJClientAddGlobalParameterDataMetadataTypeValue = @"ClientAddGlobalParameterData";
 
 #pragma mark - Private constants
 static NSString *const kKeyToAddKey = @"keyToAdd";
@@ -30,24 +29,22 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 
 @implementation ADJClientAddGlobalParameterData
 #pragma mark Instantiation
-+ (nullable instancetype)
-    instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd
-    valueToAdd:(nullable NSString *)valueToAdd
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd
+                                                             valueToAdd:(nullable NSString *)valueToAdd
+                                                                 logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable verifiedKeyToAdd =
-        [ADJNonEmptyString instanceFromString:keyToAdd
-                             sourceDescription:@"client add global parameter key"
-                                        logger:logger];
+    [ADJNonEmptyString instanceFromString:keyToAdd
+                        sourceDescription:@"client add global parameter key"
+                                   logger:logger];
 
     if (verifiedKeyToAdd == nil) {
         return nil;
     }
 
     ADJNonEmptyString *_Nullable verifiedValueToAdd =
-        [ADJNonEmptyString instanceFromString:valueToAdd
-                             sourceDescription:@"client add global parameter value"
-                                        logger:logger];
+    [ADJNonEmptyString instanceFromString:valueToAdd
+                        sourceDescription:@"client add global parameter value"
+                                   logger:logger];
 
     if (verifiedValueToAdd == nil) {
         return nil;
@@ -57,17 +54,14 @@ static NSString *const kValueToAddKey = @"valueToAdd";
                                valueToAdd:verifiedValueToAdd];
 }
 
-+ (nullable instancetype)
-    instanceFromClientActionInjectedIoDataWithData:
-        (nonnull ADJIoData *)clientActionInjectedIoData
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+                                                                 logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable clientActionTypeValue =
-        [clientActionInjectedIoData.metadataMap
-            pairValueWithKey:ADJClientActionTypeKey];
+    [clientActionInjectedIoData.metadataMap
+     pairValueWithKey:ADJClientActionTypeKey];
     if (clientActionTypeValue == nil) {
         [logger error:@"Cannot create ClientAddGlobalParameterData"
-            " instance from client action io data without client action type value"];
+         " instance from client action io data without client action type value"];
         return nil;
     }
 
@@ -75,18 +69,18 @@ static NSString *const kValueToAddKey = @"valueToAdd";
            isEqualToString:clientActionTypeValue.stringValue])
     {
         [logger error:@"Cannot create ClientAddGlobalParameterData"
-            " instance from client action io data"
-            " with read client action type value %@"
-            " different than expected %@",
-            clientActionInjectedIoData, ADJClientAddGlobalParameterDataMetadataTypeValue];
+         " instance from client action io data"
+         " with read client action type value %@"
+         " different than expected %@",
+         clientActionInjectedIoData, ADJClientAddGlobalParameterDataMetadataTypeValue];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable keyToAdd =
-        [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToAddKey];
+    [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToAddKey];
 
     ADJNonEmptyString *_Nullable valueToAdd =
-        [clientActionInjectedIoData.propertiesMap pairValueWithKey:kValueToAddKey];
+    [clientActionInjectedIoData.propertiesMap pairValueWithKey:kValueToAddKey];
 
     return [self
             instanceFromClientWithAdjustConfigWithKeyToAdd:
@@ -102,8 +96,7 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 
 #pragma mark - Private constructors
 - (nonnull instancetype)initWithKeyToAdd:(nonnull ADJNonEmptyString *)keyToAdd
-                              valueToAdd:(nonnull ADJNonEmptyString *)valueToAdd
-{
+                              valueToAdd:(nonnull ADJNonEmptyString *)valueToAdd {
     self = [super init];
 
     _keyToAdd = keyToAdd;
@@ -114,28 +107,24 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 
 #pragma mark Public API
 #pragma mark - ADJClientActionIoDataInjectable
-- (void)injectIntoClientActionIoDataBuilder:
-    (nonnull ADJIoDataBuilder *)clientActionIoDataBuilder
-{
-    ADJStringMapBuilder *_Nonnull metadataMapBuilder =
-        clientActionIoDataBuilder.metadataMapBuilder;
+- (void)injectIntoClientActionIoDataBuilder:(nonnull ADJIoDataBuilder *)clientActionIoDataBuilder {
+    ADJStringMapBuilder *_Nonnull metadataMapBuilder = clientActionIoDataBuilder.metadataMapBuilder;
 
     // add client action type to metadata map to distinguish between add/remove/clear
     //  when handler needs to deserialize and reconstruct data
     [ADJUtilMap injectIntoIoDataBuilderMap:metadataMapBuilder
-                          key:ADJClientActionTypeKey
-                        constValue:ADJClientAddGlobalParameterDataMetadataTypeValue];
+                                       key:ADJClientActionTypeKey
+                                constValue:ADJClientAddGlobalParameterDataMetadataTypeValue];
 
-    ADJStringMapBuilder *_Nonnull propertiesMapBuilder =
-        clientActionIoDataBuilder.propertiesMapBuilder;
-
-    [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                          key:kKeyToAddKey
-                        ioValueSerializable:self.keyToAdd];
+    ADJStringMapBuilder *_Nonnull propertiesMapBuilder = clientActionIoDataBuilder.propertiesMapBuilder;
 
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                          key:kValueToAddKey
-                        ioValueSerializable:self.valueToAdd];
+                                       key:kKeyToAddKey
+                       ioValueSerializable:self.keyToAdd];
+
+    [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
+                                       key:kValueToAddKey
+                       ioValueSerializable:self.valueToAdd];
 }
 
 #pragma mark - NSCopying
@@ -147,10 +136,10 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                ADJClientAddGlobalParameterDataMetadataTypeValue,
-                    kKeyToAddKey, self.keyToAdd,
-                    kValueToAddKey, self.valueToAdd,
-                nil];
+            ADJClientAddGlobalParameterDataMetadataTypeValue,
+            kKeyToAddKey, self.keyToAdd,
+            kValueToAddKey, self.valueToAdd,
+            nil];
 }
 
 - (NSUInteger)hash {
@@ -173,8 +162,9 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 
     ADJClientAddGlobalParameterData *other = (ADJClientAddGlobalParameterData *)object;
     return [ADJUtilObj objectEquals:self.keyToAdd other:other.keyToAdd]
-        && [ADJUtilObj objectEquals:self.valueToAdd other:other.valueToAdd];
+    && [ADJUtilObj objectEquals:self.valueToAdd other:other.valueToAdd];
 }
 
 @end
+
 

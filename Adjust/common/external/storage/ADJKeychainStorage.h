@@ -10,7 +10,7 @@
 
 #import "ADJCommonBase.h"
 #import "ADJNonEmptyString.h"
-// TODO move to generic storage Component
+// TODO: move to generic storage Component
 @interface ADJKeychainStorage : ADJCommonBase
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;

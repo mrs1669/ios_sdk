@@ -31,30 +31,20 @@
  @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilder;
  @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionController *measurementSessionController;
  @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJAttributionController *attributionController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJBillingSubscriptionController *billingSubscriptionController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJLaunchedDeeplinkController *launchedDeeplinkController;
+ @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
+ @property (nonnull, readonly, strong, nonatomic) ADJBillingSubscriptionController *billingSubscriptionController;
+ @property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
  @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
  @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
  @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJGlobalCallbackParametersController *globalCallbackParametersController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJGlobalPartnerParametersController *globalPartnerParametersController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJSdkPackageSenderController *sdkPackageSenderController;
+ @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersController *globalCallbackParametersController;
+ @property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersController *globalPartnerParametersController;
+ @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSenderController *sdkPackageSenderController;
  @property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJReachabilityController *reachabilityController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJPausingController *pausingController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJThirdPartySharingController *thirdPartySharingController;
- @property (nonnull, readonly, strong, nonatomic)
- ADJClientSubscriptionsController *clientSubscriptionsController;
+ @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
+ @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
+ @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
+ @property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
  @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
  @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionController *asaAttributionController;
  */
@@ -319,6 +309,8 @@
  ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
  }
 */
+
+#pragma mark - ADJGlobalCallbackParameter
 - (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
     [self.globalCallbackParametersController
      ccAddGlobalCallbackParameterWithClientData:clientAddGlobalCallbackParameterActionData];
@@ -336,6 +328,7 @@
          clientClearGlobalCallbackParametersActionData];
 }
 
+#pragma mark - ADJGlobalPartnerParameter
 - (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData{
     [self.globalPartnerParametersController
      ccAddGlobalPartnerParameterWithClientData:clientAddGlobalPartnerParameterActionData];
@@ -345,6 +338,7 @@
     [self.globalPartnerParametersController
      ccRemoveGlobalPartnerParameterWithClientData:clientRemoveGlobalPartnerParameterActionData];
 }
+
 - (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
     [self.globalPartnerParametersController
      ccClearGlobalPartnerParameterWithClientData:clientClearGlobalPartnerParametersActionData];

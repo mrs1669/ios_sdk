@@ -114,5 +114,3 @@ sqliteController:self.sqliteController];        \
 }
 
 @end
-
-

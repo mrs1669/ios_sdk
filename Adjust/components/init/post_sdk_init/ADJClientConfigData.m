@@ -18,17 +18,13 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *defaultTracker;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *logLevel;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategy;
- @property (nullable, readonly, strong, nonatomic)
- ADJClientCustomEndpointData *clientCustomEndpointData;
+ @property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
  @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
  @property (readonly, assign, nonatomic) BOOL canSendInBackground;
- @property (nullable, readonly, strong, nonatomic)
- ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
- @property (nullable, readonly, strong, nonatomic)
- id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
- @property (nullable, readonly, strong, nonatomic)
- id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+ @property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+ @property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
  */
 
 @implementation ADJClientConfigData
@@ -114,9 +110,7 @@
                                            logger:logger];
 
     ADJClientCustomEndpointData *_Nullable clientCustomEndpointData = nil;
-    if (customEndpointPublicKeyHash != nil
-        && customEndpointUrl == nil)
-    {
+    if (customEndpointPublicKeyHash != nil && customEndpointUrl == nil) {
         [logger error:@"Cannot configure certificate pinning"
          " without a custom endpoint"];
     } else if (customEndpointUrl != nil) {
@@ -138,9 +132,8 @@
     && adjustConfig.canSendInBackgroundNumberBool.boolValue;
 
     ADJNonNegativeInt *_Nullable eventIdDeduplicationMaxCapacity =
-    [ADJNonNegativeInt
-     instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt
-     logger:logger];
+    [ADJNonNegativeInt instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt
+                                                  logger:logger];
 
     return [[self alloc] initWithAppToken:appToken
      isSandboxEnvironmentOrElseProduction:isSandboxEnvironment

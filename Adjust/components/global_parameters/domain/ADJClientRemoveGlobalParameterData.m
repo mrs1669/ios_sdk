@@ -41,7 +41,6 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
     return [[self alloc] initWithKeyToRemove:verifiedKeyToRemove];
 }
 
-
 + (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
                                                                  logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable clientActionTypeValue =
@@ -54,8 +53,7 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
     }
 
     if (! [ADJClientRemoveGlobalParameterDataMetadataTypeValue
-           isEqualToString:clientActionTypeValue.stringValue])
-    {
+           isEqualToString:clientActionTypeValue.stringValue]) {
         [logger error:@"Cannot create ClientRemoveGlobalParameterData"
          " instance from client action io data"
          " with read client action type value %@"
@@ -67,10 +65,9 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
     ADJNonEmptyString *_Nullable keyToRemove =
     [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToRemoveKey];
 
-    return [self
-            instanceFromClientWithAdjustConfigWithKeyToRemove:
-                keyToRemove != nil ? keyToRemove.stringValue : nil
-            logger:logger];
+    return [self instanceFromClientWithAdjustConfigWithKeyToRemove:
+            keyToRemove != nil ? keyToRemove.stringValue : nil
+                                                            logger:logger];
 }
 
 - (nullable instancetype)init {
@@ -90,8 +87,7 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
 #pragma mark Public API
 #pragma mark - ADJClientActionIoDataInjectable
 - (void)injectIntoClientActionIoDataBuilder:(nonnull ADJIoDataBuilder *)clientActionIoDataBuilder {
-    ADJStringMapBuilder *_Nonnull metadataMapBuilder =
-    clientActionIoDataBuilder.metadataMapBuilder;
+    ADJStringMapBuilder *_Nonnull metadataMapBuilder = clientActionIoDataBuilder.metadataMapBuilder;
 
     // add client action type to metadata map to distinguish between add/remove/clear
     //  when handler needs to deserialize and reconstruct data
@@ -99,8 +95,7 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
                                        key:ADJClientActionTypeKey
                                 constValue:ADJClientRemoveGlobalParameterDataMetadataTypeValue];
 
-    ADJStringMapBuilder *_Nonnull propertiesMapBuilder =
-    clientActionIoDataBuilder.propertiesMapBuilder;
+    ADJStringMapBuilder *_Nonnull propertiesMapBuilder = clientActionIoDataBuilder.propertiesMapBuilder;
 
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
                                        key:kKeyToRemoveKey
@@ -143,3 +138,5 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
 }
 
 @end
+
+
