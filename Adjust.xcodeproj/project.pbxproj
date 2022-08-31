@@ -145,7 +145,7 @@
 		0A7ED7002892B11B00CC20DE /* ADJAdjustAttribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 071594052886E41C00E7F2F8 /* ADJAdjustAttribution.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7012892B11B00CC20DE /* ADJAdjustLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 0715940B2886E5F800E7F2F8 /* ADJAdjustLogMessageData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7022892B11B00CC20DE /* ADJAdjustDeviceIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EF828880F3800CE57FC /* ADJAdjustDeviceIds.h */; };
-		0A7ED7032892B11B00CC20DE /* ADJAdjustPushToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EFC288810A300CE57FC /* ADJAdjustPushToken.h */; };
+		0A7ED7032892B11B00CC20DE /* ADJAdjustPushToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EFC288810A300CE57FC /* ADJAdjustPushToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7042892B11B00CC20DE /* ADJAdjustEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F802572892867A0068902F /* ADJAdjustEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7052892B11B00CC20DE /* ADJCommonBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C3287F3E2A004C7D59 /* ADJCommonBase.h */; };
 		0A7ED7062892B11B00CC20DE /* ADJNonEmptyString.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C2322885846A004C7D59 /* ADJNonEmptyString.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1597,6 +1597,7 @@
 				0A7ED7732892B11B00CC20DE /* ADJClientReturnExecutor.h in Headers */,
 				0AB23D11289E94BA008B1835 /* ADJDeviceInfoData.h in Headers */,
 				0A7ED6FC2892B11B00CC20DE /* ADJAdjustAttributionSubscriber.h in Headers */,
+				0A7ED7032892B11B00CC20DE /* ADJAdjustPushToken.h in Headers */,
 				07AA119528BE5C4700B0C8B8 /* ADJClientPushTokenData.h in Headers */,
 				0A7ED7012892B11B00CC20DE /* ADJAdjustLogMessageData.h in Headers */,
 				0A7ED6FD2892B11B00CC20DE /* ADJAdjustLogSubscriber.h in Headers */,
@@ -1625,7 +1626,6 @@
 				0A7ED6FF2892B11B00CC20DE /* ADJAdjustDeviceIdsCallback.h in Headers */,
 				0A7ED7022892B11B00CC20DE /* ADJAdjustDeviceIds.h in Headers */,
 				07AA119D28BE5F2700B0C8B8 /* ADJInfoResponseData.h in Headers */,
-				0A7ED7032892B11B00CC20DE /* ADJAdjustPushToken.h in Headers */,
 				0A7ED7052892B11B00CC20DE /* ADJCommonBase.h in Headers */,
 				0A7ED7072892B11B00CC20DE /* ADJStringMapBuilder.h in Headers */,
 				0A7ED7082892B11B00CC20DE /* ADJStringMap.h in Headers */,
