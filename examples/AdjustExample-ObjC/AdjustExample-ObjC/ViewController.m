@@ -48,7 +48,9 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
                          @"Clear All Global Callback Parameters",
                          @"Add Global Partner Parameters",
                          @"Remove Global Partner Parameters",
-                         @"Clear All Global Partner Parameters",nil];
+                         @"Clear All Global Partner Parameters",
+                         @"Track Push Token",
+                         nil];
 }
 
 
@@ -110,6 +112,9 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
             break;
         case 11:
             [self clearAllGlobalPartnerParameters];
+            break;
+        case 12:
+            [self trackPushToken];
             break;
         default :
             NSLog(@"No functionality has been added.");
@@ -180,6 +185,12 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
 - (void)clearAllGlobalPartnerParameters {
     [ADJAdjust clearAllGlobalPartnerParameters];
+}
+
+- (void)trackPushToken {
+    ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc]
+                                                    initWithStringPushToken:@"965b251c6cb1926de3cb366fdfb16ddde6b9086a 8a3cac9e5f857679376eab7C"];
+    [ADJAdjust trackPushToken:adjustPushToken];
 }
 
 @end
