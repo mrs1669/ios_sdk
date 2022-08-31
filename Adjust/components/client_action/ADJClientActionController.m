@@ -100,12 +100,12 @@
                        clientActionHandlerId:ADJEventControllerClientActionHandlerId];
 }
 
-/*
- - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
- [self ccSaveClientActionWithIoInjectable:clientPushTokenData
- clientActionHandlerId:ADJPushTokenControllerClientActionHandlerId];
- }
+- (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
+    [self ccSaveClientActionWithIoInjectable:clientPushTokenData
+                       clientActionHandlerId:ADJPushTokenControllerClientActionHandlerId];
+}
 
+/*
  - (void)ccTrackThirdPartySharingWithClientData:
  (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
  {

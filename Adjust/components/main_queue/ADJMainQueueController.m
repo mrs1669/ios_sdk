@@ -152,21 +152,18 @@
     }];
 }
 
-/*
- - (void)
- addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
- {
- __typeof(self) __weak weakSelf = self;
- [self.executor executeInSequenceWithBlock:^{
- __typeof(weakSelf) __strong strongSelf = weakSelf;
- if (strongSelf == nil) { return; }
+- (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
+                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
- [strongSelf addSdkPackageToSendWithData:infoPackageData
- sqliteStorageAction:sqliteStorageAction];
- }];
- }
- */
+        [strongSelf addSdkPackageToSendWithData:infoPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    }];
+}
+
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
@@ -178,6 +175,7 @@
                             sqliteStorageAction:sqliteStorageAction];
     }];
 }
+
 /*
  - (void)
  addThirdPartySharingPackageToSendWithData:

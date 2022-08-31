@@ -30,8 +30,10 @@
  #import "ADJClientBillingSubscriptionData.h"
  #import "ADJClickPackageData.h"
  #import "ADJClientLaunchedDeeplinkData.h"
+ */
  #import "ADJInfoPackageData.h"
  #import "ADJClientPushTokenData.h"
+/*
  #import "ADJLogPackageData.h"
  */
 #import "ADJSessionPackageData.h"
@@ -83,11 +85,10 @@
  buildAsaAttributionClickWithToken:
  (nonnull ADJNonEmptyString *)asaAttibutionToken
  asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
-
- - (nonnull ADJInfoPackageData *)
- buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
+*/
+- (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
+                                                  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+/*
  - (nonnull ADJLogPackageData *)
  buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
  logLevel:(nonnull NSString *)logLevel

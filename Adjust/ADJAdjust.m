@@ -89,6 +89,29 @@
     }];
 }
 
++ (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionsWithSource:@"trackPushToken"];
+
+        if (clientActionsAPI == nil) {
+            return;
+        }
+
+        ADJClientPushTokenData *_Nullable clientPushTokenData =
+            [ADJClientPushTokenData instanceFromClientWithAdjustPushToken:adjustPushToken
+                                                                    logger:apiLogger];
+
+        if (clientPushTokenData == nil) {
+            return;
+        }
+
+        [clientActionsAPI ccTrackPushTokenWithClientData:clientPushTokenData];
+    }];
+}
+
 #pragma mark Lifecycle Methods
 + (void)appWentToTheForegroundManualCall {
     [ADJEntryRoot executeBlockInClientContext:

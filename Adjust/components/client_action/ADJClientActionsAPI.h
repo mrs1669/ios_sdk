@@ -13,11 +13,11 @@
 #import "ADJClientAddGlobalParameterData.h"
 #import "ADJClientRemoveGlobalParameterData.h"
 #import "ADJClientClearGlobalParametersData.h"
+#import "ADJClientPushTokenData.h"
 
 /*
  #import "ADJClientBillingSubscriptionData.h"
  #import "ADJClientLaunchedDeeplinkData.h"
- #import "ADJClientPushTokenData.h"
 
  #import "ADJClientThirdPartySharingData.h"
  */
@@ -27,6 +27,8 @@
 
 - (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
 
+- (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
+
 
 /*
 
@@ -35,8 +37,6 @@
 
  - (void)ccTrackLaunchedDeeplinkWithClientData:
  (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
-
- - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
 
  - (void)ccTrackThirdPartySharingWithClientData:
  (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;

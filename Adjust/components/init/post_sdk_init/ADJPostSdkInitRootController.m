@@ -297,11 +297,11 @@
     [self.eventController ccTrackEventWithClientData:clientEventData];
 }
 
-/*
- - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
- [self.pushTokenController ccTrackPushTokenWithClientData:clientPushTokenData];
- }
+- (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
+    [self.pushTokenController ccTrackPushTokenWithClientData:clientPushTokenData];
+}
 
+/*
  - (void)ccTrackThirdPartySharingWithClientData:
  (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
  {

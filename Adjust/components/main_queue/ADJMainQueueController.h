@@ -27,18 +27,18 @@
  #import "ADJClickPackageData.h"
  */
 #import "ADJEventPackageData.h"
+#import "ADJInfoResponseData.h"
 /*
- #import "ADJInfoResponseData.h"
  #import "ADJThirdPartySharingPackageData.h"
  */
 #import "ADJSessionPackageData.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
-ADJSdkResponseCallbackSubscriber,
+  ADJSdkResponseCallbackSubscriber,
 // subscriptions
-ADJSdkInitSubscriber,
-ADJPausingSubscriber,
-ADJOfflineSubscriber
+  ADJSdkInitSubscriber,
+  ADJPausingSubscriber,
+  ADJOfflineSubscriber
 >
 - (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
                                    pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
@@ -74,11 +74,9 @@ ADJOfflineSubscriber
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
-/*
- - (void)
- addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
- */
+- (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
+                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 /*

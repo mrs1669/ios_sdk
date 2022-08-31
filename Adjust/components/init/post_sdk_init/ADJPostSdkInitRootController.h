@@ -28,9 +28,9 @@
  #import "ADJAttributionController.h"
  #import "ADJBillingSubscriptionController.h"
  #import "ADJLaunchedDeeplinkController.h"
- #import "ADJPushTokenController.h"
  #import "ADJKeepAliveController.h"
  */
+#import "ADJPushTokenController.h"
 #import "ADJReachabilityController.h"
 #import "ADJPausingController.h"
 /*
@@ -68,13 +68,13 @@
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
 @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
+@property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
 
 
 /*
  @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
  @property (nonnull, readonly, strong, nonatomic) ADJBillingSubscriptionController *billingSubscriptionController;
  @property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
- @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
  @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
  */
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersController *globalCallbackParametersController;

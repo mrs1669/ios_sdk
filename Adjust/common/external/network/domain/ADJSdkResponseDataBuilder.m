@@ -18,8 +18,6 @@
  #import "ADJClickResponseData.h"
  #import "ADJGdprForgetPackageData.h"
  #import "ADJGdprForgetResponseData.h"
- #import "ADJInfoPackageData.h"
- #import "ADJInfoResponseData.h"
  #import "ADJLogPackageData.h"
  #import "ADJLogResponseData.h"
  */
@@ -29,6 +27,8 @@
 #import "ADJEventResponseData.h"
 #import "ADJAdRevenuePackageData.h"
 #import "ADJAdRevenueResponseData.h"
+#import "ADJInfoResponseData.h"
+#import "ADJInfoPackageData.h"
 
 /*
  #import "ADJThirdPartySharingPackageData.h"
@@ -41,8 +41,7 @@
 /* .h
  @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
  @property (nonnull, readonly, strong, nonatomic) ADJStringMapBuilder *sendingParameters;
- @property (nonnull, readonly, strong, nonatomic)
- id<ADJSdkResponseCallbackSubscriber> sourceCallback;
+ @property (nonnull, readonly, strong, nonatomic) id<ADJSdkResponseCallbackSubscriber> sourceCallback;
  @property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
  */
 
@@ -137,12 +136,12 @@ logger:logger];                                             \
      billingSubscriptionPackageData)
      tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
      tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
-     tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
      tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
      */
     tryBuildResponse(ADJSessionPackageData, ADJSessionResponseData, sessionPackageData)
     tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
     tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
+    tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
 
     /*
      tryBuildResponse(ADJThirdPartySharingPackageData,

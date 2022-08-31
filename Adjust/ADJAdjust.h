@@ -10,6 +10,7 @@
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
 #import "ADJAdjustAdRevenue.h"
+#import "ADJAdjustPushToken.h"
 
 @interface ADJAdjust : NSObject
 
@@ -22,6 +23,8 @@
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
 
 + (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue;
+
++ (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken;
 
 + (void)inactivateSdk;
 + (void)reactivateSdk;
