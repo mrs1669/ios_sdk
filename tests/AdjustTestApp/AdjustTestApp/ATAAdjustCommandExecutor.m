@@ -305,14 +305,12 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)setPushToken {
-    /*
-     NSString *_Nullable pushToken = [self firstParameterValueWithKey:@"pushToken"];
+    NSString *_Nullable pushToken = [self firstParameterValueWithKey:@"pushToken"];
 
-     ADJAdjustPushToken *_Nonnull adjustPushToken =
-     [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
+    ADJAdjustPushToken *_Nonnull adjustPushToken =
+    [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
 
-     [ADJAdjust trackPushToken:adjustPushToken];
-     */
+    [ADJAdjust trackPushToken:adjustPushToken];
 }
 
 - (void)openDeeplink {
