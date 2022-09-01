@@ -106,6 +106,8 @@ NSString *const ADJParamEventCurrencyKey = @"currency";
 
 // info
 NSString *const ADJParamPushTokenKey = @"push_token";
+NSString *const ADJParamPushTokenSourceKey = @"source";
+NSString *const ADJParamPushTokenSourceValue = @"push";
 
 // log
 NSString *const ADJParamLogMessageKey = @"log_message";

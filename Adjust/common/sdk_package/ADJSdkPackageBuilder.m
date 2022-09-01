@@ -294,12 +294,11 @@
                          packageParamValueSerializable:clientPushTokenData.pushTokenString];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamPushTokenKey
-                         packageParamValueSerializable:clientPushTokenData.pushTokenString];
+                                                   key:ADJParamPushTokenSourceKey
+                                            constValue:ADJParamPushTokenSourceValue];
 
-    ADJStringMap *_Nonnull parameters =
-    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
-                                                       path:ADJInfoPackageDataPath];
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJInfoPackageDataPath];
 
     return [[ADJInfoPackageData alloc] initWithClientSdk:self.clientSdk
                                               parameters:parameters];
