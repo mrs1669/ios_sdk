@@ -75,8 +75,7 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
 }
 
 #pragma mark - Private constructors
-+ (nonnull NSArray<NSString *> *)baseUrlChoicesWithUrlStrategy:
-(nullable NSString *)adjustUrlStrategy {
++ (nonnull NSArray<NSString *> *)baseUrlChoicesWithUrlStrategy:(nullable NSString *)adjustUrlStrategy {
     if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
         return @[kBaseUrlIndia, kBaseUrl];
     }
@@ -88,8 +87,7 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
     return @[kBaseUrl, kBaseUrlIndia, kBaseUrlChina];
 }
 
-+ (nonnull NSArray<NSString *> *)gdprUrlChoicesWithUrlStrategy:
-(nullable NSString *)adjustUrlStrategy {
++ (nonnull NSArray<NSString *> *)gdprUrlChoicesWithUrlStrategy:(nullable NSString *)adjustUrlStrategy {
     if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
         return @[kGdprUrlIndia, kGdprUrl];
     }
@@ -101,8 +99,7 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
     return @[kGdprUrl, kGdprUrlIndia, kGdprUrlChina];
 }
 
-+ (nonnull NSArray<NSString *> *)subscriptionUrlChoicesWithUrlStrategy:
-(nullable NSString *)adjustUrlStrategy {
++ (nonnull NSArray<NSString *> *)subscriptionUrlChoicesWithUrlStrategy:(nullable NSString *)adjustUrlStrategy {
     if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
         return @[kSubscriptionUrlIndia, kSubscriptionUrl];
     }

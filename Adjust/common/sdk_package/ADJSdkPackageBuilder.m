@@ -285,25 +285,27 @@
                                                parameters:parameters];
 }
 
-/** /
- - (nonnull ADJInfoPackageData *)
- buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJInfoPackageDataPath];
+- (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
+                                                  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJInfoPackageDataPath];
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamPushTokenKey
- packageParamValueSerializable:clientPushTokenData.pushTokenString];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamPushTokenKey
+                         packageParamValueSerializable:clientPushTokenData.pushTokenString];
 
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJInfoPackageDataPath];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamPushTokenKey
+                         packageParamValueSerializable:clientPushTokenData.pushTokenString];
 
- return [[ADJInfoPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJInfoPackageDataPath];
+
+    return [[ADJInfoPackageData alloc] initWithClientSdk:self.clientSdk
+                                              parameters:parameters];
+}
+
+/*
 
  - (nonnull ADJLogPackageData *)
  buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage

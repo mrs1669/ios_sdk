@@ -157,12 +157,12 @@
                                                eventDeduplicationStorage:storageRootController.eventDeduplicationStorage
                                                      mainQueueController:self.mainQueueController
                                            maxCapacityEventDeduplication:clientConfigData.eventIdDeduplicationMaxCapacity];
-    /*
-     _pushTokenController = [[ADJPushTokenController alloc]
-     initWithLoggerFactory:loggerFactory
-     sdkPackageBuilder:self.sdkPackageBuilder
-     mainQueueController:self.mainQueueController];
 
+    _pushTokenController = [[ADJPushTokenController alloc]initWithLoggerFactory:loggerFactory
+                                                              sdkPackageBuilder:self.sdkPackageBuilder
+                                                            mainQueueController:self.mainQueueController];
+
+     /*
      _keepAliveController =
      [[ADJKeepAliveController alloc]
      initWithLoggerFactory:loggerFactory

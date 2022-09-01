@@ -18,11 +18,12 @@
 #import "ADJBillingSubscriptionPackageData.h"
 #import "ADJClickPackageData.h"
 #import "ADJGdprForgetPackageData.h"
-#import "ADJInfoPackageData.h"
+
 #import "ADJLogPackageData.h"
  */
 #import "ADJSessionPackageData.h"
 #import "ADJEventPackageData.h"
+#import "ADJInfoPackageData.h"
 
 //#import "ADJThirdPartySharingPackageData.h"
 
@@ -96,11 +97,11 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     pathToPackage(ADJBillingSubscriptionPackageData)
     pathToPackage(ADJClickPackageData)
     pathToPackage(ADJGdprForgetPackageData)
-    pathToPackage(ADJInfoPackageData)
     pathToPackage(ADJLogPackageData)
  */
     pathToPackage(ADJSessionPackageData)
     pathToPackage(ADJEventPackageData)
+    pathToPackage(ADJInfoPackageData)
 
     //pathToPackage(ADJThirdPartySharingPackageData)
 
