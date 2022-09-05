@@ -22,13 +22,13 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAdRevenueController : ADJCommonBase <ADJClientActionHandler>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 // public api
 - (void)ccTrackAdRevenueWithClientData:
-    (nonnull ADJClientAdRevenueData *)clientAdRevenueData;
+(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
 
 @end
+
