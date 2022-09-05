@@ -14,6 +14,9 @@
 #import "ADJIoDataBuilder.h"
 #import "ADJClientActionHandler.h"
 #import "ADJAdRevenueController.h"
+#import "ADJGlobalCallbackParametersController.h"
+#import "ADJGlobalPartnerParametersController.h"
+#import "ADJClientActionRemoveStorageAction.h"
 
 /*
  #import "ADJBillingSubscriptionController.h"
@@ -22,9 +25,6 @@
 #import "ADJEventController.h"
 /*
  #import "ADJPushTokenController.h"
- #import "ADJGlobalCallbackParametersController.h"
- #import "ADJGlobalPartnerParametersController.h"
- #import "ADJClientActionRemoveStorageAction.h"
  #import "ADJThirdPartySharingController.h"
  */
 
@@ -116,32 +116,32 @@
 
 - (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
     [self ccSaveClientActionWithIoInjectable:clientAddGlobalCallbackParameterActionData
-     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
 }
 
 - (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
     [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalCallbackParameterActionData
-     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
 }
 
 - (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
     [self ccSaveClientActionWithIoInjectable:clientClearGlobalCallbackParametersActionData
-     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
 }
 
 - (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData {
     [self ccSaveClientActionWithIoInjectable:clientAddGlobalPartnerParameterActionData
-     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
 
 - (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
     [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalPartnerParameterActionData
-     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
 
 - (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
     [self ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
-     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
 
 
@@ -234,15 +234,13 @@
             continue;
         }
 
-        //        ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =
-        //            [[ADJClientActionRemoveStorageAction alloc]
-        //                 initWithClientActionStorage:clientActionStorage
-        //                 elementPosition:elementPosition];
-        //
-        //        [clientActionHandler
-        //            ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
-        //            apiTimestamp:clientActionData.apiTimestamp
-        //            clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+        ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction = [[ADJClientActionRemoveStorageAction alloc]
+                                                                                        initWithClientActionStorage:clientActionStorage
+                                                                                        elementPosition:elementPosition];
+
+        [clientActionHandler ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
+                                                                   apiTimestamp:clientActionData.apiTimestamp
+                                                clientActionRemoveStorageAction:clientActionRemoveStorageAction];
     }
 }
 
@@ -268,22 +266,21 @@
     if ([ADJEventControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.eventController;
     }
+
+    if ([ADJGlobalCallbackParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.globalCallbackParametersController;
+    }
+
+    if ([ADJGlobalPartnerParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.globalPartnerParametersController;
+    }
     /*
      if ([ADJPushTokenControllerClientActionHandlerId
      isEqualToString:clientActionHandlerId.stringValue])
      {
      return postSdkInitRootController.pushTokenController;
      }
-     if ([ADJGlobalCallbackParametersControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.globalCallbackParametersController;
-     }
-     if ([ADJGlobalPartnerParametersControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.globalPartnerParametersController;
-     }
+
      if ([ADJThirdPartySharingControllerClientActionHandlerId
      isEqualToString:clientActionHandlerId.stringValue])
      {
@@ -295,6 +292,7 @@
 }
 
 @end
+
 
 
 
