@@ -20,12 +20,12 @@
 
 @interface ADJPausingController : ADJCommonBase<
 // subscriptions
-ADJPublishingGateSubscriber,
-ADJOfflineSubscriber,
-ADJReachabilitySubscriber,
-ADJLifecycleSubscriber,
-ADJMeasurementSessionStartSubscriber,
-ADJSdkActiveSubscriber
+    ADJPublishingGateSubscriber,
+    ADJOfflineSubscriber,
+    ADJReachabilitySubscriber,
+    ADJLifecycleSubscriber,
+    ADJMeasurementSessionStartSubscriber,
+    ADJSdkActiveSubscriber
 >
 - (void)ccSubscribeToPublishersWithPublishingGate:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
                                  offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher

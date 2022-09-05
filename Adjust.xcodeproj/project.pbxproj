@@ -102,6 +102,8 @@
 		07AA119A28BE5D7E00B0C8B8 /* ADJInfoPackageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07AA119828BE5D7E00B0C8B8 /* ADJInfoPackageData.m */; };
 		07AA119D28BE5F2700B0C8B8 /* ADJInfoResponseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07AA119B28BE5F2700B0C8B8 /* ADJInfoResponseData.h */; };
 		07AA119E28BE5F2700B0C8B8 /* ADJInfoResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07AA119C28BE5F2700B0C8B8 /* ADJInfoResponseData.m */; };
+		07C5524428C227AB002EB58A /* ADJClientActionRemoveStorageAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C5524228C227AB002EB58A /* ADJClientActionRemoveStorageAction.h */; };
+		07C5524528C227AB002EB58A /* ADJClientActionRemoveStorageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C5524328C227AB002EB58A /* ADJClientActionRemoveStorageAction.m */; };
 		07C6204A28B76D1900404236 /* ADJClientClearGlobalParametersData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C6204828B76D1900404236 /* ADJClientClearGlobalParametersData.h */; };
 		07C6204B28B76D1900404236 /* ADJClientClearGlobalParametersData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C6204928B76D1900404236 /* ADJClientClearGlobalParametersData.m */; };
 		07C6204E28B76EF700404236 /* ADJGlobalPartnerParametersController.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C6204C28B76EF700404236 /* ADJGlobalPartnerParametersController.h */; };
@@ -518,6 +520,8 @@
 		07AA119828BE5D7E00B0C8B8 /* ADJInfoPackageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInfoPackageData.m; sourceTree = "<group>"; };
 		07AA119B28BE5F2700B0C8B8 /* ADJInfoResponseData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInfoResponseData.h; sourceTree = "<group>"; };
 		07AA119C28BE5F2700B0C8B8 /* ADJInfoResponseData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInfoResponseData.m; sourceTree = "<group>"; };
+		07C5524228C227AB002EB58A /* ADJClientActionRemoveStorageAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClientActionRemoveStorageAction.h; sourceTree = "<group>"; };
+		07C5524328C227AB002EB58A /* ADJClientActionRemoveStorageAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClientActionRemoveStorageAction.m; sourceTree = "<group>"; };
 		07C6204828B76D1900404236 /* ADJClientClearGlobalParametersData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClientClearGlobalParametersData.h; sourceTree = "<group>"; };
 		07C6204928B76D1900404236 /* ADJClientClearGlobalParametersData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClientClearGlobalParametersData.m; sourceTree = "<group>"; };
 		07C6204C28B76EF700404236 /* ADJGlobalPartnerParametersController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJGlobalPartnerParametersController.h; sourceTree = "<group>"; };
@@ -1397,15 +1401,15 @@
 		6F5B3E65288AE06C008539DD /* client_action */ = {
 			isa = PBXGroup;
 			children = (
+				07F80260289288950068902F /* domain */,
 				6F5B3E67288AE079008539DD /* ADJClientActionsAPI.h */,
 				0AA5A5E12893D92900CD9EA1 /* ADJClientActionHandler.h */,
-				07C5525C28C63567002EB58A /* ADJClientActionRemoveStorageAction.h */,
-				07C5525D28C63567002EB58A /* ADJClientActionRemoveStorageAction.m */,
-				07F80260289288950068902F /* domain */,
 				0AA5A5D52893D32C00CD9EA1 /* ADJClientActionController.h */,
 				0AA5A5D62893D32C00CD9EA1 /* ADJClientActionController.m */,
 				0AA5A5D92893D4AB00CD9EA1 /* ADJClientActionStorage.h */,
 				0AA5A5DA2893D4AB00CD9EA1 /* ADJClientActionStorage.m */,
+				07C5524228C227AB002EB58A /* ADJClientActionRemoveStorageAction.h */,
+				07C5524328C227AB002EB58A /* ADJClientActionRemoveStorageAction.m */,
 			);
 			path = client_action;
 			sourceTree = "<group>";
@@ -1643,6 +1647,7 @@
 				0A7ED7142892B11B00CC20DE /* ADJUtilF.h in Headers */,
 				0A7ED7152892B11B00CC20DE /* ADJUtilObj.h in Headers */,
 				0781AE5928B76AD600818672 /* ADJGlobalCallbackParametersController.h in Headers */,
+				07C5524428C227AB002EB58A /* ADJClientActionRemoveStorageAction.h in Headers */,
 				0A7ED7162892B11B00CC20DE /* ADJConstants.h in Headers */,
 				07DD775728B4EE24005A2245 /* ADJAdRevenueController.h in Headers */,
 				0A7ED7172892B11B00CC20DE /* ADJUtilConv.h in Headers */,
@@ -2019,6 +2024,7 @@
 				6FAC5704288FE8900070F564 /* ADJSdkPackageSenderPinningDelegate.m in Sources */,
 				6F214E60288AA43F002319D7 /* ADJPostSdkInitRootController.m in Sources */,
 				07F8025F289287B30068902F /* ADJClientEventData.m in Sources */,
+				07C5524528C227AB002EB58A /* ADJClientActionRemoveStorageAction.m in Sources */,
 				0737C2352885846A004C7D59 /* ADJNonEmptyString.m in Sources */,
 				0724D53528995F4F0050E2C4 /* ADJEventDeduplicationData.m in Sources */,
 				0737C1FE287F3E2A004C7D59 /* ADJConstants.m in Sources */,

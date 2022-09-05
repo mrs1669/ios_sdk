@@ -18,7 +18,6 @@
 /*
  #import "ADJClientBillingSubscriptionData.h"
  #import "ADJClientLaunchedDeeplinkData.h"
-
  #import "ADJClientThirdPartySharingData.h"
  */
 @protocol ADJClientActionsAPI <NSObject>

@@ -23,8 +23,9 @@
  #import "ADJLaunchedDeeplinkController.h"
  */
 #import "ADJEventController.h"
+#import "ADJPushTokenController.h"
+#import "ADJClientActionRemoveStorageAction.h"
 /*
- #import "ADJPushTokenController.h"
  #import "ADJThirdPartySharingController.h"
  */
 
@@ -169,18 +170,15 @@
         return;
     }
 
-    ADJIoDataBuilder *_Nonnull ioDataBuilder =
-    [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:
-     ADJClientActionDataMetadataTypeValue];
+    ADJIoDataBuilder *_Nonnull ioDataBuilder = [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:
+                                                ADJClientActionDataMetadataTypeValue];
 
     [clientActionIoDataInjectable injectIntoClientActionIoDataBuilder:ioDataBuilder];
 
-    ADJClientActionData *_Nonnull clientActionData =
-    [[ADJClientActionData alloc]
-     initWithClientActionHandlerId:
-         [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
-     nowTimestamp:nowTimestamp
-     ioDataBuilder:ioDataBuilder];
+    ADJClientActionData *_Nonnull clientActionData = [[ADJClientActionData alloc] initWithClientActionHandlerId:
+                                                      [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
+                                                                                                   nowTimestamp:nowTimestamp
+                                                                                                  ioDataBuilder:ioDataBuilder];
 
     [clientActionStorage enqueueElementToLast:clientActionData
                           sqliteStorageAction:nil];
@@ -274,13 +272,11 @@
     if ([ADJGlobalPartnerParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.globalPartnerParametersController;
     }
-    /*
-     if ([ADJPushTokenControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.pushTokenController;
-     }
 
+    if ([ADJPushTokenControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.pushTokenController;
+    }
+    /*
      if ([ADJThirdPartySharingControllerClientActionHandlerId
      isEqualToString:clientActionHandlerId.stringValue])
      {
@@ -292,7 +288,3 @@
 }
 
 @end
-
-
-
-
