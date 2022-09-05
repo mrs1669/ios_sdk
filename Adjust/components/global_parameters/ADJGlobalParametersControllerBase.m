@@ -107,14 +107,11 @@
                                                        sqliteStorageAction:clientActionRemoveStorageActionData];
 
 
-    // TODO: Aditi, Logger condition looks wrong, probably opposite.
     if (removedValue != nil) {
-        [self.logger info:
-         @"Cannot remove global %@ parameter without key being present",
-         self.globalParametersType];
+        [self.logger info: @"Removed global %@ parameter", self.globalParametersType];
     } else {
-        [self.logger info:
-         @"Removed global %@ parameter", self.globalParametersType];
+        [self.logger info: @"Cannot remove global %@ parameter without key being present",
+         self.globalParametersType];
     }
 
     return YES;
@@ -126,8 +123,7 @@
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
-        [self.logger error:
-         @"Cannot clear global %@ parameters without a reference to storage",
+        [self.logger error:@"Cannot clear global %@ parameters without a reference to storage",
          self.globalParametersType];
         return NO;
     }
@@ -208,4 +204,5 @@
 }
 
 @end
+
 
