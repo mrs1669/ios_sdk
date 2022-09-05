@@ -24,10 +24,9 @@ NSString *const ADJAdRevenueControllerClientActionHandlerId = @"AdRevenueControl
 
 @implementation ADJAdRevenueController
 #pragma mark Instantiation
-- (nonnull instancetype)
-initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
     self = [super initWithLoggerFactory:loggerFactory source:@"AdRevenueController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
@@ -48,16 +47,12 @@ mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
     return ! isPreFirstSession;
 }
 
-- (void)
-ccHandleClientActionWithClientActionIoInjectedData:
-(nonnull ADJIoData *)clientActionIoInjectedData
-apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-clientActionRemoveStorageAction:
-(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
-    ADJClientAdRevenueData *_Nullable clientAdRevenueData =
-    [ADJClientAdRevenueData
-     instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-     logger:self.logger];
+- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+    ADJClientAdRevenueData *_Nullable clientAdRevenueData = [ADJClientAdRevenueData
+                                                             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+                                                             logger:self.logger];
 
     if (clientAdRevenueData == nil) {
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
@@ -72,8 +67,7 @@ clientActionRemoveStorageAction:
 #pragma mark Internal Methods
 - (void)trackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
                         apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-     clientActionRemoveStorageAction:
-(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+     clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger error:@"Cannot Track Ad Revenue"
@@ -97,7 +91,9 @@ clientActionRemoveStorageAction:
                                        apiTimestamp:apiTimestamp];
 
     [mainQueueController addAdRevenuePackageToSendWithData:adRevenuePackageData
-     sqliteStorageAction:clientActionRemoveStorageAction];
+                                       sqliteStorageAction:clientActionRemoveStorageAction];
 }
 
 @end
+
+

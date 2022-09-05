@@ -13,8 +13,9 @@
 #import "ADJClientActionIoDataInjectable.h"
 #import "ADJIoDataBuilder.h"
 #import "ADJClientActionHandler.h"
+#import "ADJAdRevenueController.h"
+
 /*
- #import "ADJAdRevenueController.h"
  #import "ADJBillingSubscriptionController.h"
  #import "ADJLaunchedDeeplinkController.h"
  */
@@ -248,12 +249,11 @@
 
 - (nullable id<ADJClientActionHandler>)clientActionHandlerWithId:(nonnull ADJNonEmptyString *)clientActionHandlerId
                                        postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController {
+
+    if ([ADJAdRevenueControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.adRevenueController;
+    }
     /*
-     if ([ADJAdRevenueControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.adRevenueController;
-     }
      if ([ADJBillingSubscriptionControllerClientActionHandlerId
      isEqualToString:clientActionHandlerId.stringValue])
      {
@@ -265,9 +265,7 @@
      return postSdkInitRootController.launchedDeeplinkController;
      }
      */
-    if ([ADJEventControllerClientActionHandlerId
-         isEqualToString:clientActionHandlerId.stringValue])
-    {
+    if ([ADJEventControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.eventController;
     }
     /*
@@ -297,5 +295,6 @@
 }
 
 @end
+
 
 
