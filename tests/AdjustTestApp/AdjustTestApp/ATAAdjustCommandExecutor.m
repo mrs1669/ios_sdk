@@ -314,14 +314,11 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)openDeeplink {
-    /*
-     NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
+    NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
 
-     ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
-     [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
+    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
 
-     [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
-     */
+    [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)gdprForgetMe {
