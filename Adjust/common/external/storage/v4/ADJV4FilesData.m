@@ -15,12 +15,9 @@
 /* .h
  @property (nullable, readonly, strong, nonatomic) ADJV4ActivityState *v4ActivityState;
  @property (nullable, readonly, strong, nonatomic) ADJV4Attribution *v4Attribution;
- @property (nullable, readonly, strong, nonatomic)
- NSArray<ADJV4ActivityPackage *> *v4ActivityPackageArray;
- @property (nullable, readonly, strong, nonatomic)
- NSDictionary<NSString *, NSString *> *v4SessionCallbackParameters;
- @property (nullable, readonly, strong, nonatomic)
- NSDictionary<NSString *, NSString *> *v4SessionPartnerParameters;
+ @property (nullable, readonly, strong, nonatomic) NSArray<ADJV4ActivityPackage *> *v4ActivityPackageArray;
+ @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSString *> *v4SessionCallbackParameters;
+ @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSString *> *v4SessionPartnerParameters;
  */
 
 @implementation ADJV4FilesData
