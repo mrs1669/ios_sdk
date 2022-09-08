@@ -195,33 +195,25 @@
  }
  */
 
-/** /
- - (nonnull ADJClickPackageData *)
- buildLaunchedDeeplinkClickWithClientData:
- (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJClickPackageDataPath
- apiTimestamp:apiTimestamp];
+- (nonnull ADJClickPackageData *)buildLaunchedDeeplinkClickWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
+                                                             apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJClickPackageDataPath
+                                                                                 apiTimestamp:apiTimestamp];
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamClickSourceKey
- constValue:ADJParamDeeplinkClickSourceValue];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamClickSourceKey
+                                            constValue:ADJParamDeeplinkClickSourceValue];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamDeeplinkKey
- packageParamValueSerializable:clientLaunchedDeeplinkData.launchedDeeplink];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamDeeplinkKey
+                         packageParamValueSerializable:clientLaunchedDeeplinkData.launchedDeeplink];
 
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJClickPackageDataPath];
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJClickPackageDataPath];
 
- return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+    return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
+                                               parameters:parameters];
+}
 
 /** /
  - (nonnull ADJClickPackageData *)
@@ -761,8 +753,7 @@
 
 - (nonnull ADJStringMap *)publishAndGenerateParametersWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                                        path:(nonnull NSString *)path {
-    ADJStringMap *_Nonnull prePublishingParameters =
-    [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder];
+    ADJStringMap *_Nonnull prePublishingParameters = [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder];
 
     if (! self.sdkPackageCreatingPublisher.hasSubscribers) {
         return prePublishingParameters;

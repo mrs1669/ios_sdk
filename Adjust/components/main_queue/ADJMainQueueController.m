@@ -124,21 +124,19 @@
  sqliteStorageAction:sqliteStorageAction];
  }];
  }
-
- - (void)
- addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
- {
- __typeof(self) __weak weakSelf = self;
- [self.executor executeInSequenceWithBlock:^{
- __typeof(weakSelf) __strong strongSelf = weakSelf;
- if (strongSelf == nil) { return; }
-
- [strongSelf addSdkPackageToSendWithData:clickPackageData
- sqliteStorageAction:sqliteStorageAction];
- }];
- }
  */
+
+- (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        [strongSelf addSdkPackageToSendWithData:clickPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    }];
+}
 
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {

@@ -24,8 +24,8 @@
 
 /*
  #import "ADJBillingSubscriptionPackageData.h"
- #import "ADJClickPackageData.h"
  */
+#import "ADJClickPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJInfoResponseData.h"
 /*
@@ -61,15 +61,13 @@
 
 /*
 
- - (void)
- addBillingSubscriptionPackageToSendWithData:
+ - (void)addBillingSubscriptionPackageToSendWithData:
  (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
-
- - (void)
- addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
  */
+
+- (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
@@ -80,14 +78,12 @@
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 /*
- - (void)
- addThirdPartySharingPackageToSendWithData:
+ - (void)addThirdPartySharingPackageToSendWithData:
  (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
  */
 - (nonnull NSString *)defaultTargetUrl;
 
 @end
-
 
 

@@ -14,10 +14,10 @@
 #import "ADJClientRemoveGlobalParameterData.h"
 #import "ADJClientClearGlobalParametersData.h"
 #import "ADJClientPushTokenData.h"
+#import "ADJClientLaunchedDeeplinkData.h"
 
 /*
  #import "ADJClientBillingSubscriptionData.h"
- #import "ADJClientLaunchedDeeplinkData.h"
  #import "ADJClientThirdPartySharingData.h"
  */
 @protocol ADJClientActionsAPI <NSObject>
@@ -34,12 +34,11 @@
  - (void)ccTrackBillingSubscriptionWithClientData:
  (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;
 
- - (void)ccTrackLaunchedDeeplinkWithClientData:
- (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
-
  - (void)ccTrackThirdPartySharingWithClientData:
  (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
  */
+
+- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
 
 - (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData;
 - (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData;

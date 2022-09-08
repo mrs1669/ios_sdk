@@ -285,13 +285,11 @@
  ccTrackBillingSubscriptionWithClientData:clientBillingSubscriptionData];
  }
 
- - (void)ccTrackLaunchedDeeplinkWithClientData:
- (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
- {
- [self.launchedDeeplinkController
- ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
- }
  */
+
+- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
+    [self.launchedDeeplinkController ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
+}
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData {
     [self.eventController ccTrackEventWithClientData:clientEventData];

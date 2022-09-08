@@ -66,6 +66,30 @@
     }];
 }
 
++ (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionsWithSource:@"trackLaunchedDeeplink"];
+
+        if (clientActionsAPI == nil) {
+            return;
+        }
+
+        ADJClientLaunchedDeeplinkData *_Nullable clientLaunchedDeeplinkData =
+            [ADJClientLaunchedDeeplinkData
+                 instanceFromClientWithAdjustLaunchedDeeplink:adjustLaunchedDeeplink
+                 logger:apiLogger];
+
+        if (clientLaunchedDeeplinkData == nil) {
+            return;
+        }
+
+        [clientActionsAPI ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
+    }];
+}
+
 #pragma mark Track Event Method
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
     [ADJEntryRoot executeBlockInClientContext:

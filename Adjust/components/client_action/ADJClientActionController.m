@@ -85,11 +85,12 @@
         clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
 }
 
+*/
+
 - (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
     [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
                        clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
 }
-*/
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData {
     [self ccSaveClientActionWithIoInjectable:clientEventData
