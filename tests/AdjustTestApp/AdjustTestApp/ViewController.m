@@ -50,22 +50,20 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 
     //    [self.testLibrary addTest:@"Test_PushToken_before_install_kill"];
     //    [self.testLibrary addTest:@"Test_PushToken_before_install"];
-    [self.testLibrary addTest:@"Test_PushToken_after_install"];
+    //    [self.testLibrary addTest:@"Test_PushToken_after_install"];
 
     //[self.testLibrary addTestDirectory:@"gdpr"];
     //    [self.testLibrary addTestDirectory:@"session-tracking"];
-    //    [self.testLibrary addTestDirectory:@"event-tracking"];
-    //    [self.testLibrary addTestDirectory:@"global-parameters"];
-    [self.testLibrary addTestDirectory:@"push-token"];
+        [self.testLibrary addTestDirectory:@"event-tracking"];
+//    [self.testLibrary addTestDirectory:@"global-parameters"];
+//    [self.testLibrary addTestDirectory:@"push-token"];
     //    [self.testLibrary addTestDirectory:@"push-token"];
-    //    [self.testLibrary addTestDirectory:@"ad-revenue"];
+        [self.testLibrary addTestDirectory:@"ad-revenue"];
     //    [self.testLibrary addTestDirectory:@"stop-restart"];
-
-
-    //    [self.testLibrary addTest:@"Test_GlobalParameters_add"];
+//        [self.testLibrary addTest:@"Test_GlobalParameters_add"];
     //    [self.testLibrary addTest:@"Test_GlobalParameters_clear"];
-    //    [self.testLibrary addTest:@"Test_GlobalParameters_overwrite"];
-    [self.testLibrary addTest:@"Test_GlobalParameters_remove"];
+//        [self.testLibrary addTest:@"Test_GlobalParameters_overwrite"];
+    //    [self.testLibrary addTest:@"Test_GlobalParameters_remove"];
     //    [self.testLibrary addTest:@"Test_GlobalParameters_synchronicity"];
 
 }

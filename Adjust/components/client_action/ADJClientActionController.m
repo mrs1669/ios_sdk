@@ -17,7 +17,6 @@
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
 #import "ADJClientActionRemoveStorageAction.h"
-
 /*
  #import "ADJBillingSubscriptionController.h"
  #import "ADJLaunchedDeeplinkController.h"
@@ -80,21 +79,17 @@
     [self ccSaveClientActionWithIoInjectable:clientAdRevenueData
                        clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
 }
+/*
+- (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData {
+    [self  ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
+        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
+}
 
-//- (void)ccTrackBillingSubscriptionWithClientData:
-//    (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
-//{
-//    [self
-//        ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
-//        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
-//}
-//
-//- (void)ccTrackLaunchedDeeplinkWithClientData:
-//    (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
-//{
-//    [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
-//                       clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
-//}
+- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
+    [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
+                       clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
+}
+*/
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData {
     [self ccSaveClientActionWithIoInjectable:clientEventData
@@ -107,8 +102,7 @@
 }
 
 /*
- - (void)ccTrackThirdPartySharingWithClientData:
- (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+ - (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
  {
  [self ccSaveClientActionWithIoInjectable:clientThirdPartySharingData
  clientActionHandlerId:ADJThirdPartySharingControllerClientActionHandlerId];
@@ -145,7 +139,6 @@
                        clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
 
-
 #pragma mark Internal Methods
 
 - (void)ccSaveClientActionWithIoInjectable:(nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
@@ -157,8 +150,7 @@
         return;
     }
 
-    ADJTimestampMilli *_Nullable nowTimestamp =
-    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+    ADJTimestampMilli *_Nullable nowTimestamp = [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nowTimestamp == nil) {
         [self.logger error:@"Cannot enqueue client action without a valid now timestamp"];
         return;
@@ -242,7 +234,6 @@
     }
 }
 
-
 - (nullable id<ADJClientActionHandler>)clientActionHandlerWithId:(nonnull ADJNonEmptyString *)clientActionHandlerId
                                        postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController {
 
@@ -288,3 +279,4 @@
 }
 
 @end
+
