@@ -17,9 +17,10 @@
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
 #import "ADJClientActionRemoveStorageAction.h"
+#import "ADJLaunchedDeeplinkController.h"
+
 /*
  #import "ADJBillingSubscriptionController.h"
- #import "ADJLaunchedDeeplinkController.h"
  */
 #import "ADJEventController.h"
 #import "ADJPushTokenController.h"
@@ -103,8 +104,7 @@
 }
 
 /*
- - (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
- {
+ - (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData {
  [self ccSaveClientActionWithIoInjectable:clientThirdPartySharingData
  clientActionHandlerId:ADJThirdPartySharingControllerClientActionHandlerId];
  }
@@ -143,8 +143,7 @@
 #pragma mark Internal Methods
 
 - (void)ccSaveClientActionWithIoInjectable:(nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
-                     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId
-{
+                     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId {
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
         [self.logger error:@"Cannot enqueue client action without a reference to clock"];
@@ -247,12 +246,11 @@
      {
      return postSdkInitRootController.billingSubscriptionController;
      }
-     if ([ADJLaunchedDeeplinkClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.launchedDeeplinkController;
-     }
      */
+    if ([ADJLaunchedDeeplinkClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.launchedDeeplinkController;
+    }
+
     if ([ADJEventControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.eventController;
     }

@@ -145,12 +145,11 @@
      initWithLoggerFactory:loggerFactory
      sdkPackageBuilder:self.sdkPackageBuilder
      mainQueueController:self.mainQueueController];
-
-     _launchedDeeplinkController =
-     [[ADJLaunchedDeeplinkController alloc] initWithLoggerFactory:loggerFactory
-     sdkPackageBuilder:self.sdkPackageBuilder
-     mainQueueController:self.mainQueueController];
      */
+    _launchedDeeplinkController = [[ADJLaunchedDeeplinkController alloc] initWithLoggerFactory:loggerFactory
+                                                                             sdkPackageBuilder:self.sdkPackageBuilder
+                                                                           mainQueueController:self.mainQueueController];
+
     _eventController = [[ADJEventController alloc] initWithLoggerFactory:loggerFactory
                                                        sdkPackageBuilder:self.sdkPackageBuilder
                                                        eventStateStorage:storageRootController.eventStateStorage

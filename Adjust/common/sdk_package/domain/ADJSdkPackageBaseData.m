@@ -12,18 +12,19 @@
 #import "ADJIoData.h"
 #import "ADJUtilF.h"
 #import "ADJUtilMap.h"
+
 /*
-#import "ADJAdRevenuePackageData.h"
 #import "ADJAttributionPackageData.h"
 #import "ADJBillingSubscriptionPackageData.h"
-#import "ADJClickPackageData.h"
 #import "ADJGdprForgetPackageData.h"
 
 #import "ADJLogPackageData.h"
  */
+#import "ADJAdRevenuePackageData.h"
 #import "ADJSessionPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJInfoPackageData.h"
+#import "ADJClickPackageData.h"
 
 //#import "ADJThirdPartySharingPackageData.h"
 
@@ -92,13 +93,13 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
         return nil;
     }
 /*
-    pathToPackage(ADJAdRevenuePackageData)
     pathToPackage(ADJAttributionPackageData)
     pathToPackage(ADJBillingSubscriptionPackageData)
-    pathToPackage(ADJClickPackageData)
     pathToPackage(ADJGdprForgetPackageData)
     pathToPackage(ADJLogPackageData)
  */
+    pathToPackage(ADJAdRevenuePackageData)
+    pathToPackage(ADJClickPackageData)
     pathToPackage(ADJSessionPackageData)
     pathToPackage(ADJEventPackageData)
     pathToPackage(ADJInfoPackageData)

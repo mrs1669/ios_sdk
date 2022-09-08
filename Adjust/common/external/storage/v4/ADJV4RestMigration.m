@@ -29,20 +29,17 @@
 }
 
 #pragma mark Internal Methods
-- (void)migrateV4DeeplinkWithV4UserDefaultsData:
-(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
+- (void)migrateV4DeeplinkWithV4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     NSURL *_Nullable v4DeeplinkUrl = v4UserDefaultsData.deeplinkUrl;
     
     if (v4DeeplinkUrl == nil) {
         [self.logger debug:@"Deeplink not found in v4 user defaults"];
         return;
     }
-    /*
-     ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
-     [[ADJAdjustLaunchedDeeplink alloc] initWithUrl:v4DeeplinkUrl];
-     
-     [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
-     */
+
+    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithUrl:v4DeeplinkUrl];
+
+    [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)migrateV4PushTokenWithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
