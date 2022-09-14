@@ -9,6 +9,7 @@
 
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustAdRevenue.h"
 
 @interface ADJAdjust : NSObject
 
@@ -19,6 +20,8 @@
 + (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig;
 
 + (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
+
++ (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue;
 
 + (void)inactivateSdk;
 + (void)reactivateSdk;

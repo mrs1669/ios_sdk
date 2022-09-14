@@ -10,8 +10,6 @@
 
 #import "ADJUtilF.h"
 /*
- #import "ADJAdRevenuePackageData.h"
- #import "ADJAdRevenueResponseData.h"
  #import "ADJAttributionPackageData.h"
  #import "ADJAttributionResponseData.h"
  #import "ADJBillingSubscriptionPackageData.h"
@@ -29,6 +27,8 @@
 #import "ADJSessionResponseData.h"
 #import "ADJEventPackageData.h"
 #import "ADJEventResponseData.h"
+#import "ADJAdRevenuePackageData.h"
+#import "ADJAdRevenueResponseData.h"
 
 /*
  #import "ADJThirdPartySharingPackageData.h"
@@ -132,7 +132,6 @@ logger:logger];                                             \
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger {
     /*
      tryBuildResponse(ADJAttributionPackageData, ADJAttributionResponseData, attributionPackageData)
-     tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
      tryBuildResponse(ADJBillingSubscriptionPackageData,
      ADJBillingSubscriptionResponseData,
      billingSubscriptionPackageData)
@@ -143,6 +142,7 @@ logger:logger];                                             \
      */
     tryBuildResponse(ADJSessionPackageData, ADJSessionResponseData, sessionPackageData)
     tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
+    tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
 
     /*
      tryBuildResponse(ADJThirdPartySharingPackageData,

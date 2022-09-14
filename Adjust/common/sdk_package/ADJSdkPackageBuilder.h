@@ -20,10 +20,11 @@
 #import "ADJSdkPackageCreatingSubscriber.h"
 #import "ADJEventPackageData.h"
 #import "ADJClientEventData.h"
+#import "ADJAdRevenuePackageData.h"
+#import "ADJClientAdRevenueData.h"
+
 
 /*
- #import "ADJAdRevenuePackageData.h"
- #import "ADJClientAdRevenueData.h"
  #import "ADJAttributionPackageData.h"
  #import "ADJBillingSubscriptionPackageData.h"
  #import "ADJClientBillingSubscriptionData.h"
@@ -59,13 +60,12 @@
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
+- (nonnull ADJAdRevenuePackageData *)buildAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
+                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+
+
 // public api
 /*
- - (nonnull ADJAdRevenuePackageData *)
- buildAdRevenueWithClientData:
- (nonnull ADJClientAdRevenueData *)clientAdRevenueData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
-
  - (nonnull ADJAttributionPackageData *)
  buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
 

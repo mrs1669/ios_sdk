@@ -11,12 +11,11 @@
 #import "ADJSQLiteStorageQueueBase.h"
 #import "ADJSdkPackageData.h"
 
-@interface ADJMainQueueStorage :
-    ADJSQLiteStorageQueueBase<id<ADJSdkPackageData>>
+@interface ADJMainQueueStorage : ADJSQLiteStorageQueueBase<id<ADJSdkPackageData>>
+
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController;
 
 @end
