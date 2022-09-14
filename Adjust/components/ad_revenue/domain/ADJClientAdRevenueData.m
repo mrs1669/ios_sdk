@@ -139,52 +139,46 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
 + (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
                                                                  logger:(nonnull ADJLogger *)logger {
+
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
 
     ADJNonEmptyString *_Nullable source = [propertiesMap pairValueWithKey:kSourceKey];
 
-    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
-    [[ADJAdjustAdRevenue alloc] initWithSource:source != nil ? source.stringValue : nil];
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:source != nil ? source.stringValue : nil];
 
     ADJNonEmptyString *_Nullable revenueAmountIoValue = [propertiesMap pairValueWithKey:kRevenueAmountKey];
     ADJMoneyAmountBase *_Nullable revenueAmount = [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue
-                                                                                           logger:logger];
-    ADJNonEmptyString *_Nullable revenueCurrency =
-    [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
+                                                                                             logger:logger];
+    ADJNonEmptyString *_Nullable revenueCurrency = [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
     if (revenueAmount != nil || revenueCurrency != nil) {
-        [adjustAdRevenue setRevenueWithDouble:revenueAmount.doubleValue
-                                     currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
+        [adjustAdRevenue
+         setRevenueWithDoubleNumber:revenueAmount != nil? revenueAmount.numberValue : nil
+         currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
     }
 
-    ADJNonEmptyString *_Nullable adImpressionsCountIoValue =
-    [propertiesMap pairValueWithKey:kAdImpressionsCountKey];
-    ADJNonNegativeInt *_Nullable adImpressionsCount =
-    [ADJNonNegativeInt instanceFromOptionalIoDataValue:adImpressionsCountIoValue
-                                                logger:logger];
+    ADJNonEmptyString *_Nullable adImpressionsCountIoValue = [propertiesMap pairValueWithKey:kAdImpressionsCountKey];
+    ADJNonNegativeInt *_Nullable adImpressionsCount = [ADJNonNegativeInt instanceFromOptionalIoDataValue:adImpressionsCountIoValue
+                                                                                                    logger:logger];
     if (adImpressionsCount != nil) {
         [adjustAdRevenue setAdImpressionsCountWithInteger:adImpressionsCount.uIntegerValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenueNetwork =
-    [propertiesMap pairValueWithKey:kAdRevenueNetworkKey];
+    ADJNonEmptyString *_Nullable adRevenueNetwork = [propertiesMap pairValueWithKey:kAdRevenueNetworkKey];
     if (adRevenueNetwork != nil) {
         [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork.stringValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenueUnit =
-    [propertiesMap pairValueWithKey:kAdRevenueUnitKey];
+    ADJNonEmptyString *_Nullable adRevenueUnit = [propertiesMap pairValueWithKey:kAdRevenueUnitKey];
     if (adRevenueUnit != nil) {
         [adjustAdRevenue setAdRevenueUnit:adRevenueUnit.stringValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenuePlacement =
-    [propertiesMap pairValueWithKey:kAdRevenuePlacementKey];
+    ADJNonEmptyString *_Nullable adRevenuePlacement = [propertiesMap pairValueWithKey:kAdRevenuePlacementKey];
     if (adRevenuePlacement != nil) {
         [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement.stringValue];
     }
 
-    ADJStringMap *_Nullable callbackParametersMap =
-    [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
+    ADJStringMap *_Nullable callbackParametersMap = [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
 
     if (callbackParametersMap != nil) {
         for (NSString *_Nonnull callbackParameterKey in callbackParametersMap.map) {
@@ -194,8 +188,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         }
     }
 
-    ADJStringMap *_Nullable partnerParametersMap =
-    [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
+    ADJStringMap *_Nullable partnerParametersMap = [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
 
     if (partnerParametersMap != nil) {
         for (NSString *_Nonnull partnerParameterKey in partnerParametersMap.map) {
@@ -378,5 +371,6 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 }
 
 @end
+
 
 
