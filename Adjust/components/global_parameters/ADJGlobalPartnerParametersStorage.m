@@ -37,8 +37,7 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSDictionary<NSString *, NSString *> *_Nullable v4SessionPartnerParameters =
-    [v4FilesData v4SessionPartnerParameters];
+    NSDictionary<NSString *, NSString *> *_Nullable v4SessionPartnerParameters = [v4FilesData v4SessionPartnerParameters];
     if (v4SessionPartnerParameters == nil) {
         [self.logger debug:@"Session Partner Parameters v4 file not found"];
         return;
@@ -81,3 +80,4 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
 }
 
 @end
+
