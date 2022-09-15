@@ -30,8 +30,11 @@ NS_ASSUME_NONNULL_END
 // public api
 - (void)setRevenueWithDouble:(double)revenueAmountDouble
                     currency:(nonnull NSString *)currency;
+- (void)setRevenueWithDoubleNumber:(nonnull NSNumber *)revenueAmountDoubleNumber
+                          currency:(nonnull NSString *)currency;
 
 - (void)setAdImpressionsCountWithInteger:(NSInteger)adImpressionsCount;
+- (void)setAdImpressionsCountWithIntegerNumber:(nonnull NSNumber *)adImpressionsCountIntegerNumber;
 
 - (void)setAdRevenueNetwork:(nonnull NSString *)adRevenueNetwork;
 

@@ -56,8 +56,21 @@
     _revenueCurrency = [ADJUtilObj copyStringWithInput:currency];
 }
 
+- (void)setRevenueWithDoubleNumber:(nonnull NSNumber *)revenueAmountDoubleNumber
+                          currency:(nonnull NSString *)currency {
+    _revenueAmountDoubleNumber = [ADJUtilObj copyObjectWithInput:revenueAmountDoubleNumber
+                                                     classObject:[NSNumber class]];
+
+    _revenueCurrency = [ADJUtilObj copyStringWithInput:currency];
+}
+
 - (void)setAdImpressionsCountWithInteger:(NSInteger)adImpressionsCount {
     _adImpressionsCountIntegerNumber = @(adImpressionsCount);
+}
+
+- (void)setAdImpressionsCountWithIntegerNumber:(nonnull NSNumber *)adImpressionsCountIntegerNumber {
+    _adImpressionsCountIntegerNumber = [ADJUtilObj copyObjectWithInput:adImpressionsCountIntegerNumber
+                                                           classObject:[NSNumber class]];
 }
 
 - (void)setAdRevenueNetwork:(nonnull NSString *)adRevenueNetwork {

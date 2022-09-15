@@ -37,8 +37,7 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSDictionary<NSString *, NSString *> *_Nullable v4SessionCallbackParameters =
-    [v4FilesData v4SessionCallbackParameters];
+    NSDictionary<NSString *, NSString *> *_Nullable v4SessionCallbackParameters = [v4FilesData v4SessionCallbackParameters];
     if (v4SessionCallbackParameters == nil) {
         [self.logger debug:@"Session Callback Parameters v4 file not found"];
         return;

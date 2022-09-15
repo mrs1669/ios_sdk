@@ -21,7 +21,7 @@ FOUNDATION_EXPORT NSString *const ADJClientAddGlobalParameterDataMetadataTypeVal
 NS_ASSUME_NONNULL_END
 
 @interface ADJClientAddGlobalParameterData : NSObject<NSCopying,
-ADJClientActionIoDataInjectable
+   ADJClientActionIoDataInjectable
 >
 // instantiation
 + (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd

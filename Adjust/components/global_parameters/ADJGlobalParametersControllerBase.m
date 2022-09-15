@@ -48,9 +48,9 @@
     return YES;
 }
 
-- (void) ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                               apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                            clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     BOOL handled = [self ccTryHandleClientActionWithClientActionIoInjectedData:clientActionIoInjectedData
                                                                   apiTimestamp:apiTimestamp
                                                clientActionRemoveStorageAction:clientActionRemoveStorageAction];
@@ -204,5 +204,4 @@
 }
 
 @end
-
 
