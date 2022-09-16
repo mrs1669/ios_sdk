@@ -177,6 +177,19 @@
     }];
 }
 
++ (void)adjustAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        if (adjustAttributionCallback == nil) {
+            [apiLogger error:@"Cannot get Adjust Attribution with nil callback"];
+            return;
+        }
+
+        [adjustAPI ccAttributionWithCallback:adjustAttributionCallback];
+    }];
+}
+
 #pragma mark Global Parameters Methods
 
 + (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key

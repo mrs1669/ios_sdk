@@ -176,21 +176,20 @@
     _pausingController = [[ADJPausingController alloc] initWithLoggerFactory:loggerFactory
                                                        threadExecutorFactory:entryRoot.threadController
                                                          canSendInBackground:clientConfigData.canSendInBackground];
+
+    _clientSubscriptionsController = [[ADJClientSubscriptionsController alloc]
+                                      initWithLoggerFactory:loggerFactory
+                                      threadController:entryRoot.threadController
+                                      clientReturnExecutor:[entryRoot clientReturnExecutor]
+                                      adjustAttributionSubscriber:clientConfigData.adjustAttributionSubscriber
+                                      adjustLogSubscriber:clientConfigData.adjustLogSubscriber
+                                      doNotOpenDeferredDeeplink:clientConfigData.doNotOpenDeferredDeeplink];
     /*
      _thirdPartySharingController =
      [[ADJThirdPartySharingController alloc]
      initWithLoggerFactory:loggerFactory
      sdkPackageBuilder:self.sdkPackageBuilder
      mainQueueController:self.mainQueueController];
-
-     _clientSubscriptionsController =
-     [[ADJClientSubscriptionsController alloc]
-     initWithLoggerFactory:loggerFactory
-     threadController:entryRoot.threadController
-     clientReturnExecutor:[entryRoot clientReturnExecutor]
-     adjustAttributionSubscriber:clientConfigData.adjustAttributionSubscriber
-     adjustLogSubscriber:clientConfigData.adjustLogSubscriber
-     doNotOpenDeferredDeeplink:clientConfigData.doNotOpenDeferredDeeplink];
 
      _logQueueController =
      [[ADJLogQueueController alloc]
@@ -359,14 +358,13 @@
 
 - (void)ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
                                      preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController {
-    /*
-     // subscribe controllers to publishers
-     [self.attributionController
-     ccSubscribeToPublishersWithPublishingGatePublisher:self.publishingGatePublisher
-     measurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
-     sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
-     pausingPublisher:self.pausingController.pausingPublisher];
 
+     // subscribe controllers to publishers
+    [self.attributionController ccSubscribeToPublishersWithPublishingGatePublisher:self.publishingGatePublisher
+                                                  measurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
+                                                              sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
+                                                                  pausingPublisher:self.pausingController.pausingPublisher];
+     /*
      [self.asaAttributionController
      ccSubscribeToPublishersWithKeepAlivePublisher:self.keepAliveController.keepAlivePublisher
      preFirstMeasurementSessionStartPublisher:self.measurementSessionController.preFirstMeasurementSessionStartPublisher

@@ -48,9 +48,9 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 
     self.testLibrary.dictionaryParametersDelegate = self.adjustCommandExecutor;
 
-    //    [self.testLibrary addTest:@"Test_PushToken_before_install_kill"];
+        [self.testLibrary addTest:@"Test_AttributionCallback_ask_in_once"];
     //    [self.testLibrary addTest:@"Test_PushToken_before_install"];
-    [self.testLibrary addTest:@"Test_PushToken_after_install"];
+//    [self.testLibrary addTest:@"Test_PushToken_after_install"];
     //    [self.testLibrary addTest:@"Test_Deeplink_after_start"];
     //    [self.testLibrary addTestDirectory:@"gdpr"];
     //    [self.testLibrary addTestDirectory:@"session-tracking"];
@@ -67,7 +67,9 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     //    [self.testLibrary addTest:@"Test_GlobalParameters_synchronicity"];
     //    [self.testLibrary addTest:@"Test_GlobalParameters_clear"];
     //    [self.testLibrary addTestDirectory:@"gdpr"];
-    //    [self.testLibrary addTestDirectory:@"session-tracking"];
+//        [self.testLibrary addTestDirectory:@"attribution"];
+//    [self.testLibrary addTestDirectory:@"attribution-callback"];
+
     //    [self.testLibrary addTestDirectory:@"event-tracking"];
     //    [self.testLibrary addTestDirectory:@"global-parameters"];
     //    [self.testLibrary addTestDirectory:@"ad-revenue"];

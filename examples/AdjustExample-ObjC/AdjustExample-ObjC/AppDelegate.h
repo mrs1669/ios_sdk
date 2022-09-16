@@ -6,8 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ADJAdjust.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, ADJAdjustAttributionSubscriber>
 
 @property (strong, nonatomic) UIWindow *window;
 

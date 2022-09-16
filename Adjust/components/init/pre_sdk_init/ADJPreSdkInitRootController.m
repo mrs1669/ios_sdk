@@ -82,12 +82,11 @@
                          keychainStorage:self.storageRootController.keychainStorage
                          deviceIdsConfigData:entryRoot.sdkConfigData.sessionDeviceIdsConfigData];
 
-    //    _clientCallbacksController =
-    //        [[ADJClientCallbacksController alloc]
-    //            initWithLoggerFactory:loggerFactory
-    //            attributionStateStorage:self.storageRootController.attributionStateStorage
-    //            clientReturnExecutor:[entryRoot clientReturnExecutor]
-    //            deviceController:self.deviceController];
+    _clientCallbacksController = [[ADJClientCallbacksController alloc]
+                                  initWithLoggerFactory:loggerFactory
+                                  attributionStateStorage:self.storageRootController.attributionStateStorage
+                                  clientReturnExecutor:[entryRoot clientReturnExecutor]
+                                  deviceController:self.deviceController];
 
     _sdkActiveState = [[ADJSdkActiveState alloc] initWithLoggerFactory:loggerFactory
                                                        isGdprForgotten:NO]; //TODO: (Gena)Uncomment //[self.gdprForgetController isForgotten]];
@@ -264,12 +263,10 @@
     [entryRoot.postSdkInitRootController.measurementSessionController ccBackground];
 }
 
-//- (void)ccAttributionWithCallback:
-//    (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
-//{
-//    [self.clientCallbacksController ccAttributionWithCallback:adjustAttributionCallback];
-//}
-//
+- (void)ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback {
+    [self.clientCallbacksController ccAttributionWithCallback:adjustAttributionCallback];
+}
+
 //- (void)ccDeviceIdsWithCallback:
 //    (nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
 //{
@@ -437,5 +434,6 @@
 }
 
 @end
+
 
 

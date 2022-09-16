@@ -33,43 +33,35 @@
 - (nonnull instancetype)initWithDefaultValues {
     self = [super init];
 
-    _networkEndpointData =
-    [[ADJNetworkEndpointData alloc]
-     initWithExtraPath:nil
-     urlOverwrite:nil
-     timeoutMilli:
-         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-          [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneMinuteMilli]]];
+    _networkEndpointData = [[ADJNetworkEndpointData alloc]
+                            initWithExtraPath:nil
+                            urlOverwrite:nil
+                            timeoutMilli:[[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                                          [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneMinuteMilli]]];
 
-    ADJTimeLengthMilli *_Nonnull twoSecondsLength =
-    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli * 2]];
+    ADJTimeLengthMilli *_Nonnull twoSecondsLength = [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                                                     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli * 2]];
 
-    _sessionDeviceIdsConfigData =
-    [[ADJExternalConfigData alloc]
-     initWithTimeoutPerAttempt:twoSecondsLength
-     libraryMaxReadAttempts:nil
-     delayBetweenAttempts:nil
-     cacheValidityPeriod:nil];
+    _sessionDeviceIdsConfigData = [[ADJExternalConfigData alloc]
+                                   initWithTimeoutPerAttempt:twoSecondsLength
+                                   libraryMaxReadAttempts:nil
+                                   delayBetweenAttempts:nil
+                                   cacheValidityPeriod:nil];
 
-    ADJTimeLengthMilli *_Nonnull oneSecondLength =
-    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli]];
+    ADJTimeLengthMilli *_Nonnull oneSecondLength = [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                                                    [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli]];
     ADJTimeLengthMilli *_Nonnull fiveSecondsLength =
     [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
      [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli * 5]];
 
-    /*
-     ADJTimeLengthMilli *_Nonnull oneMinuteLength =
-     [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneMinuteMilli]];
-     */
-    _asaAttributionConfigData =
-    [[ADJExternalConfigData alloc]
-     initWithTimeoutPerAttempt:oneSecondLength
-     libraryMaxReadAttempts:[[ADJNonNegativeInt alloc] initWithUIntegerValue:2]
-     delayBetweenAttempts:fiveSecondsLength
-     cacheValidityPeriod:nil];
+    ADJTimeLengthMilli *_Nonnull oneMinuteLength = [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                                                    [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneMinuteMilli]];
+
+    _asaAttributionConfigData = [[ADJExternalConfigData alloc]
+                                 initWithTimeoutPerAttempt:oneSecondLength
+                                 libraryMaxReadAttempts:[[ADJNonNegativeInt alloc] initWithUIntegerValue:2]
+                                 delayBetweenAttempts:fiveSecondsLength
+                                 cacheValidityPeriod:nil];
 
     _attributionBackoffStrategy = [[ADJBackoffStrategy alloc] initWithMediumWait];
 
@@ -79,16 +71,11 @@
 
     _clientReturnExecutorOverwrite = nil;
 
-    ADJTimeLengthMilli *_Nonnull thirtyMinutesLength =
-    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJThirtyMinutesMilli]];
+    ADJTimeLengthMilli *_Nonnull thirtyMinutesLength = [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                                                        [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJThirtyMinutesMilli]];
 
     _minMeasurementSessionIntervalMilli = thirtyMinutesLength;
     _overwriteFirstSdkSessionInterval = nil;
-
-    ADJTimeLengthMilli *_Nonnull oneMinuteLength =
-    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneMinuteMilli]];
 
     _foregroundTimerStartMilli = oneMinuteLength;
 
@@ -109,5 +96,6 @@
 }
 
 @end
+
 
 

@@ -21,9 +21,18 @@
 
     ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc"
                                                                            environment:ADJEnvironmentSandbox];
+    [adjustConfig setAdjustAttributionSubscriber:self];
     [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 
     return YES;
+}
+
+- (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+    NSLog(@"Adjust attribution read: %@", adjustAttribution);
+}
+
+- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+    NSLog(@"Adjust attribution changed: %@", adjustAttribution);
 }
 
 @end

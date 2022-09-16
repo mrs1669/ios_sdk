@@ -22,9 +22,9 @@
 #import "ADJClientEventData.h"
 #import "ADJAdRevenuePackageData.h"
 #import "ADJClientAdRevenueData.h"
+#import "ADJAttributionPackageData.h"
 
 /*
- #import "ADJAttributionPackageData.h"
  #import "ADJBillingSubscriptionPackageData.h"
  #import "ADJClientBillingSubscriptionData.h"
  */
@@ -64,12 +64,9 @@
 - (nonnull ADJAdRevenuePackageData *)buildAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
                                                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
+ - (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
 
-// public api
 /*
- - (nonnull ADJAttributionPackageData *)
- buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
-
  - (nonnull ADJBillingSubscriptionPackageData *)
  buildBillingSubscriptionWithClientData:
  (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData

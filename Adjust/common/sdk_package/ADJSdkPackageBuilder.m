@@ -113,29 +113,20 @@
                                                    parameters:parameters];
 }
 
+- (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy {
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJAttributionPackageDataPath];
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamAttributionInititedByKey
+                                            constValue:initatedBy];
+    
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJAttributionPackageDataPath];
+    
+    return [[ADJAttributionPackageData alloc] initWithClientSdk:self.clientSdk
+                                                     parameters:parameters];
+}
 
-
-/** /
- - (nonnull ADJAttributionPackageData *)
- buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJAttributionPackageDataPath];
-
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAttributionInititedByKey
- constValue:initatedBy];
-
- ADJStringMap *_Nonnull parameters =
- [self
- publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJAttributionPackageDataPath];
-
- return [[ADJAttributionPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
 
 
 /** /

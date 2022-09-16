@@ -23,9 +23,9 @@
 #import "ADJAdRevenueController.h"
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
+#import "ADJAttributionController.h"
 
 /*
- #import "ADJAttributionController.h"
  #import "ADJBillingSubscriptionController.h"
  #import "ADJKeepAliveController.h"
  */
@@ -33,9 +33,10 @@
 #import "ADJPushTokenController.h"
 #import "ADJReachabilityController.h"
 #import "ADJPausingController.h"
+#import "ADJClientSubscriptionsController.h"
+
 /*
  #import "ADJThirdPartySharingController.h"
- #import "ADJClientSubscriptionsController.h"
  #import "ADJLogQueueController.h"
  #import "ADJAsaAttributionController.h"
  */
@@ -69,10 +70,9 @@
 @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
-
+@property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
 
 /*
- @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
  @property (nonnull, readonly, strong, nonatomic) ADJBillingSubscriptionController *billingSubscriptionController;
  @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
  */
@@ -81,9 +81,9 @@
 @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
 @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
 @property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
+@property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
 /*
  @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
- @property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
  @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
  @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionController *asaAttributionController;
  */

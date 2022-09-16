@@ -60,7 +60,7 @@ sqliteController:self.sqliteController];        \
     //v4FilesController:self.v4FilesController
     //systemAppDataController:self.systemAppDataController];
 
-    //    buildAndInjectStorage(attributionStateStorage, ADJAttributionStateStorage);
+    buildAndInjectStorage(attributionStateStorage, ADJAttributionStateStorage);
     //    buildAndInjectStorage(asaAttributionStateStorage, ADJAsaAttributionStateStorage);
     buildAndInjectStorage(clientActionStorage, ADJClientActionStorage);
     buildAndInjectStorage(deviceIdsStorage, ADJDeviceIdsStorage);

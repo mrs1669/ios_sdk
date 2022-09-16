@@ -21,7 +21,7 @@
 #import "ADJClientActionController.h"
 #import "ADJDeviceController.h"
 #import "ADJSdkActiveSubscriber.h"
-//#import "ADJClientCallbacksController.h"
+#import "ADJClientCallbacksController.h"
 //#import "ADJPluginController.h"
 
 //#import "ADJPostSdkInitRootController.h"
@@ -54,7 +54,7 @@
 @property (nonnull, readonly, strong, nonatomic) ADJOfflineController *offlineController;
 @property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
 @property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
-//@property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
+@property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
 //@property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
 
 @end
