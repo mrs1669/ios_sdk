@@ -81,51 +81,48 @@
     }
 }
 
-/*
- - (void)ccDeviceIdsWithCallback:
- (nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
- {
- id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
- if (clientReturnExecutor == nil) {
- [self.logger error:@"Cannot return device ids in callback"
- " without a client return executor"];
- return;
- }
+- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
+    id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
+    if (clientReturnExecutor == nil) {
+        [self.logger error:@"Cannot return device ids in callback"
+         " without a client return executor"];
+        return;
+    }
 
- ADJDeviceController *_Nullable deviceController = self.deviceControllerWeak;
- if (deviceController == nil) {
- NSString *_Nonnull errorMessage = @"Cannot return device ids in callback"
- " without a reference to the controller";
+    ADJDeviceController *_Nullable deviceController = self.deviceControllerWeak;
+    if (deviceController == nil) {
+        NSString *_Nonnull errorMessage = @"Cannot return device ids in callback"
+        " without a reference to the controller";
 
- [self.logger error:@"%@", errorMessage];
- [clientReturnExecutor executeClientReturnWithBlock:^{
- [adjustDeviceIdsCallback unableToReadAdjustDeviceIdsWithMessage:errorMessage];
- }];
- return;
- }
+        [self.logger error:@"%@", errorMessage];
+        [clientReturnExecutor executeClientReturnWithBlock:^{
+            [adjustDeviceIdsCallback unableToReadAdjustDeviceIdsWithMessage:errorMessage];
+        }];
+        return;
+    }
 
- ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
- [deviceController getSessionDeviceIdsSync];
+    ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
+    [deviceController getSessionDeviceIdsSync];
 
- if (sessionDeviceIdsData.failMessage != nil) {
- [self.logger info:@"Returning fail on client device ids callback %@",
- sessionDeviceIdsData.failMessage];
+    if (sessionDeviceIdsData.failMessage != nil) {
+        [self.logger info:@"Returning fail on client device ids callback %@",
+         sessionDeviceIdsData.failMessage];
 
- NSString *_Nonnull clientFailMessage =
- [NSString stringWithFormat:@"Cannot get device ids %@", sessionDeviceIdsData.failMessage];
+        NSString *_Nonnull clientFailMessage =
+        [NSString stringWithFormat:@"Cannot get device ids %@", sessionDeviceIdsData.failMessage];
 
- [clientReturnExecutor executeClientReturnWithBlock:^{
- [adjustDeviceIdsCallback unableToReadAdjustDeviceIdsWithMessage:clientFailMessage];
- }];
- return;
- }
+        [clientReturnExecutor executeClientReturnWithBlock:^{
+            [adjustDeviceIdsCallback unableToReadAdjustDeviceIdsWithMessage:clientFailMessage];
+        }];
+        return;
+    }
 
- ADJAdjustDeviceIds *_Nonnull adjustDeviceIds = [sessionDeviceIdsData toAdjustDeviceIds];
- [clientReturnExecutor executeClientReturnWithBlock:^{
- [adjustDeviceIdsCallback didReadWithAdjustDeviceIds:adjustDeviceIds];
- }];
- }
- */
+    ADJAdjustDeviceIds *_Nonnull adjustDeviceIds = [sessionDeviceIdsData toAdjustDeviceIds];
+    [clientReturnExecutor executeClientReturnWithBlock:^{
+        [adjustDeviceIdsCallback didReadWithAdjustDeviceIds:adjustDeviceIds];
+    }];
+}
+
 
 @end
 

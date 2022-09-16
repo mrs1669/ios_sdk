@@ -267,11 +267,9 @@
     [self.clientCallbacksController ccAttributionWithCallback:adjustAttributionCallback];
 }
 
-//- (void)ccDeviceIdsWithCallback:
-//    (nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
-//{
-//    [self.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
-//}
+- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
+    [self.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
+}
 
 - (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source {
     ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;

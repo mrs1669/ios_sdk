@@ -190,6 +190,19 @@
     }];
 }
 
++ (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
+    [ADJEntryRoot executeBlockInClientContext:
+        ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+    {
+        if (adjustDeviceIdsCallback == nil) {
+            [apiLogger error:@"Cannot get Adjust Device Ids with nil callback"];
+            return;
+        }
+
+        [adjustAPI ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
+    }];
+}
+
 #pragma mark Global Parameters Methods
 
 + (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key

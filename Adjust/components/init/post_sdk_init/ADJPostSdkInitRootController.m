@@ -161,14 +161,10 @@
                                                               sdkPackageBuilder:self.sdkPackageBuilder
                                                             mainQueueController:self.mainQueueController];
 
-     /*
-     _keepAliveController =
-     [[ADJKeepAliveController alloc]
-     initWithLoggerFactory:loggerFactory
-     threadExecutorFactory:entryRoot.threadController
-     foregroundTimerStartMilli:sdkConfigData.foregroundTimerStartMilli
-     foregroundTimerIntervalMilli:sdkConfigData.foregroundTimerIntervalMilli];
-     */
+    _keepAliveController = [[ADJKeepAliveController alloc] initWithLoggerFactory:loggerFactory
+                                                           threadExecutorFactory:entryRoot.threadController
+                                                       foregroundTimerStartMilli:sdkConfigData.foregroundTimerStartMilli
+                                                    foregroundTimerIntervalMilli:sdkConfigData.foregroundTimerIntervalMilli];
 
     _reachabilityController = [[ADJReachabilityController alloc] initWithLoggerFactory:loggerFactory
                                                                       threadController:entryRoot.threadController
@@ -360,10 +356,19 @@
                                      preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController {
 
      // subscribe controllers to publishers
-    [self.attributionController ccSubscribeToPublishersWithPublishingGatePublisher:self.publishingGatePublisher
+    [self.attributionController
+     ccSubscribeToPublishersWithPublishingGatePublisher:self.publishingGatePublisher
                                                   measurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
                                                               sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
                                                                   pausingPublisher:self.pausingController.pausingPublisher];
+
+    [self.keepAliveController
+     ccSubscribeToPublishersWithMeasurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
+                                                                       lifecyclePublisher:preSdkInitRootController.lifecycleController.lifecyclePublisher];
+
+    [self.clientSubscriptionsController
+     ccSubscribeToPublishersWithAttributionPublisher:self.attributionController.attributionPublisher
+                                                                           logPublisher:entryRoot.logController.logPublisher];
      /*
      [self.asaAttributionController
      ccSubscribeToPublishersWithKeepAlivePublisher:self.keepAliveController.keepAlivePublisher
@@ -371,16 +376,6 @@
      sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
      attributionPublisher:self.attributionController.attributionPublisher
      sdkPackageSendingPublisher:self.sdkPackageSenderController.sdkPackageSendingPublisher];
-
-     [self.clientSubscriptionsController
-     ccSubscribeToPublishersWithAttributionPublisher:
-     self.attributionController.attributionPublisher
-     logPublisher:entryRoot.logController.logPublisher];
-
-     [self.keepAliveController
-     ccSubscribeToPublishersWithMeasurementSessionStartPublisher:
-     self.measurementSessionController.measurementSessionStartPublisher
-     lifecyclePublisher:preSdkInitRootController.lifecycleController.lifecyclePublisher];
 
      [self.logQueueController
      ccSubscribeToPublishersWithSdkInitPublisher:self.sdkInitPublisher
@@ -398,14 +393,15 @@
      lifecyclePublisher:preSdkInitRootController.lifecycleController.lifecyclePublisher
      measurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
      sdkActivePublisher:preSdkInitRootController.sdkActivePublisher];
-    /*
-     [self.reachabilityController
-     ccSubscribeToPublishersWithmeasurementSessionStartPublisher:
-     self.measurementSessionController.measurementSessionStartPublisher];
-     */
-    [self.measurementSessionController ccSubscribeToPublishersWithSdkActivePublisher:preSdkInitRootController.sdkActivePublisher
+
+//    [self.reachabilityController
+//     ccSubscribeToPublishersWithmeasurementSessionStartPublisher:
+//     self.measurementSessionController.measurementSessionStartPublisher];
+
+    [self.measurementSessionController
+     ccSubscribeToPublishersWithSdkActivePublisher:preSdkInitRootController.sdkActivePublisher
                                                                     sdkInitPublisher:self.sdkInitPublisher
-                                                                  keepAlivePublisher:nil //self.keepAliveController.keepAlivePublisher
+                                                                  keepAlivePublisher:self.keepAliveController.keepAlivePublisher
                                                                   lifecyclePublisher:preSdkInitRootController.lifecycleController.lifecyclePublisher];
 
     // subscribe self to publishers

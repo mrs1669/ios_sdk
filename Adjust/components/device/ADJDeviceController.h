@@ -21,8 +21,8 @@
 #import "ADJSessionDeviceIdsData.h"
 
 @interface ADJDeviceController : ADJCommonBase<
-// subscriptions
-ADJLifecycleSubscriber
+    // subscriptions
+    ADJLifecycleSubscriber
 >
 - (void)ccSubscribeToPublishersWithLifecylePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
 

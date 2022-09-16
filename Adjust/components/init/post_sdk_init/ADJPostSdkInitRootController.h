@@ -24,11 +24,10 @@
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
 #import "ADJAttributionController.h"
-
 /*
  #import "ADJBillingSubscriptionController.h"
- #import "ADJKeepAliveController.h"
  */
+#import "ADJKeepAliveController.h"
 #import "ADJLaunchedDeeplinkController.h"
 #import "ADJPushTokenController.h"
 #import "ADJReachabilityController.h"
@@ -74,8 +73,8 @@
 
 /*
  @property (nonnull, readonly, strong, nonatomic) ADJBillingSubscriptionController *billingSubscriptionController;
- @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
  */
+@property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersController *globalCallbackParametersController;
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersController *globalPartnerParametersController;
 @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;

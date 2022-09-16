@@ -32,9 +32,8 @@
 
 /*
 - (void)ccGdprForgetDevice;
-
-- (void)ccDeviceIdsWithCallback:
-    (nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 */
+
+- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 
 @end

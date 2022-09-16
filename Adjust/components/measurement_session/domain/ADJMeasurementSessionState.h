@@ -19,8 +19,8 @@
 @interface ADJMeasurementSessionState : ADJCommonBase
 // instantiation
 - (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli;
+initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli;
 
 // public properties
 @property (readonly, assign, nonatomic) BOOL hasFirstMeasurementSessionStartHappened;
@@ -32,31 +32,23 @@
 
 - (BOOL)canMeasurementSessionBecomeActiveWhenSdkBecameActive;
 
-- (BOOL)
-    changeToActiveSessionWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    sdkStartStateEventWO:(nonnull ADJValueWO<NSString *> *)sdkStartStateEventWO
-    changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-    source:(nonnull NSString *)source;
+- (BOOL)changeToActiveSessionWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                                          sdkStartStateEventWO:(nonnull ADJValueWO<NSString *> *)sdkStartStateEventWO
+                               changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                                          packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
+                                 nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
+                                                        source:(nonnull NSString *)source;
 
-- (void)
-    appWentToTheBackgroundWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
+- (void)appWentToTheBackgroundWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                                changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                                  nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
 
-- (void)
-    sdkBecameNotActiveWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
+- (void)sdkBecameNotActiveWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                            changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                              nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
 
-- (void)
-    keepAlivePingedWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
+- (void)keepAlivePingedWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                         changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                           nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
 
 @end
