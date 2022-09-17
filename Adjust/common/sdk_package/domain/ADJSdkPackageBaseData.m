@@ -23,8 +23,7 @@
 #import "ADJEventPackageData.h"
 #import "ADJInfoPackageData.h"
 #import "ADJClickPackageData.h"
-
-//#import "ADJThirdPartySharingPackageData.h"
+#import "ADJThirdPartySharingPackageData.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -97,8 +96,7 @@ logger:logger];                 \
     pathToPackage(ADJSessionPackageData)
     pathToPackage(ADJEventPackageData)
     pathToPackage(ADJInfoPackageData)
-
-    //pathToPackage(ADJThirdPartySharingPackageData)
+    pathToPackage(ADJThirdPartySharingPackageData)
 
     [logger error:@"Cannot create instance from Io data"
      " without matching %@ path to valid package type", path];

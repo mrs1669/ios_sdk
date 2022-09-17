@@ -25,9 +25,7 @@
 #import "ADJClickPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJInfoResponseData.h"
-/*
- #import "ADJThirdPartySharingPackageData.h"
- */
+#import "ADJThirdPartySharingPackageData.h"
 #import "ADJSessionPackageData.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
@@ -70,11 +68,10 @@
 
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
-/*
- - (void)addThirdPartySharingPackageToSendWithData:
- (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
- */
+
+- (void)addThirdPartySharingPackageToSendWithData:(nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+
 - (nonnull NSString *)defaultTargetUrl;
 
 @end

@@ -16,10 +16,8 @@
 #import "ADJClientPushTokenData.h"
 #import "ADJClientLaunchedDeeplinkData.h"
 #import "ADJClientBillingSubscriptionData.h"
+#import "ADJClientThirdPartySharingData.h"
 
-/*
- #import "ADJClientThirdPartySharingData.h"
- */
 @protocol ADJClientActionsAPI <NSObject>
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData;
@@ -30,8 +28,7 @@
 
 - (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;
 
-// - (void)ccTrackThirdPartySharingWithClientData:
-// (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
+- (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
 
 - (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
 

@@ -30,11 +30,8 @@
 #import "ADJAdRevenueResponseData.h"
 #import "ADJInfoResponseData.h"
 #import "ADJInfoPackageData.h"
-
-/*
- #import "ADJThirdPartySharingPackageData.h"
- #import "ADJThirdPartySharingResponseData.h"
- */
+#import "ADJThirdPartySharingPackageData.h"
+#import "ADJThirdPartySharingResponseData.h"
 #import "ADJUnknownResponseData.h"
 
 #pragma mark Fields
@@ -142,12 +139,8 @@ logger:logger];                                             \
     tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
     tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
     tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
+    tryBuildResponse(ADJThirdPartySharingPackageData, ADJThirdPartySharingResponseData, thirdPartySharingPackageData)
 
-    /*
-     tryBuildResponse(ADJThirdPartySharingPackageData,
-     ADJThirdPartySharingResponseData,
-     thirdPartySharingPackageData)
-     */
     if (logger != nil) {
         [logger error:@"Could not match source sdk package of: %@, to one of the know types."
          " Will still be created with unknown type", self.sourcePackage];

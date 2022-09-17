@@ -136,6 +136,30 @@
     }];
 }
 
++ (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing {
+    [ADJEntryRoot executeBlockInClientContext:
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+     {
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [adjustAPI ccClientActionsWithSource:@"trackThirdPartySharing"];
+
+        if (clientActionsAPI == nil) {
+            return;
+        }
+
+        ADJClientThirdPartySharingData *_Nullable clientThirdPartySharingData =
+        [ADJClientThirdPartySharingData
+         instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
+         logger:apiLogger];
+
+        if (clientThirdPartySharingData == nil) {
+            return;
+        }
+
+        [clientActionsAPI ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
+    }];
+}
+
 #pragma mark Lifecycle Methods
 + (void)appWentToTheForegroundManualCall {
     [ADJEntryRoot executeBlockInClientContext:

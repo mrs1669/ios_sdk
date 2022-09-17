@@ -33,9 +33,9 @@
  #import "ADJLogPackageData.h"
  */
 #import "ADJSessionPackageData.h"
+#import "ADJClientThirdPartySharingData.h"
+#import "ADJThirdPartySharingPackageData.h"
 /*
- #import "ADJClientThirdPartySharingData.h"
- #import "ADJThirdPartySharingPackageData.h"
  #import "ADJGdprForgetPackageData.h"
  */
 #import "ADJPackageSessionData.h"
@@ -83,11 +83,11 @@
  logSource:(nonnull NSString *)logSource;
  */
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataToOverwrite;
-/*
- - (nonnull ADJThirdPartySharingPackageData *) buildThirdPartySharingWithClientData:
- (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
+- (nonnull ADJThirdPartySharingPackageData *)buildThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+                                                                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+
+/*
  - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage;
  */
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

@@ -177,13 +177,13 @@
                                       adjustAttributionSubscriber:clientConfigData.adjustAttributionSubscriber
                                       adjustLogSubscriber:clientConfigData.adjustLogSubscriber
                                       doNotOpenDeferredDeeplink:clientConfigData.doNotOpenDeferredDeeplink];
-    /*
-     _thirdPartySharingController =
-     [[ADJThirdPartySharingController alloc]
-     initWithLoggerFactory:loggerFactory
-     sdkPackageBuilder:self.sdkPackageBuilder
-     mainQueueController:self.mainQueueController];
 
+    _thirdPartySharingController = [[ADJThirdPartySharingController alloc]
+                                    initWithLoggerFactory:loggerFactory
+                                    sdkPackageBuilder:self.sdkPackageBuilder
+                                    mainQueueController:self.mainQueueController];
+
+    /*
      _logQueueController =
      [[ADJLogQueueController alloc]
      initWithLoggerFactory:loggerFactory
@@ -284,14 +284,9 @@
     [self.pushTokenController ccTrackPushTokenWithClientData:clientPushTokenData];
 }
 
-/*
- - (void)ccTrackThirdPartySharingWithClientData:
- (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
- {
- [self.thirdPartySharingController
- ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
- }
-*/
+- (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData {
+    [self.thirdPartySharingController ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
+}
 
 #pragma mark - ADJGlobalCallbackParameter
 - (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {

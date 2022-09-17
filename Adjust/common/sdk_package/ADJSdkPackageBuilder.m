@@ -323,60 +323,56 @@
                                                  parameters:parameters];
 }
 
-/** /
- - (nonnull ADJThirdPartySharingPackageData *)
- buildThirdPartySharingWithClientData:
- (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJThirdPartySharingPackageDataPath
- apiTimestamp:apiTimestamp];
+- (nonnull ADJThirdPartySharingPackageData *)buildThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamClickSourceKey
- constValue:ADJParamDeeplinkClickSourceValue];
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJThirdPartySharingPackageDataPath
+                               apiTimestamp:apiTimestamp];
 
- if (clientThirdPartySharingData.enabledOrElseDisabledSharing != nil) {
- if (clientThirdPartySharingData.enabledOrElseDisabledSharing.boolValue) {
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamThirdPartySharingKey
- constValue:ADJParamThirdPartySharingEnabledValue];
- } else {
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamThirdPartySharingKey
- constValue:ADJParamThirdPartySharingDisabledValue];
- }
- }
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamClickSourceKey
+                                            constValue:ADJParamDeeplinkClickSourceValue];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamThirdPartySharingGranularOptionsKey
- packageParamValueSerializable:clientThirdPartySharingData.stringGranularOptionsByName];
+    if (clientThirdPartySharingData.enabledOrElseDisabledSharing != nil) {
+        if (clientThirdPartySharingData.enabledOrElseDisabledSharing.boolValue) {
+            [ADJUtilMap
+             injectIntoPackageParametersWithBuilder:parametersBuilder
+             key:ADJParamThirdPartySharingKey
+             constValue:ADJParamThirdPartySharingEnabledValue];
+        } else {
+            [ADJUtilMap
+             injectIntoPackageParametersWithBuilder:parametersBuilder
+             key:ADJParamThirdPartySharingKey
+             constValue:ADJParamThirdPartySharingDisabledValue];
+        }
+    }
 
- ADJStringMap *_Nonnull parameters =
- [self
- publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJThirdPartySharingPackageDataPath];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamThirdPartySharingGranularOptionsKey
+     packageParamValueSerializable:clientThirdPartySharingData.stringGranularOptionsByName];
 
- return [[ADJThirdPartySharingPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
+    ADJStringMap *_Nonnull parameters =
+    [self
+     publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+     path:ADJThirdPartySharingPackageDataPath];
 
- - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
+    return [[ADJThirdPartySharingPackageData alloc] initWithClientSdk:self.clientSdk
+                                                           parameters:parameters];
+}
 
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJGdprForgetPackageDataPath];
-
- return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+//- (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
+//    ADJStringMapBuilder *_Nonnull parametersBuilder =
+//    [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
+//
+//    ADJStringMap *_Nonnull parameters =
+//    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+//                                                       path:ADJGdprForgetPackageDataPath];
+//
+//    return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
+//                                                    parameters:parameters];
+//}
 
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                           sentAtTimestamp:(nullable ADJTimestampMilli *)sentAtTimestamp {

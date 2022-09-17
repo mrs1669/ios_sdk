@@ -169,22 +169,18 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     }];
 }
 
-/*
- - (void)
- addThirdPartySharingPackageToSendWithData:
- (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
- {
- __typeof(self) __weak weakSelf = self;
- [self.executor executeInSequenceWithBlock:^{
- __typeof(weakSelf) __strong strongSelf = weakSelf;
- if (strongSelf == nil) { return; }
+- (void)addThirdPartySharingPackageToSendWithData:(nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
- [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
- sqliteStorageAction:sqliteStorageAction];
- }];
- }
- */
+        [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    }];
+}
+
 - (nonnull NSString *)defaultTargetUrl {
     return [self.sender defaultTargetUrl];
 }
