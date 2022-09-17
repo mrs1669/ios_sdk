@@ -13,9 +13,10 @@
 #import "ADJAttributionResponseData.h"
 #import "ADJBillingSubscriptionPackageData.h"
 #import "ADJBillingSubscriptionResponseData.h"
+#import "ADJClickPackageData.h"
+#import "ADJClickResponseData.h"
+
 /*
- #import "ADJClickPackageData.h"
- #import "ADJClickResponseData.h"
  #import "ADJGdprForgetPackageData.h"
  #import "ADJGdprForgetResponseData.h"
  #import "ADJLogPackageData.h"
@@ -134,7 +135,7 @@ logger:logger];                                             \
      tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
      tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
      */
-//    tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
+    tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
     tryBuildResponse(ADJBillingSubscriptionPackageData, ADJBillingSubscriptionResponseData, billingSubscriptionPackageData)
     tryBuildResponse(ADJAttributionPackageData, ADJAttributionResponseData, attributionPackageData)
     tryBuildResponse(ADJSessionPackageData, ADJSessionResponseData, sessionPackageData)

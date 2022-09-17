@@ -90,6 +90,8 @@
 		0741CDCF28D59FEE0041C816 /* ADJAdjustBillingSubscription.m in Sources */ = {isa = PBXBuildFile; fileRef = 0741CDCD28D59FEE0041C816 /* ADJAdjustBillingSubscription.m */; };
 		0741CDD228D5A2260041C816 /* ADJBillingSubscriptionResponseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 0741CDD028D5A2260041C816 /* ADJBillingSubscriptionResponseData.h */; };
 		0741CDD328D5A2260041C816 /* ADJBillingSubscriptionResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0741CDD128D5A2260041C816 /* ADJBillingSubscriptionResponseData.m */; };
+		0741CDD628D5A3DB0041C816 /* ADJClickResponseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 0741CDD428D5A3DB0041C816 /* ADJClickResponseData.h */; };
+		0741CDD728D5A3DB0041C816 /* ADJClickResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0741CDD528D5A3DB0041C816 /* ADJClickResponseData.m */; };
 		075D8FCB28731314005019E3 /* ADJAdjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 075D8FCA28731314005019E3 /* ADJAdjust.m */; };
 		075D8FCC28731314005019E3 /* ADJAdjust.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 075D8FC928731314005019E3 /* ADJAdjust.h */; };
 		075D901628731C2D005019E3 /* AdjustSdk.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D901528731C2D005019E3 /* AdjustSdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -525,6 +527,8 @@
 		0741CDCD28D59FEE0041C816 /* ADJAdjustBillingSubscription.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJAdjustBillingSubscription.m; sourceTree = "<group>"; };
 		0741CDD028D5A2260041C816 /* ADJBillingSubscriptionResponseData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJBillingSubscriptionResponseData.h; sourceTree = "<group>"; };
 		0741CDD128D5A2260041C816 /* ADJBillingSubscriptionResponseData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJBillingSubscriptionResponseData.m; sourceTree = "<group>"; };
+		0741CDD428D5A3DB0041C816 /* ADJClickResponseData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClickResponseData.h; sourceTree = "<group>"; };
+		0741CDD528D5A3DB0041C816 /* ADJClickResponseData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClickResponseData.m; sourceTree = "<group>"; };
 		075D8FC628731314005019E3 /* libAdjust.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAdjust.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		075D8FC928731314005019E3 /* ADJAdjust.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAdjust.h; sourceTree = "<group>"; };
 		075D8FCA28731314005019E3 /* ADJAdjust.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJAdjust.m; sourceTree = "<group>"; };
@@ -1677,6 +1681,8 @@
 				076BDBE828D499BE00E098C9 /* ADJAttributionResponseData.m */,
 				0741CDD028D5A2260041C816 /* ADJBillingSubscriptionResponseData.h */,
 				0741CDD128D5A2260041C816 /* ADJBillingSubscriptionResponseData.m */,
+				0741CDD428D5A3DB0041C816 /* ADJClickResponseData.h */,
+				0741CDD528D5A3DB0041C816 /* ADJClickResponseData.m */,
 			);
 			path = responses;
 			sourceTree = "<group>";
@@ -1757,6 +1763,7 @@
 				0A7ED7212892B11B00CC20DE /* ADJTimeLengthMilli.h in Headers */,
 				0735D61728D367D400614B88 /* ADJAttributionData.h in Headers */,
 				0735D60B28D366C700614B88 /* ADJAttributionController.h in Headers */,
+				0741CDD628D5A3DB0041C816 /* ADJClickResponseData.h in Headers */,
 				0A7ED7002892B11B00CC20DE /* ADJAdjustAttribution.h in Headers */,
 				0A7ED7062892B11B00CC20DE /* ADJNonEmptyString.h in Headers */,
 				0735D61B28D367E300614B88 /* ADJAttributionState.h in Headers */,
@@ -2142,6 +2149,7 @@
 				07615EFF288810A300CE57FC /* ADJAdjustPushToken.m in Sources */,
 				0787C287288838EB00B1DD52 /* ADJStorageRootController.m in Sources */,
 				071E44B92886DBD400695D89 /* ADJSQLiteStatement.m in Sources */,
+				0741CDD728D5A3DB0041C816 /* ADJClickResponseData.m in Sources */,
 				079E154028CA0B4C006E84EF /* ADJAdjustLaunchedDeeplink.m in Sources */,
 				0737C1F8287F3E2A004C7D59 /* ADJThreadController.m in Sources */,
 				6FE447B0288E8D5600FF06E0 /* ADJMainQueueController.m in Sources */,
