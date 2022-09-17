@@ -18,7 +18,6 @@
 #import "ADJGlobalPartnerParametersController.h"
 #import "ADJClientActionRemoveStorageAction.h"
 #import "ADJLaunchedDeeplinkController.h"
-
 /*
  #import "ADJBillingSubscriptionController.h"
  */
@@ -85,7 +84,6 @@
     [self  ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
         clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
 }
-
 */
 
 - (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {

@@ -172,10 +172,10 @@
 		0A7ED6FC2892B11B00CC20DE /* ADJAdjustAttributionSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1AD287F3E18004C7D59 /* ADJAdjustAttributionSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED6FD2892B11B00CC20DE /* ADJAdjustLogSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 071594092886E53F00E7F2F8 /* ADJAdjustLogSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED6FE2892B11B00CC20DE /* ADJAdjustAttributionCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EF428880E8800CE57FC /* ADJAdjustAttributionCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0A7ED6FF2892B11B00CC20DE /* ADJAdjustDeviceIdsCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EF628880F0B00CE57FC /* ADJAdjustDeviceIdsCallback.h */; };
+		0A7ED6FF2892B11B00CC20DE /* ADJAdjustDeviceIdsCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EF628880F0B00CE57FC /* ADJAdjustDeviceIdsCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7002892B11B00CC20DE /* ADJAdjustAttribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 071594052886E41C00E7F2F8 /* ADJAdjustAttribution.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7012892B11B00CC20DE /* ADJAdjustLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 0715940B2886E5F800E7F2F8 /* ADJAdjustLogMessageData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0A7ED7022892B11B00CC20DE /* ADJAdjustDeviceIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EF828880F3800CE57FC /* ADJAdjustDeviceIds.h */; };
+		0A7ED7022892B11B00CC20DE /* ADJAdjustDeviceIds.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EF828880F3800CE57FC /* ADJAdjustDeviceIds.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7032892B11B00CC20DE /* ADJAdjustPushToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EFC288810A300CE57FC /* ADJAdjustPushToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7042892B11B00CC20DE /* ADJAdjustEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F802572892867A0068902F /* ADJAdjustEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED7052892B11B00CC20DE /* ADJCommonBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C3287F3E2A004C7D59 /* ADJCommonBase.h */; };
@@ -1169,8 +1169,6 @@
 			children = (
 				075D8FC928731314005019E3 /* ADJAdjust.h */,
 				075D8FCA28731314005019E3 /* ADJAdjust.m */,
-				07615EF628880F0B00CE57FC /* ADJAdjustDeviceIdsCallback.h */,
-				071594092886E53F00E7F2F8 /* ADJAdjustLogSubscriber.h */,
 				6F214E59288A9EF5002319D7 /* ADJAdjustInternal.h */,
 				6F214E5A288A9EF6002319D7 /* ADJAdjustInternal.m */,
 				0737C1AA287F3E18004C7D59 /* ADJAdjustConfig.h */,
@@ -1181,8 +1179,10 @@
 				071594062886E41C00E7F2F8 /* ADJAdjustAttribution.m */,
 				0715940B2886E5F800E7F2F8 /* ADJAdjustLogMessageData.h */,
 				0715940C2886E5F800E7F2F8 /* ADJAdjustLogMessageData.m */,
+				071594092886E53F00E7F2F8 /* ADJAdjustLogSubscriber.h */,
 				07615EF828880F3800CE57FC /* ADJAdjustDeviceIds.h */,
 				07615EF928880F3800CE57FC /* ADJAdjustDeviceIds.m */,
+				07615EF628880F0B00CE57FC /* ADJAdjustDeviceIdsCallback.h */,
 				07615EFC288810A300CE57FC /* ADJAdjustPushToken.h */,
 				07615EFD288810A300CE57FC /* ADJAdjustPushToken.m */,
 				07F802572892867A0068902F /* ADJAdjustEvent.h */,

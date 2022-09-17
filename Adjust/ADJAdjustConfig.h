@@ -37,8 +37,7 @@ NS_DESIGNATED_INITIALIZER;
 - (void)doNotReadAppleSearchAdsAttribution;
 - (void)allowSendingFromBackground;
 - (void)setEventIdDeduplicationMaxCapacity:(int)eventIdDeduplicationMaxCapacity;
-- (void)setAdjustAttributionSubscriber:
-(nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber;
+- (void)setAdjustAttributionSubscriber:(nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber;
 - (void)setAdjustLogSubscriber:(nonnull id<ADJAdjustLogSubscriber>)adjustLogSubscriber;
 
 // public properties

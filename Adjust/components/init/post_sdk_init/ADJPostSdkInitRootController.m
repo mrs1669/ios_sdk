@@ -127,19 +127,18 @@
                                                                sdkPackageBuilder:self.sdkPackageBuilder
                                                              mainQueueController:self.mainQueueController];
 
-    /*
-     _attributionController =
-     [[ADJAttributionController alloc]
-     initWithLoggerFactory:loggerFactory
-     attributionStateStorage:storageRootController.attributionStateStorage
-     clock:preSdkInitRootController.clock
-     sdkPackageBuilder:self.sdkPackageBuilder
-     threadController:entryRoot.threadController
-     attributionBackoffStrategy:sdkConfigData.attributionBackoffStrategy
-     sdkPackageSenderFactory:self.sdkPackageSenderController
-     mainQueueController:self.mainQueueController
-     doNotInitiateAttributionFromSdk:sdkConfigData.doNotInitiateAttributionFromSdk];
 
+    _attributionController = [[ADJAttributionController alloc] initWithLoggerFactory:loggerFactory
+                                                             attributionStateStorage:storageRootController.attributionStateStorage
+                                                                               clock:preSdkInitRootController.clock
+                                                                   sdkPackageBuilder:self.sdkPackageBuilder
+                                                                    threadController:entryRoot.threadController
+                                                          attributionBackoffStrategy:sdkConfigData.attributionBackoffStrategy
+                                                             sdkPackageSenderFactory:self.sdkPackageSenderController
+                                                                 mainQueueController:self.mainQueueController
+                                                     doNotInitiateAttributionFromSdk:sdkConfigData.doNotInitiateAttributionFromSdk];
+
+    /*
      _billingSubscriptionController =
      [[ADJBillingSubscriptionController alloc]
      initWithLoggerFactory:loggerFactory
@@ -394,9 +393,9 @@
      measurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
      sdkActivePublisher:preSdkInitRootController.sdkActivePublisher];
 
-//    [self.reachabilityController
-//     ccSubscribeToPublishersWithmeasurementSessionStartPublisher:
-//     self.measurementSessionController.measurementSessionStartPublisher];
+    [self.reachabilityController
+     ccSubscribeToPublishersWithMeasurementSessionStartPublisher:
+     self.measurementSessionController.measurementSessionStartPublisher];
 
     [self.measurementSessionController
      ccSubscribeToPublishersWithSdkActivePublisher:preSdkInitRootController.sdkActivePublisher

@@ -85,15 +85,13 @@
 - (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
                                                   apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 /*
- - (nonnull ADJLogPackageData *)
- buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
+ - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
  logLevel:(nonnull NSString *)logLevel
  logSource:(nonnull NSString *)logSource;
  */
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataToOverwrite;
 /*
- - (nonnull ADJThirdPartySharingPackageData *)
- buildThirdPartySharingWithClientData:
+ - (nonnull ADJThirdPartySharingPackageData *) buildThirdPartySharingWithClientData:
  (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
