@@ -21,10 +21,7 @@
 #import "ADJBackoffStrategy.h"
 #import "ADJClientConfigData.h"
 #import "ADJAdRevenuePackageData.h"
-
-/*
- #import "ADJBillingSubscriptionPackageData.h"
- */
+#import "ADJBillingSubscriptionPackageData.h"
 #import "ADJClickPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJInfoResponseData.h"
@@ -34,11 +31,11 @@
 #import "ADJSessionPackageData.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
-  ADJSdkResponseCallbackSubscriber,
-// subscriptions
-  ADJSdkInitSubscriber,
-  ADJPausingSubscriber,
-  ADJOfflineSubscriber
+    ADJSdkResponseCallbackSubscriber,
+    // subscriptions
+    ADJSdkInitSubscriber,
+    ADJPausingSubscriber,
+    ADJOfflineSubscriber
 >
 - (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
                                    pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
@@ -59,12 +56,8 @@
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
-/*
-
- - (void)addBillingSubscriptionPackageToSendWithData:
- (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
- */
+- (void)addBillingSubscriptionPackageToSendWithData:(nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+                                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 - (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;

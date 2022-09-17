@@ -23,11 +23,8 @@
 #import "ADJAdRevenuePackageData.h"
 #import "ADJClientAdRevenueData.h"
 #import "ADJAttributionPackageData.h"
-
-/*
- #import "ADJBillingSubscriptionPackageData.h"
- #import "ADJClientBillingSubscriptionData.h"
- */
+#import "ADJBillingSubscriptionPackageData.h"
+#import "ADJClientBillingSubscriptionData.h"
 #import "ADJClickPackageData.h"
 #import "ADJClientLaunchedDeeplinkData.h"
 #import "ADJInfoPackageData.h"
@@ -66,12 +63,8 @@
 
  - (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
 
-/*
- - (nonnull ADJBillingSubscriptionPackageData *)
- buildBillingSubscriptionWithClientData:
- (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
- */
+- (nonnull ADJBillingSubscriptionPackageData *)buildBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
+                                                                         apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
 - (nonnull ADJClickPackageData *)buildLaunchedDeeplinkClickWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
                                                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;

@@ -18,9 +18,7 @@
 #import "ADJGlobalPartnerParametersController.h"
 #import "ADJClientActionRemoveStorageAction.h"
 #import "ADJLaunchedDeeplinkController.h"
-/*
- #import "ADJBillingSubscriptionController.h"
- */
+#import "ADJBillingSubscriptionController.h"
 #import "ADJEventController.h"
 #import "ADJPushTokenController.h"
 #import "ADJClientActionRemoveStorageAction.h"
@@ -79,12 +77,11 @@
     [self ccSaveClientActionWithIoInjectable:clientAdRevenueData
                        clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
 }
-/*
+
 - (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData {
     [self  ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
         clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
 }
-*/
 
 - (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
     [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
@@ -238,13 +235,11 @@
     if ([ADJAdRevenueControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.adRevenueController;
     }
-    /*
-     if ([ADJBillingSubscriptionControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.billingSubscriptionController;
-     }
-     */
+
+    if ([ADJBillingSubscriptionControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]){
+        return postSdkInitRootController.billingSubscriptionController;
+    }
+    
     if ([ADJLaunchedDeeplinkClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.launchedDeeplinkController;
     }

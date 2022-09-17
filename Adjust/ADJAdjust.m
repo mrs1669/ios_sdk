@@ -177,6 +177,31 @@
     }];
 }
 
++ (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription {
+    [ADJEntryRoot executeBlockInClientContext:
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+     {
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [adjustAPI ccClientActionsWithSource:@"trackBillingSubscription"];
+        
+        if (clientActionsAPI == nil) {
+            return;
+        }
+        
+        ADJClientBillingSubscriptionData *_Nullable clientBillingSubscriptionData =
+        [ADJClientBillingSubscriptionData
+         instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
+         logger:apiLogger];
+        
+        if (clientBillingSubscriptionData == nil) {
+            return;
+        }
+        
+        [clientActionsAPI
+         ccTrackBillingSubscriptionWithClientData:clientBillingSubscriptionData];
+    }];
+}
+
 + (void)adjustAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback {
     [ADJEntryRoot executeBlockInClientContext:
         ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)

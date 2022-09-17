@@ -14,6 +14,7 @@
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustAttributionCallback.h"
 #import "ADJAdjustDeviceIdsCallback.h"
+#import "ADJAdjustBillingSubscription.h"
 
 @interface ADJAdjust : NSObject
 
@@ -30,6 +31,8 @@
 + (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken;
 
 + (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink;
+
++ (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription;
 
 + (void)adjustAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;
 

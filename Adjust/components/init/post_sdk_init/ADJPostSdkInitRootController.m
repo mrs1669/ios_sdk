@@ -138,13 +138,11 @@
                                                                  mainQueueController:self.mainQueueController
                                                      doNotInitiateAttributionFromSdk:sdkConfigData.doNotInitiateAttributionFromSdk];
 
-    /*
-     _billingSubscriptionController =
-     [[ADJBillingSubscriptionController alloc]
-     initWithLoggerFactory:loggerFactory
-     sdkPackageBuilder:self.sdkPackageBuilder
-     mainQueueController:self.mainQueueController];
-     */
+    _billingSubscriptionController = [[ADJBillingSubscriptionController alloc]
+                                      initWithLoggerFactory:loggerFactory
+                                      sdkPackageBuilder:self.sdkPackageBuilder
+                                      mainQueueController:self.mainQueueController];
+
     _launchedDeeplinkController = [[ADJLaunchedDeeplinkController alloc] initWithLoggerFactory:loggerFactory
                                                                              sdkPackageBuilder:self.sdkPackageBuilder
                                                                            mainQueueController:self.mainQueueController];
@@ -270,15 +268,9 @@
     [self.adRevenueController ccTrackAdRevenueWithClientData:clientAdRevenueData];
 }
 
-/*
- - (void)ccTrackBillingSubscriptionWithClientData:
- (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
- {
- [self.billingSubscriptionController
- ccTrackBillingSubscriptionWithClientData:clientBillingSubscriptionData];
- }
-
- */
+- (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData {
+    [self.billingSubscriptionController ccTrackBillingSubscriptionWithClientData:clientBillingSubscriptionData];
+}
 
 - (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
     [self.launchedDeeplinkController ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
