@@ -22,9 +22,7 @@
 #import "ADJEventController.h"
 #import "ADJPushTokenController.h"
 #import "ADJClientActionRemoveStorageAction.h"
-/*
- #import "ADJThirdPartySharingController.h"
- */
+#import "ADJThirdPartySharingController.h"
 
 @interface ADJClientActionController ()
 #pragma mark - Injected dependencies
@@ -257,13 +255,10 @@
     if ([ADJPushTokenControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.pushTokenController;
     }
-    /*
-     if ([ADJThirdPartySharingControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.thirdPartySharingController;
-     }
-     */
+
+    if ([ADJThirdPartySharingControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.thirdPartySharingController;
+    }
 
     return nil;
 }
