@@ -57,6 +57,7 @@ if (adjustAttribution.valueName.length > 0) {                               \
     addWhenValid(deeplink, deeplink)
     addWhenValid(state, state)
     addWhenValid(cost_type, costType)
+
     if (adjustAttribution.costAmount >= 0) {
         [testLibrary addInfoToSend:@"cost_amount"
                              value:@(adjustAttribution.costAmount).description];

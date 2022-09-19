@@ -362,17 +362,17 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
                                                            parameters:parameters];
 }
 
-//- (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
-//    ADJStringMapBuilder *_Nonnull parametersBuilder =
-//    [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
-//
-//    ADJStringMap *_Nonnull parameters =
-//    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
-//                                                       path:ADJGdprForgetPackageDataPath];
-//
-//    return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
-//                                                    parameters:parameters];
-//}
+- (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
+    
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJGdprForgetPackageDataPath];
+    
+    return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
+                                                    parameters:parameters];
+}
 
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                           sentAtTimestamp:(nullable ADJTimestampMilli *)sentAtTimestamp {

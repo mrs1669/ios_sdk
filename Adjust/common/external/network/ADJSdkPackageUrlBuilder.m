@@ -10,8 +10,8 @@
 
 #import "ADJAdjustConfig.h"
 #import "ADJConstantsParam.h"
-//#import "ADJGdprForgetPackageData.h"
-//#import "ADJBillingSubscriptionPackageData.h"
+#import "ADJGdprForgetPackageData.h"
+#import "ADJBillingSubscriptionPackageData.h"
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -157,29 +157,26 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
 }
 
 - (NSUInteger)urlCountWithPath:(nonnull NSString *)path {
-    /*
-     if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
-     return self.gdprUrlChoicesArray.count;
-     }
-     
-     if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
-     return self.subscriptionUrlChoicesArray.count;
-     }
-     */
+    if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
+        return self.gdprUrlChoicesArray.count;
+    }
+
+    if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
+        return self.subscriptionUrlChoicesArray.count;
+    }
+
     return self.baseUrlChoicesArray.count;
 }
 
 #pragma mark Internal Methods
 - (nonnull NSString *)chooseUrlWithPath:(nonnull NSString *)path {
-    /*
-     if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
-     return [self.gdprUrlChoicesArray objectAtIndex:self.choiceIndex];
-     }
-     
-     if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
-     return [self.subscriptionUrlChoicesArray objectAtIndex:self.choiceIndex];
-     }
-     */
+    if ([path isEqualToString:ADJGdprForgetPackageDataPath]) {
+        return [self.gdprUrlChoicesArray objectAtIndex:self.choiceIndex];
+    }
+    
+    if ([path isEqualToString:ADJBillingSubscriptionPackageDataPath]) {
+        return [self.subscriptionUrlChoicesArray objectAtIndex:self.choiceIndex];
+    }
     return [self.baseUrlChoicesArray objectAtIndex:self.choiceIndex];
 }
 

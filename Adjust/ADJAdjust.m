@@ -376,6 +376,14 @@
     }];
 }
 
++ (void)gdprForgetDevice {
+    [ADJEntryRoot executeBlockInClientContext:
+     ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
+     {
+        [adjustAPI ccGdprForgetDevice];
+    }];
+}
+
 @end
 
 

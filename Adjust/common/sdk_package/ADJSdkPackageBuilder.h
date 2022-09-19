@@ -35,9 +35,7 @@
 #import "ADJSessionPackageData.h"
 #import "ADJClientThirdPartySharingData.h"
 #import "ADJThirdPartySharingPackageData.h"
-/*
- #import "ADJGdprForgetPackageData.h"
- */
+#import "ADJGdprForgetPackageData.h"
 #import "ADJPackageSessionData.h"
 
 @interface ADJSdkPackageBuilder : ADJCommonBase
@@ -61,7 +59,7 @@
 - (nonnull ADJAdRevenuePackageData *)buildAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
                                                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
- - (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
+- (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
 
 - (nonnull ADJBillingSubscriptionPackageData *)buildBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
                                                                          apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
@@ -74,7 +72,7 @@
  buildAsaAttributionClickWithToken:
  (nonnull ADJNonEmptyString *)asaAttibutionToken
  asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
-*/
+ */
 - (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
                                                   apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 /*
@@ -85,11 +83,10 @@
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataToOverwrite;
 
 - (nonnull ADJThirdPartySharingPackageData *)buildThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
-                                                                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+                                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
-/*
- - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage;
- */
+- (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage;
+
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                           sentAtTimestamp:(nullable ADJTimestampMilli *)sentAtTimestamp;
 

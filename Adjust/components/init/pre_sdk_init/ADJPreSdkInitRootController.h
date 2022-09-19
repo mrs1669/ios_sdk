@@ -12,10 +12,10 @@
 #import "ADJClientAPI.h"
 #import "ADJSdkInitSubscriber.h"
 #import "ADJPublishingGateSubscriber.h"
-//#import "ADJGdprForgetSubscriber.h"
+#import "ADJGdprForgetSubscriber.h"
 #import "ADJClock.h"
 #import "ADJStorageRootController.h"
-//#import "ADJGdprForgetController.h"
+#import "ADJGdprForgetController.h"
 #import "ADJLifecycleController.h"
 #import "ADJOfflineController.h"
 #import "ADJClientActionController.h"
@@ -32,8 +32,8 @@
 @interface ADJPreSdkInitRootController : ADJCommonBase<
     ADJClientAPI,
     // subscriptions
-    ADJPublishingGateSubscriber
-//    ADJGdprForgetSubscriber
+    ADJPublishingGateSubscriber,
+    ADJGdprForgetSubscriber
 >
 - (void)ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:(nonnull ADJEntryRoot *) entryRoot
                                     postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController
@@ -49,7 +49,7 @@
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJStorageRootController *storageRootController;
-//@property (nonnull, readonly, strong, nonatomic) ADJGdprForgetController *gdprForgetController;
+@property (nonnull, readonly, strong, nonatomic) ADJGdprForgetController *gdprForgetController;
 @property (nonnull, readonly, strong, nonatomic) ADJLifecycleController *lifecycleController;
 @property (nonnull, readonly, strong, nonatomic) ADJOfflineController *offlineController;
 @property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;

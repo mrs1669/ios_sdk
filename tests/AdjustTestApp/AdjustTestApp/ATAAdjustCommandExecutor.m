@@ -322,7 +322,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)gdprForgetMe {
-    //[ADJAdjust gdprForgetDevice];
+    [ADJAdjust gdprForgetDevice];
 }
 
 - (void)trackAdRevenue {
@@ -383,38 +383,37 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)thirdPartySharing {
-    /*
-     ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
-     [[ADJAdjustThirdPartySharing alloc] init];
 
-     NSNumber *_Nullable sharingEnabledNumberBool =
-     [self strictParseNumberBoolWithKey:@"enableOrElseDisable"];
+    ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
+    [[ADJAdjustThirdPartySharing alloc] init];
 
-     if (sharingEnabledNumberBool != nil) {
-     if (sharingEnabledNumberBool.boolValue) {
-     [adjustThirdPartySharing enableThirdPartySharing];
-     } else {
-     [adjustThirdPartySharing disableThirdPartySharing];
-     }
-     }
+    NSNumber *_Nullable sharingEnabledNumberBool =
+    [self strictParseNumberBoolWithKey:@"enableOrElseDisable"];
 
-     if ([self containsKey:@"granularOptions"]) {
-     [self iterateWithKey:@"granularOptions"
-     source:@"third party granular options"
-     nameKeyValueBlock:
-     ^(NSString * _Nonnull name,
-     NSString * _Nonnull key,
-     NSString * _Nonnull value)
-     {
-     [adjustThirdPartySharing
-     addGranularOptionWithPartnerName:name
-     key:key
-     value:value];
-     }];
-     }
+    if (sharingEnabledNumberBool != nil) {
+        if (sharingEnabledNumberBool.boolValue) {
+            [adjustThirdPartySharing enableThirdPartySharing];
+        } else {
+            [adjustThirdPartySharing disableThirdPartySharing];
+        }
+    }
+
+    if ([self containsKey:@"granularOptions"]) {
+        [self iterateWithKey:@"granularOptions"
+                      source:@"third party granular options"
+           nameKeyValueBlock:
+         ^(NSString * _Nonnull name,
+           NSString * _Nonnull key,
+           NSString * _Nonnull value)
+         {
+            [adjustThirdPartySharing
+             addGranularOptionWithPartnerName:name
+             key:key
+             value:value];
+        }];
+    }
 
      [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
-     */
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {

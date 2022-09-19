@@ -41,6 +41,8 @@
 
 + (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 
++ (void)gdprForgetDevice;
+
 + (void)inactivateSdk;
 + (void)reactivateSdk;
 

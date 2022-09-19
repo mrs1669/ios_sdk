@@ -12,8 +12,8 @@
 #import "ADJIoData.h"
 #import "ADJUtilF.h"
 #import "ADJUtilMap.h"
-/*
  #import "ADJGdprForgetPackageData.h"
+/*
  #import "ADJLogPackageData.h"
  */
 #import "ADJAttributionPackageData.h"
@@ -86,9 +86,9 @@ logger:logger];                 \
         return nil;
     }
     /*
-     pathToPackage(ADJGdprForgetPackageData)
      pathToPackage(ADJLogPackageData)
      */
+    pathToPackage(ADJGdprForgetPackageData)
     pathToPackage(ADJAttributionPackageData)
     pathToPackage(ADJBillingSubscriptionPackageData)
     pathToPackage(ADJAdRevenuePackageData)

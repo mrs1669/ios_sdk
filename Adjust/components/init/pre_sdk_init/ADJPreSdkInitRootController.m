@@ -55,13 +55,12 @@
     _storageRootController = [[ADJStorageRootController alloc] initWithLoggerFactory:loggerFactory
                                                                threadExecutorFactory:entryRoot.threadController];
 
-    //    _gdprForgetController =
-    //        [[ADJGdprForgetController alloc]
-    //            initWithLoggerFactory:loggerFactory
-    //            gdprForgetStateStorage:self.storageRootController.gdprForgetStateStorage
-    //            threadExecutorFactory:entryRoot.threadController
-    //            gdprForgetBackoffStrategy:entryRoot.sdkConfigData.gdprForgetBackoffStrategy];
-    //
+    _gdprForgetController = [[ADJGdprForgetController alloc]
+                             initWithLoggerFactory:loggerFactory
+                             gdprForgetStateStorage:self.storageRootController.gdprForgetStateStorage
+                             threadExecutorFactory:entryRoot.threadController
+                             gdprForgetBackoffStrategy:entryRoot.sdkConfigData.gdprForgetBackoffStrategy];
+
     _lifecycleController = [[ADJLifecycleController alloc]
                             initWithLoggerFactory:loggerFactory
                             threadController:entryRoot.threadController
@@ -89,7 +88,7 @@
                                   deviceController:self.deviceController];
 
     _sdkActiveState = [[ADJSdkActiveState alloc] initWithLoggerFactory:loggerFactory
-                                                       isGdprForgotten:NO]; //TODO: (Gena)Uncomment //[self.gdprForgetController isForgotten]];
+                                                       isGdprForgotten:[self.gdprForgetController isForgotten]];
 
     //    _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
 
@@ -166,32 +165,32 @@
                                                    source:@"ccReactivateSdk"];
 }
 
-//- (void)ccGdprForgetDevice {
-//    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//    if (entryRoot == nil) {
-//        [self.logger error:@"Cannot ccGdprForgetDevice without a reference to entry root"];
-//        return;
-//    }
-//
-//    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
-//        self.storageRootController.sdkActiveStateStorage;
-//
-//    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
-//
-//    BOOL forgetDevice =
-//        [self.sdkActiveState
-//            tryForgetDeviceWithCurrentSdkActiveStateData:
-//                [sdkActiveStateStorage readOnlyStoredDataValue]
-//            sdkActiveStatusEventWO:sdkActiveStatusEventWO
-//            adjustApiLogger:entryRoot.adjustApiLogger];
-//
-//    if (forgetDevice) {
-//        [self.gdprForgetController forgetDevice];
-//    }
-//
-//    [self handleSdkActiveStatusEvent:[sdkActiveStatusEventWO changedValue]
-//                              source:@"ccGdprForgetDevice"];
-//}
+- (void)ccGdprForgetDevice {
+    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+    if (entryRoot == nil) {
+        [self.logger error:@"Cannot ccGdprForgetDevice without a reference to entry root"];
+        return;
+    }
+
+    ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage =
+    self.storageRootController.sdkActiveStateStorage;
+
+    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
+
+    BOOL forgetDevice =
+    [self.sdkActiveState
+     tryForgetDeviceWithCurrentSdkActiveStateData:
+         [sdkActiveStateStorage readOnlyStoredDataValue]
+     sdkActiveStatusEventWO:sdkActiveStatusEventWO
+     adjustApiLogger:entryRoot.adjustApiLogger];
+
+    if (forgetDevice) {
+        [self.gdprForgetController forgetDevice];
+    }
+
+    [self handleSdkActiveStatusEvent:[sdkActiveStatusEventWO changedValue]
+                              source:@"ccGdprForgetDevice"];
+}
 
 - (void)ccPutSdkOffline {
     ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
@@ -305,13 +304,13 @@
     // inject post sdk init dependencies
     [self.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:postSdkInitRootController];
 
-    /*
-     [self.gdprForgetController ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
-     clock:self.clock
-     loggerFactory:entryRoot.logController
-     threadpool:entryRoot.threadController
-     sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
-     */
+
+    [self.gdprForgetController ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
+                                                                         clock:self.clock
+                                                                 loggerFactory:entryRoot.logController
+                                                                    threadpool:entryRoot.threadController
+                                                       sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
+
 
     // subscribing to publishers
     [self.lifecycleController
@@ -324,16 +323,15 @@
                                                                     measurementSessionStartPublisher:
      postSdkInitRootController.measurementSessionController.measurementSessionStartPublisher];
 
-    [self.deviceController ccSubscribeToPublishersWithLifecylePublisher:
+     [self.deviceController ccSubscribeToPublishersWithLifecylePublisher:
      self.lifecycleController.lifecyclePublisher];
 
-    /*
-     [self.gdprForgetController
-     ccSubscribeToPublishersWithSdkInitPublisher:postSdkInitRootController.sdkInitPublisher
-     publishingGatePublisher:publishingGatePublisher
-     lifecyclePublisher:self.lifecycleController.lifecyclePublisher
-     sdkResponsePublisher:postSdkInitRootController.sdkPackageSenderController.sdkResponsePublisher];
+    [self.gdprForgetController ccSubscribeToPublishersWithSdkInitPublisher:postSdkInitRootController.sdkInitPublisher
+                                                   publishingGatePublisher:publishingGatePublisher
+                                                        lifecyclePublisher:self.lifecycleController.lifecyclePublisher
+                                                      sdkResponsePublisher:postSdkInitRootController.sdkPackageSenderController.sdkResponsePublisher];
 
+    /*
      [self.pluginController
      ccSubscribeToPublishersWithSdkPackageSendingPublisher:
      postSdkInitRootController.sdkPackageSenderController.sdkPackageSendingPublisher
@@ -342,9 +340,7 @@
      // subscribe self to publishers
      */
     [publishingGatePublisher addSubscriber:self];
-    /*
-     [self.gdprForgetController.gdprForgetPublisher addSubscriber:self];
-     */
+    [self.gdprForgetController.gdprForgetPublisher addSubscriber:self];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -359,35 +355,35 @@
                               source:@"ccAllowedToPublishNotifications"];
 }
 
-//#pragma mark - ADJGdprForgetSubscriber
-//- (void)didGdprForget {
-//    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
-//
-//    if (entryRoot == nil) {
-//        [self.logger error:@"Cannot process gdpr forget event"
-//            " without a reference to entry root"];
-//        return;
-//    }
-//
-//    __typeof(self) __weak weakSelf = self;
-//    [entryRoot.clientExecutor executeInSequenceWithBlock:^{
-//        __typeof(weakSelf) __strong strongSelf = weakSelf;
-//        if (strongSelf == nil) { return; }
-//
-//        [strongSelf processGdprForgetEvent];
-//    }];
-//}
-//
-//#pragma mark Internal Methods
-//- (void)processGdprForgetEvent {
-//    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
-//
-//    [self.sdkActiveState
-//        gdprForgetEventReceivedWithSdkActiveStatusEventWO:sdkActiveStatusEventWO];
-//
-//    [self handleSdkActiveStatusEvent:[sdkActiveStatusEventWO changedValue]
-//                              source:@"GdprForgetEvent"];
-//}
+#pragma mark - ADJGdprForgetSubscriber
+- (void)didGdprForget {
+    ADJEntryRoot *_Nullable entryRoot = self.entryRootWeak;
+
+    if (entryRoot == nil) {
+        [self.logger error:@"Cannot process gdpr forget event"
+            " without a reference to entry root"];
+        return;
+    }
+
+    __typeof(self) __weak weakSelf = self;
+    [entryRoot.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        [strongSelf processGdprForgetEvent];
+    }];
+}
+
+#pragma mark Internal Methods
+- (void)processGdprForgetEvent {
+    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
+
+    [self.sdkActiveState
+        gdprForgetEventReceivedWithSdkActiveStatusEventWO:sdkActiveStatusEventWO];
+
+    [self handleSdkActiveStatusEvent:[sdkActiveStatusEventWO changedValue]
+                              source:@"GdprForgetEvent"];
+}
 
 - (void)handleStateSideEffectsWithSdkActiveStateStorage:(nonnull ADJSdkActiveStateStorage *)sdkActiveStateStorage
                               changedSdkActiveStateData:(nullable ADJSdkActiveStateData *)changedSdkActiveStateData

@@ -15,10 +15,9 @@
 #import "ADJBillingSubscriptionResponseData.h"
 #import "ADJClickPackageData.h"
 #import "ADJClickResponseData.h"
-
+#import "ADJGdprForgetPackageData.h"
+#import "ADJGdprForgetResponseData.h"
 /*
- #import "ADJGdprForgetPackageData.h"
- #import "ADJGdprForgetResponseData.h"
  #import "ADJLogPackageData.h"
  #import "ADJLogResponseData.h"
  */
@@ -128,10 +127,8 @@ logger:logger];                                             \
 
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger {
 
-    /*
-     tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
-     tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
-     */
+    tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
+    //     tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
     tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
     tryBuildResponse(ADJBillingSubscriptionPackageData, ADJBillingSubscriptionResponseData, billingSubscriptionPackageData)
     tryBuildResponse(ADJAttributionPackageData, ADJAttributionResponseData, attributionPackageData)
