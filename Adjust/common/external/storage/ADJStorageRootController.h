@@ -22,8 +22,8 @@
 #import "ADJAttributionStateStorage.h"
 /*
  #import "ADJAsaAttributionStateStorage.h"
- #import "ADJLogQueueStorage.h"
  */
+#import "ADJLogQueueStorage.h"
 #import "ADJGdprForgetStateStorage.h"
 #import "ADJMainQueueStorage.h"
 #import "ADJSdkActiveStateStorage.h"
@@ -50,7 +50,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersStorage *globalCallbackParametersStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersStorage *globalPartnerParametersStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetStateStorage *gdprForgetStateStorage;
-//@property (nonnull, readonly, strong, nonatomic) ADJLogQueueStorage *logQueueStorage;
+@property (nonnull, readonly, strong, nonatomic) ADJLogQueueStorage *logQueueStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStorage *mainQueueStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *sdkActiveStateStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *measurementSessionStateStorage;

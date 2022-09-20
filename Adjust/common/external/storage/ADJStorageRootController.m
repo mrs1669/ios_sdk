@@ -69,7 +69,7 @@ sqliteController:self.sqliteController];        \
     buildAndInjectStorage(gdprForgetStateStorage, ADJGdprForgetStateStorage);
     buildAndInjectStorage(globalCallbackParametersStorage, ADJGlobalCallbackParametersStorage);
     buildAndInjectStorage(globalPartnerParametersStorage, ADJGlobalPartnerParametersStorage);
-    //    buildAndInjectStorage(logQueueStorage, ADJLogQueueStorage);
+    buildAndInjectStorage(logQueueStorage, ADJLogQueueStorage);
     buildAndInjectStorage(mainQueueStorage, ADJMainQueueStorage);
     buildAndInjectStorage(sdkActiveStateStorage, ADJSdkActiveStateStorage);
     buildAndInjectStorage(measurementSessionStateStorage, ADJMeasurementSessionStateStorage);

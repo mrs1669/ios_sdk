@@ -183,16 +183,16 @@
                                     sdkPackageBuilder:self.sdkPackageBuilder
                                     mainQueueController:self.mainQueueController];
 
-    /*
-     _logQueueController =
-     [[ADJLogQueueController alloc]
-     initWithLoggerFactory:loggerFactory
-     storage:storageRootController.logQueueStorage
-     threadController:entryRoot.threadController
-     clock:preSdkInitRootController.clock
-     backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
-     sdkPackageSenderFactory:self.sdkPackageSenderController];
 
+    _logQueueController = [[ADJLogQueueController alloc]
+                           initWithLoggerFactory:loggerFactory
+                           storage:storageRootController.logQueueStorage
+                           threadController:entryRoot.threadController
+                           clock:preSdkInitRootController.clock
+                           backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
+                           sdkPackageSenderFactory:self.sdkPackageSenderController];
+
+    /*
      _asaAttributionController =
      [[ADJAsaAttributionController alloc]
      initWithLoggerFactory:loggerFactory
@@ -362,11 +362,12 @@
      sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
      attributionPublisher:self.attributionController.attributionPublisher
      sdkPackageSendingPublisher:self.sdkPackageSenderController.sdkPackageSendingPublisher];
+      */
 
-     [self.logQueueController
+    [self.logQueueController
      ccSubscribeToPublishersWithSdkInitPublisher:self.sdkInitPublisher
      pausingPublisher:self.pausingController.pausingPublisher];
-     */
+
     [self.mainQueueController
      ccSubscribeToPublishersWithSdkInitPublisher:self.sdkInitPublisher
      pausingPublisher:self.pausingController.pausingPublisher

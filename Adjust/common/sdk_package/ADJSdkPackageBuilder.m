@@ -281,36 +281,31 @@
                                               parameters:parameters];
 }
 
-/*
-
- - (nonnull ADJLogPackageData *)
- buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
- logLevel:(nonnull NSString *)logLevel
- logSource:(nonnull NSString *)logSource
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJLogPackageDataPath];
-
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamLogMessageKey
- packageParamValueSerializable:logMessage];
-
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamLogLevelKey
- constValue:logLevel];
-
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamLogSourceKey
- constValue:logSource];
-
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJLogPackageDataPath];
-
- return [[ADJLogPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+- (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
+                                                 logLevel:(nonnull NSString *)logLevel
+                                                logSource:(nonnull NSString *)logSource {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJLogPackageDataPath];
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamLogMessageKey
+                         packageParamValueSerializable:logMessage];
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamLogLevelKey
+                                            constValue:logLevel];
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamLogSourceKey
+                                            constValue:logSource];
+    
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJLogPackageDataPath];
+    
+    return [[ADJLogPackageData alloc] initWithClientSdk:self.clientSdk
+                                             parameters:parameters];
+}
 
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataOverwrite {
     ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJSessionPackageDataPath

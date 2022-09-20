@@ -12,10 +12,8 @@
 #import "ADJIoData.h"
 #import "ADJUtilF.h"
 #import "ADJUtilMap.h"
- #import "ADJGdprForgetPackageData.h"
-/*
- #import "ADJLogPackageData.h"
- */
+#import "ADJGdprForgetPackageData.h"
+#import "ADJLogPackageData.h"
 #import "ADJAttributionPackageData.h"
 #import "ADJBillingSubscriptionPackageData.h"
 #import "ADJAdRevenuePackageData.h"
@@ -85,9 +83,8 @@ logger:logger];                 \
         [logger error:@"Cannot create instance from Io data without valid parameters"];
         return nil;
     }
-    /*
-     pathToPackage(ADJLogPackageData)
-     */
+
+    pathToPackage(ADJLogPackageData)
     pathToPackage(ADJGdprForgetPackageData)
     pathToPackage(ADJAttributionPackageData)
     pathToPackage(ADJBillingSubscriptionPackageData)

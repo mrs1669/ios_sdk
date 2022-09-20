@@ -32,8 +32,9 @@
 #import "ADJPausingController.h"
 #import "ADJClientSubscriptionsController.h"
 #import "ADJThirdPartySharingController.h"
+#import "ADJLogQueueController.h"
+
 /*
- #import "ADJLogQueueController.h"
  #import "ADJAsaAttributionController.h"
  */
 
@@ -77,9 +78,8 @@
 @property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
 @property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
 @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
-
+@property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
 /*
- @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
  @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionController *asaAttributionController;
  */
 

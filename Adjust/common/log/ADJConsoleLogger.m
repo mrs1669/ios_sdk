@@ -126,7 +126,6 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
         messageLogLevel:(nonnull NSString *)messageLogLevel {
 
     // TODO: (Gena) Simplify the following block - call [self logOnConsoleWithLogMessage...] only in one place.
-
     if ([self.configLogLevel.stringValue isEqual:ADJAdjustLogLevelDebug]) {
         //  - AdjustLogLevel.DEBUG -> print any android log level message
         [self logOnConsoleWithLogMessage:logMessage
