@@ -20,9 +20,7 @@
 #import "ADJGlobalCallbackParametersStorage.h"
 #import "ADJGlobalPartnerParametersStorage.h"
 #import "ADJAttributionStateStorage.h"
-/*
- #import "ADJAsaAttributionStateStorage.h"
- */
+#import "ADJAsaAttributionStateStorage.h"
 #import "ADJLogQueueStorage.h"
 #import "ADJGdprForgetStateStorage.h"
 #import "ADJMainQueueStorage.h"
@@ -42,7 +40,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) ADJSQLiteController *sqliteController;
 
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionStateStorage *attributionStateStorage;
-//@property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionStateStorage *asaAttributionStateStorage;
+@property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionStateStorage *asaAttributionStateStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *clientActionStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJDeviceIdsStorage *deviceIdsStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJEventStateStorage *eventStateStorage;

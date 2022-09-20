@@ -33,10 +33,7 @@
 #import "ADJClientSubscriptionsController.h"
 #import "ADJThirdPartySharingController.h"
 #import "ADJLogQueueController.h"
-
-/*
- #import "ADJAsaAttributionController.h"
- */
+#import "ADJAsaAttributionController.h"
 
 //#import "ADJEntryRoot.h"
 @class ADJEntryRoot;
@@ -79,9 +76,7 @@
 @property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
 @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
 @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
-/*
- @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionController *asaAttributionController;
- */
+@property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionController *asaAttributionController;
 
 // public api
 - (void)ccSdkInitWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot

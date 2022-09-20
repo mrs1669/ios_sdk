@@ -192,21 +192,20 @@
                            backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
                            sdkPackageSenderFactory:self.sdkPackageSenderController];
 
-    /*
-     _asaAttributionController =
-     [[ADJAsaAttributionController alloc]
-     initWithLoggerFactory:loggerFactory
-     threadExecutorFactory:entryRoot.threadController
-     sdkPackageBuilder:self.sdkPackageBuilder
-     asaAttributionStateStorage:storageRootController.asaAttributionStateStorage
-     clock:preSdkInitRootController.clock
-     threadPool:entryRoot.threadController
-     clientConfigData:clientConfigData
-     asaAttributionConfig:sdkConfigData.asaAttributionConfigData
-     logQueueController:self.logQueueController
-     mainQueueController:self.mainQueueController
-     adjustAttributionStateStorage:storageRootController.attributionStateStorage];
-     */
+
+    _asaAttributionController = [[ADJAsaAttributionController alloc]
+                                 initWithLoggerFactory:loggerFactory
+                                 threadExecutorFactory:entryRoot.threadController
+                                 sdkPackageBuilder:self.sdkPackageBuilder
+                                 asaAttributionStateStorage:storageRootController.asaAttributionStateStorage
+                                 clock:preSdkInitRootController.clock
+                                 threadPool:entryRoot.threadController
+                                 clientConfigData:clientConfigData
+                                 asaAttributionConfig:sdkConfigData.asaAttributionConfigData
+                                 logQueueController:self.logQueueController
+                                 mainQueueController:self.mainQueueController
+                                 adjustAttributionStateStorage:storageRootController.attributionStateStorage];
+
     return self;
     /*
      googlePlayInstallReferrerController = new GooglePlayInstallReferrerController(
@@ -355,14 +354,13 @@
     [self.clientSubscriptionsController
      ccSubscribeToPublishersWithAttributionPublisher:self.attributionController.attributionPublisher
                                                                            logPublisher:entryRoot.logController.logPublisher];
-     /*
-     [self.asaAttributionController
-     ccSubscribeToPublishersWithKeepAlivePublisher:self.keepAliveController.keepAlivePublisher
-     preFirstMeasurementSessionStartPublisher:self.measurementSessionController.preFirstMeasurementSessionStartPublisher
-     sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
-     attributionPublisher:self.attributionController.attributionPublisher
-     sdkPackageSendingPublisher:self.sdkPackageSenderController.sdkPackageSendingPublisher];
-      */
+
+    [self.asaAttributionController ccSubscribeToPublishersWithKeepAlivePublisher:self.keepAliveController.keepAlivePublisher
+                                        preFirstMeasurementSessionStartPublisher:self.measurementSessionController.preFirstMeasurementSessionStartPublisher
+                                                            sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
+                                                            attributionPublisher:self.attributionController.attributionPublisher
+                                                      sdkPackageSendingPublisher:self.sdkPackageSenderController.sdkPackageSendingPublisher];
+
 
     [self.logQueueController
      ccSubscribeToPublishersWithSdkInitPublisher:self.sdkInitPublisher

@@ -76,26 +76,24 @@
     return NO;
 }
 
-/*
- - (BOOL)containsAsaClickPackage {
- ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
- if (mainQueueStorage == nil) {
- [self.logger error:@"Cannot determine if it contains first session package"
- " without a reference to storage"];
- return NO;
- }
+- (BOOL)containsAsaClickPackage {
+    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
+    if (mainQueueStorage == nil) {
+        [self.logger error:@"Cannot determine if it contains first session package"
+         " without a reference to storage"];
+        return NO;
+    }
 
- NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
+    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
 
- for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
- if ([self isAsaClickPackageWithData:sdkPackageData]) {
- return YES;
- }
- }
+    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
+        if ([self isAsaClickPackageWithData:sdkPackageData]) {
+            return YES;
+        }
+    }
 
- return NO;
- }
- */
+    return NO;
+}
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
@@ -296,22 +294,19 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     return [sessionPackageData isFirstSession];
 }
 
-/*
- - (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
- if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
- return NO;
- }
+- (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
+    if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
+        return NO;
+    }
 
- ADJNonEmptyString *_Nullable clickSourceValue =
- [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
- if (clickSourceValue == nil) {
- return NO;
- }
+    ADJNonEmptyString *_Nullable clickSourceValue =
+    [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
+    if (clickSourceValue == nil) {
+        return NO;
+    }
 
- return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
- }
-
- */
+    return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
+}
 
 - (void)handleSdkInit {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;

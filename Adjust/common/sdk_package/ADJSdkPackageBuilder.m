@@ -200,38 +200,32 @@
                                                parameters:parameters];
 }
 
-/** /
- - (nonnull ADJClickPackageData *)
- buildAsaAttributionClickWithToken:
- (nonnull ADJNonEmptyString *)asaAttibutionToken
- asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJClickPackageDataPath];
+- (nonnull ADJClickPackageData *)buildAsaAttributionClickWithToken:(nonnull ADJNonEmptyString *)asaAttibutionToken
+                                       asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJClickPackageDataPath];
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamClickSourceKey
- constValue:ADJParamAsaAttributionClickSourceValue];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamClickSourceKey
+                                            constValue:ADJParamAsaAttributionClickSourceValue];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAsaAttributionTokenKey
- packageParamValueSerializable:asaAttibutionToken];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamAsaAttributionTokenKey
+     packageParamValueSerializable:asaAttibutionToken];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAsaAttributionReadAtKey
- packageParamValueSerializable:asaAttributionReadTimestamp];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamAsaAttributionReadAtKey
+     packageParamValueSerializable:asaAttributionReadTimestamp];
 
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJClickPackageDataPath];
 
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJClickPackageDataPath];
-
- return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+    return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
+                                               parameters:parameters];
+}
 
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {

@@ -49,7 +49,7 @@
 
 // public api
 - (BOOL)containsFirstSessionPackage;
-//- (BOOL)containsAsaClickPackage;
+- (BOOL)containsAsaClickPackage;
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;

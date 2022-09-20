@@ -65,12 +65,9 @@
 - (nonnull ADJClickPackageData *)buildLaunchedDeeplinkClickWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
                                                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
-/*
- - (nonnull ADJClickPackageData *)
- buildAsaAttributionClickWithToken:
- (nonnull ADJNonEmptyString *)asaAttibutionToken
- asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
- */
+- (nonnull ADJClickPackageData *)buildAsaAttributionClickWithToken:(nonnull ADJNonEmptyString *)asaAttibutionToken
+                                       asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp;
+
 - (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
                                                   apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
