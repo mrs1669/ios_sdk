@@ -27,8 +27,7 @@ NS_ASSUME_NONNULL_END
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 // public api
-- (void)ccTrackAdRevenueWithClientData:
-(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
+- (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
 
 @end
 

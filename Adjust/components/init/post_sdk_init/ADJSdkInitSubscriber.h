@@ -18,4 +18,5 @@
 @end
 
 @interface ADJSdkInitPublisher : ADJPublisherBase<id<ADJSdkInitSubscriber>>
+
 @end

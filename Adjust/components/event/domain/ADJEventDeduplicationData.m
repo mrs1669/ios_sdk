@@ -27,32 +27,31 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
 @implementation ADJEventDeduplicationData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     if (! [ioData isExpectedMetadataTypeValue:
-                ADJEventDeduplicationDataMetadataTypeValue
-            logger:logger])
+           ADJEventDeduplicationDataMetadataTypeValue
+                                       logger:logger])
     {
         return nil;
     }
-
+    
     ADJNonEmptyString *_Nullable deduplicationId =
-        [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
-
+    [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
+    
     if (deduplicationId == nil) {
         [logger error:@"Cannot create instance from Io data without valid %@",
-            kDeduplicationIdKey];
+         kDeduplicationIdKey];
         return nil;
     }
-
+    
     return [[self alloc] initWithDeduplicationId:deduplicationId];
 }
 
 - (nonnull instancetype)initWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {
     self = [super init];
-
+    
     _deduplicationId = deduplicationId;
-
+    
     return self;
 }
 
@@ -65,30 +64,30 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
 #pragma mark - ADJIoDataSerializable
 - (nonnull ADJIoData *)toIoData {
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
-        [[ADJIoDataBuilder alloc]
-            initWithMetadataTypeValue:ADJEventDeduplicationDataMetadataTypeValue];
-
+    [[ADJIoDataBuilder alloc]
+     initWithMetadataTypeValue:ADJEventDeduplicationDataMetadataTypeValue];
+    
     [ADJUtilMap
-        injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
-        key:kDeduplicationIdKey
-        ioValueSerializable:self.deduplicationId];
-
+     injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
+     key:kDeduplicationIdKey
+     ioValueSerializable:self.deduplicationId];
+    
     return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
 }
 
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                ADJEventDeduplicationDataMetadataTypeValue,
-                    kDeduplicationIdKey, self.deduplicationId,
-                nil];
+            ADJEventDeduplicationDataMetadataTypeValue,
+            kDeduplicationIdKey, self.deduplicationId,
+            nil];
 }
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + self.deduplicationId.hash;
-
+    
     return hashCode;
 }
 
@@ -96,11 +95,11 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJEventDeduplicationData class]]) {
         return NO;
     }
-
+    
     ADJEventDeduplicationData *other = (ADJEventDeduplicationData *)object;
     return [ADJUtilObj objectEquals:self.deduplicationId other:other.deduplicationId];
 }

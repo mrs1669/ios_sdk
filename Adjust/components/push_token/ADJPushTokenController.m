@@ -18,8 +18,7 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 @interface ADJPushTokenController ()
 #pragma mark - Injected dependencies
 @property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
-@property (nullable, readonly, weak, nonatomic)
-ADJMainQueueController *mainQueueControllerWeak;
+@property (nullable, readonly, weak, nonatomic) ADJMainQueueController *mainQueueControllerWeak;
 
 @end
 

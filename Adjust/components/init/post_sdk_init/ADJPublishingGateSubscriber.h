@@ -15,4 +15,5 @@
 @end
 
 @interface ADJPublishingGatePublisher : ADJPublisherBase<id<ADJPublishingGateSubscriber>>
+
 @end

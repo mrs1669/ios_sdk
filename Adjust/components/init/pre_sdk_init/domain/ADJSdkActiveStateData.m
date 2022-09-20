@@ -75,14 +75,12 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 #pragma mark Public API
 #pragma mark - ADJIoDataSerializable
 - (nonnull ADJIoData *)toIoData {
-    ADJIoDataBuilder *_Nonnull ioDataBuilder =
-    [[ADJIoDataBuilder alloc]
-     initWithMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
+    ADJIoDataBuilder *_Nonnull ioDataBuilder = [[ADJIoDataBuilder alloc]
+                                                initWithMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
 
-    [ADJUtilMap
-     injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
-     key:kIsSdkActiveKey
-     ioValueSerializable:[ADJBooleanWrapper instanceFromBool:self.isSdkActive]];
+    [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
+                                       key:kIsSdkActiveKey
+                       ioValueSerializable:[ADJBooleanWrapper instanceFromBool:self.isSdkActive]];
 
     return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
 }
@@ -117,3 +115,4 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 }
 
 @end
+

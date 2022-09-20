@@ -432,6 +432,7 @@
  measurementSessionController.sdkStartPublisher());
 
  */
+
 - (void)ccOpenPubSubGates {
     [self.subscribingGatePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJSubscribingGateSubscriber> _Nonnull subscriber)

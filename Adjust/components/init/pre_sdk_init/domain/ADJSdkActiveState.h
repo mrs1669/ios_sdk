@@ -19,45 +19,29 @@
                               isGdprForgotten:(BOOL)isGdprForgotten;
 
 // public api
-- (BOOL)
-    sdkInitWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
+- (BOOL)sdkInitWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                             adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
 
-- (void)
-    inactivateSdkWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-    changedSdkActiveStateDataWO:
-        (nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
+- (void)inactivateSdkWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                            sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
+                       changedSdkActiveStateDataWO:(nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
+                                   adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
 
-- (void)
-    reactivateSdkWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-    changedSdkActiveStateDataWO:
-        (nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
+- (void)reactivateSdkWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                            sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
+                       changedSdkActiveStateDataWO:(nonnull ADJValueWO<ADJSdkActiveStateData *> *)changedSdkActiveStateDataWO
+                                   adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
 
-- (nonnull NSString *)
-    canPerformActiveActionWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    source:(nonnull NSString *)source;
+- (nonnull NSString *)canPerformActiveActionWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                                                                   source:(nonnull NSString *)source;
 
-- (void)
-    canNowPublishWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO;
+- (void)canNowPublishWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                            sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO;
 
-- (void)
-    gdprForgetEventReceivedWithSdkActiveStatusEventWO:
-        (nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO;
+- (void)gdprForgetEventReceivedWithSdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO;
 
-- (BOOL)
-    tryForgetDeviceWithCurrentSdkActiveStateData:
-        (nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
-    sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
-    adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
+- (BOOL)tryForgetDeviceWithCurrentSdkActiveStateData:(nonnull ADJSdkActiveStateData *)currentSdkActiveStateData
+                              sdkActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)sdkActiveStatusEventWO
+                                     adjustApiLogger:(nonnull ADJLogger *)adjustApiLogger;
 
 @end

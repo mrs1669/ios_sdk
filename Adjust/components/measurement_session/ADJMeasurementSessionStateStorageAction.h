@@ -12,11 +12,9 @@
 #import "ADJSQLiteStoragePropertiesActionBase.h"
 #import "ADJMeasurementSessionStateStorage.h"
 
-@interface ADJMeasurementSessionStateStorageAction :
-    ADJSQLiteStoragePropertiesActionBase<ADJMeasurementSessionStateData *>
+@interface ADJMeasurementSessionStateStorageAction : ADJSQLiteStoragePropertiesActionBase<ADJMeasurementSessionStateData *>
 // instantiation
-- (nonnull instancetype)
-    initWithMeasurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-    measurementSessionStateData:(nonnull ADJMeasurementSessionStateData *)measurementSessionStateData;
+- (nonnull instancetype)initWithMeasurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+                                   measurementSessionStateData:(nonnull ADJMeasurementSessionStateData *)measurementSessionStateData;
 
 @end

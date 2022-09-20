@@ -13,14 +13,11 @@
 
 @interface ADJEventDeduplicationController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic)
-ADJEventDeduplicationStorage *eventDeduplicationStorageWeak;
-@property (nonnull, readonly, strong, nonatomic)
-ADJNonNegativeInt *maxCapacityEventDeduplication;
+@property (nullable, readonly, weak, nonatomic) ADJEventDeduplicationStorage *eventDeduplicationStorageWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJNonNegativeInt *maxCapacityEventDeduplication;
 
 #pragma mark - Internal variables
-@property (nonnull, readonly, strong, nonatomic)
-NSMutableSet<NSString *> *deduplicationIdSet;
+@property (nonnull, readonly, strong, nonatomic) NSMutableSet<NSString *> *deduplicationIdSet;
 
 @end
 

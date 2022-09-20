@@ -89,6 +89,7 @@
 
     return [self publishResumeSendingWithSource:source];
 }
+
 - (BOOL)publishPauseWhenOfflineWithSource:(nonnull NSString *)source {
     self.isOffline = YES;
 

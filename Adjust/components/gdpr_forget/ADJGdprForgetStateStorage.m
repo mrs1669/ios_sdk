@@ -35,6 +35,7 @@ static NSString *const kGdprForgetStateStorageTableName = @"gdpr_forget_state";
     return [ADJGdprForgetStateData instanceFromIoData:ioData
                                                logger:self.logger];
 }
+
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJGdprForgetStateData *)dataValue {
     return [dataValue toIoData];
 }
@@ -80,4 +81,5 @@ static NSString *const kGdprForgetStateStorageTableName = @"gdpr_forget_state";
 }
 
 @end
+
 

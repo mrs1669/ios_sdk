@@ -31,8 +31,7 @@
     ADJLifecycleSubscriber,
     ADJSdkResponseSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:
-(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
                             publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
                                  lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
                                sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher;
@@ -46,8 +45,7 @@
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                     gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy;
 
-- (void)ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
-(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+- (void)ccSetDependenciesAtSdkInitWithSdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                                                   clock:(nonnull ADJClock *)clock
                                           loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                              threadpool:(nonnull id<ADJThreadPool>)threadpool

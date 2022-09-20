@@ -21,10 +21,8 @@
  @property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 
  // - built in client context
- @property (nullable, readonly, strong, nonatomic)
- ADJPreSdkInitRootController *preSdkInitRootController;
- @property (nullable, readonly, strong, nonatomic)
- ADJPostSdkInitRootController *postSdkInitRootController;
+ @property (nullable, readonly, strong, nonatomic) ADJPreSdkInitRootController *preSdkInitRootController;
+ @property (nullable, readonly, strong, nonatomic) ADJPostSdkInitRootController *postSdkInitRootController;
  */
 
 @interface ADJEntryRoot ()
@@ -157,5 +155,6 @@
 }
 
 @end
+
 
 

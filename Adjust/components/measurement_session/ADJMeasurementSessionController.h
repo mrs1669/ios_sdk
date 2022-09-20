@@ -25,14 +25,13 @@
 #import "ADJLogger.h"
 
 @interface ADJMeasurementSessionController : ADJCommonBase<
-// subscriptions
+    // subscriptions
     ADJSdkActiveSubscriber,
     ADJSdkInitSubscriber,
     ADJKeepAliveSubscriber,
     ADJLifecycleSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkActivePublisher:
-(nonnull ADJSdkActivePublisher *)sdkActivePublisher
+- (void)ccSubscribeToPublishersWithSdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher
                                      sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
                                    keepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
                                    lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
@@ -44,8 +43,7 @@
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
            minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
-overwriteFirstMeasurementSessionIntervalMilli:
-(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
+overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
                                clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage

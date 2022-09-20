@@ -43,8 +43,7 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
            minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
-overwriteFirstMeasurementSessionIntervalMilli:
-(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
+overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
                                clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
@@ -78,8 +77,7 @@ overwriteFirstMeasurementSessionIntervalMilli:
     [self processBackground];
 }
 
-- (nullable ADJMeasurementSessionStateData *)currentMeasurementSessionStateDataWithLogger:
-(nonnull ADJLogger *)logger {
+- (nullable ADJMeasurementSessionStateData *)currentMeasurementSessionStateDataWithLogger:(nonnull ADJLogger *)logger {
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage = self.measurementSessionStateStorageWeak;
 
     if (measurementSessionStateStorage == nil) {
@@ -92,8 +90,7 @@ overwriteFirstMeasurementSessionIntervalMilli:
 }
 
 #pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkActivePublisher:
-(nonnull ADJSdkActivePublisher *)sdkActivePublisher
+- (void)ccSubscribeToPublishersWithSdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher
                                      sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
                                    keepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
                                    lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher {
@@ -278,12 +275,10 @@ overwriteFirstMeasurementSessionIntervalMilli:
      measurementSessionStateStorage:measurementSessionStateStorage];
 }
 
-- (void)
-handleJustChangedMeasurementSessionDataSideEffectWithCurrentMeasurementSessionData:
+- (void)handleJustChangedMeasurementSessionDataSideEffectWithCurrentMeasurementSessionData:
 (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-changedMeasurementSessionData:(nullable ADJMeasurementSessionData *)changedMeasurementSessionData
-measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-{
+                                                             changedMeasurementSessionData:(nullable ADJMeasurementSessionData *)changedMeasurementSessionData
+                                                            measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage {
     [self handleSideEffectsWithCurrentMeasurementSessionData:currentMeasurementSessionStateData
                                           packageSessionData:nil
                                           sdkStartStateEvent:nil
@@ -419,8 +414,7 @@ measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)meas
 }
 
 - (void)buildAndSendSesionPackageWithData:(nonnull ADJPackageSessionData *)packageSessionData
-updateMeasurementSessionStateStorageAction:
-(nullable ADJMeasurementSessionStateStorageAction *)updateMeasurementSessionStateStorageAction {
+updateMeasurementSessionStateStorageAction:(nullable ADJMeasurementSessionStateStorageAction *)updateMeasurementSessionStateStorageAction {
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger error:@"Cannot Build and Send Session Package"
@@ -495,4 +489,5 @@ updateMeasurementSessionStateStorageAction:
 }
 
 @end
+
 

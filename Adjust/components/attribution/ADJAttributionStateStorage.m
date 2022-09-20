@@ -75,7 +75,7 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
     ADJAttributionStateData *_Nonnull intialAttributionStateData =
     [self readOnlyStoredDataValue];
     
-    // TODO should state fields change because it was read from v4?
+    // TODO: should state fields change because it was read from v4?
     [self updateWithNewDataValue:[[ADJAttributionStateData alloc]
                                   initWithAttributionData:v4AttributionData
                                   receivedSessionResponse:YES

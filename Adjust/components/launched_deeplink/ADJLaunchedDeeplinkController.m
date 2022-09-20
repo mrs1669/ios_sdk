@@ -92,8 +92,9 @@ ADJMainQueueController *mainQueueControllerWeak;
                                                    apiTimestamp:apiTimestamp];
 
     [mainQueueController addClickPackageToSendWithData:launchedDeeplinkClickPackageData
-     sqliteStorageAction:clientActionRemoveStorageAction];
+                                   sqliteStorageAction:clientActionRemoveStorageAction];
 }
 
 @end
+
 

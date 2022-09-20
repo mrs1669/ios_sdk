@@ -19,7 +19,7 @@
 #import "ADJThreadExecutorFactory.h"
 
 @interface ADJPausingController : ADJCommonBase<
-// subscriptions
+    // subscriptions
     ADJPublishingGateSubscriber,
     ADJOfflineSubscriber,
     ADJReachabilitySubscriber,

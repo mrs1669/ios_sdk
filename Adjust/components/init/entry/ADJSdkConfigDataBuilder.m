@@ -50,9 +50,8 @@
 
     ADJTimeLengthMilli *_Nonnull oneSecondLength = [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
                                                     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli]];
-    ADJTimeLengthMilli *_Nonnull fiveSecondsLength =
-    [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli * 5]];
+    ADJTimeLengthMilli *_Nonnull fiveSecondsLength = [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                                                      [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneSecondMilli * 5]];
 
     ADJTimeLengthMilli *_Nonnull oneMinuteLength = [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
                                                     [[ADJNonNegativeInt alloc] initWithUIntegerValue:ADJOneMinuteMilli]];
@@ -96,6 +95,7 @@
 }
 
 @end
+
 
 
 

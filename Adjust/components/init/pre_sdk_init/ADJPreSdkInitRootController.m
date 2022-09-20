@@ -323,7 +323,7 @@
                                                                     measurementSessionStartPublisher:
      postSdkInitRootController.measurementSessionController.measurementSessionStartPublisher];
 
-     [self.deviceController ccSubscribeToPublishersWithLifecylePublisher:
+    [self.deviceController ccSubscribeToPublishersWithLifecylePublisher:
      self.lifecycleController.lifecyclePublisher];
 
     [self.gdprForgetController ccSubscribeToPublishersWithSdkInitPublisher:postSdkInitRootController.sdkInitPublisher
@@ -361,7 +361,7 @@
 
     if (entryRoot == nil) {
         [self.logger error:@"Cannot process gdpr forget event"
-            " without a reference to entry root"];
+         " without a reference to entry root"];
         return;
     }
 
@@ -379,7 +379,7 @@
     ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
 
     [self.sdkActiveState
-        gdprForgetEventReceivedWithSdkActiveStatusEventWO:sdkActiveStatusEventWO];
+     gdprForgetEventReceivedWithSdkActiveStatusEventWO:sdkActiveStatusEventWO];
 
     [self handleSdkActiveStatusEvent:[sdkActiveStatusEventWO changedValue]
                               source:@"GdprForgetEvent"];
@@ -428,6 +428,7 @@
 }
 
 @end
+
 
 
 

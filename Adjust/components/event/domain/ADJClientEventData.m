@@ -37,41 +37,39 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
 @implementation ADJClientEventData
 #pragma mark Instantiation
-+ (nullable instancetype)
-    instanceFromClientWithAdjustEvent:(nullable ADJAdjustEvent *)adjustEvent
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientWithAdjustEvent:(nullable ADJAdjustEvent *)adjustEvent
+                                                    logger:(nonnull ADJLogger *)logger {
     if (adjustEvent == nil) {
         [logger error:@"Cannot create event with nil adjust event value"];
         return nil;
     }
-
+    
     ADJNonEmptyString *_Nullable eventId =
-        [ADJNonEmptyString instanceFromString:adjustEvent.eventId
-                             sourceDescription:@"event id"
-                                        logger:logger];
+    [ADJNonEmptyString instanceFromString:adjustEvent.eventId
+                        sourceDescription:@"event id"
+                                   logger:logger];
     if (eventId == nil) {
         return nil;
     }
-
+    
     ADJNonEmptyString *_Nullable deduplicationId =
-        [ADJNonEmptyString instanceFromOptionalString:adjustEvent.deduplicationId
-                                     sourceDescription:@"deduplication id"
-                                                logger:logger];
-
+    [ADJNonEmptyString instanceFromOptionalString:adjustEvent.deduplicationId
+                                sourceDescription:@"deduplication id"
+                                           logger:logger];
+    
     ADJMoney *_Nullable revenue = [self revenueWithAdjustEvent:adjustEvent
-                                                         logger:logger];
-
+                                                        logger:logger];
+    
     ADJStringMap *_Nullable callbackParameters =
-        [ADJUtilConv convertToStringMapWithKeyValueArray:adjustEvent.callbackParameterKeyValueArray
-                                        sourceDescription:@"event callback parameters"
-                                                   logger:logger];
-
+    [ADJUtilConv convertToStringMapWithKeyValueArray:adjustEvent.callbackParameterKeyValueArray
+                                   sourceDescription:@"event callback parameters"
+                                              logger:logger];
+    
     ADJStringMap *_Nullable partnerParameters =
-        [ADJUtilConv convertToStringMapWithKeyValueArray:adjustEvent.partnerParameterKeyValueArray
-                                        sourceDescription:@"event partner parameters"
-                                                   logger:logger];
-
+    [ADJUtilConv convertToStringMapWithKeyValueArray:adjustEvent.partnerParameterKeyValueArray
+                                   sourceDescription:@"event partner parameters"
+                                              logger:logger];
+    
     return [[self alloc] initWithEventId:eventId
                          deduplicationId:deduplicationId
                                  revenue:revenue
@@ -79,53 +77,51 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
                        partnerParameters:partnerParameters];
 }
 
-+ (nullable instancetype)
-    instanceFromClientActionInjectedIoDataWithData:
-        (nonnull ADJIoData *)clientActionInjectedIoData
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:
+(nonnull ADJIoData *)clientActionInjectedIoData
+                                                                 logger:(nonnull ADJLogger *)logger {
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
-
+    
     ADJNonEmptyString *_Nullable eventId =
-        [propertiesMap pairValueWithKey:kEventIdKey];
-
+    [propertiesMap pairValueWithKey:kEventIdKey];
+    
     ADJAdjustEvent *_Nonnull adjustEvent =
-        [[ADJAdjustEvent alloc] initWithEventId:eventId != nil ? eventId.stringValue : nil];
-
+    [[ADJAdjustEvent alloc] initWithEventId:eventId != nil ? eventId.stringValue : nil];
+    
     ADJNonEmptyString *_Nullable deduplicationId =
-        [propertiesMap pairValueWithKey:kDeduplicationIdKey];
+    [propertiesMap pairValueWithKey:kDeduplicationIdKey];
     if (deduplicationId != nil) {
         [adjustEvent setDeduplicationId:deduplicationId.stringValue];
     }
-
+    
     [self setRevenueWithAdjustEvent:adjustEvent
                       propertiesMap:propertiesMap
                              logger:logger];
-
+    
     ADJStringMap *_Nullable callbackParametersMap =
-        [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
-
+    [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
+    
     if (callbackParametersMap != nil) {
         for (NSString *_Nonnull callbackParameterKey in callbackParametersMap.map) {
             [adjustEvent
-                addCallbackParameterWithKey:callbackParameterKey
-                value:[callbackParametersMap.map objectForKey:callbackParameterKey].stringValue];
+             addCallbackParameterWithKey:callbackParameterKey
+             value:[callbackParametersMap.map objectForKey:callbackParameterKey].stringValue];
         }
     }
-
+    
     ADJStringMap *_Nullable partnerParametersMap =
-        [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
-
+    [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
+    
     if (partnerParametersMap != nil) {
         for (NSString *_Nonnull partnerParameterKey in partnerParametersMap.map) {
             [adjustEvent
-                addPartnerParameterWithKey:partnerParameterKey
-                value:[partnerParametersMap.map objectForKey:partnerParameterKey].stringValue];
+             addPartnerParameterWithKey:partnerParameterKey
+             value:[partnerParametersMap.map objectForKey:partnerParameterKey].stringValue];
         }
     }
-
+    
     return [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
-                                                           logger:logger];
+                                                          logger:logger];
 }
 
 - (nullable instancetype)init {
@@ -138,58 +134,55 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
                         deduplicationId:(nullable ADJNonEmptyString *)deduplicationId
                                 revenue:(nullable ADJMoney *)revenue
                      callbackParameters:(nullable ADJStringMap *)callbackParameters
-                      partnerParameters:(nullable ADJStringMap *)partnerParameters
-{
+                      partnerParameters:(nullable ADJStringMap *)partnerParameters {
     self = [super init];
-
+    
     _eventId = eventId;
     _deduplicationId = deduplicationId;
     _revenue = revenue;
     _callbackParameters = callbackParameters;
     _partnerParameters = partnerParameters;
-
+    
     return self;
 }
 
 #pragma mark Public API
 #pragma mark - ADJClientActionIoDataInjectable
-- (void)injectIntoClientActionIoDataBuilder:
-    (nonnull ADJIoDataBuilder *)clientActionIoDataBuilder
-{
+- (void)injectIntoClientActionIoDataBuilder: (nonnull ADJIoDataBuilder *)clientActionIoDataBuilder {
     ADJStringMapBuilder *_Nonnull propertiesMapBuilder =
-        clientActionIoDataBuilder.propertiesMapBuilder;
-
+    clientActionIoDataBuilder.propertiesMapBuilder;
+    
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                          key:kEventIdKey
-                        ioValueSerializable:self.eventId];
-
+                                       key:kEventIdKey
+                       ioValueSerializable:self.eventId];
+    
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                          key:kDeduplicationIdKey
-                        ioValueSerializable:self.deduplicationId];
-
+                                       key:kDeduplicationIdKey
+                       ioValueSerializable:self.deduplicationId];
+    
     if (self.revenue != nil) {
         [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                              key:kRevenueAmountKey
-                            ioValueSerializable:self.revenue.amount];
-
+                                           key:kRevenueAmountKey
+                           ioValueSerializable:self.revenue.amount];
+        
         [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                              key:kRevenueCurrencyKey
-                            ioValueSerializable:self.revenue.currency];
+                                           key:kRevenueCurrencyKey
+                           ioValueSerializable:self.revenue.currency];
     }
-
+    
     if (self.callbackParameters != nil) {
         ADJStringMapBuilder *_Nonnull callbackParametersMapBuider =
-            [clientActionIoDataBuilder
-                addAndReturnNewMapBuilderByName:kCallbackParametersMapName];
-
+        [clientActionIoDataBuilder
+         addAndReturnNewMapBuilderByName:kCallbackParametersMapName];
+        
         [callbackParametersMapBuider addAllPairsWithStringMap:self.callbackParameters];
     }
-
+    
     if (self.partnerParameters != nil) {
         ADJStringMapBuilder *_Nonnull partnerParametersMapBuider =
-            [clientActionIoDataBuilder
-                addAndReturnNewMapBuilderByName:kPartnerParametersMapName];
-
+        [clientActionIoDataBuilder
+         addAndReturnNewMapBuilderByName:kPartnerParametersMapName];
+        
         [partnerParametersMapBuider addAllPairsWithStringMap:self.partnerParameters];
     }
 }
@@ -204,28 +197,28 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
             ADJClientEventDataMetadataTypeValue,
-                kEventIdKey, self.eventId,
-                kDeduplicationIdKey, self.deduplicationId,
-                kRevenueAmountKey, self.revenue != nil ? self.revenue.amount : nil,
-                kRevenueCurrencyKey, self.revenue != nil ? self.revenue.currency : nil,
-                kCallbackParametersMapName, self.callbackParameters,
-                kPartnerParametersMapName, self.partnerParameters,
+            kEventIdKey, self.eventId,
+            kDeduplicationIdKey, self.deduplicationId,
+            kRevenueAmountKey, self.revenue != nil ? self.revenue.amount : nil,
+            kRevenueCurrencyKey, self.revenue != nil ? self.revenue.currency : nil,
+            kCallbackParametersMapName, self.callbackParameters,
+            kPartnerParametersMapName, self.partnerParameters,
             nil];
 }
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-
+    
     hashCode = ADJHashCodeMultiplier * hashCode + self.eventId.hash;
     hashCode = ADJHashCodeMultiplier * hashCode +
-        [ADJUtilObj objecNullableHash:self.deduplicationId];
+    [ADJUtilObj objecNullableHash:self.deduplicationId];
     hashCode = ADJHashCodeMultiplier * hashCode +
-        [ADJUtilObj objecNullableHash:self.revenue];
+    [ADJUtilObj objecNullableHash:self.revenue];
     hashCode = ADJHashCodeMultiplier * hashCode +
-        [ADJUtilObj objecNullableHash:self.callbackParameters];
+    [ADJUtilObj objecNullableHash:self.callbackParameters];
     hashCode = ADJHashCodeMultiplier * hashCode +
-        [ADJUtilObj objecNullableHash:self.partnerParameters];
-
+    [ADJUtilObj objecNullableHash:self.partnerParameters];
+    
     return hashCode;
 }
 
@@ -233,70 +226,68 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     if (self == object) {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[ADJClientEventData class]]) {
         return NO;
     }
-
+    
     ADJClientEventData *other = (ADJClientEventData *)object;
     return [ADJUtilObj objectEquals:self.eventId other:other.eventId]
-        && [ADJUtilObj objectEquals:self.deduplicationId other:other.deduplicationId]
-        && [ADJUtilObj objectEquals:self.revenue other:other.revenue]
-        && [ADJUtilObj objectEquals:self.callbackParameters other:other.callbackParameters]
-        && [ADJUtilObj objectEquals:self.partnerParameters other:other.partnerParameters];
+    && [ADJUtilObj objectEquals:self.deduplicationId other:other.deduplicationId]
+    && [ADJUtilObj objectEquals:self.revenue other:other.revenue]
+    && [ADJUtilObj objectEquals:self.callbackParameters other:other.callbackParameters]
+    && [ADJUtilObj objectEquals:self.partnerParameters other:other.partnerParameters];
 }
 
 #pragma mark Internal Methods
 + (nullable ADJMoney *)revenueWithAdjustEvent:(nonnull ADJAdjustEvent *)adjustEvent
-                                        logger:(nonnull ADJLogger *)logger
-{
+                                       logger:(nonnull ADJLogger *)logger {
     if (adjustEvent.revenueCurrency == nil
         && adjustEvent.revenueAmountDoubleNumber == nil
         && adjustEvent.revenueAmountDecimalNumber == nil)
     {
         return nil;
     }
-
+    
     if (adjustEvent.revenueAmountDecimalNumber == nil) {
         return [ADJMoney instanceFromAmountDoubleNumber:adjustEvent.revenueAmountDoubleNumber
-                                                currency:adjustEvent.revenueCurrency
-                                                  source:@"event double revenue"
-                                                  logger:logger];
+                                               currency:adjustEvent.revenueCurrency
+                                                 source:@"event double revenue"
+                                                 logger:logger];
     }
-
+    
     return [ADJMoney instanceFromAmountDecimalNumber:adjustEvent.revenueAmountDecimalNumber
-                                             currency:adjustEvent.revenueCurrency
-                                               source:@"event decimal revenue"
-                                               logger:logger];
+                                            currency:adjustEvent.revenueCurrency
+                                              source:@"event decimal revenue"
+                                              logger:logger];
 }
 
 + (void)setRevenueWithAdjustEvent:(nonnull ADJAdjustEvent *)adjustEvent
                     propertiesMap:(nonnull ADJStringMap *)propertiesMap
-                           logger:(nonnull ADJLogger *)logger
-{
+                           logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable revenueAmountIoValue =
-        [propertiesMap pairValueWithKey:kRevenueAmountKey];
+    [propertiesMap pairValueWithKey:kRevenueAmountKey];
     ADJMoneyAmountBase *_Nullable revenueAmount =
-        [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue
-                                                  logger:logger];
+    [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue
+                                             logger:logger];
     ADJNonEmptyString *_Nullable revenueCurrency =
-        [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
-
+    [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
+    
     if (revenueAmount == nil && revenueCurrency == nil) {
         return;
     }
-
+    
     if ([revenueAmount isKindOfClass:[ADJMoneyDecimalAmount class]]) {
         ADJMoneyDecimalAmount *_Nonnull revenueDecimalAmount =
-            (ADJMoneyDecimalAmount *)revenueAmount;
-
+        (ADJMoneyDecimalAmount *)revenueAmount;
+        
         [adjustEvent
-            setRevenueWithNSDecimalNumber:revenueDecimalAmount.decimalNumberValue
-            currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
-
+         setRevenueWithNSDecimalNumber:revenueDecimalAmount.decimalNumberValue
+         currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
+        
         return;
     }
-
+    
     [adjustEvent setRevenueWithDoubleNumber:revenueAmount != nil ? @(revenueAmount.doubleValue) : nil
                                    currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
 }

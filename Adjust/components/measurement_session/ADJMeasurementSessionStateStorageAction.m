@@ -10,10 +10,7 @@
 
 @implementation ADJMeasurementSessionStateStorageAction
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithMeasurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-    measurementSessionStateData:(nonnull ADJMeasurementSessionStateData *)measurementSessionStateData
-{
+- (nonnull instancetype)initWithMeasurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage measurementSessionStateData:(nonnull ADJMeasurementSessionStateData *)measurementSessionStateData {
     self = [super initWithPropertiesStorage:measurementSessionStateStorage
                                        data:measurementSessionStateData
                decoratedSQLiteStorageAction:nil];
