@@ -47,8 +47,7 @@
 // TODO: (Gena) Why this method declaration was commented out? It's used ADJSessionDeviceIdsData.
 + (nullable NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value;
 
-//+ (void)
-//    transferExternalParametersWithFoundationMapToRead:
+//+ (void)transferExternalParametersWithFoundationMapToRead:
 //        (nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
 //    parametersToWrite:(nonnull StringMapBuilder *)parametersToWrite
 //    source:(nonnull NSString *)source

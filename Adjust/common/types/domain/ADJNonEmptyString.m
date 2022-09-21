@@ -22,8 +22,7 @@
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromString:(nullable NSString *)stringValue
                           sourceDescription:(nonnull NSString *)sourceDescription
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     return [ADJNonEmptyString instanceWithStringValue:stringValue
                                     sourceDescription:sourceDescription
                                                logger:logger
@@ -32,8 +31,7 @@
 
 + (nullable instancetype)instanceFromOptionalString:(nullable NSString *)stringValue
                                   sourceDescription:(nonnull NSString *)sourceDescription
-                                             logger:(nonnull ADJLogger *)logger
-{
+                                             logger:(nonnull ADJLogger *)logger {
     return [ADJNonEmptyString instanceWithStringValue:stringValue
                                     sourceDescription:sourceDescription
                                                logger:logger
@@ -43,8 +41,7 @@
 + (nullable instancetype)instanceWithStringValue:(nullable NSString *)stringValue
                                sourceDescription:(nonnull NSString *)sourceDescription
                                           logger:(nonnull ADJLogger *)logger
-                                      isOptional:(BOOL)isOptional
-{
+                                      isOptional:(BOOL)isOptional {
     if (stringValue == nil) {
         if (! isOptional) {
             [logger error:@"Cannot create NonEmptyString with nil %@", sourceDescription];

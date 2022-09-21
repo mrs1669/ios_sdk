@@ -17,8 +17,7 @@ NSString *const ADJEventPackageDataPath = @"event";
 @implementation ADJEventPackageData
 #pragma mark Instantiation
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
-                               parameters:(nonnull ADJStringMap *)parameters
-{
+                               parameters:(nonnull ADJStringMap *)parameters {
     self = [super initWithPath:ADJEventPackageDataPath
                      clientSdk:clientSdk
   isPostOrElseGetNetworkMethod:YES
@@ -30,8 +29,7 @@ NSString *const ADJEventPackageDataPath = @"event";
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
                                    ioData:(nonnull ADJIoData *)ioData
-                                   logger:(nonnull ADJLogger *)logger
-{
+                                   logger:(nonnull ADJLogger *)logger {
     // does not read ioData for further information
     return [self initWithClientSdk:clientSdk parameters:parameters];
 }

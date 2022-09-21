@@ -36,16 +36,14 @@
 }
 
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger
-{
+                                          logger:(nonnull ADJLogger *)logger {
     return [self instanceFromOptionalNonNegativeInt:
             [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
                                                 logger:logger]];
 }
 
 + (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger
-{
+                                                  logger:(nonnull ADJLogger *)logger {
     return [self instanceFromOptionalNonNegativeInt:
             [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
                                                         logger:logger]];
@@ -58,6 +56,7 @@
     
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

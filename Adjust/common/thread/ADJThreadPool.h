@@ -17,9 +17,8 @@
 - (BOOL)scheduleAsyncWithBlock:(nonnull void (^)(void))blockToSchedule
                 delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli;
 
-- (BOOL)
-    executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
-    blockToExecute:(nonnull void (^)(void))blockToExecute;
+- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
+                         blockToExecute:(nonnull void (^)(void))blockToExecute;
 
 - (nonnull dispatch_queue_t)backgroundAsyncDispatchQueue;
 

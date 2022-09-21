@@ -34,9 +34,7 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
 }
 
 #pragma mark Instantiation
-- (nonnull instancetype)initWithStringMapBuilder:
-(nonnull ADJStringMapBuilder *)stringMapBuilder
-{
+- (nonnull instancetype)initWithStringMapBuilder:(nonnull ADJStringMapBuilder *)stringMapBuilder {
     return [self initWithMap:[stringMapBuilder mapCopy]];
 }
 
@@ -46,9 +44,7 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
 }
 
 #pragma mark - Private constructors
-- (nonnull instancetype)initWithMap:
-(nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)map
-{
+- (nonnull instancetype)initWithMap:(nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)map {
     self = [super init];
     
     _map = map;

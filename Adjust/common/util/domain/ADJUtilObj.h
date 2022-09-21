@@ -19,20 +19,16 @@
 
 + (NSUInteger)objecNullableHash:(nullable id)object;
 
-+ (nonnull NSString *)formatInlineKeyValuesWithName:
-    (nonnull NSString *)name, ... NS_REQUIRES_NIL_TERMINATION;
++ (nonnull NSString *)formatInlineKeyValuesWithName:(nonnull NSString *)name, ... NS_REQUIRES_NIL_TERMINATION;
 + (nonnull NSString *)formatInlineKeyValuesWithName:(nonnull NSString *)name
                                       keyValueArray:(nonnull NSArray<NSString *> *)keyValueArray;
-+ (nonnull NSString *)
-    formatInlineKeyValuesWithName:(nonnull NSString *)name
-    stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary;
++ (nonnull NSString *)formatInlineKeyValuesWithName:(nonnull NSString *)name
+                                stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary;
 
-+ (nonnull NSString *)formatNewlineKeyValuesWithName:
-    (nonnull NSString *)name, ... NS_REQUIRES_NIL_TERMINATION;
++ (nonnull NSString *)formatNewlineKeyValuesWithName:(nonnull NSString *)name, ... NS_REQUIRES_NIL_TERMINATION;
 + (nonnull NSString *)formatNewlineKeyValuesWithName:(nonnull NSString *)name
                                        keyValueArray:(nonnull NSArray<NSString *> *)keyValueArray;
-+ (nonnull NSString *)
-    formatNewlineKeyValuesWithName:(nonnull NSString *)name
-    stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary;
++ (nonnull NSString *)formatNewlineKeyValuesWithName:(nonnull NSString *)name
+                                 stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary;
 
 @end

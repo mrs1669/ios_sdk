@@ -25,6 +25,7 @@ NSString *const ADJBillingSubscriptionPackageDataPath = @"v2/purchase";
 
     return self;
 }
+
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
                                    ioData:(nonnull ADJIoData *)ioData

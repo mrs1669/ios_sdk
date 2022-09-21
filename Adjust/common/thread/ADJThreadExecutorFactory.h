@@ -11,8 +11,7 @@
 
 @protocol ADJThreadExecutorFactory <NSObject>
 
-- (nonnull ADJSingleThreadExecutor *)
-    createSingleThreadExecutorWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+- (nonnull ADJSingleThreadExecutor *)createSingleThreadExecutorWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     sourceDescription:(nonnull NSString *)sourceDescription;
 
 @end
