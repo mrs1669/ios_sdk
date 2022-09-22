@@ -130,7 +130,6 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         if (strongSelf.preSdkInitRootController != nil) {
-            [self.preSdkInitRootController.storageRootController.sqliteController.sqliteDb finalizeAtTeardown];
             [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
             [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
         }
