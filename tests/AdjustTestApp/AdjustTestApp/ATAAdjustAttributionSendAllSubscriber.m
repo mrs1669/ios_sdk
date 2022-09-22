@@ -53,7 +53,9 @@ if (adjustAttribution.valueName.length > 0) {                               \
     addWhenValid(adgroup, adgroup)
     addWhenValid(creative, creative)
     addWhenValid(click_label, clickLabel)
-    addWhenValid(adid, adid)
+    // TODO: to be cleaned up when adid gets removed from ADJAdjustAttribution
+    // keeping the comment here until that change is officially done
+    // addWhenValid(adid, adid)
     addWhenValid(deeplink, deeplink)
     addWhenValid(state, state)
     addWhenValid(cost_type, costType)
