@@ -223,6 +223,20 @@
 		07FC0813287F3974008F4489 /* ADJAdjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 07FC0811287F3974008F4489 /* ADJAdjust.m */; };
 		07FE6C502899752700EB65E6 /* ADJEventPackageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07FE6C4E2899752700EB65E6 /* ADJEventPackageData.h */; };
 		07FE6C512899752700EB65E6 /* ADJEventPackageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07FE6C4F2899752700EB65E6 /* ADJEventPackageData.m */; };
+		0A25F89128E24313001988A1 /* ADJAdjustForegroundSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A25F89228E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88C28E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A25F89328E24313001988A1 /* ADJAdjustPublishers.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88D28E24313001988A1 /* ADJAdjustPublishers.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A25F89428E24313001988A1 /* ADJAdjustPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88E28E24313001988A1 /* ADJAdjustPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A25F89528E24313001988A1 /* ADJAdjustLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88F28E24313001988A1 /* ADJAdjustLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A25F89628E24313001988A1 /* ADJAdjustPublishers.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A25F89028E24313001988A1 /* ADJAdjustPublishers.m */; };
+		0A25F8A028E24346001988A1 /* ADJPluginForegroundPublisher.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A25F89828E24345001988A1 /* ADJPluginForegroundPublisher.m */; };
+		0A25F8A128E24346001988A1 /* ADJPluginPackageSendingPublisher.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A25F89928E24345001988A1 /* ADJPluginPackageSendingPublisher.m */; };
+		0A25F8A228E24346001988A1 /* ADJPluginForegroundPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */; };
+		0A25F8A328E24346001988A1 /* ADJPluginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A25F89B28E24345001988A1 /* ADJPluginController.m */; };
+		0A25F8A428E24346001988A1 /* ADJPluginLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A25F89C28E24345001988A1 /* ADJPluginLogger.m */; };
+		0A25F8A528E24346001988A1 /* ADJPluginController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89D28E24345001988A1 /* ADJPluginController.h */; };
+		0A25F8A628E24346001988A1 /* ADJPluginLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89E28E24345001988A1 /* ADJPluginLogger.h */; };
+		0A25F8A728E24346001988A1 /* ADJPluginPackageSendingPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89F28E24346001988A1 /* ADJPluginPackageSendingPublisher.h */; };
 		0A7ED6F92892B11B00CC20DE /* ADJAdjust.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D8FC928731314005019E3 /* ADJAdjust.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED6FA2892B11B00CC20DE /* ADJAdjustInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E59288A9EF5002319D7 /* ADJAdjustInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7ED6FB2892B11B00CC20DE /* ADJAdjustConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1AA287F3E18004C7D59 /* ADJAdjustConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -740,6 +754,20 @@
 		07FC0811287F3974008F4489 /* ADJAdjust.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJAdjust.m; sourceTree = "<group>"; };
 		07FE6C4E2899752700EB65E6 /* ADJEventPackageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJEventPackageData.h; sourceTree = "<group>"; };
 		07FE6C4F2899752700EB65E6 /* ADJEventPackageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJEventPackageData.m; sourceTree = "<group>"; };
+		0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjustForegroundSubscriber.h; sourceTree = "<group>"; };
+		0A25F88C28E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjustPackageSendingSubscriber.h; sourceTree = "<group>"; };
+		0A25F88D28E24313001988A1 /* ADJAdjustPublishers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjustPublishers.h; sourceTree = "<group>"; };
+		0A25F88E28E24313001988A1 /* ADJAdjustPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjustPlugin.h; sourceTree = "<group>"; };
+		0A25F88F28E24313001988A1 /* ADJAdjustLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJAdjustLogger.h; sourceTree = "<group>"; };
+		0A25F89028E24313001988A1 /* ADJAdjustPublishers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJAdjustPublishers.m; sourceTree = "<group>"; };
+		0A25F89828E24345001988A1 /* ADJPluginForegroundPublisher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJPluginForegroundPublisher.m; sourceTree = "<group>"; };
+		0A25F89928E24345001988A1 /* ADJPluginPackageSendingPublisher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJPluginPackageSendingPublisher.m; sourceTree = "<group>"; };
+		0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJPluginForegroundPublisher.h; sourceTree = "<group>"; };
+		0A25F89B28E24345001988A1 /* ADJPluginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJPluginController.m; sourceTree = "<group>"; };
+		0A25F89C28E24345001988A1 /* ADJPluginLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJPluginLogger.m; sourceTree = "<group>"; };
+		0A25F89D28E24345001988A1 /* ADJPluginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJPluginController.h; sourceTree = "<group>"; };
+		0A25F89E28E24345001988A1 /* ADJPluginLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJPluginLogger.h; sourceTree = "<group>"; };
+		0A25F89F28E24346001988A1 /* ADJPluginPackageSendingPublisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJPluginPackageSendingPublisher.h; sourceTree = "<group>"; };
 		0AA5A5D52893D32C00CD9EA1 /* ADJClientActionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClientActionController.h; sourceTree = "<group>"; };
 		0AA5A5D62893D32C00CD9EA1 /* ADJClientActionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClientActionController.m; sourceTree = "<group>"; };
 		0AA5A5D92893D4AB00CD9EA1 /* ADJClientActionStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClientActionStorage.h; sourceTree = "<group>"; };
@@ -949,6 +977,7 @@
 		0737C1AF287F3E2A004C7D59 /* components */ = {
 			isa = PBXGroup;
 			children = (
+				0A25F89728E2432B001988A1 /* plugin */,
 				0781F22D28D9E5210041AAA3 /* asa_attribution */,
 				0741CE2128D9B0B20041C816 /* log_queue */,
 				0741CDF128D8955E0041C816 /* gdpr_forget */,
@@ -1373,6 +1402,7 @@
 		075D8FC828731314005019E3 /* Adjust */ = {
 			isa = PBXGroup;
 			children = (
+				0A25F88A28E242BC001988A1 /* plugin */,
 				075D8FC928731314005019E3 /* ADJAdjust.h */,
 				075D8FCA28731314005019E3 /* ADJAdjust.m */,
 				6F214E59288A9EF5002319D7 /* ADJAdjustInternal.h */,
@@ -1622,6 +1652,34 @@
 			);
 			path = Adjust;
 			sourceTree = SOURCE_ROOT;
+		};
+		0A25F88A28E242BC001988A1 /* plugin */ = {
+			isa = PBXGroup;
+			children = (
+				0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */,
+				0A25F88F28E24313001988A1 /* ADJAdjustLogger.h */,
+				0A25F88C28E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h */,
+				0A25F88E28E24313001988A1 /* ADJAdjustPlugin.h */,
+				0A25F88D28E24313001988A1 /* ADJAdjustPublishers.h */,
+				0A25F89028E24313001988A1 /* ADJAdjustPublishers.m */,
+			);
+			path = plugin;
+			sourceTree = "<group>";
+		};
+		0A25F89728E2432B001988A1 /* plugin */ = {
+			isa = PBXGroup;
+			children = (
+				0A25F89D28E24345001988A1 /* ADJPluginController.h */,
+				0A25F89B28E24345001988A1 /* ADJPluginController.m */,
+				0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */,
+				0A25F89828E24345001988A1 /* ADJPluginForegroundPublisher.m */,
+				0A25F89E28E24345001988A1 /* ADJPluginLogger.h */,
+				0A25F89C28E24345001988A1 /* ADJPluginLogger.m */,
+				0A25F89F28E24346001988A1 /* ADJPluginPackageSendingPublisher.h */,
+				0A25F89928E24345001988A1 /* ADJPluginPackageSendingPublisher.m */,
+			);
+			path = plugin;
+			sourceTree = "<group>";
 		};
 		0AB23CF4289BEECC008B1835 /* domain */ = {
 			isa = PBXGroup;
@@ -1967,6 +2025,11 @@
 				0781F24128D9ECDA0041AAA3 /* ADJUtilR.h in Headers */,
 				0A7ED7062892B11B00CC20DE /* ADJNonEmptyString.h in Headers */,
 				0741CDF428D895740041C816 /* ADJGdprForgetSubscriber.h in Headers */,
+				0A25F89328E24313001988A1 /* ADJAdjustPublishers.h in Headers */,
+				0A25F89528E24313001988A1 /* ADJAdjustLogger.h in Headers */,
+				0A25F89128E24313001988A1 /* ADJAdjustForegroundSubscriber.h in Headers */,
+				0A25F89428E24313001988A1 /* ADJAdjustPlugin.h in Headers */,
+				0A25F89228E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h in Headers */,
 				0741CDE828D5A6A90041C816 /* ADJThirdPartySharingPackageData.h in Headers */,
 				0735D61B28D367E300614B88 /* ADJAttributionState.h in Headers */,
 				0A7ED7512892B11B00CC20DE /* ADJIoValueSerializable.h in Headers */,
@@ -1976,6 +2039,7 @@
 				0781AE5528B7660300818672 /* ADJSQLiteStorageStringMapBase.h in Headers */,
 				0A7ED7752892B11B00CC20DE /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A7ED7392892B11B00CC20DE /* ADJNetworkEndpointData.h in Headers */,
+				0A25F8A628E24346001988A1 /* ADJPluginLogger.h in Headers */,
 				0A7ED72E2892B11B00CC20DE /* ADJExternalConfigData.h in Headers */,
 				0A7ED71C2892B11B00CC20DE /* ADJPackageParamValueSerializable.h in Headers */,
 				0A7ED7732892B11B00CC20DE /* ADJClientReturnExecutor.h in Headers */,
@@ -1994,6 +2058,7 @@
 				07DD775128B4E2E0005A2245 /* ADJAdjustAdRevenue.h in Headers */,
 				0A7ED7352892B11B00CC20DE /* ADJBackoffStrategy.h in Headers */,
 				0AA5A5D72893D32C00CD9EA1 /* ADJClientActionController.h in Headers */,
+				0A25F8A528E24346001988A1 /* ADJPluginController.h in Headers */,
 				0724D53428995F4F0050E2C4 /* ADJEventDeduplicationData.h in Headers */,
 				0741CDE428D5A6250041C816 /* ADJAdjustThirdPartySharing.h in Headers */,
 				0741CDAE28D4B7E10041C816 /* ADJKeepAliveController.h in Headers */,
@@ -2059,6 +2124,7 @@
 				0A7ED7232892B11B00CC20DE /* ADJClock.h in Headers */,
 				0A7ED7242892B11B00CC20DE /* ADJTimerOnce.h in Headers */,
 				0A7ED7252892B11B00CC20DE /* ADJTimerCycle.h in Headers */,
+				0A25F8A728E24346001988A1 /* ADJPluginPackageSendingPublisher.h in Headers */,
 				0735D60628D3669900614B88 /* ADJAttributionSubscriber.h in Headers */,
 				0A7ED7272892B11B00CC20DE /* ADJLogSubscriber.h in Headers */,
 				0A7ED7282892B11B00CC20DE /* ADJLoggerFactory.h in Headers */,
@@ -2128,6 +2194,7 @@
 				0A7ED7612892B11B00CC20DE /* ADJMainQueueStateAndTracker.h in Headers */,
 				0A7ED7622892B11B00CC20DE /* ADJMainQueueController.h in Headers */,
 				0A7ED7632892B11B00CC20DE /* ADJMainQueueStorage.h in Headers */,
+				0A25F8A228E24346001988A1 /* ADJPluginForegroundPublisher.h in Headers */,
 				0A7ED7642892B11B00CC20DE /* ADJLifecycleSubscriber.h in Headers */,
 				0741CE0128D896340041C816 /* ADJGdprForgetStateData.h in Headers */,
 				0A7ED7652892B11B00CC20DE /* ADJLifecycleController.h in Headers */,
@@ -2381,6 +2448,7 @@
 				07F8F5CD2886DE520089653A /* ADJV4UserDefaultsData.m in Sources */,
 				0788448D2886CB72001814F7 /* ADJTimeLengthMilli.m in Sources */,
 				6FAC56CA288FE2140070F564 /* ADJGlobalCallbackParametersStorage.m in Sources */,
+				0A25F89628E24313001988A1 /* ADJAdjustPublishers.m in Sources */,
 				071E44BF2886DC5800695D89 /* ADJV4FilesData.m in Sources */,
 				0781F24228D9ECDA0041AAA3 /* ADJUtilR.m in Sources */,
 				0735D61428D3676700614B88 /* ADJAttributionStateData.m in Sources */,
@@ -2394,6 +2462,7 @@
 				0737C202287F3E2A004C7D59 /* ADJUtilSys.m in Sources */,
 				0741CE0A28D896820041C816 /* ADJGdprForgetTracker.m in Sources */,
 				6F214E7A288ACFFA002319D7 /* ADJMeasurementSessionState.m in Sources */,
+				0A25F8A128E24346001988A1 /* ADJPluginPackageSendingPublisher.m in Sources */,
 				6FAC56B8288FDFF80070F564 /* ADJSdkPackageBaseData.m in Sources */,
 				0735D61C28D367E300614B88 /* ADJAttributionState.m in Sources */,
 				0781F23528D9E6CB0041AAA3 /* ADJAsaAttributionStateStorage.m in Sources */,
@@ -2471,6 +2540,7 @@
 				0737C1FE287F3E2A004C7D59 /* ADJConstants.m in Sources */,
 				0741CE1228D899080041C816 /* ADJGdprForgetPackageData.m in Sources */,
 				6F214E8A288AD271002319D7 /* ADJPackageSessionData.m in Sources */,
+				0A25F8A028E24346001988A1 /* ADJPluginForegroundPublisher.m in Sources */,
 				07DD775C28B4EF7C005A2245 /* ADJClientAdRevenueData.m in Sources */,
 				079E154E28CA10D8006E84EF /* ADJClickPackageData.m in Sources */,
 				6F278FB0288AD72600804594 /* ADJSQLiteStorageActionBase.m in Sources */,
@@ -2509,6 +2579,7 @@
 				07615EF228880DB600CE57FC /* ADJClientConfigData.m in Sources */,
 				0781F23E28D9E7710041AAA3 /* ADJAsaAttributionStateData.m in Sources */,
 				07926DB0289A7E0200260E25 /* ADJEventStateData.m in Sources */,
+				0A25F8A328E24346001988A1 /* ADJPluginController.m in Sources */,
 				0AA5A5EC2893DA8C00CD9EA1 /* ADJEventDeduplicationStorage.m in Sources */,
 				6FE447A7288E892800FF06E0 /* ADJLifecycleController.m in Sources */,
 				0781AE5E28B76C1100818672 /* ADJClientRemoveGlobalParameterData.m in Sources */,
@@ -2536,6 +2607,7 @@
 				6F214E82288AD0AF002319D7 /* ADJMeasurementSessionData.m in Sources */,
 				0AB23CF3289BEE4F008B1835 /* ADJOfflineController.m in Sources */,
 				07F8025A2892867A0068902F /* ADJAdjustEvent.m in Sources */,
+				0A25F8A428E24346001988A1 /* ADJPluginLogger.m in Sources */,
 				071594082886E41C00E7F2F8 /* ADJAdjustAttribution.m in Sources */,
 				6FAC56C0288FE0B20070F564 /* ADJConstantsParam.m in Sources */,
 			);

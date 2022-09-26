@@ -256,19 +256,17 @@
     return value.stringValue;
 }
 
-+ (void)transferExternalParametersWithFoundationMapToRead:
-(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
++ (void)transferExternalParametersWithFoundationMapToRead:(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
                                         parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
                                                    source:(nonnull NSString *)source
                                                    logger:(nonnull ADJLogger *)logger {
     NSDictionary<NSString *, NSString *> *_Nonnull foundationMapToReadCopy = [foundationMapToRead copy];
 
     for (NSString *_Nonnull readKey in foundationMapToReadCopy) {
-        ADJNonEmptyString *_Nullable keyToWrite =
-        [ADJNonEmptyString
-         instanceFromString:readKey
-         sourceDescription:[NSString stringWithFormat:@"Parameter %@ key to write", source]
-         logger:logger];
+        ADJNonEmptyString *_Nullable keyToWrite = [ADJNonEmptyString
+                                                   instanceFromString:readKey
+                                                   sourceDescription:[NSString stringWithFormat:@"Parameter %@ key to write", source]
+                                                   logger:logger];
 
         if (keyToWrite == nil) {
             continue;
@@ -276,11 +274,10 @@
 
         NSString *_Nonnull readValue = [foundationMapToReadCopy objectForKey:readKey];
 
-        ADJNonEmptyString *_Nullable valueToWrite =
-        [ADJNonEmptyString
-         instanceFromString:readValue
-         sourceDescription:[NSString stringWithFormat:@"Parameter %@ value to write", source]
-         logger:logger];
+        ADJNonEmptyString *_Nullable valueToWrite = [ADJNonEmptyString
+                                                     instanceFromString:readValue
+                                                     sourceDescription:[NSString stringWithFormat:@"Parameter %@ value to write", source]
+                                                     logger:logger];
 
         if (valueToWrite == nil) {
             continue;

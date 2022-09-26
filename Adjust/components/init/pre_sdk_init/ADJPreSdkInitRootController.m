@@ -90,7 +90,7 @@
     _sdkActiveState = [[ADJSdkActiveState alloc] initWithLoggerFactory:loggerFactory
                                                        isGdprForgotten:[self.gdprForgetController isForgotten]];
 
-    //    _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
+    _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
 
     return self;
 }
@@ -331,14 +331,10 @@
                                                         lifecyclePublisher:self.lifecycleController.lifecyclePublisher
                                                       sdkResponsePublisher:postSdkInitRootController.sdkPackageSenderController.sdkResponsePublisher];
 
-    /*
-     [self.pluginController
-     ccSubscribeToPublishersWithSdkPackageSendingPublisher:
-     postSdkInitRootController.sdkPackageSenderController.sdkPackageSendingPublisher
+     [self.pluginController ccSubscribeToPublishersWithSdkPackageSendingPublisher:postSdkInitRootController.sdkPackageSenderController.sdkPackageSendingPublisher
      lifecyclePublisher:self.lifecycleController.lifecyclePublisher];
 
      // subscribe self to publishers
-     */
     [publishingGatePublisher addSubscriber:self];
     [self.gdprForgetController.gdprForgetPublisher addSubscriber:self];
 }

@@ -44,14 +44,12 @@
 
 + (nonnull NSString *)joinString:(nonnull NSString *)first, ...;
 
-// TODO: (Gena) Why this method declaration was commented out? It's used ADJSessionDeviceIdsData.
 + (nullable NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value;
 
-//+ (void)transferExternalParametersWithFoundationMapToRead:
-//        (nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
-//    parametersToWrite:(nonnull StringMapBuilder *)parametersToWrite
-//    source:(nonnull NSString *)source
-//    logger:(nonnull Logger *)logger;
++ (void)transferExternalParametersWithFoundationMapToRead:(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
+                                        parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
+                                                   source:(nonnull NSString *)source
+                                                   logger:(nonnull ADJLogger *)logger;
 
 @end
 
