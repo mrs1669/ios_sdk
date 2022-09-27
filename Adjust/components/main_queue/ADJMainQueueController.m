@@ -76,26 +76,24 @@
     return NO;
 }
 
-/*
- - (BOOL)containsAsaClickPackage {
- ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
- if (mainQueueStorage == nil) {
- [self.logger error:@"Cannot determine if it contains first session package"
- " without a reference to storage"];
- return NO;
- }
+- (BOOL)containsAsaClickPackage {
+    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
+    if (mainQueueStorage == nil) {
+        [self.logger error:@"Cannot determine if it contains first session package"
+         " without a reference to storage"];
+        return NO;
+    }
 
- NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
+    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
 
- for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
- if ([self isAsaClickPackageWithData:sdkPackageData]) {
- return YES;
- }
- }
+    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
+        if ([self isAsaClickPackageWithData:sdkPackageData]) {
+            return YES;
+        }
+    }
 
- return NO;
- }
- */
+    return NO;
+}
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
@@ -109,36 +107,29 @@
     }];
 }
 
-/*
- - (void)
- addBillingSubscriptionPackageToSendWithData:
- (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
- {
- __typeof(self) __weak weakSelf = self;
- [self.executor executeInSequenceWithBlock:^{
- __typeof(weakSelf) __strong strongSelf = weakSelf;
- if (strongSelf == nil) { return; }
+- (void)addBillingSubscriptionPackageToSendWithData:(nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
- [strongSelf addSdkPackageToSendWithData:billingSubscriptionPackageData
- sqliteStorageAction:sqliteStorageAction];
- }];
- }
+        [strongSelf addSdkPackageToSendWithData:billingSubscriptionPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    }];
+}
 
- - (void)
- addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
- {
- __typeof(self) __weak weakSelf = self;
- [self.executor executeInSequenceWithBlock:^{
- __typeof(weakSelf) __strong strongSelf = weakSelf;
- if (strongSelf == nil) { return; }
+- (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
- [strongSelf addSdkPackageToSendWithData:clickPackageData
- sqliteStorageAction:sqliteStorageAction];
- }];
- }
- */
+        [strongSelf addSdkPackageToSendWithData:clickPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    }];
+}
 
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
                   sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
@@ -152,21 +143,18 @@
     }];
 }
 
-/*
- - (void)
- addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
- {
- __typeof(self) __weak weakSelf = self;
- [self.executor executeInSequenceWithBlock:^{
- __typeof(weakSelf) __strong strongSelf = weakSelf;
- if (strongSelf == nil) { return; }
+- (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
+                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
- [strongSelf addSdkPackageToSendWithData:infoPackageData
- sqliteStorageAction:sqliteStorageAction];
- }];
- }
- */
+        [strongSelf addSdkPackageToSendWithData:infoPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    }];
+}
+
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
@@ -178,22 +166,19 @@
                             sqliteStorageAction:sqliteStorageAction];
     }];
 }
-/*
- - (void)
- addThirdPartySharingPackageToSendWithData:
- (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
- sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
- {
- __typeof(self) __weak weakSelf = self;
- [self.executor executeInSequenceWithBlock:^{
- __typeof(weakSelf) __strong strongSelf = weakSelf;
- if (strongSelf == nil) { return; }
 
- [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
- sqliteStorageAction:sqliteStorageAction];
- }];
- }
- */
+- (void)addThirdPartySharingPackageToSendWithData:(nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    }];
+}
+
 - (nonnull NSString *)defaultTargetUrl {
     return [self.sender defaultTargetUrl];
 }
@@ -309,22 +294,19 @@
     return [sessionPackageData isFirstSession];
 }
 
-/*
- - (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
- if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
- return NO;
- }
+- (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
+    if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
+        return NO;
+    }
 
- ADJNonEmptyString *_Nullable clickSourceValue =
- [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
- if (clickSourceValue == nil) {
- return NO;
- }
+    ADJNonEmptyString *_Nullable clickSourceValue =
+    [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
+    if (clickSourceValue == nil) {
+        return NO;
+    }
 
- return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
- }
-
- */
+    return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
+}
 
 - (void)handleSdkInit {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;

@@ -21,8 +21,7 @@
    // subscriptions
    ADJMeasurementSessionStartSubscriber
 >
-- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:
-(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
+- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic)ADJReachabilityPublisher *reachabilityPublisher;

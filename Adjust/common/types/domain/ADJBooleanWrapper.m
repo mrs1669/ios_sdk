@@ -31,29 +31,28 @@ NSString *const ADJBooleanFalseString = @"false";
     if (numberBooleanValue == nil) {
         return nil;
     }
-    
+
     return [self instanceFromBool:[numberBooleanValue boolValue]];
 }
 
 + (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
-                                      logger:(nonnull ADJLogger *)logger
-{
+                                      logger:(nonnull ADJLogger *)logger {
     if (ioValue == nil) {
         [logger error:@"Cannot create boolean from Io value when it is null"];
         return nil;
     }
-    
+
     if ([ioValue.stringValue isEqualToString:ADJBooleanTrueString]) {
         return [self trueInstance];
     }
-    
+
     if ([ioValue.stringValue isEqualToString:ADJBooleanFalseString]) {
         return [self falseInstance];
     }
-    
+
     [logger error:@"Cannot create boolean from Io value"
      " when it does not match either valid value"];
-    
+
     return nil;
 }
 
@@ -71,6 +70,7 @@ NSString *const ADJBooleanFalseString = @"false";
     });
     return trueInstance;
 }
+
 + (nonnull ADJBooleanWrapper *)falseInstance {
     static dispatch_once_t onceFalseInstanceToken;
     static ADJBooleanWrapper * falseInstance;
@@ -89,6 +89,7 @@ NSString *const ADJBooleanFalseString = @"false";
     });
     return trueString;
 }
+
 + (nonnull ADJNonEmptyString *)falseString {
     static dispatch_once_t onceFalseStringToken;
     static ADJNonEmptyString * falseString;
@@ -101,9 +102,9 @@ NSString *const ADJBooleanFalseString = @"false";
 
 - (nonnull instancetype)initWithBoolValue:(BOOL)boolValue {
     self = [super init];
-    
+
     _boolValue = boolValue;
-    
+
     return self;
 }
 
@@ -126,9 +127,9 @@ NSString *const ADJBooleanFalseString = @"false";
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-    
+
     hashCode = ADJHashCodeMultiplier * hashCode + [@(self.boolValue) hash];
-    
+
     return hashCode;
 }
 
@@ -136,13 +137,14 @@ NSString *const ADJBooleanFalseString = @"false";
     if (self == object) {
         return YES;
     }
-    
+
     if (![object isKindOfClass:[ADJBooleanWrapper class]]) {
         return NO;
     }
-    
+
     ADJBooleanWrapper *other = (ADJBooleanWrapper *)object;
     return self.boolValue == other.boolValue;
 }
 
 @end
+

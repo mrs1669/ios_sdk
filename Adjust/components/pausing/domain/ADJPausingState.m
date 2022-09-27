@@ -65,6 +65,7 @@
 
     return [self publishResumeSendingWithSource:source];
 }
+
 - (BOOL)publishPauseWhenNetworkIsUnreachableWithSource:(nonnull NSString *)source {
     self.isNetworkReachable = NO;
 
@@ -76,6 +77,7 @@
 
     return [self publishResumeSendingWithSource:source];
 }
+
 - (BOOL)publishPauseWhenBackgroundWithSource:(nonnull NSString *)source {
     self.isOnForeground = NO;
 
@@ -87,6 +89,7 @@
 
     return [self publishResumeSendingWithSource:source];
 }
+
 - (BOOL)publishPauseWhenOfflineWithSource:(nonnull NSString *)source {
     self.isOffline = YES;
 
@@ -98,6 +101,7 @@
 
     return [self publishResumeSendingWithSource:source];
 }
+
 - (BOOL)publishPauseWhenSdkNotActiveWithSource:(nonnull NSString *)source {
     self.isSdkActive = NO;
 
@@ -157,6 +161,7 @@
 }
 
 - (BOOL)publishPauseSendingWithSource:(nonnull NSString *)source {
+
     if (self.isPaused) {
         [self.logger debug:@"Cannot pause sending from %@,"
          " since the SDK is already paused", source];

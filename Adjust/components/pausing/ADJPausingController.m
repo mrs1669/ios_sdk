@@ -93,6 +93,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         }
     }];
 }
+
 - (void)didSdkBecomeOffline {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
@@ -259,5 +260,4 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 }
 
 @end
-
 

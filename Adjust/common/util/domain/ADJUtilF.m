@@ -41,13 +41,13 @@
     return self;
 }
 /*
-+ (nonnull NSNumberFormatter *)createIntegerFormatter {
-    NSNumberFormatter *_Nonnull integerFormatter = [[NSNumberFormatter alloc] init];
-    [integerFormatter setNumberStyle:NSNumberFormatterNoStyle];
+ + (nonnull NSNumberFormatter *)createIntegerFormatter {
+ NSNumberFormatter *_Nonnull integerFormatter = [[NSNumberFormatter alloc] init];
+ [integerFormatter setNumberStyle:NSNumberFormatterNoStyle];
 
-    return integerFormatter;
-}
-*/
+ return integerFormatter;
+ }
+ */
 + (nonnull NSNumberFormatter *)createDecimalStyleFormatterWithLocale:(nonnull NSLocale *)locale {
     NSNumberFormatter *_Nonnull decimalStyleFormatter = [[NSNumberFormatter alloc] init];
     [decimalStyleFormatter setLocale:locale];
@@ -68,7 +68,7 @@
     NSDateFormatter *_Nonnull dateFormatter = [[NSDateFormatter alloc] init];
 
     [dateFormatter setCalendar:
-        [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
+     [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian]];
     [dateFormatter setLocale:locale];
     [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'Z"];
 
@@ -79,7 +79,7 @@
 + (nonnull NSCharacterSet *)createUrlUnreservedCharacterSet {
     // digit
     NSMutableCharacterSet *_Nonnull urlAllowCharacterSetBuilder =
-        [NSMutableCharacterSet characterSetWithCharactersInString:@"0123456789"];
+    [NSMutableCharacterSet characterSetWithCharactersInString:@"0123456789"];
 
     // lower alpha
     NSRange lowerAlphaRange;
@@ -87,7 +87,7 @@
     lowerAlphaRange.length = 26;
 
     [urlAllowCharacterSetBuilder formUnionWithCharacterSet:
-        [NSCharacterSet characterSetWithRange:lowerAlphaRange]];
+     [NSCharacterSet characterSetWithRange:lowerAlphaRange]];
 
     // upper alpha
     NSRange upperAlpha;
@@ -95,12 +95,12 @@
     upperAlpha.length = 26;
 
     [urlAllowCharacterSetBuilder formUnionWithCharacterSet:
-        [NSCharacterSet characterSetWithRange:upperAlpha]];
+     [NSCharacterSet characterSetWithRange:upperAlpha]];
 
     // special non-escaped characters
     // space ' ' is later replaced by plus '+'
     [urlAllowCharacterSetBuilder formUnionWithCharacterSet:
-        [NSCharacterSet characterSetWithCharactersInString:@"-._~ "]];
+     [NSCharacterSet characterSetWithCharactersInString:@"-._~ "]];
 
     return [urlAllowCharacterSetBuilder copy];
 }
@@ -158,32 +158,32 @@
 
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error {
     return [ADJUtilObj formatInlineKeyValuesWithName:@"NSError",
-                @"domain", error.domain,
-                @"code", @(error.code),
-                @"localizedDescription", error.localizedDescription,
-                @"localizedFailureReason", error.localizedFailureReason,
-                @"localizedRecoverySuggestion", error.localizedRecoverySuggestion,
+            @"domain", error.domain,
+            @"code", @(error.code),
+            @"localizedDescription", error.localizedDescription,
+            @"localizedFailureReason", error.localizedFailureReason,
+            @"localizedRecoverySuggestion", error.localizedRecoverySuggestion,
             nil];
 }
 
 + (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData {
     NSString *_Nullable converted =
-        [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
     if (converted == nil) {
         return nil;
     }
 
     return [converted stringByTrimmingCharactersInSet:
-                [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 + (nullable NSString *)jsonFoundationValueFormat:(nonnull id)jsonFoundationValue {
     NSError *error;
 
     NSData *_Nullable jsonData =
-        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
-                                                      errorPtr:&error];
+    [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
+                                                 errorPtr:&error];
 
     if (jsonData == nil) {
         return nil;
@@ -200,9 +200,9 @@
 + (nonnull NSString *)dateTimestampFormat:(nonnull ADJTimestampMilli *)timestamp {
     ADJUtilF *_Nonnull sharedInstance = [self sharedInstance];
     return [sharedInstance.serverDateFormatter stringFromDate:
-        [NSDate dateWithTimeIntervalSince1970:
-            [ADJUtilConv convertToSecondsWithMilliseconds:
-                timestamp.millisecondsSince1970Int.uIntegerValue]]];
+            [NSDate dateWithTimeIntervalSince1970:
+             [ADJUtilConv convertToSecondsWithMilliseconds:
+              timestamp.millisecondsSince1970Int.uIntegerValue]]];
 }
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
@@ -221,9 +221,9 @@
     ADJUtilF *_Nonnull sharedInstance = [self sharedInstance];
 
     NSString *_Nullable urlEncoded =
-        [stringToEncode
-            stringByAddingPercentEncodingWithAllowedCharacters:
-                sharedInstance.urlUnreservedCharacterSet];
+    [stringToEncode
+     stringByAddingPercentEncodingWithAllowedCharacters:
+         sharedInstance.urlUnreservedCharacterSet];
 
     if (urlEncoded == nil) {
         return nil;
@@ -256,21 +256,17 @@
     return value.stringValue;
 }
 
-+ (void)
-    transferExternalParametersWithFoundationMapToRead:
-        (nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
-    parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
-    source:(nonnull NSString *)source
-    logger:(nonnull ADJLogger *)logger
-{
++ (void)transferExternalParametersWithFoundationMapToRead:(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
+                                        parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
+                                                   source:(nonnull NSString *)source
+                                                   logger:(nonnull ADJLogger *)logger {
     NSDictionary<NSString *, NSString *> *_Nonnull foundationMapToReadCopy = [foundationMapToRead copy];
 
     for (NSString *_Nonnull readKey in foundationMapToReadCopy) {
-        ADJNonEmptyString *_Nullable keyToWrite =
-            [ADJNonEmptyString
-                instanceFromString:readKey
-                sourceDescription:[NSString stringWithFormat:@"Parameter %@ key to write", source]
-                logger:logger];
+        ADJNonEmptyString *_Nullable keyToWrite = [ADJNonEmptyString
+                                                   instanceFromString:readKey
+                                                   sourceDescription:[NSString stringWithFormat:@"Parameter %@ key to write", source]
+                                                   logger:logger];
 
         if (keyToWrite == nil) {
             continue;
@@ -278,11 +274,10 @@
 
         NSString *_Nonnull readValue = [foundationMapToReadCopy objectForKey:readKey];
 
-        ADJNonEmptyString *_Nullable valueToWrite =
-            [ADJNonEmptyString
-                instanceFromString:readValue
-                sourceDescription:[NSString stringWithFormat:@"Parameter %@ value to write", source]
-                logger:logger];
+        ADJNonEmptyString *_Nullable valueToWrite = [ADJNonEmptyString
+                                                     instanceFromString:readValue
+                                                     sourceDescription:[NSString stringWithFormat:@"Parameter %@ value to write", source]
+                                                     logger:logger];
 
         if (valueToWrite == nil) {
             continue;
@@ -293,4 +288,5 @@
 }
 
 @end
+
 

@@ -71,9 +71,9 @@
 - (nonnull ADJAdRevenuePackageData *)buildAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
                                                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
     ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJAdRevenuePackageDataPath
-                               apiTimestamp:apiTimestamp
-                callbackParametersOverwrite:clientAdRevenueData.callbackParameters
-                 partnerParametersOverwrite:clientAdRevenueData.partnerParameters];
+                                                                                 apiTimestamp:apiTimestamp
+                                                                  callbackParametersOverwrite:clientAdRevenueData.callbackParameters
+                                                                   partnerParametersOverwrite:clientAdRevenueData.partnerParameters];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAdRevenueSourceKey
@@ -113,148 +113,119 @@
                                                    parameters:parameters];
 }
 
+- (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy {
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJAttributionPackageDataPath];
+
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamAttributionInititedByKey
+                                            constValue:initatedBy];
+
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJAttributionPackageDataPath];
+
+    return [[ADJAttributionPackageData alloc] initWithClientSdk:self.clientSdk
+                                                     parameters:parameters];
+}
+
+- (nonnull ADJBillingSubscriptionPackageData *)buildBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
+                                                                         apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJBillingSubscriptionPackageDataPath
+                               apiTimestamp:apiTimestamp
+                callbackParametersOverwrite:clientBillingSubscriptionData.callbackParameters
+                 partnerParametersOverwrite:clientBillingSubscriptionData.partnerParameters];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamSubscriptionPriceAmountKey
+     packageParamValueSerializable:clientBillingSubscriptionData.price.amount];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamSubscriptionPriceCurrencyKey
+     packageParamValueSerializable:clientBillingSubscriptionData.price.currency];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamSubscriptionTransactionIdKey
+     packageParamValueSerializable:clientBillingSubscriptionData.transactionId];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamSubscriptionReceiptDataStringKey
+     packageParamValueSerializable:clientBillingSubscriptionData.receiptDataString];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamSubscriptionTransactionDateKey
+     packageParamValueSerializable:clientBillingSubscriptionData.transactionTimestamp];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamSubscriptionBillingStoreKey
+     packageParamValueSerializable:clientBillingSubscriptionData.billingStore];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamSubscriptionSalesRegionKey
+     packageParamValueSerializable:clientBillingSubscriptionData.salesRegion];
+
+    ADJStringMap *_Nonnull parameters =
+    [self
+     publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+     path:ADJBillingSubscriptionPackageDataPath];
+
+    return [[ADJBillingSubscriptionPackageData alloc] initWithClientSdk:self.clientSdk
+                                                             parameters:parameters];
+}
 
 
-/** /
- - (nonnull ADJAttributionPackageData *)
- buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJAttributionPackageDataPath];
+- (nonnull ADJClickPackageData *)buildLaunchedDeeplinkClickWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
+                                                             apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJClickPackageDataPath
+                                                                                 apiTimestamp:apiTimestamp];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAttributionInititedByKey
- constValue:initatedBy];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamClickSourceKey
+                                            constValue:ADJParamDeeplinkClickSourceValue];
 
- ADJStringMap *_Nonnull parameters =
- [self
- publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJAttributionPackageDataPath];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamDeeplinkKey
+                         packageParamValueSerializable:clientLaunchedDeeplinkData.launchedDeeplink];
 
- return [[ADJAttributionPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJClickPackageDataPath];
 
+    return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
+                                               parameters:parameters];
+}
 
-/** /
- - (nonnull ADJBillingSubscriptionPackageData *)
- buildBillingSubscriptionWithClientData:
- (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJBillingSubscriptionPackageDataPath
- apiTimestamp:apiTimestamp
- callbackParametersOverwrite:clientBillingSubscriptionData.callbackParameters
- partnerParametersOverwrite:clientBillingSubscriptionData.partnerParameters];
+- (nonnull ADJClickPackageData *)buildAsaAttributionClickWithToken:(nonnull ADJNonEmptyString *)asaAttibutionToken
+                                       asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJClickPackageDataPath];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamSubscriptionPriceAmountKey
- packageParamValueSerializable:clientBillingSubscriptionData.price.amount];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamClickSourceKey
+                                            constValue:ADJParamAsaAttributionClickSourceValue];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamSubscriptionPriceCurrencyKey
- packageParamValueSerializable:clientBillingSubscriptionData.price.currency];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamAsaAttributionTokenKey
+     packageParamValueSerializable:asaAttibutionToken];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamSubscriptionTransactionIdKey
- packageParamValueSerializable:clientBillingSubscriptionData.transactionId];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamAsaAttributionReadAtKey
+     packageParamValueSerializable:asaAttributionReadTimestamp];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamSubscriptionReceiptDataStringKey
- packageParamValueSerializable:clientBillingSubscriptionData.receiptDataString];
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJClickPackageDataPath];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamSubscriptionTransactionDateKey
- packageParamValueSerializable:clientBillingSubscriptionData.transactionTimestamp];
-
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamSubscriptionBillingStoreKey
- packageParamValueSerializable:clientBillingSubscriptionData.billingStore];
-
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamSubscriptionSalesRegionKey
- packageParamValueSerializable:clientBillingSubscriptionData.salesRegion];
-
- ADJStringMap *_Nonnull parameters =
- [self
- publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJBillingSubscriptionPackageDataPath];
-
- return [[ADJBillingSubscriptionPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
-
-/** /
- - (nonnull ADJClickPackageData *)
- buildLaunchedDeeplinkClickWithClientData:
- (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJClickPackageDataPath
- apiTimestamp:apiTimestamp];
-
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamClickSourceKey
- constValue:ADJParamDeeplinkClickSourceValue];
-
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamDeeplinkKey
- packageParamValueSerializable:clientLaunchedDeeplinkData.launchedDeeplink];
-
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJClickPackageDataPath];
-
- return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
-
-/** /
- - (nonnull ADJClickPackageData *)
- buildAsaAttributionClickWithToken:
- (nonnull ADJNonEmptyString *)asaAttibutionToken
- asaAttributionReadTimestamp:(nullable ADJTimestampMilli *)asaAttributionReadTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJClickPackageDataPath];
-
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamClickSourceKey
- constValue:ADJParamAsaAttributionClickSourceValue];
-
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAsaAttributionTokenKey
- packageParamValueSerializable:asaAttibutionToken];
-
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamAsaAttributionReadAtKey
- packageParamValueSerializable:asaAttributionReadTimestamp];
-
-
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJClickPackageDataPath];
-
- return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+    return [[ADJClickPackageData alloc] initWithClientSdk:self.clientSdk
+                                               parameters:parameters];
+}
 
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
@@ -277,13 +248,6 @@
                                                        key:ADJParamEventCurrencyKey
                              packageParamValueSerializable:clientEventData.revenue.currency];
     }
-    
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamCallbackParamsKey
-                         packageParamValueSerializable:clientEventData.callbackParameters];
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamPartnerParamsKey
-                         packageParamValueSerializable:clientEventData.partnerParameters];
 
     ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                                                            path:ADJEventPackageDataPath];
@@ -292,54 +256,50 @@
                                                parameters:parameters];
 }
 
-/** /
- - (nonnull ADJInfoPackageData *)
- buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJInfoPackageDataPath];
+- (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
+                                                  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJInfoPackageDataPath];
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamPushTokenKey
- packageParamValueSerializable:clientPushTokenData.pushTokenString];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamPushTokenKey
+                         packageParamValueSerializable:clientPushTokenData.pushTokenString];
 
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJInfoPackageDataPath];
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamPushTokenSourceKey
+                                            constValue:ADJParamPushTokenSourceValue];
 
- return [[ADJInfoPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJInfoPackageDataPath];
 
- - (nonnull ADJLogPackageData *)
- buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
- logLevel:(nonnull NSString *)logLevel
- logSource:(nonnull NSString *)logSource
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJLogPackageDataPath];
+    return [[ADJInfoPackageData alloc] initWithClientSdk:self.clientSdk
+                                              parameters:parameters];
+}
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamLogMessageKey
- packageParamValueSerializable:logMessage];
-
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamLogLevelKey
- constValue:logLevel];
-
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamLogSourceKey
- constValue:logSource];
-
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJLogPackageDataPath];
-
- return [[ADJLogPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+- (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
+                                                 logLevel:(nonnull NSString *)logLevel
+                                                logSource:(nonnull NSString *)logSource {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJLogPackageDataPath];
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamLogMessageKey
+                         packageParamValueSerializable:logMessage];
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamLogLevelKey
+                                            constValue:logLevel];
+    
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamLogSourceKey
+                                            constValue:logSource];
+    
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJLogPackageDataPath];
+    
+    return [[ADJLogPackageData alloc] initWithClientSdk:self.clientSdk
+                                             parameters:parameters];
+}
 
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataOverwrite {
     ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJSessionPackageDataPath
@@ -352,60 +312,56 @@
                                                  parameters:parameters];
 }
 
-/** /
- - (nonnull ADJThirdPartySharingPackageData *)
- buildThirdPartySharingWithClientData:
- (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
- apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJThirdPartySharingPackageDataPath
- apiTimestamp:apiTimestamp];
+- (nonnull ADJThirdPartySharingPackageData *)buildThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 
- [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamClickSourceKey
- constValue:ADJParamDeeplinkClickSourceValue];
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJThirdPartySharingPackageDataPath
+                               apiTimestamp:apiTimestamp];
 
- if (clientThirdPartySharingData.enabledOrElseDisabledSharing != nil) {
- if (clientThirdPartySharingData.enabledOrElseDisabledSharing.boolValue) {
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamThirdPartySharingKey
- constValue:ADJParamThirdPartySharingEnabledValue];
- } else {
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamThirdPartySharingKey
- constValue:ADJParamThirdPartySharingDisabledValue];
- }
- }
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamClickSourceKey
+                                            constValue:ADJParamDeeplinkClickSourceValue];
 
- [ADJUtilMap
- injectIntoPackageParametersWithBuilder:parametersBuilder
- key:ADJParamThirdPartySharingGranularOptionsKey
- packageParamValueSerializable:clientThirdPartySharingData.stringGranularOptionsByName];
+    if (clientThirdPartySharingData.enabledOrElseDisabledSharing != nil) {
+        if (clientThirdPartySharingData.enabledOrElseDisabledSharing.boolValue) {
+            [ADJUtilMap
+             injectIntoPackageParametersWithBuilder:parametersBuilder
+             key:ADJParamThirdPartySharingKey
+             constValue:ADJParamThirdPartySharingEnabledValue];
+        } else {
+            [ADJUtilMap
+             injectIntoPackageParametersWithBuilder:parametersBuilder
+             key:ADJParamThirdPartySharingKey
+             constValue:ADJParamThirdPartySharingDisabledValue];
+        }
+    }
 
- ADJStringMap *_Nonnull parameters =
- [self
- publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJThirdPartySharingPackageDataPath];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamThirdPartySharingGranularOptionsKey
+     packageParamValueSerializable:clientThirdPartySharingData.stringGranularOptionsByName];
 
- return [[ADJThirdPartySharingPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
+    ADJStringMap *_Nonnull parameters =
+    [self
+     publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+     path:ADJThirdPartySharingPackageDataPath];
 
- - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
- ADJStringMapBuilder *_Nonnull parametersBuilder =
- [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
+    return [[ADJThirdPartySharingPackageData alloc] initWithClientSdk:self.clientSdk
+                                                           parameters:parameters];
+}
 
- ADJStringMap *_Nonnull parameters =
- [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
- path:ADJGdprForgetPackageDataPath];
-
- return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
- parameters:parameters];
- }
- */
+- (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+    [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
+    
+    ADJStringMap *_Nonnull parameters =
+    [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                       path:ADJGdprForgetPackageDataPath];
+    
+    return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
+                                                    parameters:parameters];
+}
 
 + (void)injectSentAtWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                           sentAtTimestamp:(nullable ADJTimestampMilli *)sentAtTimestamp {
@@ -494,13 +450,13 @@
     [self injectEventStateFieldsWithParametersBuilder:parametersBuilder
                                                  path:path];
 
-    // [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
-    //                                                      path:path
-    //                               callbackParametersOverwrite:callbackParametersOverwrite];
+    [self injectCallbackParametersFieldsWithParametersBuilder:parametersBuilder
+                                                         path:path
+                                  callbackParametersOverwrite:callbackParametersOverwrite];
 
-    // [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
-    //                                                     path:path
-    //                               partnerParametersOverwrite:partnerParametersOverwrite];
+    [self injectPartnerParametersFieldsWithParametersBuilder:parametersBuilder
+                                                        path:path
+                                  partnerParametersOverwrite:partnerParametersOverwrite];
 
     [self injectMeasurementSessionFieldsWithParametersBuilder:parametersBuilder
                                                          path:path
@@ -666,22 +622,21 @@
                          packageParamValueSerializable:eventStateData.eventCount];
 }
 
-/*
+
 - (void)injectCallbackParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                        path:(nullable NSString *)path
                                 callbackParametersOverwrite:(nullable ADJStringMap *)callbackParametersOverwrite {
     ADJGlobalCallbackParametersStorage *_Nullable globalCallbackParametersStorage = self.globalCallbackParametersStorageWeak;
     ADJStringMap *_Nullable globalCallbackParametersMap;
-    
+
     if (globalCallbackParametersStorage == nil) {
         [self.logger error:@"Cannot inject global callback parameters for package with %@ path"
          " without a reference to global callback parameters storage", path];
         globalCallbackParametersMap = nil;
     } else {
-        // TODO: ADJGlobalCallbackParametersStorage still not alive
-        // globalCallbackParametersMap = [globalCallbackParametersStorage allPairs];
+        globalCallbackParametersMap = [globalCallbackParametersStorage allPairs];
     }
-    
+
     [self injectMapParametersWithParametersBuilder:parametersBuilder
                                     overwritingMap:callbackParametersOverwrite
                                            baseMap:globalCallbackParametersMap
@@ -693,22 +648,20 @@
                                 partnerParametersOverwrite:(nullable ADJStringMap *)partnerParametersOverwrite {
     ADJGlobalPartnerParametersStorage *_Nullable globalPartnerParametersStorage = self.globalPartnerParametersStorageWeak;
     ADJStringMap *_Nullable globalPartnerParametersMap;
-    
+
     if (globalPartnerParametersStorage == nil) {
         [self.logger error:@"Cannot inject global partner parameters for package with %@ path"
          " without a reference to global partner parameters storage", path];
         globalPartnerParametersMap = nil;
     } else {
-        // TODO: ADJGlobalPartnerParametersStorage still not alive
-        // globalPartnerParametersMap = [globalPartnerParametersStorage allPairs];
+        globalPartnerParametersMap = [globalPartnerParametersStorage allPairs];
     }
-    
+
     [self injectMapParametersWithParametersBuilder:parametersBuilder
                                     overwritingMap:partnerParametersOverwrite
                                            baseMap:globalPartnerParametersMap
                                             mapKey:ADJParamPartnerParamsKey];
 }
-*/
 
 - (void)injectMapParametersWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                   overwritingMap:(nullable ADJStringMap *)overwritingMap
@@ -770,8 +723,7 @@
 
 - (nonnull ADJStringMap *)publishAndGenerateParametersWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                                        path:(nonnull NSString *)path {
-    ADJStringMap *_Nonnull prePublishingParameters =
-    [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder];
+    ADJStringMap *_Nonnull prePublishingParameters = [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder];
 
     if (! self.sdkPackageCreatingPublisher.hasSubscribers) {
         return prePublishingParameters;
@@ -791,11 +743,12 @@
     if (parametersToWriteFromSubscribers.isEmpty) {
         return prePublishingParameters;
     }
-    
+
     [parametersBuilder addAllPairsWithStringMapBuilder:parametersToWriteFromSubscribers];
 
     return [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder];
 }
 
 @end
+
 

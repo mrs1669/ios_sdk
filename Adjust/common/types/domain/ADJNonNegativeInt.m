@@ -28,34 +28,30 @@
     return [self oneInstance];
 }
 
-
 + (nullable instancetype)instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
-                                            logger:(nonnull ADJLogger *)logger
-{
+                                            logger:(nonnull ADJLogger *)logger {
     return [self instanceFromIntegerNumber:integerNumber
                                     logger:logger
                                 isOptional:NO];
 }
 
 + (nullable instancetype)instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber
-                                                    logger:(nonnull ADJLogger *)logger
-{
+                                                    logger:(nonnull ADJLogger *)logger {
     return [self instanceFromIntegerNumber:integerNumber
                                     logger:logger
                                 isOptional:YES];
     
 }
+
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger
-{
+                                          logger:(nonnull ADJLogger *)logger {
     return [self instanceFromIoDataValue:ioDataValue
                                   logger:logger
                               isOptional:NO];
 }
 
 + (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger
-{
+                                                  logger:(nonnull ADJLogger *)logger {
     return [self instanceFromIoDataValue:ioDataValue
                                   logger:logger
                               isOptional:YES];
@@ -95,8 +91,7 @@
 
 + (nullable instancetype)instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
                                             logger:(nonnull ADJLogger *)logger
-                                        isOptional:(BOOL)isOptional
-{
+                                        isOptional:(BOOL)isOptional {
     if (integerNumber == nil) {
         if (! isOptional) {
             [logger error:@"Cannot create non negative int with nil integer number value"];
@@ -115,8 +110,7 @@
 
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
                                           logger:(nonnull ADJLogger *)logger
-                                      isOptional:(BOOL)isOptional
-{
+                                      isOptional:(BOOL)isOptional {
     if (ioDataValue == nil) {
         if (! isOptional) {
             [logger error:@"Cannot create non negative int with IoData value"];

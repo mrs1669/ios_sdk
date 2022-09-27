@@ -27,8 +27,7 @@ static NSString *const kEventCountKey = @"eventCount";
 @implementation ADJEventStateData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     if (! [ioData
            isExpectedMetadataTypeValue:ADJEventStateDataMetadataTypeValue
            logger:logger])
@@ -37,9 +36,9 @@ static NSString *const kEventCountKey = @"eventCount";
     }
 
     ADJTallyCounter *_Nullable eventCount =
-        [ADJTallyCounter instanceFromIoDataValue:
-         [ioData.propertiesMap pairValueWithKey:kEventCountKey]
-                                           logger:logger];
+    [ADJTallyCounter instanceFromIoDataValue:
+     [ioData.propertiesMap pairValueWithKey:kEventCountKey]
+                                      logger:logger];
 
     if (eventCount == nil) {
         [logger error:@"Cannot create instance from Io data without valid %@", kEventCountKey];
@@ -49,20 +48,18 @@ static NSString *const kEventCountKey = @"eventCount";
     return [[self alloc] initWithEventCount:eventCount];
 }
 
-+ (nullable instancetype)
-    instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt
+                                                              logger:(nonnull ADJLogger *)logger {
     ADJNonNegativeInt *_Nullable eventCountInt =
-        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt
-                                                   logger:logger];
+    [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt
+                                                  logger:logger];
 
     if (eventCountInt == nil) {
         return nil;
     }
 
     return [[self alloc] initWithEventCount:
-                [[ADJTallyCounter alloc] initWithCountValue:eventCountInt]];
+            [[ADJTallyCounter alloc] initWithCountValue:eventCountInt]];
 }
 
 - (nonnull instancetype)initWithIntialState {
@@ -86,19 +83,19 @@ static NSString *const kEventCountKey = @"eventCount";
 #pragma mark Public API
 - (nonnull ADJEventStateData *)generateIncrementedEventCountStateData {
     return [[ADJEventStateData alloc] initWithEventCount:
-                [self.eventCount generateIncrementedCounter]];
+            [self.eventCount generateIncrementedCounter]];
 }
 
 #pragma mark - ADJIoDataSerializable
 - (nonnull ADJIoData *)toIoData {
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
-        [[ADJIoDataBuilder alloc]
-            initWithMetadataTypeValue:ADJEventStateDataMetadataTypeValue];
+    [[ADJIoDataBuilder alloc]
+     initWithMetadataTypeValue:ADJEventStateDataMetadataTypeValue];
 
     [ADJUtilMap
-        injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
-        key:kEventCountKey
-        ioValueSerializable:self.eventCount];
+     injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
+     key:kEventCountKey
+     ioValueSerializable:self.eventCount];
 
     return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
 }
@@ -106,9 +103,9 @@ static NSString *const kEventCountKey = @"eventCount";
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                ADJEventStateDataMetadataTypeValue,
-                    kEventCountKey, self.eventCount,
-                nil];
+            ADJEventStateDataMetadataTypeValue,
+            kEventCountKey, self.eventCount,
+            nil];
 }
 
 - (NSUInteger)hash {
@@ -133,3 +130,4 @@ static NSString *const kEventCountKey = @"eventCount";
 }
 
 @end
+

@@ -10,50 +10,36 @@
 
 #import "ADJClientEventData.h"
 #import "ADJClientAdRevenueData.h"
+#import "ADJClientAddGlobalParameterData.h"
+#import "ADJClientRemoveGlobalParameterData.h"
+#import "ADJClientClearGlobalParametersData.h"
+#import "ADJClientPushTokenData.h"
+#import "ADJClientLaunchedDeeplinkData.h"
+#import "ADJClientBillingSubscriptionData.h"
+#import "ADJClientThirdPartySharingData.h"
 
-/*
- #import "ADJClientBillingSubscriptionData.h"
- #import "ADJClientLaunchedDeeplinkData.h"
- #import "ADJClientPushTokenData.h"
- #import "ADJClientAddGlobalParameterData.h"
- #import "ADJClientRemoveGlobalParameterData.h"
- #import "ADJClientClearGlobalParametersData.h"
- #import "ADJClientThirdPartySharingData.h"
- */
 @protocol ADJClientActionsAPI <NSObject>
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData;
 
 - (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
 
+- (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
 
-/*
+- (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;
 
- - (void)ccTrackBillingSubscriptionWithClientData:
- (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;
+- (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
 
- - (void)ccTrackLaunchedDeeplinkWithClientData:
- (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
+- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
 
- - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
+- (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData;
+- (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData;
+- (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData;
 
- - (void)ccTrackThirdPartySharingWithClientData:
- (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
+- (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData;
+- (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData;
+- (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData;
 
- - (void)ccAddGlobalCallbackParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData;
- - (void)ccRemoveGlobalCallbackParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData;
- - (void)ccClearGlobalCallbackParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData;
-
- - (void)ccAddGlobalPartnerParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData;
- - (void)ccRemoveGlobalPartnerParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData;
- - (void)ccClearGlobalPartnerParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData;
- */
 
 @end
 

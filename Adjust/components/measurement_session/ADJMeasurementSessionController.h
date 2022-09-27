@@ -31,36 +31,30 @@
     ADJKeepAliveSubscriber,
     ADJLifecycleSubscriber
 >
-- (void)
-    ccSubscribeToPublishersWithSdkActivePublisher:
-        (nonnull ADJSdkActivePublisher *)sdkActivePublisher
-    sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-    keepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
-    lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
+- (void)ccSubscribeToPublishersWithSdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher
+                                     sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                                   keepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
+                                   lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
 
 // publishers
-@property (nonnull, readonly, strong, nonatomic)
-    ADJMeasurementSessionStartPublisher *measurementSessionStartPublisher;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJPreFirstMeasurementSessionStartPublisher *preFirstMeasurementSessionStartPublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStartPublisher *measurementSessionStartPublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJPreFirstMeasurementSessionStartPublisher *preFirstMeasurementSessionStartPublisher;
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
-    overwriteFirstMeasurementSessionIntervalMilli:
-        (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
-    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-    clock:(nonnull ADJClock *)clock;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+           minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
+overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
+                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+                                        clock:(nonnull ADJClock *)clock;
 
 // public api
 - (void)ccForeground;
 - (void)ccBackground;
 
 - (nullable ADJMeasurementSessionStateData *)currentMeasurementSessionStateDataWithLogger:
-    (nonnull ADJLogger *)logger;
+(nonnull ADJLogger *)logger;
 
 @end

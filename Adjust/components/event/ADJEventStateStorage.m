@@ -14,33 +14,28 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 
 @implementation ADJEventStateStorage
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController
-{
-     self = [super initWithLoggerFactory:loggerFactory
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+    self = [super initWithLoggerFactory:loggerFactory
                                  source:@"EventStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kEventStateStorageTableName
                       metadataTypeValue:ADJEventStateDataMetadataTypeValue
-                 initialDefaultDataValue:[[ADJEventStateData alloc] initWithIntialState]];
+                initialDefaultDataValue:[[ADJEventStateData alloc] initWithIntialState]];
 
     return self;
 }
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJEventStateData *)concreteGenerateValueFromIoData:
-    (nonnull ADJIoData *)ioData
-{
+- (nullable ADJEventStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
     return [ADJEventStateData instanceFromIoData:ioData
-                                           logger:self.logger];
+                                          logger:self.logger];
 }
-- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:
-    (nonnull ADJEventStateData *)dataValue
-{
+
+- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJEventStateData *)dataValue {
     return [dataValue toIoData];
 }
 
@@ -51,10 +46,8 @@ static NSString *const kEventStateStorageTableName = @"event_state";
     return nil;
 }
 
-- (void)
-    migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-    v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+- (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
         [self.logger debug:@"Activity state v4 file not found"];
@@ -67,9 +60,8 @@ static NSString *const kEventStateStorageTableName = @"event_state";
     }
 
     ADJEventStateData *_Nullable eventStateData =
-        [ADJEventStateData
-            instanceFromExternalWithEventCountNumberInt:v4ActivityState.eventCountNumberInt
-            logger:self.logger];
+    [ADJEventStateData instanceFromExternalWithEventCountNumberInt:v4ActivityState.eventCountNumberInt
+     logger:self.logger];
 
     if (eventStateData == nil) {
         return;

@@ -40,11 +40,10 @@ ADJMainQueueController *mainQueueControllerWeak;
     _eventStateStorageWeak = eventStateStorage;
     _mainQueueControllerWeak = mainQueueController;
 
-    _eventDeduplicationController =
-    [[ADJEventDeduplicationController alloc]
-     initWithLoggerFactory:loggerFactory
-     eventDeduplicationStorage:eventDeduplicationStorage
-     maxCapacityEventDeduplication:maxCapacityEventDeduplication];
+    _eventDeduplicationController = [[ADJEventDeduplicationController alloc]
+                                     initWithLoggerFactory:loggerFactory
+                                     eventDeduplicationStorage:eventDeduplicationStorage
+                                     maxCapacityEventDeduplication:maxCapacityEventDeduplication];
 
     return self;
 }
@@ -157,5 +156,6 @@ ADJMainQueueController *mainQueueControllerWeak;
 }
 
 @end
+
 
 

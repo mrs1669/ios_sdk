@@ -27,7 +27,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               isGdprForgotten:(BOOL)isGdprForgotten {
-    self = [super initWithLoggerFactory:loggerFactory source:@"5SdkActiveState"];
+    self = [super initWithLoggerFactory:loggerFactory source:@"SdkActiveState"];
 
     _isSdkForgotten = isGdprForgotten;
 
@@ -210,3 +210,4 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 }
 
 @end
+

@@ -21,6 +21,5 @@
 
 @end
 
-@interface ADJSdkPackageCreatingPublisher :
-    ADJPublisherBase<id<ADJSdkPackageCreatingSubscriber>>
+@interface ADJSdkPackageCreatingPublisher : ADJPublisherBase<id<ADJSdkPackageCreatingSubscriber>>
 @end

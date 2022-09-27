@@ -34,8 +34,7 @@
 
 #pragma mark - Private Constructors
 - (nonnull instancetype)initWithInitialBoolValue:(BOOL)initialBoolValue
-                                     memoryOrder:(memory_order)memoryOrder
-{
+                                     memoryOrder:(memory_order)memoryOrder {
     self = [super init];
     
     if (initialBoolValue) {
@@ -48,6 +47,7 @@
     
     return self;
 }
+
 #pragma mark Public API
 - (BOOL)boolValue {
     return atomic_load_explicit(&_atomicB, _memoryOrder) ? YES : NO;

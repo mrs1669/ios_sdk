@@ -106,6 +106,8 @@ NSString *const ADJParamEventCurrencyKey = @"currency";
 
 // info
 NSString *const ADJParamPushTokenKey = @"push_token";
+NSString *const ADJParamPushTokenSourceKey = @"source";
+NSString *const ADJParamPushTokenSourceValue = @"push";
 
 // log
 NSString *const ADJParamLogMessageKey = @"log_message";
@@ -126,8 +128,7 @@ NSString *const ADJParamSubscriptionSalesRegionKey = @"sales_region";
 NSString *const ADJParamThirdPartySharingKey = @"sharing";
 NSString *const ADJParamThirdPartySharingEnabledValue = @"enable";
 NSString *const ADJParamThirdPartySharingDisabledValue = @"disable";
-NSString *const ADJParamThirdPartySharingGranularOptionsKey =
-    @"granular_third_party_sharing_options";
+NSString *const ADJParamThirdPartySharingGranularOptionsKey = @"granular_third_party_sharing_options";
 
 // test server params
 NSString *const ADJParamTestServerCustomEndPointKey = @"test_server_custom_end_point";

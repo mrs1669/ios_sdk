@@ -23,33 +23,29 @@
                                key:(nonnull NSString *)key
                         constValue:(nullable NSString *)constValue;
 
-+ (void)
-    injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
-    key:(nonnull NSString *)key
-    packageParamValueSerializable:
-        (nullable id<ADJPackageParamValueSerializable>)packageParamValueSerializable;
++ (void)injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                           key:(nonnull NSString *)key
+                 packageParamValueSerializable:(nullable id<ADJPackageParamValueSerializable>)packageParamValueSerializable;
 
-+ (void)
-    injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
-    key:(nonnull NSString *)key
-    constValue:(nullable NSString *)constValue;
++ (void)injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                           key:(nonnull NSString *)key
+                                    constValue:(nullable NSString *)constValue;
 
 + (nullable ADJStringMap *)mergeMapsWithBaseMap:(nullable ADJStringMap *)baseMap
-                                  overwritingMap:(nullable ADJStringMap *)overwritingMap;
+                                 overwritingMap:(nullable ADJStringMap *)overwritingMap;
 
 + (nullable NSString *)extractStringValueWithDictionary:(nullable NSDictionary *)dictionary
                                                     key:(nonnull NSString *)key;
 
 + (nullable NSNumber *)extractIntegerNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                  key:(nonnull NSString *)key;
+                                                      key:(nonnull NSString *)key;
 
 + (nullable NSNumber *)extractBooleanNumberWithDictionary:(nullable NSDictionary *)dictionary
                                                       key:(nonnull NSString *)key;
 
 + (nullable NSNumber *)extractDoubleNumberWithDictionary:(nullable NSDictionary *)dictionary
                                                      key:(nonnull NSString *)key;
-+ (nullable NSDictionary *)
-    extractDictionaryValueWithDictionary:(nullable NSDictionary *)dictionary
-    key:(nonnull NSString *)key;
++ (nullable NSDictionary *)extractDictionaryValueWithDictionary:(nullable NSDictionary *)dictionary
+                                                            key:(nonnull NSString *)key;
 
 @end

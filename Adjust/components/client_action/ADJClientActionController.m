@@ -14,19 +14,15 @@
 #import "ADJIoDataBuilder.h"
 #import "ADJClientActionHandler.h"
 #import "ADJAdRevenueController.h"
-
-/*
- #import "ADJBillingSubscriptionController.h"
- #import "ADJLaunchedDeeplinkController.h"
- */
+#import "ADJGlobalCallbackParametersController.h"
+#import "ADJGlobalPartnerParametersController.h"
+#import "ADJClientActionRemoveStorageAction.h"
+#import "ADJLaunchedDeeplinkController.h"
+#import "ADJBillingSubscriptionController.h"
 #import "ADJEventController.h"
-/*
- #import "ADJPushTokenController.h"
- #import "ADJGlobalCallbackParametersController.h"
- #import "ADJGlobalPartnerParametersController.h"
- #import "ADJClientActionRemoveStorageAction.h"
- #import "ADJThirdPartySharingController.h"
- */
+#import "ADJPushTokenController.h"
+#import "ADJClientActionRemoveStorageAction.h"
+#import "ADJThirdPartySharingController.h"
 
 @interface ADJClientActionController ()
 #pragma mark - Injected dependencies
@@ -80,97 +76,72 @@
                        clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
 }
 
-//- (void)ccTrackBillingSubscriptionWithClientData:
-//    (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
-//{
-//    [self
-//        ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
-//        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
-//}
-//
-//- (void)ccTrackLaunchedDeeplinkWithClientData:
-//    (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
-//{
-//    [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
-//                       clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
-//}
+- (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData {
+    [self  ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
+        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
+}
+
+- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
+    [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
+                       clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
+}
 
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData {
     [self ccSaveClientActionWithIoInjectable:clientEventData
                        clientActionHandlerId:ADJEventControllerClientActionHandlerId];
 }
 
-/*
- - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
- [self ccSaveClientActionWithIoInjectable:clientPushTokenData
- clientActionHandlerId:ADJPushTokenControllerClientActionHandlerId];
- }
+- (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
+    [self ccSaveClientActionWithIoInjectable:clientPushTokenData
+                       clientActionHandlerId:ADJPushTokenControllerClientActionHandlerId];
+}
 
- - (void)ccTrackThirdPartySharingWithClientData:
- (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
- {
- [self ccSaveClientActionWithIoInjectable:clientThirdPartySharingData
- clientActionHandlerId:ADJThirdPartySharingControllerClientActionHandlerId];
- }
+- (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData {
+    [self ccSaveClientActionWithIoInjectable:clientThirdPartySharingData
+                       clientActionHandlerId:ADJThirdPartySharingControllerClientActionHandlerId];
+}
 
- - (void)ccAddGlobalCallbackParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientAddGlobalCallbackParameterActionData
- clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
- }
- - (void)ccRemoveGlobalCallbackParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientRemoveGlobalCallbackParameterActionData
- clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
- }
- - (void)ccClearGlobalCallbackParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientClearGlobalCallbackParametersActionData
- clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
- }
+- (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientAddGlobalCallbackParameterActionData
+                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+}
 
- - (void)ccAddGlobalPartnerParameterWithClientData:
- (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientAddGlobalPartnerParameterActionData
- clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
- }
- - (void)ccRemoveGlobalPartnerParameterWithClientData:
- (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientRemoveGlobalPartnerParameterActionData
- clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
- }
- - (void)ccClearGlobalPartnerParametersWithClientData:
- (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData
- {
- [self
- ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
- clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
- }
- */
+- (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalCallbackParameterActionData
+                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+}
+
+- (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
+    [self ccSaveClientActionWithIoInjectable:clientClearGlobalCallbackParametersActionData
+                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+}
+
+- (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientAddGlobalPartnerParameterActionData
+                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+}
+
+- (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
+    [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalPartnerParameterActionData
+                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+}
+
+- (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
+    [self ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
+                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+}
 
 #pragma mark Internal Methods
 
 - (void)ccSaveClientActionWithIoInjectable:(nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
-                     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId
-{
+                     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId {
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
         [self.logger error:@"Cannot enqueue client action without a reference to clock"];
         return;
     }
 
-    ADJTimestampMilli *_Nullable nowTimestamp =
-    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+    ADJTimestampMilli *_Nullable nowTimestamp = [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nowTimestamp == nil) {
         [self.logger error:@"Cannot enqueue client action without a valid now timestamp"];
         return;
@@ -182,18 +153,15 @@
         return;
     }
 
-    ADJIoDataBuilder *_Nonnull ioDataBuilder =
-    [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:
-     ADJClientActionDataMetadataTypeValue];
+    ADJIoDataBuilder *_Nonnull ioDataBuilder = [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:
+                                                ADJClientActionDataMetadataTypeValue];
 
     [clientActionIoDataInjectable injectIntoClientActionIoDataBuilder:ioDataBuilder];
 
-    ADJClientActionData *_Nonnull clientActionData =
-    [[ADJClientActionData alloc]
-     initWithClientActionHandlerId:
-         [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
-     nowTimestamp:nowTimestamp
-     ioDataBuilder:ioDataBuilder];
+    ADJClientActionData *_Nonnull clientActionData = [[ADJClientActionData alloc] initWithClientActionHandlerId:
+                                                      [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
+                                                                                                   nowTimestamp:nowTimestamp
+                                                                                                  ioDataBuilder:ioDataBuilder];
 
     [clientActionStorage enqueueElementToLast:clientActionData
                           sqliteStorageAction:nil];
@@ -247,18 +215,15 @@
             continue;
         }
 
-        //        ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =
-        //            [[ADJClientActionRemoveStorageAction alloc]
-        //                 initWithClientActionStorage:clientActionStorage
-        //                 elementPosition:elementPosition];
-        //
-        //        [clientActionHandler
-        //            ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
-        //            apiTimestamp:clientActionData.apiTimestamp
-        //            clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+        ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction = [[ADJClientActionRemoveStorageAction alloc]
+                                                                                        initWithClientActionStorage:clientActionStorage
+                                                                                        elementPosition:elementPosition];
+
+        [clientActionHandler ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
+                                                                   apiTimestamp:clientActionData.apiTimestamp
+                                                clientActionRemoveStorageAction:clientActionRemoveStorageAction];
     }
 }
-
 
 - (nullable id<ADJClientActionHandler>)clientActionHandlerWithId:(nonnull ADJNonEmptyString *)clientActionHandlerId
                                        postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController {
@@ -266,48 +231,37 @@
     if ([ADJAdRevenueControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.adRevenueController;
     }
-    /*
-     if ([ADJBillingSubscriptionControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.billingSubscriptionController;
-     }
-     if ([ADJLaunchedDeeplinkClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.launchedDeeplinkController;
-     }
-     */
+
+    if ([ADJBillingSubscriptionControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]){
+        return postSdkInitRootController.billingSubscriptionController;
+    }
+    
+    if ([ADJLaunchedDeeplinkClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.launchedDeeplinkController;
+    }
+
     if ([ADJEventControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.eventController;
     }
-    /*
-     if ([ADJPushTokenControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.pushTokenController;
-     }
-     if ([ADJGlobalCallbackParametersControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.globalCallbackParametersController;
-     }
-     if ([ADJGlobalPartnerParametersControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.globalPartnerParametersController;
-     }
-     if ([ADJThirdPartySharingControllerClientActionHandlerId
-     isEqualToString:clientActionHandlerId.stringValue])
-     {
-     return postSdkInitRootController.thirdPartySharingController;
-     }
-     */
+
+    if ([ADJGlobalCallbackParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.globalCallbackParametersController;
+    }
+
+    if ([ADJGlobalPartnerParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.globalPartnerParametersController;
+    }
+
+    if ([ADJPushTokenControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.pushTokenController;
+    }
+
+    if ([ADJThirdPartySharingControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
+        return postSdkInitRootController.thirdPartySharingController;
+    }
 
     return nil;
 }
 
 @end
-
-
 

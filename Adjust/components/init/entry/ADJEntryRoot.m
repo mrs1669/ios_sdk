@@ -21,10 +21,8 @@
  @property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 
  // - built in client context
- @property (nullable, readonly, strong, nonatomic)
- ADJPreSdkInitRootController *preSdkInitRootController;
- @property (nullable, readonly, strong, nonatomic)
- ADJPostSdkInitRootController *postSdkInitRootController;
+ @property (nullable, readonly, strong, nonatomic) ADJPreSdkInitRootController *preSdkInitRootController;
+ @property (nullable, readonly, strong, nonatomic) ADJPostSdkInitRootController *postSdkInitRootController;
  */
 
 @interface ADJEntryRoot ()
@@ -84,6 +82,7 @@
 
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -131,7 +130,6 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         if (strongSelf.preSdkInitRootController != nil) {
-            [self.preSdkInitRootController.storageRootController.sqliteController.sqliteDb finalizeAtTeardown];
             [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
             [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
         }
@@ -156,5 +154,6 @@
 }
 
 @end
+
 
 

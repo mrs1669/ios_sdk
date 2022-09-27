@@ -16,37 +16,31 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 
 @implementation ADJMeasurementSessionStateStorage
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController
-{
-     self = [super initWithLoggerFactory:loggerFactory
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+    self = [super initWithLoggerFactory:loggerFactory
                                  source:@"MeasurementSessionStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kMeasurementSessionStateStorageTableName
                       metadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
-                 initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc] initWithIntialState]];
-             /*
-                    [[ADJMeasurementSessionStateData alloc] initWithIntialStateWithNewUuid:
-                        [[ADJNonEmptyString alloc] initWithValidatedStringValue:
-                            [ADJUtilSys generateUuid]]]];*/
+                initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc] initWithIntialState]];
+    /*
+     [[ADJMeasurementSessionStateData alloc] initWithIntialStateWithNewUuid:
+     [[ADJNonEmptyString alloc] initWithValidatedStringValue:
+     [ADJUtilSys generateUuid]]]];*/
 
     return self;
 }
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJMeasurementSessionStateData *)concreteGenerateValueFromIoData:
-    (nonnull ADJIoData *)ioData
-{
+- (nullable ADJMeasurementSessionStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
     return [ADJMeasurementSessionStateData instanceFromIoData:ioData
-                                                logger:self.logger];
+                                                       logger:self.logger];
 }
-- (nonnull ADJIoData *)concreteGenerateIoDataFromValue:
-    (nonnull ADJMeasurementSessionStateData *)dataValue
-{
+- (nonnull ADJIoData *)concreteGenerateIoDataFromValue: (nonnull ADJMeasurementSessionStateData *)dataValue {
     return [dataValue toIoData];
 }
 
@@ -57,10 +51,8 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
     return nil;
 }
 
-- (void)
-    migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-    v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+- (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
         [self.logger debug:@"Activity state v4 file not found"];
@@ -70,16 +62,16 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
     [self.logger debug:@"Read v4 activity state: %@", v4ActivityState];
 
     ADJMeasurementSessionData *_Nullable v4MeasurementSessionData =
-        [ADJMeasurementSessionData
-             instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
-             lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
-             sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
-             timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble
-             logger:self.logger];
+    [ADJMeasurementSessionData
+     instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
+     lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
+     sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
+     timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble
+     logger:self.logger];
 
     ADJMeasurementSessionStateData *_Nullable v4MeasurementSessionStateData =
-        [ADJMeasurementSessionStateData instanceFromExternalWithMeasurementSessionData:v4MeasurementSessionData
-                                                                 logger:self.logger];
+    [ADJMeasurementSessionStateData instanceFromExternalWithMeasurementSessionData:v4MeasurementSessionData
+                                                                            logger:self.logger];
 
     if (v4MeasurementSessionStateData == nil) {
         return;
@@ -89,3 +81,4 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 }
 
 @end
+

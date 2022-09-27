@@ -28,14 +28,10 @@
 - (void)ccForeground;
 - (void)ccBackground;
 
-/*
-- (void)ccGdprForgetDevice;
- 
+- (void)ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;
 
-- (void)ccAttributionWithCallback:
-    (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;
-- (void)ccDeviceIdsWithCallback:
-    (nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
-*/
+- (void)ccGdprForgetDevice;
+
+- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 
 @end

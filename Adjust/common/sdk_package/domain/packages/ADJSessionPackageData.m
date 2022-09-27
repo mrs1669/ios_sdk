@@ -18,8 +18,7 @@ NSString *const ADJSessionPackageDataPath = @"session";
 @implementation ADJSessionPackageData
 #pragma mark Instantiation
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
-                               parameters:(nonnull ADJStringMap *)parameters
-{
+                               parameters:(nonnull ADJStringMap *)parameters {
     self = [super initWithPath:ADJSessionPackageDataPath
                      clientSdk:clientSdk
   isPostOrElseGetNetworkMethod:YES
@@ -31,8 +30,7 @@ NSString *const ADJSessionPackageDataPath = @"session";
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
                                    ioData:(nonnull ADJIoData *)ioData
-                                   logger:(nonnull ADJLogger *)logger
-{
+                                   logger:(nonnull ADJLogger *)logger {
     // does not read ioData for further information
     return [self initWithClientSdk:clientSdk parameters:parameters];
 }

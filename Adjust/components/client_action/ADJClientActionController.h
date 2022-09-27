@@ -20,8 +20,8 @@
 
 @interface ADJClientActionController : ADJCommonBase<ADJClientActionsAPI,
 // subscriptions
-ADJPreFirstMeasurementSessionStartSubscriber,
-ADJMeasurementSessionStartSubscriber
+    ADJPreFirstMeasurementSessionStartSubscriber,
+    ADJMeasurementSessionStartSubscriber
 >
 // subscriptions and dependencies
 - (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController;

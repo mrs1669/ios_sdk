@@ -18,8 +18,7 @@
  @property (nullable, readonly, strong, nonatomic) NSURL *deeplinkUrl;
  @property (nullable, readonly, strong, nonatomic) NSDate *deeplinkClickTime;
  @property (nullable, readonly, strong, nonatomic) NSNumber *disableThirdPartySharingNumberBool;
- @property (nullable, readonly, strong, nonatomic)
- NSDictionary<NSString *, NSNumber *> *iAdErrors;
+ @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSNumber *> *iAdErrors;
  @property (nullable, readonly, strong, nonatomic) NSNumber *adServicesTrackedNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSDate * skadRegisterCallTimestamp;
  */
@@ -40,13 +39,11 @@
     
     _deeplinkClickTime = [ADJV4UserDefaultsData dateWithKey:@"adj_deeplink_click_time"];
     
-    _disableThirdPartySharingNumberBool =
-    [ADJV4UserDefaultsData numberBoolWithKey:@"adj_disable_third_party_sharing"];
+    _disableThirdPartySharingNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:@"adj_disable_third_party_sharing"];
     
     _iAdErrors = [ADJV4UserDefaultsData dictionaryWithKey:@"adj_iad_errors"];
     
-    _adServicesTrackedNumberBool =
-    [ADJV4UserDefaultsData numberBoolWithKey:@"adj_adservices_tracked"];
+    _adServicesTrackedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:@"adj_adservices_tracked"];
     
     _skadRegisterCallTimestamp = [ADJV4UserDefaultsData dateWithKey:@"adj_skad_register_call_time"];
     

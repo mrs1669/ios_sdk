@@ -12,15 +12,12 @@
 #import "ADJV4ActivityPackage.h"
 #import "ADJStringMap.h"
 #import "ADJUtilF.h"
-/*
- #import "ADJBillingSubscriptionPackageData.h"
- #import "ADJInfoPackageData.h"
- */
+#import "ADJBillingSubscriptionPackageData.h"
 #import "ADJSessionPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJAdRevenuePackageData.h"
-
-//#import "ADJThirdPartySharingPackageData.h"
+#import "ADJInfoPackageData.h"
+#import "ADJThirdPartySharingPackageData.h"
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -158,24 +155,21 @@ parameters:parameters];                     \
     if (v4Path == nil) {
         return nil;
     }
-    /*
-     v4PathToPackage(ADJV4PurchasePath, ADJBillingSubscriptionPackageData)
-     v4PathToPackage(ADJV4InfoPath, ADJInfoPackageData)
-     // TODO do ADJV4MeasuringConsentPath
-     */
+
+    v4PathToPackage(ADJV4PurchasePath, ADJBillingSubscriptionPackageData)
     v4PathToPackage(ADJV4SessionPath, ADJSessionPackageData)
     v4PathToPackage(ADJV4EventPath, ADJEventPackageData)
     v4PathToPackage(ADJV4AdRevenuePath, ADJAdRevenuePackageData)
+    v4PathToPackage(ADJV4InfoPath, ADJInfoPackageData)
+    v4PathToPackage(ADJV4ThirdPartySharingPath, ADJThirdPartySharingPackageData)
 
-    //v4PathToPackage(ADJV4ThirdPartySharingPath, ADJThirdPartySharingPackageData)
     // there are no attribution, click or gdpr packages in v4 main queue
-    /*
-     if ([v4Path isEqualToString:ADJV4DisableThirdPartySharingPath]) {
-     return [[ADJThirdPartySharingPackageData alloc]
-     initV4DisableThirdPartySharingMigratedWithClientSdk:v4ClientSdk.stringValue
-     parameters:parameters];
-     }
-     */
+
+    if ([v4Path isEqualToString:ADJV4DisableThirdPartySharingPath]) {
+        return [[ADJThirdPartySharingPackageData alloc]
+                initV4DisableThirdPartySharingMigratedWithClientSdk:v4ClientSdk.stringValue
+                parameters:parameters];
+    }
     return nil;
 }
 

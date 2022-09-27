@@ -16,8 +16,7 @@
 
 + (void)injectIntoIoDataBuilderMap:(nonnull ADJStringMapBuilder *)ioDataMapBuilder
                                key:(nonnull NSString *)key
-               ioValueSerializable:(nullable id<ADJIoValueSerializable>)ioValueSerializable
-{
+               ioValueSerializable:(nullable id<ADJIoValueSerializable>)ioValueSerializable {
     if (ioValueSerializable == nil) {
         return;
     }
@@ -27,8 +26,7 @@
 
 + (void)injectIntoIoDataBuilderMap:(nonnull ADJStringMapBuilder *)ioDataMapBuilder
                                key:(nonnull NSString *)key
-                        constValue:(nullable NSString *)constValue
-{
+                        constValue:(nullable NSString *)constValue {
     if (constValue == nil) {
         return;
     }
@@ -36,12 +34,10 @@
     [ioDataMapBuilder addPairWithConstValue:constValue key:key];
 }
 
-+ (void)
-    injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
-    key:(nonnull NSString *)key
-    packageParamValueSerializable:
-        (nullable id<ADJPackageParamValueSerializable>)packageParamValueSerializable
-{
++ (void)injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                           key:(nonnull NSString *)key
+                 packageParamValueSerializable:
+(nullable id<ADJPackageParamValueSerializable>)packageParamValueSerializable {
     if (packageParamValueSerializable == nil) {
         return;
     }
@@ -54,21 +50,18 @@
     [parametersBuilder addPairWithValue:paramValue key:key];
 }
 
-+ (void)
-    injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
-    key:(nonnull NSString *)key
-    constValue:(nullable NSString *)constValue
-{
++ (void)injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                           key:(nonnull NSString *)key
+                                    constValue:(nullable NSString *)constValue {
     if (constValue == nil) {
         return;
     }
-    
+
     [parametersBuilder addPairWithConstValue:constValue key:key];
 }
 
 + (nullable ADJStringMap *)mergeMapsWithBaseMap:(nullable ADJStringMap *)baseMap
-                                  overwritingMap:(nullable ADJStringMap *)overwritingMap
-{
+                                 overwritingMap:(nullable ADJStringMap *)overwritingMap {
     if (baseMap == nil || [baseMap isEmpty]) {
         return overwritingMap;
     }
@@ -78,7 +71,7 @@
     }
 
     ADJStringMapBuilder *_Nonnull mergedMap =
-        [[ADJStringMapBuilder alloc] initWithStringMap:baseMap];
+    [[ADJStringMapBuilder alloc] initWithStringMap:baseMap];
 
     [mergedMap addAllPairsWithStringMap:overwritingMap];
 
@@ -86,8 +79,7 @@
 }
 
 + (nullable NSString *)extractStringValueWithDictionary:(nullable NSDictionary *)dictionary
-                                                    key:(nonnull NSString *)key
-{
+                                                    key:(nonnull NSString *)key {
     if (dictionary == nil) {
         return nil;
     }
@@ -106,8 +98,7 @@
 }
 
 + (nullable NSNumber *)extractIntegerNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                      key:(nonnull NSString *)key
-{
+                                                      key:(nonnull NSString *)key {
     if (dictionary == nil) {
         return nil;
     }
@@ -132,8 +123,7 @@
 }
 
 + (nullable NSNumber *)extractBooleanNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                      key:(nonnull NSString *)key
-{
+                                                      key:(nonnull NSString *)key {
     if (dictionary == nil) {
         return nil;
     }
@@ -167,8 +157,7 @@
 }
 
 + (nullable NSNumber *)extractDoubleNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                     key:(nonnull NSString *)key
-{
+                                                     key:(nonnull NSString *)key {
     if (dictionary == nil) {
         return nil;
     }
@@ -187,9 +176,8 @@
 }
 
 + (nullable NSDictionary *)
-    extractDictionaryValueWithDictionary:(nullable NSDictionary *)dictionary
-    key:(nonnull NSString *)key
-{
+extractDictionaryValueWithDictionary:(nullable NSDictionary *)dictionary
+key:(nonnull NSString *)key {
     if (dictionary == nil) {
         return nil;
     }
@@ -208,3 +196,4 @@
 }
 
 @end
+

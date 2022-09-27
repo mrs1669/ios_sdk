@@ -22,14 +22,10 @@
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
  @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
- @property (nullable, readonly, strong, nonatomic)
- NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
- @property (nullable, readonly, strong, nonatomic)
- NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
- @property (nullable, readonly, strong, nonatomic)
- id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
- @property (nullable, readonly, strong, nonatomic)
- id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+ @property (nullable, readonly, strong, nonatomic) NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
+ @property (nullable, readonly, strong, nonatomic) NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
+ @property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
  */
 
 #pragma mark - Public constants

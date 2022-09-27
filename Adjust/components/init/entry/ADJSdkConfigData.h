@@ -14,8 +14,7 @@
 // instantiation
 - (nonnull instancetype)initWithDefaultValues;
 
-- (nonnull instancetype)initWithBuilderData:
-(nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
+- (nonnull instancetype)initWithBuilderData:(nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

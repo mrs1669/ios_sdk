@@ -13,8 +13,8 @@
 #import "ADJOfflineSubscriber.h"
 
 @interface ADJOfflineController : ADJCommonBase<
-// subscriptions
-ADJPublishingGateSubscriber
+    // subscriptions
+    ADJPublishingGateSubscriber
 >
 - (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 // publishers

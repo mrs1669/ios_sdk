@@ -21,22 +21,18 @@
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue;
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
-+ (nullable NSData *)
-    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
-    errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
-+ (nullable id)
-    convertToJsonFoundationValueWithJsonData :(nonnull NSData *)jsonData
-    errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
++ (nullable NSData *)convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
+                                                     errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
++ (nullable id)convertToJsonFoundationValueWithJsonData :(nonnull NSData *)jsonData
+                                                errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
 
-+ (nullable ADJStringMap *)
-    convertToStringMapWithKeyValueArray:
-        (nullable NSArray<NSString *> *)keyValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger;
++ (nullable ADJStringMap *)convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
+                                             sourceDescription:(nonnull NSString *)sourceDescription
+                                                        logger:(nonnull ADJLogger *)logger;
+
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *)
-    convertToMapCollectionByNameBuilderWithKeyValueArray:
-        (nullable NSArray<NSString *> *)keyValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger;
+convertToMapCollectionByNameBuilderWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
+sourceDescription:(nonnull NSString *)sourceDescription
+logger:(nonnull ADJLogger *)logger;
 
 @end

@@ -12,8 +12,7 @@
 
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
-{
+                                       source:(nonnull NSString *)source {
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJCommonBase class]]) {
         [self doesNotRecognizeSelector:_cmd];

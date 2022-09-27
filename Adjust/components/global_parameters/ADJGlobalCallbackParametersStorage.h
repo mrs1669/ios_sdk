@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "ADJSQLiteStorageStringMapBase.h"
 
-@interface ADJGlobalCallbackParametersStorage : NSObject
+@interface ADJGlobalCallbackParametersStorage : ADJSQLiteStorageStringMapBase
+// instantiation
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController;
 
 @end
-
-NS_ASSUME_NONNULL_END

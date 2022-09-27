@@ -16,6 +16,6 @@
 
 @end
 
-@interface ADJPreFirstMeasurementSessionStartPublisher :
-    ADJPublisherBase<id<ADJPreFirstMeasurementSessionStartSubscriber>>
+@interface ADJPreFirstMeasurementSessionStartPublisher : ADJPublisherBase<id<ADJPreFirstMeasurementSessionStartSubscriber>>
+
 @end

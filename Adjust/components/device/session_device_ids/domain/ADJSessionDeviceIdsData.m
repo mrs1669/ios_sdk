@@ -26,6 +26,7 @@
                advertisingIdentifier:advertisingIdentifier
                  identifierForVendor:identifierForVendor];
 }
+
 - (nonnull instancetype)initWithFailMessage:(nullable NSString *)failMessage {
     return [self initWithFailMessage:failMessage
                advertisingIdentifier:nil

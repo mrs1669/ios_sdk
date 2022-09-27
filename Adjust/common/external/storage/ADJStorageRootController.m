@@ -7,7 +7,6 @@
 //
 
 #import "ADJStorageRootController.h"
-
 #import "ADJSingleThreadExecutor.h"
 
 #pragma mark Fields
@@ -16,27 +15,19 @@
  @property (nonnull, readonly, strong, nonatomic) ADJKeychainStorage *keychainStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJSQLiteController *sqliteController;
 
- @property (nonnull, readonly, strong, nonatomic)
- ADJAttributionStateStorage *attributionStateStorage;
- @property (nonnull, readonly, strong, nonatomic)
- ADJAsaAttributionStateStorage *asaAttributionStateStorage;
+ @property (nonnull, readonly, strong, nonatomic)ADJAttributionStateStorage *attributionStateStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionStateStorage *asaAttributionStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *clientActionStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJDeviceIdsStorage *deviceIdsStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJEventStateStorage *eventStateStorage;
- @property (nonnull, readonly, strong, nonatomic)
- ADJEventDeduplicationStorage *eventDeduplicationStorage;
- @property (nonnull, readonly, strong, nonatomic)
- ADJGlobalCallbackParametersStorage *globalCallbackParametersStorage;
- @property (nonnull, readonly, strong, nonatomic)
- ADJGdprForgetStateStorage *gdprForgetStateStorage;
- @property (nonnull, readonly, strong, nonatomic)
- ADJGlobalPartnerParametersStorage *globalPartnerParametersStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJEventDeduplicationStorage *eventDeduplicationStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersStorage *globalCallbackParametersStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetStateStorage *gdprForgetStateStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersStorage *globalPartnerParametersStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJLogQueueStorage *logQueueStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStorage *mainQueueStorage;
- @property (nonnull, readonly, strong, nonatomic)
- ADJSdkActiveStateStorage *sdkActiveStateStorage;
- @property (nonnull, readonly, strong, nonatomic)
- ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *sdkActiveStateStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
  */
 @interface ADJStorageRootController ()
 
@@ -69,16 +60,16 @@ sqliteController:self.sqliteController];        \
     //v4FilesController:self.v4FilesController
     //systemAppDataController:self.systemAppDataController];
 
-    //    buildAndInjectStorage(attributionStateStorage, ADJAttributionStateStorage);
-    //    buildAndInjectStorage(asaAttributionStateStorage, ADJAsaAttributionStateStorage);
+    buildAndInjectStorage(attributionStateStorage, ADJAttributionStateStorage);
+    buildAndInjectStorage(asaAttributionStateStorage, ADJAsaAttributionStateStorage);
     buildAndInjectStorage(clientActionStorage, ADJClientActionStorage);
     buildAndInjectStorage(deviceIdsStorage, ADJDeviceIdsStorage);
     buildAndInjectStorage(eventStateStorage, ADJEventStateStorage);
     buildAndInjectStorage(eventDeduplicationStorage, ADJEventDeduplicationStorage);
-    //    buildAndInjectStorage(gdprForgetStateStorage, ADJGdprForgetStateStorage);
-    //    buildAndInjectStorage(globalCallbackParametersStorage, ADJGlobalCallbackParametersStorage);
-    //    buildAndInjectStorage(globalPartnerParametersStorage, ADJGlobalPartnerParametersStorage);
-    //    buildAndInjectStorage(logQueueStorage, ADJLogQueueStorage);
+    buildAndInjectStorage(gdprForgetStateStorage, ADJGdprForgetStateStorage);
+    buildAndInjectStorage(globalCallbackParametersStorage, ADJGlobalCallbackParametersStorage);
+    buildAndInjectStorage(globalPartnerParametersStorage, ADJGlobalPartnerParametersStorage);
+    buildAndInjectStorage(logQueueStorage, ADJLogQueueStorage);
     buildAndInjectStorage(mainQueueStorage, ADJMainQueueStorage);
     buildAndInjectStorage(sdkActiveStateStorage, ADJSdkActiveStateStorage);
     buildAndInjectStorage(measurementSessionStateStorage, ADJMeasurementSessionStateStorage);
@@ -123,4 +114,3 @@ sqliteController:self.sqliteController];        \
 }
 
 @end
-

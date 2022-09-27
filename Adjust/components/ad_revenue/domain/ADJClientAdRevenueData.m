@@ -118,16 +118,14 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
                                            logger:logger];
 
     ADJStringMap *_Nullable callbackParameters =
-    [ADJUtilConv
-     convertToStringMapWithKeyValueArray:adjustAdRevenue.callbackParameterKeyValueArray
-     sourceDescription:@"ad revenue callback parameters"
-     logger:logger];
+    [ADJUtilConv convertToStringMapWithKeyValueArray:adjustAdRevenue.callbackParameterKeyValueArray
+                                   sourceDescription:@"ad revenue callback parameters"
+                                              logger:logger];
 
     ADJStringMap *_Nullable partnerParameters =
-    [ADJUtilConv
-     convertToStringMapWithKeyValueArray:adjustAdRevenue.partnerParameterKeyValueArray
-     sourceDescription:@"ad revenue partner parameters"
-     logger:logger];
+    [ADJUtilConv convertToStringMapWithKeyValueArray:adjustAdRevenue.partnerParameterKeyValueArray
+                                   sourceDescription:@"ad revenue partner parameters"
+                                              logger:logger];
 
     return [[self alloc] initWithSource:source
                                 revenue:revenue

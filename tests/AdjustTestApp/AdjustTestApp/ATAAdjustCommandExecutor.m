@@ -18,11 +18,9 @@
 
 @property (nonnull, readonly, nonatomic, strong) NSString *url;
 @property (nonnull, readonly, nonatomic, strong) ATLTestLibrary *testLibrary;
-//@property (nonnull, readonly, nonatomic, strong)
-//    ATAAdjustCommandExecutor *adjustV4CommandExecutor;
+//@property (nonnull, readonly, nonatomic, strong) ATAAdjustCommandExecutor *adjustV4CommandExecutor;
 
-@property (nullable, readwrite, nonatomic, strong)
-NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
+@property (nullable, readwrite, nonatomic, strong) NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
 @property (nullable, readwrite, nonatomic, strong) NSString *extraPathTestOptions;
 
 @end
@@ -262,85 +260,69 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)addGlobalCallbackParameter {
-    /*
-     [self iterateWithKey:@"keyValuePairs"
-     source:@"add global callback"
-     keyValueBlock:
-     ^(NSString * _Nonnull key, NSString * _Nonnull value)
+    [self iterateWithKey:@"keyValuePairs"
+                  source:@"add global callback"
+           keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
      {
-     [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
-     }];
-     */
+        [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
+    }];
 }
 
 - (void)addGlobalPartnerParameter {
-    /*
-     [self iterateWithKey:@"keyValuePairs"
-     source:@"add global partner"
-     keyValueBlock:
-     ^(NSString * _Nonnull key, NSString * _Nonnull value)
+    [self iterateWithKey:@"keyValuePairs"
+                  source:@"add global partner"
+           keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
      {
-     [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
-     }];
-     */
+        [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
+    }];
 
 }
+
 - (void)removeGlobalCallbackParameter {
-    /*
-     [self iterateWithKey:@"key"
-     source:@"remove global callback"
-     keyBlock:^(NSString * _Nonnull key)
+    [self iterateWithKey:@"key"
+                  source:@"remove global callback"
+                keyBlock:^(NSString * _Nonnull key)
      {
-     [ADJAdjust removeGlobalCallbackParameterByKey:key];
-     }];
-     */
+        [ADJAdjust removeGlobalCallbackParameterByKey:key];
+    }];
 }
 
 - (void)removeGlobalPartnerParameter {
-    /*
-     [self iterateWithKey:@"key"
-     source:@"remove global partner"
-     keyBlock:^(NSString * _Nonnull key)
+    [self iterateWithKey:@"key"
+                  source:@"remove global partner"
+                keyBlock:^(NSString * _Nonnull key)
      {
-     [ADJAdjust removeGlobalPartnerParameterByKey:key];
-     }];
-     */
+        [ADJAdjust removeGlobalPartnerParameterByKey:key];
+    }];
 }
 
 - (void)clearGlobalCallbackParameters {
-    /*
-     [ADJAdjust clearAllGlobalCallbackParameters];
-     */
+    [ADJAdjust clearAllGlobalCallbackParameters];
 }
 
 - (void)clearGlobalPartnerParameters {
-    //[ADJAdjust clearAllGlobalPartnerParameters];
+    [ADJAdjust clearAllGlobalPartnerParameters];
 }
 
 - (void)setPushToken {
-    /*
-     NSString *_Nullable pushToken = [self firstParameterValueWithKey:@"pushToken"];
+    NSString *_Nullable pushToken = [self firstParameterValueWithKey:@"pushToken"];
 
-     ADJAdjustPushToken *_Nonnull adjustPushToken =
-     [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
+    ADJAdjustPushToken *_Nonnull adjustPushToken =
+    [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
 
-     [ADJAdjust trackPushToken:adjustPushToken];
-     */
+    [ADJAdjust trackPushToken:adjustPushToken];
 }
 
 - (void)openDeeplink {
-    /*
-     NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
+    NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
 
-     ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
-     [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
+    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
 
-     [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
-     */
+    [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)gdprForgetMe {
-    //[ADJAdjust gdprForgetDevice];
+    [ADJAdjust gdprForgetDevice];
 }
 
 - (void)trackAdRevenue {
@@ -401,38 +383,37 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)thirdPartySharing {
-    /*
-     ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
-     [[ADJAdjustThirdPartySharing alloc] init];
 
-     NSNumber *_Nullable sharingEnabledNumberBool =
-     [self strictParseNumberBoolWithKey:@"enableOrElseDisable"];
+    ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
+    [[ADJAdjustThirdPartySharing alloc] init];
 
-     if (sharingEnabledNumberBool != nil) {
-     if (sharingEnabledNumberBool.boolValue) {
-     [adjustThirdPartySharing enableThirdPartySharing];
-     } else {
-     [adjustThirdPartySharing disableThirdPartySharing];
-     }
-     }
+    NSNumber *_Nullable sharingEnabledNumberBool =
+    [self strictParseNumberBoolWithKey:@"enableOrElseDisable"];
 
-     if ([self containsKey:@"granularOptions"]) {
-     [self iterateWithKey:@"granularOptions"
-     source:@"third party granular options"
-     nameKeyValueBlock:
-     ^(NSString * _Nonnull name,
-     NSString * _Nonnull key,
-     NSString * _Nonnull value)
-     {
-     [adjustThirdPartySharing
-     addGranularOptionWithPartnerName:name
-     key:key
-     value:value];
-     }];
-     }
+    if (sharingEnabledNumberBool != nil) {
+        if (sharingEnabledNumberBool.boolValue) {
+            [adjustThirdPartySharing enableThirdPartySharing];
+        } else {
+            [adjustThirdPartySharing disableThirdPartySharing];
+        }
+    }
+
+    if ([self containsKey:@"granularOptions"]) {
+        [self iterateWithKey:@"granularOptions"
+                      source:@"third party granular options"
+           nameKeyValueBlock:
+         ^(NSString * _Nonnull name,
+           NSString * _Nonnull key,
+           NSString * _Nonnull value)
+         {
+            [adjustThirdPartySharing
+             addGranularOptionWithPartnerName:name
+             key:key
+             value:value];
+        }];
+    }
 
      [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
-     */
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {
@@ -615,5 +596,6 @@ keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
 }
 
 @end
+
 
 

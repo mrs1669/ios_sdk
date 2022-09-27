@@ -35,6 +35,7 @@
                                          logger:logger
                                      isOptional:NO];
 }
+
 + (nullable instancetype)instanceFromOptionalDecimalNumberValue:(nullable NSDecimalNumber *)decimalNumberValue
                                                          logger:(nonnull ADJLogger *)logger {
     return [self instanceFromDecimalNumberValue:decimalNumberValue
@@ -45,8 +46,7 @@
 #pragma mark - Private constructors
 + (nullable instancetype)instanceFromDecimalNumberValue:(nullable NSDecimalNumber *)decimalNumberValue
                                                  logger:(nonnull ADJLogger *)logger
-                                             isOptional:(BOOL)isOptional
-{
+                                             isOptional:(BOOL)isOptional {
     if (decimalNumberValue == nil) {
         if (! isOptional) {
             [logger error:@"Cannot create money amount with nil decimal number value"];
@@ -69,8 +69,7 @@
     return [[self alloc] initWithDecimalNumberValue:decimalNumberValue];
 }
 
-- (nonnull instancetype)initWithDecimalNumberValue:(nonnull NSDecimalNumber *)decimalNumberValue
-{
+- (nonnull instancetype)initWithDecimalNumberValue:(nonnull NSDecimalNumber *)decimalNumberValue {
     self = [super init];
     _decimalNumberValue = decimalNumberValue;
     

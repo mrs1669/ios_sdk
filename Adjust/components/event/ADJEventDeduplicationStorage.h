@@ -11,12 +11,10 @@
 #import "ADJSQLiteStorageQueueBase.h"
 #import "ADJEventDeduplicationData.h"
 
-@interface ADJEventDeduplicationStorage :
-    ADJSQLiteStorageQueueBase<ADJEventDeduplicationData *>
+@interface ADJEventDeduplicationStorage : ADJSQLiteStorageQueueBase<ADJEventDeduplicationData *>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController;
 
 @end

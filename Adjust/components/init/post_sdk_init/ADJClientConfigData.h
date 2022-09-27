@@ -42,17 +42,13 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *defaultTracker;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *logLevel;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategy;
-@property (nullable, readonly, strong, nonatomic)
-ADJClientCustomEndpointData *clientCustomEndpointData;
+@property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
 @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
 @property (readonly, assign, nonatomic) BOOL canSendInBackground;
-@property (nullable, readonly, strong, nonatomic)
-ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
-@property (nullable, readonly, strong, nonatomic)
-id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
-@property (nullable, readonly, strong, nonatomic)
-id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+@property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+@property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+@property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
 
 // public api
 - (nonnull ADJNonEmptyString *)environment;

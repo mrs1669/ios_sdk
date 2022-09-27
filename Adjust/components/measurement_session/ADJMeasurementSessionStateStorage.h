@@ -12,12 +12,10 @@
 #import "ADJMeasurementSessionStateData.h"
 #import "ADJSQLiteStorage.h"
 
-@interface ADJMeasurementSessionStateStorage :
-    ADJSQLiteStoragePropertiesBase<ADJMeasurementSessionStateData *>
+@interface ADJMeasurementSessionStateStorage : ADJSQLiteStoragePropertiesBase<ADJMeasurementSessionStateData *>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-    sqliteController:(nonnull ADJSQLiteController *)sqliteController;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController;
 
 @end

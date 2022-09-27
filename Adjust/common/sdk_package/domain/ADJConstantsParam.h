@@ -108,6 +108,8 @@ FOUNDATION_EXPORT NSString *const ADJParamEventCurrencyKey;
 
 // info
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenKey;
+FOUNDATION_EXPORT NSString *const ADJParamPushTokenSourceKey;
+FOUNDATION_EXPORT NSString *const ADJParamPushTokenSourceValue;
 
 // log
 FOUNDATION_EXPORT NSString *const ADJParamLogMessageKey;

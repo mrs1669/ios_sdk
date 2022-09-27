@@ -9,31 +9,26 @@
 #import "ADJSdkResponseDataBuilder.h"
 
 #import "ADJUtilF.h"
-/*
- #import "ADJAttributionPackageData.h"
- #import "ADJAttributionResponseData.h"
- #import "ADJBillingSubscriptionPackageData.h"
- #import "ADJBillingSubscriptionResponseData.h"
- #import "ADJClickPackageData.h"
- #import "ADJClickResponseData.h"
- #import "ADJGdprForgetPackageData.h"
- #import "ADJGdprForgetResponseData.h"
- #import "ADJInfoPackageData.h"
- #import "ADJInfoResponseData.h"
- #import "ADJLogPackageData.h"
- #import "ADJLogResponseData.h"
- */
+#import "ADJAttributionPackageData.h"
+#import "ADJAttributionResponseData.h"
+#import "ADJBillingSubscriptionPackageData.h"
+#import "ADJBillingSubscriptionResponseData.h"
+#import "ADJClickPackageData.h"
+#import "ADJClickResponseData.h"
+#import "ADJGdprForgetPackageData.h"
+#import "ADJGdprForgetResponseData.h"
+#import "ADJLogPackageData.h"
+#import "ADJLogResponseData.h"
 #import "ADJSessionPackageData.h"
 #import "ADJSessionResponseData.h"
 #import "ADJEventPackageData.h"
 #import "ADJEventResponseData.h"
 #import "ADJAdRevenuePackageData.h"
 #import "ADJAdRevenueResponseData.h"
-
-/*
- #import "ADJThirdPartySharingPackageData.h"
- #import "ADJThirdPartySharingResponseData.h"
- */
+#import "ADJInfoResponseData.h"
+#import "ADJInfoPackageData.h"
+#import "ADJThirdPartySharingPackageData.h"
+#import "ADJThirdPartySharingResponseData.h"
 #import "ADJUnknownResponseData.h"
 
 #pragma mark Fields
@@ -41,8 +36,7 @@
 /* .h
  @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
  @property (nonnull, readonly, strong, nonatomic) ADJStringMapBuilder *sendingParameters;
- @property (nonnull, readonly, strong, nonatomic)
- id<ADJSdkResponseCallbackSubscriber> sourceCallback;
+ @property (nonnull, readonly, strong, nonatomic) id<ADJSdkResponseCallbackSubscriber> sourceCallback;
  @property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
  */
 
@@ -130,25 +124,18 @@ logger:logger];                                             \
 }                                                                           \
 
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger {
-    /*
-     tryBuildResponse(ADJAttributionPackageData, ADJAttributionResponseData, attributionPackageData)
-     tryBuildResponse(ADJBillingSubscriptionPackageData,
-     ADJBillingSubscriptionResponseData,
-     billingSubscriptionPackageData)
-     tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
-     tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
-     tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
-     tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
-     */
+
+    tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
+    tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
+    tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
+    tryBuildResponse(ADJBillingSubscriptionPackageData, ADJBillingSubscriptionResponseData, billingSubscriptionPackageData)
+    tryBuildResponse(ADJAttributionPackageData, ADJAttributionResponseData, attributionPackageData)
     tryBuildResponse(ADJSessionPackageData, ADJSessionResponseData, sessionPackageData)
     tryBuildResponse(ADJEventPackageData, ADJEventResponseData, eventPackageData)
     tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
+    tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
+    tryBuildResponse(ADJThirdPartySharingPackageData, ADJThirdPartySharingResponseData, thirdPartySharingPackageData)
 
-    /*
-     tryBuildResponse(ADJThirdPartySharingPackageData,
-     ADJThirdPartySharingResponseData,
-     thirdPartySharingPackageData)
-     */
     if (logger != nil) {
         [logger error:@"Could not match source sdk package of: %@, to one of the know types."
          " Will still be created with unknown type", self.sourcePackage];

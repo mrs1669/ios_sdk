@@ -24,9 +24,8 @@ NS_ASSUME_NONNULL_END
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
                                      logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)
-    instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt
-    logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt
+                                                              logger:(nonnull ADJLogger *)logger;
 
 - (nonnull instancetype)initWithIntialState;
 

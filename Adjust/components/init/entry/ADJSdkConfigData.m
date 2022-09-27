@@ -14,21 +14,14 @@
  @property (nonnull, readonly, strong, nonatomic) ADJNetworkEndpointData *networkEndpointData;
  @property (nonnull, readonly, strong, nonatomic) ADJExternalConfigData *sessionDeviceIdsConfigData;
  @property (nonnull, readonly, strong, nonatomic) ADJExternalConfigData *asaAttributionConfigData;
- @property (nonnull, readonly, strong, nonatomic)
- ADJBackoffStrategy *attributionBackoffStrategy;
- @property (nonnull, readonly, strong, nonatomic)
- ADJBackoffStrategy *gdprForgetBackoffStrategy;
- @property (nonnull, readonly, strong, nonatomic)
- ADJBackoffStrategy *mainQueueBackoffStrategy;
- @property (nullable, readonly, strong, nonatomic)
- id<ADJClientReturnExecutor> clientReturnExecutorOverwrite;
- @property (nonnull, readonly, strong, nonatomic)
- ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
- @property (nullable, readonly, strong, nonatomic)
- ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
+ @property (nonnull, readonly, strong, nonatomic) ADJBackoffStrategy *attributionBackoffStrategy;
+ @property (nonnull, readonly, strong, nonatomic) ADJBackoffStrategy *gdprForgetBackoffStrategy;
+ @property (nonnull, readonly, strong, nonatomic) ADJBackoffStrategy *mainQueueBackoffStrategy;
+ @property (nullable, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutorOverwrite;
+ @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *minMeasurementSessionIntervalMilli;
+ @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *overwriteFirstMeasurementSessionIntervalMilli;
  @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
- @property (nonnull, readonly, strong, nonatomic)
- ADJTimeLengthMilli *foregroundTimerIntervalMilli;
+ @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerIntervalMilli;
  @property (readonly, assign, nonatomic) BOOL assumeSandboxEnvironmentForLogging;
  @property (readonly, assign, nonatomic) BOOL doNotReadCurrentLifecycleStatus;
  @property (readonly, assign, nonatomic) BOOL doNotInitiateAttributionFromSdk;
@@ -52,13 +45,11 @@
     _mainQueueBackoffStrategy = sdkConfigDataBuilder.mainQueueBackoffStrategy;
     _clientReturnExecutorOverwrite = sdkConfigDataBuilder.clientReturnExecutorOverwrite;
     _minMeasurementSessionIntervalMilli = sdkConfigDataBuilder.minMeasurementSessionIntervalMilli;
-    _overwriteFirstMeasurementSessionIntervalMilli =
-    sdkConfigDataBuilder.overwriteFirstSdkSessionInterval;
+    _overwriteFirstMeasurementSessionIntervalMilli = sdkConfigDataBuilder.overwriteFirstSdkSessionInterval;
     _foregroundTimerStartMilli = sdkConfigDataBuilder.foregroundTimerStartMilli;
     _foregroundTimerIntervalMilli = sdkConfigDataBuilder.foregroundTimerIntervalMilli;
     _assumeSandboxEnvironmentForLogging = sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging;
-    _doNotReadCurrentLifecycleStatus =
-    sdkConfigDataBuilder.doNotReadCurrentLifecycleStatus;
+    _doNotReadCurrentLifecycleStatus = sdkConfigDataBuilder.doNotReadCurrentLifecycleStatus;
     _doNotInitiateAttributionFromSdk = sdkConfigDataBuilder.doNotInitiateAttributionFromSdk;
     
     return self;
