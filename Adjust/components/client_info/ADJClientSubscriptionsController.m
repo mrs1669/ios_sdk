@@ -52,16 +52,16 @@
             [self.logger error:@"Unexpected nil attribution with Read attribution status"];
             return;
         }
-        [self attribuitonReadWithAdjustData:adjustAttribution];
+        [self attributionReadWithAdjustData:adjustAttribution];
         return;
     }
 
     if ([attributionStatus isEqualToString:ADJAttributionStatusCreated]
         || [attributionStatus isEqualToString:ADJAttributionStatusUpdated])
     {
-        [self attribuitonChangedWithAdjustData:adjustAttribution];
+        [self attributionChangedWithAdjustData:adjustAttribution];
 
-        [self attribuitonChangedWithDeferredDeeplink:
+        [self attributionChangedWithDeferredDeeplink:
          attributionData != nil ? attributionData.deeplink : nil];
 
         return;
@@ -134,7 +134,7 @@
 }
 
 #pragma mark Internal Methods
-- (void)attribuitonReadWithAdjustData:(nonnull ADJAdjustAttribution *)adjustAttribution {
+- (void)attributionReadWithAdjustData:(nonnull ADJAdjustAttribution *)adjustAttribution {
     id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
     self.adjustAttributionSubscriber;
 
@@ -154,7 +154,7 @@
     }];
 }
 
-- (void)attribuitonChangedWithAdjustData:(nullable ADJAdjustAttribution *)adjustAttribution {
+- (void)attributionChangedWithAdjustData:(nullable ADJAdjustAttribution *)adjustAttribution {
     id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
     self.adjustAttributionSubscriber;
 
@@ -174,7 +174,7 @@
     }];
 }
 
-- (void)attribuitonChangedWithDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {
+- (void)attributionChangedWithDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {
     if (self.doNotOpenDeferredDeeplink) {
         return;
     }
