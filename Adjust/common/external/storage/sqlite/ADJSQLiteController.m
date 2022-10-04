@@ -97,9 +97,9 @@ static int const kDatabaseVersion = 5000; // v5.00.0
     }
     
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
-     ^(id<ADJSQLiteStorage> _Nonnull sqiteStorage)
+     ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
-        [sqiteStorage readIntoMemorySync:self.sqliteDb];
+        [sqliteStorage readIntoMemorySync:self.sqliteDb];
     }];
     
     if (migrateFromV4) {
@@ -121,9 +121,9 @@ static int const kDatabaseVersion = 5000; // v5.00.0
     [self.logger debug:@"Creating database tables"];
     
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
-     ^(id<ADJSQLiteStorage> _Nonnull sqiteStorage)
+     ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
-        [self.sqliteDb executeStatements:[sqiteStorage sqlStringForOnCreate]];
+        [self.sqliteDb executeStatements:[sqliteStorage sqlStringForOnCreate]];
     }];
     
     [self.logger debug:@"All database tables created"];
@@ -137,9 +137,9 @@ static int const kDatabaseVersion = 5000; // v5.00.0
     [self.logger debug:@"Migrating data from v4 to database"];
     
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
-     ^(id<ADJSQLiteStorage> _Nonnull sqiteStorage)
+     ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
-        [sqiteStorage migrateFromV4WithV4FilesData:v4FilesData
+        [sqliteStorage migrateFromV4WithV4FilesData:v4FilesData
                                 v4UserDefaultsData:v4UserDefaultsData];
     }];
     

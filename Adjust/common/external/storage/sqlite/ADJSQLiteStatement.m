@@ -17,7 +17,7 @@
 #pragma mark - Injected dependencies
 @property (nonnull, readonly, strong, nonatomic) NSString *sqlString;
 @property (nullable, readonly, weak, nonatomic)
-id<ADJSQLiteDbMessageProvider> sqiteDbMessageProviderWeak;
+id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 
 #pragma mark - Internal variables
 @property (nonatomic, readwrite, assign) BOOL hasClosed;
@@ -31,11 +31,11 @@ id<ADJSQLiteDbMessageProvider> sqiteDbMessageProviderWeak;
 #pragma mark Instantiation
 - (nonnull instancetype)initWithSqliteStatement:(nonnull sqlite3_stmt *)sqliteStatement
                                       sqlString:(nonnull NSString *)sqlString
-                         sqiteDbMessageProvider:(nonnull id<ADJSQLiteDbMessageProvider>)sqiteDbMessageProvider {
+                         sqliteDbMessageProvider:(nonnull id<ADJSQLiteDbMessageProvider>)sqliteDbMessageProvider {
     self = [super init];
     _sqlite3_stmt = sqliteStatement;
     _sqlString = sqlString;
-    _sqiteDbMessageProviderWeak = sqiteDbMessageProvider;
+    _sqliteDbMessageProviderWeak = sqliteDbMessageProvider;
     
     _hasClosed = NO;
     
@@ -60,14 +60,14 @@ id<ADJSQLiteDbMessageProvider> sqiteDbMessageProviderWeak;
         _sqlite3_stmt = NULL;
     }
     
-    id<ADJSQLiteDbMessageProvider> _Nullable sqiteDbMessageProvider =
-    self.sqiteDbMessageProviderWeak;
+    id<ADJSQLiteDbMessageProvider> _Nullable sqliteDbMessageProvider =
+    self.sqliteDbMessageProviderWeak;
     
-    if (sqiteDbMessageProvider == nil) {
+    if (sqliteDbMessageProvider == nil) {
         return;
     }
     
-    [sqiteDbMessageProvider statementClosed:self];
+    [sqliteDbMessageProvider statementClosed:self];
 }
 
 // adapted from https://github.com/ccgus/fmdb/blob/2.7.4/src/fmdb/FMResultSet.m#L163
@@ -253,14 +253,14 @@ id<ADJSQLiteDbMessageProvider> sqiteDbMessageProviderWeak;
 }
 
 - (nonnull NSString *)lastErrorMessage {
-    id<ADJSQLiteDbMessageProvider> _Nullable sqiteDbMessageProvider =
-    self.sqiteDbMessageProviderWeak;
+    id<ADJSQLiteDbMessageProvider> _Nullable sqliteDbMessageProvider =
+    self.sqliteDbMessageProviderWeak;
     
-    if (sqiteDbMessageProvider == nil) {
+    if (sqliteDbMessageProvider == nil) {
         return @"Without reference to SQLiteDb";
     }
     
-    return [sqiteDbMessageProvider lastErrorMessage];
+    return [sqliteDbMessageProvider lastErrorMessage];
 }
 
 @end

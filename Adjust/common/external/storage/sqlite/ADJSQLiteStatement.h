@@ -17,7 +17,7 @@
 // instantiation
 - (nonnull instancetype)initWithSqliteStatement:(nonnull sqlite3_stmt *)sqliteStatement
                                       sqlString:(nonnull NSString *)sqlString
-                         sqiteDbMessageProvider:(nonnull id<ADJSQLiteDbMessageProvider>)sqiteDbMessageProvider;
+                         sqliteDbMessageProvider:(nonnull id<ADJSQLiteDbMessageProvider>)sqliteDbMessageProvider;
 
 // public api
 - (void)resetStatement;
