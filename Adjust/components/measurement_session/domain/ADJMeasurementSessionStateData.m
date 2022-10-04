@@ -84,7 +84,7 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
         [self.measurementSessionData injectIntoIoDataMapBuilder:stringMapBuilder];
     }
 
-    return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+    return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
 
 #pragma mark - NSObject

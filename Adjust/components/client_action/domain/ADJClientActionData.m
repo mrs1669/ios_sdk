@@ -71,7 +71,7 @@ static NSString *const kIoDataKey = @"ioData";
     
     return [self initWithClientActionHandlerId:clientActionHandlerId
                                   apiTimestamp:nowTimestamp
-                                        ioData:[[ADJIoData alloc] initWithIoDataBuider:
+                                        ioData:[[ADJIoData alloc] initWithIoDataBuilder:
                                                 ioDataBuilder]];
 }
 

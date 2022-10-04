@@ -72,7 +72,7 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
      key:kDeduplicationIdKey
      ioValueSerializable:self.deduplicationId];
     
-    return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+    return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
 
 #pragma mark - NSObject

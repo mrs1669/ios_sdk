@@ -249,19 +249,19 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
                        ioValueSerializable:self.salesRegion];
 
     if (self.callbackParameters != nil) {
-        ADJStringMapBuilder *_Nonnull callbackParametersMapBuider =
+        ADJStringMapBuilder *_Nonnull callbackParametersMapBuilder =
         [clientActionIoDataBuilder
          addAndReturnNewMapBuilderByName:kCallbackParametersMapName];
 
-        [callbackParametersMapBuider addAllPairsWithStringMap:self.callbackParameters];
+        [callbackParametersMapBuilder addAllPairsWithStringMap:self.callbackParameters];
     }
 
     if (self.partnerParameters != nil) {
-        ADJStringMapBuilder *_Nonnull partnerParametersMapBuider =
+        ADJStringMapBuilder *_Nonnull partnerParametersMapBuilder =
         [clientActionIoDataBuilder
          addAndReturnNewMapBuilderByName:kPartnerParametersMapName];
 
-        [partnerParametersMapBuider addAllPairsWithStringMap:self.partnerParameters];
+        [partnerParametersMapBuilder addAllPairsWithStringMap:self.partnerParameters];
     }
 }
 

@@ -97,7 +97,7 @@ static NSString *const kEventCountKey = @"eventCount";
      key:kEventCountKey
      ioValueSerializable:self.eventCount];
 
-    return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+    return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
 
 #pragma mark - NSObject

@@ -68,7 +68,7 @@ static NSString *const kUuidKey = @"uuid";
                                        key:kUuidKey
                        ioValueSerializable:self.uuid];
 
-    return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+    return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
 
 #pragma mark - NSObject

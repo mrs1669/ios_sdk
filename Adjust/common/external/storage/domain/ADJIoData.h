@@ -15,7 +15,7 @@
 
 @interface ADJIoData : NSObject
 // instantiation
-- (nonnull instancetype)initWithIoDataBuider:(nonnull ADJIoDataBuilder *)ioDataBuider
+- (nonnull instancetype)initWithIoDataBuilder:(nonnull ADJIoDataBuilder *)ioDataBuilder
     NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 

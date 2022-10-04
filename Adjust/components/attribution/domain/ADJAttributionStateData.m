@@ -187,7 +187,7 @@ ioValueSerializable:[ADJBooleanWrapper instanceFromBool:var]]  \
         [self.attributionData injectIntoIoDataMapBuilder:stringMapBuilder];
     }
 
-    return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+    return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
 
 #pragma mark - NSObject

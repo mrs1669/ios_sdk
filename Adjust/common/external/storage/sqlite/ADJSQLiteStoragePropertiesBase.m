@@ -164,7 +164,7 @@ static NSString *const kColumnValue = @"value";
     } while ([selectStatement nextInQueryStatementWithLogger:self.logger]);
     
     ADJIoData *_Nonnull ioData =
-    [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+    [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
     
     _Nullable id valueFromIoData = [self concreteGenerateValueFromIoData:ioData];
     

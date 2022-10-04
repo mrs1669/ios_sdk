@@ -289,7 +289,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
             BOOL elementAdded =
             [self
              addReadDataToInMemoryQueueWithIoData:
-                 [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder]
+                 [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder]
              elementPositionToAdd:elementPositionToAdd];
             if (elementAdded) {
                 atLeastOneElementAdded = YES;
@@ -318,7 +318,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     
     BOOL elementAdded =
     [self addReadDataToInMemoryQueueWithIoData:[[ADJIoData alloc]
-                                                initWithIoDataBuider:ioDataBuilder]
+                                                initWithIoDataBuilder:ioDataBuilder]
                           elementPositionToAdd:lastElementPositionToAdd];
     
     if (lastElementPositionToAdd != nil) {

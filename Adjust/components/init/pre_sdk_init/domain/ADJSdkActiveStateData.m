@@ -82,7 +82,7 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
                                        key:kIsSdkActiveKey
                        ioValueSerializable:[ADJBooleanWrapper instanceFromBool:self.isSdkActive]];
 
-    return [[ADJIoData alloc] initWithIoDataBuider:ioDataBuilder];
+    return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
 
 #pragma mark - NSObject

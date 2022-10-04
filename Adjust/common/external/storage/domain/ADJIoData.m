@@ -25,15 +25,15 @@
 @implementation ADJIoData
 
 #pragma mark Instantiation
-- (nonnull instancetype)initWithIoDataBuider:(nonnull ADJIoDataBuilder *)ioDataBuider {
+- (nonnull instancetype)initWithIoDataBuilder:(nonnull ADJIoDataBuilder *)ioDataBuilder {
     self = [super init];
 
     NSMutableDictionary<ADJNonEmptyString *, ADJStringMap *> *_Nonnull
         mapCollectionByNameBuilder = [NSMutableDictionary dictionary];
 
-    for (NSString *_Nonnull mapName in ioDataBuider.mapCollectionByNameBuilder) {
+    for (NSString *_Nonnull mapName in ioDataBuilder.mapCollectionByNameBuilder) {
         ADJStringMapBuilder *_Nonnull mapBuilder =
-            [ioDataBuider.mapCollectionByNameBuilder objectForKey:mapName];
+            [ioDataBuilder.mapCollectionByNameBuilder objectForKey:mapName];
 
         ADJStringMap *_Nonnull readOnlyMap =
             [[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder];
