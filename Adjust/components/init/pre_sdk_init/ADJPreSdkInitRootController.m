@@ -270,7 +270,7 @@
     [self.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
 }
 
-- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source {
+- (nullable id<ADJClientActionsAPI>)ccClientActionWithSource:(nonnull NSString *)source {
     ADJSdkActiveStateStorage *_Nonnull sdkActiveStateStorage = self.storageRootController.sdkActiveStateStorage;
 
     NSString *_Nullable cannotPerformActionMessage = [self.sdkActiveState canPerformActiveActionWithCurrentSdkActiveStateData:[sdkActiveStateStorage readOnlyStoredDataValue] source:source];

@@ -71,7 +71,7 @@
         ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
     {
         id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-            [adjustAPI ccClientActionsWithSource:@"trackLaunchedDeeplink"];
+            [adjustAPI ccClientActionWithSource:@"trackLaunchedDeeplink"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -95,7 +95,7 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
         id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [adjustAPI ccClientActionsWithSource:@"trackEvent"];
+        [adjustAPI ccClientActionWithSource:@"trackEvent"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -118,7 +118,7 @@
         ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
     {
         id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-            [adjustAPI ccClientActionsWithSource:@"trackPushToken"];
+            [adjustAPI ccClientActionWithSource:@"trackPushToken"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -141,7 +141,7 @@
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
         id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [adjustAPI ccClientActionsWithSource:@"trackThirdPartySharing"];
+        [adjustAPI ccClientActionWithSource:@"trackThirdPartySharing"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -183,7 +183,7 @@
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
         id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [adjustAPI ccClientActionsWithSource:@"trackAdRevenue"];
+        [adjustAPI ccClientActionWithSource:@"trackAdRevenue"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -206,7 +206,7 @@
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
         id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [adjustAPI ccClientActionsWithSource:@"trackBillingSubscription"];
+        [adjustAPI ccClientActionWithSource:@"trackBillingSubscription"];
         
         if (clientActionsAPI == nil) {
             return;
@@ -258,7 +258,7 @@
                                     value:(nonnull NSString *)value {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionsWithSource:@"addGlobalCallbackParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"addGlobalCallbackParameter"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -280,7 +280,7 @@
 + (void)removeGlobalCallbackParameterByKey:(nonnull NSString *)key {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionsWithSource:@"removeGlobalCallbackParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"removeGlobalCallbackParameter"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -302,7 +302,7 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionsWithSource:@"clearAllGlobalCallbackParameters"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"clearAllGlobalCallbackParameters"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -319,7 +319,7 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionsWithSource:@"addGlobalPartnerParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"addGlobalPartnerParameter"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -342,7 +342,7 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionsWithSource:@"removeGlobalPartnerParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"removeGlobalPartnerParameter"];
 
         if (clientActionsAPI == nil) {
             return;
@@ -364,7 +364,7 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionsWithSource:@"clearAllGlobalPartnerParameters"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"clearAllGlobalPartnerParameters"];
 
         if (clientActionsAPI == nil) {
             return;

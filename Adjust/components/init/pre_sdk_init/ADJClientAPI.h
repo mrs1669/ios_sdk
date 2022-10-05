@@ -17,7 +17,7 @@
 
 - (void)ccSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData;
 
-- (nullable id<ADJClientActionsAPI>)ccClientActionsWithSource:(nonnull NSString *)source;
+- (nullable id<ADJClientActionsAPI>)ccClientActionWithSource:(nonnull NSString *)source;
 
 - (void)ccInactivateSdk;
 - (void)ccReactivateSdk;
