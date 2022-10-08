@@ -8,6 +8,9 @@
 
 #import "ADJAdjustConfig.h"
 
+#import "ADJAdjustAttributionSubscriber.h"
+#import "ADJAdjustLogSubscriber.h"
+
 #import "ADJUtilObj.h"
 
 #pragma mark Fields

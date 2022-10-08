@@ -6,7 +6,7 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-#import "ADJAdjustLogMessageData.h"
+@class ADJAdjustLogMessageData;
 
 @protocol ADJAdjustLogSubscriber <NSObject>
 

@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJAdjustPackageSendingSubscriber.h"
-#import "ADJAdjustForegroundSubscriber.h"
+@protocol ADJAdjustPackageSendingPublisher;
+@protocol ADJAdjustForegroundPublisher;
 
 @interface ADJAdjustPublishers : NSObject
 // instantiation

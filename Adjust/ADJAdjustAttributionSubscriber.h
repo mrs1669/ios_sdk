@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJAdjustAttribution.h"
+@class ADJAdjustAttribution;
 
 @protocol ADJAdjustAttributionSubscriber <NSObject>
 

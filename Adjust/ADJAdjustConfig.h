@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJAdjustAttributionSubscriber.h"
-#import "ADJAdjustLogSubscriber.h"
+@protocol ADJAdjustAttributionSubscriber;
+@protocol ADJAdjustLogSubscriber;
 
 NS_ASSUME_NONNULL_BEGIN
 

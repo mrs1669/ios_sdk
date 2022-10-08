@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJAdjustLogger.h"
-#import "ADJAdjustPublishers.h"
+@class ADJAdjustPublishers;
+@protocol ADJAdjustLogger;
 
 @protocol ADJAdjustPlugin <NSObject>
 
