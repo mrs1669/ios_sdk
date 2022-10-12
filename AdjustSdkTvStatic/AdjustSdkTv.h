@@ -1,18 +1,10 @@
 //
 //  AdjustSdkTv.h
-//  AdjustSdkTv
+//  AdjustSdkTvStatic
 //
-//  Created by Aditi Agrawal on 05/07/22.
+//  Created by Genady Buchatsky on 11.10.22.
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
-
-#import <Foundation/Foundation.h>
-
-//! Project version number for AdjustSdkTv.
-FOUNDATION_EXPORT double AdjustSdkTvVersionNumber;
-
-//! Project version string for AdjustSdkTv.
-FOUNDATION_EXPORT const unsigned char AdjustSdkTvVersionString[];
 
 #import <AdjustSdkTv/ADJAdjust.h>
 #import <AdjustSdkTv/ADJAdjustAdRevenue.h>
@@ -34,3 +26,4 @@ FOUNDATION_EXPORT const unsigned char AdjustSdkTvVersionString[];
 #import <AdjustSdkTv/ADJAdjustPublishers.h>
 #import <AdjustSdkTv/ADJAdjustPushToken.h>
 #import <AdjustSdkTv/ADJAdjustThirdPartySharing.h>
+

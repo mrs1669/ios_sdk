@@ -21,9 +21,7 @@ NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
 @property (nonnull, readwrite, strong, nonatomic) ADJNonEmptyString *configLogLevel;
 @property (assign, nonatomic) BOOL hasSdkInit;
 @property (assign, nonatomic) BOOL isInSandboxEnvironment;
-@property (strong, nonatomic, readwrite, nonnull)
-os_log_t osLogLogger
-API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.0));
+@property (strong, nonatomic, readwrite, nonnull) os_log_t osLogLogger API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.0));
 
 @end
 
@@ -34,16 +32,14 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
     
     _logMessageDataArray = [NSMutableArray array];
     
-    _configLogLevel = [[ADJNonEmptyString alloc]
-                       initWithConstStringValue:ADJAdjustLogLevelDebug];
+    _configLogLevel = [[ADJNonEmptyString alloc] initWithConstStringValue:ADJAdjustLogLevelDebug];
     
     _isInSandboxEnvironment = NO;
     
     _hasSdkInit = NO;
     
     if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-        _osLogLogger =
-        os_log_create(ADJAdjustSubSystem.UTF8String, ADJAdjustCategory.UTF8String);
+        _osLogLogger = os_log_create(ADJAdjustSubSystem.UTF8String, ADJAdjustCategory.UTF8String);
     }
     
     return self;
@@ -68,8 +64,7 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
      } else {
      */
     for (ADJAdjustLogMessageData *logMessageData in self.logMessageDataArray) {
-        [self printLogMessage:[NSString stringWithFormat:
-                               @"Pre-Init|%@", logMessageData.logMessage]
+        [self printLogMessage:[NSString stringWithFormat:@"Pre-Init|%@", logMessageData.logMessage]
                        source:logMessageData.source
               messageLogLevel:logMessageData.messageLogLevel];
     }

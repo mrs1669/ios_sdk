@@ -175,6 +175,11 @@
 }
 
 - (void)attributionChangedWithDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {
+
+#if defined(ADJUST_IM)
+    return;
+#else
+
     if (self.doNotOpenDeferredDeeplink) {
         return;
     }
@@ -235,6 +240,7 @@
 
     [self.logger error:
      @"Could not find selector in shared application to open deferred deeplink"];
+#endif
 }
 
 + (void)openDeferredDeeplinkWithUrl:(nonnull NSURL *)deferredDeeplinkUrl

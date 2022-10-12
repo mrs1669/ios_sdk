@@ -9,6 +9,8 @@
 #import "ADJV4RestMigration.h"
 
 #import "ADJAdjust.h"
+#import "ADJAdjustLaunchedDeeplink.h"
+#import "ADJAdjustPushToken.h"
 
 @implementation ADJV4RestMigration
 #pragma mark Instantiation
@@ -50,8 +52,7 @@
 
         if (v4ActivityState.deviceToken != nil) {
             [self.logger debug:@"Push token found in v4 Activity state"];
-            ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:
-                                                            v4ActivityState.deviceToken];
+            ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:v4ActivityState.deviceToken];
             [ADJAdjust trackPushToken:adjustPushToken];
             return;
         }
