@@ -207,6 +207,9 @@ Usage: $0 [options]
 	rm -rf ${XCF_OUTPUT_FOLDER}
 	mkdir ${XCF_OUTPUT_FOLDER}
 
+    # previous xcode build folder cleanup
+    xcodebuild clean
+
 	function build_archive() {
 	  # Prameters:
 	  # 1 - scheme name
