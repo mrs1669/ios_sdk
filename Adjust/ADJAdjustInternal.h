@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class ADJEntryRoot;
-#import "ADJSdkConfigDataBuilder.h"
+@class ADJSdkConfigDataBuilder;
 
 @interface ADJAdjustInternal : NSObject
 

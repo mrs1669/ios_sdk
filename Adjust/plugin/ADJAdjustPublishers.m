@@ -7,6 +7,8 @@
 //
 
 #import "ADJAdjustPublishers.h"
+#import "ADJAdjustPackageSendingSubscriber.h"
+#import "ADJAdjustForegroundSubscriber.h"
 
 #pragma mark Fields
 /* .h

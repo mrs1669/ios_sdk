@@ -379,7 +379,13 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
             return;
         }
 
+#if defined(ADJUST_IM)
+        [strongSelf didForegroundWithSource:kApplicationStateActive];
+#else
         UIApplication *_Nonnull application = UIApplication.sharedApplication;
+
+        [strongSelf.logger error:@"UIApplication State: %ld", application.applicationState];
+
 
         UIApplicationState applicationState = application.applicationState;
 
@@ -394,6 +400,8 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
              @"Could not detect applicationState from main thread with value %@",
              [ADJUtilF integerFormat:applicationState]];
         }
+#endif
+
     }];
 }
 

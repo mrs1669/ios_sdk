@@ -7,15 +7,17 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJAdjustConfig.h"
-#import "ADJAdjustEvent.h"
-#import "ADJAdjustAdRevenue.h"
-#import "ADJAdjustPushToken.h"
-#import "ADJAdjustLaunchedDeeplink.h"
-#import "ADJAdjustAttributionCallback.h"
-#import "ADJAdjustDeviceIdsCallback.h"
-#import "ADJAdjustBillingSubscription.h"
-#import "ADJAdjustThirdPartySharing.h"
+
+@class ADJAdjustConfig;
+@class ADJAdjustEvent;
+@class ADJAdjustAdRevenue;
+@class ADJAdjustPushToken;
+@class ADJAdjustLaunchedDeeplink;
+@class ADJAdjustBillingSubscription;
+@class ADJAdjustThirdPartySharing;
+@protocol ADJAdjustAttributionCallback;
+@protocol ADJAdjustDeviceIdsCallback;
+
 
 @interface ADJAdjust : NSObject
 

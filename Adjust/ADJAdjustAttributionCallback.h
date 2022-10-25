@@ -6,7 +6,7 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-#import "ADJAdjustAttribution.h"
+@class ADJAdjustAttribution;
 
 @protocol ADJAdjustAttributionCallback <NSObject>
 

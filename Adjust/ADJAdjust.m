@@ -6,8 +6,22 @@
 //
 
 #import "ADJAdjust.h"
+
+#import "ADJAdjustConfig.h"
+#import "ADJAdjustEvent.h"
+#import "ADJAdjustAdRevenue.h"
+#import "ADJAdjustPushToken.h"
+#import "ADJAdjustLaunchedDeeplink.h"
+#import "ADJAdjustAttributionCallback.h"
+#import "ADJAdjustDeviceIdsCallback.h"
+#import "ADJAdjustBillingSubscription.h"
+#import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustAttributionCallback.h"
+#import "ADJAdjustDeviceIdsCallback.h"
+
 #import "ADJEntryRoot.h"
 #import "ADJClientConfigData.h"
+#import "ADJSdkConfigDataBuilder.h"
 
 @implementation ADJAdjust
 

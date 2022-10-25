@@ -1,20 +1,10 @@
 //
 //  AdjustSdkIm.h
-//  AdjustSdkIm
+//  AdjustSdkImStatic
 //
-//  Created by Aditi Agrawal on 05/07/22.
+//  Created by Genady Buchatsky on 11.10.22.
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
-
-#import <Foundation/Foundation.h>
-
-//! Project version number for AdjustSdkIm.
-FOUNDATION_EXPORT double AdjustSdkImVersionNumber;
-
-//! Project version string for AdjustSdkIm.
-FOUNDATION_EXPORT const unsigned char AdjustSdkImVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <AdjustSdkIm/PublicHeader.h>
 
 #import <AdjustSdkIm/ADJAdjust.h>
 #import <AdjustSdkIm/ADJAdjustAdRevenue.h>
@@ -36,4 +26,3 @@ FOUNDATION_EXPORT const unsigned char AdjustSdkImVersionString[];
 #import <AdjustSdkIm/ADJAdjustPublishers.h>
 #import <AdjustSdkIm/ADJAdjustPushToken.h>
 #import <AdjustSdkIm/ADJAdjustThirdPartySharing.h>
-
