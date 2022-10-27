@@ -37,7 +37,6 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     self = [super init];
-
     if (sdkConfigDataBuilder != nil) {
         _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigDataBuilder];
     } else {

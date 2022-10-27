@@ -127,8 +127,7 @@
         
         strongSelf.canPublish = YES;
         
-        NSArray<ADJLogMessageData *> *_Nonnull preInitLogMessageArray =
-            [strongSelf.logMessageDataArray copy];
+        NSArray<ADJAdjustLogMessageData *> *_Nonnull preInitLogMessageArray = [strongSelf.logMessageDataArray copy];
         
         [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
          ^(id<ADJLogSubscriber> _Nonnull subscriber)

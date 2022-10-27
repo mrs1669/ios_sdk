@@ -320,18 +320,15 @@
                                      preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController {
 
      // subscribe controllers to publishers
-    [self.attributionController
-     ccSubscribeToPublishersWithPublishingGatePublisher:self.publishingGatePublisher
+    [self.attributionController ccSubscribeToPublishersWithPublishingGatePublisher:self.publishingGatePublisher
                                                   measurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
                                                               sdkResponsePublisher:self.sdkPackageSenderController.sdkResponsePublisher
                                                                   pausingPublisher:self.pausingController.pausingPublisher];
 
-    [self.keepAliveController
-     ccSubscribeToPublishersWithMeasurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
+    [self.keepAliveController ccSubscribeToPublishersWithMeasurementSessionStartPublisher:self.measurementSessionController.measurementSessionStartPublisher
                                                                        lifecyclePublisher:preSdkInitRootController.lifecycleController.lifecyclePublisher];
 
-    [self.clientSubscriptionsController
-     ccSubscribeToPublishersWithAttributionPublisher:self.attributionController.attributionPublisher
+    [self.clientSubscriptionsController ccSubscribeToPublishersWithAttributionPublisher:self.attributionController.attributionPublisher
                                                                            logPublisher:entryRoot.logController.logPublisher];
 
     [self.asaAttributionController ccSubscribeToPublishersWithKeepAlivePublisher:self.keepAliveController.keepAlivePublisher

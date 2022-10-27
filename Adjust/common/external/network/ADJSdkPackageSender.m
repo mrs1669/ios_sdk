@@ -133,16 +133,14 @@
 
 - (nullable ADJStringMap *)publishPackageSendingAngGetHeadersToSendWithSdkPackage:(nonnull id<ADJSdkPackageData>)sdkPackageData
                                                                 sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters {
-    id<ADJSdkPackageSendingSubscriber> _Nullable sdkPackageSendingCollector =
-    self.sdkPackageSendingCollectorWeak;
-
+    id<ADJSdkPackageSendingSubscriber> _Nullable sdkPackageSendingCollector = self.sdkPackageSendingCollectorWeak;
+    
     if (sdkPackageSendingCollector == nil) {
         return nil;
     }
-
-    ADJStringMapBuilder *_Nonnull headersToAdd =
-    [[ADJStringMapBuilder alloc] initWithEmptyMap];
-
+    
+    ADJStringMapBuilder *_Nonnull headersToAdd = [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    
     [sdkPackageSendingCollector willSendSdkPackageWithData:sdkPackageData
                                            parametersToAdd:sendingParameters
                                               headersToAdd:headersToAdd];

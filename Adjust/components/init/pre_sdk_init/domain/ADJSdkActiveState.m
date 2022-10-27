@@ -48,8 +48,7 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
         return NO;
     }
 
-    NSString *_Nonnull currentSdkActiveStatus =
-    [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
+    NSString *_Nonnull currentSdkActiveStatus = [self currentSdkActiveStatusWithStateData:currentSdkActiveStateData];
 
     if (ADJSdkActiveStatusForgotten == currentSdkActiveStatus) {
         [adjustApiLogger infoClient:

@@ -17,10 +17,8 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /*
- @property (nonnull, readonly, strong, nonatomic)
- ADJSdkPackageSendingPublisher *sdkPackageSendingPublisher;
- @property (nonnull, readonly, strong, nonatomic)
- ADJSdkResponsePublisher *sdkResponsePublisher;
+ @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSendingPublisher *sdkPackageSendingPublisher;
+ @property (nonnull, readonly, strong, nonatomic) ADJSdkResponsePublisher *sdkResponsePublisher;
  */
 
 @interface ADJSdkPackageSenderController ()
