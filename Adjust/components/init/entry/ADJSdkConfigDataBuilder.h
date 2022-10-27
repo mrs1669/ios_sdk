@@ -33,6 +33,7 @@
 @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
 @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerIntervalMilli;
 @property (readwrite, assign, nonatomic) BOOL assumeSandboxEnvironmentForLogging;
+@property (readwrite, assign, nonatomic) BOOL assumeTraceLogLevel;
 @property (readwrite, assign, nonatomic) BOOL doNotReadCurrentLifecycleStatus;
 @property (readwrite, assign, nonatomic) BOOL doNotInitiateAttributionFromSdk;
 

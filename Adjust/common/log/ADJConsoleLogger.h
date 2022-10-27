@@ -9,16 +9,18 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJNonEmptyString.h"
+#import "ADJSdkConfigData.h"
 
 //#import <os/log.h>
 
 @interface ADJConsoleLogger : NSObject
 // instantiation
-- (nonnull instancetype)init NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+    NS_DESIGNATED_INITIALIZER;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (void)setEnvironmentToSandbox;
-
 - (void)didLogMessage:(nonnull NSString *)logMessage
                source:(nonnull NSString *)source
       messageLogLevel:(nonnull NSString *)messageLogLevel;

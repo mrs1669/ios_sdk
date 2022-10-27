@@ -2927,6 +2927,10 @@
 		6FAC570C288FE9230070F564 /* ADJTimerCycle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC570A288FE9230070F564 /* ADJTimerCycle.m */; };
 		6FAC5710288FE98A0070F564 /* ADJSdkResponseBaseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC570E288FE98A0070F564 /* ADJSdkResponseBaseData.m */; };
 		6FAC5714288FE9E20070F564 /* ADJSdkPackageSenderController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC5712288FE9E10070F564 /* ADJSdkPackageSenderController.m */; };
+		6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; };
+		6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
+		6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; };
+		6FCEAF4F290ACAB5009F1DAD /* ADJLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */; };
 		6FE44798288AE4E800FF06E0 /* ADJNetworkEndpointData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE44796288AE4E800FF06E0 /* ADJNetworkEndpointData.m */; };
 		6FE4479D288AE53100FF06E0 /* ADJExternalConfigData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE4479B288AE53100FF06E0 /* ADJExternalConfigData.m */; };
 		6FE447A2288AE58500FF06E0 /* ADJBackoffStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE447A0288AE58500FF06E0 /* ADJBackoffStrategy.m */; };
@@ -3370,6 +3374,10 @@
 		6FAC570E288FE98A0070F564 /* ADJSdkResponseBaseData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSdkResponseBaseData.m; sourceTree = "<group>"; };
 		6FAC5711288FE9E10070F564 /* ADJSdkPackageSenderController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSdkPackageSenderController.h; sourceTree = "<group>"; };
 		6FAC5712288FE9E10070F564 /* ADJSdkPackageSenderController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSdkPackageSenderController.m; sourceTree = "<group>"; };
+		6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInputLogMessageData.h; sourceTree = "<group>"; };
+		6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInputLogMessageData.m; sourceTree = "<group>"; };
+		6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLogMessageData.h; sourceTree = "<group>"; };
+		6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJLogMessageData.m; sourceTree = "<group>"; };
 		6FE44795288AE4E800FF06E0 /* ADJNetworkEndpointData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJNetworkEndpointData.h; sourceTree = "<group>"; };
 		6FE44796288AE4E800FF06E0 /* ADJNetworkEndpointData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJNetworkEndpointData.m; sourceTree = "<group>"; };
 		6FE4479A288AE53100FF06E0 /* ADJExternalConfigData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJExternalConfigData.h; sourceTree = "<group>"; };
@@ -3717,6 +3725,7 @@
 		0737C1DF287F3E2A004C7D59 /* log */ = {
 			isa = PBXGroup;
 			children = (
+				6FCEAF47290ACA62009F1DAD /* domain */,
 				0737C1E3287F3E2A004C7D59 /* ADJLogCollector.h */,
 				0737C1E4287F3E2A004C7D59 /* ADJLogSubscriber.h */,
 				0737C1E6287F3E2A004C7D59 /* ADJLoggerFactory.h */,
@@ -4457,6 +4466,17 @@
 			path = responses;
 			sourceTree = "<group>";
 		};
+		6FCEAF47290ACA62009F1DAD /* domain */ = {
+			isa = PBXGroup;
+			children = (
+				6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */,
+				6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */,
+				6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */,
+				6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */,
+			);
+			path = domain;
+			sourceTree = "<group>";
+		};
 		6FE44794288AE4D900FF06E0 /* network */ = {
 			isa = PBXGroup;
 			children = (
@@ -4647,6 +4667,7 @@
 				0A7ED72F2892B11B00CC20DE /* ADJSdkPackageSenderFactory.h in Headers */,
 				0A7ED7302892B11B00CC20DE /* ADJSdkPackageSendingSubscriber.h in Headers */,
 				0781AE5128B7628100818672 /* ADJGlobalParametersControllerBase.h in Headers */,
+				6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */,
 				0A7ED7312892B11B00CC20DE /* ADJSdkResponseSubscriber.h in Headers */,
 				0A7ED7322892B11B00CC20DE /* ADJSdkResponseData.h in Headers */,
 				0A7ED7332892B11B00CC20DE /* ADJSessionResponseData.h in Headers */,
@@ -4707,6 +4728,7 @@
 				0A7ED7632892B11B00CC20DE /* ADJMainQueueStorage.h in Headers */,
 				0A25F8A228E24346001988A1 /* ADJPluginForegroundPublisher.h in Headers */,
 				0A7ED7642892B11B00CC20DE /* ADJLifecycleSubscriber.h in Headers */,
+				6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */,
 				0741CE0128D896340041C816 /* ADJGdprForgetStateData.h in Headers */,
 				0A7ED7652892B11B00CC20DE /* ADJLifecycleController.h in Headers */,
 				0A7ED7662892B11B00CC20DE /* ADJKeepAliveSubscriber.h in Headers */,
@@ -6488,6 +6510,7 @@
 				6FE447B0288E8D5600FF06E0 /* ADJMainQueueController.m in Sources */,
 				0735D62428D36DAE00614B88 /* ADJClientCallbacksController.m in Sources */,
 				07F8F5CD2886DE520089653A /* ADJV4UserDefaultsData.m in Sources */,
+				6FCEAF4F290ACAB5009F1DAD /* ADJLogMessageData.m in Sources */,
 				0788448D2886CB72001814F7 /* ADJTimeLengthMilli.m in Sources */,
 				6FAC56CA288FE2140070F564 /* ADJGlobalCallbackParametersStorage.m in Sources */,
 				0A25F89628E24313001988A1 /* ADJAdjustPublishers.m in Sources */,
@@ -6576,6 +6599,7 @@
 				6F214E60288AA43F002319D7 /* ADJPostSdkInitRootController.m in Sources */,
 				07F8025F289287B30068902F /* ADJClientEventData.m in Sources */,
 				0741CDCF28D59FEE0041C816 /* ADJAdjustBillingSubscription.m in Sources */,
+				6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */,
 				0737C2352885846A004C7D59 /* ADJNonEmptyString.m in Sources */,
 				0724D53528995F4F0050E2C4 /* ADJEventDeduplicationData.m in Sources */,
 				0741CE0628D8965A0041C816 /* ADJGdprForgetState.m in Sources */,

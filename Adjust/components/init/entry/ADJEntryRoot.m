@@ -38,7 +38,14 @@
 - (nonnull instancetype)initWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     self = [super init];
 
-    _logController = [[ADJLogController alloc] init];
+    if (sdkConfigDataBuilder != nil) {
+        _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigDataBuilder];
+    } else {
+        _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
+    }
+
+    _logController = [[ADJLogController alloc] initWithInstanceId:nil
+                                                    sdkConfigData:_sdkConfigData];
 
     _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
 
@@ -56,15 +63,6 @@
 
     _rootLogger = [_logController createLoggerWithSource:@"EntryRoot"];
 
-    if (sdkConfigDataBuilder != nil) {
-        _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigDataBuilder];
-    } else {
-        _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
-    }
-
-    if (_sdkConfigData.assumeSandboxEnvironmentForLogging) {
-        [_logController setEnvironmentToSandbox];
-    }
 
     _preSdkInitRootController = nil;
 

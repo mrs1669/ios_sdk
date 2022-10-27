@@ -32,7 +32,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
 @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerIntervalMilli;
 @property (readonly, assign, nonatomic) BOOL assumeSandboxEnvironmentForLogging;
+@property (readonly, assign, nonatomic) BOOL assumeTraceLogLevel;
 @property (readonly, assign, nonatomic) BOOL doNotReadCurrentLifecycleStatus;
 @property (readonly, assign, nonatomic) BOOL doNotInitiateAttributionFromSdk;
-
 @end

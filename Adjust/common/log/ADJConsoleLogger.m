@@ -12,29 +12,37 @@
 
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConstants.h"
+#import "ADJInputLogMessageData.h"
 
 #pragma mark Fields
 @interface ADJConsoleLogger ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
-NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
+NSMutableArray<ADJAdjustLogMessageData *> *preSdkInitLogArray;
 @property (nonnull, readwrite, strong, nonatomic) ADJNonEmptyString *configLogLevel;
 @property (assign, nonatomic) BOOL hasSdkInit;
 @property (assign, nonatomic) BOOL isInSandboxEnvironment;
-@property (strong, nonatomic, readwrite, nonnull) os_log_t osLogLogger API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.0));
+@property (strong, nonatomic, readwrite, nonnull) os_log_t osLogLogger
+    API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.0));
 
 @end
 
 @implementation ADJConsoleLogger
 #pragma mark Instantiation
-- (nonnull instancetype)init {
+- (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData {
     self = [super init];
     
-    _logMessageDataArray = [NSMutableArray array];
+    _preSdkInitLogArray = [NSMutableArray array];
     
-    _configLogLevel = [[ADJNonEmptyString alloc] initWithConstStringValue:ADJAdjustLogLevelDebug];
+    if (sdkConfigData.assumeTraceLogLevel) {
+        _configLogLevel =
+            [[ADJNonEmptyString alloc] initWithConstStringValue:ADJLogLevelDevTrace];
+    } else {
+        _configLogLevel =
+            [[ADJNonEmptyString alloc] initWithConstStringValue:ADJLogLevelClientInfo];
+    }
     
-    _isInSandboxEnvironment = NO;
+    _isInSandboxEnvironment = sdkConfigData.assumeSandboxEnvironmentForLogging;
     
     _hasSdkInit = NO;
     
@@ -45,49 +53,30 @@ NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
     return self;
 }
 
-#pragma mark Public API
-- (void)setEnvironmentToSandbox {
-    if (self.isInSandboxEnvironment) {
-        return;
-    }
-    
-    self.isInSandboxEnvironment = YES;
-    
-    /*
-     if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-     for (ADJAdjustLogMessageData *logMessageData in self.logMessageDataArray) {
-     [self printLogMessage:[NSString stringWithFormat:
-     @"[%@]%@", logMessageData.source, logMessageData.logMessage]
-     adjustLogLevel:logMessageData.adjustLogLevel
-     osLogLogger:osLogLogger];
-     }
-     } else {
-     */
-    for (ADJAdjustLogMessageData *logMessageData in self.logMessageDataArray) {
-        [self printLogMessage:[NSString stringWithFormat:@"Pre-Init|%@", logMessageData.logMessage]
-                       source:logMessageData.source
-              messageLogLevel:logMessageData.messageLogLevel];
-    }
-    //}
-    [self.logMessageDataArray removeAllObjects];
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
+#pragma mark Public API
 - (void)didLogMessage:(nonnull NSString *)logMessage
                source:(nonnull NSString *)source
-      messageLogLevel:(nonnull NSString *)messageLogLevel {
+      messageLogLevel:(nonnull NSString *)messageLogLevel
+{
     if (self.isInSandboxEnvironment) {
         [self printLogMessage:logMessage
                        source:source
               messageLogLevel:messageLogLevel];
         return;
     }
+
     // discard if SDK has been initialised in production
     if (self.hasSdkInit) {
         return;
     }
     
     // save log message to process when SDK gets initialised
-    [self.logMessageDataArray addObject:[[ADJAdjustLogMessageData alloc]
+    [self.preSdkInitLogArray addObject:[[ADJAdjustLogMessageData alloc]
                                          initWithLogMessage:logMessage
                                          source:source
                                          messageLogLevel:messageLogLevel]];
@@ -103,16 +92,41 @@ NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
 }
 
 - (void)didSdkInitWithIsSandboxEnvironment:(BOOL)isSandboxEnvironment
-                                  logLevel:(nullable ADJNonEmptyString *)logLevel {
+                                  logLevel:(nullable ADJNonEmptyString *)logLevel
+{
     self.hasSdkInit = YES;
     
     if (logLevel != nil) {
         self.configLogLevel = logLevel;
     }
-    
-    if (isSandboxEnvironment) {
-        [self setEnvironmentToSandbox];
+
+    if (! isSandboxEnvironment) {
+        return;
     }
+
+    if (self.isInSandboxEnvironment) {
+        return;
+    }
+
+    self.isInSandboxEnvironment = YES;
+    
+    /*
+     if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
+     for (ADJAdjustLogMessageData *logMessageData in self.logMessageDataArray) {
+     [self printLogMessage:[NSString stringWithFormat:
+     @"[%@]%@", logMessageData.source, logMessageData.logMessage]
+     adjustLogLevel:logMessageData.adjustLogLevel
+     osLogLogger:osLogLogger];
+     }
+     } else {
+     */
+    for (ADJAdjustLogMessageData *logMessageData in self.preSdkInitLogArray) {
+        [self printLogMessage:[NSString stringWithFormat:@"Pre-Init|%@", logMessageData.logMessage]
+                       source:logMessageData.source
+              messageLogLevel:logMessageData.messageLogLevel];
+    }
+    //}
+    [self.preSdkInitLogArray removeAllObjects];
 }
 
 #pragma mark Internal Methods

@@ -24,36 +24,38 @@
 
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
-NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
-
+    NSMutableArray<ADJAdjustLogMessageData *> *logMessageDataArray;
 @property (nonnull, readonly, strong, nonatomic) ADJConsoleLogger *consoleLogger;
-
+@property (nullable, readonly, strong, nonatomic) NSString *instanceId;
 @property (assign, readwrite, nonatomic) BOOL canPublish;
 @end
 
 @implementation ADJLogController
 #pragma mark Instantiation
-- (nonnull instancetype)init {
+- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
+                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+{
     self = [super init];
-    
+
     _logPublisher = [[ADJLogPublisher alloc] init];
     
     _logMessageDataArray = [NSMutableArray array];
     
-    _consoleLogger = [[ADJConsoleLogger alloc] init];
+    _consoleLogger = [[ADJConsoleLogger alloc] initWithSdkConfigData:sdkConfigData];
     
     _canPublish = NO;
     
     return self;
 }
 
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 #pragma mark Public API
 - (void)injectDependeciesWithCommonExecutor:(nonnull ADJSingleThreadExecutor *)commonExecutor {
     self.commonExecutorWeak = commonExecutor;
-}
-
-- (void)setEnvironmentToSandbox {
-    [self.consoleLogger setEnvironmentToSandbox];
 }
 
 #pragma mark - ADJLogCollector
