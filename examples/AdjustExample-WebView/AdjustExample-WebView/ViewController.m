@@ -22,6 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self loadWKWebView];
 }
 
 - (void)loadWKWebView {
@@ -34,7 +35,7 @@
     [self.webView loadRequest:request];
     [self.view addSubview:self.webView];
 
-    ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"" environment:ADJEnvironmentSandbox];
+    ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc" environment:ADJEnvironmentSandbox];
     [[ADJAdjustBridge alloc] augmentedHybridWebView:_webView withAdjustConfig:adjustConfig];
 }
 
