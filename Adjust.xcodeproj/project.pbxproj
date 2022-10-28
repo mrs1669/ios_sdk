@@ -143,7 +143,7 @@
 		075586A02909354E00A3AD50 /* ADJAdjustAttributionCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 07615EF428880E8800CE57FC /* ADJAdjustAttributionCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075586A12909354E00A3AD50 /* ADJAdjustEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F802572892867A0068902F /* ADJAdjustEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075586A22909354E00A3AD50 /* ADJAdjustConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1AA287F3E18004C7D59 /* ADJAdjustConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		075586A529093BDB00A3AD50 /* ADJAdjustBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 075586A329093BDB00A3AD50 /* ADJAdjustBridge.h */; };
+		075586A529093BDB00A3AD50 /* ADJAdjustBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 075586A329093BDB00A3AD50 /* ADJAdjustBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075586A629093BDB00A3AD50 /* ADJAdjustBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 075586A429093BDB00A3AD50 /* ADJAdjustBridge.m */; };
 		075586A7290969E800A3AD50 /* ADJTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E8C288AD4B9002319D7 /* ADJTallyCounter.m */; };
 		075586A8290969E800A3AD50 /* ADJAtomicBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F278FB3288AD79A00804594 /* ADJAtomicBoolean.m */; };

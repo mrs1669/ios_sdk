@@ -14,6 +14,7 @@
 		07558851290A342300A3AD50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0755884F290A342300A3AD50 /* LaunchScreen.storyboard */; };
 		07558854290A342300A3AD50 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 07558853290A342300A3AD50 /* main.m */; };
 		0755885D290A407A00A3AD50 /* AdjustExample-WebView.html in Resources */ = {isa = PBXBuildFile; fileRef = 0755885C290A407A00A3AD50 /* AdjustExample-WebView.html */; };
+		AF43E8D596501442A19AF42E /* Pods_AdjustExample_WebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A45DBAA85F58CFB0586EB1 /* Pods_AdjustExample_WebView.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,9 @@
 		07558852290A342300A3AD50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07558853290A342300A3AD50 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0755885C290A407A00A3AD50 /* AdjustExample-WebView.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "AdjustExample-WebView.html"; sourceTree = "<group>"; };
+		20A45DBAA85F58CFB0586EB1 /* Pods_AdjustExample_WebView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdjustExample_WebView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B65FDE5BDE1516D7B9A86994 /* Pods-AdjustExample-WebView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-WebView.release.xcconfig"; path = "Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView.release.xcconfig"; sourceTree = "<group>"; };
+		BCF06B57F6BFD1E16D3ED973 /* Pods-AdjustExample-WebView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-WebView.debug.xcconfig"; path = "Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AF43E8D596501442A19AF42E /* Pods_AdjustExample_WebView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +51,8 @@
 			children = (
 				07558840290A342300A3AD50 /* AdjustExample-WebView */,
 				0755883F290A342300A3AD50 /* Products */,
+				E5747A85914CE53DFA69BF1D /* Pods */,
+				5BE5E914E7AF954141099281 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +81,24 @@
 			path = "AdjustExample-WebView";
 			sourceTree = "<group>";
 		};
+		5BE5E914E7AF954141099281 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				20A45DBAA85F58CFB0586EB1 /* Pods_AdjustExample_WebView.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E5747A85914CE53DFA69BF1D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BCF06B57F6BFD1E16D3ED973 /* Pods-AdjustExample-WebView.debug.xcconfig */,
+				B65FDE5BDE1516D7B9A86994 /* Pods-AdjustExample-WebView.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -81,9 +106,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 07558857290A342300A3AD50 /* Build configuration list for PBXNativeTarget "AdjustExample-WebView" */;
 			buildPhases = (
+				BC6B846B6879D91ABAB28C1A /* [CP] Check Pods Manifest.lock */,
 				0755883A290A342300A3AD50 /* Sources */,
 				0755883B290A342300A3AD50 /* Frameworks */,
 				0755883C290A342300A3AD50 /* Resources */,
+				9DDAD1930C6E94F175DDAC73 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -139,6 +166,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9DDAD1930C6E94F175DDAC73 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BC6B846B6879D91ABAB28C1A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AdjustExample-WebView-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0755883A290A342300A3AD50 /* Sources */ = {
@@ -285,6 +354,7 @@
 		};
 		07558858290A342300A3AD50 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BCF06B57F6BFD1E16D3ED973 /* Pods-AdjustExample-WebView.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -311,6 +381,7 @@
 		};
 		07558859290A342300A3AD50 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B65FDE5BDE1516D7B9A86994 /* Pods-AdjustExample-WebView.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'WebBridge' do |wb|
-    wb.source_files = 'ADJAdjustBridge/*.{h,m}'
+    wb.source_files = 'AdjustSdkWebBridge/*.{h,m}'
     wb.dependency 'Adjust/Core'
     wb.ios.deployment_target = '9.0'
   end
