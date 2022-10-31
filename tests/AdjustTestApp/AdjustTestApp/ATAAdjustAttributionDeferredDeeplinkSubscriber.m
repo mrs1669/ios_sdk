@@ -6,6 +6,7 @@
 //
 
 #import "ATAAdjustAttributionDeferredDeeplinkSubscriber.h"
+#import "ADJAdjustAttribution.h"
 
 @interface ATAAdjustAttributionDeferredDeeplinkSubscriber ()
 

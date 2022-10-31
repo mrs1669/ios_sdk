@@ -6,7 +6,7 @@
 //
 
 #import "ATAAdjustAttributionSendAllSubscriber.h"
-
+#import "ADJAdjustAttribution.h"
 
 @interface ATAAdjustAttributionSendAllSubscriber ()
 

@@ -13,6 +13,11 @@
 #import "ATAAdjustAttributionSendAllSubscriber.h"
 #import "ADJAdjustConfig.h"
 #import "ADJAdjust.h"
+#import "ADJAdjustEvent.h"
+#import "ADJAdjustPushToken.h"
+#import "ADJAdjustAdRevenue.h"
+#import "ADJAdjustLaunchedDeeplink.h"
+#import "ADJAdjustThirdPartySharing.h"
 
 @interface ATAAdjustCommandExecutor ()
 
