@@ -10,7 +10,6 @@
 #import <WebKit/WebKit.h>
 
 #import "ADJAdjust.h"
-#import "ADJAdjustEvent.h"
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustAttributionSubscriber.h"
 

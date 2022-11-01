@@ -30,12 +30,12 @@
 
                 const eventDetails = {
                     "eventToken" : "g3mfiw",
-                    "revenueAmountDoubleNumber": "300.0",
+                    "revenue": "300.0",
                 };
 
                 const message = {
                     action:'adjust_trackEvent',
-                    eventDetails: eventDetails
+                    data: eventDetails
                 };
 
                 window.webkit.messageHandlers.adjust.postMessage(message);
