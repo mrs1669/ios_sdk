@@ -336,8 +336,6 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
         self.overwriteFirstMeasurementSessionIntervalMilli = nil;
     }
 
-    NSLog(@"tormv nonMonotonicNowTimestampMilli %@", nonMonotonicNowTimestampMilli);
-
     ADJValueWO<NSString *> *_Nonnull sdkStartStateEventWO = [[ADJValueWO alloc] init];
     ADJValueWO<ADJMeasurementSessionData *> *_Nonnull changedMeasurementSessionDataWO =
     [[ADJValueWO alloc] init];

@@ -8,6 +8,8 @@
 
 #import "ADJClientSubscriptionsController.h"
 
+#import "ADJAdjustLogMessageData.h"
+
 @import UIKit;
 
 @interface ADJClientSubscriptionsController ()
@@ -29,7 +31,8 @@
                          clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
                   adjustAttributionSubscriber:(nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
                           adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
-                    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink {
+                    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"ClientSubscriptionsController"];
     _threadControllerWeak = threadController;
     _clientReturnExecutorWeak = clientReturnExecutor;
@@ -85,10 +88,9 @@
 }
 
 #pragma mark - ADJLogSubscriber
-- (void)didLogWithMessage:(nonnull NSString *)logMessage
-                   source:(nonnull NSString *)source
-           adjustLogLevel:(nonnull NSString *)adjustLogLevel {
-    if (self.adjustLogSubscriber == nil) {
+- (void)didLogMessage:(nonnull ADJLogMessageData *)logMessageData {
+    id<ADJAdjustLogSubscriber> localAdjustLogSubscriber = self.adjustLogSubscriber;
+    if (localAdjustLogSubscriber == nil) {
         return;
     }
 
@@ -100,13 +102,14 @@
     }
 
     [clientReturnExecutor executeClientReturnWithBlock:^{
-        [ADJAdjustLogMessageData generateFullLogWithMessage:logMessage
-                                                     source:source
-                                            messageLogLevel:adjustLogLevel];
+        [localAdjustLogSubscriber didLogWithMessage:logMessageData.inputData.message
+                                           logLevel:logMessageData.inputData.level];
     }];
 }
 
-- (void)didLogMessagesPreInitWithArray:(nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray {
+- (void)didLogMessagesPreInitWithArray:
+    (nonnull NSArray<ADJLogMessageData *> *)preInitLogMessageArray
+{
     id<ADJAdjustLogSubscriber> localAdjustLogSubscriber = self.adjustLogSubscriber;
     if (localAdjustLogSubscriber == nil) {
         return;
@@ -118,9 +121,18 @@
          " without reference to client return executor"];
         return;
     }
+    
+    NSMutableArray<ADJAdjustLogMessageData *> *_Nonnull adjustLogArray =
+        [[NSMutableArray alloc] initWithCapacity:preInitLogMessageArray.count];
+    
+    for (ADJLogMessageData *_Nonnull logData in preInitLogMessageArray) {
+        [adjustLogArray addObject:[[ADJAdjustLogMessageData alloc]
+                                   initWithLogMessage:@""
+                                   messageLogLevel:logData.inputData.level]];
+    }
 
     [clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustLogSubscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
+        [localAdjustLogSubscriber didLogMessagesPreInitWithArray:adjustLogArray];
     }];
 }
 
@@ -136,7 +148,7 @@
 #pragma mark Internal Methods
 - (void)attributionReadWithAdjustData:(nonnull ADJAdjustAttribution *)adjustAttribution {
     id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
-    self.adjustAttributionSubscriber;
+        self.adjustAttributionSubscriber;
 
     if (localAdjustAttributionSubscriber == nil) {
         return;

@@ -13,17 +13,20 @@
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConstants.h"
 #import "ADJInputLogMessageData.h"
+#import "ADJLogMessageData.h"
+#import "ADJUtilObj.h"
 
 #pragma mark Fields
 @interface ADJConsoleLogger ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
-NSMutableArray<ADJAdjustLogMessageData *> *preSdkInitLogArray;
-@property (nonnull, readwrite, strong, nonatomic) ADJNonEmptyString *configLogLevel;
+    NSMutableArray<ADJLogMessageData *> *preSdkInitLogArray;
+//@property (nonnull, readwrite, strong, nonatomic) ADJNonEmptyString *configLogLevel;
+@property (assign, nonatomic) BOOL printClientLogs;
+@property (assign, nonatomic) BOOL printDevLogs;
 @property (assign, nonatomic) BOOL hasSdkInit;
 @property (assign, nonatomic) BOOL isInSandboxEnvironment;
-@property (strong, nonatomic, readwrite, nonnull) os_log_t osLogLogger
-    API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.0));
+@property (nonnull, readonly, strong, nonatomic) os_log_t osLogLogger;
 
 @end
 
@@ -33,22 +36,16 @@ NSMutableArray<ADJAdjustLogMessageData *> *preSdkInitLogArray;
     self = [super init];
     
     _preSdkInitLogArray = [NSMutableArray array];
-    
-    if (sdkConfigData.assumeTraceLogLevel) {
-        _configLogLevel =
-            [[ADJNonEmptyString alloc] initWithConstStringValue:ADJLogLevelDevTrace];
-    } else {
-        _configLogLevel =
-            [[ADJNonEmptyString alloc] initWithConstStringValue:ADJLogLevelClientInfo];
-    }
+
+    _printClientLogs = YES;
+
+    _printDevLogs = sdkConfigData.assumeDevLogs;
     
     _isInSandboxEnvironment = sdkConfigData.assumeSandboxEnvironmentForLogging;
     
     _hasSdkInit = NO;
     
-    if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-        _osLogLogger = os_log_create(ADJAdjustSubSystem.UTF8String, ADJAdjustCategory.UTF8String);
-    }
+    _osLogLogger = os_log_create(ADJAdjustSubSystem.UTF8String, ADJAdjustCategory.UTF8String);
     
     return self;
 }
@@ -59,14 +56,9 @@ NSMutableArray<ADJAdjustLogMessageData *> *preSdkInitLogArray;
 }
 
 #pragma mark Public API
-- (void)didLogMessage:(nonnull NSString *)logMessage
-               source:(nonnull NSString *)source
-      messageLogLevel:(nonnull NSString *)messageLogLevel
-{
+- (void)didLogMessage:(nonnull ADJLogMessageData *)logMessageData {
     if (self.isInSandboxEnvironment) {
-        [self printLogMessage:logMessage
-                       source:source
-              messageLogLevel:messageLogLevel];
+        [self printToConsoleWithData:logMessageData isPreSdkInit:NO];
         return;
     }
 
@@ -76,12 +68,10 @@ NSMutableArray<ADJAdjustLogMessageData *> *preSdkInitLogArray;
     }
     
     // save log message to process when SDK gets initialised
-    [self.preSdkInitLogArray addObject:[[ADJAdjustLogMessageData alloc]
-                                         initWithLogMessage:logMessage
-                                         source:source
-                                         messageLogLevel:messageLogLevel]];
+    [self.preSdkInitLogArray addObject:logMessageData];
     
     // print error log, when it's in debug mode, even in production environment
+    /*
 #ifdef DEBUG
     if ([messageLogLevel isEqualToString:ADJAdjustLogLevelError]) {
         [self printLogMessage:logMessage
@@ -89,17 +79,15 @@ NSMutableArray<ADJAdjustLogMessageData *> *preSdkInitLogArray;
               messageLogLevel:messageLogLevel];
     }
 #endif
+     */
 }
 
 - (void)didSdkInitWithIsSandboxEnvironment:(BOOL)isSandboxEnvironment
-                                  logLevel:(nullable ADJNonEmptyString *)logLevel
+                                  doLogAll:(BOOL)doLogAll
+                               doNotLogAny:(BOOL)doNotLogAny;
 {
     self.hasSdkInit = YES;
     
-    if (logLevel != nil) {
-        self.configLogLevel = logLevel;
-    }
-
     if (! isSandboxEnvironment) {
         return;
     }
@@ -110,73 +98,117 @@ NSMutableArray<ADJAdjustLogMessageData *> *preSdkInitLogArray;
 
     self.isInSandboxEnvironment = YES;
     
-    /*
-     if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-     for (ADJAdjustLogMessageData *logMessageData in self.logMessageDataArray) {
-     [self printLogMessage:[NSString stringWithFormat:
-     @"[%@]%@", logMessageData.source, logMessageData.logMessage]
-     adjustLogLevel:logMessageData.adjustLogLevel
-     osLogLogger:osLogLogger];
-     }
-     } else {
-     */
-    for (ADJAdjustLogMessageData *logMessageData in self.preSdkInitLogArray) {
-        [self printLogMessage:[NSString stringWithFormat:@"Pre-Init|%@", logMessageData.logMessage]
-                       source:logMessageData.source
-              messageLogLevel:logMessageData.messageLogLevel];
+    if (doNotLogAny) {
+        self.printClientLogs = NO;
+        self.printDevLogs = NO;
+    } else if (doLogAll) {
+        self.printClientLogs = YES;
+        self.printDevLogs = YES;
     }
-    //}
+
+    if (self.printDevLogs || self.printClientLogs) {
+        for (ADJLogMessageData *logMessageData in self.preSdkInitLogArray) {
+            [self printToConsoleWithData:logMessageData
+                            isPreSdkInit:YES];
+        }
+    }
+
     [self.preSdkInitLogArray removeAllObjects];
 }
 
 #pragma mark Internal Methods
-- (void)printLogMessage:(nonnull NSString *)logMessage
-                 source:(nonnull NSString *)source
-        messageLogLevel:(nonnull NSString *)messageLogLevel {
+- (void)printToConsoleWithData:(nonnull ADJLogMessageData *)logMessageData
+                  isPreSdkInit:(BOOL)isPreSdkInit
+{
+    if (logMessageData.inputData.level == ADJAdjustLogLevelTrace
+        || logMessageData.inputData.level == ADJAdjustLogLevelDebug)
+    {
+        if (! self.printDevLogs) {
+            return;
+        }
 
-    // TODO: (Gena) Simplify the following block - call [self logOnConsoleWithLogMessage...] only in one place.
-    if ([self.configLogLevel.stringValue isEqual:ADJAdjustLogLevelDebug]) {
-        //  - AdjustLogLevel.DEBUG -> print any android log level message
-        [self logOnConsoleWithLogMessage:logMessage
-                                  source:source
-                         messageLogLevel:messageLogLevel];
-    } else if ([self.configLogLevel.stringValue isEqual:ADJAdjustLogLevelInfo]) {
-        //  - AdjustLogLevel.INFO -> print INFO and ERROR android log level messages
-        if (! [messageLogLevel isEqualToString:ADJAdjustLogLevelDebug]) {
-            [self logOnConsoleWithLogMessage:logMessage
-                                      source:source
-                             messageLogLevel:messageLogLevel];
-        }
-    } else {
-        //  - AdjustLogLevel.ERROR -> print only ERROR android log level messages
-        if ([messageLogLevel isEqualToString:ADJAdjustLogLevelError]) {
-            [self logOnConsoleWithLogMessage:logMessage
-                                      source:source
-                             messageLogLevel:messageLogLevel];
-        }
+        NSString *_Nonnull devFormattedMessage = [self devFormatMessage:logMessageData
+                                                           isPreSdkInit:isPreSdkInit];
+        
+        [self osLogWithFullMessage:devFormattedMessage
+                   messageLogLevel:logMessageData.inputData.level];
+        
+        return;
     }
+    
+    // assume it's one of the client log levels
+    if (! self.printClientLogs) {
+        return;
+    }
+    
+    NSString *_Nonnull clientFormattedMessage = [self clientFormatMessage:logMessageData
+                                                             isPreSdkInit:isPreSdkInit];
+    
+    [self osLogWithFullMessage:clientFormattedMessage
+               messageLogLevel:logMessageData.inputData.level];
 }
 
-- (void)logOnConsoleWithLogMessage:(nonnull NSString *)logMessage
-                            source:(nonnull NSString *)source
-                   messageLogLevel:(nonnull NSString *)messageLogLevel {
-    if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, macCatalyst 13.0, *)) {
-        NSString *fullLogMessage =
-        [NSString stringWithFormat:@"[%@][%@] %@",
-         messageLogLevel, source, logMessage];
-        if (messageLogLevel == ADJAdjustLogLevelDebug) {
-            os_log_debug(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
-        } else if (messageLogLevel == ADJAdjustLogLevelInfo) {
-            os_log_info(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
-        } else if (messageLogLevel == ADJAdjustLogLevelError) {
-            os_log_error(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
-        }
-    } else {
-        NSLog(@"%@", [ADJAdjustLogMessageData
-                      generateFullLogWithMessage:logMessage
-                      source:source
-                      messageLogLevel:messageLogLevel]);
+- (nonnull NSString *)clientFormatMessage:(nonnull ADJLogMessageData *)logMessageData
+                             isPreSdkInit:(BOOL)isPreSdkInit
+{
+    NSString *_Nonnull message = isPreSdkInit ?
+        [NSString stringWithFormat:@"Pre-Init| %@", logMessageData.inputData.message]
+        : logMessageData.inputData.message;
+    
+    if (logMessageData.inputData.messageParams == nil) {
+        return message;
     }
+    
+    return [NSString stringWithFormat:@"%@ %@", logMessageData.inputData.message,
+            [ADJLogMessageData generateJsonFromFoundationDictionary:
+                logMessageData.inputData.messageParams]];
+/*
+    return [ADJUtilObj formatInlineKeyValuesWithName:message
+                                 stringKeyDictionary:logMessageData.inputData.messageParams];
+ */
+}
+
+- (nonnull NSString *)devFormatMessage:(nonnull ADJLogMessageData *)logMessageData
+                          isPreSdkInit:(BOOL)isPreSdkInit
+{
+    NSMutableDictionary <NSString *, id> *_Nonnull foundationDictionary =
+        [logMessageData generateFoundationDictionary];
+        
+    [foundationDictionary removeObjectForKey:ADJLogMessageKey];
+    
+    if (isPreSdkInit) {
+        [foundationDictionary setObject:@(YES) forKey:ADJLogIsPreSdkInitKey];
+    }
+    
+    return [NSString stringWithFormat:@"%@ %@", logMessageData.inputData.message,
+            [ADJLogMessageData generateJsonFromFoundationDictionary:foundationDictionary]];
+    /*
+    return [ADJUtilObj formatInlineKeyValuesWithName:logMessageData.inputData.message
+                                 stringKeyDictionary:foundationDictionary];
+     */
+}
+
+- (void)osLogWithFullMessage:(nonnull NSString *)fullLogMessage
+             messageLogLevel:(nonnull NSString *)messageLogLevel
+{
+    uint8_t osLogType;
+    
+    if (messageLogLevel == ADJAdjustLogLevelDebug
+        || messageLogLevel == ADJAdjustLogLevelTrace)
+    {
+        osLogType = OS_LOG_TYPE_DEBUG;
+    } else if (messageLogLevel == ADJAdjustLogLevelInfo) {
+        osLogType = OS_LOG_TYPE_INFO;
+    } else if (messageLogLevel == ADJAdjustLogLevelNotice) {
+        osLogType = OS_LOG_TYPE_DEFAULT;
+    } else if (messageLogLevel == ADJAdjustLogLevelError) {
+        osLogType = OS_LOG_TYPE_ERROR;
+    } else {
+        return;
+    }
+
+    os_log_with_type(self.osLogLogger, osLogType,
+                     "%{public}s", fullLogMessage.UTF8String);
 }
 
 @end

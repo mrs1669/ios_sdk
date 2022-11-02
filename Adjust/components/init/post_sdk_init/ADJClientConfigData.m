@@ -16,7 +16,8 @@
  @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *appToken;
  @property (readonly, assign, nonatomic) BOOL isSandboxEnvironmentOrElseProduction;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *defaultTracker;
- @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *logLevel;
+ @property (readonly, assign, nonatomic) BOOL doLogAll;
+ @property (readonly, assign, nonatomic) BOOL doNotLogAny;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategy;
  @property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
@@ -30,9 +31,11 @@
 @implementation ADJClientConfigData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
-                                                     logger:(nonnull ADJLogger *)logger {
+                                                     logger:(nonnull ADJLogger *)logger
+{
     if (adjustConfig == nil) {
-        [logger error:@"Cannot create config with null adjust config value"];
+        //[logger errorClientStart:@"Cannot create config with null adjust config value"].log();
+        [logger errorClientStart:@"Cannot create config with null adjust config value"].log();
         return nil;
     }
 
@@ -42,48 +45,45 @@
                                    logger:logger];
 
     if (appToken == nil) {
-        [logger error:@"Cannot create config with invalid app token value"];
+        [logger errorClientStart:@"Cannot create config with invalid app token value"].log();
         return nil;
     }
 
     ADJNonEmptyString *_Nullable environment =
-    [ADJNonEmptyString instanceFromString:adjustConfig.environment
-                        sourceDescription:@"environment"
-                                   logger:logger];
+        [ADJNonEmptyString instanceFromString:adjustConfig.environment
+                            sourceDescription:@"environment"
+                                       logger:logger];
 
     if (environment == nil) {
-        [logger error:@"Cannot create config with invalid environment value"];
+        [logger errorClientStart:@"Cannot create config with invalid environment value"].log();
         return nil;
     }
 
     ADJNonEmptyString *_Nullable defaultTracker =
-    [ADJNonEmptyString instanceFromOptionalString:adjustConfig.defaultTracker
-                                sourceDescription:@"default tracker"
-                                           logger:logger];
+        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.defaultTracker
+                                    sourceDescription:@"default tracker"
+                                               logger:logger];
 
     BOOL isSandboxEnvironment = [environment.stringValue isEqualToString:ADJEnvironmentSandbox];
     BOOL isProductionEnvironment =
-    [environment.stringValue isEqualToString:ADJEnvironmentProduction];
+        [environment.stringValue isEqualToString:ADJEnvironmentProduction];
 
     if (! isSandboxEnvironment && ! isProductionEnvironment) {
-        [logger error:@"Cannot create config with environment value %@,"
-         " different than expected %@ or %@",
-         environment, ADJEnvironmentSandbox, ADJEnvironmentProduction];
+        [logger errorClientStart:@"Cannot create config with unexpected environment value"]
+            .wKv(@"received", environment.stringValue)
+            .wKv(@"expected",[NSString stringWithFormat:@"%@ or %@",
+                              ADJEnvironmentSandbox, ADJEnvironmentProduction])
+            .log();
         return nil;
     }
+    
+    BOOL doNotLogAny =
+        adjustConfig.doNotLogAnyNumberBool != nil
+        && adjustConfig.doNotLogAnyNumberBool.boolValue;
 
-    ADJNonEmptyString *_Nullable loglevel = nil;
-    if (adjustConfig.logLevel != nil) {
-        if ([ADJAdjustLogLevelDebug isEqualToString:adjustConfig.logLevel]
-            || [ADJAdjustLogLevelInfo isEqualToString:adjustConfig.logLevel]
-            || [ADJAdjustLogLevelError isEqualToString:adjustConfig.logLevel])
-        {
-            loglevel = [[ADJNonEmptyString alloc]
-                        initWithConstStringValue:adjustConfig.logLevel];
-        } else {
-            [logger error:@"Cannot set log level with unknown value: %@", adjustConfig.logLevel];
-        }
-    }
+    BOOL doLogAll =
+        adjustConfig.doLogAllNumberBool != nil
+        && adjustConfig.doLogAllNumberBool.boolValue;
 
     ADJNonEmptyString *_Nullable urlStrategy = nil;
     if (adjustConfig.urlStrategy != nil) {
@@ -138,7 +138,8 @@
     return [[self alloc] initWithAppToken:appToken
      isSandboxEnvironmentOrElseProduction:isSandboxEnvironment
                            defaultTracker:defaultTracker
-                                 logLevel:loglevel
+                                 doLogAll:doLogAll
+                              doNotLogAny:doNotLogAny
                               urlStrategy:urlStrategy
                  clientCustomEndpointData:clientCustomEndpointData
                 doNotOpenDeferredDeeplink:doNotOpenDeferredDeeplink
@@ -155,24 +156,29 @@
 }
 
 #pragma mark - Private constructors
-- (nonnull instancetype)initWithAppToken:(nonnull ADJNonEmptyString *)appToken
+- (nonnull instancetype)
+    initWithAppToken:(nonnull ADJNonEmptyString *)appToken
     isSandboxEnvironmentOrElseProduction:(BOOL)isSandboxEnvironmentOrElseProduction
-                          defaultTracker:(nullable ADJNonEmptyString *)defaultTracker
-                                logLevel:(nullable ADJNonEmptyString *)logLevel
-                             urlStrategy:(nullable ADJNonEmptyString *)urlStrategy
-                clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
-               doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
-                 doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
-                     canSendInBackground:(BOOL)canSendInBackground
-         eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
-             adjustAttributionSubscriber:(nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
-                     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber {
+    defaultTracker:(nullable ADJNonEmptyString *)defaultTracker
+    doLogAll:(BOOL)doLogAll
+    doNotLogAny:(BOOL)doNotLogAny
+    urlStrategy:(nullable ADJNonEmptyString *)urlStrategy
+    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
+    doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
+    canSendInBackground:(BOOL)canSendInBackground
+    eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
+    adjustAttributionSubscriber:
+        (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
+    adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
+{
     self = [super init];
 
     _appToken = appToken;
     _isSandboxEnvironmentOrElseProduction = isSandboxEnvironmentOrElseProduction;
     _defaultTracker = defaultTracker;
-    _logLevel = logLevel;
+    _doLogAll = doLogAll;
+    _doNotLogAny = doNotLogAny;
     _urlStrategy = urlStrategy;
     _clientCustomEndpointData = clientCustomEndpointData;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;

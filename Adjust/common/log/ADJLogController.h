@@ -17,7 +17,7 @@
 #import "ADJSingleThreadExecutor.h"
 #import "ADJSdkConfigData.h"
 
-@interface ADJLogController : NSObject <
+@interface ADJLogController : NSObject<
     ADJLogCollector,
     ADJLoggerFactory,
     // subscriptions

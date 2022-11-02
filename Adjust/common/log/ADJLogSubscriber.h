@@ -9,15 +9,13 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJPublisherBase.h"
-#import "ADJAdjustLogMessageData.h"
+#import "ADJLogMessageData.h"
 
 @protocol ADJLogSubscriber <NSObject>
 
-- (void)didLogWithMessage:(nonnull NSString *)logMessage
-                   source:(nonnull NSString *)source
-           adjustLogLevel:(nonnull NSString *)adjustLogLevel;
+- (void)didLogMessage:(nonnull ADJLogMessageData *)logMessageData;
 
-- (void)didLogMessagesPreInitWithArray:(nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray;
+- (void)didLogMessagesPreInitWithArray:(nonnull NSArray<ADJLogMessageData *> *)preInitLogMessageArray;
 
 @end
 

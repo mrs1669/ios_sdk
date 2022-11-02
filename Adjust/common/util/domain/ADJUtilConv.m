@@ -112,21 +112,97 @@
                                                options:0];
 }
 
-+ (nullable NSData *)convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
-                                                     errorPtr:(NSError * _Nullable * _Nonnull)errorPtr {
++ (nullable NSData *)
+    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
+    errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
+{
+    // todo check isValidJSONObject:
     return [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:errorPtr];
 }
 
 + (nullable id)convertToJsonFoundationValueWithJsonData :(nonnull NSData *)jsonData
-                                                errorPtr:(NSError * _Nullable * _Nonnull)errorPtr {
+                                                errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
+{
     return [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:errorPtr];
 }
 
++ (nonnull id)convertToFoundationObject:(nonnull id)objectToConvert {
+    if ([NSJSONSerialization isValidJSONObject:objectToConvert]) {
+        return objectToConvert;
+    }
+    
+    if ([objectToConvert isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *_Nonnull dictionaryToConvert = (NSDictionary *)objectToConvert;
+        NSMutableDictionary<NSString *, id> *_Nonnull foundationDictionary =
+            [[NSMutableDictionary alloc] initWithCapacity:dictionaryToConvert.count];
+        
+        for (id _Nonnull key in dictionaryToConvert) {
+            id _Nullable value = dictionaryToConvert[key];
+            NSString *_Nonnull keyString = [key description];
+            
+            if (value == nil || [value isEqual:[NSNull null]]) {
+                [foundationDictionary setObject:[NSNull null] forKey:keyString];
+                continue;
+            }
+            
+            if ([value isKindOfClass:[NSDictionary class]] ||
+                [value isKindOfClass:[NSArray class]])
+            {
+                [foundationDictionary
+                    setObject:[ADJUtilConv convertToFoundationObject:value]
+                    forKey:keyString];
+                continue;
+            }
+            
+            if ([value isKindOfClass:[NSNumber class]]) {
+                [foundationDictionary setObject:value forKey:keyString];
+                continue;
+            }
+            
+            [foundationDictionary setObject:[value description] forKey:keyString];
+        }
+        
+        return foundationDictionary;
+    }
+    
+    if ([objectToConvert isKindOfClass:[NSArray class]]) {
+        NSArray *_Nonnull arrayToConvert = (NSArray *)objectToConvert;
+        NSMutableArray *_Nonnull foundationArray =
+            [[NSMutableArray alloc] initWithCapacity:arrayToConvert.count];
+        
+        for (id _Nullable value in arrayToConvert) {
+            if (value == nil || [value isEqual:[NSNull null]]) {
+                [foundationArray addObject:[NSNull null]];
+                continue;
+            }
+            
+            if ([value isKindOfClass:[NSDictionary class]] ||
+                [value isKindOfClass:[NSArray class]])
+            {
+                [foundationArray addObject:[ADJUtilConv convertToFoundationObject:value]];
+                continue;
+            }
+            
+            if ([value isKindOfClass:[NSNumber class]]) {
+                [foundationArray addObject:value];
+                continue;
+            }
+
+            
+            [foundationArray addObject:[value description]];
+        }
+        
+        return foundationArray;
+    }
+    
+    return [[NSDictionary alloc] init];
+}
+
 + (nullable ADJStringMap *)
-convertToStringMapWithKeyValueArray:
-(nullable NSArray *)keyValueArray
-sourceDescription:(nonnull NSString *)sourceDescription
-logger:(nonnull ADJLogger *)logger {
+    convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger
+{
     if (keyValueArray == nil) {
         return nil;
     }

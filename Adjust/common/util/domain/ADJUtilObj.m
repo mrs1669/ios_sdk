@@ -135,7 +135,7 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
                                 keyValueArray:(nullable NSArray<NSString *> *)keyValueArray
                           stringKeyDictionary:(nullable NSDictionary<NSString *, id> *)stringKeyDictionary
                                vaKeyValueList:(va_list)vaKeyValueList {
-    NSMutableString *_Nonnull sb = [NSMutableString stringWithFormat:@"%@{", name];
+    NSMutableString *_Nonnull sb = [NSMutableString stringWithFormat:@"%@ {", name];
     
     if (keyValueArray != nil && (keyValueArray.count % 2) != 0) {
         [sb appendFormat:@"Invalid array key value of size %@}",

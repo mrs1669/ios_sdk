@@ -10,7 +10,8 @@
 
 @protocol ADJAdjustLogSubscriber <NSObject>
 
-- (void)didLogWithMessage:(nonnull NSString *)logMessage;
+- (void)didLogWithMessage:(nonnull NSString *)logMessage
+                 logLevel:(nonnull NSString *)logLevel;
 
 - (void)didLogMessagesPreInitWithArray:(nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray;
 

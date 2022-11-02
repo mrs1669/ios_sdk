@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+/*
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJLogLevelDevTrace;
@@ -17,11 +17,25 @@ FOUNDATION_EXPORT NSString *const ADJLogLevelClientNotice;
 FOUNDATION_EXPORT NSString *const ADJLogLevelClientError;
 
 NS_ASSUME_NONNULL_END
-
-NS_ASSUME_NONNULL_BEGIN
-
+*/
 @interface ADJInputLogMessageData : NSObject
+// instantiation
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull NSString *)level
+    issueType:(nullable NSString *)issueType
+    nsError:(nullable NSError *)nsError
+    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
+NS_DESIGNATED_INITIALIZER;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+// public properties
+@property (nonnull, readonly, strong, nonatomic) NSString *message;
+@property (nonnull, readonly, strong, nonatomic) NSString *level;
+@property (nullable, readonly, strong, nonatomic) NSString *issueType;
+@property (nullable, readonly, strong, nonatomic) NSError *nsError;
+@property (nullable, readonly, strong, nonatomic)
+    NSDictionary<NSString *, NSString*> *messageParams;
 
 @end
-
-NS_ASSUME_NONNULL_END

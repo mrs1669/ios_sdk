@@ -9,11 +9,16 @@
 #import <Foundation/Foundation.h>
 //#import <os/log.h>
 
-@protocol ADJLogCollector <NSObject>
+#import "ADJLogMessageData.h"
 
+@protocol ADJLogCollector <NSObject>
+/*
 - (void)collectLogMessage:(nonnull NSString *)logMessage
                    source:(nonnull NSString *)source
           messageLogLevel:(nonnull NSString *)messageLogLevel;
+ */
+ 
+- (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData;
 /*
  - (void)collectLogMessage:(nonnull NSString *)logMessage
  source:(nonnull NSString *)source

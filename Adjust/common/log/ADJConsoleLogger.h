@@ -10,6 +10,7 @@
 
 #import "ADJNonEmptyString.h"
 #import "ADJSdkConfigData.h"
+#import "ADJLogMessageData.h"
 
 //#import <os/log.h>
 
@@ -21,12 +22,11 @@
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (void)didLogMessage:(nonnull NSString *)logMessage
-               source:(nonnull NSString *)source
-      messageLogLevel:(nonnull NSString *)messageLogLevel;
+- (void)didLogMessage:(nonnull ADJLogMessageData *)logMessageData;
 
 - (void)didSdkInitWithIsSandboxEnvironment:(BOOL)isSandboxEnvironment
-                                  logLevel:(nullable ADJNonEmptyString *)logLevel;
+                                  doLogAll:(BOOL)doLogAll
+                               doNotLogAny:(BOOL)doNotLogAny;
 
 /*
  - (void)didLogMessage:(nonnull NSString *)logMessage

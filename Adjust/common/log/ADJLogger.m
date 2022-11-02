@@ -48,6 +48,49 @@
 }
 
 #pragma mark Public API
+- (nonnull ADJLogBuilder *)debugDevStart:(nonnull NSString *)message {
+    return [[ADJLogBuilder alloc]
+                initWithLevel:ADJAdjustLogLevelDebug
+                message:message
+                logBuildCallback:self];
+}
+- (nonnull id<ADJClientLogBuilder>)infoClientStart:(nonnull NSString *)message {
+    return [[ADJLogBuilder alloc]
+                initWithLevel:ADJAdjustLogLevelInfo
+                message:message
+                logBuildCallback:self];
+}
+- (nonnull id<ADJClientLogBuilder>)noticeClientStart:(nonnull NSString *)message {
+    return [[ADJLogBuilder alloc]
+                initWithLevel:ADJAdjustLogLevelNotice
+                message:message
+                logBuildCallback:self];
+}
+- (nonnull id<ADJClientLogBuilder>)errorClientStart:(nonnull NSString *)message {
+    return [[ADJLogBuilder alloc]
+                initWithLevel:ADJAdjustLogLevelError
+                message:message
+                logBuildCallback:self];
+}
+
+#pragma mark - ADJLogBuildCallback
+- (void)endInputLog:(nonnull ADJInputLogMessageData *)inputLogMessageData {
+    id<ADJLogCollector> _Nullable logCollector = self.logCollectorWeak;
+    if (logCollector == nil) {
+        return;
+    }
+
+    ADJLogMessageData *_Nonnull logMessageData =
+        [[ADJLogMessageData alloc] initWithInputData:inputLogMessageData
+                                   sourceDescription:self.source
+         // TODO
+                                      callerThreadId:nil
+                                     runningThreadId:nil
+                                          instanceId:nil];
+
+    [logCollector collectLogMessage:logMessageData];
+}
+
 - (nonnull NSString *)debug:(nonnull NSString *)message, ... {
     va_list parameters; va_start(parameters, message);
     
@@ -101,22 +144,14 @@
     NSString *_Nonnull formattedMessage =
     [[NSString alloc] initWithFormat:message arguments:parameters];
     va_end(parameters);
-    
+    /*
     id<ADJLogCollector> _Nullable logCollector = self.logCollectorWeak;
     if (logCollector != nil) {
-        /*
-         if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-         [self.logCollector collectLogMessage:formattedMessage
-         source:self.source
-         adjustLogLevel:adjustLogLevel
-         osLogLogger:self.osLogLogger];
-         } else {
-         */
         [logCollector collectLogMessage:formattedMessage
                                  source:self.source
                         messageLogLevel:messageLogLevel];
-        //}
     }
+     */
     
     return formattedMessage;
 }

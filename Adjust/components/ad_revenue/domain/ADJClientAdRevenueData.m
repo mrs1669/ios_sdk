@@ -353,16 +353,15 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     if (localFoundationJsonPayload != nil) {
         NSError *error;
         localDataJsonPayload =
-        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationJsonPayload
-                                                     errorPtr:&error];
+            [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationJsonPayload
+                                                         errorPtr:&error];
         if (error != nil) {
             [logger errorWithNSError:error message:@"ad revenue foundation Json payload"];
         }
     }
 
     if (localDataJsonPayload != nil) {
-        localStringJsonPayload =
-        [ADJUtilF jsonDataFormat:localDataJsonPayload];
+        localStringJsonPayload = [ADJUtilF jsonDataFormat:localDataJsonPayload];
     }
 
     return [ADJNonEmptyString instanceFromString:localStringJsonPayload

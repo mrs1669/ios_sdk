@@ -50,20 +50,23 @@
     _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
 
     _clientExecutor =
-    [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                 sourceDescription:@"clientExecutor"];
+        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
+                                                     sourceDescription:@"clientExecutor"];
 
     _commonExecutor =
-    [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                 sourceDescription:@"commonExecutor"];
+        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
+                                                     sourceDescription:@"commonExecutor"];
 
     [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
 
     _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
 
     _rootLogger = [_logController createLoggerWithSource:@"EntryRoot"];
+/*
+    [_rootLogger debugDevStart:@"log without closing"].wKv(@"key1", @"value1");
 
-
+    [_rootLogger debugDevStart:@"log with closing"].wKv(@"key2", @"value2").end();
+*/
     _preSdkInitRootController = nil;
 
     _postSdkInitRootController = nil;

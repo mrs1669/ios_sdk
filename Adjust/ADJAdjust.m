@@ -38,9 +38,10 @@
 + (void)sdkInitWithAdjustConfig:(nonnull ADJAdjustConfig *)adjustConfig {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
-        ADJClientConfigData *_Nullable clientConfigData = [ADJClientConfigData
-                                                           instanceFromClientWithAdjustConfig:adjustConfig
-                                                           logger:apiLogger];
+        ADJClientConfigData *_Nullable clientConfigData =
+            [ADJClientConfigData
+                instanceFromClientWithAdjustConfig:adjustConfig
+                logger:apiLogger];
         if (clientConfigData == nil) {
             [apiLogger error:@"Cannot init SDK without valid adjust config"];
             return;
