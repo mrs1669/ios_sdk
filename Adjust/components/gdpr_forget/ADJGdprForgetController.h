@@ -14,7 +14,6 @@
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJLifecycleSubscriber.h"
 #import "ADJThreadExecutorFactory.h"
-#import "ADJThreadPool.h"
 #import "ADJSdkResponseSubscriber.h"
 #import "ADJGdprForgetStateStorage.h"
 #import "ADJBackoffStrategy.h"
@@ -45,11 +44,13 @@
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                     gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy;
 
-- (void)ccSetDependenciesAtSdkInitWithSdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                                                  clock:(nonnull ADJClock *)clock
-                                          loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                             threadpool:(nonnull id<ADJThreadPool>)threadpool
-                                sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+- (void)
+    ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
+        (nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    clock:(nonnull ADJClock *)clock
+    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
 // public api
 - (BOOL)isForgotten;

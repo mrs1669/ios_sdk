@@ -44,7 +44,6 @@
 #pragma mark - Injected dependencies
 
 #pragma mark - Internal variables
-@property (readwrite, assign, nonatomic) BOOL failedToProcessLocally;
 @property (readwrite, assign, nonatomic) BOOL okResponseCode;
 @property (readwrite, assign, nonatomic) NSUInteger retries;
 //@property (nullable, readwrite, strong, nonatomic) id jsonResponseFoundation;
@@ -64,8 +63,6 @@
     _sourceCallback = sourceCallback;
     
     _jsonDictionary = nil;
-    
-    _failedToProcessLocally = NO;
     
     _okResponseCode = NO;
     
@@ -101,10 +98,6 @@
         [self appendErrorWithMessage:
          [NSString stringWithFormat:@"Without NSError, %@", errorMessage]];
     }
-}
-
-- (void)cannotProcessLocally {
-    self.failedToProcessLocally = YES;
 }
 
 - (void)setOkResponseCode {

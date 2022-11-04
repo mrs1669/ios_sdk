@@ -41,7 +41,7 @@
 
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
                                                              sourceDescription:self.source
-                                                                    threadpool:threadController];
+                                                         threadExecutorFactory:threadController];
 
     _logQueueStateAndTracker =
     [[ADJLogQueueStateAndTracker alloc] initWithLoggerFactory:loggerFactory

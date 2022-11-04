@@ -46,7 +46,7 @@
 
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
                                                              sourceDescription:self.source
-                                                                    threadpool:threadController];
+                                                         threadExecutorFactory:threadController];
 
     _mainQueueStateAndTracker = [[ADJMainQueueStateAndTracker alloc] initWithLoggerFactory:loggerFactory
                                                                            backoffStrategy:backoffStrategy];

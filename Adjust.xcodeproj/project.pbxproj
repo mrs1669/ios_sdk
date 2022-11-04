@@ -342,7 +342,6 @@
 		0A25F94328E5CAC6001988A1 /* ADJKeychainStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0787C2892888395100B1DD52 /* ADJKeychainStorage.h */; };
 		0A25F94428E5CAC6001988A1 /* ADJThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C0287F3E2A004C7D59 /* ADJThreadController.h */; };
 		0A25F94528E5CAC6001988A1 /* ADJSingleThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */; };
-		0A25F94628E5CAC6001988A1 /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; };
 		0A25F94728E5CAC6001988A1 /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; };
 		0A25F94828E5CAC6001988A1 /* ADJPluginController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89D28E24345001988A1 /* ADJPluginController.h */; };
 		0A25F94928E5CAC6001988A1 /* ADJPluginForegroundPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */; };
@@ -759,7 +758,6 @@
 		0A25FB4028F42381001988A1 /* ADJKeychainStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0787C2892888395100B1DD52 /* ADJKeychainStorage.h */; };
 		0A25FB4128F42381001988A1 /* ADJThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C0287F3E2A004C7D59 /* ADJThreadController.h */; };
 		0A25FB4228F42381001988A1 /* ADJSingleThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */; };
-		0A25FB4328F42381001988A1 /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; };
 		0A25FB4428F42381001988A1 /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; };
 		0A25FB4528F42381001988A1 /* ADJPluginController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89D28E24345001988A1 /* ADJPluginController.h */; };
 		0A25FB4628F42381001988A1 /* ADJPluginForegroundPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */; };
@@ -1176,7 +1174,6 @@
 		0A25FD0F28F43C2C001988A1 /* ADJKeychainStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0787C2892888395100B1DD52 /* ADJKeychainStorage.h */; };
 		0A25FD1028F43C2C001988A1 /* ADJThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C0287F3E2A004C7D59 /* ADJThreadController.h */; };
 		0A25FD1128F43C2C001988A1 /* ADJSingleThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */; };
-		0A25FD1228F43C2C001988A1 /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; };
 		0A25FD1328F43C2C001988A1 /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; };
 		0A25FD1428F43C2C001988A1 /* ADJPluginController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89D28E24345001988A1 /* ADJPluginController.h */; };
 		0A25FD1528F43C2C001988A1 /* ADJPluginForegroundPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */; };
@@ -2148,7 +2145,6 @@
 		0A7E48F028F8276C00827F0B /* ADJKeychainStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0787C2892888395100B1DD52 /* ADJKeychainStorage.h */; };
 		0A7E48F128F8276C00827F0B /* ADJThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C0287F3E2A004C7D59 /* ADJThreadController.h */; };
 		0A7E48F228F8276C00827F0B /* ADJSingleThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */; };
-		0A7E48F328F8276C00827F0B /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; };
 		0A7E48F428F8276C00827F0B /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; };
 		0A7E48F528F8276C00827F0B /* ADJPluginController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89D28E24345001988A1 /* ADJPluginController.h */; };
 		0A7E48F628F8276C00827F0B /* ADJPluginForegroundPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */; };
@@ -2381,7 +2377,6 @@
 		0A7E49E028F82F6C00827F0B /* ADJKeychainStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0787C2892888395100B1DD52 /* ADJKeychainStorage.h */; };
 		0A7E49E128F82F6C00827F0B /* ADJThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C0287F3E2A004C7D59 /* ADJThreadController.h */; };
 		0A7E49E228F82F6C00827F0B /* ADJSingleThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */; };
-		0A7E49E328F82F6C00827F0B /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; };
 		0A7E49E428F82F6C00827F0B /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; };
 		0A7E49E528F82F6C00827F0B /* ADJPluginController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89D28E24345001988A1 /* ADJPluginController.h */; };
 		0A7E49E628F82F6C00827F0B /* ADJPluginForegroundPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */; };
@@ -2614,7 +2609,6 @@
 		0A7E4ACB28F830AE00827F0B /* ADJKeychainStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0787C2892888395100B1DD52 /* ADJKeychainStorage.h */; };
 		0A7E4ACC28F830AE00827F0B /* ADJThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C0287F3E2A004C7D59 /* ADJThreadController.h */; };
 		0A7E4ACD28F830AE00827F0B /* ADJSingleThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */; };
-		0A7E4ACE28F830AE00827F0B /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; };
 		0A7E4ACF28F830AE00827F0B /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; };
 		0A7E4AD028F830AE00827F0B /* ADJPluginController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89D28E24345001988A1 /* ADJPluginController.h */; };
 		0A7E4AD128F830AE00827F0B /* ADJPluginForegroundPublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F89A28E24345001988A1 /* ADJPluginForegroundPublisher.h */; };
@@ -2818,7 +2812,6 @@
 		0A7ED7552892B11B00CC20DE /* ADJKeychainStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0787C2892888395100B1DD52 /* ADJKeychainStorage.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED7562892B11B00CC20DE /* ADJThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C0287F3E2A004C7D59 /* ADJThreadController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED7572892B11B00CC20DE /* ADJSingleThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		0A7ED7582892B11B00CC20DE /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED7592892B11B00CC20DE /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED75A2892B11B00CC20DE /* ADJOfflineSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5A9C6F288FEC1200E8265A /* ADJOfflineSubscriber.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED75B2892B11B00CC20DE /* ADJPausingSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5A9C6A288FEBB400E8265A /* ADJPausingSubscriber.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -3087,7 +3080,6 @@
 		0737C1F0287F3E2A004C7D59 /* ADJIoValueSerializable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJIoValueSerializable.h; sourceTree = "<group>"; };
 		0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJSingleThreadExecutor.h; sourceTree = "<group>"; };
 		0737C1F3287F3E2A004C7D59 /* ADJSingleThreadExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJSingleThreadExecutor.m; sourceTree = "<group>"; };
-		0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJThreadPool.h; sourceTree = "<group>"; };
 		0737C215287F3F31004C7D59 /* ADJSdkActiveState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJSdkActiveState.m; sourceTree = "<group>"; };
 		0737C216287F3F31004C7D59 /* ADJSdkActiveStateData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADJSdkActiveStateData.m; sourceTree = "<group>"; };
 		0737C217287F3F31004C7D59 /* ADJSdkActiveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADJSdkActiveState.h; sourceTree = "<group>"; };
@@ -3842,7 +3834,6 @@
 				0737C1BF287F3E2A004C7D59 /* ADJThreadController.m */,
 				0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */,
 				0737C1F3287F3E2A004C7D59 /* ADJSingleThreadExecutor.m */,
-				0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */,
 				078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */,
 			);
 			path = thread;
@@ -4768,7 +4759,6 @@
 				0A7ED7562892B11B00CC20DE /* ADJThreadController.h in Headers */,
 				079E154D28CA10D8006E84EF /* ADJClickPackageData.h in Headers */,
 				0A7ED7572892B11B00CC20DE /* ADJSingleThreadExecutor.h in Headers */,
-				0A7ED7582892B11B00CC20DE /* ADJThreadPool.h in Headers */,
 				0A7ED7592892B11B00CC20DE /* ADJThreadExecutorFactory.h in Headers */,
 				0A7ED75A2892B11B00CC20DE /* ADJOfflineSubscriber.h in Headers */,
 				0A7ED75B2892B11B00CC20DE /* ADJPausingSubscriber.h in Headers */,
@@ -4964,7 +4954,6 @@
 				0A25F94328E5CAC6001988A1 /* ADJKeychainStorage.h in Headers */,
 				0A25F94428E5CAC6001988A1 /* ADJThreadController.h in Headers */,
 				0A25F94528E5CAC6001988A1 /* ADJSingleThreadExecutor.h in Headers */,
-				0A25F94628E5CAC6001988A1 /* ADJThreadPool.h in Headers */,
 				0A25F94728E5CAC6001988A1 /* ADJThreadExecutorFactory.h in Headers */,
 				0A25F94828E5CAC6001988A1 /* ADJPluginController.h in Headers */,
 				0A25F94928E5CAC6001988A1 /* ADJPluginForegroundPublisher.h in Headers */,
@@ -5208,7 +5197,6 @@
 				0A25FB4028F42381001988A1 /* ADJKeychainStorage.h in Headers */,
 				0A25FB4128F42381001988A1 /* ADJThreadController.h in Headers */,
 				0A25FB4228F42381001988A1 /* ADJSingleThreadExecutor.h in Headers */,
-				0A25FB4328F42381001988A1 /* ADJThreadPool.h in Headers */,
 				0A25FB4428F42381001988A1 /* ADJThreadExecutorFactory.h in Headers */,
 				0A25FB4528F42381001988A1 /* ADJPluginController.h in Headers */,
 				0A25FB4628F42381001988A1 /* ADJPluginForegroundPublisher.h in Headers */,
@@ -5452,7 +5440,6 @@
 				0A25FD0F28F43C2C001988A1 /* ADJKeychainStorage.h in Headers */,
 				0A25FD1028F43C2C001988A1 /* ADJThreadController.h in Headers */,
 				0A25FD1128F43C2C001988A1 /* ADJSingleThreadExecutor.h in Headers */,
-				0A25FD1228F43C2C001988A1 /* ADJThreadPool.h in Headers */,
 				0A25FD1328F43C2C001988A1 /* ADJThreadExecutorFactory.h in Headers */,
 				0A25FD1428F43C2C001988A1 /* ADJPluginController.h in Headers */,
 				0A25FD1528F43C2C001988A1 /* ADJPluginForegroundPublisher.h in Headers */,
@@ -5696,7 +5683,6 @@
 				0A7E48F028F8276C00827F0B /* ADJKeychainStorage.h in Headers */,
 				0A7E48F128F8276C00827F0B /* ADJThreadController.h in Headers */,
 				0A7E48F228F8276C00827F0B /* ADJSingleThreadExecutor.h in Headers */,
-				0A7E48F328F8276C00827F0B /* ADJThreadPool.h in Headers */,
 				0A7E48F428F8276C00827F0B /* ADJThreadExecutorFactory.h in Headers */,
 				0A7E48F528F8276C00827F0B /* ADJPluginController.h in Headers */,
 				0A7E48F628F8276C00827F0B /* ADJPluginForegroundPublisher.h in Headers */,
@@ -5940,7 +5926,6 @@
 				0A7E49E028F82F6C00827F0B /* ADJKeychainStorage.h in Headers */,
 				0A7E49E128F82F6C00827F0B /* ADJThreadController.h in Headers */,
 				0A7E49E228F82F6C00827F0B /* ADJSingleThreadExecutor.h in Headers */,
-				0A7E49E328F82F6C00827F0B /* ADJThreadPool.h in Headers */,
 				0A7E49E428F82F6C00827F0B /* ADJThreadExecutorFactory.h in Headers */,
 				0A7E49E528F82F6C00827F0B /* ADJPluginController.h in Headers */,
 				0A7E49E628F82F6C00827F0B /* ADJPluginForegroundPublisher.h in Headers */,
@@ -6184,7 +6169,6 @@
 				0A7E4ACB28F830AE00827F0B /* ADJKeychainStorage.h in Headers */,
 				0A7E4ACC28F830AE00827F0B /* ADJThreadController.h in Headers */,
 				0A7E4ACD28F830AE00827F0B /* ADJSingleThreadExecutor.h in Headers */,
-				0A7E4ACE28F830AE00827F0B /* ADJThreadPool.h in Headers */,
 				0A7E4ACF28F830AE00827F0B /* ADJThreadExecutorFactory.h in Headers */,
 				0A7E4AD028F830AE00827F0B /* ADJPluginController.h in Headers */,
 				0A7E4AD128F830AE00827F0B /* ADJPluginForegroundPublisher.h in Headers */,

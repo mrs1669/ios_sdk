@@ -41,7 +41,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 @implementation ADJDeviceController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                                         clock:(nonnull ADJClock *)clock
                              deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
                               keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
@@ -54,11 +54,11 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     _deviceInfoData = [[ADJDeviceInfoData alloc] initWithLogger:self.logger];
 
     _sessionDeviceIdsController =
-    [[ADJSessionDeviceIdsController alloc]
-     initWithLoggerFactory:loggerFactory
-     threadPool:threadPool
-     timeoutPerAttempt:deviceIdsConfigData.timeoutPerAttempt
-     canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
+        [[ADJSessionDeviceIdsController alloc]
+             initWithLoggerFactory:loggerFactory
+             threadExecutorFactory:threadExecutorFactory
+             timeoutPerAttempt:deviceIdsConfigData.timeoutPerAttempt
+             canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
 
     _uuidKeychainCache =
     [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger

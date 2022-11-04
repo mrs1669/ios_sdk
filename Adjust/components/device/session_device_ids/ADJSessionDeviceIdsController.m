@@ -14,7 +14,7 @@
 
 @interface ADJSessionDeviceIdsController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) id<ADJThreadPool> threadPoolWeak;
+@property (nullable, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *timeoutPerAttempt;
 @property (readonly, assign, nonatomic) BOOL canCacheData;
 
@@ -30,11 +30,12 @@
 }
 
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                             timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
                                  canCacheData:(BOOL)canCacheData {
     self = [super initWithLoggerFactory:loggerFactory source:@"SessionDeviceIdsController"];
-    _threadPoolWeak = threadPool;
+    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                                                                 sourceDescription:self.source];
     _timeoutPerAttempt = timeoutPerAttempt;
     _canCacheData = canCacheData;
 
@@ -65,18 +66,11 @@
         return [self returnFailed:@"without timeout per attempt"];
     }
 
-    id<ADJThreadPool> _Nullable threadPool = self.threadPoolWeak;
-    if (threadPool == nil) {
-        return [self returnFailed:@"without reference to thread pool"];
-    }
-
     ADJNonEmptyString *_Nullable identifierForVendor =
-    [self getIdentifierForVendorWithThreadPool:threadPool
-                             timeoutPerAttempt:self.timeoutPerAttempt];
+    [self getIdentifierForVendorWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
     ADJNonEmptyString *_Nullable advertisingIdentifier =
-    [self getAdvertisingIdentifierWithThreadPool:threadPool
-                               timeoutPerAttempt:self.timeoutPerAttempt];
+    [self getAdvertisingIdentifierWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
     if (identifierForVendor == nil && advertisingIdentifier == nil) {
         return [self returnFailed:@"either session device ids"];
@@ -101,8 +95,9 @@
     return [[ADJSessionDeviceIdsData alloc] initWithFailMessage:failReason];
 }
 
-- (nullable ADJNonEmptyString *)getIdentifierForVendorWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
-                                                   timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt {
+- (nullable ADJNonEmptyString *)
+    getIdentifierForVendorWithTimeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
+{
     if (self.identifierForVendorCached != nil) {
         return self.identifierForVendorCached;
     }
@@ -113,8 +108,8 @@
     [[ADJValueWO alloc] init];
 
     BOOL readIdentifierForVendorFinishedSuccessfully =
-    [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                 blockToExecute:
+    [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                    blockToExecute:
      ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
@@ -133,16 +128,17 @@
     return [identifierForVendorWO changedValue];
 }
 
-- (nullable ADJNonEmptyString *)getAdvertisingIdentifierWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
-                                                     timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt {
+- (nullable ADJNonEmptyString *)
+    getAdvertisingIdentifierWithTimeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
+{
     __typeof(self) __weak weakSelf = self;
 
     __block ADJValueWO<ADJNonEmptyString *> *_Nonnull advertisingIdentifierWO =
     [[ADJValueWO alloc] init];
 
     BOOL readAdvertisingIdentifierFinishedSuccessfully =
-    [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                 blockToExecute:
+    [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                    blockToExecute:
      ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }

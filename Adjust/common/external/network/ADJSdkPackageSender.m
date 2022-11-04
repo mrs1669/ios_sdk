@@ -21,12 +21,12 @@
 #pragma mark Fields
 @interface ADJSdkPackageSender ()
 #pragma mark - Injected dependencies
-@property (nonnull, readonly, strong, nonatomic) id<ADJThreadPool> threadPoolWeak;
 @property (nullable, readonly, weak, nonatomic) id<ADJSdkPackageSendingSubscriber> sdkPackageSendingCollectorWeak;
 @property (nullable, readonly, weak, nonatomic) id<ADJSdkResponseSubscriber> sdkResponseCollectorWeak;
 @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *timeoutMilli;
 
 #pragma mark - Internal variables
+@property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageUrlBuilder *sdkPackageUrlBuilder;
 @property (nonnull, readonly, strong, nonatomic) NSURLSession *urlSession;
 @property (nullable, readonly, strong, nonatomic) ADJSdkPackageSenderPinningDelegate *sdkPackageSenderPinningDelegate;
@@ -34,18 +34,23 @@
 
 @implementation ADJSdkPackageSender
 #pragma mark Instantiation
-- (nonnull instancetype) initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                             sourceDescription:(nonnull NSString *)sourceDescription
-                                    threadpool:(nonnull id<ADJThreadPool>)threadpool
-                    sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
-                          sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
-                           networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-                             adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-                      clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sourceDescription:(nonnull NSString *)sourceDescription
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageSendingCollector:
+        (nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
+    sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
+    networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
+    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+{
     self = [super initWithLoggerFactory:loggerFactory
                                  source:[NSString stringWithFormat:@"%@-SdkPackageSender",
                                          sourceDescription]];
-    _threadPoolWeak = threadpool;
+    _executor =
+        [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                                                         sourceDescription:self.source];
     _sdkPackageSendingCollectorWeak = sdkPackageSendingCollector;
     _sdkResponseCollectorWeak = sdkResponseCollector;
     _timeoutMilli = networkEndpointData.timeoutMilli;
@@ -80,26 +85,15 @@
 #pragma mark Public API
 - (void)sendSdkPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData
              sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-              responseCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)responseCallback {
+              responseCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)responseCallback
+{
     ADJSdkResponseDataBuilder *_Nonnull sdkResponseDataBuilder =
-    [[ADJSdkResponseDataBuilder alloc] initWithSourceSdkPackage:sdkPackageData
-                                              sendingParameters:sendingParameters
-                                                 sourceCallback:responseCallback
-                                          previousErrorMessages:nil];
+        [[ADJSdkResponseDataBuilder alloc] initWithSourceSdkPackage:sdkPackageData
+                                                  sendingParameters:sendingParameters
+                                                     sourceCallback:responseCallback
+                                              previousErrorMessages:nil];
     
-    id<ADJThreadPool> _Nullable threadpool = self.threadPoolWeak;
-    
-    if (threadpool == nil) {
-        [self failToProcessLocallyWithResponseBuilder:sdkResponseDataBuilder
-                                         errorMessage:
-         @"Cannot send sdk package without reference to threadpool"];
-        
-        [self returnWithSdkResponseBuilder:sdkResponseDataBuilder];
-        
-        return;
-    }
-    
-    [self sendSdkPackageWithBuilder:sdkResponseDataBuilder threadpool:threadpool];
+    [self sendSdkPackageWithBuilder:sdkResponseDataBuilder];
 }
 
 - (nonnull NSString *)defaultTargetUrl {
@@ -107,10 +101,9 @@
 }
 
 #pragma mark Internal Methods
-- (void)sendSdkPackageWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                       threadpool:(nonnull id<ADJThreadPool>)threadpool {
+- (void)sendSdkPackageWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder {
     __typeof(self) __weak weakSelf = self;
-    [threadpool executeAsyncWithBlock:^{
+    [self.executor executeAsyncWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
@@ -118,8 +111,7 @@
         [strongSelf buildUrlRequestWithBuilder:sdkResponseDataBuilder];
         
         [strongSelf sendWithUrlRequest:urlRequest
-                    sdkResponseBuilder:sdkResponseDataBuilder
-                            threadpool:threadpool];
+                    sdkResponseBuilder:sdkResponseDataBuilder];
     }];
 }
 
@@ -266,7 +258,6 @@
 
 - (void)sendWithUrlRequest:(nonnull NSURLRequest *)urlRequest
         sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
-                threadpool:(nonnull id<ADJThreadPool>)threadpool
 {
     __typeof(self) __weak weakSelf = self;
     
@@ -291,14 +282,13 @@
         
         dispatch_semaphore_signal(semaphore);
         
-        [threadpool executeAsyncWithBlock:^{
+        [strongSelf.executor executeAsyncWithBlock:^{
             [strongSelf handleRequestCallbackWithData:data
                                              response:response
                                                 error:error
                                    sdkResponseBuilder:sdkResponseBuilder];
             
-            [strongSelf retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder
-                                                 threadpool:threadpool];
+            [strongSelf retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
         }];
     }];
     [sessionDatatask resume];
@@ -319,7 +309,7 @@
                                    nsError:nil
                               errorMessage:timedOut ? @"Request timeout" : @"Unexpected wait end"];
     
-    [self retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder threadpool:threadpool];
+    [self retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
 }
 
 - (void)handleRequestCallbackWithData:(nullable NSData *)data
@@ -394,27 +384,18 @@
     sdkResponseBuilder.jsonDictionary = (NSDictionary *)responseJsonFoundationObject;
 }
 
-- (void)retryOrReturnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
-                                 threadpool:(nonnull id<ADJThreadPool>)threadpool {
+- (void)retryOrReturnWithSdkResponseBuilder:
+    (nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
+{
     BOOL retryToSend =
     [self shouldRetryToSendWithResponseBuilder:sdkResponseBuilder];
     
     if (retryToSend) {
         [sdkResponseBuilder incrementRetries];
-        [self sendSdkPackageWithBuilder:sdkResponseBuilder threadpool:threadpool];
+        [self sendSdkPackageWithBuilder:sdkResponseBuilder];
     } else {
         [self returnWithSdkResponseBuilder:sdkResponseBuilder];
     }
-}
-
-- (void)failToProcessLocallyWithResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
-                                   errorMessage:(nonnull NSString *)errorMessage {
-    [sdkResponseBuilder cannotProcessLocally];
-    [sdkResponseBuilder logErrorWithLogger:self.logger
-                                   nsError:nil
-                              errorMessage:errorMessage];
-    
-    [self.sdkPackageUrlBuilder resetAfterNetworkNotFailing];
 }
 
 - (void)returnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
@@ -430,13 +411,6 @@
 }
 
 - (BOOL)shouldRetryToSendWithResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
-    if ([sdkResponseBuilder failedToProcessLocally]) {
-        [self.logger debug:@"Failed before current url strategy was used"
-         " and it will not retry"];
-        [self.sdkPackageUrlBuilder resetAfterNetworkNotFailing];
-        return NO;
-    }
-    
     if ([sdkResponseBuilder didReceiveJsonResponse]) {
         [self.logger debug:@"Received network request with current url strategy"];
         [self.sdkPackageUrlBuilder resetAfterNetworkNotFailing];

@@ -28,8 +28,6 @@
 @property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
 
 // public api
-- (BOOL)failedToProcessLocally;
-
 - (BOOL)didReceiveJsonResponse;
 
 - (nullable NSString *)errorMessages;

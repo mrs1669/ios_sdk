@@ -193,41 +193,20 @@
                            sdkPackageSenderFactory:self.sdkPackageSenderController];
 
 
-    _asaAttributionController = [[ADJAsaAttributionController alloc]
-                                 initWithLoggerFactory:loggerFactory
-                                 threadExecutorFactory:entryRoot.threadController
-                                 sdkPackageBuilder:self.sdkPackageBuilder
-                                 asaAttributionStateStorage:storageRootController.asaAttributionStateStorage
-                                 clock:preSdkInitRootController.clock
-                                 threadPool:entryRoot.threadController
-                                 clientConfigData:clientConfigData
-                                 asaAttributionConfig:sdkConfigData.asaAttributionConfigData
-                                 logQueueController:self.logQueueController
-                                 mainQueueController:self.mainQueueController
-                                 adjustAttributionStateStorage:storageRootController.attributionStateStorage];
+    _asaAttributionController =
+        [[ADJAsaAttributionController alloc]
+            initWithLoggerFactory:loggerFactory
+            threadExecutorFactory:entryRoot.threadController
+            sdkPackageBuilder:self.sdkPackageBuilder
+            asaAttributionStateStorage:storageRootController.asaAttributionStateStorage
+            clock:preSdkInitRootController.clock
+            clientConfigData:clientConfigData
+            asaAttributionConfig:sdkConfigData.asaAttributionConfigData
+            logQueueController:self.logQueueController
+            mainQueueController:self.mainQueueController
+            adjustAttributionStateStorage:storageRootController.attributionStateStorage];
 
     return self;
-    /*
-     googlePlayInstallReferrerController = new GooglePlayInstallReferrerController(
-     entryRoot.logController,
-     preSdkInitRootController.application,
-     entryRoot.sdkConfigData.googlePlayInstallReferrerConfigData,
-     sdkPackageBuilder,
-     storageRootController.googlePlayInstallReferrerStateStorage,
-     mainQueueController,
-     entryRoot.threadPoolExecutor,
-     preSdkInitRootController.runtimeFinalizerController);
-
-     huaweiInstallReferrerController = new HuaweiInstallReferrerController(
-     entryRoot.logController,
-     preSdkInitRootController.application,
-     entryRoot.sdkConfigData.huaweiInstallReferrerConfigData,
-     sdkPackageBuilder,
-     storageRootController.huaweiInstallReferrerStorage,
-     mainQueueController,
-     entryRoot.threadPoolExecutor,
-     preSdkInitRootController.runtimeFinalizerController);
-     */
 }
 
 #pragma mark Public API

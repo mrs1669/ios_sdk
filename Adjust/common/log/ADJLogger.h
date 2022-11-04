@@ -62,4 +62,5 @@
 
 + (nonnull NSString *)formatNSError:(nonnull NSError *)error
                             message:(nonnull NSString *)message;
+
 @end

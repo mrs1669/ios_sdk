@@ -57,7 +57,7 @@
     
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
                                                              sourceDescription:self.source
-                                                                    threadpool:threadController];
+                                                         threadExecutorFactory:threadController];
 
     _attributionTracker = [[ADJAttributionTracker alloc]
                            initWithLoggerFactory:loggerFactory

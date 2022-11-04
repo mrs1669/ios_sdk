@@ -45,65 +45,6 @@
     dispatch_async(dispatch_get_main_queue(), blockToExecute);
 }
 
-#pragma mark - ADJThreadPool
-- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute {
-    if (self.hasFinalized) {
-        return NO;
-    }
-
-    dispatch_async([self backgroundAsyncDispatchQueue], blockToExecute);
-
-    return YES;
-}
-
-- (BOOL)scheduleAsyncWithBlock:(nonnull void (^)(void))blockToSchedule
-                delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
-{
-    if (delayTimeMilli.millisecondsSpan.uIntegerValue == 0) {
-        return [self executeAsyncWithBlock:blockToSchedule];
-    }
-
-    if (self.hasFinalized) {
-        return NO;
-    }
-
-    dispatch_after
-        ([ADJUtilSys dispatchTimeWithMilli:delayTimeMilli.millisecondsSpan.uIntegerValue],
-         [self backgroundAsyncDispatchQueue],
-         blockToSchedule);
-
-    return YES;
-}
-
-- (BOOL)
-    executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
-    blockToExecute:(nonnull void (^)(void))blockToExecute
-{
-    __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
-    BOOL canExecuteTask = [self executeAsyncWithBlock:^{
-        blockToExecute();
-        dispatch_semaphore_signal(semaphore);
-    }];
-
-    if (! canExecuteTask) {
-        return NO;
-    }
-
-    intptr_t waitResult =
-        dispatch_semaphore_wait(semaphore,
-                                [ADJUtilSys
-                                    dispatchTimeWithMilli:timeout.millisecondsSpan.uIntegerValue]);
-
-    BOOL timedOut = waitResult != 0;
-
-    return ! timedOut;
-}
-
-- (nonnull dispatch_queue_t)backgroundAsyncDispatchQueue {
-    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
-}
-
 #pragma mark - ADJThreadExecutorFactory
 - (nonnull ADJSingleThreadExecutor *)
     createSingleThreadExecutorWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -111,8 +52,7 @@
 {
     ADJSingleThreadExecutor *_Nonnull singleThreadExecutor =
         [[ADJSingleThreadExecutor alloc] initWithLoggerFactory:loggerFactory
-                                              sourceDescription:sourceDescription
-                                                     threadPool:self];
+                                             sourceDescription:sourceDescription];
 
     [self.threadExecutorAggregator addSubscriber:singleThreadExecutor];
 

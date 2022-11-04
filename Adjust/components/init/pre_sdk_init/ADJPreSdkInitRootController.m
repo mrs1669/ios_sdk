@@ -73,13 +73,14 @@
                                                                    clientActionStorage:self.storageRootController.clientActionStorage
                                                                                  clock:self.clock];
 
-    _deviceController = [[ADJDeviceController alloc]
-                         initWithLoggerFactory:loggerFactory
-                         threadPool:entryRoot.threadController
-                         clock:self.clock
-                         deviceIdsStorage:self.storageRootController.deviceIdsStorage
-                         keychainStorage:self.storageRootController.keychainStorage
-                         deviceIdsConfigData:entryRoot.sdkConfigData.sessionDeviceIdsConfigData];
+    _deviceController =
+        [[ADJDeviceController alloc]
+            initWithLoggerFactory:loggerFactory
+            threadExecutorFactory:entryRoot.threadController
+            clock:self.clock
+            deviceIdsStorage:self.storageRootController.deviceIdsStorage
+            keychainStorage:self.storageRootController.keychainStorage
+            deviceIdsConfigData:entryRoot.sdkConfigData.sessionDeviceIdsConfigData];
 
     _clientCallbacksController = [[ADJClientCallbacksController alloc]
                                   initWithLoggerFactory:loggerFactory
@@ -305,11 +306,12 @@
     [self.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:postSdkInitRootController];
 
 
-    [self.gdprForgetController ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
-                                                                         clock:self.clock
-                                                                 loggerFactory:entryRoot.logController
-                                                                    threadpool:entryRoot.threadController
-                                                       sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
+    [self.gdprForgetController
+        ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootController.sdkPackageBuilder
+        clock:self.clock
+        loggerFactory:entryRoot.logController
+        threadExecutorFactory:entryRoot.threadController
+        sdkPackageSenderFactory:postSdkInitRootController.sdkPackageSenderController];
 
 
     // subscribing to publishers

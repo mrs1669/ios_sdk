@@ -65,17 +65,21 @@
     return self;
 }
 
-- (void)ccSetDependenciesAtSdkInitWithSdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                                                  clock:(nonnull ADJClock *)clock
-                                          loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                             threadpool:(nonnull id<ADJThreadPool>)threadpool
-                                sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
+- (void)
+    ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
+        (nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    clock:(nonnull ADJClock *)clock
+    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+{
     self.sdkPackageBuilderWeak = sdkPackageBuilder;
     self.clockWeak = clock;
     
-    self.sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source
-                                                                        threadpool:threadpool];
+    self.sender = [sdkPackageSenderFactory
+                    createSdkPackageSenderWithLoggerFactory:loggerFactory
+                    sourceDescription:self.source
+                    threadExecutorFactory:threadExecutorFactory];
 }
 
 #pragma mark Public API

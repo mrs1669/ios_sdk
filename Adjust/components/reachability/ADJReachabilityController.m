@@ -37,7 +37,6 @@ static NSString *const kReachableViaWWAN = @"reachableViaWWAN";
 
 @interface ADJReachabilityController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) id<ADJThreadPool> threadpoolWeak;
 @property (nonnull, readonly, strong, nonatomic) NSString *targetEndpoint;
 
 #pragma mark - Internal variables
@@ -72,7 +71,6 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
                              threadController:(nonnull ADJThreadController *)threadController
                                targetEndpoint:(nonnull NSString *)targetEndpoint {
     self = [super initWithLoggerFactory:loggerFactory source:@"ReachabilityController"];
-    _threadpoolWeak = threadController;
     _targetEndpoint = targetEndpoint;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
@@ -90,21 +88,12 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 #pragma mark Public API
 #pragma mark - ADJMeasurementSessionStartSubscriber
 - (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
-    id<ADJThreadPool> threadpool = self.threadpoolWeak;
-
-    if (threadpool == nil) {
-        [self.logger error:@"Cannot start network reachability"
-         " without a reference to threadpool"];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [threadpool executeAsyncWithBlock:^{
+    [self.executor executeAsyncWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf startNetworkReachabilityWithDispatchQueue:
-         [threadpool backgroundAsyncDispatchQueue]];
+        [strongSelf startNetworkReachabilityWithDispatchQueue:strongSelf.executor.dispachQueue];
     }];
 }
 
@@ -118,7 +107,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
     _reachabilityRef = [self createReachabilityRef];
 
     BOOL didSubscribeToSystemReachability =
-    [self subscribeToSystemReachabilityWithDispatchQueue:dispatchQueue];
+        [self subscribeToSystemReachabilityWithDispatchQueue:dispatchQueue];
 
     // when it cannot subscribe to the system reachability service
     //  do not publish even if it could on demand

@@ -27,7 +27,6 @@
 @property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
 @property (nullable, readonly, weak, nonatomic) ADJAsaAttributionStateStorage *storageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
-@property (nullable, readonly, weak, nonatomic) id<ADJThreadPool> threadPoolWeak;
 @property (nonnull, readonly, strong, nonatomic) ADJExternalConfigData *asaAttributionConfig;
 
 #pragma mark - Internal variables
@@ -45,7 +44,6 @@
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                    asaAttributionStateStorage:(nonnull ADJAsaAttributionStateStorage *)asaAttributionStateStorage
                                         clock:(nonnull ADJClock *)clock
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
                              clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
                          asaAttributionConfig:(nonnull ADJExternalConfigData *)asaAttributionConfig
                            logQueueController:(nonnull ADJLogQueueController *)logQueueController
@@ -59,7 +57,6 @@
     _clockWeak = clock;
     _storageWeak = asaAttributionStateStorage;
     _clockWeak = clock;
-    _threadPoolWeak = threadPool;
     _asaAttributionConfig = asaAttributionConfig;
 
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
@@ -468,12 +465,6 @@
     // any error that happens before trying to read the Asa Attribution Token
     //  won't change during the current app execution,
     //  so it can be assumed that the token can't be read
-    id<ADJThreadPool> _Nullable threadPool = self.threadPoolWeak;
-    if (threadPool == nil) {
-        self.canReadToken = NO;
-        return @"Cannot attempt to read token without a reference to ThreadPool";
-    }
-
     if (self.asaAttributionConfig.timeoutPerAttempt == nil) {
         self.canReadToken = NO;
         return @"Cannot attempt to read token without a timeout";
@@ -505,12 +496,12 @@
     __block NSString *_Nullable asaAttributionToken;
 
     BOOL readAsaAttributionTokenFinishedSuccessfully =
-    [threadPool executeSynchronouslyWithTimeout:self.asaAttributionConfig.timeoutPerAttempt
-                                 blockToExecute:
-     ^{
-        // TODO cache in a dispatch_once: methodImplementation, classFromName and methodSelector
-        asaAttributionToken = func(classFromName, methodSelector, &error);
-    }];
+        [self.executor
+            executeSynchronouslyWithTimeout:self.asaAttributionConfig.timeoutPerAttempt
+            blockToExecute:^{
+                // TODO cache in a dispatch_once: methodImplementation, classFromName and methodSelector
+                asaAttributionToken = func(classFromName, methodSelector, &error);
+            }];
 
     if (! readAsaAttributionTokenFinishedSuccessfully) {
         return @"Could not make or finish the [AAAttribution attributionTokenWithError:] call";

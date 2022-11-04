@@ -32,7 +32,6 @@
 @interface ADJSdkResponseBaseData ()
 #pragma mark - Injected dependencies
 @property (nonnull, readonly, strong, nonatomic) ADJStringMapBuilder *sendingParameters;
-@property (readonly, assign, nonatomic) BOOL failedToProcessLocally;
 @property (nullable, readonly, strong, nonatomic) NSString *errorMessages;
 @property (nullable, readonly, strong, nonatomic) NSDictionary *jsonDictionary;
 
@@ -70,7 +69,6 @@
     
     _sourcePackage = sdkPackageData;
     _sendingParameters = sdkResponseDataBuilder.sendingParameters;
-    _failedToProcessLocally = [sdkResponseDataBuilder failedToProcessLocally];
     _errorMessages = [sdkResponseDataBuilder errorMessages];
     
     _jsonDictionary = sdkResponseDataBuilder.jsonDictionary;
@@ -166,10 +164,6 @@
 //  since retrying would not change the outcome
 // otherwise, retry if it was not processed by the server
 - (BOOL)shouldRetry {
-    if (self.failedToProcessLocally) {
-        return NO;
-    }
-    
     return ! self.processedByServer;
 }
 
