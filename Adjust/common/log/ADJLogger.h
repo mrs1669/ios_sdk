@@ -24,9 +24,24 @@
 
 // public API
 - (nonnull ADJLogBuilder *)debugDevStart:(nonnull NSString *)message;
+
 - (nonnull id<ADJClientLogBuilder>)infoClientStart:(nonnull NSString *)message;
+- (void)infoClient:(nonnull NSString *)message;
+- (void)infoClient:(nonnull NSString *)message
+               key:(nonnull NSString *)key
+             value:(nullable NSString *)value;
+
 - (nonnull id<ADJClientLogBuilder>)noticeClientStart:(nonnull NSString *)message;
+- (void)noticeClient:(nonnull NSString *)message;
+- (void)noticeClient:(nonnull NSString *)message
+                 key:(nonnull NSString *)key
+               value:(nullable NSString *)value;
+
 - (nonnull id<ADJClientLogBuilder>)errorClientStart:(nonnull NSString *)message;
+- (void)errorClient:(nonnull NSString *)message;
+- (void)errorClient:(nonnull NSString *)message
+                key:(nonnull NSString *)key
+              value:(nullable NSString *)value;
 
 //- (void)logWithBuilder:(nonnull ADJLogBuilder *)logBuilder;
 /*

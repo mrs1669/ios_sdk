@@ -17,7 +17,7 @@
         (NSString *_Nonnull key, NSString * _Nullable value);
 
 @property(nonnull, nonatomic, copy, readonly)
-    id<ADJClientLogBuilder> _Nonnull (^log)(void);
+    id<ADJClientLogBuilder> _Nonnull (^end)(void);
 
 @end
 

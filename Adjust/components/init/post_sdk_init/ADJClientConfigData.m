@@ -35,7 +35,7 @@
 {
     if (adjustConfig == nil) {
         //[logger errorClientStart:@"Cannot create config with null adjust config value"].log();
-        [logger errorClientStart:@"Cannot create config with null adjust config value"].log();
+        [logger errorClient:@"Cannot create config with null adjust config value"];
         return nil;
     }
 
@@ -45,7 +45,7 @@
                                    logger:logger];
 
     if (appToken == nil) {
-        [logger errorClientStart:@"Cannot create config with invalid app token value"].log();
+        [logger errorClient:@"Cannot create config with invalid app token value"];
         return nil;
     }
 
@@ -55,7 +55,7 @@
                                        logger:logger];
 
     if (environment == nil) {
-        [logger errorClientStart:@"Cannot create config with invalid environment value"].log();
+        [logger errorClient:@"Cannot create config with invalid environment value"];
         return nil;
     }
 
@@ -70,10 +70,10 @@
 
     if (! isSandboxEnvironment && ! isProductionEnvironment) {
         [logger errorClientStart:@"Cannot create config with unexpected environment value"]
-            .wKv(@"received", environment.stringValue)
             .wKv(@"expected",[NSString stringWithFormat:@"%@ or %@",
                               ADJEnvironmentSandbox, ADJEnvironmentProduction])
-            .log();
+            .wKv(@"actual", environment.stringValue)
+            .end();
         return nil;
     }
     
