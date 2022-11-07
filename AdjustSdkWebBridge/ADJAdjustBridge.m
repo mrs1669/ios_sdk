@@ -160,8 +160,7 @@
 
     } else if ([action isEqual: @"adjust_trackDeeplink"]) {
 
-        NSString *_Nullable openDeeplink = [data objectForKey:@"deeplink"];
-        ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
+        ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:data];
         [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
         
     } else if ([action isEqual: @"adjust_trackThirdPartySharing"]) {
