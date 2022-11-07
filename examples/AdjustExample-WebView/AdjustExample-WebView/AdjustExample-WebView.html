@@ -6,10 +6,25 @@
     </head>
     <body style="background-color:#08d1ff; font-size: 20px; ">
         <h2><center>Webview</center></h2><br></br>
-        <button onclick="myFunction()">Track Event</button>
+        <button onclick="trackEvent()">Track Event</button><br>
+        <button onclick="trackRevenue()">Track Revenue</button><br>
+        <button onclick="trackPushToken()">Track Push Token</button><br>
+        <!--        <button onclick="goOffline()">Go Offline</button><br>-->
+        <!--        <button onclick="goOnline()">Go Online</button><br>-->
+        <!--        <button onclick="trackDeeplink()">Track Deeplink</button><br>-->
+        <!--        <button onclick="trackThirdPartySharing()">Track Third party sharing</button><br>-->
+        <!--        <button onclick="inactiveSDK()">Inactive SDK</button><br>-->
+        <!--        <button onclick="reactivateSDK()">Reactivate SDK</button><br>-->
+        <!--        <button onclick="addGlobalCallbackParameter()">Add Global Callback Parameter</button><br>-->
+        <!--        <button onclick="removeGlobalCallbackParameter()">Remove Global Callback Parameter By Key</button><br>-->
+        <!--        <button onclick="clearAllGlobalCallbackParameter()">Clear All Global Callback Parameters</button><br>-->
+        <!--        <button onclick="addGlobalPartnerParameter()">Add Global Partner Parameter</button><br>-->
+        <!--        <button onclick="removeGlobalPartnerParameter()">Remove Global Partner Parameter By Key</button><br>-->
+        <!--        <button onclick="clearAllGlobalPartnerParameter()">Clear All Global Partner Parameters</button><br>-->
+        <!--        <button onclick="gdprForgetMe()">Gdpr Forget Me</button><br>-->
+
         <p id="demo"> </p>
         <script>
-
             function something() {
                 document.write('Hey, there!')
             }
@@ -24,9 +39,7 @@
                 document.write(returnedValue)
             }
 
-            function myFunction() {
-
-                document.getElementById("demo").innerHTML = 'Hey, whats up?';
+            function trackEvent() {
 
                 const eventDetails = {
                     "eventToken" : "g3mfiw",
@@ -36,6 +49,21 @@
                 const message = {
                     action:'adjust_trackEvent',
                     data: eventDetails
+                };
+
+                window.webkit.messageHandlers.adjust.postMessage(message);
+            }
+
+            function trackRevenue() {
+
+                const revenueDetails = {
+                    "source" : "g3mfiw",
+                    "revenue": 300.0,
+                };
+
+                const message = {
+                    action:'adjust_trackAdRevenue',
+                    data: revenueDetails,
                 };
 
                 window.webkit.messageHandlers.adjust.postMessage(message);

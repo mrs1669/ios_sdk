@@ -7,11 +7,13 @@
 //
 
 #import "ADJAdjustBridge.h"
+
 #import "ADJAdjustEvent.h"
 #import "ADJAdjustPushToken.h"
 #import "ADJAdjustAttribution.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustAdRevenue.h"
 
 @implementation ADJAdjustBridge
 
@@ -70,10 +72,6 @@
         }
 
         if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
-            // TODO: not sure if clients will be using NSNumber over double approach
-            // NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
-            // [adjustEvent setRevenueWithDoubleNumber:revenueNumber
-            //                                currency:currency];
             [adjustEvent setRevenueWithDouble:[revenue doubleValue] currency:currency];
         }
 
@@ -93,9 +91,52 @@
 
     } else if ([action isEqual:@"adjust_trackAdRevenue"]) {
 
-        NSString *source = [data objectForKey:@"source"];
-        NSString *payload = [data objectForKey:@"payload"];
-        NSData *dataPayload = [payload dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *adRevenueSource = [data objectForKey:@"source"];
+        NSNumber *revenue = [data objectForKey:@"revenue"];
+        NSNumber *adImpressionsCount = [data objectForKey:@"adImpressionsCount"];
+        NSString *currency = [data objectForKey:@"currency"];
+        NSString *adRevenueNetwork = [data objectForKey:@"adRevenueNetwork"];
+        NSString *adRevenueUnit = [data objectForKey:@"adRevenueUnit"];
+        NSString *adRevenuePlacement = [data objectForKey:@"adRevenuePlacement"];
+
+        id callbackParameters = [data objectForKey:@"callbackParameters"];
+        id partnerParameters = [data objectForKey:@"partnerParameters"];
+
+        ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
+
+        if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
+            [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
+        }
+
+        if ([self isFieldValid:adImpressionsCount]) {
+            [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCount];
+        }
+
+        if ([self isFieldValid:adRevenueNetwork]) {
+            [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork];
+        }
+
+        if ([self isFieldValid:adRevenueUnit]) {
+            [adjustAdRevenue setAdRevenueUnit:adRevenueUnit];
+        }
+
+        if ([self isFieldValid:adRevenuePlacement]) {
+            [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement];
+        }
+
+        for (int i = 0; i < [callbackParameters count]; i += 2) {
+            NSString *key = [[callbackParameters objectAtIndex:i] description];
+            NSString *value = [[callbackParameters objectAtIndex:(i + 1)] description];
+            [adjustAdRevenue addCallbackParameterWithKey:key value:value];
+        }
+
+        for (int i = 0; i < [partnerParameters count]; i += 2) {
+            NSString *key = [[partnerParameters objectAtIndex:i] description];
+            NSString *value = [[partnerParameters objectAtIndex:(i + 1)] description];
+            [adjustAdRevenue addPartnerParameterWithKey:key value:value];
+        }
+
+        [ADJAdjust trackAdRevenue:adjustAdRevenue];
         
     } else if ([action isEqual:@"adjust_trackPushToken"]) {
 
@@ -149,12 +190,6 @@
         }
 
         [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
-
-    } else if ([action isEqual: @"adjust_trackDeeplink"]) {
-
-        NSString *_Nullable openDeeplink = [data objectForKey:@"deeplink"];
-        ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
-        [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
 
     } else if ([action isEqual: @"adjust_inactivateSdk"]) {
 
