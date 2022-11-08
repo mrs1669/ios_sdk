@@ -114,8 +114,7 @@
             clientConfigData.isSandboxEnvironmentOrElseProduction
             doLogAll:clientConfigData.doLogAll
             doNotLogAny:clientConfigData.doNotLogAny];
-
-    }];
+    } source:@"sdk init"];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -143,7 +142,7 @@
         
         // can flush memory stored logs
         [strongSelf.logMessageDataArray removeAllObjects];
-    }];
+    } source:@"allowed to publish notifications"];
 }
 
 @end

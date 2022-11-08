@@ -77,7 +77,7 @@
         if (strongSelf.isOnForeground) {
             [strongSelf startForegroundTimer];
         }
-    }];
+    } source:@"measurement session start"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -92,7 +92,7 @@
         if (strongSelf.hasMeasurementSessionStarted) {
             [strongSelf startForegroundTimer];
         }
-    }];
+    } source:@"foreground"];
 }
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
     __typeof(self) __weak weakSelf = self;
@@ -103,7 +103,7 @@
         strongSelf.isOnForeground = NO;
         
         [strongSelf.foregroundTimer cancelDelayAndCycle];
-    }];
+    } source:@"background"];
 }
 
 #pragma mark Internal Methods

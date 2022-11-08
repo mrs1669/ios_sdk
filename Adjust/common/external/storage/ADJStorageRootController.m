@@ -100,7 +100,7 @@ sqliteController:self.sqliteController];        \
 
         // prevent any other storage task from executing
         [strongSelf.storageExecutor finalizeAtTeardown];
-    }];
+    } source:@"finalize at teardown"];
 
     if (! canExecuteTask && closeStorageBlock != nil) {
         closeStorageBlock();

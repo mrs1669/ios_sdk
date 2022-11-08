@@ -106,7 +106,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf processForgetDevice];
-    }];
+    } source:@"forget device"];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
@@ -118,7 +118,7 @@
     }
     
     ADJGdprForgetResponseData *_Nonnull gdprForgetResponseData =
-    (ADJGdprForgetResponseData *)sdkResponseData;
+        (ADJGdprForgetResponseData *)sdkResponseData;
     
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
@@ -128,7 +128,7 @@
         [strongSelf processGdprForgetResponseInStateWithData:gdprForgetResponseData];
         
         [strongSelf processGdprForgetResponseInTrackerWithData:gdprForgetResponseData];
-    }];
+    } source:@"received gdpr forget response"];
 }
 
 #pragma mark - ADJSdkInitSubscriber
@@ -139,7 +139,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf processSdkInit];
-    }];
+    } source:@"sdk init"];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -150,7 +150,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf.gdprForgetState canStartPublish];
-    }];
+    } source:@"allowed to publish notifications"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -163,7 +163,7 @@
         [strongSelf processForegroundInState];
         
         [strongSelf processForegroundInTracker];
-    }];
+    } source:@"foreground"];
 }
 
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
@@ -175,7 +175,7 @@
         [strongSelf.gdprForgetState appWentToTheBackground];
         
         [strongSelf.gdprForgetTracker pauseTrackingWhenAppWentToBackground];
-    }];
+    } source:@"background"];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -191,7 +191,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf processOptOut];
-    }];
+    } source:@"received opt out sdk response"];
 }
 
 #pragma mark - Subscriptions
@@ -293,7 +293,9 @@
         if (sendGdprForget) {
             [strongSelf sendGdprForgetWithSourceDescription:@"DelayEnd"];
         }
-    } delayTimeMilli:delayData.delay];
+    }
+                                delayTimeMilli:delayData.delay
+                                        source:@"send gdpr forget"];
 }
 
 - (void)processSdkInit {

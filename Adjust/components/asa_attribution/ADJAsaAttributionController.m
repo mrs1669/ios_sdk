@@ -112,9 +112,12 @@
     return canReadTokenFromClient && canReadTokenFromConfig && hasMininumOsVersion;
 }
 
-+ (void)updateAdjustAttributionWithStateData:(nonnull ADJAttributionStateData *)adjustAttributionStateData
-                                     storage:(nonnull ADJAsaAttributionStateStorage *)storage
-                                    executor:(nonnull ADJSingleThreadExecutor *)executor {
++ (void)
+    updateAdjustAttributionWithStateData:
+        (nonnull ADJAttributionStateData *)adjustAttributionStateData
+    storage:(nonnull ADJAsaAttributionStateStorage *)storage
+    executor:(nonnull ADJSingleThreadExecutor *)executor
+{
     ADJAsaAttributionStateData *_Nonnull stateData = [storage readOnlyStoredDataValue];
 
     // no need to update, since it already received a final adjust attribution previously
@@ -144,7 +147,7 @@
           cachedToken:currentStateData.cachedToken
           cacheReadTimestamp:currentStateData.cacheReadTimestamp
           errorReason:currentStateData.errorReason]];
-    }];
+    } source:@"update asa attribution"];
 }
 
 #pragma mark Public API
@@ -176,7 +179,7 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    }];
+    } source:@"keep alive ping"];
 }
 
 #pragma mark - ADJPreFirstMeasurementSessionStartSubscriber
@@ -192,7 +195,7 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    }];
+    } source:@"pre first measurement session start"];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -211,12 +214,13 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAsaClickPackage];
-    }];
+    } source:@"received asa click response"];
 }
 
 #pragma mark - ADJAttributionSubscriber
 - (void)didAttributionWithData:(nullable ADJAttributionData *)attributionData
-             attributionStatus:(nonnull NSString *)attributionStatus {
+             attributionStatus:(nonnull NSString *)attributionStatus
+{
     ADJAsaAttributionStateStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
         [self.logger error:@"Cannot check if it has received adjust attribution"
@@ -238,7 +242,7 @@
 
         [strongSelf handleAdjustAttributionWithStatus:attributionStatus
                                               storage:storage];
-    }];
+    } source:@"handle adjust attribution"];
 }
 
 #pragma mark - ADJSdkPackageSendingSubscriber
@@ -504,7 +508,7 @@
             blockToExecute:^{
                 // TODO cache in a dispatch_once: methodImplementation, classFromName and methodSelector
                 asaAttributionToken = func(classFromName, methodSelector, &error);
-            }];
+            } source:@"read AAAttribution attributionTokenWithError with timeout"];
 
     if (! readAsaAttributionTokenFinishedSuccessfully) {
         return @"Could not make or finish the [AAAttribution attributionTokenWithError:] call";
@@ -581,7 +585,9 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          [[ADJNonNegativeInt alloc] initWithUIntegerValue:nextNumberOfAttemptsLeft]];
-    } delayTimeMilli:self.asaAttributionConfig.delayBetweenAttempts];
+    }
+                                delayTimeMilli:self.asaAttributionConfig.delayBetweenAttempts
+                                        source:@"retry asa attribution"];
 }
 
 - (void)trackAsaClickWithStateData:(nonnull ADJAsaAttributionStateData *)stateData {

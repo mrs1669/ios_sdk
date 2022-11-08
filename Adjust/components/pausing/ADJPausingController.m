@@ -75,7 +75,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         } else {
             [strongSelf publishResumeSendingWithSource:ADJFromCanPublish];
         }
-    }];
+    } source:@"allowed to publish notifications"];
 }
 
 #pragma mark - ADJOfflineSubscriber
@@ -91,7 +91,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkOnline];
         }
-    }];
+    } source:@"sdk become online"];
 }
 
 - (void)didSdkBecomeOffline {
@@ -106,7 +106,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromSdkOffline];
         }
-    }];
+    } source:@"sdk become offline"];
 }
 
 #pragma mark - ADJReachabilitySubscriber
@@ -123,7 +123,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromNetworkReachable];
         }
-    }];
+    } source:@"become reachable"];
 }
 
 - (void)didBecomeUnreachable {
@@ -139,7 +139,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromNetworkUnreachable];
         }
-    }];
+    } source:@"become unreachable"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -160,7 +160,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromForeground];
         }
-    }];
+    } source:@"foreground"];
 }
 
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
@@ -180,7 +180,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromBackground];
         }
-    }];
+    } source:@"background"];
 }
 
 #pragma mark - ADJMeasurementSessionStartSubscriber
@@ -197,7 +197,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkStart];
         }
-    }];
+    } source:@"measurement session start"];
 }
 
 #pragma mark - ADJSdkActiveSubscriber
@@ -224,7 +224,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
                 [self publishPauseSendingWithSource:ADJPauseFromSdkNotActive];
             }
         }
-    }];
+    } source:@"sdk active"];
 }
 
 #pragma mark - Subscriptions

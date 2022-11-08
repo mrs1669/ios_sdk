@@ -36,17 +36,5 @@
                          blockToExecute:(nonnull void (^)(void))blockToExecute
                                  source:(nonnull NSString *)source;
 
-
-// temporary
-- (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
-                     delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli;
-
-- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute;
-
-- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute;
-
-- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
-                         blockToExecute:(nonnull void (^)(void))blockToExecute;
-
 @end
 

@@ -135,7 +135,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
         if (strongSelf == nil) { return; }
 
         [strongSelf processKeepAlivePing];
-    }];
+    } source:@"keep alive ping"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -159,7 +159,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
         if (strongSelf == nil) { return; }
 
         [strongSelf processForegroundWithSource:@"onForeground"];
-    }];
+    } source:@"foreground"];
 }
 
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
@@ -182,7 +182,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
         if (strongSelf == nil) { return; }
 
         [strongSelf processBackground];
-    }];
+    } source:@"background"];
 }
 
 #pragma mark Internal Methods

@@ -162,31 +162,6 @@
     return ! timedOut;
 }
 
-// temporary
-- (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
-                     delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
-{
-    return [self scheduleInSequenceWithBlock:blockToSchedule
-                              delayTimeMilli:delayTimeMilli
-                                      source:@"TORMV"];
-}
-
-- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute {
-    return [self executeInSequenceWithBlock:blockToExecute source:@"TORMV"];
-}
-
-- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute {
-    return [self executeAsyncWithBlock:blockToExecute source:@""];
-}
-
-- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
-                         blockToExecute:(nonnull void (^)(void))blockToExecute
-{
-    return [self executeSynchronouslyWithTimeout:timeout
-                                  blockToExecute:blockToExecute
-                                          source:@""];
-}
-
 #pragma mark - ADJTeardownFinalizer
 - (void)finalizeAtTeardown {
     if (self.hasFinalized) {

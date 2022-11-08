@@ -74,13 +74,11 @@
     [_clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
-        [strongSelf.rootLogger debugDevStart:@"TORMV"].end();
 
         strongSelf.preSdkInitRootController =
             [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
                                                              entryRoot:strongSelf];
-    }];
+    } source:@"init"];
 
     return self;
 }
@@ -104,7 +102,7 @@
         }
 
         blockInClientContext(root.preSdkInitRootController, root.adjustApiLogger);
-    }];
+    } source:@"execute in client context"];
 }
 
 - (nonnull ADJPostSdkInitRootController *)ccCreatePostSdkInitRootControllerWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData
@@ -132,7 +130,8 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         if (strongSelf.preSdkInitRootController != nil) {
-            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+            [strongSelf.preSdkInitRootController.storageRootController
+                finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
             [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
         }
 
@@ -141,7 +140,7 @@
         }
 
         [strongSelf.threadController finalizeAtTeardown];
-    }];
+    } source:@"finalize at teardown"];
 
     if (! canExecuteTask && closeStorageBlock != nil) {
         closeStorageBlock();
@@ -149,13 +148,13 @@
 }
 
 #pragma mark - Subscriptions
-- (void)ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                             publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
+- (void)
+    ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:
+        (nonnull ADJSdkInitPublisher *)sdkInitPublisher
+    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
+{
     [self.logController ccSubscribeToPublishersWithSdkInitPublisher:sdkInitPublisher
                                             publishingGatePublisher:publishingGatePublisher];
 }
 
 @end
-
-
-

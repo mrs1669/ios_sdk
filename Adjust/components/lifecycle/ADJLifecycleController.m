@@ -165,7 +165,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
         if (strongSelf == nil) { return; }
 
         [strongSelf publishWhenGatesOpen];
-    }];
+    } source:@"allowed to publish notifications"];
 }
 
 #pragma mark - Subscriptions
@@ -220,7 +220,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
              {
                 [subscriber onForegroundWithIsFromClientContext:source == kClientForeground];
             }];
-        }];
+        } source:@"publish foreground"];
     } else {
         [self.logger debug:@"Cannot publish foreground before sdk init"];
     }
@@ -263,7 +263,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
              {
                 [subscriber onBackgroundWithIsFromClientContext:source == kClientBackground];
             }];
-        }];
+        } source:@"publish background"];
     } else {
         [self.logger debug:@"Cannot publish background before sdk init"];
     }

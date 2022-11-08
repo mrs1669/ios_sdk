@@ -208,7 +208,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         
         [strongSelf removeElementByPosition:elementPositionToRemove
                                    sqliteDb:sqliteDb];
-    }];
+    } source:@"remove element by position in storage only"];
 }
 
 - (void)removeAllElements {
@@ -251,7 +251,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         }
         
         [sqliteDb executeStatements:strongSelf.deleteAllSql.stringValue];
-    }];
+    } source:@"remove all elements"];
 }
 
 #pragma mark Protected Methods
@@ -528,7 +528,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
                               newElement:newElement
                       newElementPosition:newElementPosition
                      sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add element to storage"];
 }
 
 - (void)addElementToSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb

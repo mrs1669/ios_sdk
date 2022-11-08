@@ -95,8 +95,10 @@
     return NO;
 }
 
-- (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
-                      sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -104,11 +106,14 @@
 
         [strongSelf addSdkPackageToSendWithData:adRevenuePackageData
                             sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add ad revenue package"];
 }
 
-- (void)addBillingSubscriptionPackageToSendWithData:(nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
-sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    addBillingSubscriptionPackageToSendWithData:
+        (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -116,11 +121,12 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
         [strongSelf addSdkPackageToSendWithData:billingSubscriptionPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add billing subscription package"];
 }
 
 - (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
-                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -128,11 +134,12 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
         [strongSelf addSdkPackageToSendWithData:clickPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add click package"];
 }
 
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
-                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -140,11 +147,12 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
         [strongSelf addSdkPackageToSendWithData:eventPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add event package"];
 }
 
 - (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
-                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -152,11 +160,12 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
         [strongSelf addSdkPackageToSendWithData:infoPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add info package"];
 }
 
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
-                    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -164,11 +173,14 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
         [strongSelf addSdkPackageToSendWithData:sessionPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add session package"];
 }
 
-- (void)addThirdPartySharingPackageToSendWithData:(nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
-                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    addThirdPartySharingPackageToSendWithData:
+        (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -176,7 +188,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
         [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add third party sharing package"];
 }
 
 - (nonnull NSString *)defaultTargetUrl {
@@ -191,7 +203,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResponseWithData:sdkResponseData];
-    }];
+    } source:@"sdk response"];
 }
 
 #pragma mark - ADJSdkInitSubscriber
@@ -202,7 +214,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         if (strongSelf == nil) { return; }
 
         [strongSelf handleSdkInit];
-    }];
+    } source:@"sdk init"];
 }
 
 #pragma mark - ADJPausingSubscriber
@@ -213,8 +225,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResumeSending];
-    }];
-
+    } source:@"resume sending"];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
@@ -224,7 +235,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         if (strongSelf == nil) { return; }
 
         [strongSelf.mainQueueStateAndTracker pauseSending];
-    }];
+    } source:@"pause sending"];
 }
 
 #pragma mark - ADJOfflineSubscriber
@@ -239,7 +250,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         if (strongSelf == nil) { return; }
 
         [strongSelf.mainQueueStateAndTracker pauseSending];
-    }];
+    } source:@"sdk become offline"];
 }
 
 #pragma mark - Subscriptions
@@ -398,7 +409,8 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
         [strongSelf handleDelayEndWithSource:delayData.source];
     }
-     delayTimeMilli:delayData.delay];
+     delayTimeMilli:delayData.delay
+     source:@"delay end"];
 }
 
 - (void)handleDelayEndWithSource:(nonnull NSString *)source {

@@ -96,7 +96,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         // TODO possibly use private queue
         [strongSelf startNetworkReachabilityWithDispatchQueue:
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
-    }];
+    } source:@"measurement session start"];
 }
 
 #pragma mark - Subscriptions
@@ -326,7 +326,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         [strongSelf reachableNetworkWithFlags:flags];
 
         [strongSelf updateAndPublishWithReachability:reachableNetworkFromFlags];
-    }];
+    } source:@"reachability changed"];
 }
 
 - (void)stopNetworkReachability {

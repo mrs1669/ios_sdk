@@ -112,7 +112,7 @@
         
         [strongSelf sendWithUrlRequest:urlRequest
                     sdkResponseBuilder:sdkResponseDataBuilder];
-    }];
+    } source:@"send sdk package"];
 }
 
 - (nonnull NSURLRequest *)buildUrlRequestWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
@@ -289,7 +289,7 @@
                                    sdkResponseBuilder:sdkResponseBuilder];
             
             [strongSelf retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
-        }];
+        } source:@"request response"];
     }];
     [sessionDatatask resume];
     

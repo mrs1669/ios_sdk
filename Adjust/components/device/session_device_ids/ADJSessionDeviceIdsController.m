@@ -119,7 +119,7 @@
         ADJNonEmptyString *_Nullable identifierForVendor =
         [self readIdentifierForVendorWithCurrentDevice:currentDevice];
         [identifierForVendorWO setNewValue:identifierForVendor];
-    }];
+    } source:@"read system idfv with timeout"];
 
     if (! readIdentifierForVendorFinishedSuccessfully) {
         return nil;
@@ -146,7 +146,7 @@
         ADJNonEmptyString *_Nullable advertisingIdentifier =
         [strongSelf readAdvertisingIdentifier];
         [advertisingIdentifierWO setNewValue:advertisingIdentifier];
-    }];
+    } source:@"read system idfa"];
 
     if (! readAdvertisingIdentifierFinishedSuccessfully) {
         return  nil;

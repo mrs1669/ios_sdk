@@ -369,7 +369,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf processGdprForgetEvent];
-    }];
+    } source:@"gdpr forget"];
 }
 
 #pragma mark Internal Methods

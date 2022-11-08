@@ -59,7 +59,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleLogPackageAddedToSendWithData:logPackageData];
-    }];
+    } source:@"add log package"];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
@@ -70,7 +70,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResponseWithData:sdkResponseData];
-    }];
+    } source:@"received sdk response"];
 }
 
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
@@ -80,7 +80,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleSdkInit];
-    }];
+    } source:@"sdk init"];
 }
 
 #pragma mark - ADJPausingSubscriber
@@ -91,7 +91,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResumeSending];
-    }];
+    } source:@"resume sending"];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
@@ -101,7 +101,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf.logQueueStateAndTracker pauseSending];
-    }];
+    } source:@"pause sending"];
 }
 
 #pragma mark - Subscriptions
@@ -225,14 +225,14 @@
 
 - (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor
-     scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleDelayEndWithSource:delayData.source];
     }
-     delayTimeMilli:delayData.delay];
+                                delayTimeMilli:delayData.delay
+    source:@"delay end"];
 }
 
 - (void)handleDelayEndWithSource:(nonnull NSString *)source {

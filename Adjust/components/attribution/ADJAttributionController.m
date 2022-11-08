@@ -82,7 +82,7 @@
     }
     
     ADJAttributionResponseData *_Nonnull attributionResponseData =
-    (ADJAttributionResponseData *)sdkResponseData;
+        (ADJAttributionResponseData *)sdkResponseData;
     
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
@@ -92,7 +92,7 @@
         [strongSelf handleAttributionResponseInStateWithData:attributionResponseData];
         
         [strongSelf handleAttributionResponseInTrackerWithData:attributionResponseData];
-    }];
+    } source:@"received attribution response"];
 }
 
 - (void)handleAttributionResponseInStateWithData:(nonnull ADJAttributionResponseData *)attributionResponseData {
@@ -150,7 +150,7 @@
         [strongSelf handleAcceptedSdkResponseInStateWithData:sdkResponseData];
         
         [strongSelf handleAccepteSessionResponseInStateWithData:sdkResponseData];
-    }];
+    } source:@"received sdk response"];
 }
 
 - (void)handleAcceptedSdkResponseInStateWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
@@ -218,7 +218,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf handleAllowedToPublishNotifications];
-    }];
+    } source:@"allowed to publish notifications"];
 }
 
 - (void)handleAllowedToPublishNotifications {
@@ -244,7 +244,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf handleMeasurementSessionStartWithStatus:MeasurementSessionStartStatus];
-    }];
+    } source:@"measurement session start"];
 }
 
 - (void)handleMeasurementSessionStartWithStatus:(nonnull NSString *)MeasurementSessionStartStatus {
@@ -283,7 +283,7 @@
         if (sendAttribution) {
             [strongSelf sendAttributionWithSource:@"ResumeSending"];
         }
-    }];
+    } source:@"resume sending"];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
@@ -293,7 +293,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf.attributionTracker pauseSending];
-    }];
+    } source:@"pause sending"];
 }
 
 #pragma mark - Subscriptions
@@ -415,14 +415,14 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor
-     scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf handleDelayEndWithData:delayData source:source];
     }
-     delayTimeMilli:delayData.delay];
+                                delayTimeMilli:delayData.delay
+                                        source:@"delay end"];
 }
 
 - (void)handleDelayEndWithData:(nonnull ADJDelayData *)delayData

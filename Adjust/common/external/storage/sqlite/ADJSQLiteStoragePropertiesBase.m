@@ -119,7 +119,7 @@ static NSString *const kColumnValue = @"value";
         
         [strongSelf updateInStorageSyncWithSqliteDb:sqliteDb
                                        newDataValue:newDataValue];
-    }];
+    } source:@"update in storage only"];
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb

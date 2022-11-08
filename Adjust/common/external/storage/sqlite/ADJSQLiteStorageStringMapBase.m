@@ -249,7 +249,7 @@ static int const kDeleteKeyFieldPosition = 1;
                                 value:value
                                   key:key
                   sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add pair to storage"];
 }
 
 - (void)addPairToDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -342,7 +342,7 @@ static int const kDeleteKeyFieldPosition = 1;
         [strongSelf removePairFromDatabase:sqliteDb
                                        key:key
                        sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"remove pair from storage"];
 }
 
 - (void)removePairFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -423,7 +423,7 @@ static int const kDeleteKeyFieldPosition = 1;
         [strongSelf replaceAllFromDatabase:sqliteDb
                                  stringMap:stringMap
                        sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"replace all from storage"];
 }
 
 - (void)replaceAllFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
