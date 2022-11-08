@@ -22,8 +22,34 @@ NS_ASSUME_NONNULL_END
 // instantiation
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
+    level:(nonnull NSString *)level;
+
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull NSString *)level
+    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
+
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
     level:(nonnull NSString *)level
     issueType:(nullable NSString *)issueType
+    nsError:(nullable NSError *)nsError
+    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
+
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull NSString *)level
+    callerThreadId:(nullable NSString *)callerThreadId
+    callerDescription:(nullable NSString *)callerDescription
+    runningThreadId:(nullable NSString *)runningThreadId;
+
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull NSString *)level
+    issueType:(nullable NSString *)issueType
+    callerThreadId:(nullable NSString *)callerThreadId
+    callerDescription:(nullable NSString *)callerDescription
+    runningThreadId:(nullable NSString *)runningThreadId
     nsError:(nullable NSError *)nsError
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
 NS_DESIGNATED_INITIALIZER;
@@ -33,6 +59,9 @@ NS_DESIGNATED_INITIALIZER;
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSString *message;
 @property (nonnull, readonly, strong, nonatomic) NSString *level;
+@property (nullable, readonly, strong, nonatomic) NSString *callerThreadId;
+@property (nullable, readonly, strong, nonatomic) NSString *callerDescription;
+@property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readonly, strong, nonatomic) NSString *issueType;
 @property (nullable, readonly, strong, nonatomic) NSError *nsError;
 @property (nullable, readonly, strong, nonatomic)

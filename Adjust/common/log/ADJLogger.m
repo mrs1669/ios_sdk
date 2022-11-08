@@ -11,6 +11,7 @@
 #import "ADJAdjustLogMessageData.h"
 #import "ADJUtilF.h"
 #import "ADJConstants.h"
+#import "ADJLocalThreadController.h"
 
 //#import <os/log.h>
 
@@ -48,6 +49,20 @@
 }
 
 #pragma mark Public API
+- (void)
+    traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
+    runningThreadId:(nonnull NSString *)runningThreadId
+    callerDescription:(nonnull NSString *)callerDescription
+{
+    [self endInputLog:
+        [[ADJInputLogMessageData alloc]
+            initWithMessage:@"New thread"
+            level:ADJAdjustLogLevelTrace
+            callerThreadId:callerThreadId
+            callerDescription:callerDescription
+            runningThreadId:runningThreadId]];
+}
+
 - (nonnull ADJLogBuilder *)debugDevStart:(nonnull NSString *)message {
     return [[ADJLogBuilder alloc]
                 initWithLevel:ADJAdjustLogLevelDebug
@@ -119,12 +134,15 @@
         return;
     }
 
+    NSString *_Nullable runningThreadId = nil;
+    if (inputLogMessageData.runningThreadId == nil) {
+        runningThreadId = [[ADJLocalThreadController instance] localIdOrOutside];
+    }
+
     ADJLogMessageData *_Nonnull logMessageData =
         [[ADJLogMessageData alloc] initWithInputData:inputLogMessageData
                                    sourceDescription:self.source
-         // TODO
-                                      callerThreadId:nil
-                                     runningThreadId:nil
+                                     runningThreadId:runningThreadId
                                           instanceId:nil];
 
     [logCollector collectLogMessage:logMessageData];
@@ -197,8 +215,6 @@
         [[ADJInputLogMessageData alloc]
             initWithMessage:message
             level:logLevel
-            issueType:nil
-            nsError:nil
             messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:value, key, nil]]];
 }
 

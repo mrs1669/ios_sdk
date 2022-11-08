@@ -21,6 +21,7 @@ NSString *const ADJLogParamsKey = @"params";
 NSString *const ADJLogSourceKey = @"source";
 NSString *const ADJLogCallerThreadIdKey = @"callerId";
 NSString *const ADJLogRunningThreadIdKey = @"runningId";
+NSString *const ADJLogCallerDescriptionKey = @"callerDescription";
 NSString *const ADJLogInstanceIdKey = @"instanceId";
 NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 
@@ -28,8 +29,7 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
  @property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
- @property (nullable, readonly, strong, nonatomic) NSNumber *callerThreadId;
- @property (nullable, readonly, strong, nonatomic) NSNumber *runningThreadId;
+ @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
  @property (nullable, readonly, strong, nonatomic) NSString *instanceId;
  */
 
@@ -38,15 +38,13 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 - (nonnull instancetype)
     initWithInputData:(nonnull ADJInputLogMessageData *)inputData
     sourceDescription:(nonnull NSString *)sourceDescription
-    callerThreadId:(nullable NSNumber *)callerThreadId
-    runningThreadId:(nullable NSNumber *)runningThreadId
+    runningThreadId:(nullable NSString *)runningThreadId
     instanceId:(nullable NSString *)instanceId
 {
     self = [super init];
 
     _inputData = inputData;
     _sourceDescription = sourceDescription;
-    _callerThreadId = callerThreadId;
     _runningThreadId = runningThreadId;
     _instanceId = instanceId;
 
@@ -64,7 +62,24 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
             self.inputData.message, ADJLogMessageKey,
             self.inputData.level, ADJLogLevelKey,
             self.sourceDescription, ADJLogSourceKey, nil];
-    
+
+    if (self.inputData.callerThreadId != nil) {
+        [foundationDictionary setObject:self.inputData.callerThreadId
+                                 forKey:ADJLogCallerThreadIdKey];
+    }
+
+    if (self.inputData.callerDescription != nil) {
+        [foundationDictionary setObject:self.inputData.callerDescription
+                                 forKey:ADJLogCallerDescriptionKey];
+    }
+
+    if (self.inputData.runningThreadId != nil) {
+        [foundationDictionary setObject:self.inputData.runningThreadId
+                                 forKey:ADJLogRunningThreadIdKey];
+    } else if (self.runningThreadId != nil) {
+        [foundationDictionary setObject:self.runningThreadId forKey:ADJLogRunningThreadIdKey];
+    }
+
     if (self.inputData.issueType != nil) {
         [foundationDictionary setObject:self.inputData.issueType
                                  forKey:ADJLogIssueKey];
@@ -74,7 +89,7 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
         NSMutableDictionary *_Nonnull errorDictionary =
             [[NSMutableDictionary alloc] initWithObjectsAndKeys:
                 self.inputData.nsError.domain, @"domain",
-                @(self.inputData.nsError.code),@"code",  nil];
+                @(self.inputData.nsError.code), @"code",  nil];
         
         if (self.inputData.nsError.userInfo != nil) {
             [errorDictionary
@@ -87,14 +102,6 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
     
     if (self.inputData.messageParams != nil) {
         [foundationDictionary setObject:self.inputData.messageParams forKey:ADJLogParamsKey];
-    }
-    
-    if (self.callerThreadId != nil) {
-        [foundationDictionary setObject:self.callerThreadId forKey:ADJLogCallerThreadIdKey];
-    }
-    
-    if (self.runningThreadId != nil) {
-        [foundationDictionary setObject:self.runningThreadId forKey:ADJLogRunningThreadIdKey];
     }
     
     if (self.instanceId != nil) {

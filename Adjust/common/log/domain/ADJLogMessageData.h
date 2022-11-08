@@ -20,6 +20,7 @@ FOUNDATION_EXPORT NSString *const ADJLogParamsKey;
 FOUNDATION_EXPORT NSString *const ADJLogSourceKey;
 FOUNDATION_EXPORT NSString *const ADJLogCallerThreadIdKey;
 FOUNDATION_EXPORT NSString *const ADJLogRunningThreadIdKey;
+FOUNDATION_EXPORT NSString *const ADJLogCallerDescriptionKey;
 FOUNDATION_EXPORT NSString *const ADJLogInstanceIdKey;
 FOUNDATION_EXPORT NSString *const ADJLogIsPreSdkInitKey;
 
@@ -31,8 +32,7 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)
     initWithInputData:(nonnull ADJInputLogMessageData *)inputData
     sourceDescription:(nonnull NSString *)sourceDescription
-    callerThreadId:(nullable NSNumber *)callerThreadId
-    runningThreadId:(nullable NSNumber *)runningThreadId
+    runningThreadId:(nullable NSString *)runningThreadId
     instanceId:(nullable NSString *)instanceId
 
 NS_DESIGNATED_INITIALIZER;
@@ -42,8 +42,7 @@ NS_DESIGNATED_INITIALIZER;
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
 @property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
-@property (nullable, readonly, strong, nonatomic) NSNumber *callerThreadId;
-@property (nullable, readonly, strong, nonatomic) NSNumber *runningThreadId;
+@property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readonly, strong, nonatomic) NSString *instanceId;
 
 // public API

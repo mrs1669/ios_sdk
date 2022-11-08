@@ -23,6 +23,11 @@
 @property (nonnull, readonly, strong, nonatomic) NSString *source;
 
 // public API
+- (void)
+    traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
+    runningThreadId:(nonnull NSString *)runningThreadId
+    callerDescription:(nonnull NSString *)callerDescription;
+
 - (nonnull ADJLogBuilder *)debugDevStart:(nonnull NSString *)message;
 
 - (nonnull id<ADJClientLogBuilder>)infoClientStart:(nonnull NSString *)message;
@@ -44,12 +49,8 @@
               value:(nullable NSString *)value;
 
 //- (void)logWithBuilder:(nonnull ADJLogBuilder *)logBuilder;
-/*
-- (nonnull NSString *)
-    traceThreadChangeWithCallerId:(nullable ADJNonNegativeInt *)callerThreadId
-    runningThreadId:(nonnull ADJNonNegativeInt *)runningThreadId
-    sourceDescription:(nonnull NSString *)sourceDescription;
-*/
+
+
 /*
 - (nonnull NSString *)debugWithIssue:(nonnull NSString *)issueType
                              message:(nonnull NSString *)message;

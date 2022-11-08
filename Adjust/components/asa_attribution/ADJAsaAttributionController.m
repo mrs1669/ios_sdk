@@ -39,16 +39,19 @@
 @end
 
 @implementation ADJAsaAttributionController
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                   asaAttributionStateStorage:(nonnull ADJAsaAttributionStateStorage *)asaAttributionStateStorage
-                                        clock:(nonnull ADJClock *)clock
-                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                         asaAttributionConfig:(nonnull ADJExternalConfigData *)asaAttributionConfig
-                           logQueueController:(nonnull ADJLogQueueController *)logQueueController
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                adjustAttributionStateStorage:(nonnull ADJAttributionStateStorage *)adjustAttributionStateStorage {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    asaAttributionStateStorage:(nonnull ADJAsaAttributionStateStorage *)asaAttributionStateStorage
+    clock:(nonnull ADJClock *)clock
+    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+    asaAttributionConfig:(nonnull ADJExternalConfigData *)asaAttributionConfig
+    logQueueController:(nonnull ADJLogQueueController *)logQueueController
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    adjustAttributionStateStorage:
+        (nonnull ADJAttributionStateStorage *)adjustAttributionStateStorage
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"AsaAttributionController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _logQueueControllerWeak = logQueueController;

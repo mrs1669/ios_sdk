@@ -7,17 +7,15 @@
 //
 
 #import "ADJSingleThreadExecutor.h"
+
 #import "ADJUtilSys.h"
+#import "ADJLocalThreadController.h"
 
 #pragma mark Fields
-#pragma mark - Public properties
-/* .h
- @property (nonnull, readonly, strong, nonatomic) dispatch_queue_t dispachQueue;
- */
-
 @interface ADJSingleThreadExecutor ()
 #pragma mark - Injected dependencies
 #pragma mark - Internal variables
+@property (nonnull, readonly, strong, nonatomic) dispatch_queue_t serialQueue;
 @property (readwrite, assign, nonatomic) BOOL isThreadExecuting;
 @property (readwrite, assign, nonatomic) BOOL hasFinalized;
 
@@ -32,7 +30,9 @@
                                  source:[NSString stringWithFormat:@"%@-SingleThreadExecutor",
                                          sourceDescription]];
 
-    _dispachQueue = dispatch_queue_create(self.source.UTF8String, DISPATCH_QUEUE_SERIAL);
+    _serialQueue = dispatch_queue_create(self.source.UTF8String,
+                                         dispatch_queue_attr_make_with_qos_class
+                                             (DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0));
 
     _isThreadExecuting = NO;
     _hasFinalized = NO;
@@ -47,46 +47,91 @@
 
 #pragma mark Public API
 - (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
-                delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+                     delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+                             source:(nonnull NSString *)source
 {
     if (delayTimeMilli.millisecondsSpan.uIntegerValue == 0) {
-        return [self executeAsyncWithBlock:blockToSchedule];
+        return [self executeInSequenceWithBlock:blockToSchedule source:source];
     }
-
+    
     if (self.hasFinalized) {
         return NO;
     }
+    
+    __block ADJLocalThreadController *_Nonnull localThreadController =
+        [ADJLocalThreadController instance];
+    
+    NSString *_Nonnull callerLocalId = [localThreadController localIdOrOutside];
 
+    __typeof(self) __weak weakSelf = self;
     dispatch_after
         ([ADJUtilSys dispatchTimeWithMilli:delayTimeMilli.millisecondsSpan.uIntegerValue],
-         self.dispachQueue,
-         blockToSchedule);
+         self.serialQueue,
+         ^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
+
+            NSString *_Nonnull runningLocalId =
+                [localThreadController
+                    setNextLocalIdWithSerialDispatchQueue:strongSelf.serialQueue];
+            
+            [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
+                                                   runningThreadId:runningLocalId
+                                                 callerDescription:source];
+
+            blockToSchedule();
+        });
 
     return YES;
 }
 
-- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute {
+- (BOOL)executeInSequenceSkippingTraceWithBlock:(nonnull void (^)(void))blockToExecute {
+    return [self executeInSequenceWithBlock:blockToExecute
+                                     source:@""
+                           skipTraceLocalId:YES];
+}
+
+- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
+                            source:(nonnull NSString *)source
+{
+    return [self executeInSequenceWithBlock:blockToExecute
+                                     source:source
+                           skipTraceLocalId:NO];
+}
+
+- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute
+                       source:(nonnull NSString *)source
+{
     if (self.hasFinalized) {
         return NO;
     }
 
-    //__typeof(self) __weak weakSelf = self;
-    dispatch_async(self.dispachQueue, ^{
-        //__typeof(weakSelf) __strong strongSelf = weakSelf;
-        //if (strongSelf != nil) { return; }
+    __block ADJLocalThreadController *_Nonnull localThreadController =
+        [ADJLocalThreadController instance];
 
+    NSString *_Nonnull callerLocalId = [localThreadController localIdOrOutside];
+
+    __typeof(self) __weak weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        NSString *_Nonnull runningLocalId =
+            [localThreadController setNextLocalIdInConcurrentThread];
+        
+        // no need to check for skip trace local id,
+        //  since there is no async executions downstream of the log collection.
+        //  If/when that changes, it will be necessary to check here
+        [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
+                                               runningThreadId:runningLocalId
+                                             callerDescription:source];
+        
         blockToExecute();
+
+        // because the thread can be reused by an outside execution
+        //  it needs to be clear to avoid reading it again by mistake
+        [localThreadController removeLocalIdInConcurrentThread];
     });
-
-    return YES;
-}
-
-- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute {
-    if (self.hasFinalized) {
-        return NO;
-    }
-
-    dispatch_async(self.dispachQueue, blockToExecute);
 
     return YES;
 }
@@ -94,13 +139,14 @@
 - (BOOL)
     executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
     blockToExecute:(nonnull void (^)(void))blockToExecute
+    source:(nonnull NSString *)source
 {
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
     BOOL canExecuteTask = [self executeAsyncWithBlock:^{
         blockToExecute();
         dispatch_semaphore_signal(semaphore);
-    }];
+    } source:source];
 
     if (! canExecuteTask) {
         return NO;
@@ -114,6 +160,31 @@
     BOOL timedOut = waitResult != 0;
 
     return ! timedOut;
+}
+
+// temporary
+- (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
+                     delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+{
+    return [self scheduleInSequenceWithBlock:blockToSchedule
+                              delayTimeMilli:delayTimeMilli
+                                      source:@"TORMV"];
+}
+
+- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute {
+    return [self executeInSequenceWithBlock:blockToExecute source:@"TORMV"];
+}
+
+- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute {
+    return [self executeAsyncWithBlock:blockToExecute source:@""];
+}
+
+- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
+                         blockToExecute:(nonnull void (^)(void))blockToExecute
+{
+    return [self executeSynchronouslyWithTimeout:timeout
+                                  blockToExecute:blockToExecute
+                                          source:@""];
 }
 
 #pragma mark - ADJTeardownFinalizer
@@ -130,6 +201,40 @@
 }
 
 #pragma mark Internal Methods
+- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
+                            source:(nonnull NSString *)source
+                  skipTraceLocalId:(BOOL)skipTraceLocalId
+{
+    
+    if (self.hasFinalized) {
+        return NO;
+    }
+
+    __block ADJLocalThreadController *_Nonnull localThreadController =
+        [ADJLocalThreadController instance];
+    
+    NSString *_Nonnull callerLocalId = [localThreadController localIdOrOutside];
+    
+    __typeof(self) __weak weakSelf = self;
+    dispatch_async(self.serialQueue, ^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        NSString *_Nonnull runningLocalId =
+            [localThreadController setNextLocalIdWithSerialDispatchQueue:strongSelf.serialQueue];
+        
+        if (! skipTraceLocalId) {
+            [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
+                                                   runningThreadId:runningLocalId
+                                                 callerDescription:source];
+        }
+
+        blockToExecute();
+    });
+
+    return YES;
+}
+
 /*
  private void tryToRunI(@NonNull final RunnableWrap runnableWrap) {
      try {

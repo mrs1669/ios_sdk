@@ -19,10 +19,25 @@
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
-// properties
-@property (nonnull, readonly, strong, nonatomic) dispatch_queue_t dispachQueue;
-
 // public api
+- (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
+                     delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+                             source:(nonnull NSString *)source;
+
+- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
+                            source:(nonnull NSString *)source;
+
+- (BOOL)executeInSequenceSkippingTraceWithBlock:(nonnull void (^)(void))blockToExecute;
+
+- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute
+                       source:(nonnull NSString *)source;
+
+- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
+                         blockToExecute:(nonnull void (^)(void))blockToExecute
+                                 source:(nonnull NSString *)source;
+
+
+// temporary
 - (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
                      delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli;
 

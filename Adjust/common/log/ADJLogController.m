@@ -66,7 +66,7 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [commonExecutor executeInSequenceWithBlock:^{
+    [commonExecutor executeInSequenceSkippingTraceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         

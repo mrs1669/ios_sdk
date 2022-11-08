@@ -2944,6 +2944,41 @@
 		6F85473D2913B898008F6F42 /* ADJLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */; };
 		6F85473E2913B898008F6F42 /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
 		6F85473F2913B898008F6F42 /* ADJLogBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF51290BFDF6009F1DAD /* ADJLogBuilder.m */; };
+		6F854774291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		6F854775291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
+		6F854776291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
+		6F854777291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
+		6F854778291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
+		6F854779291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
+		6F85477A291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
+		6F85477B291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		6F85477C291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		6F85477D291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		6F85477E291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		6F85477F291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		6F854780291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		6F854781291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		6F85479429185EBA008F6F42 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		6F85479529185EBA008F6F42 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
+		6F85479629185EBA008F6F42 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
+		6F85479729185EBA008F6F42 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
+		6F85479829185EBA008F6F42 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
+		6F85479929185EBA008F6F42 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
+		6F85479A29185EBA008F6F42 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
+		6F85479B29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		6F85479C29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		6F85479D29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		6F85479E29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		6F85479F29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		6F8547A029185EBA008F6F42 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		6F8547A129185EBA008F6F42 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		6F8547A42919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		6F8547A52919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */; };
+		6F8547A62919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */; };
+		6F8547A72919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */; };
+		6F8547A82919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */; };
+		6F8547A92919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */; };
+		6F8547AA2919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */; };
 		6FAC56B4288FDFBD0070F564 /* ADJSessionPackageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC56B2288FDFBD0070F564 /* ADJSessionPackageData.m */; };
 		6FAC56B8288FDFF80070F564 /* ADJSdkPackageBaseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC56B6288FDFF80070F564 /* ADJSdkPackageBaseData.m */; };
 		6FAC56C0288FE0B20070F564 /* ADJConstantsParam.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC56BE288FE0B20070F564 /* ADJConstantsParam.m */; };
@@ -3369,6 +3404,11 @@
 		6F5B3E6C288AE1E5008539DD /* ADJKeepAliveSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJKeepAliveSubscriber.h; sourceTree = "<group>"; };
 		6F6073D4288AE288006D0743 /* ADJLifecycleSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLifecycleSubscriber.h; sourceTree = "<group>"; };
 		6F69DE4D288ADEA200234640 /* ADJSubscribingGateSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSubscribingGateSubscriber.h; sourceTree = "<group>"; };
+		6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAtomicTallyCounter.h; sourceTree = "<group>"; };
+		6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJAtomicTallyCounter.m; sourceTree = "<group>"; };
+		6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLocalThreadController.h; sourceTree = "<group>"; };
+		6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJLocalThreadController.m; sourceTree = "<group>"; };
+		6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJConcurrentThreadExecutor.h; sourceTree = "<group>"; };
 		6FAC56AC288FDF610070F564 /* ADJSdkPackageCreatingSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSdkPackageCreatingSubscriber.h; sourceTree = "<group>"; };
 		6FAC56B1288FDFBD0070F564 /* ADJSessionPackageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSessionPackageData.h; sourceTree = "<group>"; };
 		6FAC56B2288FDFBD0070F564 /* ADJSessionPackageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSessionPackageData.m; sourceTree = "<group>"; };
@@ -3675,6 +3715,8 @@
 				07F8027F28928A520068902F /* ADJMoneyDecimalAmount.m */,
 				07F8028228928B490068902F /* ADJMoneyDoubleAmount.h */,
 				07F8028328928B490068902F /* ADJMoneyDoubleAmount.m */,
+				6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */,
+				6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */,
 			);
 			path = domain;
 			sourceTree = "<group>";
@@ -3835,6 +3877,9 @@
 				0737C1F2287F3E2A004C7D59 /* ADJSingleThreadExecutor.h */,
 				0737C1F3287F3E2A004C7D59 /* ADJSingleThreadExecutor.m */,
 				078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */,
+				6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */,
+				6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */,
+				6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */,
 			);
 			path = thread;
 			sourceTree = "<group>";
@@ -4664,6 +4709,7 @@
 				0A7ED7052892B11B00CC20DE /* ADJCommonBase.h in Headers */,
 				0A7ED7072892B11B00CC20DE /* ADJStringMapBuilder.h in Headers */,
 				0735D62328D36DAE00614B88 /* ADJClientCallbacksController.h in Headers */,
+				6F85479429185EBA008F6F42 /* ADJLocalThreadController.h in Headers */,
 				0A7ED7082892B11B00CC20DE /* ADJStringMap.h in Headers */,
 				07C6204A28B76D1900404236 /* ADJClientClearGlobalParametersData.h in Headers */,
 				0A7ED7092892B11B00CC20DE /* ADJBooleanWrapper.h in Headers */,
@@ -4712,10 +4758,12 @@
 				0A7ED7302892B11B00CC20DE /* ADJSdkPackageSendingSubscriber.h in Headers */,
 				0781AE5128B7628100818672 /* ADJGlobalParametersControllerBase.h in Headers */,
 				6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */,
+				6F8547A42919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */,
 				0A7ED7312892B11B00CC20DE /* ADJSdkResponseSubscriber.h in Headers */,
 				0A7ED7322892B11B00CC20DE /* ADJSdkResponseData.h in Headers */,
 				0A7ED7332892B11B00CC20DE /* ADJSessionResponseData.h in Headers */,
 				0A7ED7342892B11B00CC20DE /* ADJDelayData.h in Headers */,
+				6F854774291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A7ED7362892B11B00CC20DE /* ADJSdkResponseDataBuilder.h in Headers */,
 				0A7ED7372892B11B00CC20DE /* ADJUnknownResponseData.h in Headers */,
 				0A7ED7382892B11B00CC20DE /* ADJSdkResponseBaseData.h in Headers */,
@@ -4843,6 +4891,7 @@
 				0A25F8D628E5CAC3001988A1 /* ADJAdjustLogMessageData.h in Headers */,
 				0A25F8D728E5CAC3001988A1 /* ADJAdjustDeviceIds.h in Headers */,
 				0A25F8D828E5CAC3001988A1 /* ADJAdjustDeviceIdsCallback.h in Headers */,
+				6F85479529185EBA008F6F42 /* ADJLocalThreadController.h in Headers */,
 				0A25F8D928E5CAC3001988A1 /* ADJAdjustPushToken.h in Headers */,
 				0A25F8DA28E5CAC3001988A1 /* ADJAdjustEvent.h in Headers */,
 				0A25F8DB28E5CAC3001988A1 /* ADJAdjustAdRevenue.h in Headers */,
@@ -4929,6 +4978,7 @@
 				0A25F92A28E5CAC5001988A1 /* ADJSdkPackageSenderController.h in Headers */,
 				0A25F92B28E5CAC5001988A1 /* ADJV4FilesData.h in Headers */,
 				0A25F92C28E5CAC5001988A1 /* ADJV4ActivityState.h in Headers */,
+				6F854775291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A25F92D28E5CAC5001988A1 /* ADJV4Attribution.h in Headers */,
 				0A25F92E28E5CAC6001988A1 /* ADJV4ActivityPackage.h in Headers */,
 				0A25F92F28E5CAC6001988A1 /* ADJV4UserDefaultsData.h in Headers */,
@@ -5019,6 +5069,7 @@
 				0A25F98528E5CAC8001988A1 /* ADJMainQueueStateAndTracker.h in Headers */,
 				0A25F98628E5CAC8001988A1 /* ADJMainQueueController.h in Headers */,
 				0A25F98728E5CAC8001988A1 /* ADJMainQueueStorage.h in Headers */,
+				6F8547A52919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */,
 				6F8547192913B886008F6F42 /* ADJLogMessageData.h in Headers */,
 				0A25F98828E5CAC8001988A1 /* ADJLifecycleSubscriber.h in Headers */,
 				0A25F98928E5CAC8001988A1 /* ADJLifecycleController.h in Headers */,
@@ -5086,6 +5137,7 @@
 				0A25FAD428F42380001988A1 /* ADJAdjustDeviceIds.h in Headers */,
 				0A25FAD528F42380001988A1 /* ADJAdjustDeviceIdsCallback.h in Headers */,
 				0A25FAD628F42380001988A1 /* ADJAdjustPushToken.h in Headers */,
+				6F85479629185EBA008F6F42 /* ADJLocalThreadController.h in Headers */,
 				0A25FAD728F42380001988A1 /* ADJAdjustEvent.h in Headers */,
 				0A25FAD828F42380001988A1 /* ADJAdjustAdRevenue.h in Headers */,
 				0A25FAD928F42380001988A1 /* ADJAdjustLaunchedDeeplink.h in Headers */,
@@ -5172,6 +5224,7 @@
 				0A25FB2728F42381001988A1 /* ADJSdkPackageSenderController.h in Headers */,
 				0A25FB2828F42381001988A1 /* ADJV4FilesData.h in Headers */,
 				0A25FB2928F42381001988A1 /* ADJV4ActivityState.h in Headers */,
+				6F854776291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A25FB2A28F42381001988A1 /* ADJV4Attribution.h in Headers */,
 				0A25FB2B28F42381001988A1 /* ADJV4ActivityPackage.h in Headers */,
 				0A25FB2C28F42381001988A1 /* ADJV4UserDefaultsData.h in Headers */,
@@ -5262,6 +5315,7 @@
 				0A25FB8228F42382001988A1 /* ADJMainQueueStateAndTracker.h in Headers */,
 				0A25FB8328F42382001988A1 /* ADJMainQueueController.h in Headers */,
 				0A25FB8428F42382001988A1 /* ADJMainQueueStorage.h in Headers */,
+				6F8547A62919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */,
 				6F85471D2913B887008F6F42 /* ADJLogMessageData.h in Headers */,
 				0A25FB8528F42382001988A1 /* ADJLifecycleSubscriber.h in Headers */,
 				0A25FB8628F42382001988A1 /* ADJLifecycleController.h in Headers */,
@@ -5329,6 +5383,7 @@
 				0A25FCA328F43C2C001988A1 /* ADJAdjustDeviceIds.h in Headers */,
 				0A25FCA428F43C2C001988A1 /* ADJAdjustDeviceIdsCallback.h in Headers */,
 				0A25FCA528F43C2C001988A1 /* ADJAdjustPushToken.h in Headers */,
+				6F85479729185EBA008F6F42 /* ADJLocalThreadController.h in Headers */,
 				0A25FCA628F43C2C001988A1 /* ADJAdjustEvent.h in Headers */,
 				0A25FCA728F43C2C001988A1 /* ADJAdjustAdRevenue.h in Headers */,
 				0A25FCA828F43C2C001988A1 /* ADJAdjustLaunchedDeeplink.h in Headers */,
@@ -5415,6 +5470,7 @@
 				0A25FCF628F43C2C001988A1 /* ADJSdkPackageSenderController.h in Headers */,
 				0A25FCF728F43C2C001988A1 /* ADJV4FilesData.h in Headers */,
 				0A25FCF828F43C2C001988A1 /* ADJV4ActivityState.h in Headers */,
+				6F854777291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A25FCF928F43C2C001988A1 /* ADJV4Attribution.h in Headers */,
 				0A25FCFA28F43C2C001988A1 /* ADJV4ActivityPackage.h in Headers */,
 				0A25FCFB28F43C2C001988A1 /* ADJV4UserDefaultsData.h in Headers */,
@@ -5505,6 +5561,7 @@
 				0A25FD5128F43C2D001988A1 /* ADJMainQueueStateAndTracker.h in Headers */,
 				0A25FD5228F43C2D001988A1 /* ADJMainQueueController.h in Headers */,
 				0A25FD5328F43C2D001988A1 /* ADJMainQueueStorage.h in Headers */,
+				6F8547A72919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */,
 				6F8547212913B888008F6F42 /* ADJLogMessageData.h in Headers */,
 				0A25FD5428F43C2D001988A1 /* ADJLifecycleSubscriber.h in Headers */,
 				0A25FD5528F43C2D001988A1 /* ADJLifecycleController.h in Headers */,
@@ -5572,6 +5629,7 @@
 				0A7E488428F8276C00827F0B /* ADJAdjustDeviceIds.h in Headers */,
 				0A7E488528F8276C00827F0B /* ADJAdjustDeviceIdsCallback.h in Headers */,
 				0A7E488628F8276C00827F0B /* ADJAdjustPushToken.h in Headers */,
+				6F85479829185EBA008F6F42 /* ADJLocalThreadController.h in Headers */,
 				0A7E488728F8276C00827F0B /* ADJAdjustEvent.h in Headers */,
 				0A7E488828F8276C00827F0B /* ADJAdjustAdRevenue.h in Headers */,
 				0A7E488928F8276C00827F0B /* ADJAdjustLaunchedDeeplink.h in Headers */,
@@ -5658,6 +5716,7 @@
 				0A7E48D728F8276C00827F0B /* ADJSdkPackageSenderController.h in Headers */,
 				0A7E48D828F8276C00827F0B /* ADJV4FilesData.h in Headers */,
 				0A7E48D928F8276C00827F0B /* ADJV4ActivityState.h in Headers */,
+				6F854778291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A7E48DA28F8276C00827F0B /* ADJV4Attribution.h in Headers */,
 				0A7E48DB28F8276C00827F0B /* ADJV4ActivityPackage.h in Headers */,
 				0A7E48DC28F8276C00827F0B /* ADJV4UserDefaultsData.h in Headers */,
@@ -5748,6 +5807,7 @@
 				0A7E493228F8276D00827F0B /* ADJMainQueueStateAndTracker.h in Headers */,
 				0A7E493328F8276D00827F0B /* ADJMainQueueController.h in Headers */,
 				0A7E493428F8276D00827F0B /* ADJMainQueueStorage.h in Headers */,
+				6F8547A82919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */,
 				6F8547252913B888008F6F42 /* ADJLogMessageData.h in Headers */,
 				0A7E493528F8276D00827F0B /* ADJLifecycleSubscriber.h in Headers */,
 				0A7E493628F8276D00827F0B /* ADJLifecycleController.h in Headers */,
@@ -5815,6 +5875,7 @@
 				0A7E497428F82F6B00827F0B /* ADJAdjustDeviceIds.h in Headers */,
 				0A7E497528F82F6B00827F0B /* ADJAdjustDeviceIdsCallback.h in Headers */,
 				0A7E497628F82F6B00827F0B /* ADJAdjustPushToken.h in Headers */,
+				6F85479929185EBA008F6F42 /* ADJLocalThreadController.h in Headers */,
 				0A7E497728F82F6B00827F0B /* ADJAdjustEvent.h in Headers */,
 				0A7E497828F82F6B00827F0B /* ADJAdjustAdRevenue.h in Headers */,
 				0A7E497928F82F6B00827F0B /* ADJAdjustLaunchedDeeplink.h in Headers */,
@@ -5901,6 +5962,7 @@
 				0A7E49C728F82F6C00827F0B /* ADJSdkPackageSenderController.h in Headers */,
 				0A7E49C828F82F6C00827F0B /* ADJV4FilesData.h in Headers */,
 				0A7E49C928F82F6C00827F0B /* ADJV4ActivityState.h in Headers */,
+				6F854779291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A7E49CA28F82F6C00827F0B /* ADJV4Attribution.h in Headers */,
 				0A7E49CB28F82F6C00827F0B /* ADJV4ActivityPackage.h in Headers */,
 				0A7E49CC28F82F6C00827F0B /* ADJV4UserDefaultsData.h in Headers */,
@@ -5991,6 +6053,7 @@
 				0A7E4A2228F82F6D00827F0B /* ADJMainQueueStateAndTracker.h in Headers */,
 				0A7E4A2328F82F6D00827F0B /* ADJMainQueueController.h in Headers */,
 				0A7E4A2428F82F6D00827F0B /* ADJMainQueueStorage.h in Headers */,
+				6F8547A92919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */,
 				6F8547292913B889008F6F42 /* ADJLogMessageData.h in Headers */,
 				0A7E4A2528F82F6D00827F0B /* ADJLifecycleSubscriber.h in Headers */,
 				0A7E4A2628F82F6D00827F0B /* ADJLifecycleController.h in Headers */,
@@ -6058,6 +6121,7 @@
 				0A7E4A5E28F830AC00827F0B /* ADJAdjustLogMessageData.h in Headers */,
 				0A7E4A5F28F830AC00827F0B /* ADJAdjustDeviceIds.h in Headers */,
 				0A7E4A6028F830AC00827F0B /* ADJAdjustDeviceIdsCallback.h in Headers */,
+				6F85479A29185EBA008F6F42 /* ADJLocalThreadController.h in Headers */,
 				0A7E4A6128F830AC00827F0B /* ADJAdjustPushToken.h in Headers */,
 				0A7E4A6228F830AC00827F0B /* ADJAdjustEvent.h in Headers */,
 				0A7E4A6328F830AC00827F0B /* ADJAdjustAdRevenue.h in Headers */,
@@ -6144,6 +6208,7 @@
 				0A7E4AB228F830AD00827F0B /* ADJSdkPackageSenderController.h in Headers */,
 				0A7E4AB328F830AD00827F0B /* ADJV4FilesData.h in Headers */,
 				0A7E4AB428F830AD00827F0B /* ADJV4ActivityState.h in Headers */,
+				6F85477A291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A7E4AB528F830AD00827F0B /* ADJV4Attribution.h in Headers */,
 				0A7E4AB628F830AD00827F0B /* ADJV4ActivityPackage.h in Headers */,
 				0A7E4AB728F830AD00827F0B /* ADJV4UserDefaultsData.h in Headers */,
@@ -6234,6 +6299,7 @@
 				0A7E4B0D28F830AF00827F0B /* ADJMainQueueStateAndTracker.h in Headers */,
 				0A7E4B0E28F830AF00827F0B /* ADJMainQueueController.h in Headers */,
 				0A7E4B0F28F830AF00827F0B /* ADJMainQueueStorage.h in Headers */,
+				6F8547AA2919337F008F6F42 /* ADJConcurrentThreadExecutor.h in Headers */,
 				6F85472D2913B889008F6F42 /* ADJLogMessageData.h in Headers */,
 				0A7E4B1028F830AF00827F0B /* ADJLifecycleSubscriber.h in Headers */,
 				0A7E4B1128F830AF00827F0B /* ADJLifecycleController.h in Headers */,
@@ -6609,6 +6675,7 @@
 				079E154A28CA0CE5006E84EF /* ADJClientLaunchedDeeplinkData.m in Sources */,
 				0741CDCB28D59F390041C816 /* ADJBillingSubscriptionPackageData.m in Sources */,
 				0737C206287F3E2A004C7D59 /* ADJPublisherBase.m in Sources */,
+				6F85479B29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */,
 				0AB23D10289E94BA008B1835 /* ADJDeviceIdsStorage.m in Sources */,
 				6F214E5C288A9EF6002319D7 /* ADJAdjustInternal.m in Sources */,
 				0AB23D34289E94F2008B1835 /* ADJSessionDeviceIdsData.m in Sources */,
@@ -6685,6 +6752,7 @@
 				0735D62828D36EB200614B88 /* ADJClientSubscriptionsController.m in Sources */,
 				6F214E7E288AD04B002319D7 /* ADJMeasurementSessionStateData.m in Sources */,
 				6FAC56D3288FE2650070F564 /* ADJEventStateStorage.m in Sources */,
+				6F85477B291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */,
 				07DD776028B4F298005A2245 /* ADJAdRevenuePackageData.m in Sources */,
 				0737C1FD287F3E2A004C7D59 /* ADJUtilObj.m in Sources */,
 				0737C204287F3E2A004C7D59 /* ADJLogger.m in Sources */,
@@ -6804,6 +6872,7 @@
 				0A25F9E628E5CB2E001988A1 /* ADJLogger.m in Sources */,
 				0A25F9E728E5CB2E001988A1 /* ADJLogController.m in Sources */,
 				0A25F9E828E5CB2E001988A1 /* ADJConsoleLogger.m in Sources */,
+				6F85479C29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */,
 				0A25F9E928E5CB2E001988A1 /* ADJPublisherBase.m in Sources */,
 				0A25F9EA28E5CB2E001988A1 /* ADJExternalConfigData.m in Sources */,
 				0A25F9EB28E5CB2E001988A1 /* ADJSessionResponseData.m in Sources */,
@@ -6880,6 +6949,7 @@
 				0A25FA3228E5CB2F001988A1 /* ADJReachabilityController.m in Sources */,
 				0A25FA3328E5CB2F001988A1 /* ADJOfflineController.m in Sources */,
 				0A25FA3428E5CB2F001988A1 /* ADJPausingController.m in Sources */,
+				6F85477C291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */,
 				0A25FA3528E5CB2F001988A1 /* ADJPausingState.m in Sources */,
 				0A25FA3628E5CB2F001988A1 /* ADJClientEventData.m in Sources */,
 				0A25FA3728E5CB2F001988A1 /* ADJEventDeduplicationData.m in Sources */,
@@ -6999,6 +7069,7 @@
 				0A25FBEC28F43027001988A1 /* ADJLogger.m in Sources */,
 				0A25FBED28F43027001988A1 /* ADJLogController.m in Sources */,
 				0A25FBEE28F43027001988A1 /* ADJConsoleLogger.m in Sources */,
+				6F85479D29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */,
 				0A25FBEF28F43027001988A1 /* ADJPublisherBase.m in Sources */,
 				0A25FBF028F43027001988A1 /* ADJExternalConfigData.m in Sources */,
 				0A25FBF128F43027001988A1 /* ADJSessionResponseData.m in Sources */,
@@ -7075,6 +7146,7 @@
 				0A25FC3828F43028001988A1 /* ADJReachabilityController.m in Sources */,
 				0A25FC3928F43028001988A1 /* ADJOfflineController.m in Sources */,
 				0A25FC3A28F43028001988A1 /* ADJPausingController.m in Sources */,
+				6F85477D291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */,
 				0A25FC3B28F43028001988A1 /* ADJPausingState.m in Sources */,
 				0A25FC3C28F43028001988A1 /* ADJClientEventData.m in Sources */,
 				0A25FC3D28F43028001988A1 /* ADJEventDeduplicationData.m in Sources */,
@@ -7194,6 +7266,7 @@
 				0A25FDEB28F442DE001988A1 /* ADJLogger.m in Sources */,
 				0A25FDEC28F442DE001988A1 /* ADJLogController.m in Sources */,
 				0A25FDED28F442DE001988A1 /* ADJConsoleLogger.m in Sources */,
+				6F85479E29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */,
 				0A25FDEE28F442DE001988A1 /* ADJPublisherBase.m in Sources */,
 				0A25FDEF28F442DE001988A1 /* ADJExternalConfigData.m in Sources */,
 				0A25FDF028F442DE001988A1 /* ADJSessionResponseData.m in Sources */,
@@ -7270,6 +7343,7 @@
 				0A25FE3728F442DE001988A1 /* ADJReachabilityController.m in Sources */,
 				0A25FE3828F442DE001988A1 /* ADJOfflineController.m in Sources */,
 				0A25FE3928F442DE001988A1 /* ADJPausingController.m in Sources */,
+				6F85477E291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */,
 				0A25FE3A28F442DE001988A1 /* ADJPausingState.m in Sources */,
 				0A25FE3B28F442DE001988A1 /* ADJClientEventData.m in Sources */,
 				0A25FE3C28F442DE001988A1 /* ADJEventDeduplicationData.m in Sources */,
@@ -7389,6 +7463,7 @@
 				0A2BF92E28F6053000852E17 /* ADJLogger.m in Sources */,
 				0A2BF92F28F6053000852E17 /* ADJLogController.m in Sources */,
 				0A2BF93028F6053000852E17 /* ADJConsoleLogger.m in Sources */,
+				6F85479F29185EBA008F6F42 /* ADJLocalThreadController.m in Sources */,
 				0A2BF93128F6053000852E17 /* ADJPublisherBase.m in Sources */,
 				0A2BF93228F6053000852E17 /* ADJExternalConfigData.m in Sources */,
 				0A2BF93328F6053000852E17 /* ADJSessionResponseData.m in Sources */,
@@ -7465,6 +7540,7 @@
 				0A2BF97A28F6053100852E17 /* ADJReachabilityController.m in Sources */,
 				0A2BF97B28F6053100852E17 /* ADJOfflineController.m in Sources */,
 				0A2BF97C28F6053100852E17 /* ADJPausingController.m in Sources */,
+				6F85477F291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */,
 				0A2BF97D28F6053100852E17 /* ADJPausingState.m in Sources */,
 				0A2BF97E28F6053100852E17 /* ADJClientEventData.m in Sources */,
 				0A2BF97F28F6053100852E17 /* ADJEventDeduplicationData.m in Sources */,
@@ -7584,6 +7660,7 @@
 				0A2BFA0B28F6072400852E17 /* ADJLogger.m in Sources */,
 				0A2BFA0C28F6072400852E17 /* ADJLogController.m in Sources */,
 				0A2BFA0D28F6072400852E17 /* ADJConsoleLogger.m in Sources */,
+				6F8547A029185EBA008F6F42 /* ADJLocalThreadController.m in Sources */,
 				0A2BFA0E28F6072400852E17 /* ADJPublisherBase.m in Sources */,
 				0A2BFA0F28F6072400852E17 /* ADJExternalConfigData.m in Sources */,
 				0A2BFA1028F6072400852E17 /* ADJSessionResponseData.m in Sources */,
@@ -7660,6 +7737,7 @@
 				0A2BFA5728F6072500852E17 /* ADJReachabilityController.m in Sources */,
 				0A2BFA5828F6072500852E17 /* ADJOfflineController.m in Sources */,
 				0A2BFA5928F6072500852E17 /* ADJPausingController.m in Sources */,
+				6F854780291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */,
 				0A2BFA5A28F6072500852E17 /* ADJPausingState.m in Sources */,
 				0A2BFA5B28F6072500852E17 /* ADJClientEventData.m in Sources */,
 				0A2BFA5C28F6072500852E17 /* ADJEventDeduplicationData.m in Sources */,
@@ -7779,6 +7857,7 @@
 				0A2BFAEE28F60B8C00852E17 /* ADJLogger.m in Sources */,
 				0A2BFAEF28F60B8C00852E17 /* ADJLogController.m in Sources */,
 				0A2BFAF028F60B8C00852E17 /* ADJConsoleLogger.m in Sources */,
+				6F8547A129185EBA008F6F42 /* ADJLocalThreadController.m in Sources */,
 				0A2BFAF128F60B8C00852E17 /* ADJPublisherBase.m in Sources */,
 				0A2BFAF228F60B8C00852E17 /* ADJExternalConfigData.m in Sources */,
 				0A2BFAF328F60B8C00852E17 /* ADJSessionResponseData.m in Sources */,
@@ -7855,6 +7934,7 @@
 				0A2BFB3A28F60B8D00852E17 /* ADJReachabilityController.m in Sources */,
 				0A2BFB3B28F60B8D00852E17 /* ADJOfflineController.m in Sources */,
 				0A2BFB3C28F60B8D00852E17 /* ADJPausingController.m in Sources */,
+				6F854781291851EB008F6F42 /* ADJAtomicTallyCounter.m in Sources */,
 				0A2BFB3D28F60B8D00852E17 /* ADJPausingState.m in Sources */,
 				0A2BFB3E28F60B8D00852E17 /* ADJClientEventData.m in Sources */,
 				0A2BFB3F28F60B8D00852E17 /* ADJEventDeduplicationData.m in Sources */,

@@ -16,6 +16,7 @@
 #import "ADJSdkPackageSendingSubscriber.h"
 
 #import "ADJThreadExecutorFactory.h"
+#import "ADJConcurrentThreadExecutor.h"
 #import "ADJLogQueueController.h"
 #import "ADJMainQueueController.h"
 #import "ADJSdkPackageBuilder.h"

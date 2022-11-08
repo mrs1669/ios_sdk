@@ -62,11 +62,10 @@
     _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
 
     _rootLogger = [_logController createLoggerWithSource:@"EntryRoot"];
-/*
-    [_rootLogger debugDevStart:@"log without closing"].wKv(@"key1", @"value1");
+
 
     [_rootLogger debugDevStart:@"log with closing"].wKv(@"key2", @"value2").end();
-*/
+
     _preSdkInitRootController = nil;
 
     _postSdkInitRootController = nil;
@@ -75,10 +74,12 @@
     [_clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
+        
+        [strongSelf.rootLogger debugDevStart:@"TORMV"].end();
 
         strongSelf.preSdkInitRootController =
-        [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
-                                                         entryRoot:strongSelf];
+            [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
+                                                             entryRoot:strongSelf];
     }];
 
     return self;
