@@ -35,13 +35,13 @@
 
 - (void)didReadWithAdjustAttribution:(ADJAdjustAttribution *)adjustAttribution {
     NSString *adjustAttributionString = adjustAttribution.description;
-    NSString *javaScript = [NSString stringWithFormat:@"attributionCallback('%@');", adjustAttributionString];
+    NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@');", adjustAttributionString];
     [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 }
 
 - (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     NSString *adjustAttributionString = adjustAttribution.description;
-    NSString *javaScript = [NSString stringWithFormat:@"%@", adjustAttributionString];
+    NSString *javaScript = [NSString stringWithFormat:@"didChangeWithAdjustAttribution('%@')", adjustAttributionString];
     [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 }
 
@@ -58,91 +58,18 @@
 
     if ([action isEqual:@"adjust_trackEvent"]) {
 
-        NSString *eventToken = [data objectForKey:@"eventToken"];
-        NSString *revenue = [data objectForKey:@"revenue"];
-        NSString *currency = [data objectForKey:@"currency"];
-        NSString *deduplicationId = [data objectForKey:@"deduplicationId"];
-        id callbackParameters = [data objectForKey:@"callbackParameters"];
-        id partnerParameters = [data objectForKey:@"partnerParameters"];
-
-        ADJAdjustEvent *_Nonnull adjustEvent = [[ADJAdjustEvent alloc] initWithEventId:eventToken];
-
-        if ([self isFieldValid:@"deduplicationId"]) {
-            [adjustEvent setDeduplicationId:deduplicationId];
-        }
-
-        if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
-            [adjustEvent setRevenueWithDouble:[revenue doubleValue] currency:currency];
-        }
-
-        for (int i = 0; i < [callbackParameters count]; i += 2) {
-            NSString *key = [[callbackParameters objectAtIndex:i] description];
-            NSString *value = [[callbackParameters objectAtIndex:(i + 1)] description];
-            [adjustEvent addCallbackParameterWithKey:key value:value];
-        }
-
-        for (int i = 0; i < [partnerParameters count]; i += 2) {
-            NSString *key = [[partnerParameters objectAtIndex:i] description];
-            NSString *value = [[partnerParameters objectAtIndex:(i + 1)] description];
-            [adjustEvent addPartnerParameterWithKey:key value:value];
-        }
-
-        [ADJAdjust trackEvent:adjustEvent];
+        [self trackEvent:data];
 
     } else if ([action isEqual:@"adjust_trackAdRevenue"]) {
 
-        NSString *adRevenueSource = [data objectForKey:@"source"];
-        NSNumber *revenue = [data objectForKey:@"revenue"];
-        NSNumber *adImpressionsCount = [data objectForKey:@"adImpressionsCount"];
-        NSString *currency = [data objectForKey:@"currency"];
-        NSString *adRevenueNetwork = [data objectForKey:@"adRevenueNetwork"];
-        NSString *adRevenueUnit = [data objectForKey:@"adRevenueUnit"];
-        NSString *adRevenuePlacement = [data objectForKey:@"adRevenuePlacement"];
+        [self trackAdRevenue:data];
 
-        id callbackParameters = [data objectForKey:@"callbackParameters"];
-        id partnerParameters = [data objectForKey:@"partnerParameters"];
-
-        ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
-
-        if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
-            [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
-        }
-
-        if ([self isFieldValid:adImpressionsCount]) {
-            [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCount];
-        }
-
-        if ([self isFieldValid:adRevenueNetwork]) {
-            [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork];
-        }
-
-        if ([self isFieldValid:adRevenueUnit]) {
-            [adjustAdRevenue setAdRevenueUnit:adRevenueUnit];
-        }
-
-        if ([self isFieldValid:adRevenuePlacement]) {
-            [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement];
-        }
-
-        for (int i = 0; i < [callbackParameters count]; i += 2) {
-            NSString *key = [[callbackParameters objectAtIndex:i] description];
-            NSString *value = [[callbackParameters objectAtIndex:(i + 1)] description];
-            [adjustAdRevenue addCallbackParameterWithKey:key value:value];
-        }
-
-        for (int i = 0; i < [partnerParameters count]; i += 2) {
-            NSString *key = [[partnerParameters objectAtIndex:i] description];
-            NSString *value = [[partnerParameters objectAtIndex:(i + 1)] description];
-            [adjustAdRevenue addPartnerParameterWithKey:key value:value];
-        }
-
-        [ADJAdjust trackAdRevenue:adjustAdRevenue];
-        
     } else if ([action isEqual:@"adjust_trackPushToken"]) {
 
         if (![data isKindOfClass:[NSString class]]) {
             return;
         }
+
         ADJAdjustPushToken *pushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:(NSString *)data];
         [ADJAdjust trackPushToken:pushToken];
 
@@ -160,35 +87,16 @@
 
     } else if ([action isEqual: @"adjust_trackDeeplink"]) {
 
-        ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:data];
+        if (![data isKindOfClass:[NSString class]]) {
+            return;
+        }
+
+        ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:(NSString *)data];
         [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
         
     } else if ([action isEqual: @"adjust_trackThirdPartySharing"]) {
 
-        id isEnabledO = [data objectForKey:@"isEnabled"];
-        id granularOptions = [data objectForKey:@"granularOptions"];
-
-        NSNumber *isEnabled = nil;
-        if ([isEnabledO isKindOfClass:[NSNumber class]]) {
-            isEnabled = (NSNumber *)isEnabledO;
-        }
-
-        ADJAdjustThirdPartySharing *adjustThirdPartySharing = [ADJAdjustThirdPartySharing init];
-
-        if (isEnabled) {
-            [adjustThirdPartySharing enableThirdPartySharing];
-        } else {
-            [adjustThirdPartySharing disableThirdPartySharing];
-        }
-
-        for (int i = 0; i < [granularOptions count]; i += 3) {
-            NSString *partnerName = [[granularOptions objectAtIndex:i] description];
-            NSString *key = [[granularOptions objectAtIndex:(i + 1)] description];
-            NSString *value = [[granularOptions objectAtIndex:(i + 2)] description];
-            [adjustThirdPartySharing addGranularOptionWithPartnerName:partnerName key:key value:value];
-        }
-
-        [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
+        [self trackThirdPartySharing:data];
 
     } else if ([action isEqual: @"adjust_inactivateSdk"]) {
 
@@ -232,6 +140,120 @@
 
         [ADJAdjust gdprForgetDevice];
     }
+}
+
+- (void)trackEvent:(NSDictionary *)data {
+
+    NSString *eventToken = [data objectForKey:@"eventToken"];
+    NSString *revenue = [data objectForKey:@"revenue"];
+    NSString *currency = [data objectForKey:@"currency"];
+    NSString *deduplicationId = [data objectForKey:@"deduplicationId"];
+    id callbackParameters = [data objectForKey:@"callbackParameters"];
+    id partnerParameters = [data objectForKey:@"partnerParameters"];
+
+    ADJAdjustEvent *_Nonnull adjustEvent = [[ADJAdjustEvent alloc] initWithEventId:eventToken];
+
+    if ([self isFieldValid:@"deduplicationId"]) {
+        [adjustEvent setDeduplicationId:deduplicationId];
+    }
+
+    if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
+        [adjustEvent setRevenueWithDouble:[revenue doubleValue] currency:currency];
+    }
+
+    for (int i = 0; i < [callbackParameters count]; i += 2) {
+        NSString *key = [[callbackParameters objectAtIndex:i] description];
+        NSString *value = [[callbackParameters objectAtIndex:(i + 1)] description];
+        [adjustEvent addCallbackParameterWithKey:key value:value];
+    }
+
+    for (int i = 0; i < [partnerParameters count]; i += 2) {
+        NSString *key = [[partnerParameters objectAtIndex:i] description];
+        NSString *value = [[partnerParameters objectAtIndex:(i + 1)] description];
+        [adjustEvent addPartnerParameterWithKey:key value:value];
+    }
+
+    [ADJAdjust trackEvent:adjustEvent];
+}
+
+- (void)trackAdRevenue:(NSDictionary *)data {
+
+    NSString *adRevenueSource = [data objectForKey:@"source"];
+    NSNumber *revenue = [data objectForKey:@"revenue"];
+    NSNumber *adImpressionsCount = [data objectForKey:@"adImpressionsCount"];
+    NSString *currency = [data objectForKey:@"currency"];
+    NSString *adRevenueNetwork = [data objectForKey:@"adRevenueNetwork"];
+    NSString *adRevenueUnit = [data objectForKey:@"adRevenueUnit"];
+    NSString *adRevenuePlacement = [data objectForKey:@"adRevenuePlacement"];
+
+    id callbackParameters = [data objectForKey:@"callbackParameters"];
+    id partnerParameters = [data objectForKey:@"partnerParameters"];
+
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
+
+    if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
+        [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
+    }
+
+    if ([self isFieldValid:adImpressionsCount]) {
+        [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCount];
+    }
+
+    if ([self isFieldValid:adRevenueNetwork]) {
+        [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork];
+    }
+
+    if ([self isFieldValid:adRevenueUnit]) {
+        [adjustAdRevenue setAdRevenueUnit:adRevenueUnit];
+    }
+
+    if ([self isFieldValid:adRevenuePlacement]) {
+        [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement];
+    }
+
+    for (int i = 0; i < [callbackParameters count]; i += 2) {
+        NSString *key = [[callbackParameters objectAtIndex:i] description];
+        NSString *value = [[callbackParameters objectAtIndex:(i + 1)] description];
+        [adjustAdRevenue addCallbackParameterWithKey:key value:value];
+    }
+
+    for (int i = 0; i < [partnerParameters count]; i += 2) {
+        NSString *key = [[partnerParameters objectAtIndex:i] description];
+        NSString *value = [[partnerParameters objectAtIndex:(i + 1)] description];
+        [adjustAdRevenue addPartnerParameterWithKey:key value:value];
+    }
+
+    [ADJAdjust trackAdRevenue:adjustAdRevenue];
+
+}
+
+- (void)trackThirdPartySharing:(NSDictionary *)data {
+
+    id isEnabledO = [data objectForKey:@"isEnabled"];
+    id granularOptions = [data objectForKey:@"granularOptions"];
+
+    NSNumber *isEnabled = nil;
+    if ([isEnabledO isKindOfClass:[NSNumber class]]) {
+        isEnabled = (NSNumber *)isEnabledO;
+    }
+
+    ADJAdjustThirdPartySharing *adjustThirdPartySharing = [ADJAdjustThirdPartySharing init];
+
+    if (isEnabled) {
+        [adjustThirdPartySharing enableThirdPartySharing];
+    } else {
+        [adjustThirdPartySharing disableThirdPartySharing];
+    }
+
+    for (int i = 0; i < [granularOptions count]; i += 3) {
+        NSString *partnerName = [[granularOptions objectAtIndex:i] description];
+        NSString *key = [[granularOptions objectAtIndex:(i + 1)] description];
+        NSString *value = [[granularOptions objectAtIndex:(i + 2)] description];
+        [adjustThirdPartySharing addGranularOptionWithPartnerName:partnerName key:key value:value];
+    }
+
+    [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
+
 }
 
 #pragma mark - Private & helper methods

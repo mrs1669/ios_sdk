@@ -22,53 +22,53 @@
         <button onclick="removeGlobalPartnerParameter()">Remove Global Partner Parameter By Key</button><br>
         <button onclick="clearAllGlobalPartnerParameter()">Clear All Global Partner Parameters</button><br>
         <button onclick="gdprForgetMe()">Gdpr Forget Me</button><br>
-        
+
         <p id="demo"> </p>
         <script>
             function something() {
                 document.write('Hey, there!')
             }
-            
+
             function testMethod(returnedValue) {
                 // do you stuff with returned value here
                 document.write(returnedValue)
             }
-            
+
             function attributionCallback(returnedValue) {
                 // do you stuff with returned value here
                 document.write(returnedValue)
             }
-            
+
             function trackEvent() {
-                
+
                 const eventDetails = {
                     "eventToken" : "g3mfiw",
                     "revenue": "300.0",
                 };
-                
+
                 const message = {
                     action:'adjust_trackEvent',
                     data: eventDetails
                 };
-                
+
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function trackRevenue() {
-                
+
                 const revenueDetails = {
                     "source" : "g3mfiw",
                     "revenue": 300.0,
                 };
-                
+
                 const message = {
                     action:'adjust_trackAdRevenue',
                     data: revenueDetails,
                 };
-                
+
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function trackPushToken() {
                 const message = {
                     action:'adjust_trackPushToken',
@@ -76,21 +76,21 @@
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function goOffline() {
                 const message = {
                     action:'adjust_switchToOfflineMode',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function goOnline() {
                 const message = {
                     action:'adjust_switchToOnlineMode',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function trackDeeplink() {
                 const message = {
                     action:'adjust_trackDeeplink',
@@ -98,21 +98,21 @@
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function inactiveSDK() {
                 const message = {
                     action:'adjust_inactivateSdk',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function reactivateSDK() {
                 const message = {
                     action:'adjust_reactivateSdk',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function addGlobalCallbackParameter() {
                 const message = {
                     action:'adjust_addGlobalCallbackParameter',
@@ -121,7 +121,7 @@
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function removeGlobalCallbackParameter() {
                 const message = {
                     action:'adjust_removeGlobalCallbackParameterByKey',
@@ -129,14 +129,14 @@
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function clearAllGlobalCallbackParameter() {
                 const message = {
                     action:'adjust_clearAllGlobalCallbackParameters',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function addGlobalPartnerParameter() {
                 const message = {
                     action:'adjust_addGlobalPartnerParameter',
@@ -145,7 +145,7 @@
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function removeGlobalPartnerParameter() {
                 const message = {
                     action:'adjust_removeGlobalPartnerParameterByKey',
@@ -153,20 +153,20 @@
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function clearAllGlobalPartnerParameter() {
                 const message = {
                     action:'adjust_clearAllGlobalPartnerParameters',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
             function gdprForgetMe() {
                 const message = {
                     action:'adjust_gdprForgetMe',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
-            
+
         </script></body>
 </html>
