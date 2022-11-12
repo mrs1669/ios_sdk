@@ -11,6 +11,7 @@
 #import "ADJNonEmptyString.h"
 #import "ADJSdkConfigData.h"
 #import "ADJLogMessageData.h"
+#import "ADJInputLogMessageData.h"
 
 //#import <os/log.h>
 
@@ -27,6 +28,9 @@
 - (void)didSdkInitWithIsSandboxEnvironment:(BOOL)isSandboxEnvironment
                                   doLogAll:(BOOL)doLogAll
                                doNotLogAny:(BOOL)doNotLogAny;
+
++ (nonnull NSString *)clientFormatMessage:(nonnull ADJInputLogMessageData *)inputLogMessageData
+                             isPreSdkInit:(BOOL)isPreSdkInit;
 
 /*
  - (void)didLogMessage:(nonnull NSString *)logMessage

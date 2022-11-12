@@ -12,7 +12,7 @@
 
 @protocol ADJLogBuildCallback <NSObject>
 
-- (void)endInputLog:(nonnull ADJInputLogMessageData *)inputLogMessageData;
+- (void)logWithInput:(nonnull ADJInputLogMessageData *)inputLogMessageData;
 
 @end
 

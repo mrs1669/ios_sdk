@@ -16,6 +16,7 @@ FOUNDATION_EXPORT NSString *const ADJLogMessageKey;
 FOUNDATION_EXPORT NSString *const ADJLogLevelKey;
 FOUNDATION_EXPORT NSString *const ADJLogIssueKey;
 FOUNDATION_EXPORT NSString *const ADJLogErrorKey;
+FOUNDATION_EXPORT NSString *const ADJLogExceptionKey;
 FOUNDATION_EXPORT NSString *const ADJLogParamsKey;
 FOUNDATION_EXPORT NSString *const ADJLogSourceKey;
 FOUNDATION_EXPORT NSString *const ADJLogCallerThreadIdKey;
@@ -47,6 +48,11 @@ NS_DESIGNATED_INITIALIZER;
 
 // public API
 - (nonnull NSMutableDictionary <NSString *, id>*)generateFoundationDictionary;
+
++ (nonnull NSDictionary<NSString *, id> *)
+    generateFoundationDictionaryFromNsError:(nonnull NSError *)nsError;
++ (nonnull NSDictionary<NSString *, id> *)
+    generateFoundationDictionaryFromNsException:(nonnull NSException *)nsException;
 
 + (nonnull NSString *)generateJsonFromFoundationDictionary:
     (nonnull NSDictionary<NSString *, id> *)foundationDictionary;

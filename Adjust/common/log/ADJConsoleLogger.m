@@ -12,8 +12,6 @@
 
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConstants.h"
-#import "ADJInputLogMessageData.h"
-#import "ADJLogMessageData.h"
 #import "ADJUtilObj.h"
 
 #pragma mark Fields
@@ -141,31 +139,48 @@
         return;
     }
     
-    NSString *_Nonnull clientFormattedMessage = [self clientFormatMessage:logMessageData
-                                                             isPreSdkInit:isPreSdkInit];
+    NSString *_Nonnull clientFormattedMessage =
+        [ADJConsoleLogger clientFormatMessage:logMessageData.inputData
+                                 isPreSdkInit:isPreSdkInit];
     
     [self osLogWithFullMessage:clientFormattedMessage
                messageLogLevel:logMessageData.inputData.level];
 }
 
-- (nonnull NSString *)clientFormatMessage:(nonnull ADJLogMessageData *)logMessageData
++ (nonnull NSString *)clientFormatMessage:(nonnull ADJInputLogMessageData *)inputLogMessageData
                              isPreSdkInit:(BOOL)isPreSdkInit
 {
     NSString *_Nonnull message = isPreSdkInit ?
-        [NSString stringWithFormat:@"Pre-Init| %@", logMessageData.inputData.message]
-        : logMessageData.inputData.message;
+        [NSString stringWithFormat:@"Pre-Init| %@", inputLogMessageData.message]
+        : inputLogMessageData.message;
     
-    if (logMessageData.inputData.messageParams == nil) {
+    if (inputLogMessageData.messageParams == nil && inputLogMessageData.nsError == nil) {
         return message;
     }
-    
-    return [NSString stringWithFormat:@"%@ %@", logMessageData.inputData.message,
+
+    NSMutableString *_Nonnull stringBuilder = [[NSMutableString alloc] initWithString:message];
+
+    if (inputLogMessageData.messageParams != nil) {
+        [stringBuilder appendFormat:@" %@",
             [ADJLogMessageData generateJsonFromFoundationDictionary:
-                logMessageData.inputData.messageParams]];
-/*
-    return [ADJUtilObj formatInlineKeyValuesWithName:message
-                                 stringKeyDictionary:logMessageData.inputData.messageParams];
- */
+             inputLogMessageData.messageParams]];
+    }
+
+    if (inputLogMessageData.nsError != nil) {
+        [stringBuilder appendFormat:@" %@",
+            [ADJLogMessageData generateJsonFromFoundationDictionary:
+                [ADJLogMessageData generateFoundationDictionaryFromNsError:
+                 inputLogMessageData.nsError]]];
+    }
+
+    if (inputLogMessageData.nsException != nil) {
+        [stringBuilder appendFormat:@" %@",
+            [ADJLogMessageData generateJsonFromFoundationDictionary:
+                [ADJLogMessageData generateFoundationDictionaryFromNsException:
+                 inputLogMessageData.nsException]]];
+    }
+
+    return [stringBuilder description];
 }
 
 - (nonnull NSString *)devFormatMessage:(nonnull ADJLogMessageData *)logMessageData

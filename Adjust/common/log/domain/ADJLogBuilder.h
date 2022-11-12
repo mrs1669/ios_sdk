@@ -15,6 +15,10 @@
 @property(nonnull, nonatomic, copy, readonly)
     id<ADJClientLogBuilder> _Nonnull (^wKv)
         (NSString *_Nonnull key, NSString * _Nullable value);
+@property(nonnull, nonatomic, copy, readonly)
+    id<ADJClientLogBuilder> _Nonnull (^wError)(NSError * _Nonnull nsError);
+@property(nonnull, nonatomic, copy, readonly)
+    id<ADJClientLogBuilder>_Nonnull (^wException)(NSException * _Nonnull nsException);
 
 @property(nonnull, nonatomic, copy, readonly)
     id<ADJClientLogBuilder> _Nonnull (^end)(void);
@@ -32,12 +36,14 @@
 
 // public properties and API
 @property(nonnull, nonatomic, copy, readonly)
-    ADJLogBuilder *_Nonnull (^wIssue)(NSString * _Nonnull issueType);
+    ADJLogBuilder *_Nonnull (^wIssue)(ADJIssue _Nonnull issueType);
 @property(nonnull, nonatomic, copy, readonly)
     ADJLogBuilder *_Nonnull (^wKv)
         (NSString *_Nonnull key, NSString * _Nullable value);
 @property(nonnull, nonatomic, copy, readonly)
     ADJLogBuilder *_Nonnull (^wError)(NSError * _Nonnull nsError);
+@property(nonnull, nonatomic, copy, readonly)
+    ADJLogBuilder *_Nonnull (^wException)(NSException * _Nonnull nsException);
 
 @property(nonnull, nonatomic, copy, readonly)
     ADJLogBuilder *_Nonnull (^end)(void);

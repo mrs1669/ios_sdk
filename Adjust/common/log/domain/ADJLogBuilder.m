@@ -12,12 +12,14 @@
 #pragma mark - Public properties
 /* .h
  @property(nonnull, nonatomic, copy, readonly)
-     ADJLogBuilder *_Nonnull (^wIssue)(NSString * _Nonnull issueType);
+     ADJLogBuilder *_Nonnull (^wIssue)(ADJIssue _Nonnull issueType);
  @property(nonnull, nonatomic, copy, readonly)
      ADJLogBuilder *_Nonnull (^wKv)
          (NSString *_Nonnull key, NSString * _Nullable value);
  @property(nonnull, nonatomic, copy, readonly)
      ADJLogBuilder *_Nonnull (^wError)(NSString * _Nonnull nsError);
+ @property(nonnull, nonatomic, copy, readonly)
+     ADJLogBuilder *_Nonnull (^wException)(NSException * _Nonnull nsException);
 
  @property(nonnull, nonatomic, copy, readonly)
      ADJLogBuilder *_Nonnull (^log)(void);
@@ -32,8 +34,9 @@
 #pragma mark - Internal variables
 @property (nullable, readwrite, strong, nonatomic)
     NSMutableDictionary <NSString *, NSString *> *params;
-@property (nullable, readwrite, strong, nonatomic) NSString *issueType;
+@property (nullable, readwrite, strong, nonatomic) ADJIssue issueType;
 @property (nullable, readwrite, strong, nonatomic) NSError *nsError;
+@property (nullable, readwrite, strong, nonatomic) NSException *nsException;
 //@property (readwrite, assign, nonatomic) BOOL hasLogged;
 
 @end
@@ -53,6 +56,7 @@
     _params = nil;
     _issueType = nil;
     _nsError = nil;
+    _nsException = nil;
     
     return self;
 }
@@ -63,9 +67,9 @@
 }
 
 #pragma mark Public API
-- (ADJLogBuilder * (^)(NSString * _Nonnull))wIssue
+- (ADJLogBuilder * (^)(ADJIssue _Nonnull))wIssue
 {
-    return ^(NSString * _Nonnull issueType) {
+    return ^(ADJIssue _Nonnull issueType) {
         self.issueType = issueType;
         return self;
     };
@@ -89,18 +93,26 @@
         return self;
     };
 }
+- (ADJLogBuilder * (^)(NSException * _Nonnull))wException
+{
+    return ^(NSException * _Nonnull nsException) {
+        self.nsException = nsException;
+        return self;
+    };
+}
 
 - (ADJLogBuilder * (^)(void))end
 {
     // self.hasLogged = YES;
     return ^(void) {
-        [self.logBuildCallback endInputLog:
-         [[ADJInputLogMessageData alloc]
-          initWithMessage:self.message
-          level:self.logLevel
-          issueType:self.issueType
-          nsError:self.nsError
-          messageParams:self.params]];
+        [self.logBuildCallback logWithInput:
+             [[ADJInputLogMessageData alloc]
+              initWithMessage:self.message
+              level:self.logLevel
+              issueType:self.issueType
+              nsError:self.nsError
+              nsException:self.nsException
+              messageParams:self.params]];
         return self;
     };
 }

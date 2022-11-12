@@ -16,19 +16,33 @@
  @property (nullable, readonly, strong, nonatomic) NSString *callerThreadId;
  @property (nullable, readonly, strong, nonatomic) NSString *callerDescription;
  @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
- @property (nullable, readonly, strong, nonatomic) NSString *issueType;
+ @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
  @property (nullable, readonly, strong, nonatomic) NSError *nsError;
- @property (nullable, readonly, strong, nonatomic)
+ @property (nullable, readonly, strong, nonatomic) NSException* nsException;
+@property (nullable, readonly, strong, nonatomic)
      NSDictionary<NSString *, NSString*> *messageParams;
  */
-/*
+
 #pragma mark - Public constants
-NSString *const ADJLogLevelDevTrace = @"trace";
-NSString *const ADJLogLevelDevDebug = @"debug";
-NSString *const ADJLogLevelClientInfo = @"info";
-NSString *const ADJLogLevelClientNotice = @"notice";
-NSString *const ADJLogLevelClientError = @"error";
-*/
+ADJLogLevel const ADJLogLevelDevTrace = @"trace";
+ADJLogLevel const ADJLogLevelDevDebug = @"debug";
+ADJLogLevel const ADJLogLevelClientInfo = @"info";
+ADJLogLevel const ADJLogLevelClientNotice = @"notice";
+ADJLogLevel const ADJLogLevelClientError = @"error";
+
+ADJIssue const ADJIssueClientInput = @"client_input";
+ADJIssue const ADJIssueUnexpectedInput = @"unexpected_input";
+ADJIssue const ADJIssueInvalidInput = @"invalid_input";
+ADJIssue const ADJIssueExternalApi = @"external_api";
+ADJIssue const ADJIssueLogicError = @"logic_error";
+ADJIssue const ADJIssueNetworkRequest = @"network_request";
+ADJIssue const ADJIssueNonNativeIntegration = @"non_native_integration";
+ADJIssue const ADJIssueNonProdConfig = @"non_prod_config";
+ADJIssue const ADJIssuePluginOrigin = @"plugin_origin";
+ADJIssue const ADJIssueStorageIo = @"storage_io";
+ADJIssue const ADJIssueThreadsAndLocks = @"threads_and_locks";
+ADJIssue const ADJIssueWeakReference = @"weak_reference";
+
 @implementation ADJInputLogMessageData
 #pragma mark Instantiation
 - (nonnull instancetype)
@@ -42,6 +56,7 @@ NSString *const ADJLogLevelClientError = @"error";
                callerDescription:nil
                  runningThreadId:nil
                          nsError:nil
+                     nsException:nil
                    messageParams:nil];
 }
 
@@ -57,14 +72,16 @@ NSString *const ADJLogLevelClientError = @"error";
                callerDescription:nil
                  runningThreadId:nil
                          nsError:nil
+                     nsException:nil
                    messageParams:messageParams];
 }
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
     level:(nonnull NSString *)level
-    issueType:(nullable NSString *)issueType
+    issueType:(nullable ADJIssue)issueType
     nsError:(nullable NSError *)nsError
+    nsException:(nullable NSException *)nsException
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
 {
     return [self initWithMessage:message
@@ -74,6 +91,7 @@ NSString *const ADJLogLevelClientError = @"error";
                callerDescription:nil
                  runningThreadId:nil
                          nsError:nsError
+                     nsException:nsException
                    messageParams:messageParams];
 }
 
@@ -91,17 +109,19 @@ NSString *const ADJLogLevelClientError = @"error";
                callerDescription:callerDescription
                  runningThreadId:runningThreadId
                          nsError:nil
+                     nsException:nil
                    messageParams:nil];
 }
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
     level:(nonnull NSString *)level
-    issueType:(nullable NSString *)issueType
+    issueType:(nullable ADJIssue)issueType
     callerThreadId:(nullable NSString *)callerThreadId
     callerDescription:(nullable NSString *)callerDescription
     runningThreadId:(nullable NSString *)runningThreadId
     nsError:(nullable NSError *)nsError
+    nsException:(nullable NSException *)nsException
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
 {
     self = [super init];
@@ -113,6 +133,7 @@ NSString *const ADJLogLevelClientError = @"error";
     _callerDescription = callerDescription;
     _runningThreadId = runningThreadId;
     _nsError = nsError;
+    _nsException = nsException;
     _messageParams = messageParams;
 
     return self;

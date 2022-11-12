@@ -29,12 +29,58 @@
     callerDescription:(nonnull NSString *)callerDescription;
 
 - (nonnull ADJLogBuilder *)debugDevStart:(nonnull NSString *)message;
+- (void)debugDev:(nonnull NSString *)message;
+- (void)debugDev:(nonnull NSString *)message
+            from:(nonnull NSString *)from;
+- (void)debugDev:(nonnull NSString *)message
+             key:(nonnull NSString *)key
+           value:(nullable NSString *)value;
+- (void)debugDev:(nonnull NSString *)message
+            from:(nonnull NSString *)from
+             key:(nonnull NSString *)key
+           value:(nullable NSString *)value;
+- (void)debugDev:(nonnull NSString *)message
+            key1:(nonnull NSString *)key1
+          value1:(nullable NSString *)value1
+            key2:(nonnull NSString *)key2
+          value2:(nullable NSString *)value2;
+
+- (void)debugDev:(nonnull NSString *)message
+       issueType:(nonnull ADJIssue)issueType;
+- (void)debugDev:(nonnull NSString *)message
+         nserror:(nullable NSError *)nserror
+       issueType:(nonnull ADJIssue)issueType;
+- (void)debugDev:(nonnull NSString *)message
+   expectedValue:(nonnull NSString *)expectedValue
+     actualValue:(nullable NSString *)actualValue
+       issueType:(nonnull ADJIssue)issueType;
+- (void)debugDev:(nonnull NSString *)message
+       valueName:(nonnull NSString *)valueName
+       issueType:(nonnull ADJIssue)issueType;
+- (void)debugDev:(nonnull NSString *)message
+            from:(nonnull NSString *)from
+       issueType:(nonnull ADJIssue)issueType;
+- (void)debugDev:(nonnull NSString *)message
+             key:(nonnull NSString *)key
+           value:(nullable NSString *)value
+       issueType:(nonnull ADJIssue)issueType;
+- (void)debugDev:(nonnull NSString *)message
+            key1:(nonnull NSString *)key1
+          value1:(nullable NSString *)value1
+            key2:(nonnull NSString *)key2
+          value2:(nullable NSString *)value2
+       issueType:(nonnull ADJIssue)issueType;
 
 - (nonnull id<ADJClientLogBuilder>)infoClientStart:(nonnull NSString *)message;
 - (void)infoClient:(nonnull NSString *)message;
 - (void)infoClient:(nonnull NSString *)message
                key:(nonnull NSString *)key
              value:(nullable NSString *)value;
+- (void)infoClient:(nonnull NSString *)message
+              key1:(nonnull NSString *)key1
+            value1:(nullable NSString *)value1
+              key2:(nonnull NSString *)key2
+            value2:(nullable NSString *)value2;
 
 - (nonnull id<ADJClientLogBuilder>)noticeClientStart:(nonnull NSString *)message;
 - (void)noticeClient:(nonnull NSString *)message;
@@ -45,21 +91,13 @@
 - (nonnull id<ADJClientLogBuilder>)errorClientStart:(nonnull NSString *)message;
 - (void)errorClient:(nonnull NSString *)message;
 - (void)errorClient:(nonnull NSString *)message
+            nserror:(nullable NSError *)nserror;
+- (void)errorClient:(nonnull NSString *)message
                 key:(nonnull NSString *)key
               value:(nullable NSString *)value;
-
-//- (void)logWithBuilder:(nonnull ADJLogBuilder *)logBuilder;
-
-
-/*
-- (nonnull NSString *)debugWithIssue:(nonnull NSString *)issueType
-                             message:(nonnull NSString *)message;
-- (nonnull NSString *)debugWithIssue:(nonnull NSString *)issueType
-                  messageAndKvParams:(nonnull NSString *)message, ... NS_REQUIRES_NIL_TERMINATION;
-- (nonnull NSString *)debugWithIssue:(nonnull NSString *)issueType
-                             message:(nonnull NSString *)message
-                      stringMapParam:(nonnull NSDictionary<NSString *, NSString*> *)stringMapParam;
-*/
+- (void)errorClient:(nonnull NSString *)message
+      expectedValue:(nonnull NSString *)expectedValue
+        actualValue:(nullable NSString *)actualValue;
 
 - (nonnull NSString *)debug:(nonnull NSString *)message, ... NS_FORMAT_FUNCTION(1,2);
 - (nonnull NSString *)debug:(nonnull NSString *)message parameters:(va_list)parameters;
