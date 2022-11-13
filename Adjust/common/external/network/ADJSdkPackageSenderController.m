@@ -84,7 +84,9 @@
 
 #pragma mark - ADJSdkResponseSubscriber
 - (void)didReceiveSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
-    [self.logger debug:@"%@", [sdkResponseData generateSentShortDescription]];
+    [self.logger debugDev:@"Received response"
+                      key:@"sdk response"
+                    value:sdkResponseData.description];
     
     [self.sdkResponsePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJSdkResponseSubscriber> _Nonnull subscriber)

@@ -59,8 +59,9 @@
 - (BOOL)containsFirstSessionPackage {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot determine if it contains first session package"
-         " without a reference to storage"];
+        [self.logger debugDev:
+         @"Cannot determine if it contains first session package without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return NO;
     }
 
@@ -79,8 +80,9 @@
 - (BOOL)containsAsaClickPackage {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot determine if it contains first session package"
-         " without a reference to storage"];
+        [self.logger debugDev:
+         @"Cannot determine if it contains first session package without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return NO;
     }
 
@@ -264,11 +266,13 @@
 
 #pragma mark Internal Methods
 - (void)addSdkPackageToSendWithData:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
-                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot add sdk package to send"
-         " without a reference to the storage"];
+        [self.logger debugDev:
+         @"Cannot add sdk package to send without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
@@ -277,11 +281,10 @@
                        sqliteStorageAction:sqliteStorageAction];
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
-
     BOOL sendPackageAtFront =
-    [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
-                                          mainQueueSdkPackageCount:[mainQueueStorage count]
-                                                 hasPackageAtFront:packageAtFront != nil];
+        [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
+                                              mainQueueSdkPackageCount:[mainQueueStorage count]
+                                                     hasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         NSString *_Nonnull source = [NSString stringWithFormat:@"%@ added",
@@ -322,8 +325,8 @@
 - (void)handleSdkInit {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot handle sdk init"
-         " without a reference to the storage"];
+        [self.logger debugDev:@"Cannot handle sdk init without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -343,7 +346,8 @@
 - (void)handleResumeSending {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot handle resuming sending without a reference to the storage"];
+        [self.logger debugDev:@"Cannot handle resuming sending without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -361,7 +365,8 @@
 - (void)handleResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot handle response without a reference to the storage"];
+        [self.logger debugDev:@"Cannot handle response without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -394,9 +399,10 @@
     id<ADJSdkPackageData> _Nullable removedSdkPackage = [storage removeElementAtFront];
 
     if (removedSdkPackage == nil) {
-        [self.logger error:@"Should not be empty when removing package at front"];
+        [self.logger debugDev:@"Should not be empty when removing package at front"
+                    issueType:ADJIssueLogicError];
     } else {
-        [self.logger debug:@"Package at front removed"];
+        [self.logger debugDev:@"Package at front removed"];
     }
 }
 
@@ -414,12 +420,13 @@
 }
 
 - (void)handleDelayEndWithSource:(nonnull NSString *)source {
-    [self.logger debug:@"Delay due to %@ ended", source];
+    [self.logger debugDev:@"Delay ended"
+                     from:source];
 
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
-        [self.logger error:@"Cannot handle delay end"
-         " without a reference to the storage"];
+        [self.logger debugDev:@"Cannot handle delay end without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -438,18 +445,21 @@
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
            mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-                     source:(nonnull NSString *)source {
+                     source:(nonnull NSString *)source
+{
     if (packageToSend == nil) {
-        [self.logger error:@"Cannot send package from %@ when it is nil", source];
+        [self.logger debugDev:@"Cannot send package it is nil"
+                         from:source];
         return;
     }
 
-    [self.logger debug:@"To send sdk package %@ from %@",
-     [packageToSend generateShortDescription],
-     source];
+    [self.logger debugDev:@"To send sdk package"
+                     from:source
+                      key:@"package"
+                    value:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
-    [self generateSendingParametersWithStorage:mainQueueStorage];
+        [self generateSendingParametersWithStorage:mainQueueStorage];
 
     [self.sender sendSdkPackageWithData:packageToSend
                       sendingParameters:sendingParameters
@@ -466,7 +476,8 @@
          injectSentAtWithParametersBuilder:sendingParameters
          sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
     } else {
-        [self.logger error:@"Cannot inject sent at without a reference to clock"];
+        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
+                    issueType:ADJIssueWeakReference];
     }
 
     [ADJSdkPackageBuilder
@@ -484,8 +495,8 @@
          injectRemainingQueuSizeWithParametersBuilder:sendingParameters
          remainingQueueSize:remaingQueueSize];
     } else {
-        [self.logger error:@"Cannot inject remaining queue sizy"
-         " when its empty"];
+        [self.logger debugDev:@"Cannot inject remaining queue size when its empty"
+                    issueType:ADJIssueLogicError];
     }
 
     return sendingParameters;

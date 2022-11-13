@@ -65,13 +65,17 @@ NSString *const ADJAdRevenueControllerClientActionHandlerId = @"AdRevenueControl
 }
 
 #pragma mark Internal Methods
-- (void)trackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
-                        apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-     clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)
+    trackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
+    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
-        [self.logger error:@"Cannot Track Ad Revenue"
-         " without a reference to sdk package builder"];
+        [self.logger debugDev:
+            @"Cannot Track Ad Revenue without a reference to sdk package builder"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
@@ -79,8 +83,9 @@ NSString *const ADJAdRevenueControllerClientActionHandlerId = @"AdRevenueControl
 
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
-        [self.logger error:@"Cannot Track Ad Revenue"
-         " without a reference to main queue controller"];
+        [self.logger debugDev:
+            @"Cannot Track Ad Revenue without a reference to main queue controller"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;

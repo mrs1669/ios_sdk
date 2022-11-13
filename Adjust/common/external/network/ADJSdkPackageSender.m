@@ -90,8 +90,8 @@
     ADJSdkResponseDataBuilder *_Nonnull sdkResponseDataBuilder =
         [[ADJSdkResponseDataBuilder alloc] initWithSourceSdkPackage:sdkPackageData
                                                   sendingParameters:sendingParameters
-                                                     sourceCallback:responseCallback
-                                              previousErrorMessages:nil];
+                                                     sourceCallback:responseCallback];
+                                              //previousErrorMessages:nil];
     
     [self sendSdkPackageWithBuilder:sdkResponseDataBuilder];
 }
@@ -317,6 +317,7 @@
                                 error:(nullable NSError *)error
                    sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
 {
+    /*
     if (response != nil
         && [response isKindOfClass:[NSHTTPURLResponse class]])
     {
@@ -326,7 +327,7 @@
             [sdkResponseBuilder setOkResponseCode];
         }
     }
-    
+    */
     if (error != nil) {
         [sdkResponseBuilder logErrorWithLogger:self.logger
                                        nsError:error
@@ -344,9 +345,11 @@
     NSString *_Nullable responseString = [ADJUtilF jsonDataFormat:data];
     
     if (responseString != nil) {
-        [self.logger debug:@"Server response: %@", responseString];
+        [self.logger debugDev:@"Server with response"
+                          key:@"raw response"
+                        value:responseString];
     } else {
-        [self.logger debug:@"Without server response"];
+        [self.logger debugDev:@"Without server response"];
     }
     
     [self injectJsonWithResponseData:data
@@ -400,7 +403,7 @@
 
 - (void)returnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
     id<ADJSdkResponseData> _Nonnull sdkResponseData =
-    [sdkResponseBuilder buildSdkResponseDataWithLogger:self.logger];
+        [sdkResponseBuilder buildSdkResponseDataWithLogger:self.logger];
     
     [sdkResponseBuilder.sourceCallback sdkResponseCallbackWithResponseData:sdkResponseData];
     
@@ -412,7 +415,7 @@
 
 - (BOOL)shouldRetryToSendWithResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
     if ([sdkResponseBuilder didReceiveJsonResponse]) {
-        [self.logger debug:@"Received network request with current url strategy"];
+        [self.logger debugDev:@"Received network request with current url strategy"];
         [self.sdkPackageUrlBuilder resetAfterNetworkNotFailing];
         return NO;
     }

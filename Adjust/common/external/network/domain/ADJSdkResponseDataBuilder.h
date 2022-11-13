@@ -16,10 +16,11 @@
 
 @interface ADJSdkResponseDataBuilder : NSObject
 // instantiation
-- (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
-                               sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
-                           previousErrorMessages:(nullable NSString *)previousErrorMessages;
+- (nonnull instancetype)
+    initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
+    sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
+    sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback;
+//    previousErrorMessages:(nullable NSString *)previousErrorMessages;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
@@ -30,17 +31,17 @@
 // public api
 - (BOOL)didReceiveJsonResponse;
 
-- (nullable NSString *)errorMessages;
+//- (nullable NSString *)errorMessages;
 
-- (BOOL)okResponseCode;
+//- (BOOL)okResponseCode;
 
 - (void)logErrorWithLogger:(nullable ADJLogger *)logger
                    nsError:(nullable NSError *)nsError
               errorMessage:(nonnull NSString *)errorMessage;
 
-- (void)cannotProcessLocally;
+//- (void)cannotProcessLocally;
 
-- (void)setOkResponseCode;
+//- (void)setOkResponseCode;
 
 - (void)incrementRetries;
 

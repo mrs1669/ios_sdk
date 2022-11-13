@@ -151,7 +151,8 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 - (BOOL)subscribeToSystemReachabilityWithDispatchQueue:(nonnull dispatch_queue_t)dispatchQueue {
     SCNetworkReachabilityRef localStrongReachabilityRef = _reachabilityRef;
     if (! localStrongReachabilityRef) {
-        [self.logger debug:@"Cannot subscribe to system reachability with nil reachabilityRef"];
+        [self.logger debugDev:@"Cannot subscribe to system reachability with nil reachabilityRef"
+                    issueType:ADJIssueExternalApi];
         return NO;
     }
 
@@ -163,13 +164,15 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
                                           ADJReachabilityCallback,
                                           &context))
     {
-        [self.logger debug:@"Could not set reachability callback"];
+        [self.logger debugDev:@"Could not set reachability callback"
+                    issueType:ADJIssueExternalApi];
         return NO;
     }
 
     // dispatch queue will be retained, needs to be set NULL to release
     if(! SCNetworkReachabilitySetDispatchQueue(localStrongReachabilityRef, dispatchQueue)) {
-        [self.logger debug:@"Could not set dispatch queue"];
+        [self.logger debugDev:@"Could not set dispatch queue"
+                    issueType:ADJIssueExternalApi];
 
         // remove callback and release 'self'
         SCNetworkReachabilitySetCallback(localStrongReachabilityRef, NULL, NULL);
@@ -183,7 +186,8 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 - (nullable NSString *)readReachabilitySync {
     SCNetworkReachabilityRef localStrongReachabilityRef = _reachabilityRef;
     if (! localStrongReachabilityRef) {
-        [self.logger debug:@"Cannot read reachability with nil reachabilityRef"];
+        [self.logger debugDev:@"Cannot read reachability with nil reachabilityRef"
+                    issueType:ADJIssueExternalApi];
 
         return nil;
     }

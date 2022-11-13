@@ -63,9 +63,6 @@
 
     _rootLogger = [_logController createLoggerWithSource:@"EntryRoot"];
 
-
-    [_rootLogger debugDevStart:@"log with closing"].wKv(@"key2", @"value2").end();
-
     _preSdkInitRootController = nil;
 
     _postSdkInitRootController = nil;
@@ -89,15 +86,19 @@
 }
 
 #pragma mark Public API
-+ (void)executeBlockInClientContext:(nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))blockInClientContext {
++ (void)executeBlockInClientContext:
+    (nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))
+        blockInClientContext
+{
     ADJEntryRoot *_Nonnull root = [ADJAdjustInternal rootInstance];
 
     // TODO: (Gena) Why do we need ths check👇🏻? ('preSdkInitRootController' is created by ADJEntryRoot initializer)
     // no weak/strong self needed since it does not use self inside
     [root.clientExecutor executeInSequenceWithBlock:^{
         if (root.preSdkInitRootController == nil) {
-            [root.adjustApiLogger error:
-             @"Cannot execute in client context without pre sdk init controller"];
+            [root.adjustApiLogger debugDev:
+                @"Cannot execute in client context without pre sdk init controller"
+            issueType:ADJIssueLogicError];
             return;
         }
 

@@ -14,6 +14,8 @@
 
 #import <CommonCrypto/CommonDigest.h>
 
+#import "ADJUtilF.h"
+
 #pragma mark Fields
 #pragma mark - Private constants
 static const unsigned char kRsa2048Asn1Header[] =
@@ -69,12 +71,13 @@ static const unsigned char kEcDsaSecp384r1Asn1Header[] =
 }
 
 #pragma mark - NSURLSessionDelegate
-- (void)URLSession:(nonnull NSURLSession *)session
-didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
- completionHandler:
-(void (^_Nonnull)
- (NSURLSessionAuthChallengeDisposition disposition,
-  NSURLCredential * _Nullable credential))completionHandler {
+- (void)
+    URLSession:(nonnull NSURLSession *)session
+    didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
+    completionHandler:(void (^_Nonnull)
+                       (NSURLSessionAuthChallengeDisposition disposition,
+                        NSURLCredential * _Nullable credential))completionHandler
+{
     if (! [challenge.protectionSpace.authenticationMethod
            isEqualToString:NSURLAuthenticationMethodServerTrust])
     {
@@ -107,8 +110,9 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
         return NO;
     }
     
-    [self.logger debug:@"Server trust validated with %d certificates",
-     (int)SecTrustGetCertificateCount(serverTrust)];
+    [self.logger debugDev:@"Server trust validated certificates"
+                      key:@"certificates count"
+                    value:[ADJUtilF intFormat:(int)SecTrustGetCertificateCount(serverTrust)]];
     
     SecCertificateRef _Nullable serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
     
@@ -118,6 +122,7 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
         return NO;
     }
     
+    // TODO see how it is done before iOS 10.3
     SecKeyRef _Nullable serverPublicKey = SecCertificateCopyPublicKey(serverCertificate);
     
     if (! serverPublicKey) {
@@ -137,8 +142,9 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     CFErrorRef errorRef;
     
     // TODO maybe use __bridge_transfer / CFBridgingRelease instead of CFRelease
+    // TODO see how it is done before iOS 10.0
     CFDataRef _Nullable serverPublicKeyData =
-    SecKeyCopyExternalRepresentation(serverPublicKey, &errorRef);
+        SecKeyCopyExternalRepresentation(serverPublicKey, &errorRef);
     
     if (errorRef) {
         NSError *error = (__bridge NSError *)errorRef;
@@ -346,7 +352,8 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
 }
 
 - (void)logErrorWithMessage:(nonnull NSString *)errorMessage
-                    nsError:(nullable NSError *)nsError {
+                    nsError:(nullable NSError *)nsError
+{
     ADJSdkResponseDataBuilder *sdkResponseDataBuilder = self.sdkResponseDataBuilderWeakRef;
     
     if (sdkResponseDataBuilder != nil) {
@@ -354,11 +361,9 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
                                            nsError:nsError
                                       errorMessage:errorMessage];
     } else {
-        if (nsError != nil) {
-            [self.logger errorWithNSError:nsError message:@"%@", errorMessage];
-        } else {
-            [self.logger error:@"%@", errorMessage];
-        }
+        [self.logger debugDev:errorMessage
+                      nserror:nsError
+                    issueType:ADJIssueNetworkRequest];
     }
 }
 

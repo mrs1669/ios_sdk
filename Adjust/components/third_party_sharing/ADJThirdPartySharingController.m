@@ -66,13 +66,18 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
 }
 
 #pragma mark Internal Methods
-- (void)trackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
-                                apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-             clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)
+    trackThirdPartySharingWithClientData:
+        (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
-        [self.logger error:@"Cannot Track Third Party Sharing"
-         " without a reference to sdk package builder"];
+        [self.logger debugDev:
+         @"Cannot Track Third Party Sharing without a reference to sdk package builder"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
@@ -80,20 +85,21 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
 
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
-        [self.logger error:@"Cannot Track Third Party Sharing"
-         " without a reference to main queue controller"];
+        [self.logger debugDev:
+         @"Cannot Track Third Party Sharing without a reference to main queue controller"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
 
     ADJThirdPartySharingPackageData *_Nonnull thirdPartySharingPackageData =
-    [sdkPackageBuilder buildThirdPartySharingWithClientData:clientThirdPartySharingData
-                                               apiTimestamp:apiTimestamp];
+        [sdkPackageBuilder buildThirdPartySharingWithClientData:clientThirdPartySharingData
+                                                   apiTimestamp:apiTimestamp];
 
     [mainQueueController
-     addThirdPartySharingPackageToSendWithData:thirdPartySharingPackageData
-     sqliteStorageAction:clientActionRemoveStorageAction];
+         addThirdPartySharingPackageToSendWithData:thirdPartySharingPackageData
+         sqliteStorageAction:clientActionRemoveStorageAction];
 }
 
 @end

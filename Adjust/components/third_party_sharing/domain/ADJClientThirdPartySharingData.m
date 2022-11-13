@@ -30,27 +30,30 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
 
 @implementation ADJClientThirdPartySharingData
 #pragma mark Instantiation
-+ (nullable instancetype) instanceFromClientWithAdjustThirdPartySharing:(nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
-                                                                 logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustThirdPartySharing:
+        (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustThirdPartySharing == nil) {
-        [logger error:
-         @"Cannot create third party sharing with nil adjust third party sharing value"];
+        [logger errorClient:
+            @"Cannot create third party sharing with nil adjust third party sharing value"];
         return nil;
     }
     
     ADJBooleanWrapper *_Nonnull enabledOrElseDisabledSharing =
-    adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool != nil ?
-    [ADJBooleanWrapper instanceFromBool:
-     adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue]
-    : nil;
+        adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool != nil
+            ? [ADJBooleanWrapper instanceFromBool:
+                    adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue]
+            : nil;
     
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *_Nullable
-    granularOptionsByName =
-    [ADJUtilConv
-     convertToMapCollectionByNameBuilderWithKeyValueArray:
-         adjustThirdPartySharing.granularOptionsByNameArray
-     sourceDescription:@"third party sharing granular options"
-     logger:logger];
+        granularOptionsByName =
+            [ADJUtilConv
+                convertToMapCollectionByNameBuilderWithKeyValueArray:
+                    adjustThirdPartySharing.granularOptionsByNameArray
+                sourceDescription:@"third party sharing granular options"
+                logger:logger];
     
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
     [ADJNonEmptyString

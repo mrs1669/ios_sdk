@@ -58,16 +58,16 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 + (nullable instancetype)instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
                                                         logger:(nonnull ADJLogger *)logger {
     if (adjustAdRevenue == nil) {
-        [logger error:@"Cannot create ad revenue with nil adjust ad revenue value"];
+        [logger errorClient:@"Cannot create ad revenue with nil adjust ad revenue value"];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable source =
-    [ADJNonEmptyString instanceFromString:adjustAdRevenue.source
-                        sourceDescription:@"ad revenue source"
-                                   logger:logger];
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.source
+                            sourceDescription:@"ad revenue source"
+                                       logger:logger];
     if (source == nil) {
-        [logger error:@"Cannot create ad revenue without ad revenue source"];
+        [logger errorClient:@"Cannot create ad revenue without ad revenue source"];
         return nil;
     }
 
@@ -85,8 +85,8 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     });
 
     if (![adRevenueSourceSet containsObject:source.stringValue]) {
-        [logger error:@"Cannot match ad revenue source to an expected one,"
-         " but will be used as is"];
+        [logger noticeClient:@"Cannot match ad revenue source to an expected one,"
+            " but will be used as is"];
     }
 
     ADJMoney *_Nullable revenue = nil;
@@ -98,34 +98,36 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     }
 
     ADJNonNegativeInt *_Nullable adImpressionsCount =
-    [ADJNonNegativeInt
-     instanceFromOptionalIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber
-     logger:logger];
+        [ADJNonNegativeInt
+            instanceFromOptionalIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber
+            logger:logger];
 
     ADJNonEmptyString *_Nullable adRevenueNetwork =
-    [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueNetwork
-                                sourceDescription:@"ad revenue network"
+        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueNetwork
+                                    sourceDescription:@"ad revenue network"
                                            logger:logger];
 
     ADJNonEmptyString *_Nullable adRevenueUnit =
-    [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueUnit
-                                sourceDescription:@"ad revenue unit"
-                                           logger:logger];
+        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueUnit
+                                    sourceDescription:@"ad revenue unit"
+                                               logger:logger];
 
     ADJNonEmptyString *_Nullable adRevenuePlacement =
-    [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenuePlacement
-                                sourceDescription:@"ad revenue placement"
-                                           logger:logger];
+        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenuePlacement
+                                    sourceDescription:@"ad revenue placement"
+                                               logger:logger];
 
     ADJStringMap *_Nullable callbackParameters =
-    [ADJUtilConv convertToStringMapWithKeyValueArray:adjustAdRevenue.callbackParameterKeyValueArray
-                                   sourceDescription:@"ad revenue callback parameters"
-                                              logger:logger];
+        [ADJUtilConv
+            convertToStringMapWithKeyValueArray:adjustAdRevenue.callbackParameterKeyValueArray
+            sourceDescription:@"ad revenue callback parameters"
+            logger:logger];
 
     ADJStringMap *_Nullable partnerParameters =
-    [ADJUtilConv convertToStringMapWithKeyValueArray:adjustAdRevenue.partnerParameterKeyValueArray
-                                   sourceDescription:@"ad revenue partner parameters"
-                                              logger:logger];
+        [ADJUtilConv
+            convertToStringMapWithKeyValueArray:adjustAdRevenue.partnerParameterKeyValueArray
+            sourceDescription:@"ad revenue partner parameters"
+            logger:logger];
 
     return [[self alloc] initWithSource:source
                                 revenue:revenue
@@ -232,9 +234,9 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
 #pragma mark Public API
 #pragma mark - ADJClientActionIoDataInjectable
-- (void)injectIntoClientActionIoDataBuilder:(nonnull ADJIoDataBuilder *)clientActionIoDataBuilder{
+- (void)injectIntoClientActionIoDataBuilder:(nonnull ADJIoDataBuilder *)clientActionIoDataBuilder {
     ADJStringMapBuilder *_Nonnull propertiesMapBuilder =
-    clientActionIoDataBuilder.propertiesMapBuilder;
+        clientActionIoDataBuilder.propertiesMapBuilder;
 
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
                                        key:kSourceKey
@@ -339,34 +341,6 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     && [ADJUtilObj objectEquals:self.adRevenuePlacement other:other.adRevenuePlacement]
     && [ADJUtilObj objectEquals:self.callbackParameters other:other.callbackParameters]
     && [ADJUtilObj objectEquals:self.partnerParameters other:other.partnerParameters];
-}
-
-#pragma mark Internal Methods
-+ (nullable ADJNonEmptyString *)extractNonEmptyStringJsonPayloadWithFoundation:(nullable id)foundationJsonPayload
-                                                                          data:(nullable NSData *)dataJsonPayload
-                                                                        string:(nullable NSString *)stringJsonPayload
-                                                                        logger:(nonnull ADJLogger *)logger {
-    id _Nullable localFoundationJsonPayload = foundationJsonPayload;
-    NSData *_Nullable localDataJsonPayload = dataJsonPayload;
-    NSString *_Nullable localStringJsonPayload = stringJsonPayload;
-
-    if (localFoundationJsonPayload != nil) {
-        NSError *error;
-        localDataJsonPayload =
-            [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationJsonPayload
-                                                         errorPtr:&error];
-        if (error != nil) {
-            [logger errorWithNSError:error message:@"ad revenue foundation Json payload"];
-        }
-    }
-
-    if (localDataJsonPayload != nil) {
-        localStringJsonPayload = [ADJUtilF jsonDataFormat:localDataJsonPayload];
-    }
-
-    return [ADJNonEmptyString instanceFromString:localStringJsonPayload
-                               sourceDescription:@"ad revenue string json payload"
-                                          logger:logger];
 }
 
 @end

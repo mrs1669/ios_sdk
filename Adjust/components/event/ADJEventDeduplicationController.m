@@ -23,24 +23,28 @@
 
 @implementation ADJEventDeduplicationController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-                maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+    maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"EventDeduplicationController"];
     _eventDeduplicationStorageWeak = eventDeduplicationStorage;
     
     if (maxCapacityEventDeduplication != nil) {
         _maxCapacityEventDeduplication = maxCapacityEventDeduplication;
         
-        [self.logger debug:@"Overwriting max capacity event deduplication to %@",
-         self.maxCapacityEventDeduplication];
+        [self.logger debugDev:@"Overwriting max capacity event deduplication"
+                          key:@"changed_max_capacity"
+                        value:_maxCapacityEventDeduplication.description];
     } else {
         _maxCapacityEventDeduplication =
-        [[ADJNonNegativeInt alloc]
-         initWithUIntegerValue:ADJDefaultMaxCapacityEventDeduplication];
+            [[ADJNonNegativeInt alloc]
+             initWithUIntegerValue:ADJDefaultMaxCapacityEventDeduplication];
         
-        [self.logger debug:@"Falling back to default max capacity event deduplication of %@",
-         self.maxCapacityEventDeduplication];
+        [self.logger debugDev:@"Falling back to default max capacity event deduplication"
+                          key:@"default_max_capacity"
+                        value:_maxCapacityEventDeduplication.description];
     }
     
     _deduplicationIdSet =
@@ -61,18 +65,19 @@
     ADJEventDeduplicationStorage *_Nullable storage =
     self.eventDeduplicationStorageWeak;
     if (storage == nil) {
-        [self.logger error:@"Cannot add deduplication id without a reference to storage"];
+        [self.logger debugDev:@"Cannot add deduplication id without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return [ADJNonNegativeInt instanceAtZero];
     }
     
     if (self.maxCapacityEventDeduplication.uIntegerValue == 0) {
-        [self.logger info:@"Cannot add deduplication id to the duplication list,"
+        [self.logger infoClient:@"Cannot add deduplication id to the duplication list,"
          " because it has capacity for zero deduplication ids"];
         return [storage count];
     }
     
     if ([self ccContainsWithDeduplicationId:deduplicationId]) {
-        [self.logger info:@"Cannot add deduplication id to the duplication list,"
+        [self.logger infoClient:@"Cannot add deduplication id to the duplication list,"
          " because it already contains the same deduplication id"];
         return [storage count];
     }
@@ -81,10 +86,11 @@
     [storage count].uIntegerValue - self.maxCapacityEventDeduplication.uIntegerValue;
     
     if (excessDeduplicationIdsCount >= 0) {
-        [self.logger info:@"Event deduplication id list hit limit of %@."
+        [self.logger infoClient:@"Event deduplication id list hit limit."
          " It will remove enough of the oldest added deduplication ids"
-         " before adding the new one",
-         self.maxCapacityEventDeduplication];
+         " before adding the new one"
+                            key:@"limit"
+                          value:self.maxCapacityEventDeduplication.description];
         
         [self removeOldestDeduplicationIdsWithStorage:storage
                   oldestDeduplicationIdsToRemoveCount:excessDeduplicationIdsCount + 1];
@@ -105,9 +111,10 @@
     [storage count].uIntegerValue - self.maxCapacityEventDeduplication.uIntegerValue;
     
     if (excessDeduplicationIdsCount > 0) {
-        [self.logger debug:@"Event deduplication id list was loaded with %@ ids above limit."
-         " They will removed from oldest order",
-         [ADJUtilF integerFormat:excessDeduplicationIdsCount]];
+        [self.logger debugDev:@"Event deduplication id list was loaded above limit."
+         " They will removed from oldest order"
+                          key:@"excessDeduplicationIdsCount"
+                        value:[ADJUtilF integerFormat:excessDeduplicationIdsCount]];
         [self removeOldestDeduplicationIdsWithStorage:storage
                   oldestDeduplicationIdsToRemoveCount:(NSUInteger)excessDeduplicationIdsCount];
     }
@@ -122,7 +129,10 @@
         if ([self.deduplicationIdSet containsObject:
              deduplicationIdElement.deduplicationId.stringValue])
         {
-            [self.logger error:@"Found unexpected duplicated id in storage, removing it"];
+            [self.logger debugDev:@"Found unexpected duplicated id in storage, removing it"
+                              key:@"unexpected duplicated id"
+                            value:deduplicationIdElement.deduplicationId.stringValue
+                        issueType:ADJIssueStorageIo];
             [storage removeElementByPosition:elementPosition];
         } else {
             [self.deduplicationIdSet
@@ -141,23 +151,26 @@
     
     for (NSUInteger i = 0; i < oldestDeduplicationIdsToRemoveCount; i = i + 1) {
         if ([storage isEmpty]) {
-            [self.logger error:@"Cannot remove more oldest deduplication ids"
-             " when there are no more to remove"];
+            [self.logger debugDev:@"Cannot remove more oldest deduplication ids"
+             " when there are no more to remove"
+                        issueType:ADJIssueStorageIo];
             return;
         }
         
         ADJEventDeduplicationData *_Nullable removedElement = [storage removeElementAtFront];
         
         if (removedElement == nil) {
-            [self.logger error:@"Was not able to retrieve removed oldest deduplication id"
-             " from storage"];
+            [self.logger debugDev:
+             @"Was not able to retrieve removed oldest deduplication id from storage"
+                        issueType:ADJIssueStorageIo];
             continue;
         }
         
-        [self.logger debug:@"Removed more oldest deduplication id in storage"];
+        [self.logger debugDev:@"Removed more oldest deduplication id in storage"];
         
         if (self.deduplicationIdSet.count == 0) {
-            [self.logger error:@"Does not have any id in set, when it was expected"];
+            [self.logger debugDev:@"Does not have any id in set, when it was expected"
+                        issueType:ADJIssueStorageIo];
             continue;
         }
         
@@ -165,13 +178,14 @@
         [self.deduplicationIdSet containsObject:removedElement.deduplicationId.stringValue];
         
         if (! containsElementInSet) {
-            [self.logger error:@"Cannot remove oldest deduplication id from set"
-             " when it was not present"];
+            [self.logger debugDev:
+             @"Cannot remove oldest deduplication id from set when it was not present"
+                        issueType:ADJIssueStorageIo];
         }
         
         [self.deduplicationIdSet removeObject:removedElement.deduplicationId.stringValue];
         
-        [self.logger debug:@"Removed more oldest deduplication id in set"];
+        [self.logger debugDev:@"Removed more oldest deduplication id in set"];
     }
 }
 

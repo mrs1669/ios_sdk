@@ -43,7 +43,6 @@
                 instanceFromClientWithAdjustConfig:adjustConfig
                 logger:apiLogger];
         if (clientConfigData == nil) {
-            [apiLogger error:@"Cannot init SDK without valid adjust config"];
             return;
         }
 
@@ -204,9 +203,10 @@
             return;
         }
 
-        ADJClientAdRevenueData *_Nullable clientAdRevenueData = [ADJClientAdRevenueData
-                                                                 instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
-                                                                 logger:apiLogger];
+        ADJClientAdRevenueData *_Nullable clientAdRevenueData =
+            [ADJClientAdRevenueData
+                instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
+                logger:apiLogger];
 
         if (clientAdRevenueData == nil) {
             return;
@@ -228,9 +228,9 @@
         }
         
         ADJClientBillingSubscriptionData *_Nullable clientBillingSubscriptionData =
-        [ADJClientBillingSubscriptionData
-         instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
-         logger:apiLogger];
+            [ADJClientBillingSubscriptionData
+                instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
+                logger:apiLogger];
         
         if (clientBillingSubscriptionData == nil) {
             return;
@@ -246,7 +246,7 @@
         ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
     {
         if (adjustAttributionCallback == nil) {
-            [apiLogger error:@"Cannot get Adjust Attribution with nil callback"];
+            [apiLogger errorClient:@"Cannot get Adjust Attribution with nil callback"];
             return;
         }
 
@@ -259,7 +259,7 @@
         ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
     {
         if (adjustDeviceIdsCallback == nil) {
-            [apiLogger error:@"Cannot get Adjust Device Ids with nil callback"];
+            [apiLogger errorClient:@"Cannot get Adjust Device Ids with nil callback"];
             return;
         }
 
@@ -268,21 +268,23 @@
 }
 
 #pragma mark Global Parameters Methods
-
 + (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key
-                                    value:(nonnull NSString *)value {
+                                    value:(nonnull NSString *)value
+{
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"addGlobalCallbackParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionWithSource:@"addGlobalCallbackParameter"];
 
         if (clientActionsAPI == nil) {
             return;
         }
 
-        ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData = [ADJClientAddGlobalParameterData
-                                                                                   instanceFromClientWithAdjustConfigWithKeyToAdd:key
-                                                                                   valueToAdd:value
-                                                                                   logger:apiLogger];
+        ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
+            [ADJClientAddGlobalParameterData
+                instanceFromClientWithAdjustConfigWithKeyToAdd:key
+                valueToAdd:value
+                logger:apiLogger];
 
         if (clientAddGlobalParameterData == nil) {
             return;
@@ -295,21 +297,24 @@
 + (void)removeGlobalCallbackParameterByKey:(nonnull NSString *)key {
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger) {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"removeGlobalCallbackParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionWithSource:@"removeGlobalCallbackParameter"];
 
         if (clientActionsAPI == nil) {
             return;
         }
 
-        ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData = [ADJClientRemoveGlobalParameterData
-                                                                                         instanceFromClientWithAdjustConfigWithKeyToRemove:key
-                                                                                         logger:apiLogger];
+        ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
+            [ADJClientRemoveGlobalParameterData
+                instanceFromClientWithAdjustConfigWithKeyToRemove:key
+                logger:apiLogger];
 
         if (clientRemoveGlobalParameterData == nil) {
             return;
         }
 
-        [clientActionsAPI ccRemoveGlobalCallbackParameterWithClientData:clientRemoveGlobalParameterData];
+        [clientActionsAPI
+            ccRemoveGlobalCallbackParameterWithClientData:clientRemoveGlobalParameterData];
     }];
 }
 
@@ -317,15 +322,18 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"clearAllGlobalCallbackParameters"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionWithSource:@"clearAllGlobalCallbackParameters"];
 
         if (clientActionsAPI == nil) {
             return;
         }
 
-        ADJClientClearGlobalParametersData *_Nonnull clientClearGlobalParametersData = [[ADJClientClearGlobalParametersData alloc] init];
+        ADJClientClearGlobalParametersData *_Nonnull clientClearGlobalParametersData =
+            [[ADJClientClearGlobalParametersData alloc] init];
 
-        [clientActionsAPI ccClearGlobalCallbackParametersWithClientData:clientClearGlobalParametersData];
+        [clientActionsAPI
+            ccClearGlobalCallbackParametersWithClientData:clientClearGlobalParametersData];
     }];
 }
 
@@ -334,16 +342,18 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"addGlobalPartnerParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionWithSource:@"addGlobalPartnerParameter"];
 
         if (clientActionsAPI == nil) {
             return;
         }
 
-        ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData = [ADJClientAddGlobalParameterData
-                                                                                   instanceFromClientWithAdjustConfigWithKeyToAdd:key
-                                                                                   valueToAdd:value
-                                                                                   logger:apiLogger];
+        ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
+            [ADJClientAddGlobalParameterData
+                instanceFromClientWithAdjustConfigWithKeyToAdd:key
+                valueToAdd:value
+                logger:apiLogger];
 
         if (clientAddGlobalParameterData == nil) {
             return;
@@ -357,21 +367,24 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"removeGlobalPartnerParameter"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionWithSource:@"removeGlobalPartnerParameter"];
 
         if (clientActionsAPI == nil) {
             return;
         }
 
-        ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData = [ADJClientRemoveGlobalParameterData
-                                                                                         instanceFromClientWithAdjustConfigWithKeyToRemove:key
-                                                                                         logger:apiLogger];
+        ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
+            [ADJClientRemoveGlobalParameterData
+                instanceFromClientWithAdjustConfigWithKeyToRemove:key
+                logger:apiLogger];
 
         if (clientRemoveGlobalParameterData == nil) {
             return;
         }
 
-        [clientActionsAPI ccRemoveGlobalPartnerParameterWithClientData:clientRemoveGlobalParameterData];
+        [clientActionsAPI ccRemoveGlobalPartnerParameterWithClientData:
+            clientRemoveGlobalParameterData];
     }];
 }
 
@@ -379,15 +392,18 @@
     [ADJEntryRoot executeBlockInClientContext:
      ^(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger)
      {
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [adjustAPI ccClientActionWithSource:@"clearAllGlobalPartnerParameters"];
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+            [adjustAPI ccClientActionWithSource:@"clearAllGlobalPartnerParameters"];
 
         if (clientActionsAPI == nil) {
             return;
         }
 
-        ADJClientClearGlobalParametersData *_Nonnull clientClearGlobalParametersData = [[ADJClientClearGlobalParametersData alloc] init];
+        ADJClientClearGlobalParametersData *_Nonnull clientClearGlobalParametersData =
+            [[ADJClientClearGlobalParametersData alloc] init];
 
-        [clientActionsAPI ccClearGlobalPartnerParametersWithClientData:clientClearGlobalParametersData];
+        [clientActionsAPI ccClearGlobalPartnerParametersWithClientData:
+            clientClearGlobalParametersData];
     }];
 }
 
@@ -400,5 +416,3 @@
 }
 
 @end
-
-

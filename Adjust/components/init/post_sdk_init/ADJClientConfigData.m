@@ -34,7 +34,6 @@
                                                      logger:(nonnull ADJLogger *)logger
 {
     if (adjustConfig == nil) {
-        //[logger errorClientStart:@"Cannot create config with null adjust config value"].log();
         [logger errorClient:@"Cannot create config with null adjust config value"];
         return nil;
     }
@@ -69,11 +68,10 @@
         [environment.stringValue isEqualToString:ADJEnvironmentProduction];
 
     if (! isSandboxEnvironment && ! isProductionEnvironment) {
-        [logger errorClientStart:@"Cannot create config with unexpected environment value"]
-            .wKv(@"expected",[NSString stringWithFormat:@"%@ or %@",
-                              ADJEnvironmentSandbox, ADJEnvironmentProduction])
-            .wKv(@"actual", environment.stringValue)
-            .end();
+        [logger errorClient:@"Cannot create config with unexpected environment value"
+              expectedValue:[NSString stringWithFormat:@"%@ or %@",
+                             ADJEnvironmentSandbox, ADJEnvironmentProduction]
+                actualValue:environment.stringValue];
         return nil;
     }
     
@@ -93,8 +91,8 @@
             urlStrategy = [[ADJNonEmptyString alloc]
                            initWithConstStringValue:adjustConfig.urlStrategy];
         } else {
-            [logger error:@"Cannot set url strategy with unknown value: %@",
-             adjustConfig.urlStrategy];
+            [logger noticeClient:@"Cannot set unknown url strategy"
+                            key:@"value" value:adjustConfig.urlStrategy];
         }
     }
 
@@ -111,7 +109,7 @@
 
     ADJClientCustomEndpointData *_Nullable clientCustomEndpointData = nil;
     if (customEndpointPublicKeyHash != nil && customEndpointUrl == nil) {
-        [logger error:@"Cannot configure certificate pinning"
+        [logger noticeClient:@"Cannot configure certificate pinning"
          " without a custom endpoint"];
     } else if (customEndpointUrl != nil) {
         clientCustomEndpointData = [[ADJClientCustomEndpointData alloc]

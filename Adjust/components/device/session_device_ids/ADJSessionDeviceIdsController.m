@@ -63,7 +63,8 @@
     }
 
     if (self.timeoutPerAttempt == nil) {
-        return [self returnFailed:@"without timeout per attempt"];
+        return [[ADJSessionDeviceIdsData alloc]
+                initWithFailMessage:@"without timeout per attempt"];
     }
 
     ADJNonEmptyString *_Nullable identifierForVendor =
@@ -73,7 +74,8 @@
     [self getAdvertisingIdentifierWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
     if (identifierForVendor == nil && advertisingIdentifier == nil) {
-        return [self returnFailed:@"either session device ids"];
+        return [[ADJSessionDeviceIdsData alloc]
+                initWithFailMessage:@"either session device ids"];
     }
 
     ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
@@ -90,11 +92,6 @@
 }
 
 #pragma mark Internal Methods
-- (nonnull ADJSessionDeviceIdsData *)returnFailed:(nonnull NSString *)failReason {
-    [self.logger debug:@"Cannot get session device ids %@", failReason];
-    return [[ADJSessionDeviceIdsData alloc] initWithFailMessage:failReason];
-}
-
 - (nullable ADJNonEmptyString *)
     getIdentifierForVendorWithTimeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
 {

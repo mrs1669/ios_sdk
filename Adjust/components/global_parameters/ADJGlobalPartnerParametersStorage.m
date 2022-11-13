@@ -39,7 +39,7 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     NSDictionary<NSString *, NSString *> *_Nullable v4SessionPartnerParameters = [v4FilesData v4SessionPartnerParameters];
     if (v4SessionPartnerParameters == nil) {
-        [self.logger debug:@"Session Partner Parameters v4 file not found"];
+        [self.logger debugDev:@"Session Partner Parameters v4 file not found"];
         return;
     }
 

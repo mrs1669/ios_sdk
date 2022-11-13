@@ -208,8 +208,11 @@
     }
     
     if (keyValueArray.count % 2 != 0) {
-        [logger error:@"Cannot convert %@ key value array with non-multiple of elements",
-         [ADJUtilF uIntegerFormat:keyValueArray.count]];
+        [logger debugDev:
+         @"Cannot convert key value array with non-multiple of 2 elements"
+                     key:@"keyValueArray count"
+                   value:[ADJUtilF uIntegerFormat:keyValueArray.count].description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
@@ -219,31 +222,39 @@
     for (NSUInteger i = 0; i < keyValueArray.count; i = i + 2) {
         id _Nonnull keyObject = [keyValueArray objectAtIndex:i];
         if ([keyObject isEqual:[NSNull null]]) {
-            [logger error:@"Cannot add key/value to %@ with invalid key", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with NSNull key"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         ADJNonEmptyString *_Nullable key =
-        [ADJNonEmptyString instanceFromString:(NSString *)keyObject
-                            sourceDescription:sourceDescription
-                                       logger:logger];
+            [ADJNonEmptyString instanceFromString:(NSString *)keyObject
+                                sourceDescription:sourceDescription
+                                           logger:logger];
         if (key == nil) {
-            [logger error:@"Cannot add key/value to %@ with invalid key", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with invalid key"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         id _Nonnull valueObject = [keyValueArray objectAtIndex:(i + 1)];
         if ([valueObject isEqual:[NSNull null]]) {
-            [logger error:@"Cannot add key/value to %@ with invalid value", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with NSNull value"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         ADJNonEmptyString *_Nullable value =
-        [ADJNonEmptyString instanceFromString:(NSString *)valueObject
-                            sourceDescription:sourceDescription
-                                       logger:logger];
+            [ADJNonEmptyString instanceFromString:(NSString *)valueObject
+                                sourceDescription:sourceDescription
+                                           logger:logger];
         if (value == nil) {
-            [logger error:@"Cannot add key/value to %@ with invalid value", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with invalid value"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
@@ -251,8 +262,10 @@
         [stringMapBuilder addPairWithValue:value
                                        key:key.stringValue];
         if (previousValue != nil) {
-            [logger info:@"Value of key %@ of %@ was overwritten",
-             key, sourceDescription];
+            [logger debugDev:@"Value was overwritten"
+                        from:sourceDescription
+                         key:@"key"
+                       value:key.stringValue];
         }
     }
     
@@ -273,63 +286,78 @@ logger:(nonnull ADJLogger *)logger {
     }
     
     if (keyValueArray.count % 3 != 0) {
-        [logger error:@"Cannot convert %@ key value array with non-multiple of elements",
-         [ADJUtilF uIntegerFormat:keyValueArray.count]];
+        [logger debugDev:
+         @"Cannot convert key value array with non-multiple of 3 elements"
+                     key:@"keyValueArray count"
+                   value:[ADJUtilF uIntegerFormat:keyValueArray.count].description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *_Nonnull
     mapCollectionByNameBuilder =
-    [[NSMutableDictionary alloc] initWithCapacity:(keyValueArray.count / 3)];
+        [[NSMutableDictionary alloc] initWithCapacity:(keyValueArray.count / 3)];
     
     for (NSUInteger i = 0; i < keyValueArray.count; i = i + 3) {
         id _Nonnull nameObject = [keyValueArray objectAtIndex:i];
         if ([nameObject isEqual:[NSNull null]]) {
-            [logger error:@"Cannot add map name to %@ with invalid name", sourceDescription];
+            [logger debugDev:@"Cannot add map name with NSNull name"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         ADJNonEmptyString *_Nullable name =
-        [ADJNonEmptyString instanceFromString:(NSString *)nameObject
-                            sourceDescription:sourceDescription
-                                       logger:logger];
+            [ADJNonEmptyString instanceFromString:(NSString *)nameObject
+                                sourceDescription:sourceDescription
+                                           logger:logger];
         if (name == nil) {
-            [logger error:@"Cannot add map name to %@ with invalid name", sourceDescription];
+            [logger debugDev:@"Cannot add map name with invalid name"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         id _Nonnull keyObject = [keyValueArray objectAtIndex:(i + 1)];
         if ([keyObject isEqual:[NSNull null]]) {
-            [logger error:@"Cannot add key/value to %@ with invalid key", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with NSNull key"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         ADJNonEmptyString *_Nullable key =
-        [ADJNonEmptyString instanceFromString:(NSString *)keyObject
-                            sourceDescription:sourceDescription
-                                       logger:logger];
+            [ADJNonEmptyString instanceFromString:(NSString *)keyObject
+                                sourceDescription:sourceDescription
+                                           logger:logger];
         if (key == nil) {
-            [logger error:@"Cannot add key/value to %@ with invalid key", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with invalid key"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         id _Nonnull valueObject = [keyValueArray objectAtIndex:(i + 2)];
         if ([valueObject isEqual:[NSNull null]]) {
-            [logger error:@"Cannot add key/value to %@ with invalid value", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with NSNull value"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         ADJNonEmptyString *_Nullable value =
-        [ADJNonEmptyString instanceFromString:(NSString *)valueObject
-                            sourceDescription:sourceDescription
-                                       logger:logger];
+            [ADJNonEmptyString instanceFromString:(NSString *)valueObject
+                                sourceDescription:sourceDescription
+                                           logger:logger];
         if (value == nil) {
-            [logger error:@"Cannot add key/value to %@ with invalid value", sourceDescription];
+            [logger debugDev:@"Cannot add key/value with invalid value"
+                        from:sourceDescription
+                   issueType:ADJIssueInvalidInput];
             continue;
         }
         
         NSMutableDictionary<NSString *, NSString *> *_Nullable mapBuilder =
-        [mapCollectionByNameBuilder objectForKey:name.stringValue];
+            [mapCollectionByNameBuilder objectForKey:name.stringValue];
         
         if (mapBuilder == nil) {
             mapBuilder = [[NSMutableDictionary alloc] init];
@@ -339,8 +367,10 @@ logger:(nonnull ADJLogger *)logger {
         
         NSString *_Nullable previousValue = [mapBuilder objectForKey:key.stringValue];
         if (previousValue != nil) {
-            [logger info:@"Value of key %@ of %@ was overwritten",
-             key, sourceDescription];
+            [logger debugDev:@"Value was overwritten"
+                        from:sourceDescription
+                         key:@"key"
+                       value:key.stringValue];
         }
         
         [mapBuilder setObject:value.stringValue

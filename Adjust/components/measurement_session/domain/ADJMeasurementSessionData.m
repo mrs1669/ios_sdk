@@ -240,7 +240,9 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 + (void)errorLogAtCreateWithLogger:(nonnull ADJLogger *)logger
                                key:(nonnull NSString *)key
 {
-    [logger error:@"Cannot create instance with invalid %@", key];
+    [logger debugDev:@"Cannot create instance with invalid key"
+           valueName:key
+           issueType:ADJIssueInvalidInput];
 }
 
 @end

@@ -61,21 +61,31 @@
 }
 
 #pragma mark Protected Methods
-- (BOOL)ccAddGlobalParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalParameterData
-                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-       clientActionRemoveStorageActionData:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData {
+- (BOOL)
+    ccAddGlobalParameterWithClientData:
+        (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalParameterData
+    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageActionData:
+        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData
+{
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
-        [self.logger error:@"Cannot add global %@ parameter without a reference to storage", self.globalParametersType];
+        [self.logger debugDev:@"Cannot add global parameter without a reference to storage"
+                          key:@"parameter type"
+                        value:self.globalParametersType
+                    issueType:ADJIssueWeakReference];
         return NO;
     }
 
-    ADJNonEmptyString *_Nullable previousValueBeforeAdding = [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd.stringValue];
+    ADJNonEmptyString *_Nullable previousValueBeforeAdding =
+        [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd.stringValue];
 
     if ([clientAddGlobalParameterData.valueToAdd isEqual:previousValueBeforeAdding]) {
-        [self.logger info:@"Cannot add global %@ parameter"
-         " since the same key/value is already present", self.globalParametersType];
+        [self.logger noticeClient:
+         @"Cannot add global parameter since the same key/value is already present"
+                            key:@"parameter type"
+                          value:self.globalParametersType];
         return NO;
     }
 
@@ -84,79 +94,107 @@
           sqliteStorageAction:clientActionRemoveStorageActionData];
 
     if (previousValueBeforeAdding != nil) {
-        [self.logger info:@"Added global %@ parameter with key already present,"
-         " value will be overwritten", self.globalParametersType];
+        [self.logger infoClient:
+         @"Added global parameter with key already present, value will be overwritten"
+                            key:@"parameter type"
+                          value:self.globalParametersType];
     } else {
-        [self.logger info:@"Added global %@ parameter", self.globalParametersType];
+        [self.logger infoClient:@"Added global parameter"
+                            key:@"parameter type"
+                          value:self.globalParametersType];
     }
 
     return YES;
 }
 
-- (BOOL)ccRemoveGlobalParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalParameterData
-                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-          clientActionRemoveStorageActionData:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData {
+- (BOOL)
+    ccRemoveGlobalParameterWithClientData:
+        (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalParameterData
+    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageActionData:
+        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData
+{
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
-        [self.logger error: @"Cannot remove global %@ parameter without a reference to storage", self.globalParametersType];
+        [self.logger debugDev:@"Cannot remove global parameter without a reference to storage"
+                          key:@"parameter type"
+                        value:self.globalParametersType
+                    issueType:ADJIssueWeakReference];
         return NO;
     }
 
-    ADJNonEmptyString *_Nullable removedValue = [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove.stringValue
-                                                       sqliteStorageAction:clientActionRemoveStorageActionData];
-
+    ADJNonEmptyString *_Nullable removedValue =
+        [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove.stringValue
+               sqliteStorageAction:clientActionRemoveStorageActionData];
 
     if (removedValue != nil) {
-        [self.logger info: @"Removed global %@ parameter", self.globalParametersType];
+        [self.logger infoClient:@"Removed global parameter"
+                            key:@"parameter type"
+                          value:self.globalParametersType];
     } else {
-        [self.logger info: @"Cannot remove global %@ parameter without key being present",
-         self.globalParametersType];
+        [self.logger noticeClient:@"Cannot remove global parameter without key being present"
+                              key:@"parameter type"
+                            value:self.globalParametersType];
     }
 
     return YES;
 }
 
-- (BOOL)ccClearGlobalParameterWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalParametersData
-                                apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-         clientActionRemoveStorageActionData:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData {
+- (BOOL)
+    ccClearGlobalParameterWithClientData:
+        (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalParametersData
+    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageActionData:
+        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData
+{
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
-        [self.logger error:@"Cannot clear global %@ parameters without a reference to storage",
-         self.globalParametersType];
+        [self.logger debugDev:@"Cannot clear global parameters without a reference to storage"
+                          key:@"parameter type"
+                        value:self.globalParametersType];
         return NO;
     }
 
     NSUInteger clearedKeys =
-    [storage removeAllPairsWithSqliteStorageAction:clientActionRemoveStorageActionData];
+        [storage removeAllPairsWithSqliteStorageAction:clientActionRemoveStorageActionData];
 
-    [self.logger info:@"Cleared %@ global %@ parameters",
-     [ADJUtilF uIntegerFormat:clearedKeys],
-     self.globalParametersType];
+    [self.logger infoClient:@"Cleared %@ global %@ parameters"
+                       key1:@"cleared values count"
+                     value1:[ADJUtilF uIntegerFormat:clearedKeys].description
+                       key2:@"parameter type"
+                     value2:self.globalParametersType];
 
     return YES;
 }
 
 #pragma mark Internal Methods
-- (BOOL)ccTryHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                                 apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                              clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (BOOL)
+    ccTryHandleClientActionWithClientActionIoInjectedData:
+        (nonnull ADJIoData *)clientActionIoInjectedData
+    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
     ADJNonEmptyString *_Nullable clientActionType = [clientActionIoInjectedData.metadataMap
                                                      pairValueWithKey:ADJClientActionTypeKey];
 
     if (clientActionType == nil) {
-        [self.logger error:@"Cannot handle global %@ parameter client action"
-         " without clientActionType", self.globalParametersType];
+        [self.logger debugDev:
+         @"Cannot handle global parameter client action without clientActionType"
+                          key:@"parameter type"
+                        value:self.globalParametersType];
         return NO;
     }
 
     if ([ADJClientAddGlobalParameterDataMetadataTypeValue
-         isEqualToString:clientActionType.stringValue]) {
+         isEqualToString:clientActionType.stringValue])
+    {
         ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
-        [ADJClientAddGlobalParameterData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientAddGlobalParameterData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             logger:self.logger];
         if (clientAddGlobalParameterData == nil) {
             return NO;
         }
@@ -167,11 +205,12 @@
     }
 
     if ([ADJClientRemoveGlobalParameterDataMetadataTypeValue
-         isEqualToString:clientActionType.stringValue]) {
+         isEqualToString:clientActionType.stringValue])
+    {
         ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
-        [ADJClientRemoveGlobalParameterData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             logger:self.logger];
         if (clientRemoveGlobalParameterData == nil) {
             return NO;
         }
@@ -182,11 +221,12 @@
     }
 
     if ([ADJClientClearGlobalParametersDataMetadataTypeValue
-         isEqualToString:clientActionType.stringValue]) {
+         isEqualToString:clientActionType.stringValue])
+    {
         ADJClientClearGlobalParametersData *_Nullable clientClearGlobalParametersData =
-        [ADJClientClearGlobalParametersData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientClearGlobalParametersData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             logger:self.logger];
         if (clientClearGlobalParametersData == nil) {
             return NO;
         }
@@ -196,9 +236,13 @@
                       clientActionRemoveStorageActionData:clientActionRemoveStorageAction];
     }
 
-    [self.logger error:@"Cannot handle global %@ parameter client action"
-     " with unknown %@ client action type",
-     self.globalParametersType, clientActionType];
+    [self.logger debugDev:
+     @"Cannot handle global parameter client action with unknown client action type"
+                     key1:@"parameter type"
+                   value1:self.globalParametersType
+                     key2:@"clientActionType"
+                   value2:clientActionType.stringValue
+                issueType:ADJIssueInvalidInput];
 
     return NO;
 }

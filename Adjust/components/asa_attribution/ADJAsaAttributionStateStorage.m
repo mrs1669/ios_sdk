@@ -46,26 +46,28 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
     NSNumber *_Nullable adServicesTrackedNumberBool = v4UserDefaultsData.adServicesTrackedNumberBool;
 
     if (adServicesTrackedNumberBool == nil || !adServicesTrackedNumberBool.boolValue) {
-        [self.logger debug:@"Asa attribution tracked not found in v4 shared preferences"];
+        [self.logger debugDev:@"Asa attribution tracked not found in v4 shared preferences"];
         return;
     }
     
-    [self.logger debug:@"Asa attribution tracked found in v4 shared preferences"];
+    [self.logger debugDev:@"Asa attribution tracked found in v4 shared preferences"];
 
     ADJAsaAttributionStateData *_Nonnull initialStateData =
-    [[ADJAsaAttributionStateData alloc] initWithIntialState];
+        [[ADJAsaAttributionStateData alloc] initWithIntialState];
+        
     [self updateWithNewDataValue:
-     [[ADJAsaAttributionStateData alloc]
-      // overwrite only the received asa click flag
-      initWithHasReceivedValidAsaClickResponse:YES
-      hasReceivedAdjustAttribution:initialStateData.hasReceivedAdjustAttribution
-      cachedToken:initialStateData.cachedToken
-      cacheReadTimestamp:initialStateData.cacheReadTimestamp
-      errorReason:initialStateData.errorReason]];
+         [[ADJAsaAttributionStateData alloc]
+              // overwrite only the received asa click flag
+              initWithHasReceivedValidAsaClickResponse:YES
+              hasReceivedAdjustAttribution:initialStateData.hasReceivedAdjustAttribution
+              cachedToken:initialStateData.cachedToken
+              cacheReadTimestamp:initialStateData.cacheReadTimestamp
+              errorReason:initialStateData.errorReason]];
 }
 
 @end

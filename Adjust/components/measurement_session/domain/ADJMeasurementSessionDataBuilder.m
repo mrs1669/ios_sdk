@@ -65,13 +65,16 @@
 #pragma mark Public API
 - (void)incrementSessionCountWithLogger:(nonnull ADJLogger *)logger {
     if (self.sessionCount == nil) {
-        [logger error:@"Cannot increment session count with nil value"];
+        [logger debugDev:@"Cannot increment session count with nil value"
+               issueType:ADJIssueLogicError];
         return;
     }
 
     self.sessionCount = [self.sessionCount generateIncrementedCounter];
 
-    [logger debug:@"Session count incremented by 1 to %@", self.sessionCount];
+    [logger debugDev:@"Session count incremented"
+                 key:@"session count"
+               value:self.sessionCount.description];
 }
 
 - (void)setLastActivityTimestampMilli:(nonnull ADJTimestampMilli *)lastActivityTimestampMilli {

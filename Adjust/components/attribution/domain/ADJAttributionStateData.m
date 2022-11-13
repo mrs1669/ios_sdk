@@ -44,15 +44,17 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 @implementation ADJAttributionStateData
 #pragma mark Instantiation
 #define extractBoolean(varName, paramKey)                                                   \
-ADJBooleanWrapper *_Nullable varName =                                                 \
-[ADJBooleanWrapper                                                                 \
-instanceFromIoValue:                                                            \
-[ioData.propertiesMap pairValueWithKey:paramKey]                            \
-logger:logger];                                                                 \
-if (varName == nil) {                                                                   \
-[logger error:@"Cannot create instance from Io data without valid %@", paramKey];   \
-return nil;                                                                         \
-}                                                                                       \
+     ADJBooleanWrapper *_Nullable varName =                                                 \
+         [ADJBooleanWrapper                                                                 \
+            instanceFromIoValue:                                                            \
+                [ioData.propertiesMap pairValueWithKey:paramKey]                            \
+            logger:logger];                                                                 \
+    if (varName == nil) {                                                                   \
+        [logger debugDev:@"Cannot create instance from Io data with invalid valid io value" \
+               valueName:paramKey                                                           \
+               issueType:ADJIssueStorageIo];                                                \
+        return nil;                                                                         \
+    }                                                                                       \
 
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
                                      logger:(nonnull ADJLogger *)logger {

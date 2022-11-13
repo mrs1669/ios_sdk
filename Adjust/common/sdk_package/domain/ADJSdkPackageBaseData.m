@@ -48,16 +48,17 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
 @synthesize parameters = _parameters;
 
 #define pathToPackage(packageClass)                                             \
-if ([packageClass ## Path isEqualToString:path.stringValue]) {              \
-return [[packageClass alloc] initWithClientSdk:clientSdk.stringValue    \
-parameters:parameters               \
-ioData:ioData                   \
-logger:logger];                 \
-}
+    if ([packageClass ## Path isEqualToString:path.stringValue]) {              \
+        return [[packageClass alloc] initWithClientSdk:clientSdk.stringValue    \
+                                            parameters:parameters               \
+                                                ioData:ioData                   \
+                                                logger:logger];                 \
+    }                                                                           \
 
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
+                                     logger:(nonnull ADJLogger *)logger
+{
     if (! [ioData isExpectedMetadataTypeValue:ADJSdkPackageDataMetadataTypeValue
            logger:logger]) {
         return nil;
@@ -67,20 +68,26 @@ logger:logger];                 \
 
     ADJNonEmptyString *_Nullable path = [propertiesMap pairValueWithKey:kPathKey];
     if (path == nil) {
-        [logger error:@"Cannot create instance from Io data without valid path"];
+        [logger debugDev:@"Cannot create instance from io data without valid value"
+               valueName:kPathKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable clientSdk =
     [propertiesMap pairValueWithKey:kClientSdkKey];
     if (clientSdk == nil) {
-        [logger error:@"Cannot create instance from Io data without valid clientSdk"];
+        [logger debugDev:@"Cannot create instance from io data without valid value"
+               valueName:kClientSdkKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
     ADJStringMap *_Nullable parameters = [ioData mapWithName:kParametersMapName];
     if (parameters == nil) {
-        [logger error:@"Cannot create instance from Io data without valid parameters"];
+        [logger debugDev:@"Cannot create instance from io data without valid value"
+               valueName:kParametersMapName
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
@@ -95,8 +102,11 @@ logger:logger];                 \
     pathToPackage(ADJInfoPackageData)
     pathToPackage(ADJThirdPartySharingPackageData)
 
-    [logger error:@"Cannot create instance from Io data"
-     " without matching %@ path to valid package type", path];
+    [logger debugDev:
+        @"Cannot create instance from io data without matching path to valid package type"
+                 key:@"path"
+               value:path.stringValue
+           issueType:ADJIssueStorageIo];
 
     return nil;
 }

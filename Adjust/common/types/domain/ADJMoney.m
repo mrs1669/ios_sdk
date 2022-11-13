@@ -25,13 +25,16 @@
 + (nullable instancetype)instanceFromAmountDoubleNumber:(nullable NSNumber *)amountDoubleNumber
                                                currency:(nullable NSString *)currency
                                                  source:(nonnull NSString *)source
-                                                 logger:(nonnull ADJLogger *)logger {
+                                                 logger:(nonnull ADJLogger *)logger
+{
     ADJMoneyDoubleAmount *_Nullable moneyDoubleAmount =
-    [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber
+        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber
                                                  logger:logger];
     
     if (moneyDoubleAmount == nil) {
-        [logger error:@"Cannot create %@ without valid double amount", source];
+        [logger debugDev:@"Cannot create money instance without valid double amount"
+                    from:source
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
@@ -41,16 +44,20 @@
                                   logger:logger];
 }
 
-+ (nullable instancetype)instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
-                                                currency:(nullable NSString *)currency
-                                                  source:(nonnull NSString *)source
-                                                  logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
+    currency:(nullable NSString *)currency
+    source:(nonnull NSString *)source
+    logger:(nonnull ADJLogger *)logger
+{
     ADJMoneyDecimalAmount *_Nullable moneyDecimalAmount =
-    [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber
-                                                   logger:logger];
+        [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber
+                                                       logger:logger];
     
     if (moneyDecimalAmount == nil) {
-        [logger error:@"Cannot create %@ without valid decimal amount", source];
+        [logger debugDev:@"Cannot create money instance without valid decimal amount"
+                    from:source
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
@@ -86,7 +93,9 @@
                                    logger:logger];
     
     if (currencyNonEmptyString == nil) {
-        [logger error:@"Cannot create %@ without valid currency", source];
+        [logger debugDev:@"Cannot create money instance without valid decimal currency"
+                    from:source
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     

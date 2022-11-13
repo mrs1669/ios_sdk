@@ -41,15 +41,19 @@ static NSString *const kEventCountKey = @"eventCount";
                                       logger:logger];
 
     if (eventCount == nil) {
-        [logger error:@"Cannot create instance from Io data without valid %@", kEventCountKey];
+        [logger debugDev:@"Cannot create instance from Io data invalid io value"
+               valueName:kEventCountKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
     return [[self alloc] initWithEventCount:eventCount];
 }
 
-+ (nullable instancetype)instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt
-                                                              logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt    
+    logger:(nonnull ADJLogger *)logger
+{
     ADJNonNegativeInt *_Nullable eventCountInt =
     [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt
                                                   logger:logger];

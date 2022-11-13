@@ -38,24 +38,25 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 @implementation ADJClientEventData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromClientWithAdjustEvent:(nullable ADJAdjustEvent *)adjustEvent
-                                                    logger:(nonnull ADJLogger *)logger {
+                                                    logger:(nonnull ADJLogger *)logger
+{
     if (adjustEvent == nil) {
-        [logger error:@"Cannot create event with nil adjust event value"];
+        [logger errorClient:@"Cannot create event with nil adjust event value"];
         return nil;
     }
     
     ADJNonEmptyString *_Nullable eventId =
-    [ADJNonEmptyString instanceFromString:adjustEvent.eventId
-                        sourceDescription:@"event id"
-                                   logger:logger];
+        [ADJNonEmptyString instanceFromString:adjustEvent.eventId
+                            sourceDescription:@"event id"
+                                       logger:logger];
     if (eventId == nil) {
         return nil;
     }
     
     ADJNonEmptyString *_Nullable deduplicationId =
-    [ADJNonEmptyString instanceFromOptionalString:adjustEvent.deduplicationId
-                                sourceDescription:@"deduplication id"
-                                           logger:logger];
+        [ADJNonEmptyString instanceFromOptionalString:adjustEvent.deduplicationId
+                                    sourceDescription:@"deduplication id"
+                                               logger:logger];
     
     ADJMoney *_Nullable revenue = [self revenueWithAdjustEvent:adjustEvent
                                                         logger:logger];

@@ -27,47 +27,55 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
 
 @implementation ADJClientRemoveGlobalParameterData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToRemove:(nullable NSString *)keyToRemove
-                                                                    logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustConfigWithKeyToRemove:(nullable NSString *)keyToRemove
+    logger:(nonnull ADJLogger *)logger
+{
     ADJNonEmptyString *_Nullable verifiedKeyToRemove =
-    [ADJNonEmptyString instanceFromString:keyToRemove
-                        sourceDescription:@"client remove global parameter key"
-                                   logger:logger];
+        [ADJNonEmptyString instanceFromString:keyToRemove
+                            sourceDescription:@"client remove global parameter key"
+                                       logger:logger];
 
     if (verifiedKeyToRemove == nil) {
+        [logger errorClient:@"Invalid key to remove parameter"];
         return nil;
     }
 
     return [[self alloc] initWithKeyToRemove:verifiedKeyToRemove];
 }
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger
+{
     ADJNonEmptyString *_Nullable clientActionTypeValue =
-    [clientActionInjectedIoData.metadataMap
-     pairValueWithKey:ADJClientActionTypeKey];
+        [clientActionInjectedIoData.metadataMap pairValueWithKey:ADJClientActionTypeKey];
     if (clientActionTypeValue == nil) {
-        [logger error:@"Cannot create ClientRemoveGlobalParameterData"
-         " instance from client action io data without client action type value"];
+        [logger debugDev:@"Cannot create ClientRemoveGlobalParameterData"
+            " from client action io data without client action type value"
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
     if (! [ADJClientRemoveGlobalParameterDataMetadataTypeValue
-           isEqualToString:clientActionTypeValue.stringValue]) {
-        [logger error:@"Cannot create ClientRemoveGlobalParameterData"
-         " instance from client action io data"
-         " with read client action type value %@"
-         " different than expected %@",
-         clientActionInjectedIoData, ADJClientRemoveGlobalParameterDataMetadataTypeValue];
+           isEqualToString:clientActionTypeValue.stringValue])
+    {
+        [logger debugDev:
+         @"Cannot create ClientRemoveGlobalParameterData from client action io data"
+         " with different client action type"
+           expectedValue:ADJClientRemoveGlobalParameterDataMetadataTypeValue
+               actualValue:clientActionTypeValue.stringValue
+                 issueType:ADJIssueStorageIo];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable keyToRemove =
-    [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToRemoveKey];
+        [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToRemoveKey];
 
-    return [self instanceFromClientWithAdjustConfigWithKeyToRemove:
-            keyToRemove != nil ? keyToRemove.stringValue : nil
-                                                            logger:logger];
+    return [self
+                instanceFromClientWithAdjustConfigWithKeyToRemove:
+                    keyToRemove != nil ? keyToRemove.stringValue : nil
+                logger:logger];
 }
 
 - (nullable instancetype)init {

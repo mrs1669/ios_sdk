@@ -26,12 +26,14 @@
 
 @implementation ADJLogQueueController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                      storage:(nonnull ADJLogQueueStorage *)storage
-                             threadController:(nonnull ADJThreadController *)threadController
-                                        clock:(nonnull ADJClock *)clock
-                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    storage:(nonnull ADJLogQueueStorage *)storage
+    threadController:(nonnull ADJThreadController *)threadController
+    clock:(nonnull ADJClock *)clock
+    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"LogQueueController"];
     _storageWeak = storage;
     _clockWeak = clock;
@@ -115,8 +117,9 @@
 - (void)handleLogPackageAddedToSendWithData:(nonnull ADJLogPackageData *)logPackageDataToAdd {
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
-        [self.logger error:@"Cannot add log package to send"
-         " without a reference to the storage"];
+        [self.logger debugDev:
+            @"Cannot add log package to send without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -142,8 +145,8 @@
 - (void)handleSdkInit {
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
-        [self.logger error:@"Cannot handle sdk init"
-         " without a reference to the storage"];
+        [self.logger debugDev:@"Cannot handle sdk init without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -162,8 +165,9 @@
 - (void)handleResumeSending {
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
-        [self.logger error:@"Cannot handle resuming sending"
-         " without a reference to the storage"];
+        [self.logger debugDev:
+            @"Cannot handle resuming sending without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -183,8 +187,8 @@
 - (void)handleResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
-        [self.logger error:@"Cannot handle response"
-         " without a reference to the storage"];
+        [self.logger debugDev:@"Cannot handle response without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -217,9 +221,10 @@
     ADJLogPackageData *_Nullable removedSdkPackage = [storage removeElementAtFront];
 
     if (removedSdkPackage == nil) {
-        [self.logger error:@"Should not be empty when removing package at front"];
+        [self.logger debugDev:@"Should not be empty when removing package at front"
+                    issueType:ADJIssueLogicError];
     } else {
-        [self.logger debug:@"Package at front removed"];
+        [self.logger debugDev:@"Package at front removed"];
     }
 }
 
@@ -236,12 +241,12 @@
 }
 
 - (void)handleDelayEndWithSource:(nonnull NSString *)source {
-    [self.logger debug:@"Delay due to %@ ended", source];
+    [self.logger debugDev:@"Delay ended" from:source];
 
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
-        [self.logger error:@"Cannot handle delay end"
-         " without a reference to the storage"];
+        [self.logger debugDev:@"Cannot handle delay end without a reference to the storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -260,15 +265,19 @@
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
                     storage:(nonnull ADJLogQueueStorage *)storage
-                     source:(nonnull NSString *)source {
+                     source:(nonnull NSString *)source
+{
     if (packageToSend == nil) {
-        [self.logger error:@"Cannot send package from %@ when it is nil", source];
+        [self.logger debugDev:@"Cannot send package when it is nil"
+                         from:source
+                    issueType:ADJIssueInvalidInput];
         return;
     }
 
-    [self.logger debug:@"To send sdk package %@ from %@",
-     [packageToSend generateShortDescription],
-     source];
+    [self.logger debugDev:@"To send sdk package"
+                     from:source
+                      key:@"package"
+                    value:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
     [self generateSendingParametersWithStorage:storage];
@@ -279,9 +288,10 @@
 }
 
 - (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:
-(nonnull ADJLogQueueStorage *)storage {
+    (nonnull ADJLogQueueStorage *)storage
+{
     ADJStringMapBuilder *_Nonnull sendingParameters =
-    [[ADJStringMapBuilder alloc] initWithEmptyMap];
+        [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock != nil) {
@@ -289,7 +299,8 @@
          injectSentAtWithParametersBuilder:sendingParameters
          sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
     } else {
-        [self.logger error:@"Cannot inject sent at without a reference to clock"];
+        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
+                    issueType:ADJIssueWeakReference];
     }
 
     [ADJSdkPackageBuilder
@@ -300,15 +311,15 @@
 
     if (currentQueueSize.uIntegerValue > 0) {
         ADJNonNegativeInt *_Nonnull remaingQueueSize =
-        [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-         currentQueueSize.uIntegerValue - 1];
+            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+             currentQueueSize.uIntegerValue - 1];
 
         [ADJSdkPackageBuilder
-         injectRemainingQueuSizeWithParametersBuilder:sendingParameters
-         remainingQueueSize:remaingQueueSize];
+            injectRemainingQueuSizeWithParametersBuilder:sendingParameters
+            remainingQueueSize:remaingQueueSize];
     } else {
-        [self.logger error:@"Cannot inject remaining queue sizy"
-         " when its empty"];
+        [self.logger debugDev:@"Cannot inject remaining queue size when its empty"
+                    issueType:ADJIssueLogicError];
     }
 
     return sendingParameters;

@@ -27,6 +27,7 @@
 
 #pragma mark Public API
 #pragma mark - ADJAdjustLogger
+/*
 - (nonnull NSString *)debug:(nonnull NSString *)message, ... {
     va_list parameters; va_start(parameters, message);
 
@@ -51,5 +52,5 @@
 
     return [self.logger errorWithNSError:error message:message parameters:parameters];
 }
-
+*/
 @end

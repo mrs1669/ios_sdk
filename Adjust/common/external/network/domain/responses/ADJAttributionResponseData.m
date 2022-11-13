@@ -12,7 +12,8 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
                  attributionPackageData:(nonnull ADJAttributionPackageData *)attributionPackageData
-                                 logger:(nonnull ADJLogger *)logger {
+                                 logger:(nonnull ADJLogger *)logger
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:attributionPackageData
                            logger:logger];

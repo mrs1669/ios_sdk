@@ -44,19 +44,21 @@
 #pragma mark - Injected dependencies
 
 #pragma mark - Internal variables
-@property (readwrite, assign, nonatomic) BOOL okResponseCode;
+//@property (readwrite, assign, nonatomic) BOOL okResponseCode;
 @property (readwrite, assign, nonatomic) NSUInteger retries;
 //@property (nullable, readwrite, strong, nonatomic) id jsonResponseFoundation;
-@property (nullable, readwrite, strong, nonatomic) NSString *errorMessages;
+//@property (nullable, readwrite, strong, nonatomic) NSString *errorMessages;
 
 @end
 
 @implementation ADJSdkResponseDataBuilder
 #pragma mark Instantiation
-- (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
-                               sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
-                           previousErrorMessages:(nullable NSString *)previousErrorMessages {
+- (nonnull instancetype)
+    initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
+    sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
+    sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
+//    previousErrorMessages:(nullable NSString *)previousErrorMessages
+{
     self = [super init];
     _sourcePackage = sourcePackage;
     _sendingParameters = sendingParameters;
@@ -64,11 +66,11 @@
     
     _jsonDictionary = nil;
     
-    _okResponseCode = NO;
+    //_okResponseCode = NO;
     
     //_jsonResponseFoundation = nil;
     
-    _errorMessages = previousErrorMessages;
+    //_errorMessages = previousErrorMessages;
     
     return self;
 }
@@ -80,41 +82,46 @@
 
 - (void)logErrorWithLogger:(nullable ADJLogger *)logger
                    nsError:(nullable NSError *)nsError
-              errorMessage:(nonnull NSString *)errorMessage {
+              errorMessage:(nonnull NSString *)errorMessage
+{
     if (nsError != nil) {
         if (logger != nil) {
-            [logger errorWithNSError:nsError message:@"%@", errorMessage];
+            [logger debugDev:errorMessage
+                     nserror:nsError
+                   issueType:ADJIssueNetworkRequest];
         }
-        
+        /*
         [self appendErrorWithMessage:
          [NSString stringWithFormat:@"%@, with NSError: %@",
           errorMessage,
           [ADJUtilF errorFormat:nsError]]];
+         */
     } else {
         if (logger != nil) {
-            [logger error:@"%@", errorMessage];
+            [logger debugDev:errorMessage issueType:ADJIssueNetworkRequest];
         }
-        
+        /*
         [self appendErrorWithMessage:
          [NSString stringWithFormat:@"Without NSError, %@", errorMessage]];
+         */
     }
 }
-
+/*
 - (void)setOkResponseCode {
     self.okResponseCode = YES;
 }
-
+*/
 - (void)incrementRetries {
     self.retries = self.retries + 1;
 }
 
 #define tryBuildResponse(packageClassType, responseClassType, packageDataName)  \
-if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {          \
-return [[responseClassType alloc]                                       \
-initWithBuilder:self                                        \
-packageDataName:(packageClassType *)self.sourcePackage      \
-logger:logger];                                             \
-}                                                                           \
+    if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {          \
+        return [[responseClassType alloc]                                       \
+                    initWithBuilder:self                                        \
+                    packageDataName:(packageClassType *)self.sourcePackage      \
+                    logger:logger];                                             \
+    }                                                                           \
 
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger {
 
@@ -130,15 +137,18 @@ logger:logger];                                             \
     tryBuildResponse(ADJThirdPartySharingPackageData, ADJThirdPartySharingResponseData, thirdPartySharingPackageData)
 
     if (logger != nil) {
-        [logger error:@"Could not match source sdk package of: %@, to one of the know types."
-         " Will still be created with unknown type", self.sourcePackage];
+        [logger debugDev:
+         @"Could not match source sdk package, to one of the know types."
+         " Will still be created with unknown type"
+                     key:@"sourcePackage class"
+                   value:NSStringFromClass([self.sourcePackage class])];
     }
     
     return [[ADJUnknownResponseData alloc] initWithBuilder:self
                                             sdkPackageData:self.sourcePackage
                                                     logger:logger];
 }
-
+/*
 - (void)appendErrorWithMessage:(nonnull NSString *)errorMessage {
     if (self.errorMessages != nil) {
         self.errorMessages =
@@ -147,5 +157,5 @@ logger:logger];                                             \
         self.errorMessages = errorMessage;
     }
 }
-
+*/
 @end
