@@ -55,11 +55,13 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
-        [self.logger debug:@"Activity state v4 file not found"];
+        [self.logger debugDev:@"Activity state v4 file not found"];
         return;
     }
 
-    [self.logger debug:@"Read v4 activity state: %@", v4ActivityState];
+    [self.logger debugDev:@"Read v4 activity state"
+                      key:@"activity_state"
+                    value:[v4ActivityState description]];
 
     ADJMeasurementSessionData *_Nullable v4MeasurementSessionData =
     [ADJMeasurementSessionData

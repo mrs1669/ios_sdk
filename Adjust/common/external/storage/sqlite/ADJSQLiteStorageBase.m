@@ -52,14 +52,15 @@
 #pragma mark Public API
 #pragma mark - ADJSQLiteStorage
 - (void)readIntoMemorySync:(nonnull ADJSQLiteDb *)sqliteDb {
-    [self.logger debug:@"Trying to read data from %@ table in database to memory", self.tableName];
-    
+    [self.logger debugDev:@"Trying to read data from table in database to memory"
+                      key:@"table name" value:self.tableName];
+
     if ([self transactReadIntoMemory:sqliteDb]) {
-        [self.logger debug:@"Read data to memory"];
+        [self.logger debugDev:@"Read data to memory"];
         return;
     }
     
-    [self.logger debug:@"Did not read data to memory. Writing default initial state"];
+    [self.logger debugDev:@"Did not read data to memory. Writing default initial state"];
     
     [self concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:sqliteDb];
 }
@@ -85,9 +86,11 @@
 }
 
 #pragma mark Protected Methods
-- (nullable ADJNonEmptyString *)stringFromSelectStatement:(nonnull ADJSQLiteStatement *)selectStatement
-                                              columnIndex:(int)columnIndex
-                                                fieldName:(nonnull NSString *)fieldName {
+- (nullable ADJNonEmptyString *)
+    stringFromSelectStatement:(nonnull ADJSQLiteStatement *)selectStatement
+    columnIndex:(int)columnIndex
+    fieldName:(nonnull NSString *)fieldName
+{
     NSString *_Nullable fieldString = [selectStatement stringForColumnIndex:columnIndex];
     
     ADJNonEmptyString *_Nullable fieldValue =
@@ -96,8 +99,8 @@
                                    logger:self.logger];
     
     if (fieldValue == nil) {
-        [self.logger error:@"Cannot get string value from select statement '%@' field",
-         fieldName];
+        [self.logger debugDev:@"Cannot get string value from select statement"
+                    valueName:fieldName issueType:ADJIssueStorageIo];
     }
     
     return fieldValue;
@@ -132,11 +135,15 @@
 - (BOOL)transactReadIntoMemory:(nonnull ADJSQLiteDb *)sqliteDb {
     [sqliteDb beginTransaction];
     
-    ADJSQLiteStatement *_Nullable selectStatement = [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
+    ADJSQLiteStatement *_Nullable selectStatement =
+        [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
     
     if (selectStatement == nil) {
-        [self.logger error:@"Cannot read value from Db"
-         " without a prepared statement from the select query: %@", self.selectSql];
+        [self.logger debugDev:
+         @"Cannot read value from Db without a prepared statement from the select query"
+                          key:@"selectSql"
+                        value:self.selectSql.stringValue
+                    issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         return NO;
     }
@@ -144,15 +151,18 @@
     BOOL wasAbleToStepToFirstRow = [selectStatement nextInQueryStatementWithLogger:self.logger];
     
     if (! wasAbleToStepToFirstRow) {
-        [self.logger debug:@"Cannot read value from Select queryCursor"
-         "without a queryCursor from the select query: %@", self.selectSql];
+        [self.logger debugDev:
+         @"Cannot read value from Select queryCursor without a queryCursor from the select query"
+                          key:@"selectSql"
+                        value:self.selectSql.stringValue
+                    issueType:ADJIssueStorageIo];
         [selectStatement closeStatement];
         [sqliteDb rollback];
         return NO;
     }
     
     BOOL readIntoMemory =
-    [self concreteReadIntoMemoryFromSelectStatementInFirstRowSync:selectStatement];
+        [self concreteReadIntoMemoryFromSelectStatementInFirstRowSync:selectStatement];
     
     [selectStatement closeStatement];
     [sqliteDb commit];
@@ -161,7 +171,8 @@
 }
 
 - (nonnull ADJNonEmptyString *)generateDeleteAllSqlWithTableName:(nonnull NSString *)tableName {
-    return [[ADJNonEmptyString alloc] initWithConstStringValue: [NSString stringWithFormat:@"DELETE FROM %@", tableName]];
+    return [[ADJNonEmptyString alloc] initWithConstStringValue:
+            [NSString stringWithFormat:@"DELETE FROM %@", tableName]];
 }
 
 @end

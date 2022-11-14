@@ -28,18 +28,22 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 @implementation ADJSdkActiveStateData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
+                                     logger:(nonnull ADJLogger *)logger
+{
     if (! [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
                                        logger:logger]) {
         return nil;
     }
 
     ADJBooleanWrapper *_Nullable isSdkActive =
-    [ADJBooleanWrapper instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]
-                                    logger:logger];
+        [ADJBooleanWrapper
+            instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]
+            logger:logger];
 
     if (isSdkActive == nil) {
-        [logger error:@"Cannot create instance from Io data without valid %@", kIsSdkActiveKey];
+        [logger debugDev:@"Cannot create instance from io data without valid value"
+               valueName:kIsSdkActiveKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 

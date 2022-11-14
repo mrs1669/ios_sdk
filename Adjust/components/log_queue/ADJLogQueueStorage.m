@@ -14,9 +14,11 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
 
 @implementation ADJLogQueueStorage
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+    sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"LogQueueStorage"
                         storageExecutor:storageExecutor
@@ -31,15 +33,17 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
 - (nullable ADJLogPackageData *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
     id<ADJSdkPackageData> _Nullable sdkPackageData =
-    [ADJSdkPackageBaseData instanceFromIoData:ioData logger:self.logger];
+        [ADJSdkPackageBaseData instanceFromIoData:ioData logger:self.logger];
 
     if (sdkPackageData == nil) {
         return nil;
     }
 
     if (! [sdkPackageData isKindOfClass:[ADJLogPackageData class]]) {
-        [self.logger error:@"Unexpected non log package data: %@",
-         [sdkPackageData generateShortDescription]];
+        [self.logger debugDev:@"Unexpected non log package data"
+                          key:@"package read"
+                        value:[sdkPackageData generateShortDescription].stringValue
+                    issueType:ADJIssueStorageIo];
         return nil;
     }
 

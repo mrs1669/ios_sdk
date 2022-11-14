@@ -61,49 +61,54 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
     NSArray *_Nullable v4ActivityPackageArray = [v4FilesData v4ActivityPackageArray];
 
     if (v4ActivityPackageArray == nil) {
-        [self.logger debug:@"Activity Packages v4 file not found"];
+        [self.logger debugDev:@"Activity Packages v4 file not found"];
         return;
     }
 
-    [self.logger debug:@"Activity Packages v4 file found with %@ packages",
-     [ADJUtilF uIntegerFormat:v4ActivityPackageArray.count]];
+    [self.logger debugDev:@"Activity Packages v4 file found"
+                      key:@"count"
+                    value:[ADJUtilF uIntegerFormat:v4ActivityPackageArray.count]];
 
     for (id _Nullable activityPackageObject in v4ActivityPackageArray) {
         if (activityPackageObject == nil) {
-            [self.logger debug:@"Cannot not add v4 package with nil object"];
+            [self.logger debugDev:@"Cannot not add v4 package with nil object"];
             continue;
         }
 
         if (! [activityPackageObject isKindOfClass:[ADJV4ActivityPackage class]]) {
-            [self.logger debug:@"Cannot not add v4 package that is not of expected class"];
+            [self.logger debugDev:@"Cannot not add v4 package that is not of expected class"];
             continue;
         }
 
-        ADJV4ActivityPackage *_Nonnull v4ActivityPackage = (ADJV4ActivityPackage *)activityPackageObject;
+        ADJV4ActivityPackage *_Nonnull v4ActivityPackage =
+            (ADJV4ActivityPackage *)activityPackageObject;
 
-        ADJNonEmptyString *_Nullable v4ClientSdk = [ADJNonEmptyString instanceFromString:v4ActivityPackage.clientSdk
-                                                                       sourceDescription:@"v4 Activity Package client sdk"
-                                                                                  logger:self.logger];
+        ADJNonEmptyString *_Nullable v4ClientSdk =
+            [ADJNonEmptyString instanceFromString:v4ActivityPackage.clientSdk
+                                sourceDescription:@"v4 Activity Package client sdk"
+                                           logger:self.logger];
         if (v4ClientSdk == nil) {
-            [self.logger debug:@"Cannot not add v4 package without client sdk"];
+            [self.logger debugDev:@"Cannot not add v4 package without client sdk"];
             continue;
         }
 
-        ADJStringMap *_Nullable parameters = [self convertV4ParametersWithV4ActivityPackage:v4ActivityPackage];
+        ADJStringMap *_Nullable parameters =
+            [self convertV4ParametersWithV4ActivityPackage:v4ActivityPackage];
         if (parameters == nil) {
-            [self.logger debug:@"Cannot not add v4 package without parameters"];
+            [self.logger debugDev:@"Cannot not add v4 package without parameters"];
             continue;
         }
 
-        id<ADJSdkPackageData> _Nullable sdkPackageData = [self convertSdkPackageFromV4WithV4Path:v4ActivityPackage.path
-                                                                                     v4ClientSdk:v4ClientSdk
-                                                                                      parameters:parameters];
+        id<ADJSdkPackageData> _Nullable sdkPackageData =
+            [self convertSdkPackageFromV4WithV4Path:v4ActivityPackage.path
+                                        v4ClientSdk:v4ClientSdk
+                                         parameters:parameters];
         if (sdkPackageData == nil) {
-            [self.logger debug:@"Cannot not add v4 package that could not be converted"];
+            [self.logger debugDev:@"Cannot not add v4 package that could not be converted"];
             continue;
         }
 
-        [self.logger debug:@"Adding v4 package that could be converted"];
+        [self.logger debugDev:@"Adding v4 package that could be converted"];
 
         [self enqueueElementToLast:sdkPackageData
                sqliteStorageAction:nil];

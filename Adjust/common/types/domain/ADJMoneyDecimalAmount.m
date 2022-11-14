@@ -49,20 +49,27 @@
                                              isOptional:(BOOL)isOptional {
     if (decimalNumberValue == nil) {
         if (! isOptional) {
-            [logger error:@"Cannot create money amount with nil decimal number value"];
+            [logger debugDev:@"Cannot create money amount with nil decimal number value"
+                   issueType:ADJIssueInvalidInput];
         }
         return nil;
     }
     
     if ([ADJUtilF isNotANumber:decimalNumberValue]) {
-        [logger error:@"Cannot create money amount with invalid decimal number %@ value",
-         decimalNumberValue];
+        [logger debugDev:@"Cannot create money amount with invalid decimal number"
+                     key:@"decimalNumberValue"
+                   value:decimalNumberValue.description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
-    BOOL isDecimalNegative = [decimalNumberValue compare:[NSDecimalNumber zero]] == NSOrderedAscending;
+    BOOL isDecimalNegative =
+        [decimalNumberValue compare:[NSDecimalNumber zero]] == NSOrderedAscending;
     if (isDecimalNegative) {
-        [logger error:@"Cannot create money amount with negative %@ value", decimalNumberValue];
+        [logger debugDev:@"Cannot create money amount with negative"
+                     key:@"decimalNumberValue"
+                   value:decimalNumberValue.description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     

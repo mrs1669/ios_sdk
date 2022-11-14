@@ -211,7 +211,7 @@
 
     [foundationDictionary removeObjectForKey:ADJLogSourceKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];
-    return [NSString stringWithFormat:@"%@%@%@[%@]%@%@ %@",
+    return [NSString stringWithFormat:@"%@%@%@[%@]%@ %@ %@",
             logLevelFormat,
             instanceIdFormat,
             threadIdFormat,

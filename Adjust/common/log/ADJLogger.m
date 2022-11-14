@@ -350,53 +350,6 @@
     [logCollector collectLogMessage:logMessageData];
 }
 
-- (nonnull NSString *)debug:(nonnull NSString *)message, ... {
-    va_list parameters; va_start(parameters, message);
-    
-    return [self debug:message parameters:parameters];
-}
-- (nonnull NSString *)debug:(nonnull NSString *)message parameters:(va_list)parameters {
-    return [self log:message parameters:parameters messageLogLevel:ADJAdjustLogLevelDebug];
-}
-
-- (nonnull NSString *)info:(nonnull NSString *)message, ... {
-    va_list parameters; va_start(parameters, message);
-    
-    return [self info:message parameters:parameters];
-}
-- (nonnull NSString *)info:(nonnull NSString *)message parameters:(va_list)parameters {
-    return [self log:message parameters:parameters messageLogLevel:ADJAdjustLogLevelInfo];
-}
-
-- (nonnull NSString *)error:(nonnull NSString *)message, ... {
-    va_list parameters; va_start(parameters, message);
-    
-    return [self error:message parameters:parameters];
-}
-- (nonnull NSString *)error:(nonnull NSString *)message parameters:(va_list)parameters {
-    return [self log:message parameters:parameters messageLogLevel:ADJAdjustLogLevelError];
-}
-
-- (nonnull NSString *)errorWithNSError:(nonnull NSError *)error
-                               message:(nonnull NSString *)message, ... {
-    va_list parameters; va_start(parameters, message);
-    
-    return [self errorWithNSError:error message:message parameters:parameters];
-}
-- (nonnull NSString *)errorWithNSError:(nonnull NSError *)error
-                               message:(nonnull NSString *)message
-                            parameters:(va_list)parameters {
-    NSString *_Nonnull formattedWithError = [ADJLogger formatNSError:error message:message];
-    return [self log:formattedWithError parameters:parameters messageLogLevel:ADJAdjustLogLevelError];
-}
-
-+ (nonnull NSString *)formatNSError:(nonnull NSError *)error
-                            message:(nonnull NSString *)message
-{
-    return [NSString stringWithFormat:@"%@, with NSError: %@",
-            message, [ADJUtilF errorFormat:error]];
-}
-
 #pragma mark Internal methods
 - (void)logWithMessage:(nonnull NSString *)message
               logLevel:(nonnull NSString *)logLevel
@@ -434,31 +387,6 @@
             level:logLevel
             messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
                            value1, key1, value2, key2, nil]]];
-}
-
-- (nonnull NSString *)log:(nonnull NSString *)message
-               parameters:(va_list)parameters
-          messageLogLevel:(nonnull NSString *)messageLogLevel
-{
-    NSString *_Nonnull formattedMessage =
-        [[NSString alloc] initWithFormat:message arguments:parameters];
-    va_end(parameters);
-
-    [self logWithInput:[[ADJInputLogMessageData alloc]
-                        initWithMessage:[NSString stringWithFormat:@"TOUPDT|%@", formattedMessage]
-                        level:ADJAdjustLogLevelDebug]];
-
-    return formattedMessage;
-    /*;
-    id<ADJLogCollector> _Nullable logCollector = self.logCollectorWeak;
-    if (logCollector != nil) {
-        [logCollector collectLogMessage:formattedMessage
-                                 source:self.source
-                        messageLogLevel:messageLogLevel];
-    }
-    
-    return formattedMessage;
-     */
 }
 
 @end

@@ -145,11 +145,12 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 - (BOOL)removeElementByPositionInTransaction:(nonnull ADJNonNegativeInt *)elementPositionToRemove
                                     sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb {
     ADJSQLiteStatement *_Nullable deleteElementStatement =
-    [sqliteDb prepareStatementWithSqlString:self.deleteElementByPositionSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.deleteElementByPositionSql.stringValue];
     
     if (deleteElementStatement == nil) {
-        [self.logger error:@"Cannot remove element by position in sqliteDb"
-         " without a prepared statement"];
+        [self.logger debugDev:
+         @"Cannot remove element by position in sqliteDb without a prepared statement"
+                    issueType:ADJIssueStorageIo];
         return NO;
     }
     
@@ -179,8 +180,9 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 (nonnull ADJNonNegativeInt *)elementPositionToRemove {
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
-        [self.logger error:@"Cannot remove element by position in storage"
-         " without a reference to storageExecutor"];
+        [self.logger debugDev:
+         @"Cannot remove element by position in storage without a reference to storageExecutor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
     
@@ -193,21 +195,15 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         strongSelf.sqliteDatabaseProviderWeak;
         
         if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger error:@"Cannot remove element by position in storage"
-             " without a reference to sqliteDatabaseProvider"];
-            return;
-        }
-        
-        ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
-        
-        if (sqliteDb == nil) {
-            [strongSelf.logger error:@"Cannot remove element by position in storage"
-             " without a sqliteDb"];
+            [strongSelf.logger debugDev:
+             @"Cannot remove element by position in storage"
+             " without a reference to sqliteDatabaseProvider"
+                              issueType:ADJIssueWeakReference];
             return;
         }
         
         [strongSelf removeElementByPosition:elementPositionToRemove
-                                   sqliteDb:sqliteDb];
+                                   sqliteDb:[sqliteDatabaseProvider sqliteDb]];
     } source:@"remove element by position in storage only"];
 }
 
@@ -223,8 +219,9 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     // in storage
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
-        [self.logger error:@"Cannot remove all elements in storage"
-         " without a reference to storageExecutor"];
+        [self.logger debugDev:
+         @"Cannot remove all elements in storage without a reference to storageExecutor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
     
@@ -234,22 +231,16 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         if (strongSelf == nil) { return; }
         
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        strongSelf.sqliteDatabaseProviderWeak;
+            strongSelf.sqliteDatabaseProviderWeak;
         
         if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger error:@"Cannot remove all elements in storage"
-             " without a reference to sqliteDatabaseProvider"];
+            [strongSelf.logger debugDev:
+             @"Cannot remove all elements in storage without a reference to sqliteDatabaseProvider"
+                              issueType:ADJIssueWeakReference];
             return;
         }
         
         ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
-        
-        if (sqliteDb == nil) {
-            [strongSelf.logger error:@"Cannot remove all elements in storage"
-             " without a sqliteDb"];
-            return;
-        }
-        
         [sqliteDb executeStatements:strongSelf.deleteAllSql.stringValue];
     } source:@"remove all elements"];
 }
@@ -263,10 +254,11 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
 - (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:(nonnull ADJSQLiteStatement *)selectStatement {
     NSNumber *_Nullable currentElementPositionNumber =
-    [selectStatement numberIntForColumnIndex:kSelectElementPositionFieldIndex];
+        [selectStatement numberIntForColumnIndex:kSelectElementPositionFieldIndex];
     
     if (currentElementPositionNumber == nil) {
-        [self.logger error:@"Cannot get first select element position"];
+        [self.logger debugDev:@"Cannot get first select element position"
+                    issueType:ADJIssueStorageIo];
         return NO;
     }
     
@@ -302,7 +294,8 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
         }
         
         if (readElementPositionNumber == nil) {
-            [self.logger error:@"Cannot get select element position"];
+            [self.logger debugDev:@"Cannot get select element position"
+                        issueType:ADJIssueStorageIo];
             break;
         }
         
@@ -329,11 +322,13 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     if (elementAdded) {
         atLeastOneElementAdded = YES;
     }
-    
+
     if (atLeastOneElementAdded) {
-        [self.logger debug:@"Read %@ elements to the queue", [self count]];
+        [self.logger debugDev:@"Read %@ elements to the queue"
+                          key:@"count"
+                        value:[self count].description];
     } else {
-        [self.logger debug:@"Did not read any element to the queue"];
+        [self.logger debugDev:@"Did not read any element to the queue"];
     }
     
     return atLeastOneElementAdded;
@@ -411,19 +406,25 @@ static int const kInsertValueFieldPosition = 4;
 static int const kDeleteElementPositionFieldPosition = 1;
 
 - (BOOL)addReadDataToInMemoryQueueWithIoData:(nonnull ADJIoData *)readIoData
-                        elementPositionToAdd:(nullable ADJNonNegativeInt *)elementPositionToAdd {
+                        elementPositionToAdd:(nullable ADJNonNegativeInt *)elementPositionToAdd
+{
     if (elementPositionToAdd == nil) {
-        [self.logger error:@"Cannot add element to queue %@, without a valid element position",
-         self.metadataTypeValue];
+        [self.logger debugDev:
+         @"Cannot add element to queue, without a valid element position"
+                          key:@"metadataTypeValue"
+                        value:self.metadataTypeValue
+                    issueType:ADJIssueStorageIo];
         return NO;
     }
     
     id _Nullable lastReadElement = [self concreteGenerateElementFromIoData:readIoData];
-    
     if (lastReadElement == nil) {
-        [self.logger error:@"Cannot create element for queue %@,"
-         " from IoData: %@, with element position: %@",
-         self.metadataTypeValue, readIoData, elementPositionToAdd];
+        [self.logger debugDev:@"Cannot create element of last read"
+                         key1:@"metadataTypeValue"
+                       value1:self.metadataTypeValue
+                         key2:@"elementPositionToAdd"
+                       value2:elementPositionToAdd.description
+                    issueType:ADJIssueStorageIo];
         return NO;
     }
     
@@ -488,15 +489,17 @@ static int const kDeleteElementPositionFieldPosition = 1;
 
 - (void)addElementToStorage:(nonnull id)newElement
          newElementPosition:(nonnull ADJNonNegativeInt *)newElementPosition
-        sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+        sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
-        [self.logger error:@"Cannot add element by position in storage"
-         " without a reference to storageExecutor"];
+        [self.logger debugDev:
+         @"Cannot add element by position in storage without a reference to storageExecutor"
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
-    
+
     __typeof(self) __weak weakSelf = self;
     [storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -504,27 +507,20 @@ static int const kDeleteElementPositionFieldPosition = 1;
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
-        
+
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        strongSelf.sqliteDatabaseProviderWeak;
-        
+            strongSelf.sqliteDatabaseProviderWeak;
+
         if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger error:@"Cannot add element by position in storage"
-             " without a reference to sqliteDatabaseProvider"];
+            [strongSelf.logger debugDev:
+             @"Cannot add element by position in storage"
+             " without a reference to sqliteDatabaseProvider"
+                              issueType:ADJIssueWeakReference];
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
-        
-        ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
-        
-        if (sqliteDb == nil) {
-            [strongSelf.logger error:@"Cannot add element by position in storage"
-             " without a sqliteDb"];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-        
-        [strongSelf addElementToSqliteDb:sqliteDb
+
+        [strongSelf addElementToSqliteDb:[sqliteDatabaseProvider sqliteDb]
                               newElement:newElement
                       newElementPosition:newElementPosition
                      sqliteStorageAction:sqliteStorageAction];
@@ -534,22 +530,24 @@ static int const kDeleteElementPositionFieldPosition = 1;
 - (void)addElementToSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb
                   newElement:(nonnull id)newElement
           newElementPosition:(nonnull ADJNonNegativeInt *)newElementPosition
-         sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+         sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     [sqliteDb beginTransaction];
     
     ADJSQLiteStatement *_Nullable insertStatement =
     [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
     
     if (insertStatement == nil) {
-        [self.logger error:@"Cannot add element by position in storage"
-         " without a compiled insertStatement"];
+        [self.logger debugDev:
+         @"Cannot add element by position in storage without a compiled insertStatement"
+                    issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
     
     ADJIoData *_Nonnull newElementIoData =
-    [self concreteGenerateIoDataFromElement:newElement];
+        [self concreteGenerateIoDataFromElement:newElement];
     
     [self insertElementWithStatement:insertStatement
                     newElementIoData:newElementIoData
@@ -561,15 +559,16 @@ static int const kDeleteElementPositionFieldPosition = 1;
         if (! [sqliteStorageAction performStorageActionInDbTransaction:sqliteDb
                                                                 logger:self.logger])
         {
-            [self.logger error:@"Cannot add element by position in storage"
-             " with failed storage action"];
+            [self.logger debugDev:
+             @"Cannot add element by position in storage with failed storage action"
+                        issueType:ADJIssueStorageIo];
             [sqliteDb rollback];
             return;
         }
     }
     
     [sqliteDb commit];
-    [self.logger debug:@"Element added to database"];
+    [self.logger debugDev:@"Element added to database"];
 }
 
 - (void)insertElementWithStatement:(nonnull ADJSQLiteStatement *)insertStatement

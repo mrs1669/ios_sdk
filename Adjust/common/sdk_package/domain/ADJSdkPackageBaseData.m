@@ -75,7 +75,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     }
 
     ADJNonEmptyString *_Nullable clientSdk =
-    [propertiesMap pairValueWithKey:kClientSdkKey];
+        [propertiesMap pairValueWithKey:kClientSdkKey];
     if (clientSdk == nil) {
         [logger debugDev:@"Cannot create instance from io data without valid value"
                valueName:kClientSdkKey

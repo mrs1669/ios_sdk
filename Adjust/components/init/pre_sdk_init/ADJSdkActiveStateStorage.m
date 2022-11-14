@@ -47,10 +47,11 @@ static NSString *const kSdkActiveStateStorageTableName = @"sdk_active_state";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
-        [self.logger debug:@"Activity state v4 file not found"];
+        [self.logger debugDev:@"Activity state v4 file not found"];
         return;
     }
 

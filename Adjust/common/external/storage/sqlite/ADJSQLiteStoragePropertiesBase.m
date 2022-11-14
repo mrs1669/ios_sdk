@@ -82,33 +82,38 @@ static NSString *const kColumnValue = @"value";
 }
 
 - (void)updateInMemoryOnlyWithNewDataValue:(nonnull id)newDataValue {
-    [self.logger debug:@"Updating value in memory"];
-    [self.logger debug:@"Current value: %@", self.inMemoryDataValue];
-    [self.logger debug:@"New value: %@", newDataValue];
-    
+    [self.logger debugDev:@"Updating value in memory"
+                     key1:@"inMemoryDataValue"
+                   value1:[self.inMemoryDataValue description]
+                     key2:@"newDataValue"
+                   value2:[newDataValue description]];
+
     self.inMemoryDataValue = newDataValue;
 }
 
 - (void)updateInStorageOnlyWithNewDataValue:(nonnull id)newDataValue {
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
-        [self.logger error:@"Cannot update new value in storage"
-         " without a reference to storage executor"];
+        [self.logger debugDev:
+         @"Cannot update new value in storage without a reference to storage executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
     
     id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-    self.sqliteDatabaseProviderWeak;
+        self.sqliteDatabaseProviderWeak;
     if (sqliteDatabaseProvider == nil) {
-        [self.logger error:@"Cannot update new value in storage"
-         " without a reference to sqliteDatabaseProvider"];
+        [self.logger debugDev:
+         @"Cannot update new value in storage without a reference to sqliteDatabaseProvider"
+                    issueType:ADJIssueWeakReference];
         return;
     }
     
     ADJSQLiteDb *_Nullable sqliteDb = sqliteDatabaseProvider.sqliteDb;
     if (sqliteDb == nil) {
-        [self.logger error:@"Cannot update new value in storage"
-         " without a reference to sqliteDb"];
+        [self.logger debugDev:
+         @"Cannot update new value in storage without a reference to sqliteDb"
+                    issueType:ADJIssueWeakReference];
         return;
     }
     
@@ -123,14 +128,15 @@ static NSString *const kColumnValue = @"value";
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb
-                            newDataValue:(nonnull id)newDataValue {
+                            newDataValue:(nonnull id)newDataValue
+{
     //[self printRowNumberWithSQLiteDb:sqliteDb];
     // delete all rows
     BOOL deletedSuccess = [self deleteAllInTransactionWithDb:sqliteDb];
     if (! deletedSuccess) {
         return NO;
     }
-    [self.logger debug:@"Deleted all rows in update transaction"];
+    [self.logger debugDev:@"Deleted all rows in update transaction"];
     
     //[self printRowNumberWithSQLiteDb:sqliteDb];
     
@@ -140,7 +146,7 @@ static NSString *const kColumnValue = @"value";
     if (! insertedSuccess) {
         return NO;
     }
-    [self.logger debug:@"Inserted new data values in update transaction"];
+    [self.logger debugDev:@"Inserted new data values in update transaction"];
     
     return YES;
 }
@@ -168,12 +174,14 @@ static NSString *const kColumnValue = @"value";
     
     _Nullable id valueFromIoData = [self concreteGenerateValueFromIoData:ioData];
     
-    [self.logger debug:@"Data successfully read with value: %@", valueFromIoData];
+    [self.logger debugDev:@"Data successfully read"
+                      key:@"valueFromIoData"
+                    value:valueFromIoData];
     
     if (valueFromIoData != nil) {
         _inMemoryDataValue = valueFromIoData;
     } else {
-        [self.logger debug:@"Cannot set generated value from io data"];
+        [self.logger debugDev:@"Cannot set generated value from io data"];
     }
     
     return valueFromIoData != nil;
@@ -237,16 +245,17 @@ static int const kInsertValueFieldPosition = 3;
     
     [sqliteDb commit];
     
-    [self.logger debug:@"Updated in db"];
+    [self.logger debugDev:@"Updated in db"];
 }
 
 - (BOOL)deleteAllInTransactionWithDb:(nonnull ADJSQLiteDb *)sqliteDb {
     ADJSQLiteStatement *_Nullable deleteAllStatement =
-    [sqliteDb prepareStatementWithSqlString:self.deleteAllSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.deleteAllSql.stringValue];
     
     if (deleteAllStatement == nil) {
-        [self.logger error:@"Cannot remove all in sqliteDb"
-         " without a prepared statement"];
+        [self.logger debugDev:
+         @"Cannot remove all in sqliteDb without a prepared statement"
+                    issueType:ADJIssueStorageIo];
         return NO;
     }
     
@@ -259,12 +268,14 @@ static int const kInsertValueFieldPosition = 3;
 }
 
 - (BOOL)insertValueInTransactionToDb:(nonnull ADJSQLiteDb *)sqliteDb
-                        newDataValue:(nonnull id)newDataValue {
+                        newDataValue:(nonnull id)newDataValue
+{
     ADJSQLiteStatement *_Nullable insertStatement =
-    [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
     
     if (insertStatement == nil) {
-        [self.logger error:@"Cannot insert value to db without a prepared statement"];
+        [self.logger debugDev:@"Cannot insert value to db without a prepared statement"
+                    issueType:ADJIssueStorageIo];
         return NO;
     }
     
@@ -340,31 +351,41 @@ static int const kInsertValueFieldPosition = 3;
 
 - (void)printRowNumberWithSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb {
     NSString *selectCountSql =
-    [NSString stringWithFormat: @"select count(*) from %@", self.tableName];
+        [NSString stringWithFormat: @"select count(*) from %@", self.tableName];
     
     ADJSQLiteStatement *_Nullable selectCountStatement =
-    [sqliteDb prepareStatementWithSqlString:selectCountSql];
+        [sqliteDb prepareStatementWithSqlString:selectCountSql];
     
     if (selectCountStatement == nil) {
-        [self.logger error:@"Cannot count rows"
-         " without a prepared statement from the select query: %@", selectCountSql];
+        [self.logger debugDev:
+         @"Cannot count rows without a prepared statement from the select query"
+                         key:@"selectCountSql"
+                       value:selectCountSql
+                    issueType:ADJIssueStorageIo];
         return;
     }
     
     BOOL wasAbleToStepToFirstRow =
-    [selectCountStatement nextInQueryStatementWithLogger:self.logger];
-    
-    
+        [selectCountStatement nextInQueryStatementWithLogger:self.logger];
+
+
     if (! wasAbleToStepToFirstRow) {
-        [self.logger debug:@"Cannot count rows from Select queryCursor"
-         "without a queryCursor from the select query: %@", selectCountSql];
+        [self.logger debugDev:
+         @"Cannot count rows from Select queryCursor without a queryCursor from the select query"
+                          key:@"selectCountSql"
+                        value:selectCountSql
+                    issueType:ADJIssueStorageIo];
         [selectCountStatement closeStatement];
         return;
     }
     
     NSNumber *_Nullable countNumber = [selectCountStatement numberIntForColumnIndex:0];
     
-    [self.logger debug:@"table with name %@ with %@ rows", self.tableName, countNumber];
+    [self.logger debugDev:@"table read with count number"
+                     key1:@"tableName"
+                   value1:self.tableName
+                     key2:@"countNumber"
+                   value2:countNumber.description];
     
     [selectCountStatement closeStatement];
 }

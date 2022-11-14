@@ -18,7 +18,8 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"GlobalCallbackParametersStorage"
                         storageExecutor:storageExecutor
@@ -36,10 +37,12 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSDictionary<NSString *, NSString *> *_Nullable v4SessionCallbackParameters = [v4FilesData v4SessionCallbackParameters];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    NSDictionary<NSString *, NSString *> *_Nullable v4SessionCallbackParameters =
+        [v4FilesData v4SessionCallbackParameters];
     if (v4SessionCallbackParameters == nil) {
-        [self.logger debug:@"Session Callback Parameters v4 file not found"];
+        [self.logger debugDev:@"Session Callback Parameters v4 file not found"];
         return;
     }
 
@@ -56,17 +59,17 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
         }
 
         ADJNonEmptyString *_Nullable verifiedKey =
-        [ADJNonEmptyString instanceFromOptionalString:key
-                                    sourceDescription:@"v4 Session Callback Parameter key"
-                                               logger:self.logger];
+            [ADJNonEmptyString instanceFromOptionalString:key
+                                        sourceDescription:@"v4 Session Callback Parameter key"
+                                                   logger:self.logger];
         if (verifiedKey == nil) {
             continue;
         }
 
         ADJNonEmptyString *_Nullable verifiedValue =
-        [ADJNonEmptyString instanceFromOptionalString:value
-                                    sourceDescription:@"v4 Session Callback Parameter value"
-                                               logger:self.logger];
+            [ADJNonEmptyString instanceFromOptionalString:value
+                                        sourceDescription:@"v4 Session Callback Parameter value"
+                                                   logger:self.logger];
         if (verifiedValue == nil) {
             continue;
         }
