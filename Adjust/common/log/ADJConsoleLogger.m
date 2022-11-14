@@ -188,19 +188,82 @@
 {
     NSMutableDictionary <NSString *, id> *_Nonnull foundationDictionary =
         [logMessageData generateFoundationDictionary];
-        
-    [foundationDictionary removeObjectForKey:ADJLogMessageKey];
     
     if (isPreSdkInit) {
         [foundationDictionary setObject:@(YES) forKey:ADJLogIsPreSdkInitKey];
     }
-    
-    return [NSString stringWithFormat:@"%@ %@", logMessageData.inputData.message,
+
+    [foundationDictionary removeObjectForKey:ADJLogInstanceIdKey];
+    NSString *_Nonnull instanceIdFormat =
+        logMessageData.instanceId == nil ?
+            @"" : [NSString stringWithFormat:@"_%@_", logMessageData.instanceId];
+
+    [foundationDictionary removeObjectForKey:ADJLogCallerThreadIdKey];
+    [foundationDictionary removeObjectForKey:ADJLogRunningThreadIdKey];
+    NSString *_Nonnull threadIdFormat = [self threadIdFormat:logMessageData];
+
+    [foundationDictionary removeObjectForKey:ADJLogIssueKey];
+    NSString *_Nonnull issueFormat = logMessageData.inputData.issueType == nil ? @""
+        : [NSString stringWithFormat:@"{%@}", logMessageData.inputData.issueType];
+
+    [foundationDictionary removeObjectForKey:ADJLogLevelKey];
+    NSString *_Nonnull logLevelFormat = [self logLevelFormat:logMessageData.inputData.level];
+
+    [foundationDictionary removeObjectForKey:ADJLogSourceKey];
+    [foundationDictionary removeObjectForKey:ADJLogMessageKey];
+    return [NSString stringWithFormat:@"%@%@%@[%@]%@%@ %@",
+            logLevelFormat,
+            instanceIdFormat,
+            threadIdFormat,
+            logMessageData.sourceDescription,
+            issueFormat,
+            logMessageData.inputData.message,
             [ADJLogMessageData generateJsonFromFoundationDictionary:foundationDictionary]];
     /*
     return [ADJUtilObj formatInlineKeyValuesWithName:logMessageData.inputData.message
                                  stringKeyDictionary:foundationDictionary];
      */
+}
+
+- (nonnull NSString *)logLevelFormat:(nonnull NSString *)logLevel {
+    if (logLevel == ADJAdjustLogLevelTrace) {
+        return @"t/";
+    }
+    if (logLevel == ADJAdjustLogLevelDebug) {
+        return @"d/";
+    }
+    if (logLevel == ADJAdjustLogLevelInfo) {
+        return @"i/";
+    }
+    if (logLevel == ADJAdjustLogLevelNotice) {
+        return @"n/";
+    }
+    if (logLevel == ADJAdjustLogLevelError) {
+        return @"e/";
+    }
+    return @"u/";
+}
+
+- (nonnull NSString *)threadIdFormat:(nonnull ADJLogMessageData *)logMessageData {
+    NSString *_Nullable runningThreadId =
+        logMessageData.inputData.runningThreadId != nil ?
+            logMessageData.inputData.runningThreadId
+            : logMessageData.runningThreadId != nil ? logMessageData.runningThreadId : nil;
+    NSString *_Nullable callingThreadId = logMessageData.inputData.callerThreadId;
+
+    if (callingThreadId == nil) {
+        if (runningThreadId == nil) {
+            return @"";
+        }
+
+        return [NSString stringWithFormat:@"<%@>", runningThreadId];
+    }
+
+    if (runningThreadId == nil) {
+        return [NSString stringWithFormat:@"<%@->", callingThreadId];
+    }
+
+    return [NSString stringWithFormat:@"<%@-%@>", callingThreadId, runningThreadId];
 }
 
 - (void)osLogWithFullMessage:(nonnull NSString *)fullLogMessage

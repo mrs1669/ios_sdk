@@ -445,11 +445,8 @@
     va_end(parameters);
 
     [self logWithInput:[[ADJInputLogMessageData alloc]
-                        initWithMessage:formattedMessage
-                        level:ADJAdjustLogLevelDebug
-                        messageParams:
-                            [NSDictionary dictionaryWithObjectsAndKeys:
-                             @"log to be deprecated", @"true", nil]]];
+                        initWithMessage:[NSString stringWithFormat:@"TOUPDT|%@", formattedMessage]
+                        level:ADJAdjustLogLevelDebug]];
 
     return formattedMessage;
     /*;
