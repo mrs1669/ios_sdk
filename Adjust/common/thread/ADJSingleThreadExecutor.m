@@ -74,7 +74,7 @@
             NSString *_Nonnull runningLocalId =
                 [localThreadController
                     setNextLocalIdWithSerialDispatchQueue:strongSelf.serialQueue];
-            
+
             [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                    runningThreadId:runningLocalId
                                                  callerDescription:source];

@@ -211,18 +211,14 @@
 
     [foundationDictionary removeObjectForKey:ADJLogSourceKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];
-    return [NSString stringWithFormat:@"%@%@%@[%@]%@ %@ %@",
+    return [NSString stringWithFormat:@"%@%@[%@]%@ %@ %@%@",
             logLevelFormat,
             instanceIdFormat,
-            threadIdFormat,
             logMessageData.sourceDescription,
             issueFormat,
             logMessageData.inputData.message,
+            threadIdFormat,
             [ADJLogMessageData generateJsonFromFoundationDictionary:foundationDictionary]];
-    /*
-    return [ADJUtilObj formatInlineKeyValuesWithName:logMessageData.inputData.message
-                                 stringKeyDictionary:foundationDictionary];
-     */
 }
 
 - (nonnull NSString *)logLevelFormat:(nonnull NSString *)logLevel {
@@ -239,7 +235,7 @@
         return @"n/";
     }
     if (logLevel == ADJAdjustLogLevelError) {
-        return @"e/";
+        return @"err/";
     }
     return @"u/";
 }
