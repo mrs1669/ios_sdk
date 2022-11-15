@@ -176,7 +176,7 @@ static NSString *const kColumnValue = @"value";
     
     [self.logger debugDev:@"Data successfully read"
                       key:@"valueFromIoData"
-                    value:valueFromIoData];
+                    value:[valueFromIoData description]];
     
     if (valueFromIoData != nil) {
         _inMemoryDataValue = valueFromIoData;

@@ -125,7 +125,7 @@
         [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                runningThreadId:runningLocalId
                                              callerDescription:source];
-        
+
         blockToExecute();
 
         // because the thread can be reused by an outside execution
@@ -194,11 +194,15 @@
     dispatch_async(self.serialQueue, ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-
-        NSString *_Nonnull runningLocalId =
-            [localThreadController setNextLocalIdWithSerialDispatchQueue:strongSelf.serialQueue];
         
         if (! skipTraceLocalId) {
+            // no need to set a new thread id when it is tracing a new thread
+            //  because, so far, there is any sort of logging downstream of the log collector
+            // If that changes and some "special" (to avoid looping) logging is done, then
+            //  this will need to be done in those cases
+            NSString *_Nonnull runningLocalId =
+                [localThreadController setNextLocalIdWithSerialDispatchQueue:strongSelf.serialQueue];
+
             [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                    runningThreadId:runningLocalId
                                                  callerDescription:source];

@@ -243,7 +243,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
 
     if (! self.isOnForeground) {
         [self.logger debugDev:
-         @"Cannot change to ActiveSession from %@ in %@ state while it is on the background"
+         @"Cannot change to ActiveSession while it is on the background"
                          from:source
                           key:@"measurementSessionStatus"
                         value:self.measurementSessionStatus];

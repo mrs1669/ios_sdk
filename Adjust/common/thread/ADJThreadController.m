@@ -95,7 +95,7 @@
         [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                runningThreadId:runningLocalId
                                              callerDescription:source];
-        
+
         blockToExecute();
 
         // because the thread can be reused by an outside execution

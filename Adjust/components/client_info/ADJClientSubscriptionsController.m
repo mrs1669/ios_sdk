@@ -107,9 +107,12 @@
 
     id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
     if (clientReturnExecutor == nil) {
+        /* Must not use the "normal" logging downstream of the log collector
+            to prevent becoming in a loop
         [self.logger debugDev:
          @"Cannot publish adjust log message without reference to client return executor"
                     issueType:ADJIssueWeakReference];
+         */
         return;
     }
 
