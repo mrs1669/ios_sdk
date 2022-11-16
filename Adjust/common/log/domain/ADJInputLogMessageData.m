@@ -80,6 +80,23 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     initWithMessage:(nonnull NSString *)message
     level:(nonnull NSString *)level
     issueType:(nullable ADJIssue)issueType
+    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
+{
+    return [self initWithMessage:message
+                           level:level
+                       issueType:issueType
+                  callerThreadId:nil
+               callerDescription:nil
+                 runningThreadId:nil
+                         nsError:nil
+                     nsException:nil
+                   messageParams:messageParams];
+}
+
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull NSString *)level
+    issueType:(nullable ADJIssue)issueType
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams

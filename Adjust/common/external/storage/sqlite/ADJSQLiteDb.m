@@ -12,6 +12,7 @@
 
 #import "ADJSQLiteStatement.h"
 #import "ADJUtilF.h"
+#import "ADJAdjustLogMessageData.h"
 
 #pragma mark Fields
 #pragma mark - Protected properties
@@ -194,13 +195,12 @@
         sqlite3_prepare_v2(localStrongSqlite3, sqlString.UTF8String, -1, &statement, 0);
     
     if (SQLITE_OK != returnCode) {
-        [self.logger debugDevStart:
-            @"Cannot prepare statement"]
-            .wKv(@"sql", sqlString)
-            .wKv(@"returnCode", [ADJUtilF intFormat:returnCode])
-            .wKv(@"lastErrorMessage", [self lastErrorMessage])
-            .wIssue(ADJIssueStorageIo)
-            .end();
+        [self.logger debugDev:@"Cannot prepare statement"
+                messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
+                               sqlString, @"sql",
+                               [ADJUtilF intFormat:returnCode], @"returnCode",
+                               [self lastErrorMessage], @"lastErrorMessage", nil]
+                    issueType:ADJIssueStorageIo];
         
         sqlite3_finalize(statement);
         return nil;

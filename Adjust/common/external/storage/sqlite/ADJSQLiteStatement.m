@@ -10,9 +10,9 @@
 
 #import "ADJSQLiteDb.h"
 #import "ADJUtilF.h"
+#import "ADJAdjustLogMessageData.h"
 
 #pragma mark Fields
-
 @interface ADJSQLiteStatement ()
 #pragma mark - Injected dependencies
 @property (nonnull, readonly, strong, nonatomic) NSString *sqlString;
@@ -249,14 +249,14 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
                      reasonDescription:(nonnull NSString *)reasonDescription
                    isQueryOrElseUpdate:(BOOL)isQueryOrElseUpdate
 {
-    [logger debugDevStart:@"Error stepping"]
-        .wKv(@"reason", reasonDescription)
-        .wKv(@"isQueryOrElseUpdate", isQueryOrElseUpdate ? @"true" : @"false")
-        .wKv(@"sql", self.sqlString)
-        .wKv(@"returnCode", [ADJUtilF intFormat:returnCode])
-        .wKv(@"lastErrorMessage@", [self lastErrorMessage])
-        .wIssue(ADJIssueStorageIo)
-        .end();
+    [logger debugDev:@"Error stepping"
+       messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
+                      reasonDescription, @"reason",
+                      isQueryOrElseUpdate ? @"true" : @"false", @"isQueryOrElseUpdate",
+                      self.sqlString, @"sql",
+                      [ADJUtilF intFormat:returnCode], @"returnCode",
+                      [self lastErrorMessage], @"lastErrorMessage@", nil]
+           issueType:ADJIssueStorageIo];
 }
 
 - (nonnull NSString *)lastErrorMessage {

@@ -425,20 +425,20 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 - (nullable NSString *)logCannotStartAskingWithSource:(nonnull NSString *)source
                                                reason:(nonnull NSString *)reason
 {
-    [self.logger debugDevStart:@"Cannot start asking"]
-        .wKv(@"from", source)
-        .wKv(@"reason", reason)
-        .end();
+    [self.logger debugDev:@"Cannot start asking"
+                     from:source
+                      key:@"reason"
+                    value:reason];
     return nil;
 }
 
 - (void)logStartAskingWihtSource:(nonnull NSString *)source
                   startingSource:(nonnull NSString *)startingSource
 {
-    [self.logger debugDevStart:@"Start asking"]
-        .wKv(@"from", source)
-        .wKv(@"starting_source", startingSource)
-        .end();
+    [self.logger debugDev:@"Start asking"
+                     from:source
+                      key:@"startingSource"
+                    value:startingSource];
 }
 
 @end

@@ -338,16 +338,13 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
                 [currentMeasurementSessionData.lastActivityTimestampMilli
                  generateTimestampWithAddedTimeLength:
                      self.overwriteFirstMeasurementSessionIntervalMilli];
-            [self.logger logWithInput:
-             [[ADJInputLogMessageData alloc]
-              initWithMessage:@"Now timestamp overwritten"
-              level:ADJLogLevelDevDebug
-              messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
-                             nonMonotonicNowTimestampMilli.description, @"nowTimestamp",
-                             overwrittenNowTimestamp.description, @"overwrittenNowTimestamp",
-                             [currentMeasurementSessionData.lastActivityTimestampMilli description],
-                                @"lastActivityTimestamp",
-                             nil]]];
+            [self.logger debugDev:@"Now timestamp overwritten"
+                    messageParams:
+             [NSDictionary dictionaryWithObjectsAndKeys:
+              nonMonotonicNowTimestampMilli.description, @"nowTimestamp",
+              overwrittenNowTimestamp.description, @"overwrittenNowTimestamp",
+              [currentMeasurementSessionData.lastActivityTimestampMilli description],
+                    @"lastActivityTimestamp", nil]];
             nonMonotonicNowTimestampMilli = overwrittenNowTimestamp;
         } else {
             [self.logger debugDev:

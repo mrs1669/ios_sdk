@@ -62,6 +62,12 @@ NS_ASSUME_NONNULL_END
     initWithMessage:(nonnull NSString *)message
     level:(nonnull NSString *)level
     issueType:(nullable ADJIssue)issueType
+    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
+
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull NSString *)level
+    issueType:(nullable ADJIssue)issueType
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;

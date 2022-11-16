@@ -434,11 +434,11 @@
 - (void)handleDelayEndWithData:(nonnull ADJDelayData *)delayData
                         source:(nonnull NSString *)source
 {
-    [self.logger debugDevStart:@"Delay ended"]
-        .wKv(@"from", source)
-        .wKv(@"delay_reason", delayData.source)
-        .end();
-    
+    [self.logger debugDev:@"Delay ended"
+                     from:source
+                      key:@"delayReason"
+                    value:delayData.source];
+
     ADJAttributionStateData *_Nullable currentAttributionStateData =
         [self currentAttributionStateDataWithSource:@"handleDelayEnd"];
     if (currentAttributionStateData == nil) {
@@ -506,12 +506,12 @@
     }
     
     ADJAttributionStateData *_Nonnull attributionStateData =
-    [attributionStateStorage readOnlyStoredDataValue];
-    
-    [self.logger debugDevStart:@"Publishing attribution"]
-        .wKv(@"status", attributionStatusEvent)
-        .wKv(@"from", source)
-        .end();
+        [attributionStateStorage readOnlyStoredDataValue];
+
+    [self.logger debugDev:@"Publishing attribution"
+                     from:source
+                      key:@"status"
+                    value:attributionStatusEvent];
     
     [self.attributionPublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJAttributionSubscriber> _Nonnull subscriber)

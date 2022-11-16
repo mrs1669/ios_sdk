@@ -317,17 +317,6 @@
                                 error:(nullable NSError *)error
                    sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
 {
-    /*
-    if (response != nil
-        && [response isKindOfClass:[NSHTTPURLResponse class]])
-    {
-        NSHTTPURLResponse *httpUrlResponse = (NSHTTPURLResponse *)response;
-        
-        if (httpUrlResponse != nil && httpUrlResponse.statusCode == 200) {
-            [sdkResponseBuilder setOkResponseCode];
-        }
-    }
-    */
     if (error != nil) {
         [sdkResponseBuilder logErrorWithLogger:self.logger
                                        nsError:error

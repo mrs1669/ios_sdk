@@ -9,6 +9,7 @@
 #import "ADJV4FilesData.h"
 
 #import "ADJUtilSys.h"
+#import "ADJAdjustLogMessageData.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -134,11 +135,16 @@
         
         return objectRead;
     } @catch (NSException *ex) {
-        [logger debugDevStart:@""]
-            .wKv(@"objectName", objectName)
-            .wKv(@"filePath", filePath)
-            .wException(ex)
-            .end();
+        [logger logWithInput:
+             [[ADJInputLogMessageData alloc]
+              initWithMessage:@"Exception from reading object from file"
+              level:ADJAdjustLogLevelDebug
+              issueType:ADJIssueStorageIo
+              nsError:nil
+              nsException:ex
+              messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
+                             objectName, @"objectName",
+                             filePath, @"filePath", nil]]];
     }
     
     return nil;

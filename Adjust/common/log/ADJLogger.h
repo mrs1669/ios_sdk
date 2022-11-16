@@ -9,10 +9,9 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJLogCollector.h"
-#import "ADJLogBuilder.h"
-#import "ADJLogBuildCallback.h"
+#import "ADJInputLogMessageData.h"
 
-@interface ADJLogger : NSObject <ADJLogBuildCallback>
+@interface ADJLogger : NSObject
 // instantiation
 - (nonnull instancetype)initWithSource:(nonnull NSString *)source
                           logCollector:(nonnull id<ADJLogCollector>)logCollector
@@ -28,7 +27,6 @@ traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
 runningThreadId:(nonnull NSString *)runningThreadId
 callerDescription:(nonnull NSString *)callerDescription;
 
-- (nonnull ADJLogBuilder *)debugDevStart:(nonnull NSString *)message;
 - (void)debugDev:(nonnull NSString *)message;
 - (void)debugDev:(nonnull NSString *)message
             from:(nonnull NSString *)from;
@@ -44,6 +42,8 @@ callerDescription:(nonnull NSString *)callerDescription;
           value1:(nullable NSString *)value1
             key2:(nonnull NSString *)key2
           value2:(nullable NSString *)value2;
+- (void)debugDev:(nonnull NSString *)message
+   messageParams:(nonnull NSDictionary<NSString *, NSString*> *)messageParams;
 
 - (void)debugDev:(nonnull NSString *)message
        issueType:(nonnull ADJIssue)issueType;
@@ -70,8 +70,10 @@ callerDescription:(nonnull NSString *)callerDescription;
             key2:(nonnull NSString *)key2
           value2:(nullable NSString *)value2
        issueType:(nonnull ADJIssue)issueType;
+- (void)debugDev:(nonnull NSString *)message
+   messageParams:(nonnull NSDictionary<NSString *, NSString*> *)messageParams
+       issueType:(nonnull ADJIssue)issueType;
 
-- (nonnull id<ADJClientLogBuilder>)infoClientStart:(nonnull NSString *)message;
 - (void)infoClient:(nonnull NSString *)message;
 - (void)infoClient:(nonnull NSString *)message
                key:(nonnull NSString *)key
@@ -82,13 +84,11 @@ callerDescription:(nonnull NSString *)callerDescription;
               key2:(nonnull NSString *)key2
             value2:(nullable NSString *)value2;
 
-- (nonnull id<ADJClientLogBuilder>)noticeClientStart:(nonnull NSString *)message;
 - (void)noticeClient:(nonnull NSString *)message;
 - (void)noticeClient:(nonnull NSString *)message
                  key:(nonnull NSString *)key
                value:(nullable NSString *)value;
 
-- (nonnull id<ADJClientLogBuilder>)errorClientStart:(nonnull NSString *)message;
 - (void)errorClient:(nonnull NSString *)message;
 - (void)errorClient:(nonnull NSString *)message
             nserror:(nullable NSError *)nserror;
@@ -98,5 +98,7 @@ callerDescription:(nonnull NSString *)callerDescription;
 - (void)errorClient:(nonnull NSString *)message
       expectedValue:(nonnull NSString *)expectedValue
         actualValue:(nullable NSString *)actualValue;
+
+- (void)logWithInput:(nonnull ADJInputLogMessageData *)inputLogMessageData;
 
 @end

@@ -109,11 +109,11 @@
         hasMininumOsVersion = NO;
     }
 
-    [logger debugDevStart:@"Initial canReadToken values"]
-        .wKv(@"canReadTokenFromClient", @(canReadTokenFromClient).description)
-        .wKv(@"canReadTokenFromConfig", @(canReadTokenFromConfig).description)
-        .wKv(@"hasMininumOsVersion", @(hasMininumOsVersion).description)
-        .end();
+    [logger debugDev:@"Initial canReadToken values"
+       messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
+                      @(canReadTokenFromClient).description, @"canReadTokenFromClient",
+                      @(canReadTokenFromConfig).description, @"canReadTokenFromConfig",
+                      @(hasMininumOsVersion).description, @"hasMininumOsVersion", nil]];
 
     return canReadTokenFromClient && canReadTokenFromConfig && hasMininumOsVersion;
 }
@@ -371,13 +371,13 @@
     ADJAsaAttributionStateData *_Nonnull stateData = [storage readOnlyStoredDataValue];
 
     BOOL hasFinishedReadingAsaAttribution =
-    stateData.hasReceivedAdjustAttribution && stateData.hasReceivedValidAsaClickResponse;
+        stateData.hasReceivedAdjustAttribution && stateData.hasReceivedValidAsaClickResponse;
 
-    [self.logger debugDevStart:@"Has Finished Reading Asa Attribution?"]
-        .wKv(@"hasReceivedAdjustAttribution", @(stateData.hasReceivedAdjustAttribution).description)
-        .wKv(@"hasReceivedValidAsaClickResponse",
-             @(stateData.hasReceivedValidAsaClickResponse).description)
-        .end();
+    [self.logger debugDev:@"Has Finished Reading Asa Attribution?"
+                     key1:@"hasReceivedAdjustAttribution"
+                   value1:@(stateData.hasReceivedAdjustAttribution).description
+                     key2:@"hasReceivedValidAsaClickResponse"
+                   value2:@(stateData.hasReceivedValidAsaClickResponse).description];
 
     if (hasFinishedReadingAsaAttribution) {
         self.isFinishedReading = YES;

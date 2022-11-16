@@ -295,13 +295,14 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     if (intervalSinceLastActivityMilli.millisecondsSpan.uIntegerValue
         > self.minMeasurementSessionIntervalMilli.millisecondsSpan.uIntegerValue)
     {
-        [self.logger debugDevStart:
-            @"Create a new session, because there was enough of interval since last activity"]
-            .wKv(@"from", source)
-            .wKv(@"interval milli", intervalSinceLastActivityMilli.description)
-            .wKv(@"min interval for new session milli",
-                 self.minMeasurementSessionIntervalMilli.description)
-            .end();
+        [self.logger debugDev:
+         @"Create a new session, because there was enough of interval since last activity"
+                messageParams:
+         [NSDictionary dictionaryWithObjectsAndKeys:
+            source, @"from",
+            intervalSinceLastActivityMilli.description, @"interval milli",
+            self.minMeasurementSessionIntervalMilli.description,
+            @"min interval for new session milli", nil]];
 
         [self processNewSessionWithMeasurementSessionDataBuilder:updatedMeasurementSessionDataBuilder
                                             packageSessionDataWO:packageSessionDataWO];

@@ -63,13 +63,6 @@
         runningThreadId:runningThreadId]];
 }
 
-- (nonnull ADJLogBuilder *)debugDevStart:(nonnull NSString *)message {
-    return [[ADJLogBuilder alloc]
-            initWithLevel:ADJAdjustLogLevelDebug
-            message:message
-            logBuildCallback:self];
-}
-
 - (void)debugDev:(nonnull NSString *)message {
     [self logWithMessage:message logLevel:ADJAdjustLogLevelDebug];
 }
@@ -132,6 +125,17 @@
                             [[NSDictionary alloc] initWithObjectsAndKeys:
                              value1, key1,
                              value2, key2, nil]]];
+}
+- (void)debugDev:(nonnull NSString *)message
+   messageParams:(nonnull NSDictionary<NSString *, NSString*> *)messageParams
+{
+    [self logWithInput:[[ADJInputLogMessageData alloc]
+                        initWithMessage:message
+                        level:ADJAdjustLogLevelDebug
+                        issueType:nil
+                        nsError:nil
+                        nsException:nil
+                        messageParams:messageParams]];
 }
 
 - (void)debugDev:(nonnull NSString *)message
@@ -235,13 +239,19 @@
                              value1, key1,
                              value2, key2, nil]]];
 }
-
-- (nonnull id<ADJClientLogBuilder>)infoClientStart:(nonnull NSString *)message {
-    return [[ADJLogBuilder alloc]
-                initWithLevel:ADJAdjustLogLevelInfo
-                message:message
-                logBuildCallback:self];
+- (void)debugDev:(nonnull NSString *)message
+   messageParams:(nonnull NSDictionary<NSString *, NSString*> *)messageParams
+       issueType:(nonnull ADJIssue)issueType
+{
+    [self logWithInput:[[ADJInputLogMessageData alloc]
+                        initWithMessage:message
+                        level:ADJAdjustLogLevelDebug
+                        issueType:issueType
+                        nsError:nil
+                        nsException:nil
+                        messageParams:messageParams]];
 }
+
 - (void)infoClient:(nonnull NSString *)message {
     [self logWithMessage:message logLevel:ADJAdjustLogLevelInfo];
 }
@@ -268,12 +278,6 @@
                   value2:value2];
 }
 
-- (nonnull id<ADJClientLogBuilder>)noticeClientStart:(nonnull NSString *)message {
-    return [[ADJLogBuilder alloc]
-                initWithLevel:ADJAdjustLogLevelNotice
-                message:message
-                logBuildCallback:self];
-}
 - (void)noticeClient:(nonnull NSString *)message {
     [self logWithMessage:message logLevel:ADJAdjustLogLevelNotice];
 }
@@ -287,12 +291,6 @@
                    value:value];
 }
 
-- (nonnull id<ADJClientLogBuilder>)errorClientStart:(nonnull NSString *)message {
-    return [[ADJLogBuilder alloc]
-                initWithLevel:ADJAdjustLogLevelError
-                message:message
-                logBuildCallback:self];
-}
 - (void)errorClient:(nonnull NSString *)message {
     [self logWithMessage:message logLevel:ADJAdjustLogLevelError];
 }
@@ -329,7 +327,6 @@
                   value2:actualValue];
 }
 
-#pragma mark - ADJLogBuildCallback
 - (void)logWithInput:(nonnull ADJInputLogMessageData *)inputLogMessageData {
     id<ADJLogCollector> _Nullable logCollector = self.logCollectorWeak;
     if (logCollector == nil) {
