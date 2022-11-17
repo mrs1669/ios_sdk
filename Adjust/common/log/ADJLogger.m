@@ -19,12 +19,6 @@
 // Injected variables
 @property (nullable, readonly, weak, nonatomic) id<ADJLogCollector> logCollectorWeak;
 
-// Internal variables
-/*
- @property (strong, nonatomic, readwrite, nonnull)
- os_log_t osLogLogger
- API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0));
- */
 @end
 
 @implementation ADJLogger
@@ -36,11 +30,6 @@
     _source = source;
     _logCollectorWeak = logCollector;
     
-    /*
-     if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-     _osLogLogger = os_log_create(ADJAdjustSubSystem.UTF8String, self.source.UTF8String);
-     }
-     */
     return self;
 }
 - (nullable instancetype)init {
@@ -349,7 +338,7 @@
 
 #pragma mark Internal methods
 - (void)logWithMessage:(nonnull NSString *)message
-              logLevel:(nonnull NSString *)logLevel
+              logLevel:(nonnull ADJAdjustLogLevel)logLevel
 {
     [self logWithInput:
         [[ADJInputLogMessageData alloc] initWithMessage:message
@@ -361,7 +350,7 @@
 
 }
 - (void)logWithMessage:(nonnull NSString *)message
-              logLevel:(nonnull NSString *)logLevel
+              logLevel:(nonnull ADJAdjustLogLevel)logLevel
                    key:(nonnull NSString *)key
                  value:(nullable NSString *)value
 {
@@ -372,7 +361,7 @@
             messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:value, key, nil]]];
 }
 - (void)logWithMessage:(nonnull NSString *)message
-              logLevel:(nonnull NSString *)logLevel
+              logLevel:(nonnull ADJAdjustLogLevel)logLevel
                   key1:(nonnull NSString *)key1
                 value1:(nullable NSString *)value1
                   key2:(nonnull NSString *)key2

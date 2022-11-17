@@ -72,7 +72,7 @@
                                                   apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
-                                                 logLevel:(nonnull NSString *)logLevel
+                                                 logLevel:(nonnull ADJAdjustLogLevel)logLevel
                                                 logSource:(nonnull NSString *)logSource;
 
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataToOverwrite;

@@ -276,7 +276,7 @@
 }
 
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
-                                                 logLevel:(nonnull NSString *)logLevel
+                                                 logLevel:(nonnull ADJAdjustLogLevel)logLevel
                                                 logSource:(nonnull NSString *)logSource {
     ADJStringMapBuilder *_Nonnull parametersBuilder =
     [self generateParametersBuilderWithPath:ADJLogPackageDataPath];

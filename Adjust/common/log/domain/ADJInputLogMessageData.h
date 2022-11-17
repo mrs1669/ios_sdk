@@ -8,14 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "ADJAdjustLogMessageData.h"
 
-typedef NSString *ADJLogLevel NS_TYPED_ENUM;
-FOUNDATION_EXPORT ADJLogLevel const ADJLogLevelDevTrace;
-FOUNDATION_EXPORT ADJLogLevel const ADJLogLevelDevDebug;
-FOUNDATION_EXPORT ADJLogLevel const ADJLogLevelClientInfo;
-FOUNDATION_EXPORT ADJLogLevel const ADJLogLevelClientNotice;
-FOUNDATION_EXPORT ADJLogLevel const ADJLogLevelClientError;
+NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString *ADJIssue NS_TYPED_ENUM;
 FOUNDATION_EXPORT ADJIssue const ADJIssueClientInput;
@@ -51,22 +46,22 @@ NS_ASSUME_NONNULL_END
 // instantiation
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level;
+    level:(nonnull ADJAdjustLogLevel)level;
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
@@ -74,14 +69,14 @@ NS_ASSUME_NONNULL_END
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     callerThreadId:(nullable NSString *)callerThreadId
     callerDescription:(nullable NSString *)callerDescription
     runningThreadId:(nullable NSString *)runningThreadId;
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     callerThreadId:(nullable NSString *)callerThreadId
     callerDescription:(nullable NSString *)callerDescription

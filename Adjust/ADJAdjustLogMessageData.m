@@ -14,7 +14,7 @@
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) NSString *logMessage;
- @property (nonnull, readonly, strong, nonatomic) NSString *messageLogLevel;
+ @property (nonnull, readonly, strong, nonatomic) ADJAdjustLogLevel messageLogLevel;
  */
 
 #pragma mark - Public constants
@@ -28,7 +28,7 @@ NSString *const ADJAdjustLogLevelError = @"error";
 
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLogMessage:(nonnull NSString *)logMessage
-                           messageLogLevel:(nonnull NSString *)messageLogLevel {
+                           messageLogLevel:(nonnull ADJAdjustLogLevel)messageLogLevel {
     self = [super init];
     
     _logMessage = logMessage;

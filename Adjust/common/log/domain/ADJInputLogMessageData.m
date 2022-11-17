@@ -24,12 +24,6 @@
  */
 
 #pragma mark - Public constants
-ADJLogLevel const ADJLogLevelDevTrace = @"trace";
-ADJLogLevel const ADJLogLevelDevDebug = @"debug";
-ADJLogLevel const ADJLogLevelClientInfo = @"info";
-ADJLogLevel const ADJLogLevelClientNotice = @"notice";
-ADJLogLevel const ADJLogLevelClientError = @"error";
-
 ADJIssue const ADJIssueClientInput = @"client_input";
 ADJIssue const ADJIssueUnexpectedInput = @"unexpected_input";
 ADJIssue const ADJIssueInvalidInput = @"invalid_input";
@@ -47,7 +41,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 #pragma mark Instantiation
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
 {
     return [self initWithMessage:message
                            level:level
@@ -62,7 +56,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
 {
     return [self initWithMessage:message
@@ -78,7 +72,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
 {
@@ -95,7 +89,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
@@ -114,7 +108,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     callerThreadId:(nullable NSString *)callerThreadId
     callerDescription:(nullable NSString *)callerDescription
     runningThreadId:(nullable NSString *)runningThreadId
@@ -132,7 +126,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
-    level:(nonnull NSString *)level
+    level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     callerThreadId:(nullable NSString *)callerThreadId
     callerDescription:(nullable NSString *)callerDescription

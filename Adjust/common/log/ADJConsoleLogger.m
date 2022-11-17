@@ -207,7 +207,7 @@
         : [NSString stringWithFormat:@"{%@}", logMessageData.inputData.issueType];
 
     [foundationDictionary removeObjectForKey:ADJLogLevelKey];
-    NSString *_Nonnull logLevelFormat = [self logLevelFormat:logMessageData.inputData.level];
+    ADJAdjustLogLevel _Nonnull logLevelFormat = [self logLevelFormat:logMessageData.inputData.level];
 
     [foundationDictionary removeObjectForKey:ADJLogSourceKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];
@@ -221,7 +221,7 @@
             [ADJLogMessageData generateJsonFromFoundationDictionary:foundationDictionary]];
 }
 
-- (nonnull NSString *)logLevelFormat:(nonnull NSString *)logLevel {
+- (nonnull NSString *)logLevelFormat:(nonnull ADJAdjustLogLevel)logLevel {
     if (logLevel == ADJAdjustLogLevelTrace) {
         return @"t/";
     }
@@ -263,7 +263,7 @@
 }
 
 - (void)osLogWithFullMessage:(nonnull NSString *)fullLogMessage
-             messageLogLevel:(nonnull NSString *)messageLogLevel
+             messageLogLevel:(nonnull ADJAdjustLogLevel)messageLogLevel
 {
     uint8_t osLogType;
     

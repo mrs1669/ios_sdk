@@ -11,6 +11,7 @@
 #import "ADJSessionDeviceIdsData.h"
 #import "ADJUtilF.h"
 #import "ADJConsoleLogger.h"
+#import "ADJAdjustLogMessageData.h"
 
 @interface ADJClientCallbacksController ()
 #pragma mark - Injected dependencies
@@ -115,7 +116,7 @@
         ADJInputLogMessageData *_Nonnull clientInputLog =
             [[ADJInputLogMessageData alloc]
              initWithMessage:@"Cannot get device ids for callback"
-             level:ADJLogLevelClientInfo
+             level:ADJAdjustLogLevelInfo
              messageParams:
                     [[NSDictionary alloc] initWithObjectsAndKeys:
                      sessionDeviceIdsData.failMessage, @"reason", nil]];
