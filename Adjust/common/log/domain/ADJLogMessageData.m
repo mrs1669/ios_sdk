@@ -102,7 +102,9 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
     }
     
     if (self.inputData.messageParams != nil) {
-        [foundationDictionary setObject:self.inputData.messageParams forKey:ADJLogParamsKey];
+        [foundationDictionary setObject:[ADJUtilConv convertToFoundationObject:
+                                         self.inputData.messageParams]
+                                 forKey:ADJLogParamsKey];
     }
     
     if (self.instanceId != nil) {

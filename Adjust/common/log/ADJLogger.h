@@ -23,9 +23,9 @@ NS_DESIGNATED_INITIALIZER;
 
 // public API
 - (void)
-traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
-runningThreadId:(nonnull NSString *)runningThreadId
-callerDescription:(nonnull NSString *)callerDescription;
+    traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
+    runningThreadId:(nonnull NSString *)runningThreadId
+    callerDescription:(nonnull NSString *)callerDescription;
 
 - (void)debugDev:(nonnull NSString *)message;
 - (void)debugDev:(nonnull NSString *)message
@@ -43,7 +43,7 @@ callerDescription:(nonnull NSString *)callerDescription;
             key2:(nonnull NSString *)key2
           value2:(nullable NSString *)value2;
 - (void)debugDev:(nonnull NSString *)message
-   messageParams:(nonnull NSDictionary<NSString *, NSString*> *)messageParams;
+   messageParams:(nonnull NSDictionary<NSString *, id> *)messageParams;
 
 - (void)debugDev:(nonnull NSString *)message
        issueType:(nonnull ADJIssue)issueType;
@@ -71,7 +71,7 @@ callerDescription:(nonnull NSString *)callerDescription;
           value2:(nullable NSString *)value2
        issueType:(nonnull ADJIssue)issueType;
 - (void)debugDev:(nonnull NSString *)message
-   messageParams:(nonnull NSDictionary<NSString *, NSString*> *)messageParams
+   messageParams:(nonnull NSDictionary<NSString *, id> *)messageParams
        issueType:(nonnull ADJIssue)issueType;
 
 - (void)infoClient:(nonnull NSString *)message;

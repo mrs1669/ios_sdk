@@ -20,7 +20,7 @@
  @property (nullable, readonly, strong, nonatomic) NSError *nsError;
  @property (nullable, readonly, strong, nonatomic) NSException* nsException;
 @property (nullable, readonly, strong, nonatomic)
-     NSDictionary<NSString *, NSString*> *messageParams;
+     NSDictionary<NSString *, id> *messageParams;
  */
 
 #pragma mark - Public constants
@@ -57,7 +57,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
     level:(nonnull ADJAdjustLogLevel)level
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
 {
     return [self initWithMessage:message
                            level:level
@@ -74,26 +74,9 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     initWithMessage:(nonnull NSString *)message
     level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
-{
-    return [self initWithMessage:message
-                           level:level
-                       issueType:issueType
-                  callerThreadId:nil
-               callerDescription:nil
-                 runningThreadId:nil
-                         nsError:nil
-                     nsException:nil
-                   messageParams:messageParams];
-}
-
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    issueType:(nullable ADJIssue)issueType
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
 {
     return [self initWithMessage:message
                            level:level
@@ -133,7 +116,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     runningThreadId:(nullable NSString *)runningThreadId
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
 {
     self = [super init];
 

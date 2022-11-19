@@ -51,13 +51,7 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
     level:(nonnull ADJAdjustLogLevel)level
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
-
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    issueType:(nullable ADJIssue)issueType
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
@@ -65,7 +59,7 @@ NS_ASSUME_NONNULL_END
     issueType:(nullable ADJIssue)issueType
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams;
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
 
 - (nonnull instancetype)
     initWithMessage:(nonnull NSString *)message
@@ -83,7 +77,7 @@ NS_ASSUME_NONNULL_END
     runningThreadId:(nullable NSString *)runningThreadId
     nsError:(nullable NSError *)nsError
     nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, NSString*> *)messageParams
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
     NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
@@ -98,6 +92,6 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) NSError *nsError;
 @property (nullable, readonly, strong, nonatomic) NSException* nsException;
 @property (nullable, readonly, strong, nonatomic)
-    NSDictionary<NSString *, NSString*> *messageParams;
+    NSDictionary<NSString *, id> *messageParams;
 
 @end
