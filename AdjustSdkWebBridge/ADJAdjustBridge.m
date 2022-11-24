@@ -23,7 +23,8 @@
 
         ADJAdjustConfig *config = adjustConfig;
         [config setAdjustAttributionSubscriber:self];
-        [config setUrlStrategy:ADJUrlStategyIndia];
+        [config setUrlStrategy:config.urlStrategy];
+        [config setLogLevel:config.logLevel];
         [ADJAdjust sdkInitWithAdjustConfig:config];
 
         self.webView = webView;
@@ -34,9 +35,11 @@
 }
 
 - (void)didReadWithAdjustAttribution:(ADJAdjustAttribution *)adjustAttribution {
-    NSString *adjustAttributionString = adjustAttribution.description;
-    NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@');", adjustAttributionString];
-    [self.webView evaluateJavaScript:javaScript completionHandler:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        NSString *adjustAttributionString = adjustAttribution.description;
+        NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')", adjustAttributionString];
+        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
+    });
 }
 
 - (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
@@ -57,6 +60,9 @@
     NSDictionary *data = [message objectForKey:@"data"];
 
     if ([action isEqual:@"adjust_trackEvent"]) {
+
+        NSString *javaScript = [NSString stringWithFormat:@"testMethod('%@')", @"aditi agrawal"];
+        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 
         [self trackEvent:data];
 
@@ -224,7 +230,6 @@
     }
 
     [ADJAdjust trackAdRevenue:adjustAdRevenue];
-
 }
 
 - (void)trackThirdPartySharing:(NSDictionary *)data {
@@ -253,7 +258,6 @@
     }
 
     [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
-
 }
 
 #pragma mark - Private & helper methods

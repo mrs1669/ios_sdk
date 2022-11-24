@@ -25,47 +25,40 @@
 
         <p id="demo"> </p>
         <script>
-            function something() {
-                document.write('Hey, there!')
+
+            function didChangeWithAdjustAttribution(attributionValue) {
+                document.write(attributionValue)
             }
 
-            function testMethod(returnedValue) {
-                // do you stuff with returned value here
-                document.write(returnedValue)
-            }
-
-            function attributionCallback(returnedValue) {
-                // do you stuff with returned value here
-                document.write(returnedValue)
+            function didReadWithAdjustAttribution(attributionValue) {
+                document.write(attributionValue)
             }
 
             function trackEvent() {
-
                 const eventDetails = {
                     "eventToken" : "g3mfiw",
                     "revenue": "300.0",
                 };
-
                 const message = {
                     action:'adjust_trackEvent',
                     data: eventDetails
                 };
-
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
 
             function trackRevenue() {
-
                 const revenueDetails = {
                     "source" : "g3mfiw",
                     "revenue": 300.0,
+                    "adImpressionsCount": 100,
+                    "currency": "Eur",
+                    "callbackParameters": ["cb_param_key", "cb_param_value"],
+                    "partnerParameters": ["partner_param_key", "partner_param_value_overwrite"]
                 };
-
                 const message = {
                     action:'adjust_trackAdRevenue',
                     data: revenueDetails,
                 };
-
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
 
