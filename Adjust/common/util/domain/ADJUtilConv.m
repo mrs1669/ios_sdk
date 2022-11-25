@@ -196,8 +196,8 @@
 }
 
 + (nullable ADJStringMap *)convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
-                                             sourceDescription:(nonnull NSString *)sourceDescription
-                                                        logger:(nonnull ADJLogger *)logger {
+sourceDescription:(nonnull NSString *)sourceDescription
+logger:(nonnull ADJLogger *)logger {
     if (keyValueArray == nil) {
         return nil;
     }
@@ -271,10 +271,10 @@
     return [[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder];
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *)convertToMapCollectionByNameBuilderWithKeyValueArray:
-(nullable NSArray<NSString *> *)keyValueArray
-                                                                                                                                sourceDescription:(nonnull NSString *)sourceDescription
-                                                                                                                                           logger:(nonnull ADJLogger *)logger {
++ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *)convertToMapCollectionByNameBuilderWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
+sourceDescription:(nonnull NSString *)sourceDescription
+logger:(nonnull ADJLogger *)logger {
+
     if (keyValueArray == nil) {
         return nil;
     }
@@ -379,5 +379,6 @@
 }
 
 @end
+
 
 
