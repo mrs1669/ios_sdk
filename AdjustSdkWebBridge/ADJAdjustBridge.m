@@ -236,13 +236,14 @@
 
     id isEnabledO = [data objectForKey:@"isEnabled"];
     id granularOptions = [data objectForKey:@"granularOptions"];
+    id partnerSharingSettings = [data objectForKey:@"partnerSharingSettings"];
 
     NSNumber *isEnabled = nil;
     if ([isEnabledO isKindOfClass:[NSNumber class]]) {
         isEnabled = (NSNumber *)isEnabledO;
     }
 
-    ADJAdjustThirdPartySharing *adjustThirdPartySharing = [ADJAdjustThirdPartySharing init];
+    ADJAdjustThirdPartySharing *adjustThirdPartySharing = [[ADJAdjustThirdPartySharing alloc] init];
 
     if (isEnabled) {
         [adjustThirdPartySharing enableThirdPartySharing];
@@ -255,6 +256,13 @@
         NSString *key = [[granularOptions objectAtIndex:(i + 1)] description];
         NSString *value = [[granularOptions objectAtIndex:(i + 2)] description];
         [adjustThirdPartySharing addGranularOptionWithPartnerName:partnerName key:key value:value];
+    }
+
+    for (int i = 0; i < [partnerSharingSettings count]; i += 3) {
+        NSString *partnerName = [[partnerSharingSettings objectAtIndex:i] description];
+        NSString *key = [[partnerSharingSettings objectAtIndex:(i + 1)] description];
+        BOOL value = [[partnerSharingSettings objectAtIndex:(i + 2)] description];
+        [adjustThirdPartySharing addPartnerSharingSettingWithPartnerName:partnerName key:key value:value];
     }
 
     [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];

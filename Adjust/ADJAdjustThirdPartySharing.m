@@ -20,6 +20,7 @@
 @interface ADJAdjustThirdPartySharing ()
 #pragma mark - Internal variables
 @property (nonnull, readwrite, strong, nonatomic)NSMutableArray<NSString *> *granularOptionsByNameArrayMut;
+@property (nonnull, readwrite, strong, nonatomic)NSMutableArray<NSString *> *partnerSharingSettingsByNameArrayMut;
 
 @end
 
@@ -31,6 +32,7 @@
     _enabledOrElseDisabledSharingNumberBool = nil;
 
     _granularOptionsByNameArrayMut = [[NSMutableArray alloc] init];
+    _partnerSharingSettingsByNameArrayMut = [[NSMutableArray alloc] init];
 
     return self;
 }
@@ -57,13 +59,36 @@
     }
 }
 
+- (void)addPartnerSharingSettingWithPartnerName:(nonnull NSString *)partnerName
+                                     key:(nonnull NSString *)key
+                                   value:(BOOL)value {
+    @synchronized (self.partnerSharingSettingsByNameArrayMut) {
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [ADJUtilObj copyStringForCollectionWithInput:partnerName]];
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [ADJUtilObj copyStringForCollectionWithInput:key]];
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [ADJUtilObj copyStringForCollectionWithInput:[NSNumber numberWithBool:value]]];
+    }
+}
+
+
 #pragma mark - Generated properties
-- (nullable NSArray<NSString *> *)granularOptionMapByName {
+- (nullable NSArray<NSString *> *)granularOptionsByNameArray {
     @synchronized (self.granularOptionsByNameArrayMut) {
         if (self.granularOptionsByNameArrayMut.count == 0) {
             return nil;
         }
         return [self.granularOptionsByNameArrayMut copy];
+    }
+}
+
+- (nullable NSArray<NSString *> *)partnerSharingSettingsByNameArray {
+    @synchronized (self.partnerSharingSettingsByNameArrayMut) {
+        if (self.partnerSharingSettingsByNameArrayMut.count == 0) {
+            return nil;
+        }
+        return  [self.partnerSharingSettingsByNameArrayMut copy];
     }
 }
 

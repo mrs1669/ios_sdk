@@ -12,7 +12,7 @@
         <button onclick="goOffline()">Go Offline</button><br>
         <button onclick="goOnline()">Go Online</button><br>
         <button onclick="trackDeeplink()">Track Deeplink</button><br>
-        <!--        <button onclick="trackThirdPartySharing()">Track Third party sharing</button><br>-->
+        <button onclick="trackThirdPartySharing()">Track Third party sharing</button><br>
         <button onclick="inactiveSDK()">Inactive SDK</button><br>
         <button onclick="reactivateSDK()">Reactivate SDK</button><br>
         <button onclick="addGlobalCallbackParameter()">Add Global Callback Parameter</button><br>
@@ -27,11 +27,11 @@
         <script>
 
             function didChangeWithAdjustAttribution(attributionValue) {
-                document.write(attributionValue)
+<!--                document.write(attributionValue)-->
             }
 
             function didReadWithAdjustAttribution(attributionValue) {
-                document.write(attributionValue)
+<!--                document.write(attributionValue)-->
             }
 
             function trackEvent() {
@@ -88,6 +88,19 @@
                 const message = {
                     action:'adjust_trackDeeplink',
                     data: "https://www.wired.com/story/fancy-cat-furniture/#intcid=_wired-verso-hp-trending_4cb42ea3-2131-4763-9733-a391e19d84e6_popular4-1"
+                };
+                window.webkit.messageHandlers.adjust.postMessage(message);
+            }
+
+            function trackThirdPartySharing() {
+                const thirdPartyDetails = {
+                    "isEnabled" : true,
+                    "granularOptions": ["xpto1", "key1", "value1", "xpto2", "key2", "value2"],
+                    "partnerSharingSettings": ["fb1", "key1", true, "fb2", "key2", false]
+                };
+                const message = {
+                    action:'adjust_trackThirdPartySharing',
+                    data: thirdPartyDetails
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
             }
@@ -163,3 +176,4 @@
 
         </script></body>
 </html>
+

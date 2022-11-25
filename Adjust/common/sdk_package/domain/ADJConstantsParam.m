@@ -129,6 +129,8 @@ NSString *const ADJParamThirdPartySharingKey = @"sharing";
 NSString *const ADJParamThirdPartySharingEnabledValue = @"enable";
 NSString *const ADJParamThirdPartySharingDisabledValue = @"disable";
 NSString *const ADJParamThirdPartySharingGranularOptionsKey = @"granular_third_party_sharing_options";
+NSString *const ADJParamThirdPartySharingPartnerSharingSettingsKey = @"partner_sharing_settings";
+
 
 // test server params
 NSString *const ADJParamTestServerCustomEndPointKey = @"test_server_custom_end_point";
