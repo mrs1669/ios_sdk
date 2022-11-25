@@ -138,27 +138,27 @@
     if (! self.printClientLogs) {
         return;
     }
-    
+
     NSString *_Nonnull clientFormattedMessage =
         [ADJConsoleLogger clientFormatMessage:logMessageData.inputData
                                  isPreSdkInit:isPreSdkInit];
-    
+
     [self osLogWithFullMessage:clientFormattedMessage
                messageLogLevel:logMessageData.inputData.level];
 }
 
-+ (nonnull NSString *)clientFormatMessage:(nonnull ADJInputLogMessageData *)inputLogMessageData
-                             isPreSdkInit:(BOOL)isPreSdkInit
++ (nonnull NSString *)
+    clientFormatMessage:(nonnull ADJInputLogMessageData *)inputLogMessageData
+    isPreSdkInit:(BOOL)isPreSdkInit
 {
     NSString *_Nonnull message = isPreSdkInit ?
         [NSString stringWithFormat:@"Pre-Init| %@", inputLogMessageData.message]
         : inputLogMessageData.message;
-    
-    if (inputLogMessageData.messageParams == nil && inputLogMessageData.nsError == nil) {
-        return message;
-    }
 
-    NSMutableString *_Nonnull stringBuilder = [[NSMutableString alloc] initWithString:message];
+    NSMutableString *_Nonnull stringBuilder =
+        [[NSMutableString alloc] initWithFormat:@"%@%@",
+            [ADJConsoleLogger logLevelFormat:inputLogMessageData.level],
+            message];
 
     if (inputLogMessageData.messageParams != nil) {
         [stringBuilder appendFormat:@" %@",
@@ -200,14 +200,17 @@
 
     [foundationDictionary removeObjectForKey:ADJLogCallerThreadIdKey];
     [foundationDictionary removeObjectForKey:ADJLogRunningThreadIdKey];
-    NSString *_Nonnull threadIdFormat = [self threadIdFormat:logMessageData];
+    NSString *_Nonnull threadIdFormat =
+        [ADJConsoleLogger threadIdFormat:logMessageData];
 
     [foundationDictionary removeObjectForKey:ADJLogIssueKey];
-    NSString *_Nonnull issueFormat = logMessageData.inputData.issueType == nil ? @""
+    NSString *_Nonnull issueFormat =
+        logMessageData.inputData.issueType == nil ? @""
         : [NSString stringWithFormat:@"{%@}", logMessageData.inputData.issueType];
 
     [foundationDictionary removeObjectForKey:ADJLogLevelKey];
-    ADJAdjustLogLevel _Nonnull logLevelFormat = [self logLevelFormat:logMessageData.inputData.level];
+    ADJAdjustLogLevel _Nonnull logLevelFormat =
+        [ADJConsoleLogger logLevelFormat:logMessageData.inputData.level];
 
     [foundationDictionary removeObjectForKey:ADJLogSourceKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];
@@ -218,10 +221,11 @@
             issueFormat,
             logMessageData.inputData.message,
             threadIdFormat,
-            [ADJLogMessageData generateJsonFromFoundationDictionary:foundationDictionary]];
+            [ADJLogMessageData
+                generateJsonFromFoundationDictionary:foundationDictionary]];
 }
 
-- (nonnull NSString *)logLevelFormat:(nonnull ADJAdjustLogLevel)logLevel {
++ (nonnull NSString *)logLevelFormat:(nonnull ADJAdjustLogLevel)logLevel {
     if (logLevel == ADJAdjustLogLevelTrace) {
         return @"t/";
     }
@@ -240,11 +244,12 @@
     return @"u/";
 }
 
-- (nonnull NSString *)threadIdFormat:(nonnull ADJLogMessageData *)logMessageData {
++ (nonnull NSString *)threadIdFormat:(nonnull ADJLogMessageData *)logMessageData {
     NSString *_Nullable runningThreadId =
         logMessageData.inputData.runningThreadId != nil ?
             logMessageData.inputData.runningThreadId
-            : logMessageData.runningThreadId != nil ? logMessageData.runningThreadId : nil;
+            : logMessageData.runningThreadId != nil ?
+                logMessageData.runningThreadId : nil;
     NSString *_Nullable callingThreadId = logMessageData.inputData.callerThreadId;
 
     if (callingThreadId == nil) {
@@ -259,7 +264,8 @@
         return [NSString stringWithFormat:@"<%@->", callingThreadId];
     }
 
-    return [NSString stringWithFormat:@"<%@-%@>", callingThreadId, runningThreadId];
+    return [NSString stringWithFormat:@"<%@-%@>",
+            callingThreadId, runningThreadId];
 }
 
 - (void)osLogWithFullMessage:(nonnull NSString *)fullLogMessage
