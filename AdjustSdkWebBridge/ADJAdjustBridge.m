@@ -21,6 +21,7 @@
 
     if ([webView isKindOfClass:WKWebView.class]) {
 
+        //set the Adjust Config object
         ADJAdjustConfig *config = adjustConfig;
         [config setAdjustAttributionSubscriber:self];
         [config setUrlStrategy:config.urlStrategy];
@@ -29,7 +30,6 @@
 
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;
-
         [controller addScriptMessageHandler:self name:@"adjust"];
     }
 }
@@ -60,9 +60,6 @@
     NSDictionary *data = [message objectForKey:@"data"];
 
     if ([action isEqual:@"adjust_trackEvent"]) {
-
-        NSString *javaScript = [NSString stringWithFormat:@"testMethod('%@')", @"aditi agrawal"];
-        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 
         [self trackEvent:data];
 
@@ -261,7 +258,7 @@
     for (int i = 0; i < [partnerSharingSettings count]; i += 3) {
         NSString *partnerName = [[partnerSharingSettings objectAtIndex:i] description];
         NSString *key = [[partnerSharingSettings objectAtIndex:(i + 1)] description];
-        BOOL value = [[partnerSharingSettings objectAtIndex:(i + 2)] description];
+        BOOL value = [[partnerSharingSettings objectAtIndex:(i + 2)] boolValue];
         [adjustThirdPartySharing addPartnerSharingSettingWithPartnerName:partnerName key:key value:value];
     }
 
