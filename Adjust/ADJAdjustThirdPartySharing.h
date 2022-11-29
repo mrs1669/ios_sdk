@@ -26,7 +26,10 @@
 
 // public properties
 @property (nullable, readonly, strong, nonatomic) NSNumber *enabledOrElseDisabledSharingNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *granularOptionsByNameArray;
-@property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *partnerSharingSettingsByNameArray;
+@property (nullable, readonly, strong, nonatomic) NSDictionary *granularOptionsByNameDictionary;
+@property (nullable, readonly, strong, nonatomic) NSDictionary *partnerSharingSettingsByNameDictionary;
 
 @end
+
+
+//private @NonNull final Map<String, Map<String, Boolean>> partnerSharingSettingsMap;

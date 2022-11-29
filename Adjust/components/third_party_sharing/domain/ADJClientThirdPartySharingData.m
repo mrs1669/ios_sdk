@@ -66,25 +66,14 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
 
     ADJBooleanWrapper *_Nonnull enabledOrElseDisabledSharing = adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool != nil ?
     [ADJBooleanWrapper instanceFromBool: adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue] : nil;
-    
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *_Nullable
-    granularOptionsByName = [ADJUtilConv convertToMapCollectionByNameBuilderWithKeyValueArray:adjustThirdPartySharing.granularOptionsByNameArray
-                                                                            sourceDescription:@"third party sharing granular options"
-                                                                                       logger:logger];
-    
+
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
-    [ADJNonEmptyString instanceFromOptionalString: granularOptionsByName != nil ? [ADJUtilF jsonFoundationValueFormat:granularOptionsByName]: nil
+    [ADJNonEmptyString instanceFromOptionalString: adjustThirdPartySharing.granularOptionsByNameDictionary != nil ? [ADJUtilF jsonFoundationValueFormat:adjustThirdPartySharing.granularOptionsByNameDictionary]: nil
                                 sourceDescription:@"third party sharing granular options"
                                            logger:logger];
 
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *_Nullable
-    
-    partnerSharingSettingsByName = [ADJUtilConv convertToMapCollectionByNameBuilderWithKeyValueArray:adjustThirdPartySharing.partnerSharingSettingsByNameArray
-                                                                                   sourceDescription:@"third party sharing partner sharing settings"
-                                                                                              logger:logger];
-
     ADJNonEmptyString *_Nullable stringPartnerSharingSettingsByName =
-    [ADJNonEmptyString instanceFromOptionalString: partnerSharingSettingsByName != nil ? [ADJUtilF jsonFoundationValueFormat:partnerSharingSettingsByName]: nil
+    [ADJNonEmptyString instanceFromOptionalString: adjustThirdPartySharing.partnerSharingSettingsByNameDictionary != nil ? [ADJUtilF jsonFoundationValueFormat:adjustThirdPartySharing.partnerSharingSettingsByNameDictionary]: nil
                                 sourceDescription:@"third party sharing partner sharing settings"
                                            logger:logger];
 
