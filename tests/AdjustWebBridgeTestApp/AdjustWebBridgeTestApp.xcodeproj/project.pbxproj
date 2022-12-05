@@ -1,0 +1,639 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		071286B22936521D001C0A1E /* libAdjustTestLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 071286AF2936520C001C0A1E /* libAdjustTestLibrary.a */; };
+		075B05EF293652FB00BBCDED /* libAdjust.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B05E0293652F500BBCDED /* libAdjust.a */; };
+		075B05F02936530100BBCDED /* AdjustSdkWebBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */; };
+		075B067D29377C5700BBCDED /* libAdjustTestOptionsLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B067C29377C4E00BBCDED /* libAdjustTestOptionsLibrary.a */; };
+		6F7AF62B211878BA00F730B2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AF62A211878BA00F730B2 /* AppDelegate.m */; };
+		6F7AF631211878BA00F730B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF62F211878BA00F730B2 /* Main.storyboard */; };
+		6F7AF633211878BC00F730B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF632211878BC00F730B2 /* Assets.xcassets */; };
+		6F7AF636211878BC00F730B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF634211878BC00F730B2 /* LaunchScreen.storyboard */; };
+		6F7AF639211878BC00F730B2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AF638211878BC00F730B2 /* main.m */; };
+		6F7AF78B21187EC500F730B2 /* WKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AF78A21187EC500F730B2 /* WKWebViewController.m */; };
+		6F7AF78D2118808400F730B2 /* AdjustTestApp-WebView.html in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF78C2118808300F730B2 /* AdjustTestApp-WebView.html */; };
+		6F7AF790211888B500F730B2 /* TestLibraryBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AF78F211888B500F730B2 /* TestLibraryBridge.m */; };
+		6F7AF7B02118949C00F730B2 /* TestLibraryBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF7AF2118949C00F730B2 /* TestLibraryBridge.js */; };
+		6F7AF7BB2118992200F730B2 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F7AF7BA2118992200F730B2 /* WebKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		071286AE2936520C001C0A1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A530E812891509700FD7EFB;
+			remoteInfo = AdjustTestLibrary;
+		};
+		075B05DF293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D8FC628731314005019E3;
+			remoteInfo = Adjust;
+		};
+		075B05E1293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D901328731C2D005019E3;
+			remoteInfo = AdjustSdk;
+		};
+		075B05E3293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D903628744D17005019E3;
+			remoteInfo = AdjustSdkTv;
+		};
+		075B05E5293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 075D905228745EBB005019E3;
+			remoteInfo = AdjustSdkIm;
+		};
+		075B05E7293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF8EF28F6040F00852E17;
+			remoteInfo = AdjustSdkStatic;
+		};
+		075B05E9293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF9CC28F606AC00852E17;
+			remoteInfo = AdjustSdkTvStatic;
+		};
+		075B05EB293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BFAAB28F608EE00852E17;
+			remoteInfo = AdjustSdkImStatic;
+		};
+		075B05ED293652F500BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0755868029092F1000A3AD50;
+			remoteInfo = AdjustSdkWebBridge;
+		};
+		075B064F29376E9000BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A530E802891509700FD7EFB;
+			remoteInfo = AdjustTestLibrary;
+		};
+		075B065A29376E9600BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 075D8FC528731314005019E3;
+			remoteInfo = Adjust;
+		};
+		075B067B29377C4E00BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0AB7AFB72892AEAA00FE60CF;
+			remoteInfo = AdjustTestOptionsLibrary;
+		};
+		075B067E29377C5F00BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AB7AFB62892AEAA00FE60CF;
+			remoteInfo = AdjustTestOptionsLibrary;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestLibrary.xcodeproj; path = ../AdjustTestLibrary/AdjustTestLibrary.xcodeproj; sourceTree = "<group>"; };
+		071286B029365213001C0A1E /* libAdjust.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAdjust.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		075B05D0293652D200BBCDED /* libAdjust.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAdjust.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		075B05D2293652D500BBCDED /* AdjustSdkWebBridge.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AdjustSdkWebBridge.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		075B05D4293652F500BBCDED /* Adjust.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Adjust.xcodeproj; path = ../../Adjust.xcodeproj; sourceTree = "<group>"; };
+		075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestOptionsLibrary.xcodeproj; path = ../AdjustTestOptionsLibrary/AdjustTestOptionsLibrary.xcodeproj; sourceTree = "<group>"; };
+		6F7AF626211878B900F730B2 /* AdjustWebBridgeTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdjustWebBridgeTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F7AF629211878BA00F730B2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		6F7AF62A211878BA00F730B2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6F7AF630211878BA00F730B2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6F7AF632211878BC00F730B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6F7AF635211878BC00F730B2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6F7AF637211878BC00F730B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6F7AF638211878BC00F730B2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6F7AF78921187EC500F730B2 /* WKWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKWebViewController.h; sourceTree = "<group>"; };
+		6F7AF78A21187EC500F730B2 /* WKWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKWebViewController.m; sourceTree = "<group>"; };
+		6F7AF78C2118808300F730B2 /* AdjustTestApp-WebView.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "AdjustTestApp-WebView.html"; sourceTree = "<group>"; };
+		6F7AF78E211888B500F730B2 /* TestLibraryBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestLibraryBridge.h; sourceTree = "<group>"; };
+		6F7AF78F211888B500F730B2 /* TestLibraryBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLibraryBridge.m; sourceTree = "<group>"; };
+		6F7AF7AF2118949C00F730B2 /* TestLibraryBridge.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = TestLibraryBridge.js; sourceTree = "<group>"; };
+		6F7AF7BA2118992200F730B2 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		6FD0412B211C71D1008D42D0 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		6FD0412D211C71D9008D42D0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		6FD0412F211C71E8008D42D0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6FD04131211C71EE008D42D0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		9DAA5C6B25B0F81F00C718DD /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6F7AF623211878B900F730B2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				075B05F02936530100BBCDED /* AdjustSdkWebBridge.framework in Frameworks */,
+				075B05EF293652FB00BBCDED /* libAdjust.a in Frameworks */,
+				071286B22936521D001C0A1E /* libAdjustTestLibrary.a in Frameworks */,
+				6F7AF7BB2118992200F730B2 /* WebKit.framework in Frameworks */,
+				075B067D29377C5700BBCDED /* libAdjustTestOptionsLibrary.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		071286AB2936520C001C0A1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				071286AF2936520C001C0A1E /* libAdjustTestLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		075B05D5293652F500BBCDED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				075B05E0293652F500BBCDED /* libAdjust.a */,
+				075B05E2293652F500BBCDED /* AdjustSdk.framework */,
+				075B05E4293652F500BBCDED /* AdjustSdkTv.framework */,
+				075B05E6293652F500BBCDED /* AdjustSdkIm.framework */,
+				075B05E8293652F500BBCDED /* libAdjustSdk.a */,
+				075B05EA293652F500BBCDED /* libAdjustSdkTv.a */,
+				075B05EC293652F500BBCDED /* libAdjustSdkIm.a */,
+				075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		075B067129377C4E00BBCDED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				075B067C29377C4E00BBCDED /* libAdjustTestOptionsLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6F7AF61D211878B900F730B2 = {
+			isa = PBXGroup;
+			children = (
+				075B05D4293652F500BBCDED /* Adjust.xcodeproj */,
+				071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */,
+				075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */,
+				6F7AF628211878B900F730B2 /* AdjustWebBridgeTestApp */,
+				6F7AF627211878B900F730B2 /* Products */,
+				6F7AF7B92118992200F730B2 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		6F7AF627211878B900F730B2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6F7AF626211878B900F730B2 /* AdjustWebBridgeTestApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6F7AF628211878B900F730B2 /* AdjustWebBridgeTestApp */ = {
+			isa = PBXGroup;
+			children = (
+				6F7AF629211878BA00F730B2 /* AppDelegate.h */,
+				6F7AF62A211878BA00F730B2 /* AppDelegate.m */,
+				6F7AF7AF2118949C00F730B2 /* TestLibraryBridge.js */,
+				6F7AF78E211888B500F730B2 /* TestLibraryBridge.h */,
+				6F7AF78F211888B500F730B2 /* TestLibraryBridge.m */,
+				6F7AF78921187EC500F730B2 /* WKWebViewController.h */,
+				6F7AF78A21187EC500F730B2 /* WKWebViewController.m */,
+				6F7AF78C2118808300F730B2 /* AdjustTestApp-WebView.html */,
+				6F7AF638211878BC00F730B2 /* main.m */,
+				6F7AF637211878BC00F730B2 /* Info.plist */,
+				6F7AF632211878BC00F730B2 /* Assets.xcassets */,
+				6F7AF62F211878BA00F730B2 /* Main.storyboard */,
+				6F7AF634211878BC00F730B2 /* LaunchScreen.storyboard */,
+			);
+			path = AdjustWebBridgeTestApp;
+			sourceTree = "<group>";
+		};
+		6F7AF7B92118992200F730B2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				075B05D2293652D500BBCDED /* AdjustSdkWebBridge.framework */,
+				075B05D0293652D200BBCDED /* libAdjust.a */,
+				071286B029365213001C0A1E /* libAdjust.a */,
+				9DAA5C6B25B0F81F00C718DD /* AdServices.framework */,
+				6FD04131211C71EE008D42D0 /* UIKit.framework */,
+				6FD0412F211C71E8008D42D0 /* Foundation.framework */,
+				6FD0412D211C71D9008D42D0 /* AdSupport.framework */,
+				6FD0412B211C71D1008D42D0 /* iAd.framework */,
+				6F7AF7BA2118992200F730B2 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6F7AF625211878B900F730B2 /* AdjustWebBridgeTestApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6F7AF63C211878BC00F730B2 /* Build configuration list for PBXNativeTarget "AdjustWebBridgeTestApp" */;
+			buildPhases = (
+				6F7AF622211878B900F730B2 /* Sources */,
+				6F7AF623211878B900F730B2 /* Frameworks */,
+				6F7AF624211878B900F730B2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				075B065B29376E9600BBCDED /* PBXTargetDependency */,
+				075B065029376E9000BBCDED /* PBXTargetDependency */,
+				075B067F29377C5F00BBCDED /* PBXTargetDependency */,
+			);
+			name = AdjustWebBridgeTestApp;
+			productName = AdjustWebBridgeTestApp;
+			productReference = 6F7AF626211878B900F730B2 /* AdjustWebBridgeTestApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6F7AF61E211878B900F730B2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1250;
+				ORGANIZATIONNAME = adjust;
+				TargetAttributes = {
+					6F7AF625211878B900F730B2 = {
+						CreatedOnToolsVersion = 10.0;
+					};
+				};
+			};
+			buildConfigurationList = 6F7AF621211878B900F730B2 /* Build configuration list for PBXProject "AdjustWebBridgeTestApp" */;
+			compatibilityVersion = "Xcode 10.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6F7AF61D211878B900F730B2;
+			productRefGroup = 6F7AF627211878B900F730B2 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 075B05D5293652F500BBCDED /* Products */;
+					ProjectRef = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+				},
+				{
+					ProductGroup = 071286AB2936520C001C0A1E /* Products */;
+					ProjectRef = 071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */;
+				},
+				{
+					ProductGroup = 075B067129377C4E00BBCDED /* Products */;
+					ProjectRef = 075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				6F7AF625211878B900F730B2 /* AdjustWebBridgeTestApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		071286AF2936520C001C0A1E /* libAdjustTestLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustTestLibrary.a;
+			remoteRef = 071286AE2936520C001C0A1E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05E0293652F500BBCDED /* libAdjust.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjust.a;
+			remoteRef = 075B05DF293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05E2293652F500BBCDED /* AdjustSdk.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdk.framework;
+			remoteRef = 075B05E1293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05E4293652F500BBCDED /* AdjustSdkTv.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdkTv.framework;
+			remoteRef = 075B05E3293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05E6293652F500BBCDED /* AdjustSdkIm.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdkIm.framework;
+			remoteRef = 075B05E5293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05E8293652F500BBCDED /* libAdjustSdk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdk.a;
+			remoteRef = 075B05E7293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05EA293652F500BBCDED /* libAdjustSdkTv.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkTv.a;
+			remoteRef = 075B05E9293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05EC293652F500BBCDED /* libAdjustSdkIm.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkIm.a;
+			remoteRef = 075B05EB293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdkWebBridge.framework;
+			remoteRef = 075B05ED293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B067C29377C4E00BBCDED /* libAdjustTestOptionsLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustTestOptionsLibrary.a;
+			remoteRef = 075B067B29377C4E00BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6F7AF624211878B900F730B2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F7AF78D2118808400F730B2 /* AdjustTestApp-WebView.html in Resources */,
+				6F7AF636211878BC00F730B2 /* LaunchScreen.storyboard in Resources */,
+				6F7AF7B02118949C00F730B2 /* TestLibraryBridge.js in Resources */,
+				6F7AF633211878BC00F730B2 /* Assets.xcassets in Resources */,
+				6F7AF631211878BA00F730B2 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6F7AF622211878B900F730B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6F7AF790211888B500F730B2 /* TestLibraryBridge.m in Sources */,
+				6F7AF78B21187EC500F730B2 /* WKWebViewController.m in Sources */,
+				6F7AF639211878BC00F730B2 /* main.m in Sources */,
+				6F7AF62B211878BA00F730B2 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		075B065029376E9000BBCDED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AdjustTestLibrary;
+			targetProxy = 075B064F29376E9000BBCDED /* PBXContainerItemProxy */;
+		};
+		075B065B29376E9600BBCDED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Adjust;
+			targetProxy = 075B065A29376E9600BBCDED /* PBXContainerItemProxy */;
+		};
+		075B067F29377C5F00BBCDED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AdjustTestOptionsLibrary;
+			targetProxy = 075B067E29377C5F00BBCDED /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6F7AF62F211878BA00F730B2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6F7AF630211878BA00F730B2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		6F7AF634211878BC00F730B2 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6F7AF635211878BC00F730B2 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6F7AF63A211878BC00F730B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		6F7AF63B211878BC00F730B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6F7AF63D211878BC00F730B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QGUGW9AUMK;
+				INFOPLIST_FILE = AdjustWebBridgeTestApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.AdjustWebBridgeTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(TARGET_BUILD_DIR)/usr/local/include";
+			};
+			name = Debug;
+		};
+		6F7AF63E211878BC00F730B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QGUGW9AUMK;
+				INFOPLIST_FILE = AdjustWebBridgeTestApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adjust.AdjustWebBridgeTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(TARGET_BUILD_DIR)/usr/local/include";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6F7AF621211878B900F730B2 /* Build configuration list for PBXProject "AdjustWebBridgeTestApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F7AF63A211878BC00F730B2 /* Debug */,
+				6F7AF63B211878BC00F730B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6F7AF63C211878BC00F730B2 /* Build configuration list for PBXNativeTarget "AdjustWebBridgeTestApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F7AF63D211878BC00F730B2 /* Debug */,
+				6F7AF63E211878BC00F730B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6F7AF61E211878B900F730B2 /* Project object */;
+}

@@ -530,6 +530,7 @@
 		0755882529096CCC00A3AD50 /* ADJThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1BF287F3E2A004C7D59 /* ADJThreadController.m */; };
 		0755882629096CCC00A3AD50 /* ADJThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1F4287F3E2A004C7D59 /* ADJThreadPool.h */; };
 		0755882729096CCC00A3AD50 /* ADJThreadExecutorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 078844922886CF49001814F7 /* ADJThreadExecutorFactory.h */; };
+		075B068F2938CE8C00BBCDED /* ADJAdjustBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 075586A329093BDB00A3AD50 /* ADJAdjustBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075D8FCB28731314005019E3 /* ADJAdjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 075D8FCA28731314005019E3 /* ADJAdjust.m */; };
 		075D8FCC28731314005019E3 /* ADJAdjust.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 075D8FC928731314005019E3 /* ADJAdjust.h */; };
 		075D901628731C2D005019E3 /* AdjustSdk.h in Headers */ = {isa = PBXBuildFile; fileRef = 075D901528731C2D005019E3 /* AdjustSdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -5193,6 +5194,7 @@
 				07FE6C502899752700EB65E6 /* ADJEventPackageData.h in Headers */,
 				07926DB4289A806000260E25 /* ADJClientAddGlobalParameterData.h in Headers */,
 				0A7ED7212892B11B00CC20DE /* ADJTimeLengthMilli.h in Headers */,
+				075B068F2938CE8C00BBCDED /* ADJAdjustBridge.h in Headers */,
 				0A7ED71C2892B11B00CC20DE /* ADJPackageParamValueSerializable.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
