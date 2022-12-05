@@ -49,27 +49,32 @@
 - (void)addGranularOptionWithPartnerName:(nonnull NSString *)partnerName
                                      key:(nonnull NSString *)key
                                    value:(nonnull NSString *)value {
-    NSMutableDictionary *granularOptions = [self.granularOptionsByNameDictMut objectForKey:partnerName];
+
+    NSMutableDictionary *granularOptions = [self.granularOptionsByNameDictMut
+                                            objectForKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
     if (granularOptions == nil) {
         granularOptions = [[NSMutableDictionary alloc] init];
-        [self.granularOptionsByNameDictMut setObject:granularOptions forKey:partnerName];
+        [self.granularOptionsByNameDictMut setObject:granularOptions
+                                              forKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
     }
 
-    [granularOptions setObject:value forKey:key];
+    [granularOptions setObject:[ADJUtilObj copyStringForCollectionWithInput:value] forKey:[ADJUtilObj copyStringForCollectionWithInput:key]];
 }
 
 - (void)addPartnerSharingSettingWithPartnerName:(nonnull NSString *)partnerName
-                                     key:(nonnull NSString *)key
-                                   value:(BOOL)value {
-    NSMutableDictionary *partnerSharingSetting = [self.partnerSharingSettingsByNameDictMut objectForKey:partnerName];
-    if (partnerSharingSetting == nil) {
-        partnerSharingSetting = [[NSMutableDictionary alloc] init];
-        [self.partnerSharingSettingsByNameDictMut setObject:partnerSharingSetting forKey:partnerName];
+                                            key:(nonnull NSString *)key
+                                          value:(BOOL)value {
+
+    NSMutableDictionary *partnerSharingSettings = [self.partnerSharingSettingsByNameDictMut
+                                                  objectForKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
+    if (partnerSharingSettings == nil) {
+        partnerSharingSettings = [[NSMutableDictionary alloc] init];
+        [self.partnerSharingSettingsByNameDictMut setObject:partnerSharingSettings
+                                                     forKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
     }
 
-    [partnerSharingSetting setObject:[NSNumber numberWithBool:value] forKey:key];
+    [partnerSharingSettings setObject:[NSNumber numberWithBool:value] forKey:[ADJUtilObj copyStringForCollectionWithInput:key]];
 }
-
 
 #pragma mark - Generated properties
 - (nullable NSDictionary *)granularOptionsByNameDictionary {
