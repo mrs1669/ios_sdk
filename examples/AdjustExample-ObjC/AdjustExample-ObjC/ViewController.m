@@ -9,6 +9,8 @@
 
 #import "ADJAdjust.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustAdRevenue.h"
+#import "ADJAdjustPushToken.h"
 
 NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
