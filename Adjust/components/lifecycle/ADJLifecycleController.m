@@ -78,11 +78,9 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
                                                             sourceDescription:self.source];
 
     _isInForegroundAtomic = [[ADJAtomicBoolean alloc]
-                             //initWithRelaxedValue:ADJIsSdkInForegroundWhenStarting];
                              initSeqCstMemoryOrderWithInitialBoolValue:
                                  ADJIsSdkInForegroundWhenStarting];
 
-    //_canPublishAtomic = [[ADJAtomicBoolean alloc] initWithRelaxedValue:NO];
     _canPublishAtomic = [[ADJAtomicBoolean alloc] initSeqCstMemoryOrderWithInitialBoolValue:NO];
 
     _cachedLifecycleStateChangeSource = nil;
