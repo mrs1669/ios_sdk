@@ -25,42 +25,39 @@
 + (nullable instancetype)instanceFromAmountDoubleNumber:(nullable NSNumber *)amountDoubleNumber
                                                currency:(nullable NSString *)currency
                                                  source:(nonnull NSString *)source
-                                                 logger:(nonnull ADJLogger *)logger
-{
+                                                 logger:(nonnull ADJLogger *)logger {
     ADJMoneyDoubleAmount *_Nullable moneyDoubleAmount =
-        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber
+    [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber
                                                  logger:logger];
-    
+
     if (moneyDoubleAmount == nil) {
         [logger debugDev:@"Cannot create money instance without valid double amount"
                     from:source
                issueType:ADJIssueInvalidInput];
         return nil;
     }
-    
+
     return [self instanceFromMoneyAmount:moneyDoubleAmount
                                 currency:currency
                                   source:source
                                   logger:logger];
 }
 
-+ (nullable instancetype)
-    instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
-    currency:(nullable NSString *)currency
-    source:(nonnull NSString *)source
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
+                                                currency:(nullable NSString *)currency
+                                                  source:(nonnull NSString *)source
+                                                  logger:(nonnull ADJLogger *)logger {
     ADJMoneyDecimalAmount *_Nullable moneyDecimalAmount =
-        [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber
-                                                       logger:logger];
-    
+    [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber
+                                                   logger:logger];
+
     if (moneyDecimalAmount == nil) {
         [logger debugDev:@"Cannot create money instance without valid decimal amount"
                     from:source
                issueType:ADJIssueInvalidInput];
         return nil;
     }
-    
+
     return [self instanceFromMoneyAmount:moneyDecimalAmount
                                 currency:currency
                                   source:source
@@ -70,10 +67,10 @@
 - (nonnull instancetype)initWithAmount:(nonnull ADJMoneyAmountBase *)amount
                               currency:(nonnull ADJNonEmptyString *)currency {
     self = [super init];
-    
+
     _amount = amount;
     _currency = currency;
-    
+
     return self;
 }
 
@@ -91,14 +88,14 @@
     [ADJNonEmptyString instanceFromString:currency
                         sourceDescription:source
                                    logger:logger];
-    
+
     if (currencyNonEmptyString == nil) {
         [logger debugDev:@"Cannot create money instance without valid decimal currency"
                     from:source
                issueType:ADJIssueInvalidInput];
         return nil;
     }
-    
+
     return [[self alloc] initWithAmount:moneyAmount currency:currencyNonEmptyString];
 }
 
@@ -111,10 +108,10 @@
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-    
+
     hashCode = ADJHashCodeMultiplier * hashCode + self.amount.hash;
     hashCode = ADJHashCodeMultiplier * hashCode + self.currency.hash;
-    
+
     return hashCode;
 }
 
@@ -122,14 +119,15 @@
     if (self == object) {
         return YES;
     }
-    
+
     if (![object isKindOfClass:[ADJMoney class]]) {
         return NO;
     }
-    
+
     ADJMoney *other = (ADJMoney *)object;
     return [ADJUtilObj objectEquals:self.amount other:other.amount]
     && [ADJUtilObj objectEquals:self.currency other:other.currency];
 }
 
 @end
+

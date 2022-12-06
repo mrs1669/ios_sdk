@@ -57,8 +57,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
 
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     if (! [ioData isExpectedMetadataTypeValue:ADJSdkPackageDataMetadataTypeValue
            logger:logger]) {
         return nil;
@@ -102,8 +101,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     pathToPackage(ADJInfoPackageData)
     pathToPackage(ADJThirdPartySharingPackageData)
 
-    [logger debugDev:
-        @"Cannot create instance from io data without matching path to valid package type"
+    [logger debugDev:@"Cannot create instance from io data without matching path to valid package type"
                  key:@"path"
                value:path.stringValue
            issueType:ADJIssueStorageIo];

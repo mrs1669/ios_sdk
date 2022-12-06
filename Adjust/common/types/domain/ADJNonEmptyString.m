@@ -42,8 +42,7 @@
 + (nullable instancetype)instanceWithStringValue:(nullable NSString *)stringValue
                                sourceDescription:(nonnull NSString *)sourceDescription
                                           logger:(nonnull ADJLogger *)logger
-                                      isOptional:(BOOL)isOptional
-{
+                                      isOptional:(BOOL)isOptional {
     if (stringValue == nil) {
         if (! isOptional) {
             [logger debugDev:@"Cannot create NonEmptyString with nil value"

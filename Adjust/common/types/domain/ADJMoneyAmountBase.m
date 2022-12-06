@@ -51,8 +51,7 @@
 #pragma mark - Private constructors
 + (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
                                       logger:(nonnull ADJLogger *)logger
-                                  isOptional:(BOOL)isOptional
-{
+                                  isOptional:(BOOL)isOptional {
     if (ioValue == nil) {
         if (! isOptional) {
             [logger debugDev:@"Cannot create money amount with nil string value"
