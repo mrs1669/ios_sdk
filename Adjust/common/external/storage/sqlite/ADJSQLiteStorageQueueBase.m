@@ -42,22 +42,22 @@ static NSString *const kColumnValue = @"value";
         [self doesNotRecognizeSelector:_cmd];
         return nil;
     }
-    
+
     self = [super initWithLoggerFactory:loggerFactory
                                  source:source
                         storageExecutor:storageExecutor
                  sqliteDatabaseProvider:sqliteController
                               tableName:tableName
                       metadataTypeValue:metadataTypeValue];
-    
+
     _inMemoryQueueByPosition = [NSMutableDictionary dictionary];
     //_inMemoryPositionArray = [NSMutableArray array];
     _inMemoryPositionIndexSet = [NSMutableIndexSet indexSet];
-    
+
     _deleteElementByPositionSql = [self generateDeleteElementSqlWithTableName:tableName];
-    
+
     _lastElementPosition = [ADJTallyCounter instanceStartingAtZero];
-    
+
     return self;
 }
 
@@ -75,12 +75,12 @@ static NSString *const kColumnValue = @"value";
     if ([self isEmpty]) {
         return nil;
     }
-    
+
     NSUInteger firstIndex = self.inMemoryPositionIndexSet.firstIndex;
     if (firstIndex == NSNotFound) {
         return nil;
     }
-    
+
     return [self elementByPosition:
             [[ADJNonNegativeInt alloc] initWithUIntegerValue:firstIndex]];
 }
@@ -104,18 +104,17 @@ static NSString *const kColumnValue = @"value";
     return [NSDictionary dictionaryWithDictionary:self.inMemoryQueueByPosition];
 }
 
-- (nonnull ADJNonNegativeInt *)
-enqueueElementToLast:(nonnull id)newElement
-sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (nonnull ADJNonNegativeInt *)enqueueElementToLast:(nonnull id)newElement
+                                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     ADJNonNegativeInt *_Nonnull newElementPosition = [self incrementAndReturnNewElementPosition];
-    
+
     [self.inMemoryQueueByPosition setObject:newElement forKey:newElementPosition];
     [self.inMemoryPositionIndexSet addIndex:newElementPosition.uIntegerValue];
-    
+
     [self addElementToStorage:newElement
            newElementPosition:newElementPosition
           sqliteStorageAction:sqliteStorageAction];
-    
+
     return newElementPosition;
 }
 
@@ -123,12 +122,12 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     if ([self isEmpty]) {
         return nil;
     }
-    
+
     NSUInteger firstIndex = self.inMemoryPositionIndexSet.firstIndex;
     if (firstIndex == NSNotFound) {
         return nil;
     }
-    
+
     return [self removeElementByPosition:
             [[ADJNonNegativeInt alloc] initWithUIntegerValue:firstIndex]];
 }
@@ -136,48 +135,46 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 - (nullable id)removeElementByPosition:(nonnull ADJNonNegativeInt *)elementPositionToRemove {
     id _Nullable elementToRemove =
     [self removeElementByPositionInMemoryOnly:elementPositionToRemove];
-    
+
     [self removeElementByPositionInStorageOnly:elementPositionToRemove];
-    
+
     return elementToRemove;
 }
 
 - (BOOL)removeElementByPositionInTransaction:(nonnull ADJNonNegativeInt *)elementPositionToRemove
                                     sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb {
     ADJSQLiteStatement *_Nullable deleteElementStatement =
-        [sqliteDb prepareStatementWithSqlString:self.deleteElementByPositionSql.stringValue];
-    
+    [sqliteDb prepareStatementWithSqlString:self.deleteElementByPositionSql.stringValue];
+
     if (deleteElementStatement == nil) {
         [self.logger debugDev:
          @"Cannot remove element by position in sqliteDb without a prepared statement"
                     issueType:ADJIssueStorageIo];
         return NO;
     }
-    
+
     [deleteElementStatement bindInt:(int)elementPositionToRemove.uIntegerValue
                         columnIndex:kDeleteElementPositionFieldPosition];
-    
+
     BOOL deleteSuccess =
     [deleteElementStatement executeUpdatePreparedStatementWithLogger:self.logger];
-    
+
     [deleteElementStatement closeStatement];
-    
+
     return deleteSuccess;
 }
 
-- (nullable id)removeElementByPositionInMemoryOnly:
-(nonnull ADJNonNegativeInt *)elementPositionToRemove {
+- (nullable id)removeElementByPositionInMemoryOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove {
     [self.inMemoryPositionIndexSet removeIndex:elementPositionToRemove.uIntegerValue];
-    
+
     id _Nullable elementRemoved =
     [self.inMemoryQueueByPosition objectForKey:elementPositionToRemove];
     [self.inMemoryQueueByPosition removeObjectForKey:elementPositionToRemove];
-    
+
     return elementRemoved;
 }
 
-- (void)removeElementByPositionInStorageOnly:
-(nonnull ADJNonNegativeInt *)elementPositionToRemove {
+- (void)removeElementByPositionInStorageOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove {
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
         [self.logger debugDev:
@@ -185,15 +182,15 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
                     issueType:ADJIssueWeakReference];
         return;
     }
-    
+
     __typeof(self) __weak weakSelf = self;
     [storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
+
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
         strongSelf.sqliteDatabaseProviderWeak;
-        
+
         if (sqliteDatabaseProvider == nil) {
             [strongSelf.logger debugDev:
              @"Cannot remove element by position in storage"
@@ -201,7 +198,7 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
                               issueType:ADJIssueWeakReference];
             return;
         }
-        
+
         [strongSelf removeElementByPosition:elementPositionToRemove
                                    sqliteDb:[sqliteDatabaseProvider sqliteDb]];
     } source:@"remove element by position in storage only"];
@@ -211,11 +208,11 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     if ([self isEmpty]) {
         return;
     }
-    
+
     // in memory
     [self.inMemoryQueueByPosition removeAllObjects];
     [self.inMemoryPositionIndexSet removeAllIndexes];
-    
+
     // in storage
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
@@ -224,22 +221,22 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
                     issueType:ADJIssueWeakReference];
         return;
     }
-    
+
     __typeof(self) __weak weakSelf = self;
     [storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
+
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-            strongSelf.sqliteDatabaseProviderWeak;
-        
+        strongSelf.sqliteDatabaseProviderWeak;
+
         if (sqliteDatabaseProvider == nil) {
             [strongSelf.logger debugDev:
              @"Cannot remove all elements in storage without a reference to sqliteDatabaseProvider"
                               issueType:ADJIssueWeakReference];
             return;
         }
-        
+
         ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
         [sqliteDb executeStatements:strongSelf.deleteAllSql.stringValue];
     } source:@"remove all elements"];
@@ -254,30 +251,30 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
 
 - (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:(nonnull ADJSQLiteStatement *)selectStatement {
     NSNumber *_Nullable currentElementPositionNumber =
-        [selectStatement numberIntForColumnIndex:kSelectElementPositionFieldIndex];
-    
+    [selectStatement numberIntForColumnIndex:kSelectElementPositionFieldIndex];
+
     if (currentElementPositionNumber == nil) {
         [self.logger debugDev:@"Cannot get first select element position"
                     issueType:ADJIssueStorageIo];
         return NO;
     }
-    
+
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
     [[ADJIoDataBuilder alloc]
      initWithMetadataTypeValue:self.metadataTypeValue];
-    
+
     BOOL atLeastOneElementAdded = NO;
-    
+
     do {
         NSNumber *_Nullable readElementPositionNumber =
         [selectStatement numberIntForColumnIndex:kSelectElementPositionFieldIndex];
-        
+
         // new element:
         if (! [currentElementPositionNumber isEqualToNumber:readElementPositionNumber]) {
             ADJNonNegativeInt *_Nullable elementPositionToAdd =
             [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber
                                                   logger:self.logger];
-            
+
             BOOL elementAdded =
             [self
              addReadDataToInMemoryQueueWithIoData:
@@ -286,39 +283,39 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
             if (elementAdded) {
                 atLeastOneElementAdded = YES;
             }
-            
+
             // prepare for new element
             ioDataBuilder = [[ADJIoDataBuilder alloc]
                              initWithMetadataTypeValue:self.metadataTypeValue];
             currentElementPositionNumber = readElementPositionNumber;
         }
-        
+
         if (readElementPositionNumber == nil) {
             [self.logger debugDev:@"Cannot get select element position"
                         issueType:ADJIssueStorageIo];
             break;
         }
-        
+
         [self readFromSelectStatementIntoBuildingData:selectStatement
                                         ioDataBuilder:ioDataBuilder];
-        
+
     } while ([selectStatement nextInQueryStatementWithLogger:self.logger]);
-    
+
     // last element
     ADJNonNegativeInt *_Nullable lastElementPositionToAdd =
     [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber
                                           logger:self.logger];
-    
+
     BOOL elementAdded =
     [self addReadDataToInMemoryQueueWithIoData:[[ADJIoData alloc]
                                                 initWithIoDataBuilder:ioDataBuilder]
                           elementPositionToAdd:lastElementPositionToAdd];
-    
+
     if (lastElementPositionToAdd != nil) {
         self.lastElementPosition =
         [[ADJTallyCounter alloc] initWithCountValue:lastElementPositionToAdd];
     }
-    
+
     if (elementAdded) {
         atLeastOneElementAdded = YES;
     }
@@ -330,12 +327,11 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     } else {
         [self.logger debugDev:@"Did not read any element to the queue"];
     }
-    
+
     return atLeastOneElementAdded;
 }
 
-- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:
-(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:(nonnull NSString *)tableName {
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:
                 [NSString stringWithFormat:@"SELECT %@, %@, %@, %@ FROM %@ ORDER BY %@",
@@ -346,13 +342,13 @@ sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
                  tableName,
                  kColumnElementPosition]];
 }
+
 static int const kSelectElementPositionFieldIndex = 0;
 static int const kSelectMapNameFieldIndex = 1;
 static int const kSelectKeyFieldIndex = 2;
 static int const kSelectValueFieldIndex = 3;
 
-- (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:
-(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:(nonnull NSString *)tableName {
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:
                 [NSString stringWithFormat:
@@ -363,6 +359,7 @@ static int const kSelectValueFieldIndex = 3;
                  kColumnKey,
                  kColumnValue]];
 }
+
 static int const kInsertElementPositionFieldPosition = 1;
 static int const kInsertMapNameFieldPosition = 2;
 static int const kInsertKeyFieldPosition = 3;
@@ -389,14 +386,14 @@ static int const kInsertValueFieldPosition = 4;
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull id)element {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
 #pragma mark Internal Methods
-- (nonnull ADJNonEmptyString *)generateDeleteElementSqlWithTableName:
-(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)generateDeleteElementSqlWithTableName:(nonnull NSString *)tableName {
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:
                 [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?",
@@ -406,8 +403,7 @@ static int const kInsertValueFieldPosition = 4;
 static int const kDeleteElementPositionFieldPosition = 1;
 
 - (BOOL)addReadDataToInMemoryQueueWithIoData:(nonnull ADJIoData *)readIoData
-                        elementPositionToAdd:(nullable ADJNonNegativeInt *)elementPositionToAdd
-{
+                        elementPositionToAdd:(nullable ADJNonNegativeInt *)elementPositionToAdd {
     if (elementPositionToAdd == nil) {
         [self.logger debugDev:
          @"Cannot add element to queue, without a valid element position"
@@ -416,7 +412,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
                     issueType:ADJIssueStorageIo];
         return NO;
     }
-    
+
     id _Nullable lastReadElement = [self concreteGenerateElementFromIoData:readIoData];
     if (lastReadElement == nil) {
         [self.logger debugDev:@"Cannot create element of last read"
@@ -427,10 +423,10 @@ static int const kDeleteElementPositionFieldPosition = 1;
                     issueType:ADJIssueStorageIo];
         return NO;
     }
-    
+
     [self.inMemoryQueueByPosition setObject:lastReadElement forKey:elementPositionToAdd];
     [self.inMemoryPositionIndexSet addIndex:elementPositionToAdd.uIntegerValue];
-    
+
     return YES;
 }
 
@@ -443,7 +439,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
     if (mapName == nil) {
         return;
     }
-    
+
     ADJNonEmptyString *_Nullable key =
     [self stringFromSelectStatement:selectStatement
                         columnIndex:kSelectKeyFieldIndex
@@ -451,7 +447,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
     if (key == nil) {
         return;
     }
-    
+
     ADJNonEmptyString *_Nullable value =
     [self stringFromSelectStatement:selectStatement
                         columnIndex:kSelectValueFieldIndex
@@ -459,7 +455,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
     if (value == nil) {
         return;
     }
-    
+
     [ioDataBuilder addEntryToMapByName:mapName.stringValue
                                    key:key.stringValue
                                  value:value];
@@ -470,27 +466,26 @@ static int const kDeleteElementPositionFieldPosition = 1;
         self.lastElementPosition = [self.lastElementPosition generateIncrementedCounter];
         return self.lastElementPosition.countValue;
     }
-    
+
     NSUInteger lastIndex = self.inMemoryPositionIndexSet.lastIndex;
     if (lastIndex == NSNotFound) {
         self.lastElementPosition = [self.lastElementPosition generateIncrementedCounter];
         return self.lastElementPosition.countValue;
     }
-    
+
     if (lastIndex > self.lastElementPosition.countValue.uIntegerValue) {
         self.lastElementPosition =
         [[ADJTallyCounter alloc] initWithCountValue:
          [[ADJNonNegativeInt alloc] initWithUIntegerValue:lastIndex]];
     }
-    
+
     self.lastElementPosition = [self.lastElementPosition generateIncrementedCounter];
     return self.lastElementPosition.countValue;
 }
 
 - (void)addElementToStorage:(nonnull id)newElement
          newElementPosition:(nonnull ADJNonNegativeInt *)newElementPosition
-        sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+        sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
         [self.logger debugDev:
@@ -509,7 +504,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
         }
 
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-            strongSelf.sqliteDatabaseProviderWeak;
+        strongSelf.sqliteDatabaseProviderWeak;
 
         if (sqliteDatabaseProvider == nil) {
             [strongSelf.logger debugDev:
@@ -530,13 +525,12 @@ static int const kDeleteElementPositionFieldPosition = 1;
 - (void)addElementToSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb
                   newElement:(nonnull id)newElement
           newElementPosition:(nonnull ADJNonNegativeInt *)newElementPosition
-         sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+         sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     [sqliteDb beginTransaction];
-    
+
     ADJSQLiteStatement *_Nullable insertStatement =
     [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
-    
+
     if (insertStatement == nil) {
         [self.logger debugDev:
          @"Cannot add element by position in storage without a compiled insertStatement"
@@ -545,16 +539,16 @@ static int const kDeleteElementPositionFieldPosition = 1;
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
-    
+
     ADJIoData *_Nonnull newElementIoData =
-        [self concreteGenerateIoDataFromElement:newElement];
-    
+    [self concreteGenerateIoDataFromElement:newElement];
+
     [self insertElementWithStatement:insertStatement
                     newElementIoData:newElementIoData
                   newElementPosition:newElementPosition];
-    
+
     [insertStatement closeStatement];
-    
+
     if (sqliteStorageAction != nil) {
         if (! [sqliteStorageAction performStorageActionInDbTransaction:sqliteDb
                                                                 logger:self.logger])
@@ -566,7 +560,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
             return;
         }
     }
-    
+
     [sqliteDb commit];
     [self.logger debugDev:@"Element added to database"];
 }
@@ -576,19 +570,19 @@ static int const kDeleteElementPositionFieldPosition = 1;
                 newElementPosition:(nonnull ADJNonNegativeInt *)newElementPosition {
     for (NSString *_Nonnull mapName in newElementIoData.mapCollectionByName) {
         ADJStringMap *_Nonnull map = [newElementIoData.mapCollectionByName objectForKey:mapName];
-        
+
         for (NSString *_Nonnull key in map.map) {
             ADJNonEmptyString *_Nonnull value = [map.map objectForKey:key];
-            
+
             // clear bindings
             [insertStatement resetStatement];
-            
+
             [insertStatement bindInt:(int)newElementPosition.uIntegerValue
                          columnIndex:kInsertElementPositionFieldPosition];
             [insertStatement bindString:mapName columnIndex:kInsertMapNameFieldPosition];
             [insertStatement bindString:key columnIndex:kInsertKeyFieldPosition];
             [insertStatement bindString:value.stringValue columnIndex:kInsertValueFieldPosition];
-            
+
             [insertStatement executeUpdatePreparedStatementWithLogger:self.logger];
         }
     }
@@ -597,10 +591,10 @@ static int const kDeleteElementPositionFieldPosition = 1;
 - (void)removeElementByPosition:(nonnull ADJNonNegativeInt *)elementPositionToRemove
                        sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb {
     [sqliteDb beginTransaction];
-    
+
     BOOL elementDeleted = [self removeElementByPositionInTransaction:elementPositionToRemove
                                                             sqliteDb:sqliteDb];
-    
+
     if (elementDeleted) {
         [sqliteDb commit];
     } else {
@@ -609,3 +603,4 @@ static int const kDeleteElementPositionFieldPosition = 1;
 }
 
 @end
+

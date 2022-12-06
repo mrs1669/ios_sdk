@@ -107,11 +107,9 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
-        [strongSelf.consoleLogger
-            didSdkInitWithIsSandboxEnvironment:
-            clientConfigData.isSandboxEnvironmentOrElseProduction
-            doLogAll:clientConfigData.doLogAll
-            doNotLogAny:clientConfigData.doNotLogAny];
+        [strongSelf.consoleLogger didSdkInitWithIsSandboxEnvironment:clientConfigData.isSandboxEnvironmentOrElseProduction
+                                                            doLogAll:clientConfigData.doLogAll
+                                                         doNotLogAny:clientConfigData.doNotLogAny];
     } source:@"sdk init"];
 }
 

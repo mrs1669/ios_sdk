@@ -128,8 +128,7 @@ static NSString *const kColumnValue = @"value";
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb
-                            newDataValue:(nonnull id)newDataValue
-{
+                            newDataValue:(nonnull id)newDataValue {
     //[self printRowNumberWithSQLiteDb:sqliteDb];
     // delete all rows
     BOOL deletedSuccess = [self deleteAllInTransactionWithDb:sqliteDb];
@@ -268,8 +267,7 @@ static int const kInsertValueFieldPosition = 3;
 }
 
 - (BOOL)insertValueInTransactionToDb:(nonnull ADJSQLiteDb *)sqliteDb
-                        newDataValue:(nonnull id)newDataValue
-{
+                        newDataValue:(nonnull id)newDataValue {
     ADJSQLiteStatement *_Nullable insertStatement =
         [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
     

@@ -30,31 +30,29 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
 
 @implementation ADJClientThirdPartySharingData
 #pragma mark Instantiation
-+ (nullable instancetype)
-    instanceFromClientWithAdjustThirdPartySharing:
-        (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientWithAdjustThirdPartySharing:
+(nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+                                                                logger:(nonnull ADJLogger *)logger {
     if (adjustThirdPartySharing == nil) {
         [logger errorClient:
-            @"Cannot create third party sharing with nil adjust third party sharing value"];
+         @"Cannot create third party sharing with nil adjust third party sharing value"];
         return nil;
     }
-    
+
     ADJBooleanWrapper *_Nonnull enabledOrElseDisabledSharing =
-        adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool != nil
-            ? [ADJBooleanWrapper instanceFromBool:
-                    adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue]
-            : nil;
-    
+    adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool != nil
+    ? [ADJBooleanWrapper instanceFromBool:
+       adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue]
+    : nil;
+
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *_Nullable
-        granularOptionsByName =
-            [ADJUtilConv
-                convertToMapCollectionByNameBuilderWithKeyValueArray:
-                    adjustThirdPartySharing.granularOptionsByNameArray
-                sourceDescription:@"third party sharing granular options"
-                logger:logger];
-    
+    granularOptionsByName =
+    [ADJUtilConv
+     convertToMapCollectionByNameBuilderWithKeyValueArray:
+         adjustThirdPartySharing.granularOptionsByNameArray
+     sourceDescription:@"third party sharing granular options"
+     logger:logger];
+
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
     [ADJNonEmptyString
      instanceFromOptionalString:
@@ -63,7 +61,7 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
      : nil
      sourceDescription:@"third party sharing granular options"
      logger:logger];
-    
+
     return [[self alloc] initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharing
                                   stringGranularOptionsByName:stringGranularOptionsByName];
 }
@@ -71,17 +69,17 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
 + (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
                                                                  logger:(nonnull ADJLogger *)logger {
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
-    
+
     ADJNonEmptyString *_Nullable enabledOrElseDisabledSharingIoValue =
     [propertiesMap pairValueWithKey:kEnabledOrElseDisabledSharingKey];
-    
+
     ADJBooleanWrapper *_Nullable enabledOrElseDisabledSharing =
     [ADJBooleanWrapper instanceFromIoValue:enabledOrElseDisabledSharingIoValue
                                     logger:logger];
-    
+
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
     [propertiesMap pairValueWithKey:kStringGranularOptionsByNameKey];
-    
+
     return [[self alloc] initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharing
                                   stringGranularOptionsByName:stringGranularOptionsByName];
 }
@@ -95,10 +93,10 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
 - (nonnull instancetype)initWithEnabledOrElseDisabledSharing:(nullable ADJBooleanWrapper *)enabledOrElseDisabledSharing
                                  stringGranularOptionsByName:(nullable ADJNonEmptyString *)stringGranularOptionsByName {
     self = [super init];
-    
+
     _enabledOrElseDisabledSharing = enabledOrElseDisabledSharing;
     _stringGranularOptionsByName = stringGranularOptionsByName;
-    
+
     return self;
 }
 
@@ -106,11 +104,11 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
 #pragma mark - ADJClientActionIoDataInjectable
 - (void)injectIntoClientActionIoDataBuilder:(nonnull ADJIoDataBuilder *)clientActionIoDataBuilder{
     ADJStringMapBuilder *_Nonnull propertiesMapBuilder = clientActionIoDataBuilder.propertiesMapBuilder;
-    
+
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
                                        key:kEnabledOrElseDisabledSharingKey
                        ioValueSerializable:self.enabledOrElseDisabledSharing];
-    
+
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
                                        key:kStringGranularOptionsByNameKey
                        ioValueSerializable:self.stringGranularOptionsByName];
@@ -127,12 +125,12 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-    
+
     hashCode = ADJHashCodeMultiplier * hashCode +
     [ADJUtilObj objecNullableHash:self.enabledOrElseDisabledSharing];
     hashCode = ADJHashCodeMultiplier * hashCode +
     [ADJUtilObj objecNullableHash:self.stringGranularOptionsByName];
-    
+
     return hashCode;
 }
 
@@ -140,11 +138,11 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
     if (self == object) {
         return YES;
     }
-    
+
     if (![object isKindOfClass:[ADJClientThirdPartySharingData class]]) {
         return NO;
     }
-    
+
     ADJClientThirdPartySharingData *other = (ADJClientThirdPartySharingData *)object;
     return [ADJUtilObj objectEquals:self.enabledOrElseDisabledSharing
                               other:other.enabledOrElseDisabledSharing]
@@ -153,3 +151,4 @@ static NSString *const kStringGranularOptionsByNameKey = @"stringGranularOptions
 }
 
 @end
+

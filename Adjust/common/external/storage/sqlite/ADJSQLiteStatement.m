@@ -28,6 +28,7 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 #pragma mark - Unmanaged variables
     sqlite3_stmt *_sqlite3_stmt;
 }
+
 #pragma mark Instantiation
 - (nonnull instancetype)initWithSqliteStatement:(nonnull sqlite3_stmt *)sqliteStatement
                                       sqlString:(nonnull NSString *)sqlString

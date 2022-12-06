@@ -16,7 +16,7 @@
  id<ADJSQLiteDatabaseProvider> sqliteDatabaseProviderWeak;
  @property (nonnull, readonly, strong, nonatomic) NSString *tableName;
  @property (nonnull, readonly, strong, nonatomic) NSString *metadataTypeValue;
- 
+
  @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *selectSql;
  @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *insertSql;
  @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *deleteAllSql;
@@ -35,17 +35,17 @@
         [self doesNotRecognizeSelector:_cmd];
         return nil;
     }
-    
+
     self = [super initWithLoggerFactory:loggerFactory source:source];
     _storageExecutorWeak = storageExecutor;
     _sqliteDatabaseProviderWeak = sqliteDatabaseProvider;
     _tableName = tableName;
     _metadataTypeValue = metadataTypeValue;
-    
+
     _selectSql = [self concreteGenerateSelectSqlWithTableName:tableName];
     _insertSql = [self concreteGenerateInsertSqlWithTableName:tableName];
     _deleteAllSql = [self generateDeleteAllSqlWithTableName:tableName];
-    
+
     return self;
 }
 
@@ -59,9 +59,9 @@
         [self.logger debugDev:@"Read data to memory"];
         return;
     }
-    
+
     [self.logger debugDev:@"Did not read data to memory. Writing default initial state"];
-    
+
     [self concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:sqliteDb];
 }
 
@@ -86,23 +86,21 @@
 }
 
 #pragma mark Protected Methods
-- (nullable ADJNonEmptyString *)
-    stringFromSelectStatement:(nonnull ADJSQLiteStatement *)selectStatement
-    columnIndex:(int)columnIndex
-    fieldName:(nonnull NSString *)fieldName
-{
+- (nullable ADJNonEmptyString *)stringFromSelectStatement:(nonnull ADJSQLiteStatement *)selectStatement
+                                              columnIndex:(int)columnIndex
+                                                fieldName:(nonnull NSString *)fieldName {
     NSString *_Nullable fieldString = [selectStatement stringForColumnIndex:columnIndex];
-    
+
     ADJNonEmptyString *_Nullable fieldValue =
     [ADJNonEmptyString instanceFromString:fieldString
                         sourceDescription:fieldName
                                    logger:self.logger];
-    
+
     if (fieldValue == nil) {
         [self.logger debugDev:@"Cannot get string value from select statement"
                     valueName:fieldName issueType:ADJIssueStorageIo];
     }
-    
+
     return fieldValue;
 }
 
@@ -111,21 +109,26 @@
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
 - (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:(nonnull NSString *)tableName {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
 - (void)concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb {
     [self doesNotRecognizeSelector:_cmd];
 }
+
 - (nonnull NSString *)concreteGenerateCreateTableFieldsSql {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
 - (nonnull NSString *)concreteGenerateCreateTablePrimaryKeySql {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
 - (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:(nonnull ADJSQLiteStatement *)selectStatement {
     [self doesNotRecognizeSelector:_cmd];
     return NO;
@@ -134,10 +137,10 @@
 #pragma mark Internal Methods
 - (BOOL)transactReadIntoMemory:(nonnull ADJSQLiteDb *)sqliteDb {
     [sqliteDb beginTransaction];
-    
+
     ADJSQLiteStatement *_Nullable selectStatement =
-        [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
-    
+    [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
+
     if (selectStatement == nil) {
         [self.logger debugDev:
          @"Cannot read value from Db without a prepared statement from the select query"
@@ -147,9 +150,9 @@
         [sqliteDb rollback];
         return NO;
     }
-    
+
     BOOL wasAbleToStepToFirstRow = [selectStatement nextInQueryStatementWithLogger:self.logger];
-    
+
     if (! wasAbleToStepToFirstRow) {
         [self.logger debugDev:
          @"Cannot read value from Select queryCursor without a queryCursor from the select query"
@@ -160,13 +163,13 @@
         [sqliteDb rollback];
         return NO;
     }
-    
+
     BOOL readIntoMemory =
-        [self concreteReadIntoMemoryFromSelectStatementInFirstRowSync:selectStatement];
-    
+    [self concreteReadIntoMemoryFromSelectStatementInFirstRowSync:selectStatement];
+
     [selectStatement closeStatement];
     [sqliteDb commit];
-    
+
     return readIntoMemory;
 }
 
@@ -176,3 +179,4 @@
 }
 
 @end
+
