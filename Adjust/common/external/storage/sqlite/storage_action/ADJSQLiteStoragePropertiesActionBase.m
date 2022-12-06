@@ -39,9 +39,7 @@
     self.sqliteStoragePropertiesWeak;
 
     if (sqliteStorageProperties == nil) {
-        [logger debugDev:
-         @"Cannot perform properties storage action"
-         " in db transaction without a reference to storage"
+        [logger debugDev:@"Cannot perform properties storage action in db transaction without a reference to storage"
                issueType:ADJIssueWeakReference];
         // rollback rest of transaction
         return NO;
