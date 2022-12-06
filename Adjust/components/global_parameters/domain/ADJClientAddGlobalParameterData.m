@@ -29,11 +29,9 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 
 @implementation ADJClientAddGlobalParameterData
 #pragma mark Instantiation
-+ (nullable instancetype)
-    instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd
++ (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd
     valueToAdd:(nullable NSString *)valueToAdd
-    logger:(nonnull ADJLogger *)logger
-{
+    logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable verifiedKeyToAdd =
         [ADJNonEmptyString instanceFromString:keyToAdd
                             sourceDescription:@"client add global parameter key"
@@ -58,10 +56,8 @@ static NSString *const kValueToAddKey = @"valueToAdd";
                                valueToAdd:verifiedValueToAdd];
 }
 
-+ (nullable instancetype)
-    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable clientActionTypeValue = [clientActionInjectedIoData.metadataMap
                                                           pairValueWithKey:ADJClientActionTypeKey];
     if (clientActionTypeValue == nil) {

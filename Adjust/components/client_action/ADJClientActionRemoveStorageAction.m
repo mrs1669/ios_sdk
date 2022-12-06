@@ -32,8 +32,7 @@
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageActionBase
 - (BOOL)concretePerformStorageActionInDbTransaction:(nonnull ADJSQLiteDb *)sqliteDb
-                                             logger:(nonnull ADJLogger *)logger
-{
+                                             logger:(nonnull ADJLogger *)logger {
     ADJClientActionStorage *_Nullable clientActionStorage = self.clientActionStorageWeak;
 
     if (clientActionStorage == nil) {

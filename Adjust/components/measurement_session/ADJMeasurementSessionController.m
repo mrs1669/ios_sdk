@@ -194,7 +194,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 #pragma mark Internal Methods
 - (void)processKeepAlivePing {
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage =
-        self.measurementSessionStateStorageWeak;
+    self.measurementSessionStateStorageWeak;
     if (measurementSessionStateStorage == nil) {
         [self.logger debugDev:@"Cannot process Keep Alive Ping without a reference to storage"
                     issueType:ADJIssueWeakReference];
@@ -209,7 +209,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     }
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
-        [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
         [self.logger debugDev:@"Cannot process Keep Alive Ping without a valid now timestamp"
                     issueType:ADJIssueWeakReference];
@@ -217,9 +217,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     }
 
     ADJMeasurementSessionStateData *_Nonnull currentMeasurementSessionStateData =
-        [measurementSessionStateStorage readOnlyStoredDataValue];
+    [measurementSessionStateStorage readOnlyStoredDataValue];
     ADJValueWO<ADJMeasurementSessionData *> *_Nonnull changedMeasurementSessionDataWO =
-        [[ADJValueWO alloc] init];
+    [[ADJValueWO alloc] init];
 
     [self.measurementSessionState
      keepAlivePingedWithCurrentMeasurementSessionData:currentMeasurementSessionStateData
@@ -244,7 +244,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 
 - (void)processBackground {
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage =
-        self.measurementSessionStateStorageWeak;
+    self.measurementSessionStateStorageWeak;
     if (measurementSessionStateStorage == nil) {
         [self.logger debugDev:@"Cannot process Background without a reference to storage"
                     issueType:ADJIssueWeakReference];
@@ -259,7 +259,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     }
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
-        [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
         [self.logger debugDev:@"Cannot process Background without a valid now timestamp"
                     issueType:ADJIssueWeakReference];
@@ -267,9 +267,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     }
 
     ADJMeasurementSessionStateData *_Nullable currentMeasurementSessionStateData =
-        [measurementSessionStateStorage readOnlyStoredDataValue];
+    [measurementSessionStateStorage readOnlyStoredDataValue];
     ADJValueWO<ADJMeasurementSessionData *> *_Nonnull changedMeasurementSessionDataWO =
-        [[ADJValueWO alloc] init];
+    [[ADJValueWO alloc] init];
 
     [self.measurementSessionState
      appWentToTheBackgroundWithCurrentMeasurementSessionData:currentMeasurementSessionStateData
@@ -312,13 +312,13 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     }
 
     ADJMeasurementSessionStateData *_Nullable currentMeasurementSessionStateData =
-        [measurementSessionStateStorage readOnlyStoredDataValue];
+    [measurementSessionStateStorage readOnlyStoredDataValue];
 
     [self publishWillFirstMeasurementSessionStartHappenWithCurrentMeasurementSessionStateData:
-        currentMeasurementSessionStateData];
+     currentMeasurementSessionStateData];
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
-        [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
         [self.logger debugDev:
          @"Cannot process Change To Active Session without a valid now timestamp"
@@ -332,23 +332,23 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
                         value:self.overwriteFirstMeasurementSessionIntervalMilli.description];
 
         ADJMeasurementSessionData *_Nullable currentMeasurementSessionData =
-            currentMeasurementSessionStateData.measurementSessionData;
+        currentMeasurementSessionStateData.measurementSessionData;
         if (currentMeasurementSessionData != nil) {
             ADJTimestampMilli *_Nonnull overwrittenNowTimestamp =
-                [currentMeasurementSessionData.lastActivityTimestampMilli
-                 generateTimestampWithAddedTimeLength:
-                     self.overwriteFirstMeasurementSessionIntervalMilli];
+            [currentMeasurementSessionData.lastActivityTimestampMilli
+             generateTimestampWithAddedTimeLength:
+                 self.overwriteFirstMeasurementSessionIntervalMilli];
             [self.logger debugDev:@"Now timestamp overwritten"
                     messageParams:
              [NSDictionary dictionaryWithObjectsAndKeys:
               nonMonotonicNowTimestampMilli.description, @"nowTimestamp",
               overwrittenNowTimestamp.description, @"overwrittenNowTimestamp",
               [currentMeasurementSessionData.lastActivityTimestampMilli description],
-                    @"lastActivityTimestamp", nil]];
+              @"lastActivityTimestamp", nil]];
             nonMonotonicNowTimestampMilli = overwrittenNowTimestamp;
         } else {
             [self.logger debugDev:
-                @"Cannot overwrite First Sdk Session Interval without last activity timestamp"];
+             @"Cannot overwrite First Sdk Session Interval without last activity timestamp"];
         }
 
         self.overwriteFirstMeasurementSessionIntervalMilli = nil;
@@ -356,9 +356,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 
     ADJValueWO<NSString *> *_Nonnull sdkStartStateEventWO = [[ADJValueWO alloc] init];
     ADJValueWO<ADJMeasurementSessionData *> *_Nonnull changedMeasurementSessionDataWO =
-        [[ADJValueWO alloc] init];
+    [[ADJValueWO alloc] init];
     ADJValueWO<ADJPackageSessionData *> *_Nonnull packageSessionDataWO =
-        [[ADJValueWO alloc] init];
+    [[ADJValueWO alloc] init];
 
     BOOL changedToActiveSession  =
     [self.measurementSessionState
@@ -382,8 +382,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
      measurementSessionStateStorage:measurementSessionStateStorage];
 }
 
-- (void)handleSideEffectsWithCurrentMeasurementSessionData:
-(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+- (void)handleSideEffectsWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
                                         packageSessionData:(nullable ADJPackageSessionData *)packageSessionData
                                         sdkStartStateEvent:(nullable NSString *)sdkStartStateEvent
                              changedMeasurementSessionData:(nullable ADJMeasurementSessionData *)changedMeasurementSessionData
@@ -483,7 +482,7 @@ updateMeasurementSessionStateStorageAction:(nullable ADJMeasurementSessionStateS
     }
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
-        [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
         [self.logger debugDev:@"Cannot process Sdk Became Not Active without a valid now timestamp"
                     issueType:ADJIssueExternalApi];
@@ -509,5 +508,6 @@ updateMeasurementSessionStateStorageAction:(nullable ADJMeasurementSessionStateS
 }
 
 @end
+
 
 

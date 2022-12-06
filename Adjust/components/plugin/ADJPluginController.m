@@ -92,7 +92,7 @@
     NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap = [NSMutableDictionary dictionaryWithDictionary:[parametersToAddStringMap foundationStringMap]];
 
     [self.pluginPackageSendingPublisher.publisher notifySubscribersWithSubscriberBlock:
-        ^(id<ADJAdjustPackageSendingSubscriber>  _Nonnull subscriber)
+     ^(id<ADJAdjustPackageSendingSubscriber>  _Nonnull subscriber)
      {
         NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap = [[NSMutableDictionary alloc] init];
 
@@ -117,7 +117,7 @@
 #pragma mark - ADJLifecycleSubscriber
 - (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
     [self.pluginForegroundPublisher.publisher notifySubscribersWithSubscriberBlock:
-        ^(id<ADJAdjustForegroundSubscriber>  _Nonnull subscriber)
+     ^(id<ADJAdjustForegroundSubscriber>  _Nonnull subscriber)
      {
         [subscriber onForeground];
     }];
@@ -129,8 +129,7 @@
 
 #pragma mark - Subscriptions
 - (void)ccSubscribeToPublishersWithSdkPackageSendingPublisher:(nonnull ADJSdkPackageSendingPublisher *)sdkPackageSendingPublisher
-                                           lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-{
+                                           lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher {
     ADJAdjustPublishers *_Nonnull adjustPublishers = [[ADJAdjustPublishers alloc] initWithPackageSendingPublisher:self.pluginPackageSendingPublisher
                                                                                               foregroundPublisher:self.pluginForegroundPublisher];
 
@@ -148,3 +147,4 @@
 }
 
 @end
+

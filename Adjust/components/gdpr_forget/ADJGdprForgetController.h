@@ -44,13 +44,11 @@
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                     gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy;
 
-- (void)
-    ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
-        (nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    clock:(nonnull ADJClock *)clock
-    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+- (void)ccSetDependenciesAtSdkInitWithSdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                                                  clock:(nonnull ADJClock *)clock
+                                          loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                  threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+                                sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
 // public api
 - (BOOL)isForgotten;

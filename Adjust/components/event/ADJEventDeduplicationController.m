@@ -23,11 +23,9 @@
 
 @implementation ADJEventDeduplicationController
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-    maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+                maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication {
     self = [super initWithLoggerFactory:loggerFactory source:@"EventDeduplicationController"];
     _eventDeduplicationStorageWeak = eventDeduplicationStorage;
     
@@ -39,8 +37,8 @@
                         value:_maxCapacityEventDeduplication.description];
     } else {
         _maxCapacityEventDeduplication =
-            [[ADJNonNegativeInt alloc]
-             initWithUIntegerValue:ADJDefaultMaxCapacityEventDeduplication];
+        [[ADJNonNegativeInt alloc]
+         initWithUIntegerValue:ADJDefaultMaxCapacityEventDeduplication];
         
         [self.logger debugDev:@"Falling back to default max capacity event deduplication"
                           key:@"default_max_capacity"

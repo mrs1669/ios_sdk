@@ -38,6 +38,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
     return [ADJDeviceIdsData instanceFromIoData:ioData
                                          logger:self.logger];
 }
+
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJDeviceIdsData *)dataValue {
     return [dataValue toIoData];
 }
@@ -50,8 +51,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
         [self.logger debugDev:@"Activity state v4 file not found"];

@@ -38,12 +38,10 @@
 
 @implementation ADJGdprForgetController
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    gdprForgetStateStorage:(nonnull ADJGdprForgetStateStorage *)gdprForgetStateStorage
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                       gdprForgetStateStorage:(nonnull ADJGdprForgetStateStorage *)gdprForgetStateStorage
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy {
     self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetController"];
     _gdprForgetStateStorageWeak = gdprForgetStateStorage;
     _sdkPackageBuilderWeak = nil;
@@ -54,8 +52,8 @@
     _gdprForgetState = [[ADJGdprForgetState alloc] initWithLoggerFactory:loggerFactory];
     
     _gdprForgetTracker =
-        [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
-                                  gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
+    [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
+                              gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
     
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -67,21 +65,19 @@
     return self;
 }
 
-- (void)
-    ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
-        (nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    clock:(nonnull ADJClock *)clock
-    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-{
+- (void)ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
+(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                                                  clock:(nonnull ADJClock *)clock
+                                          loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                  threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+                                sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
     self.sdkPackageBuilderWeak = sdkPackageBuilder;
     self.clockWeak = clock;
     
     self.sender = [sdkPackageSenderFactory
-                    createSdkPackageSenderWithLoggerFactory:loggerFactory
-                    sourceDescription:self.source
-                    threadExecutorFactory:threadExecutorFactory];
+                   createSdkPackageSenderWithLoggerFactory:loggerFactory
+                   sourceDescription:self.source
+                   threadExecutorFactory:threadExecutorFactory];
 }
 
 #pragma mark Public API
@@ -115,7 +111,7 @@
 - (void)sdkResponseCallbackWithResponseData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     if (! [sdkResponseData isKindOfClass:[ADJGdprForgetResponseData class]]) {
         [self.logger debugDev:
-            @"Cannot process response data with that is not an gdpr forget"
+         @"Cannot process response data with that is not an gdpr forget"
                 expectedValue:NSStringFromClass([ADJGdprForgetResponseData class])
                   actualValue:NSStringFromClass([sdkResponseData class])
                     issueType:ADJIssueLogicError];
@@ -123,7 +119,7 @@
     }
     
     ADJGdprForgetResponseData *_Nonnull gdprForgetResponseData =
-        (ADJGdprForgetResponseData *)sdkResponseData;
+    (ADJGdprForgetResponseData *)sdkResponseData;
     
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
@@ -200,8 +196,7 @@
 }
 
 #pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:
-(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
                             publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
                                  lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
                                sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher {

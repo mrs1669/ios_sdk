@@ -418,7 +418,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         }];
     }
 
-     [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
+    [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {
@@ -503,10 +503,9 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     return @(doubleValue);
 }
 
-- (void)
-iterateWithKey:(nonnull NSString *)key
-source:(nonnull NSString *)source
-keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
+- (void)iterateWithKey:(nonnull NSString *)key
+                source:(nonnull NSString *)source
+              keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
 {
     NSArray<NSString *> *_Nullable array =
     [self.commandParameters objectForKey:key];
@@ -601,6 +600,7 @@ keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
 }
 
 @end
+
 
 
 

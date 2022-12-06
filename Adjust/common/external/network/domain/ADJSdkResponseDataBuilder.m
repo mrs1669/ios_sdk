@@ -53,10 +53,9 @@
 
 @implementation ADJSdkResponseDataBuilder
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
-    sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-    sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
+- (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
+                               sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
+                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
 //    previousErrorMessages:(nullable NSString *)previousErrorMessages
 {
     self = [super init];
@@ -82,8 +81,7 @@
 
 - (void)logErrorWithLogger:(nullable ADJLogger *)logger
                    nsError:(nullable NSError *)nsError
-              errorMessage:(nonnull NSString *)errorMessage
-{
+              errorMessage:(nonnull NSString *)errorMessage {
     if (nsError != nil) {
         if (logger != nil) {
             [logger debugDev:errorMessage
@@ -91,37 +89,37 @@
                    issueType:ADJIssueNetworkRequest];
         }
         /*
-        [self appendErrorWithMessage:
+         [self appendErrorWithMessage:
          [NSString stringWithFormat:@"%@, with NSError: %@",
-          errorMessage,
-          [ADJUtilF errorFormat:nsError]]];
+         errorMessage,
+         [ADJUtilF errorFormat:nsError]]];
          */
     } else {
         if (logger != nil) {
             [logger debugDev:errorMessage issueType:ADJIssueNetworkRequest];
         }
         /*
-        [self appendErrorWithMessage:
+         [self appendErrorWithMessage:
          [NSString stringWithFormat:@"Without NSError, %@", errorMessage]];
          */
     }
 }
 /*
-- (void)setOkResponseCode {
-    self.okResponseCode = YES;
-}
-*/
+ - (void)setOkResponseCode {
+ self.okResponseCode = YES;
+ }
+ */
 - (void)incrementRetries {
     self.retries = self.retries + 1;
 }
 
 #define tryBuildResponse(packageClassType, responseClassType, packageDataName)  \
-    if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {          \
-        return [[responseClassType alloc]                                       \
-                    initWithBuilder:self                                        \
-                    packageDataName:(packageClassType *)self.sourcePackage      \
-                    logger:logger];                                             \
-    }                                                                           \
+if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {          \
+return [[responseClassType alloc]                                       \
+initWithBuilder:self                                        \
+packageDataName:(packageClassType *)self.sourcePackage      \
+logger:logger];                                             \
+}                                                                           \
 
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger {
 
@@ -149,13 +147,13 @@
                                                     logger:logger];
 }
 /*
-- (void)appendErrorWithMessage:(nonnull NSString *)errorMessage {
-    if (self.errorMessages != nil) {
-        self.errorMessages =
-        [NSString stringWithFormat:@"%@\n%@", self.errorMessages, errorMessage];
-    } else {
-        self.errorMessages = errorMessage;
-    }
-}
-*/
+ - (void)appendErrorWithMessage:(nonnull NSString *)errorMessage {
+ if (self.errorMessages != nil) {
+ self.errorMessages =
+ [NSString stringWithFormat:@"%@\n%@", self.errorMessages, errorMessage];
+ } else {
+ self.errorMessages = errorMessage;
+ }
+ }
+ */
 @end

@@ -138,8 +138,7 @@ ADJMainQueueController *mainQueueControllerWeak;
         return NO;
     }
 
-    ADJNonNegativeInt *_Nonnull newDeduplicationCount =
-    [self.eventDeduplicationController ccAddWithDeduplicationId:deduplicationId];
+    ADJNonNegativeInt *_Nonnull newDeduplicationCount = [self.eventDeduplicationController ccAddWithDeduplicationId:deduplicationId];
 
     [self.logger debugDev:
      @"Saving deduplication id to avoid tracking an event with the same value in the future"

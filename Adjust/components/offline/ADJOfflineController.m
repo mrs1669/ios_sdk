@@ -66,8 +66,7 @@
 }
 
 #pragma mark - NSNotificationCenter subscriptions
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher:
-(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
+- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
     [publishingGatePublisher addSubscriber:self];
 }
 

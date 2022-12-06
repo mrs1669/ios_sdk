@@ -30,7 +30,7 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
     self = [super initWithLoggerFactory:loggerFactory source:@"ThirdPartySharingController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
-
+    
     return self;
 }
 
@@ -54,52 +54,50 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
     [ADJClientThirdPartySharingData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
      logger:self.logger];
-
+    
     if (clientThirdPartySharingData == nil) {
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
-
+    
     [self trackThirdPartySharingWithClientData:clientThirdPartySharingData
                                   apiTimestamp:apiTimestamp
                clientActionRemoveStorageAction:clientActionRemoveStorageAction];
 }
 
 #pragma mark Internal Methods
-- (void)
-    trackThirdPartySharingWithClientData:
-        (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)trackThirdPartySharingWithClientData:
+(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+                                apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+             clientActionRemoveStorageAction:
+(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger debugDev:
          @"Cannot Track Third Party Sharing without a reference to sdk package builder"
                     issueType:ADJIssueWeakReference];
-
+        
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
-
+    
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
         [self.logger debugDev:
          @"Cannot Track Third Party Sharing without a reference to main queue controller"
                     issueType:ADJIssueWeakReference];
-
+        
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
-
+    
     ADJThirdPartySharingPackageData *_Nonnull thirdPartySharingPackageData =
-        [sdkPackageBuilder buildThirdPartySharingWithClientData:clientThirdPartySharingData
-                                                   apiTimestamp:apiTimestamp];
-
+    [sdkPackageBuilder buildThirdPartySharingWithClientData:clientThirdPartySharingData
+                                               apiTimestamp:apiTimestamp];
+    
     [mainQueueController
-         addThirdPartySharingPackageToSendWithData:thirdPartySharingPackageData
-         sqliteStorageAction:clientActionRemoveStorageAction];
+     addThirdPartySharingPackageToSendWithData:thirdPartySharingPackageData
+     sqliteStorageAction:clientActionRemoveStorageAction];
 }
 
 @end

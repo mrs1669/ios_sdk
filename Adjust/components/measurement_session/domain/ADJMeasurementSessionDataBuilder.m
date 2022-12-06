@@ -41,19 +41,17 @@
                        timeSpentMilli:nil];
 }
 
-- (nonnull instancetype)
-    initWithSessionCount:(nullable ADJTallyCounter *)sessionCount
-    lastActivityTimestampMilli:(nullable ADJTimestampMilli *)lastActivityTimestampMilli
-    sessionLengthMilli:(nullable ADJTimeLengthMilli *)sessionLengthMilli
-    timeSpentMilli:(nullable ADJTimeLengthMilli *)timeSpentMilli
-{
+- (nonnull instancetype)initWithSessionCount:(nullable ADJTallyCounter *)sessionCount
+                  lastActivityTimestampMilli:(nullable ADJTimestampMilli *)lastActivityTimestampMilli
+                          sessionLengthMilli:(nullable ADJTimeLengthMilli *)sessionLengthMilli
+                              timeSpentMilli:(nullable ADJTimeLengthMilli *)timeSpentMilli {
     self = [super init];
-
+    
     _sessionCount = sessionCount;
     _lastActivityTimestampMilli = lastActivityTimestampMilli;
     _sessionLengthMilli = sessionLengthMilli;
     _timeSpentMilli = timeSpentMilli;
-
+    
     return self;
 }
 
@@ -69,9 +67,9 @@
                issueType:ADJIssueLogicError];
         return;
     }
-
+    
     self.sessionCount = [self.sessionCount generateIncrementedCounter];
-
+    
     [logger debugDev:@"Session count incremented"
                  key:@"session count"
                value:self.sessionCount.description];

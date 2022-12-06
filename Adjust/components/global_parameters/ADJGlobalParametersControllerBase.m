@@ -61,13 +61,9 @@
 }
 
 #pragma mark Protected Methods
-- (BOOL)
-    ccAddGlobalParameterWithClientData:
-        (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalParameterData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageActionData:
-        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData
-{
+- (BOOL)ccAddGlobalParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalParameterData
+                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+       clientActionRemoveStorageActionData:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData {
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
@@ -79,13 +75,13 @@
     }
 
     ADJNonEmptyString *_Nullable previousValueBeforeAdding =
-        [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd.stringValue];
+    [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd.stringValue];
 
     if ([clientAddGlobalParameterData.valueToAdd isEqual:previousValueBeforeAdding]) {
         [self.logger noticeClient:
          @"Cannot add global parameter since the same key/value is already present"
-                            key:@"parameter type"
-                          value:self.globalParametersType];
+                              key:@"parameter type"
+                            value:self.globalParametersType];
         return NO;
     }
 
@@ -107,13 +103,9 @@
     return YES;
 }
 
-- (BOOL)
-    ccRemoveGlobalParameterWithClientData:
-        (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalParameterData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageActionData:
-        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData
-{
+- (BOOL)ccRemoveGlobalParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalParameterData
+                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+          clientActionRemoveStorageActionData:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData {
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
@@ -125,8 +117,8 @@
     }
 
     ADJNonEmptyString *_Nullable removedValue =
-        [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove.stringValue
-               sqliteStorageAction:clientActionRemoveStorageActionData];
+    [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove.stringValue
+           sqliteStorageAction:clientActionRemoveStorageActionData];
 
     if (removedValue != nil) {
         [self.logger infoClient:@"Removed global parameter"
@@ -141,13 +133,9 @@
     return YES;
 }
 
-- (BOOL)
-    ccClearGlobalParameterWithClientData:
-        (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalParametersData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageActionData:
-        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData
-{
+- (BOOL)ccClearGlobalParameterWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalParametersData
+                                apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+         clientActionRemoveStorageActionData:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageActionData {
     ADJSQLiteStorageStringMapBase *storage = self.sqliteStorageStringMapBaseWeak;
 
     if (storage == nil) {
@@ -158,7 +146,7 @@
     }
 
     NSUInteger clearedKeys =
-        [storage removeAllPairsWithSqliteStorageAction:clientActionRemoveStorageActionData];
+    [storage removeAllPairsWithSqliteStorageAction:clientActionRemoveStorageActionData];
 
     [self.logger infoClient:@"Cleared %@ global %@ parameters"
                        key1:@"cleared values count"
@@ -170,13 +158,9 @@
 }
 
 #pragma mark Internal Methods
-- (BOOL)
-    ccTryHandleClientActionWithClientActionIoInjectedData:
-        (nonnull ADJIoData *)clientActionIoInjectedData
-    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (BOOL)ccTryHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                                 apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                              clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     ADJNonEmptyString *_Nullable clientActionType = [clientActionIoInjectedData.metadataMap
                                                      pairValueWithKey:ADJClientActionTypeKey];
 
@@ -192,9 +176,9 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
-            [ADJClientAddGlobalParameterData
-             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-             logger:self.logger];
+        [ADJClientAddGlobalParameterData
+         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+         logger:self.logger];
         if (clientAddGlobalParameterData == nil) {
             return NO;
         }
@@ -208,9 +192,9 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
-            [ADJClientRemoveGlobalParameterData
-             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-             logger:self.logger];
+        [ADJClientRemoveGlobalParameterData
+         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+         logger:self.logger];
         if (clientRemoveGlobalParameterData == nil) {
             return NO;
         }
@@ -224,9 +208,9 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientClearGlobalParametersData *_Nullable clientClearGlobalParametersData =
-            [ADJClientClearGlobalParametersData
-             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-             logger:self.logger];
+        [ADJClientClearGlobalParametersData
+         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+         logger:self.logger];
         if (clientClearGlobalParametersData == nil) {
             return NO;
         }
@@ -248,4 +232,5 @@
 }
 
 @end
+
 

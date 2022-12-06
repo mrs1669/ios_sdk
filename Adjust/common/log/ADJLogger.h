@@ -22,10 +22,9 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) NSString *source;
 
 // public API
-- (void)
-    traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
-    runningThreadId:(nonnull NSString *)runningThreadId
-    callerDescription:(nonnull NSString *)callerDescription;
+- (void)traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
+                            runningThreadId:(nonnull NSString *)runningThreadId
+                          callerDescription:(nonnull NSString *)callerDescription;
 
 - (void)debugDev:(nonnull NSString *)message;
 - (void)debugDev:(nonnull NSString *)message

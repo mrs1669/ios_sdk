@@ -26,14 +26,12 @@
 
 @implementation ADJLogQueueController
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storage:(nonnull ADJLogQueueStorage *)storage
-    threadController:(nonnull ADJThreadController *)threadController
-    clock:(nonnull ADJClock *)clock
-    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                      storage:(nonnull ADJLogQueueStorage *)storage
+                             threadController:(nonnull ADJThreadController *)threadController
+                                        clock:(nonnull ADJClock *)clock
+                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
     self = [super initWithLoggerFactory:loggerFactory source:@"LogQueueController"];
     _storageWeak = storage;
     _clockWeak = clock;
@@ -118,7 +116,7 @@
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
         [self.logger debugDev:
-            @"Cannot add log package to send without a reference to the storage"
+         @"Cannot add log package to send without a reference to the storage"
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -166,7 +164,7 @@
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
         [self.logger debugDev:
-            @"Cannot handle resuming sending without a reference to the storage"
+         @"Cannot handle resuming sending without a reference to the storage"
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -237,7 +235,7 @@
         [strongSelf handleDelayEndWithSource:delayData.source];
     }
                                 delayTimeMilli:delayData.delay
-    source:@"delay end"];
+                                        source:@"delay end"];
 }
 
 - (void)handleDelayEndWithSource:(nonnull NSString *)source {
@@ -265,8 +263,7 @@
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
                     storage:(nonnull ADJLogQueueStorage *)storage
-                     source:(nonnull NSString *)source
-{
+                     source:(nonnull NSString *)source {
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package when it is nil"
                          from:source
@@ -288,10 +285,9 @@
 }
 
 - (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:
-    (nonnull ADJLogQueueStorage *)storage
-{
+(nonnull ADJLogQueueStorage *)storage {
     ADJStringMapBuilder *_Nonnull sendingParameters =
-        [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock != nil) {
@@ -311,12 +307,12 @@
 
     if (currentQueueSize.uIntegerValue > 0) {
         ADJNonNegativeInt *_Nonnull remaingQueueSize =
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-             currentQueueSize.uIntegerValue - 1];
+        [[ADJNonNegativeInt alloc] initWithUIntegerValue:
+         currentQueueSize.uIntegerValue - 1];
 
         [ADJSdkPackageBuilder
-            injectRemainingQueuSizeWithParametersBuilder:sendingParameters
-            remainingQueueSize:remaingQueueSize];
+         injectRemainingQueuSizeWithParametersBuilder:sendingParameters
+         remainingQueueSize:remaingQueueSize];
     } else {
         [self.logger debugDev:@"Cannot inject remaining queue size when its empty"
                     issueType:ADJIssueLogicError];
@@ -326,4 +322,5 @@
 }
 
 @end
+
 

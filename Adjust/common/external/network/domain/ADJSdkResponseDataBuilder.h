@@ -16,10 +16,9 @@
 
 @interface ADJSdkResponseDataBuilder : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
-    sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-    sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback;
+- (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
+                               sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
+                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback;
 //    previousErrorMessages:(nullable NSString *)previousErrorMessages;
 
 // public properties
@@ -50,3 +49,4 @@
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger;
 
 @end
+

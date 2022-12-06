@@ -30,8 +30,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJLogMessageData : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithInputData:(nonnull ADJInputLogMessageData *)inputData
+- (nonnull instancetype)initWithInputData:(nonnull ADJInputLogMessageData *)inputData
     sourceDescription:(nonnull NSString *)sourceDescription
     runningThreadId:(nullable NSString *)runningThreadId
     instanceId:(nullable NSString *)instanceId
@@ -49,12 +48,9 @@ NS_DESIGNATED_INITIALIZER;
 // public API
 - (nonnull NSMutableDictionary <NSString *, id>*)generateFoundationDictionary;
 
-+ (nonnull NSDictionary<NSString *, id> *)
-    generateFoundationDictionaryFromNsError:(nonnull NSError *)nsError;
-+ (nonnull NSDictionary<NSString *, id> *)
-    generateFoundationDictionaryFromNsException:(nonnull NSException *)nsException;
++ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsError:(nonnull NSError *)nsError;
++ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsException:(nonnull NSException *)nsException;
 
-+ (nonnull NSString *)generateJsonFromFoundationDictionary:
-    (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
++ (nonnull NSString *)generateJsonFromFoundationDictionary:(nonnull NSDictionary<NSString *, id> *)foundationDictionary;
 
 @end

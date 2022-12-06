@@ -33,31 +33,30 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 @implementation ADJMeasurementSessionData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
-                                        logger:(nonnull ADJLogger *)logger
-{
+                                        logger:(nonnull ADJLogger *)logger {
     ADJTallyCounter *_Nullable sessionCount =
-        [ADJTallyCounter
-            instanceFromOptionalIoDataValue:
-                [ioDataMap pairValueWithKey:kSessionCountKey]
-            logger:logger];
+    [ADJTallyCounter
+     instanceFromOptionalIoDataValue:
+         [ioDataMap pairValueWithKey:kSessionCountKey]
+     logger:logger];
 
     ADJTimestampMilli *_Nullable lastActivityTimestampMilli =
-        [ADJTimestampMilli
-            instanceFromOptionalIoDataValue:
-                [ioDataMap pairValueWithKey:kLastActivityTimestampMilliKey]
-            logger:logger];
+    [ADJTimestampMilli
+     instanceFromOptionalIoDataValue:
+         [ioDataMap pairValueWithKey:kLastActivityTimestampMilliKey]
+     logger:logger];
 
     ADJTimeLengthMilli *_Nullable sessionLengthMilli =
-        [ADJTimeLengthMilli
-            instanceFromOptionalIoDataValue:
-                [ioDataMap pairValueWithKey:kSessionLengthMilliKey]
-            logger:logger];
+    [ADJTimeLengthMilli
+     instanceFromOptionalIoDataValue:
+         [ioDataMap pairValueWithKey:kSessionLengthMilliKey]
+     logger:logger];
 
     ADJTimeLengthMilli *_Nullable timeSpentMilli =
-        [ADJTimeLengthMilli
-            instanceFromOptionalIoDataValue:
-                [ioDataMap pairValueWithKey:kTimeSpentMilliKey]
-            logger:logger];
+    [ADJTimeLengthMilli
+     instanceFromOptionalIoDataValue:
+         [ioDataMap pairValueWithKey:kTimeSpentMilliKey]
+     logger:logger];
 
     return [self instanceFromNullableWithSessionCount:sessionCount
                            lastActivityTimestampMilli:lastActivityTimestampMilli
@@ -66,47 +65,40 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
                                                logger:logger];
 }
 
-+ (nullable instancetype)
-    instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
-    logger:(nonnull ADJLogger *)logger
-{
-    return [self
-                instanceFromNullableWithSessionCount:measurementSessionDataBuilder.sessionCount
-                lastActivityTimestampMilli:measurementSessionDataBuilder.lastActivityTimestampMilli
-                sessionLengthMilli:measurementSessionDataBuilder.sessionLengthMilli
-                timeSpentMilli:measurementSessionDataBuilder.timeSpentMilli
-                logger:logger];
++ (nullable instancetype)instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
+                                      logger:(nonnull ADJLogger *)logger {
+    return [self instanceFromNullableWithSessionCount:measurementSessionDataBuilder.sessionCount
+                           lastActivityTimestampMilli:measurementSessionDataBuilder.lastActivityTimestampMilli
+                                   sessionLengthMilli:measurementSessionDataBuilder.sessionLengthMilli
+                                       timeSpentMilli:measurementSessionDataBuilder.timeSpentMilli
+                                               logger:logger];
 }
 
-+ (nullable instancetype)
-    instanceFromExternalWithSessionCountNumberInt:
-        (nullable NSNumber *)sessionCountNumberInt
-    lastActivityTimestampNumberDoubleSeconds:
-        (nullable NSNumber *)lastActivityTimestampNumberDoubleSeconds
-    sessionLengthNumberDoubleSeconds:(nullable NSNumber *)sessionLengthNumberDoubleSeconds
-    timeSpentNumberDoubleSeconds:(nullable NSNumber *)timeSpentNumberDoubleSeconds
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromExternalWithSessionCountNumberInt:(nullable NSNumber *)sessionCountNumberInt
+                              lastActivityTimestampNumberDoubleSeconds:(nullable NSNumber *)lastActivityTimestampNumberDoubleSeconds
+                                      sessionLengthNumberDoubleSeconds:(nullable NSNumber *)sessionLengthNumberDoubleSeconds
+                                          timeSpentNumberDoubleSeconds:(nullable NSNumber *)timeSpentNumberDoubleSeconds
+                                                                logger:(nonnull ADJLogger *)logger {
     ADJTallyCounter *_Nullable sessionCount =
-        [ADJTallyCounter instanceFromOptionalNonNegativeInt:
-            [ADJNonNegativeInt instanceFromOptionalIntegerNumber:sessionCountNumberInt
-                                                       logger:logger]];
+    [ADJTallyCounter instanceFromOptionalNonNegativeInt:
+     [ADJNonNegativeInt instanceFromOptionalIntegerNumber:sessionCountNumberInt
+                                                   logger:logger]];
 
     ADJTimestampMilli *_Nullable lastActivityTimestampMilli =
-        [ADJTimestampMilli
-             instanceWithOptionalNumberDoubleSecondsSince1970:
-                lastActivityTimestampNumberDoubleSeconds
-             logger:logger];
+    [ADJTimestampMilli
+     instanceWithOptionalNumberDoubleSecondsSince1970:
+         lastActivityTimestampNumberDoubleSeconds
+     logger:logger];
 
     ADJTimeLengthMilli *_Nullable sessionLengthMilli =
-        [ADJTimeLengthMilli
-             instanceWithOptionalNumberDoubleSeconds:sessionLengthNumberDoubleSeconds
-             logger:logger];
+    [ADJTimeLengthMilli
+     instanceWithOptionalNumberDoubleSeconds:sessionLengthNumberDoubleSeconds
+     logger:logger];
 
     ADJTimeLengthMilli *_Nullable timeSpentMilli =
-        [ADJTimeLengthMilli
-             instanceWithOptionalNumberDoubleSeconds:timeSpentNumberDoubleSeconds
-             logger:logger];
+    [ADJTimeLengthMilli
+     instanceWithOptionalNumberDoubleSeconds:timeSpentNumberDoubleSeconds
+     logger:logger];
 
     return [self instanceFromNullableWithSessionCount:sessionCount
                            lastActivityTimestampMilli:lastActivityTimestampMilli
@@ -121,13 +113,11 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 }
 
 #pragma mark - Private constructors
-+ (nullable instancetype)
-    instanceFromNullableWithSessionCount:(nullable ADJTallyCounter *)sessionCount
-    lastActivityTimestampMilli:(nullable ADJTimestampMilli *)lastActivityTimestampMilli
-    sessionLengthMilli:(nullable ADJTimeLengthMilli *)sessionLengthMilli
-    timeSpentMilli:(nullable ADJTimeLengthMilli *)timeSpentMilli
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromNullableWithSessionCount:(nullable ADJTallyCounter *)sessionCount
+                                   lastActivityTimestampMilli:(nullable ADJTimestampMilli *)lastActivityTimestampMilli
+                                           sessionLengthMilli:(nullable ADJTimeLengthMilli *)sessionLengthMilli
+                                               timeSpentMilli:(nullable ADJTimeLengthMilli *)timeSpentMilli
+                                                       logger:(nonnull ADJLogger *)logger {
     if (sessionCount == nil) {
         [self errorLogAtCreateWithLogger:logger key:kSessionCountKey];
         return nil;
@@ -154,12 +144,10 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
                                timeSpentMilli:timeSpentMilli];
 }
 
-- (nonnull instancetype)
-    initWithSessionCount:(nonnull ADJTallyCounter *)sessionCount
-    lastActivityTimestampMilli:(nonnull ADJTimestampMilli *)lastActivityTimestampMilli
-    sessionLengthMilli:(nonnull ADJTimeLengthMilli *)sessionLengthMilli
-    timeSpentMilli:(nonnull ADJTimeLengthMilli *)timeSpentMilli
-{
+- (nonnull instancetype)initWithSessionCount:(nonnull ADJTallyCounter *)sessionCount
+                  lastActivityTimestampMilli:(nonnull ADJTimestampMilli *)lastActivityTimestampMilli
+                          sessionLengthMilli:(nonnull ADJTimeLengthMilli *)sessionLengthMilli
+                              timeSpentMilli:(nonnull ADJTimeLengthMilli *)timeSpentMilli {
     self = [super init];
 
     _sessionCount = sessionCount;
@@ -173,39 +161,39 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 #pragma mark Public API
 - (nonnull ADJMeasurementSessionDataBuilder *)toMeasurementSessionDataBuilder {
     return [[ADJMeasurementSessionDataBuilder alloc] initWithSessionCount:self.sessionCount
-                                        lastActivityTimestampMilli:self.lastActivityTimestampMilli
-                                                sessionLengthMilli:self.sessionLengthMilli
-                                                    timeSpentMilli:self.timeSpentMilli];
+                                               lastActivityTimestampMilli:self.lastActivityTimestampMilli
+                                                       sessionLengthMilli:self.sessionLengthMilli
+                                                           timeSpentMilli:self.timeSpentMilli];
 }
 
 #pragma mark - ADJIoDataMapBuilderInjectable
 - (void)injectIntoIoDataMapBuilder:(nonnull ADJStringMapBuilder *)ioDataMapBuilder {
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder
-                          key:kSessionCountKey
-                        ioValueSerializable:self.sessionCount];
+                                       key:kSessionCountKey
+                       ioValueSerializable:self.sessionCount];
 
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder
-                          key:kLastActivityTimestampMilliKey
-                        ioValueSerializable:self.lastActivityTimestampMilli];
+                                       key:kLastActivityTimestampMilliKey
+                       ioValueSerializable:self.lastActivityTimestampMilli];
 
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder
-                          key:kSessionLengthMilliKey
-                        ioValueSerializable:self.sessionLengthMilli];
+                                       key:kSessionLengthMilliKey
+                       ioValueSerializable:self.sessionLengthMilli];
 
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder
-                          key:kTimeSpentMilliKey
-                        ioValueSerializable:self.timeSpentMilli];
+                                       key:kTimeSpentMilliKey
+                       ioValueSerializable:self.timeSpentMilli];
 }
 
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-                ADJMeasurementSessionDataMetadataTypeValue,
-                    kSessionCountKey, self.sessionCount,
-                    kLastActivityTimestampMilliKey, self.lastActivityTimestampMilli,
-                    kSessionLengthMilliKey, self.sessionLengthMilli,
-                    kTimeSpentMilliKey, self.timeSpentMilli,
-                nil];
+            ADJMeasurementSessionDataMetadataTypeValue,
+            kSessionCountKey, self.sessionCount,
+            kLastActivityTimestampMilliKey, self.lastActivityTimestampMilli,
+            kSessionLengthMilliKey, self.sessionLengthMilli,
+            kTimeSpentMilliKey, self.timeSpentMilli,
+            nil];
 }
 
 - (NSUInteger)hash {
@@ -230,19 +218,19 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 
     ADJMeasurementSessionData *other = (ADJMeasurementSessionData *)object;
     return [ADJUtilObj objectEquals:self.sessionCount other:other.sessionCount]
-        && [ADJUtilObj objectEquals:self.lastActivityTimestampMilli
-                             other:other.lastActivityTimestampMilli]
-        && [ADJUtilObj objectEquals:self.sessionLengthMilli other:other.sessionLengthMilli]
-        && [ADJUtilObj objectEquals:self.timeSpentMilli other:other.timeSpentMilli];
+    && [ADJUtilObj objectEquals:self.lastActivityTimestampMilli
+                          other:other.lastActivityTimestampMilli]
+    && [ADJUtilObj objectEquals:self.sessionLengthMilli other:other.sessionLengthMilli]
+    && [ADJUtilObj objectEquals:self.timeSpentMilli other:other.timeSpentMilli];
 }
 
 #pragma mark Internal Methods
 + (void)errorLogAtCreateWithLogger:(nonnull ADJLogger *)logger
-                               key:(nonnull NSString *)key
-{
+                               key:(nonnull NSString *)key {
     [logger debugDev:@"Cannot create instance with invalid key"
            valueName:key
            issueType:ADJIssueInvalidInput];
 }
 
 @end
+

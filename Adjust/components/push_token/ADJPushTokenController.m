@@ -65,12 +65,9 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 }
 
 #pragma mark Internal Methods
-- (void)
-    trackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)trackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData
+                        apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+     clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger debugDev:@"Cannot Track Push Token without a reference to sdk package builder"
@@ -91,8 +88,8 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
     }
 
     ADJInfoPackageData *_Nonnull infoPackageData =
-        [sdkPackageBuilder buildInfoPackageWithClientData:clientPushTokenData
-                                             apiTimestamp:apiTimestamp];
+    [sdkPackageBuilder buildInfoPackageWithClientData:clientPushTokenData
+                                         apiTimestamp:apiTimestamp];
 
     [mainQueueController addInfoPackageToSendWithData:infoPackageData
                                   sqliteStorageAction:clientActionRemoveStorageAction];

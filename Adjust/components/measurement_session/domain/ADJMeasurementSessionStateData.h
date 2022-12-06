@@ -25,8 +25,7 @@ NS_ASSUME_NONNULL_END
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
                                      logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)
-    instanceFromExternalWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
++ (nullable instancetype)instanceFromExternalWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
     logger:(nonnull ADJLogger *)logger;
 
 - (nonnull instancetype)initWithIntialState;

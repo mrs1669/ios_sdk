@@ -49,8 +49,7 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4Attribution *_Nullable v4Attribution = [v4FilesData v4Attribution];
     if (v4Attribution == nil) {
         [self.logger debugDev:@"Attribution v4 file not found"];

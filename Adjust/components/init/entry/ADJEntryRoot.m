@@ -149,11 +149,8 @@
 }
 
 #pragma mark - Subscriptions
-- (void)
-    ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:
-        (nonnull ADJSdkInitPublisher *)sdkInitPublisher
-    publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-{
+- (void)ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                                             publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
     [self.logController ccSubscribeToPublishersWithSdkInitPublisher:sdkInitPublisher
                                             publishingGatePublisher:publishingGatePublisher];
 }

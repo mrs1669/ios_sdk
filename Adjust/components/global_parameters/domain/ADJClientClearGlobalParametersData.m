@@ -16,14 +16,12 @@
 #pragma mark Fields
 #pragma mark - Public constants
 NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue =
-    @"ClientClearGlobalParametersData";
+@"ClientClearGlobalParametersData";
 
 @implementation ADJClientClearGlobalParametersData
 #pragma mark Instantiation
-+ (nullable instancetype)
-    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+                                                                 logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable clientActionTypeValue = [clientActionInjectedIoData.metadataMap
                                                           pairValueWithKey:ADJClientActionTypeKey];
 
@@ -41,8 +39,8 @@ NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue =
          @"Cannot create ClientClearGlobalParametersData from client action io data"
          " with different client action type"
            expectedValue:ADJClientClearGlobalParametersDataMetadataTypeValue
-               actualValue:clientActionTypeValue.stringValue
-                 issueType:ADJIssueStorageIo];
+             actualValue:clientActionTypeValue.stringValue
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
@@ -99,4 +97,5 @@ NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue =
 }
 
 @end
+
 

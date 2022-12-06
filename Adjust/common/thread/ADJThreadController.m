@@ -21,8 +21,7 @@
 @interface ADJThreadController ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) dispatch_queue_t concurrentQueue;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJThreadExecutorAggregator *threadExecutorAggregator;
+@property (nonnull, readonly, strong, nonatomic) ADJThreadExecutorAggregator *threadExecutorAggregator;
 @property (readwrite, assign, nonatomic) BOOL hasFinalized;
 
 @end
@@ -50,13 +49,11 @@
 }
 
 #pragma mark - ADJThreadExecutorFactory
-- (nonnull ADJSingleThreadExecutor *)
-    createSingleThreadExecutorWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    sourceDescription:(nonnull NSString *)sourceDescription
-{
+- (nonnull ADJSingleThreadExecutor *)createSingleThreadExecutorWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                                               sourceDescription:(nonnull NSString *)sourceDescription {
     ADJSingleThreadExecutor *_Nonnull singleThreadExecutor =
-        [[ADJSingleThreadExecutor alloc] initWithLoggerFactory:loggerFactory
-                                             sourceDescription:sourceDescription];
+    [[ADJSingleThreadExecutor alloc] initWithLoggerFactory:loggerFactory
+                                         sourceDescription:sourceDescription];
 
     [self.threadExecutorAggregator addSubscriber:singleThreadExecutor];
 
@@ -70,14 +67,13 @@
 
 #pragma mark - ADJThreadExecutorFactory
 - (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute
-                       source:(nonnull NSString *)source
-{
+                       source:(nonnull NSString *)source {
     if (self.hasFinalized) {
         return NO;
     }
 
     __block ADJLocalThreadController *_Nonnull localThreadController =
-        [ADJLocalThreadController instance];
+    [ADJLocalThreadController instance];
 
     NSString *_Nonnull callerLocalId = [localThreadController localIdOrOutside];
 
@@ -87,8 +83,8 @@
         if (strongSelf == nil) { return; }
 
         NSString *_Nonnull runningLocalId =
-            [localThreadController setNextLocalIdInConcurrentThread];
-        
+        [localThreadController setNextLocalIdInConcurrentThread];
+
         // no need to check for skip trace local id,
         //  since there is no async executions downstream of the log collection.
         //  If/when that changes, it will be necessary to check here
@@ -106,11 +102,9 @@
     return YES;
 }
 
-- (BOOL)
-    executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
-    blockToExecute:(nonnull void (^)(void))blockToExecute
-    source:(nonnull NSString *)source
-{
+- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
+                         blockToExecute:(nonnull void (^)(void))blockToExecute
+                                 source:(nonnull NSString *)source {
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
     BOOL canExecuteTask = [self executeAsyncWithBlock:^{
@@ -123,9 +117,9 @@
     }
 
     intptr_t waitResult =
-        dispatch_semaphore_wait(semaphore,
-                                [ADJUtilSys
-                                    dispatchTimeWithMilli:timeout.millisecondsSpan.uIntegerValue]);
+    dispatch_semaphore_wait(semaphore,
+                            [ADJUtilSys
+                             dispatchTimeWithMilli:timeout.millisecondsSpan.uIntegerValue]);
 
     BOOL timedOut = waitResult != 0;
 
@@ -140,8 +134,8 @@
     self.hasFinalized = YES;
 
     [self.threadExecutorAggregator notifySubscribersWithSubscriberBlock:
-        ^(ADJSingleThreadExecutor *_Nonnull subscriber)
-    {
+     ^(ADJSingleThreadExecutor *_Nonnull subscriber)
+     {
         [subscriber finalizeAtTeardown];
     }];
 }
@@ -152,3 +146,4 @@
 }
 
 @end
+

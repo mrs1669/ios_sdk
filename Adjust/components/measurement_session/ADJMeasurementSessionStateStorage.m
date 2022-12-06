@@ -40,6 +40,7 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
     return [ADJMeasurementSessionStateData instanceFromIoData:ioData
                                                        logger:self.logger];
 }
+
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue: (nonnull ADJMeasurementSessionStateData *)dataValue {
     return [dataValue toIoData];
 }
@@ -64,12 +65,11 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
                     value:[v4ActivityState description]];
 
     ADJMeasurementSessionData *_Nullable v4MeasurementSessionData =
-    [ADJMeasurementSessionData
-     instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
-     lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
-     sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
-     timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble
-     logger:self.logger];
+    [ADJMeasurementSessionData instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
+                                    lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
+                                            sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
+                                                timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble
+                                                                      logger:self.logger];
 
     ADJMeasurementSessionStateData *_Nullable v4MeasurementSessionStateData =
     [ADJMeasurementSessionStateData instanceFromExternalWithMeasurementSessionData:v4MeasurementSessionData
@@ -83,4 +83,5 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 }
 
 @end
+
 

@@ -23,8 +23,7 @@
 @property (nullable, readwrite, weak, nonatomic) ADJSingleThreadExecutor *commonExecutorWeak;
 
 #pragma mark - Internal variables
-@property (nonnull, readonly, strong, nonatomic)
-    NSMutableArray<ADJLogMessageData *> *logMessageDataArray;
+@property (nonnull, readonly, strong, nonatomic) NSMutableArray<ADJLogMessageData *> *logMessageDataArray;
 @property (nonnull, readonly, strong, nonatomic) ADJConsoleLogger *consoleLogger;
 @property (nullable, readonly, strong, nonatomic) NSString *instanceId;
 @property (assign, readwrite, nonatomic) BOOL canPublish;
@@ -33,8 +32,7 @@
 @implementation ADJLogController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
-{
+                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData {
     self = [super init];
 
     _logPublisher = [[ADJLogPublisher alloc] init];

@@ -28,14 +28,12 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 
 @implementation ADJClientLaunchedDeeplinkData
 #pragma mark Instantiation
-+ (nullable instancetype)
-    instanceFromClientWithAdjustLaunchedDeeplink:
-        (nullable ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromClientWithAdjustLaunchedDeeplink:
+(nullable ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink
+                                                               logger:(nonnull ADJLogger *)logger {
     if (adjustLaunchedDeeplink == nil) {
         [logger errorClient:
-            @"Cannot create launched deeplink with nil adjust launched deeplink value"];
+         @"Cannot create launched deeplink with nil adjust launched deeplink value"];
         return nil;
     }
 
@@ -56,7 +54,7 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 
     NSError *error = NULL;
     NSRegularExpression *_Nullable excludedRegex =
-        [self excludedRegexWithError:&error];
+    [self excludedRegexWithError:&error];
 
     if (excludedRegex == nil) {
         [logger errorClient:@"Cannot create launched deeplink without excludedRegex"
@@ -146,9 +144,9 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 
     dispatch_once(&onceExcludedRegexInstanceToken, ^{
         NSRegularExpression *regex =
-            [NSRegularExpression regularExpressionWithPattern:kExcludedDeeplinksPattern
-                                                      options:NSRegularExpressionCaseInsensitive
-                                                        error:&parserError];
+        [NSRegularExpression regularExpressionWithPattern:kExcludedDeeplinksPattern
+                                                  options:NSRegularExpressionCaseInsensitive
+                                                    error:&parserError];
 
         excludedRegexInstance = regex;
     });

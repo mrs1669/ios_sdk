@@ -60,8 +60,7 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
                          sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-                                 logger:(nonnull ADJLogger *)logger
-{
+                                 logger:(nonnull ADJLogger *)logger {
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSdkResponseBaseData class]]) {
         [self doesNotRecognizeSelector:_cmd];

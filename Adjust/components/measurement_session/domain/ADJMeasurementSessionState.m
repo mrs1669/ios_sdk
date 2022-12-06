@@ -91,16 +91,12 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     return [self canChangeToActiveSessionWithSource:@"SdkBecameActive"];
 }
 
-- (BOOL)
-    changeToActiveSessionWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    sdkStartStateEventWO:(nonnull ADJValueWO<NSString *> *)sdkStartStateEventWO
-    changedMeasurementSessionDataWO:
-        (nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-    source:(nonnull NSString *)source
-{
+- (BOOL)changeToActiveSessionWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                                          sdkStartStateEventWO:(nonnull ADJValueWO<NSString *> *)sdkStartStateEventWO
+                               changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                                          packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
+                                 nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
+                                                        source:(nonnull NSString *)source {
     [self.logger debugDev:@"Changing to ActiveState from %@ in %@"
                      from:source
                       key:@"measurementSessionStatus"
@@ -130,69 +126,57 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     return YES;
 }
 
-- (void)
-appWentToTheBackgroundWithCurrentMeasurementSessionData:
-    (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-changedMeasurementSessionDataWO:
-    (nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-{
+- (void)appWentToTheBackgroundWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                                changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                                  nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli {
     if (! self.isOnForeground) {
         [self.logger debugDev:
-            @"Cannot change from AppWentToTheBackground while already being in the background"];
+         @"Cannot change from AppWentToTheBackground while already being in the background"];
         return;
     }
     self.isOnForeground = NO;
 
     if (currentMeasurementSessionStateData.measurementSessionData == nil) {
         [self.logger debugDev:
-            @"Cannot change from AppWentToTheBackground without a valid current session data"];
+         @"Cannot change from AppWentToTheBackground without a valid current session data"];
         return;
     }
 
     [self
      changeToPauseSessionWithCurrentMeasurementSessionData:
-        currentMeasurementSessionStateData.measurementSessionData
+         currentMeasurementSessionStateData.measurementSessionData
      changedMeasurementSessionDataWO:changedMeasurementSessionDataWO
      nonMonotonicNowTimestampMilli:nonMonotonicNowTimestampMilli
      source:@"AppWentToTheBackground"];
 }
 
-- (void)
-    sdkBecameNotActiveWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    changedMeasurementSessionDataWO:
-        (nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-{
+- (void)sdkBecameNotActiveWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli {
     if (! self.isSdkActive) {
         [self.logger debugDev:
-            @"Cannot change from SdkBecameNotActive while already being in not active"];
+         @"Cannot change from SdkBecameNotActive while already being in not active"];
         return;
     }
     self.isSdkActive = NO;
 
     if (currentMeasurementSessionStateData.measurementSessionData == nil) {
         [self.logger debugDev:
-            @"Cannot change from SdkBecameNotActive without a valid current session data"];
+         @"Cannot change from SdkBecameNotActive without a valid current session data"];
         return;
     }
 
     [self
      changeToPauseSessionWithCurrentMeasurementSessionData:
-        currentMeasurementSessionStateData.measurementSessionData
+         currentMeasurementSessionStateData.measurementSessionData
      changedMeasurementSessionDataWO:changedMeasurementSessionDataWO
      nonMonotonicNowTimestampMilli:nonMonotonicNowTimestampMilli
      source:@"SdkBecameNotActive"];
 }
 
-- (void)
-    keepAlivePingedWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    changedMeasurementSessionDataWO:
-        (nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-{
+- (void)keepAlivePingedWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                         changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                           nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli {
     BOOL notActiveSession = kActiveSessionStatus != self.measurementSessionStatus;
 
     if (notActiveSession) {
@@ -204,7 +188,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
 
     if (currentMeasurementSessionStateData.measurementSessionData == nil) {
         [self.logger debugDev:
-            @"Cannot update from KeepAlivePinged without a valid current session data"];
+         @"Cannot update from KeepAlivePinged without a valid current session data"];
         return;
     }
 
@@ -254,17 +238,15 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     return YES;
 }
 
-- (nullable ADJMeasurementSessionData *)
-    sessionDataToUpdateWhenChangingToActiveSessionWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-    sdkStartStateEventWO:(nonnull ADJValueWO<NSString *> *)sdkStartStateEventWO
-    packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-    source:(nonnull NSString *)source
-{
+- (nullable ADJMeasurementSessionData *)sessionDataToUpdateWhenChangingToActiveSessionWithCurrentMeasurementSessionData:
+(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+                                                                                                   sdkStartStateEventWO:(nonnull ADJValueWO<NSString *> *)sdkStartStateEventWO
+                                                                                                   packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
+                                                                                          nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
+                                                                                                                 source:(nonnull NSString *)source {
     if (currentMeasurementSessionStateData.measurementSessionData == nil) {
         [self.logger debugDev:
-            @"Creating first session, since there is no current session data"];
+         @"Creating first session, since there is no current session data"];
 
         ADJMeasurementSessionDataBuilder *_Nonnull firstSessionBuilder =
         [[ADJMeasurementSessionDataBuilder alloc] initWithPreFirstSessionData];
@@ -281,10 +263,10 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     }
 
     ADJMeasurementSessionDataBuilder *_Nonnull updatedMeasurementSessionDataBuilder =
-        [currentMeasurementSessionStateData.measurementSessionData toMeasurementSessionDataBuilder];
+    [currentMeasurementSessionStateData.measurementSessionData toMeasurementSessionDataBuilder];
 
     ADJTimestampMilli *_Nonnull currentLastActivityTimestampMilli =
-        currentMeasurementSessionStateData.measurementSessionData.lastActivityTimestampMilli;
+    currentMeasurementSessionStateData.measurementSessionData.lastActivityTimestampMilli;
 
     ADJTimeLengthMilli *_Nonnull intervalSinceLastActivityMilli =
     [self
@@ -299,10 +281,10 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
          @"Create a new session, because there was enough of interval since last activity"
                 messageParams:
          [NSDictionary dictionaryWithObjectsAndKeys:
-            source, @"from",
-            intervalSinceLastActivityMilli.description, @"interval milli",
-            self.minMeasurementSessionIntervalMilli.description,
-            @"min interval for new session milli", nil]];
+          source, @"from",
+          intervalSinceLastActivityMilli.description, @"interval milli",
+          self.minMeasurementSessionIntervalMilli.description,
+          @"min interval for new session milli", nil]];
 
         [self processNewSessionWithMeasurementSessionDataBuilder:updatedMeasurementSessionDataBuilder
                                             packageSessionDataWO:packageSessionDataWO];
@@ -329,8 +311,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
                                                    logger:self.logger];
 }
 
-- (void)processNewSessionWithMeasurementSessionDataBuilder:
-(nonnull ADJMeasurementSessionDataBuilder *)newMeasurementSessionDataBuilder
+- (void)processNewSessionWithMeasurementSessionDataBuilder:(nonnull ADJMeasurementSessionDataBuilder *)newMeasurementSessionDataBuilder
                                       packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO {
 
     [newMeasurementSessionDataBuilder incrementSessionCountWithLogger:self.logger];
@@ -347,8 +328,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     [newMeasurementSessionDataBuilder resetSessionIntervals];
 }
 
-- (nonnull ADJTimeLengthMilli *)calculateIntervalSinceLastActivityMilliWithLastActivityTimestampMilli:
-(nonnull ADJTimestampMilli *)lastActivityTimestampMilli
+- (nonnull ADJTimeLengthMilli *)calculateIntervalSinceLastActivityMilliWithLastActivityTimestampMilli:(nonnull ADJTimestampMilli *)lastActivityTimestampMilli
                                                                         nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli {
     ADJTimeLengthMilli *_Nullable intervalSinceLastActivityMilli =
     [lastActivityTimestampMilli timeLengthDifferenceWithLaterTimestamp:
@@ -364,8 +344,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     return intervalSinceLastActivityMilli;
 }
 
-- (void)increaseSessionLengthWithMeasurementSessionDataBuilder:
-(nonnull ADJMeasurementSessionDataBuilder *)newMeasurementSessionDataBuilder
+- (void)increaseSessionLengthWithMeasurementSessionDataBuilder:(nonnull ADJMeasurementSessionDataBuilder *)newMeasurementSessionDataBuilder
                                 intervalSinceLastActivityMilli:(nullable ADJTimeLengthMilli *)intervalSinceLastActivityMilli {
     if (intervalSinceLastActivityMilli == nil) {
         [self.logger debugDev:@"Cannot increase session length without any value"];
@@ -377,7 +356,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
 
     if (currentSessionLengthMilli == nil) {
         [self.logger debugDev:
-            @"Cannot increase session length without interval since last activity"];
+         @"Cannot increase session length without interval since last activity"];
         return;
     }
 
@@ -394,14 +373,10 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
                    value2:newMeasurementSessionDataBuilder.sessionLengthMilli.description];
 }
 
-- (void)
-    changeToPauseSessionWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionData *)currentMeasurementSessionData
-    changedMeasurementSessionDataWO:
-        (nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-    source:(nonnull NSString *)source
-{
+- (void)changeToPauseSessionWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionData *)currentMeasurementSessionData
+                              changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                                nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
+                                                       source:(nonnull NSString *)source {
     BOOL notActiveSession = kActiveSessionStatus != self.measurementSessionStatus;
     if (notActiveSession) {
         [self.logger debugDev:@"Cannot change status"
@@ -422,18 +397,14 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     self.measurementSessionStatus = kPausedSessionStatus;
 }
 
-- (void)
-    updateIntervalsInActiveSessionWithCurrentMeasurementSessionData:
-        (nonnull ADJMeasurementSessionData *)currentMeasurementSessionData
-    changedMeasurementSessionDataWO:
-        (nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-    nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-{
+- (void)updateIntervalsInActiveSessionWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionData *)currentMeasurementSessionData
+                                        changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
+                                          nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli {
     ADJMeasurementSessionDataBuilder *_Nonnull measurementSessionDataBuilder =
-        [currentMeasurementSessionData toMeasurementSessionDataBuilder];
+    [currentMeasurementSessionData toMeasurementSessionDataBuilder];
 
     ADJTimestampMilli *_Nonnull currentLastActivityTimestampMilli =
-        currentMeasurementSessionData.lastActivityTimestampMilli;
+    currentMeasurementSessionData.lastActivityTimestampMilli;
 
     ADJTimeLengthMilli *_Nullable intervalSinceLastActivityMilli =
     [self
@@ -454,12 +425,12 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
                               intervalSinceLastActivityMilli:intervalSinceLastActivityMilli];
 
     ADJMeasurementSessionData *_Nullable newMeasurementSessionData =
-        [ADJMeasurementSessionData instanceFromBuilder:measurementSessionDataBuilder
-                                                logger:self.logger];
+    [ADJMeasurementSessionData instanceFromBuilder:measurementSessionDataBuilder
+                                            logger:self.logger];
 
     if (newMeasurementSessionData == nil) {
         [self.logger debugDev:
-        @"Cannot update intervals in active session with invalid sdk session"
+         @"Cannot update intervals in active session with invalid sdk session"
                     issueType:ADJIssueInvalidInput];
         return;
     }
@@ -467,11 +438,8 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     [changedMeasurementSessionDataWO setNewValue:newMeasurementSessionData];
 }
 
-- (void)
-    increaseTimeSpentWithMeasurementSessionDataBuilder:
-        (nonnull ADJMeasurementSessionDataBuilder *)newMeasurementSessionDataBuilder
-    intervalSinceLastActivityMilli:(nullable ADJTimeLengthMilli *)intervalSinceLastActivityMilli
-{
+- (void)increaseTimeSpentWithMeasurementSessionDataBuilder:(nonnull ADJMeasurementSessionDataBuilder *)newMeasurementSessionDataBuilder
+                            intervalSinceLastActivityMilli:(nullable ADJTimeLengthMilli *)intervalSinceLastActivityMilli {
     if (intervalSinceLastActivityMilli == nil) {
         [self.logger debugDev:
          @"Cannot increase time spent without interval since last activity"
@@ -480,7 +448,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     }
 
     ADJTimeLengthMilli *_Nullable currentTimeSpentMilli =
-        newMeasurementSessionDataBuilder.timeSpentMilli;
+    newMeasurementSessionDataBuilder.timeSpentMilli;
 
     if (currentTimeSpentMilli == nil) {
         [self.logger debugDev:@"Cannot increase time spent without any value"
@@ -489,8 +457,8 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
     }
 
     ADJTimeLengthMilli *_Nonnull newTimeSpentMilli =
-        [currentTimeSpentMilli
-         generateTimeLengthWithAddedTimeLength:intervalSinceLastActivityMilli];
+    [currentTimeSpentMilli
+     generateTimeLengthWithAddedTimeLength:intervalSinceLastActivityMilli];
 
     [newMeasurementSessionDataBuilder setTimeSpentMilli:newTimeSpentMilli];
 

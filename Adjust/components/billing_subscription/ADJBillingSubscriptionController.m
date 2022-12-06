@@ -12,14 +12,12 @@
 
 #pragma mark Fields
 #pragma mark - Public constants
-NSString *const ADJBillingSubscriptionControllerClientActionHandlerId =
-@"BillingSubscriptionController";
+NSString *const ADJBillingSubscriptionControllerClientActionHandlerId = @"BillingSubscriptionController";
 
 @interface ADJBillingSubscriptionController ()
 #pragma mark - Injected dependencies
 @property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
-@property (nullable, readonly, weak, nonatomic)
-ADJMainQueueController *mainQueueControllerWeak;
+@property (nullable, readonly, weak, nonatomic) ADJMainQueueController *mainQueueControllerWeak;
 
 @end
 
@@ -73,7 +71,7 @@ ADJMainQueueController *mainQueueControllerWeak;
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger debugDev:
-            @"Cannot Track Billing Subscription without a reference to sdk package builder"
+         @"Cannot Track Billing Subscription without a reference to sdk package builder"
                     issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
@@ -83,7 +81,7 @@ ADJMainQueueController *mainQueueControllerWeak;
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
         [self.logger debugDev:
-            @"Cannot Track Billing Subscription without a reference to main queue controller"
+         @"Cannot Track Billing Subscription without a reference to main queue controller"
                     issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
@@ -100,5 +98,4 @@ ADJMainQueueController *mainQueueControllerWeak;
 }
 
 @end
-
 

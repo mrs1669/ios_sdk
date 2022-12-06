@@ -54,11 +54,11 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     _deviceInfoData = [[ADJDeviceInfoData alloc] initWithLogger:self.logger];
 
     _sessionDeviceIdsController =
-        [[ADJSessionDeviceIdsController alloc]
-             initWithLoggerFactory:loggerFactory
-             threadExecutorFactory:threadExecutorFactory
-             timeoutPerAttempt:deviceIdsConfigData.timeoutPerAttempt
-             canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
+    [[ADJSessionDeviceIdsController alloc]
+     initWithLoggerFactory:loggerFactory
+     threadExecutorFactory:threadExecutorFactory
+     timeoutPerAttempt:deviceIdsConfigData.timeoutPerAttempt
+     canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
 
     _uuidKeychainCache =
     [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger
@@ -134,13 +134,13 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     }
 
     BOOL hasBackgroundCachedTimeLimitExpired =
-        [foregroundTimestamp
-         hasEnoughTimePassedSince:backgroundTimestampLocal
-         enoughTimeLength:self.deviceIdsConfigData.cacheValidityPeriod];
+    [foregroundTimestamp
+     hasEnoughTimePassedSince:backgroundTimestampLocal
+     enoughTimeLength:self.deviceIdsConfigData.cacheValidityPeriod];
 
     if (hasBackgroundCachedTimeLimitExpired) {
         [self.logger debugDev:
-            @"Cache will be invalidated when enough time has passed in the background"];
+         @"Cache will be invalidated when enough time has passed in the background"];
         [self.sessionDeviceIdsController invalidateCache];
     } else {
         [self.logger debugDev:
@@ -164,7 +164,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
         [self.logger debugDev:
-            @"Background timestamp cannot be taken without a reference to clock"
+         @"Background timestamp cannot be taken without a reference to clock"
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -173,17 +173,15 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 }
 
 #pragma mark Internal Methods
-+ (nullable ADJNonEmptyString *)
-syncUuidAndGetUuidKeychainWithLogger:(nonnull ADJLogger *)logger
-deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
-keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
-{
++ (nullable ADJNonEmptyString *)syncUuidAndGetUuidKeychainWithLogger:(nonnull ADJLogger *)logger
+                                                    deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
+                                                     keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage {
     ADJNonEmptyString *_Nullable uuidKeychain =
-        [keychainStorage valueInGenericPasswordKeychainWithKey:kUuidKey
-                                                       service:kKeychainServiceKey];
+    [keychainStorage valueInGenericPasswordKeychainWithKey:kUuidKey
+                                                   service:kKeychainServiceKey];
 
     ADJNonEmptyString *_Nullable currentStorageUuid =
-        [deviceIdsStorage readOnlyStoredDataValue].uuid;
+    [deviceIdsStorage readOnlyStoredDataValue].uuid;
 
     if (uuidKeychain != nil && currentStorageUuid != nil) {
         if ([currentStorageUuid isEqual:uuidKeychain]) {
@@ -217,7 +215,7 @@ keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
     }
 
     [logger debugDev:
-        @"Detected no uuid either in keychain or device ids storage, will write new one to both"];
+     @"Detected no uuid either in keychain or device ids storage, will write new one to both"];
 
     ADJNonEmptyString *_Nonnull newUuid = [ADJUtilSys generateUuid];
 
@@ -228,14 +226,12 @@ keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
                                              uuidValue:newUuid];
 }
 
-+ (nullable ADJNonEmptyString *)
-    setAndGetSavedUuidKeychainWithStorage:(nonnull ADJKeychainStorage *)keychainStorage
-    uuidValue:(nonnull ADJNonEmptyString *)uuidValue
-{
++ (nullable ADJNonEmptyString *)setAndGetSavedUuidKeychainWithStorage:(nonnull ADJKeychainStorage *)keychainStorage
+                                                            uuidValue:(nonnull ADJNonEmptyString *)uuidValue {
     BOOL uuidWasSet =
-        [keychainStorage setGenericPasswordKeychainWithKey:kUuidKey
-                                                   service:kKeychainServiceKey
-                                                     value:uuidValue];
+    [keychainStorage setGenericPasswordKeychainWithKey:kUuidKey
+                                               service:kKeychainServiceKey
+                                                 value:uuidValue];
 
     if (uuidWasSet) {
         return uuidValue;
@@ -245,4 +241,5 @@ keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
 }
 
 @end
+
 

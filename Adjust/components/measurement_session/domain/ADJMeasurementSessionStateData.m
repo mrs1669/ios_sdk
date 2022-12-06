@@ -27,12 +27,10 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
 @implementation ADJMeasurementSessionStateData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     if (! [ioData
             isExpectedMetadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
-            logger:logger])
-    {
+            logger:logger]) {
         return nil;
     }
 
@@ -47,10 +45,8 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
     return [[self alloc] initWithMeasurementSessionData:measurementSessionData];
 }
 
-+ (nullable instancetype)
-    instanceFromExternalWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable instancetype)instanceFromExternalWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
+    logger:(nonnull ADJLogger *)logger {
     return [[self alloc] initWithMeasurementSessionData:measurementSessionData];
 }
 

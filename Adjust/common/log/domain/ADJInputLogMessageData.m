@@ -19,8 +19,8 @@
  @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
  @property (nullable, readonly, strong, nonatomic) NSError *nsError;
  @property (nullable, readonly, strong, nonatomic) NSException* nsException;
-@property (nullable, readonly, strong, nonatomic)
-     NSDictionary<NSString *, id> *messageParams;
+ @property (nullable, readonly, strong, nonatomic)
+ NSDictionary<NSString *, id> *messageParams;
  */
 
 #pragma mark - Public constants
@@ -39,10 +39,8 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 
 @implementation ADJInputLogMessageData
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-{
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level {
     return [self initWithMessage:message
                            level:level
                        issueType:nil
@@ -54,11 +52,9 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                    messageParams:nil];
 }
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
-{
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams {
     return [self initWithMessage:message
                            level:level
                        issueType:nil
@@ -70,14 +66,12 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                    messageParams:messageParams];
 }
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    issueType:(nullable ADJIssue)issueType
-    nsError:(nullable NSError *)nsError
-    nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
-{
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                              issueType:(nullable ADJIssue)issueType
+                                nsError:(nullable NSError *)nsError
+                            nsException:(nullable NSException *)nsException
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams {
     return [self initWithMessage:message
                            level:level
                        issueType:issueType
@@ -89,13 +83,11 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                    messageParams:messageParams];
 }
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    callerThreadId:(nullable NSString *)callerThreadId
-    callerDescription:(nullable NSString *)callerDescription
-    runningThreadId:(nullable NSString *)runningThreadId
-{
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                         callerThreadId:(nullable NSString *)callerThreadId
+                      callerDescription:(nullable NSString *)callerDescription
+                        runningThreadId:(nullable NSString *)runningThreadId {
     return [self initWithMessage:message
                            level:level
                        issueType:nil
@@ -107,17 +99,15 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                    messageParams:nil];
 }
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    issueType:(nullable ADJIssue)issueType
-    callerThreadId:(nullable NSString *)callerThreadId
-    callerDescription:(nullable NSString *)callerDescription
-    runningThreadId:(nullable NSString *)runningThreadId
-    nsError:(nullable NSError *)nsError
-    nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
-{
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                              issueType:(nullable ADJIssue)issueType
+                         callerThreadId:(nullable NSString *)callerThreadId
+                      callerDescription:(nullable NSString *)callerDescription
+                        runningThreadId:(nullable NSString *)runningThreadId
+                                nsError:(nullable NSError *)nsError
+                            nsException:(nullable NSException *)nsException
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams {
     self = [super init];
 
     _message = message;
@@ -139,3 +129,4 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 }
 
 @end
+

@@ -97,10 +97,8 @@
     return NO;
 }
 
-- (void)
-    addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+- (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
+                      sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -111,11 +109,9 @@
     } source:@"add ad revenue package"];
 }
 
-- (void)
-    addBillingSubscriptionPackageToSendWithData:
-        (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+- (void)addBillingSubscriptionPackageToSendWithData:
+(nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+                                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -127,8 +123,7 @@
 }
 
 - (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
-                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -140,8 +135,7 @@
 }
 
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
-                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -153,8 +147,7 @@
 }
 
 - (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
-                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -166,8 +159,7 @@
 }
 
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
-                    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+                    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -178,11 +170,9 @@
     } source:@"add session package"];
 }
 
-- (void)
-    addThirdPartySharingPackageToSendWithData:
-        (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
-    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+- (void)addThirdPartySharingPackageToSendWithData:
+(nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -266,8 +256,7 @@
 
 #pragma mark Internal Methods
 - (void)addSdkPackageToSendWithData:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
-                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
-{
+                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
     if (mainQueueStorage == nil) {
         [self.logger debugDev:
@@ -282,9 +271,9 @@
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
     BOOL sendPackageAtFront =
-        [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
-                                              mainQueueSdkPackageCount:[mainQueueStorage count]
-                                                     hasPackageAtFront:packageAtFront != nil];
+    [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
+                                          mainQueueSdkPackageCount:[mainQueueStorage count]
+                                                 hasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         NSString *_Nonnull source = [NSString stringWithFormat:@"%@ added",
@@ -445,8 +434,7 @@
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
            mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-                     source:(nonnull NSString *)source
-{
+                     source:(nonnull NSString *)source {
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package it is nil"
                          from:source];
@@ -459,7 +447,7 @@
                     value:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
-        [self generateSendingParametersWithStorage:mainQueueStorage];
+    [self generateSendingParametersWithStorage:mainQueueStorage];
 
     [self.sender sendSdkPackageWithData:packageToSend
                       sendingParameters:sendingParameters
@@ -467,8 +455,7 @@
 }
 
 - (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage {
-    ADJStringMapBuilder *_Nonnull sendingParameters =
-    [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    ADJStringMapBuilder *_Nonnull sendingParameters = [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock != nil) {
@@ -503,4 +490,5 @@
 }
 
 @end
+
 

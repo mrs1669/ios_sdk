@@ -24,9 +24,8 @@
     ADJSdkInitSubscriber,
     ADJPublishingGateSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:
-    (nonnull ADJSdkInitPublisher *)sdkInitPublisher
-publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
+- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
+                            publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJLogPublisher *logPublisher;

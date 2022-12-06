@@ -66,13 +66,9 @@ ADJMainQueueController *mainQueueControllerWeak;
 }
 
 #pragma mark Internal Methods
-- (void)
-    ccTrackLaunchedDeeplinkWithClientData:
-        (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
-    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
+                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+              clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger debugDev:
@@ -94,8 +90,8 @@ ADJMainQueueController *mainQueueControllerWeak;
     }
 
     ADJClickPackageData *_Nonnull launchedDeeplinkClickPackageData =
-        [sdkPackageBuilder buildLaunchedDeeplinkClickWithClientData:clientLaunchedDeeplinkData
-                                                       apiTimestamp:apiTimestamp];
+    [sdkPackageBuilder buildLaunchedDeeplinkClickWithClientData:clientLaunchedDeeplinkData
+                                                   apiTimestamp:apiTimestamp];
 
     [mainQueueController addClickPackageToSendWithData:launchedDeeplinkClickPackageData
                                    sqliteStorageAction:clientActionRemoveStorageAction];

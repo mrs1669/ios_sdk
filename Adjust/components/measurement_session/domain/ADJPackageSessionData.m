@@ -19,9 +19,7 @@
 
 @implementation ADJPackageSessionData
 // instantiation
-- (nonnull instancetype)initWithBuilder:
-    (nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
-{
+- (nonnull instancetype)initWithBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder {
     return [self initWithSessionCount:measurementSessionDataBuilder.sessionCount
            lastActivityTimestampMilli:measurementSessionDataBuilder.lastActivityTimestampMilli
                    sessionLengthMilli:measurementSessionDataBuilder.sessionLengthMilli
@@ -34,12 +32,10 @@
 }
 
 #pragma mark - Private constructors
-- (nonnull instancetype)
-    initWithSessionCount:(nullable ADJTallyCounter *)sessionCount
-    lastActivityTimestampMilli:(nullable ADJTimestampMilli *)lastActivityTimestampMilli
-    sessionLengthMilli:(nullable ADJTimeLengthMilli *)sessionLengthMilli
-    timeSpentMilli:(nullable ADJTimeLengthMilli *)timeSpentMilli
-{
+- (nonnull instancetype)initWithSessionCount:(nullable ADJTallyCounter *)sessionCount
+                  lastActivityTimestampMilli:(nullable ADJTimestampMilli *)lastActivityTimestampMilli
+                          sessionLengthMilli:(nullable ADJTimeLengthMilli *)sessionLengthMilli
+                              timeSpentMilli:(nullable ADJTimeLengthMilli *)timeSpentMilli {
     self = [super init];
 
     _sessionCount = sessionCount;

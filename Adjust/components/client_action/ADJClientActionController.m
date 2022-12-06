@@ -29,7 +29,7 @@
 @property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
 @property (nullable, readwrite, weak, nonatomic)
-    ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
+ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
 
 @end
 
@@ -38,18 +38,15 @@
 #pragma mark Subscriptions and Dependencies
 
 - (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController:
-    (nonnull ADJPostSdkInitRootController *)postSdkInitRootController
-{
+(nonnull ADJPostSdkInitRootController *)postSdkInitRootController {
     self.postSdkInitRootControllerWeak = postSdkInitRootController;
 }
 
-- (void)
-    ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:
-        (nonnull ADJPreFirstMeasurementSessionStartPublisher *)
-        preFirstMeasurementSessionStartPublisher
-    measurementSessionStartPublisher:
-        (nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-{
+- (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:
+(nonnull ADJPreFirstMeasurementSessionStartPublisher *)
+preFirstMeasurementSessionStartPublisher
+                                           measurementSessionStartPublisher:
+(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher {
     [preFirstMeasurementSessionStartPublisher addSubscriber:self];
     [measurementSessionStartPublisher addSubscriber:self];
 }
@@ -87,7 +84,7 @@
 
 - (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData {
     [self  ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
-        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
+                        clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
 }
 
 - (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
@@ -142,10 +139,8 @@
 
 #pragma mark Internal Methods
 
-- (void)ccSaveClientActionWithIoInjectable:
-    (nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
-                        clientActionHandlerId:(nonnull NSString *)clientActionHandlerId
-{
+- (void)ccSaveClientActionWithIoInjectable:(nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
+                     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId {
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
         [self.logger debugDev:@"Cannot enqueue client action without a reference to clock"
@@ -154,7 +149,7 @@
     }
 
     ADJTimestampMilli *_Nullable nowTimestamp =
-        [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nowTimestamp == nil) {
         [self.logger debugDev:@"Cannot enqueue client action without a valid now timestamp"
                     issueType:ADJIssueWeakReference];
@@ -174,10 +169,10 @@
     [clientActionIoDataInjectable injectIntoClientActionIoDataBuilder:ioDataBuilder];
 
     ADJClientActionData *_Nonnull clientActionData =
-        [[ADJClientActionData alloc] initWithClientActionHandlerId:
-         [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
-                                                      nowTimestamp:nowTimestamp
-                                                     ioDataBuilder:ioDataBuilder];
+    [[ADJClientActionData alloc] initWithClientActionHandlerId:
+     [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
+                                                  nowTimestamp:nowTimestamp
+                                                 ioDataBuilder:ioDataBuilder];
 
     [clientActionStorage enqueueElementToLast:clientActionData
                           sqliteStorageAction:nil];
@@ -192,7 +187,7 @@
     }
 
     ADJPostSdkInitRootController *_Nullable postSdkInitRootController =
-        self.postSdkInitRootControllerWeak;
+    self.postSdkInitRootControllerWeak;
     if (postSdkInitRootController == nil) {
         [self.logger debugDev:@"Cannot process client actions"
          " without a reference to post sdk init controller"
@@ -201,7 +196,7 @@
     }
 
     NSArray<ADJNonNegativeInt *> *_Nonnull elementPositionList =
-        [clientActionStorage copySortedElementPositionList];
+    [clientActionStorage copySortedElementPositionList];
 
     [self.logger debugDev:@"Trying to process client actions"
                      key1:@"count"
@@ -211,7 +206,7 @@
 
     for (ADJNonNegativeInt *_Nonnull elementPosition in elementPositionList) {
         ADJClientActionData *_Nullable clientActionData =
-            [clientActionStorage elementByPosition:elementPosition];
+        [clientActionStorage elementByPosition:elementPosition];
         if (clientActionData == nil) {
             [self.logger debugDev:@"Cannot process client action from queue with queue id"
                               key:@"elementPosition"
@@ -221,8 +216,8 @@
         }
 
         id<ADJClientActionHandler> _Nullable clientActionHandler =
-            [self clientActionHandlerWithId:clientActionData.clientActionHandlerId
-                  postSdkInitRootController:postSdkInitRootController];
+        [self clientActionHandlerWithId:clientActionData.clientActionHandlerId
+              postSdkInitRootController:postSdkInitRootController];
         if (clientActionHandler == nil) {
             [self.logger debugDev:@"Cannot process client action with handler id"
                               key:@"clientActionHandlerId"
@@ -232,7 +227,7 @@
         }
 
         BOOL canHandleClientAction =
-            [clientActionHandler ccCanHandleClientActionWithIsPreFirstSession:isPreFirstSession];
+        [clientActionHandler ccCanHandleClientActionWithIsPreFirstSession:isPreFirstSession];
         if (! canHandleClientAction) {
             [self.logger debugDev:@"Client Actino Handler cannot proccess client"
                              key1:@"is pre first session"
@@ -243,14 +238,14 @@
         }
 
         ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =
-            [[ADJClientActionRemoveStorageAction alloc]
-             initWithClientActionStorage:clientActionStorage
-             elementPosition:elementPosition];
+        [[ADJClientActionRemoveStorageAction alloc]
+         initWithClientActionStorage:clientActionStorage
+         elementPosition:elementPosition];
 
         [clientActionHandler
-             ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
-             apiTimestamp:clientActionData.apiTimestamp
-             clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+         ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
+         apiTimestamp:clientActionData.apiTimestamp
+         clientActionRemoveStorageAction:clientActionRemoveStorageAction];
     }
 }
 
@@ -264,7 +259,7 @@
     if ([ADJBillingSubscriptionControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]){
         return postSdkInitRootController.billingSubscriptionController;
     }
-    
+
     if ([ADJLaunchedDeeplinkClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
         return postSdkInitRootController.launchedDeeplinkController;
     }
@@ -293,4 +288,5 @@
 }
 
 @end
+
 

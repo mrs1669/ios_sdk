@@ -44,41 +44,36 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJInputLogMessageData : NSObject
 // instantiation
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level;
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    issueType:(nullable ADJIssue)issueType
-    nsError:(nullable NSError *)nsError
-    nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                              issueType:(nullable ADJIssue)issueType
+                                nsError:(nullable NSError *)nsError
+                            nsException:(nullable NSException *)nsException
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    callerThreadId:(nullable NSString *)callerThreadId
-    callerDescription:(nullable NSString *)callerDescription
-    runningThreadId:(nullable NSString *)runningThreadId;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                         callerThreadId:(nullable NSString *)callerThreadId
+                      callerDescription:(nullable NSString *)callerDescription
+                        runningThreadId:(nullable NSString *)runningThreadId;
 
-- (nonnull instancetype)
-    initWithMessage:(nonnull NSString *)message
-    level:(nonnull ADJAdjustLogLevel)level
-    issueType:(nullable ADJIssue)issueType
-    callerThreadId:(nullable NSString *)callerThreadId
-    callerDescription:(nullable NSString *)callerDescription
-    runningThreadId:(nullable NSString *)runningThreadId
-    nsError:(nullable NSError *)nsError
-    nsException:(nullable NSException *)nsException
-    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
-    NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+                              issueType:(nullable ADJIssue)issueType
+                         callerThreadId:(nullable NSString *)callerThreadId
+                      callerDescription:(nullable NSString *)callerDescription
+                        runningThreadId:(nullable NSString *)runningThreadId
+                                nsError:(nullable NSError *)nsError
+                            nsException:(nullable NSException *)nsException
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -92,6 +87,7 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) NSError *nsError;
 @property (nullable, readonly, strong, nonatomic) NSException* nsException;
 @property (nullable, readonly, strong, nonatomic)
-    NSDictionary<NSString *, id> *messageParams;
+NSDictionary<NSString *, id> *messageParams;
 
 @end
+

@@ -35,9 +35,7 @@
             [[ADJSdkConfigDataBuilder alloc] initWithDefaultValues]];
 }
 
-- (nonnull instancetype)
-    initWithBuilderData:(nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
-{
+- (nonnull instancetype)initWithBuilderData:(nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     self = [super init];
     
     _networkEndpointData = sdkConfigDataBuilder.networkEndpointData;

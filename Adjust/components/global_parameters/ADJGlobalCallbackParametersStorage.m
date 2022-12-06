@@ -18,8 +18,7 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
-{
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"GlobalCallbackParametersStorage"
                         storageExecutor:storageExecutor
@@ -37,8 +36,7 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
-{
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     NSDictionary<NSString *, NSString *> *_Nullable v4SessionCallbackParameters =
         [v4FilesData v4SessionCallbackParameters];
     if (v4SessionCallbackParameters == nil) {

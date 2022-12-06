@@ -28,8 +28,7 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 @implementation ADJSdkActiveStateData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     if (! [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
                                        logger:logger]) {
         return nil;
