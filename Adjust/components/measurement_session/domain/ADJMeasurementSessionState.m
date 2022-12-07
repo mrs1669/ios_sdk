@@ -462,7 +462,7 @@ nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimest
 
     [newMeasurementSessionDataBuilder setTimeSpentMilli:newTimeSpentMilli];
 
-    [self.logger debugDev:@"Time Spent increased by %@ to %@"
+    [self.logger debugDev:@"Time Spent increased"
                      key1:@"interval"
                    value1:intervalSinceLastActivityMilli.description
                      key2:@"time spent"
