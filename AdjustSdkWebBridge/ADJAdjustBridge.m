@@ -20,14 +20,14 @@
 - (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView withAdjustConfig:(ADJAdjustConfig *)adjustConfig {
 
     if ([webView isKindOfClass:WKWebView.class]) {
+        self.webView = webView;
+        WKUserContentController *controller = webView.configuration.userContentController;
+        [controller addScriptMessageHandler:self name:@"adjust"];
+    }
+}
 
-        //set the Adjust Config object
-        ADJAdjustConfig *config = adjustConfig;
-        [config setAdjustAttributionSubscriber:self];
-        [config setUrlStrategy:config.urlStrategy];
-        [config setLogLevel:config.logLevel];
-        [ADJAdjust sdkInitWithAdjustConfig:config];
-
+- (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
+    if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;
         [controller addScriptMessageHandler:self name:@"adjust"];
@@ -59,7 +59,11 @@
     NSString *action = [message objectForKey:@"action"];
     NSDictionary *data = [message objectForKey:@"data"];
 
-    if ([action isEqual:@"adjust_trackEvent"]) {
+    if ([action isEqual:@"adjust_appDidLaunch"]) {
+
+        [self setAdjustConfig:data];
+
+    } else  if ([action isEqual:@"adjust_trackEvent"]) {
 
         [self trackEvent:data];
 
@@ -83,7 +87,7 @@
     } else if ([action isEqual:@"adjust_switchToOnlineMode"]) {
 
         [ADJAdjust switchBackToOnlineMode];
-        
+
     } else if ([action isEqual:@"adjust_switchToOnlineMode"]) {
 
         [ADJAdjust switchBackToOnlineMode];
@@ -96,7 +100,7 @@
 
         ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:(NSString *)data];
         [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
-        
+
     } else if ([action isEqual: @"adjust_trackThirdPartySharing"]) {
 
         [self trackThirdPartySharing:data];
@@ -143,6 +147,62 @@
 
         [ADJAdjust gdprForgetDevice];
     }
+}
+
+- (void)setAdjustConfig:(NSDictionary *)data {
+
+    NSString *appToken = [data objectForKey:@"appToken"];
+    NSString *environment = [data objectForKey:@"environment"];
+    NSString *customEndpointUrl = [data objectForKey:@"customEndpointUrl"];
+    NSString *defaultTracker = [data objectForKey:@"defaultTracker"];
+    NSNumber *sendInBackground = [data objectForKey:@"sendInBackground"];
+    NSString *logLevel = [data objectForKey:@"logLevel"];
+    NSNumber *eventBufferingEnabled = [data objectForKey:@"eventBufferingEnabled"];
+    NSNumber *coppaCompliantEnabled = [data objectForKey:@"coppaCompliantEnabled"];
+    NSNumber *linkMeEnabled = [data objectForKey:@"linkMeEnabled"];
+    NSNumber *allowiAdInfoReading = [data objectForKey:@"allowiAdInfoReading"];
+    NSNumber *allowAdServicesInfoReading = [data objectForKey:@"allowAdServicesInfoReading"];
+    NSNumber *allowIdfaReading = [data objectForKey:@"allowIdfaReading"];
+    NSNumber *allowSkAdNetworkHandling = [data objectForKey:@"allowSkAdNetworkHandling"];
+    NSNumber *openDeferredDeeplink = [data objectForKey:@"openDeferredDeeplink"];
+    NSString *attributionCallback = [data objectForKey:@"attributionCallback"];
+    NSString *urlStrategy = [data objectForKey:@"urlStrategy"];
+
+    ADJAdjustConfig *adjustConfig;
+    if ([self isFieldValid:appToken] && [self isFieldValid:environment]) {
+        adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken environment:environment];
+    }
+
+    if ([self isFieldValid:logLevel]) {
+        [adjustConfig setLogLevel:logLevel];
+    }
+
+    if ([self isFieldValid:urlStrategy]) {
+        [adjustConfig setUrlStrategy:urlStrategy];
+    }
+
+    if ([self isFieldValid:defaultTracker]) {
+        [adjustConfig setDefaultTracker:defaultTracker];
+    }
+
+    if ([self isFieldValid:logLevel]) {
+        // TODO: add option to take Public Key Hash
+        [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:nil];
+    }
+
+    if ([self isFieldValid:openDeferredDeeplink]) {
+        [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
+    }
+
+    if ([self isFieldValid:sendInBackground]) {
+        [adjustConfig allowSendingFromBackground];
+    }
+
+    if ([self isFieldValid:attributionCallback]) {
+        [adjustConfig setAdjustAttributionSubscriber:self];
+    }
+
+    [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 }
 
 - (void)trackEvent:(NSDictionary *)data {
@@ -281,3 +341,4 @@
 }
 
 @end
+

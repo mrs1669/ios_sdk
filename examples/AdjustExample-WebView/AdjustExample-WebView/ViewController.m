@@ -8,7 +8,7 @@
 #import "ViewController.h"
 #import <WebKit/WebKit.h>
 
-#import <Adjust/ADJAdjust.h>
+@import Adjust;
 #import "ADJAdjustBridge.h"
 
 @interface ViewController ()
@@ -35,8 +35,12 @@
     [self.webView loadRequest:request];
     [self.view addSubview:self.webView];
 
-    ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc" environment:ADJEnvironmentSandbox];
-    [[ADJAdjustBridge alloc] augmentedHybridWebView:_webView withAdjustConfig:adjustConfig];
+    /// One way of initialising the SDK
+//    ADJAdjustConfig *config = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc" environment:ADJEnvironmentSandbox];
+//    [[ADJAdjustBridge alloc] augmentedHybridWebView:_webView withAdjustConfig:config];
+
+    /// Another way of initialising the SDK
+    [[ADJAdjustBridge alloc] augmentedHybridWebView:_webView];
 }
 
 @end

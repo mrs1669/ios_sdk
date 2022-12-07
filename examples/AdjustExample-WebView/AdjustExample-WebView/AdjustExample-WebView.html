@@ -6,6 +6,7 @@
     </head>
     <body style="background-color:#08d1ff; font-size: 20px; ">
         <h2><center>Webview</center></h2><br></br>
+        <button onclick="appDidLaunch()">App Did Launch</button><br>
         <button onclick="trackEvent()">Track Event</button><br>
         <button onclick="trackRevenue()">Track Revenue</button><br>
         <button onclick="trackPushToken()">Track Push Token</button><br>
@@ -26,12 +27,25 @@
         <p id="demo"> </p>
         <script>
 
-            function didChangeWithAdjustAttribution(attributionValue) {
-<!--                document.write(attributionValue)-->
-            }
+            window.onload = event => {
+                appDidLaunch();
+            };
 
-            function didReadWithAdjustAttribution(attributionValue) {
-<!--               document.write(attributionValue)-->
+            function appDidLaunch() {
+                const adjustConfig = {
+                    "appToken" : "2fm9gkqubvpc",
+                    "environment": "sandbox",
+                    "defaultTracker": "xyz",
+                };
+                const message = {
+                    action:'adjust_appDidLaunch',
+                    data: adjustConfig,
+                };
+
+                Adjust.appDidLaunch(adjustConfig)
+                Adjust.trackEvent()
+
+                window.webkit.messageHandlers.adjust.postMessage(message);
             }
 
             function trackEvent() {
@@ -172,6 +186,14 @@
                     action:'adjust_gdprForgetMe',
                 };
                 window.webkit.messageHandlers.adjust.postMessage(message);
+            }
+
+            function didChangeWithAdjustAttribution(attributionValue) {
+<!--                document.write(attributionValue)-->
+            }
+
+            function didReadWithAdjustAttribution(attributionValue) {
+<!--               document.write(attributionValue)-->
             }
 
         </script></body>
