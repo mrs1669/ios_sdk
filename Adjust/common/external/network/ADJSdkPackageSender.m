@@ -42,11 +42,12 @@
                           networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
                             adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
                      clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
+
     self = [super initWithLoggerFactory:loggerFactory
                                  source:[NSString stringWithFormat:@"%@-SdkPackageSender",
                                          sourceDescription]];
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                     sourceDescription:self.source];
+                                                                 sourceDescription:self.source];
     _sdkPackageSendingCollectorWeak = sdkPackageSendingCollector;
     _sdkResponseCollectorWeak = sdkResponseCollector;
     _timeoutMilli = networkEndpointData.timeoutMilli;
@@ -55,11 +56,9 @@
                              initWithUrlOverwrite:networkEndpointData.urlOverwrite
                              extraPath:networkEndpointData.extraPath
                              adjustUrlStrategy:adjustUrlStrategy
-                             clientCustomEndpointUrl:clientCustomEndpointData != nil ?
-                             clientCustomEndpointData.url : nil];
+                             clientCustomEndpointUrl:clientCustomEndpointData != nil ? clientCustomEndpointData.url : nil];
 
-    NSURLSessionConfiguration *_Nonnull sessionConfiguration =
-    [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSessionConfiguration *_Nonnull sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
 
     if (clientCustomEndpointData != nil && clientCustomEndpointData.publicKeyHash != nil) {
         _sdkPackageSenderPinningDelegate =
@@ -86,7 +85,6 @@
     [[ADJSdkResponseDataBuilder alloc] initWithSourceSdkPackage:sdkPackageData
                                               sendingParameters:sendingParameters
                                                  sourceCallback:responseCallback];
-    //previousErrorMessages:nil];
 
     [self sendSdkPackageWithBuilder:sdkResponseDataBuilder];
 }
@@ -252,8 +250,7 @@
 }
 
 - (void)sendWithUrlRequest:(nonnull NSURLRequest *)urlRequest
-        sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
-{
+        sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
     __typeof(self) __weak weakSelf = self;
 
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
@@ -310,8 +307,7 @@
 - (void)handleRequestCallbackWithData:(nullable NSData *)data
                              response:(nullable NSURLResponse *)response
                                 error:(nullable NSError *)error
-                   sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
-{
+                   sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
     if (error != nil) {
         [sdkResponseBuilder logErrorWithLogger:self.logger
                                        nsError:error
@@ -370,8 +366,7 @@
     sdkResponseBuilder.jsonDictionary = (NSDictionary *)responseJsonFoundationObject;
 }
 
-- (void)retryOrReturnWithSdkResponseBuilder:
-(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
+- (void)retryOrReturnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
     BOOL retryToSend =
     [self shouldRetryToSendWithResponseBuilder:sdkResponseBuilder];
 
@@ -432,5 +427,4 @@
 }
 
 @end
-
 

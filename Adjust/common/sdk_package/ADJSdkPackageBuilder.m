@@ -585,11 +585,8 @@
                          packageParamValueSerializable:deviceInfoData.osBuild];
 }
 
-- (void)
-injectClientConfigFieldsWithParametersBuilder:
-(nonnull ADJStringMapBuilder *)parametersBuilder
-path:(nullable NSString *)path
-{
+- (void)injectClientConfigFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
+                                                 path:(nullable NSString *)path {
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAppTokenKey
                          packageParamValueSerializable:self.clientConfigData.appToken];
