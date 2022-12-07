@@ -64,7 +64,7 @@
     
     BOOL isSandboxEnvironment = [environment.stringValue isEqualToString:ADJEnvironmentSandbox];
     BOOL isProductionEnvironment =
-    [environment.stringValue isEqualToString:ADJEnvironmentProduction];
+        [environment.stringValue isEqualToString:ADJEnvironmentProduction];
     
     if (! isSandboxEnvironment && ! isProductionEnvironment) {
         [logger errorClient:@"Cannot create config with unexpected environment value"
@@ -73,22 +73,21 @@
                 actualValue:environment.stringValue];
         return nil;
     }
-    
+
     BOOL doNotLogAny =
-    adjustConfig.doNotLogAnyNumberBool != nil
-    && adjustConfig.doNotLogAnyNumberBool.boolValue;
+        adjustConfig.doNotLogAnyNumberBool != nil
+        && adjustConfig.doNotLogAnyNumberBool.boolValue;
     
     BOOL doLogAll =
-    adjustConfig.doLogAllNumberBool != nil
-    && adjustConfig.doLogAllNumberBool.boolValue;
+        adjustConfig.doLogAllNumberBool != nil
+        && adjustConfig.doLogAllNumberBool.boolValue;
     
     ADJNonEmptyString *_Nullable urlStrategy = nil;
     if (adjustConfig.urlStrategy != nil) {
         if ([ADJUrlStategyChina isEqualToString:adjustConfig.urlStrategy]
-            || [ADJUrlStategyIndia isEqualToString:adjustConfig.urlStrategy])
-        {
-            urlStrategy = [[ADJNonEmptyString alloc]
-                           initWithConstStringValue:adjustConfig.urlStrategy];
+            || [ADJUrlStategyIndia isEqualToString:adjustConfig.urlStrategy]) {
+
+            urlStrategy = [[ADJNonEmptyString alloc] initWithConstStringValue:adjustConfig.urlStrategy];
         } else {
             [logger noticeClient:@"Cannot set unknown url strategy"
                              key:@"value" value:adjustConfig.urlStrategy];
@@ -111,22 +110,21 @@
         [logger noticeClient:@"Cannot configure certificate pinning"
          " without a custom endpoint"];
     } else if (customEndpointUrl != nil) {
-        clientCustomEndpointData = [[ADJClientCustomEndpointData alloc]
-                                    initWithUrl:customEndpointUrl
-                                    publicKeyHash:customEndpointPublicKeyHash];
+        clientCustomEndpointData = [[ADJClientCustomEndpointData alloc] initWithUrl:customEndpointUrl
+                                                                      publicKeyHash:customEndpointPublicKeyHash];
     }
     
     BOOL doNotOpenDeferredDeeplink =
-    adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
-    && adjustConfig.doNotOpenDeferredDeeplinkNumberBool.boolValue;
+        adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
+        && adjustConfig.doNotOpenDeferredDeeplinkNumberBool.boolValue;
     
     BOOL doNotReadAsaAttribution =
-    adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool != nil
-    && adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool.boolValue;
+        adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool != nil
+        && adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool.boolValue;
     
     BOOL canSendInBackground =
-    adjustConfig.canSendInBackgroundNumberBool != nil
-    && adjustConfig.canSendInBackgroundNumberBool.boolValue;
+        adjustConfig.canSendInBackgroundNumberBool != nil
+        && adjustConfig.canSendInBackgroundNumberBool.boolValue;
     
     ADJNonNegativeInt *_Nullable eventIdDeduplicationMaxCapacity =
     [ADJNonNegativeInt instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt
@@ -197,8 +195,7 @@
     static dispatch_once_t sandboxEnvironmentToken;
     static id sandboxEnvironment;
     dispatch_once(&sandboxEnvironmentToken, ^{
-        sandboxEnvironment = [[ADJNonEmptyString alloc]
-                              initWithConstStringValue:ADJEnvironmentSandbox];
+        sandboxEnvironment = [[ADJNonEmptyString alloc] initWithConstStringValue:ADJEnvironmentSandbox];
     });
     return sandboxEnvironment;
 }
@@ -207,8 +204,7 @@
     static dispatch_once_t productionEnvironmentToken;
     static id productionEnvironment;
     dispatch_once(&productionEnvironmentToken, ^{
-        productionEnvironment = [[ADJNonEmptyString alloc]
-                                 initWithConstStringValue:ADJEnvironmentProduction];
+        productionEnvironment = [[ADJNonEmptyString alloc] initWithConstStringValue:ADJEnvironmentProduction];
     });
     return productionEnvironment;
 }

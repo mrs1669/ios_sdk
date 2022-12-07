@@ -245,15 +245,6 @@
     } source:@"sdk become offline"];
 }
 
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                   pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
-                                   offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher {
-    [sdkInitPublisher addSubscriber:self];
-    [pausingPublisher addSubscriber:self];
-    [offlinePublisher addSubscriber:self];
-}
-
 #pragma mark Internal Methods
 - (void)addSdkPackageToSendWithData:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {

@@ -110,8 +110,7 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 
         [self.logger debugDev:@"Adding v4 package that could be converted"];
 
-        [self enqueueElementToLast:sdkPackageData
-               sqliteStorageAction:nil];
+        [self enqueueElementToLast:sdkPackageData sqliteStorageAction:nil];
     }
 }
 

@@ -21,8 +21,6 @@
     ADJAttributionSubscriber,
     ADJLogSubscriber
 >
-- (void)ccSubscribeToPublishersWithAttributionPublisher:(nonnull ADJAttributionPublisher *)attributionPublisher
-                                           logPublisher:(nonnull ADJLogPublisher *)logPublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory

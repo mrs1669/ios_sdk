@@ -8,7 +8,7 @@
 #import "AppDelegate.h"
 
 #import "ADJAdjust.h"
-#import "ADJAdjustEvent.h"
+#import "ADJAdjustInstance.h"
 #import "ADJAdjustConfig.h"
 
 @interface AppDelegate ()
@@ -23,7 +23,8 @@
     ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc"
                                                                            environment:ADJEnvironmentSandbox];
     [adjustConfig doLogAll];
-    [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
+    [adjustConfig setAdjustAttributionSubscriber:self];
+    [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
 
     return YES;
 }

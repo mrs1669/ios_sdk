@@ -74,16 +74,15 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
                                             costAmountDoubleNumber:v4Attribution.costAmount
                                                 costCurrencyString:v4Attribution.costCurrency];
 
-    ADJAttributionStateData *_Nonnull intialAttributionStateData =
-    [self readOnlyStoredDataValue];
+    ADJAttributionStateData *_Nonnull initialAttrData = [self readOnlyStoredDataValue];
     
     // TODO: should state fields change because it was read from v4?
-    [self updateWithNewDataValue:[[ADJAttributionStateData alloc]
-                                  initWithAttributionData:v4AttributionData
-                                  receivedSessionResponse:YES
-                                  unavailableAttribution:intialAttributionStateData.unavailableAttribution
-                                  askingFromSdk:intialAttributionStateData.askingFromSdk
-                                  askingFromBackend:intialAttributionStateData.askingFromBackend]];
+    [self updateWithNewDataValue:
+     [[ADJAttributionStateData alloc] initWithAttributionData:v4AttributionData
+                                      receivedSessionResponse:YES
+                                       unavailableAttribution:initialAttrData.unavailableAttribution
+                                                askingFromSdk:initialAttrData.askingFromSdk
+                                            askingFromBackend:initialAttrData.askingFromBackend]];
 }
 
 @end

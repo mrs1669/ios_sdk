@@ -36,7 +36,9 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                           networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
                             adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
+                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"SdkPackageSenderController"];
     _networkEndpointData = networkEndpointData;
@@ -44,9 +46,10 @@
     _clientCustomEndpointData = clientCustomEndpointData;
 
     _sdkPackageSendingPublisher = [[ADJSdkPackageSendingPublisher alloc] init];
-
+    [pubRegistry addPublisher:_sdkPackageSendingPublisher];
     _sdkResponsePublisher = [[ADJSdkResponsePublisher alloc] init];
-
+    [pubRegistry addPublisher:_sdkResponsePublisher];
+    
     return self;
 }
 

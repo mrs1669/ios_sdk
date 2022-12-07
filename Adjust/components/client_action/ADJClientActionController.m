@@ -42,15 +42,6 @@ ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
     self.postSdkInitRootControllerWeak = postSdkInitRootController;
 }
 
-- (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:
-(nonnull ADJPreFirstMeasurementSessionStartPublisher *)
-preFirstMeasurementSessionStartPublisher
-                                           measurementSessionStartPublisher:
-(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher {
-    [preFirstMeasurementSessionStartPublisher addSubscriber:self];
-    [measurementSessionStartPublisher addSubscriber:self];
-}
-
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                           clientActionStorage:(nonnull ADJClientActionStorage *)clientActionStorage
@@ -169,10 +160,10 @@ preFirstMeasurementSessionStartPublisher
     [clientActionIoDataInjectable injectIntoClientActionIoDataBuilder:ioDataBuilder];
 
     ADJClientActionData *_Nonnull clientActionData =
-    [[ADJClientActionData alloc] initWithClientActionHandlerId:
-     [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
-                                                  nowTimestamp:nowTimestamp
-                                                 ioDataBuilder:ioDataBuilder];
+        [[ADJClientActionData alloc] initWithClientActionHandlerId:
+         [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
+                                                      nowTimestamp:nowTimestamp
+                                                     ioDataBuilder:ioDataBuilder];
 
     [clientActionStorage enqueueElementToLast:clientActionData
                           sqliteStorageAction:nil];
@@ -186,8 +177,7 @@ preFirstMeasurementSessionStartPublisher
         return;
     }
 
-    ADJPostSdkInitRootController *_Nullable postSdkInitRootController =
-    self.postSdkInitRootControllerWeak;
+    ADJPostSdkInitRootController *_Nullable postSdkInitRootController = self.postSdkInitRootControllerWeak;
     if (postSdkInitRootController == nil) {
         [self.logger debugDev:@"Cannot process client actions"
          " without a reference to post sdk init controller"
@@ -195,8 +185,7 @@ preFirstMeasurementSessionStartPublisher
         return;
     }
 
-    NSArray<ADJNonNegativeInt *> *_Nonnull elementPositionList =
-    [clientActionStorage copySortedElementPositionList];
+    NSArray<ADJNonNegativeInt *> *_Nonnull elementPositionList = [clientActionStorage copySortedElementPositionList];
 
     [self.logger debugDev:@"Trying to process client actions"
                      key1:@"count"

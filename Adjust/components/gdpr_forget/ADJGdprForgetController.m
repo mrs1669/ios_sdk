@@ -41,19 +41,21 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                        gdprForgetStateStorage:(nonnull ADJGdprForgetStateStorage *)gdprForgetStateStorage
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy {
+                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetController"];
     _gdprForgetStateStorageWeak = gdprForgetStateStorage;
     _sdkPackageBuilderWeak = nil;
     _clockWeak = nil;
     
     _gdprForgetPublisher = [[ADJGdprForgetPublisher alloc] init];
+    [pubRegistry addPublisher:_gdprForgetPublisher];
     
     _gdprForgetState = [[ADJGdprForgetState alloc] initWithLoggerFactory:loggerFactory];
     
-    _gdprForgetTracker =
-    [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
-                              gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
+    _gdprForgetTracker = [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
+                                                   gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
     
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -193,17 +195,6 @@
         
         [strongSelf processOptOut];
     } source:@"received opt out sdk response"];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                            publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                                 lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-                               sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher {
-    [sdkInitPublisher addSubscriber:self];
-    [publishingGatePublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
-    [sdkResponsePublisher addSubscriber:self];
 }
 
 #pragma mark Internal Methods
@@ -415,8 +406,7 @@
                                         gdprForgetStateStorage:gdprForgetStateStorage];
 }
 
-- (void)handleStateSideEffectsWithChangedGdprForgetStateData:
-(nullable ADJGdprForgetStateData *)changedGdprForgetStateData
+- (void)handleStateSideEffectsWithChangedGdprForgetStateData:(nullable ADJGdprForgetStateData *)changedGdprForgetStateData
                                        gdprForgetStatusEvent:(nullable NSString *)gdprForgetStatusEvent
                                       gdprForgetStateStorage:(nullable ADJGdprForgetStateStorage *)gdprForgetStateStorage {
     if (changedGdprForgetStateData != nil) {

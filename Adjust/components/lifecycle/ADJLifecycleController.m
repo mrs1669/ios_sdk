@@ -16,9 +16,7 @@
 #import "ADJConstants.h"
 
 #pragma mark Private class
-@implementation ADJLifecyclePublisher
-
-@end
+@implementation ADJLifecyclePublisher @end
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -68,11 +66,14 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
-              doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus {
+              doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"LifecycleController"];
     _threadControllerWeak = threadController;
 
     _lifecyclePublisher = [[ADJLifecyclePublisher alloc] init];
+    [pubRegistry addPublisher:_lifecyclePublisher];
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];
@@ -164,11 +165,6 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
         [strongSelf publishWhenGatesOpen];
     } source:@"allowed to publish notifications"];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher: (nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
-    [publishingGatePublisher addSubscriber:self];
 }
 
 #pragma mark - ADJTeardownFinalizer

@@ -104,13 +104,6 @@
     } source:@"pause sending"];
 }
 
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                   pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher {
-    [sdkInitPublisher addSubscriber:self];
-    [pausingPublisher addSubscriber:self];
-}
-
 #pragma mark Internal Methods
 - (void)handleLogPackageAddedToSendWithData:(nonnull ADJLogPackageData *)logPackageDataToAdd {
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;

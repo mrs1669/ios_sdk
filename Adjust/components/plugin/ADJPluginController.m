@@ -37,6 +37,14 @@
 
     [self ccLoadPluginsWithLoggerFactory:loggerFactory];
 
+    ADJAdjustPublishers *_Nonnull adjustPublishers =
+    [[ADJAdjustPublishers alloc] initWithPackageSendingPublisher:_pluginPackageSendingPublisher
+                                             foregroundPublisher:_pluginForegroundPublisher];
+
+    for (id<ADJAdjustPlugin> _Nonnull plugin in self.loadedPluginList) {
+        [plugin subscribeWithPublishers:adjustPublishers];
+    }
+
     return self;
 }
 
@@ -84,17 +92,23 @@
 - (void)willSendSdkPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData
                    parametersToAdd:(nonnull ADJStringMapBuilder *)parametersToAdd
                       headersToAdd:(nonnull ADJStringMapBuilder *)headersToAdd {
-    // no need to check if has subscribers to avoid conversion,
-    //  since it has checked when subscribing to publishers
+
+    if (! [self.pluginPackageSendingPublisher.publisher hasSubscribers]) {
+        return;
+    }
+
     NSDictionary<NSString *, NSString *> *_Nonnull parametersFoundationMap = [sdkPackageData.parameters foundationStringMap];
 
     ADJStringMap *_Nonnull parametersToAddStringMap = [[ADJStringMap alloc] initWithStringMapBuilder:parametersToAdd];
-    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap = [NSMutableDictionary dictionaryWithDictionary:[parametersToAddStringMap foundationStringMap]];
+
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap =
+    [NSMutableDictionary dictionaryWithDictionary:[parametersToAddStringMap foundationStringMap]];
 
     [self.pluginPackageSendingPublisher.publisher notifySubscribersWithSubscriberBlock:
-     ^(id<ADJAdjustPackageSendingSubscriber>  _Nonnull subscriber)
+        ^(id<ADJAdjustPackageSendingSubscriber> _Nonnull subscriber)
      {
-        NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap =
+        [[NSMutableDictionary alloc] init];
 
         [subscriber willSendSdkPackageWithClientSdk:sdkPackageData.clientSdk
                                                path:sdkPackageData.path
@@ -116,8 +130,13 @@
 
 #pragma mark - ADJLifecycleSubscriber
 - (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+
+    if (! [self.pluginForegroundPublisher.publisher hasSubscribers]) {
+        return;
+    }
+
     [self.pluginForegroundPublisher.publisher notifySubscribersWithSubscriberBlock:
-     ^(id<ADJAdjustForegroundSubscriber>  _Nonnull subscriber)
+        ^(id<ADJAdjustForegroundSubscriber> _Nonnull subscriber)
      {
         [subscriber onForeground];
     }];
@@ -125,25 +144,6 @@
 
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
     // nothing to do
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkPackageSendingPublisher:(nonnull ADJSdkPackageSendingPublisher *)sdkPackageSendingPublisher
-                                           lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher {
-    ADJAdjustPublishers *_Nonnull adjustPublishers = [[ADJAdjustPublishers alloc] initWithPackageSendingPublisher:self.pluginPackageSendingPublisher
-                                                                                              foregroundPublisher:self.pluginForegroundPublisher];
-
-    for (id<ADJAdjustPlugin> _Nonnull plugin in self.loadedPluginList) {
-        [plugin subscribeWithPublishers:adjustPublishers];
-    }
-
-    if ([self.pluginPackageSendingPublisher.publisher hasSubscribers]) {
-        [sdkPackageSendingPublisher addSubscriber:self];
-    }
-
-    if ([self.pluginForegroundPublisher.publisher hasSubscribers]) {
-        [lifecyclePublisher addSubscriber:self];
-    }
 }
 
 @end

@@ -35,9 +35,6 @@
     ADJPausingSubscriber,
     ADJOfflineSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                   pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher
-                                   offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory

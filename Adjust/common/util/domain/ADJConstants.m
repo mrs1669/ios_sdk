@@ -18,7 +18,7 @@ NSUInteger const ADJOneMinuteMilli = ADJOneSecondMilli * 60;
 NSUInteger const ADJThirtyMinutesMilli = ADJOneMinuteMilli * 30;
 NSUInteger const ADJOneHourMilli = ADJOneMinuteMilli * 60;
 
-NSString *const ADJDatabaseName = @"adjust.db";
+NSString *const ADJDatabaseNamePrefix = @"adjust";
 
 NSString *const ADJAdjustSubSystem = @"com.adjust.sdk";
 NSString *const ADJAdjustCategory = @"Adjust";

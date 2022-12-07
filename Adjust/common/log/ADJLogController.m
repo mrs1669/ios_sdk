@@ -31,11 +31,16 @@
 
 @implementation ADJLogController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData {
+- (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry
+                                   InstanceId:(nullable NSString *)instanceId
+{
     self = [super init];
 
+    _instanceId = instanceId;
+
     _logPublisher = [[ADJLogPublisher alloc] init];
+    [pubRegistry addPublisher:_logPublisher];
     
     _logMessageDataArray = [NSMutableArray array];
     
@@ -88,13 +93,6 @@
                                 logCollector:self];
 }
 
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                            publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
-    [sdkInitPublisher addSubscriber:self];
-    [publishingGatePublisher addSubscriber:self];
-}
-
 #pragma mark - ADJSdkInitStateSubscriber
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
     ADJSingleThreadExecutor *_Nullable commonExecutor = self.commonExecutorWeak;
@@ -127,7 +125,8 @@
         
         strongSelf.canPublish = YES;
         
-        NSArray<ADJAdjustLogMessageData *> *_Nonnull preInitLogMessageArray = [strongSelf.logMessageDataArray copy];
+        NSArray<ADJLogMessageData *> *_Nonnull preInitLogMessageArray =
+            [strongSelf.logMessageDataArray copy];
         
         [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
          ^(id<ADJLogSubscriber> _Nonnull subscriber)

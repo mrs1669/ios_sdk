@@ -17,6 +17,9 @@ NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
+- (BOOL)isMigrationCompleted;
+- (void)setMigrationCompleted;
+
 // public properties
 @property (nullable, readonly, strong, nonatomic) NSData *pushTokenData;
 @property (nullable, readonly, strong, nonatomic) NSString *pushTokenString;
@@ -28,5 +31,6 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSNumber *> *iAdErrors;
 @property (nullable, readonly, strong, nonatomic) NSNumber *adServicesTrackedNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSDate * skadRegisterCallTimestamp;
+@property (nullable, readonly, strong, nonatomic) NSNumber *migrationCompletedNumberBool;
 
 @end

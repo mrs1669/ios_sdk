@@ -23,6 +23,7 @@
 #import "ADJClock.h"
 #import "ADJMeasurementSessionStateData.h"
 #import "ADJLogger.h"
+#import "ADJPublishersRegistry.h"
 
 @interface ADJMeasurementSessionController : ADJCommonBase<
     // subscriptions
@@ -31,10 +32,6 @@
     ADJKeepAliveSubscriber,
     ADJLifecycleSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher
-                                     sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                   keepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
-                                   lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStartPublisher *measurementSessionStartPublisher;
@@ -48,7 +45,8 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                                        clock:(nonnull ADJClock *)clock;
+                                        clock:(nonnull ADJClock *)clock
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 // public api
 - (void)ccForeground;

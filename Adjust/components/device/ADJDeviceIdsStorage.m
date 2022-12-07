@@ -67,8 +67,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
                                     sourceDescription:@"v4 uuid"
                                                logger:self.logger];
 
-    ADJDeviceIdsData *_Nonnull v4DeviceIdsData =
-        [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
+    ADJDeviceIdsData *_Nonnull v4DeviceIdsData = [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
 
     [self updateWithNewDataValue:v4DeviceIdsData];
 }

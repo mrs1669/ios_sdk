@@ -16,6 +16,7 @@
 #import "ADJLogger.h"
 #import "ADJSingleThreadExecutor.h"
 #import "ADJSdkConfigData.h"
+#import "ADJPublishersRegistry.h"
 
 @interface ADJLogController : NSObject<
     ADJLogCollector,
@@ -24,17 +25,15 @@
     ADJSdkInitSubscriber,
     ADJPublishingGateSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                            publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJLogPublisher *logPublisher;
 
 // instantiation
-- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+- (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry
+                                   InstanceId:(nullable NSString *)instanceId
     NS_DESIGNATED_INITIALIZER;
-
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api

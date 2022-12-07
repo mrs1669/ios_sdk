@@ -10,7 +10,7 @@
 
 #import "ADJAdjustLogMessageData.h"
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 
 @interface ADJClientSubscriptionsController ()
 #pragma mark - Injected dependencies
@@ -150,15 +150,6 @@
     [clientReturnExecutor executeClientReturnWithBlock:^{
         [localAdjustLogSubscriber didLogMessagesPreInitWithArray:adjustLogArray];
     }];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithAttributionPublisher:(nonnull ADJAttributionPublisher *)attributionPublisher
-                                           logPublisher:(nonnull ADJLogPublisher *)logPublisher {
-    [attributionPublisher addSubscriber:self];
-    if (self.adjustLogSubscriber != nil) {
-        [logPublisher addSubscriber:self];
-    }
 }
 
 #pragma mark Internal Methods

@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ADJAdjustAttributionSubscriber.h"
 
 #import "ADJAdjust.h"
 #import "ADJAdjustAttributionCallback.h"

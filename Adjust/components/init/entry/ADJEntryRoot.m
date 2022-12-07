@@ -7,74 +7,38 @@
 //
 
 #import "ADJEntryRoot.h"
-
-#import "ADJAdjustInternal.h"
+#import "ADJInstanceRoot.h"
+#import "ADJSdkConfigData.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
-/* .h
- @property (nonnull, readonly, strong, nonatomic) ADJLogController *logController;
- @property (nonnull, readonly, strong, nonatomic) ADJThreadController *threadController;
- @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
- @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *commonExecutor;
- @property (nonnull, readonly, strong, nonatomic) ADJLogger *adjustApiLogger;
- @property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
-
- // - built in client context
- @property (nullable, readonly, strong, nonatomic) ADJPreSdkInitRootController *preSdkInitRootController;
- @property (nullable, readonly, strong, nonatomic) ADJPostSdkInitRootController *postSdkInitRootController;
- */
+// TODO: (Gena) - discuss this reference
+NSString *const ADJDefaultInstanceId = @"ADJUST_DEFAULT_INSTANCE";
 
 @interface ADJEntryRoot ()
-#pragma mark - Internal variables
-@property (nonnull, readonly, strong, nonatomic) ADJLogger *rootLogger;
-@property (nullable, readwrite, strong, nonatomic) ADJPreSdkInitRootController *preSdkInitRootController;
-@property (nullable, readwrite, strong, nonatomic)ADJPostSdkInitRootController *postSdkInitRootController;
-
+@property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
+@property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 @end
 
 @implementation ADJEntryRoot
 #pragma mark Instantiation
-- (nonnull instancetype)initWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
+- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
+                          sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder {
     self = [super init];
-    if (sdkConfigDataBuilder != nil) {
-        _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigDataBuilder];
+
+    _instanceMap = [[NSMutableDictionary alloc] init];
+
+    if (sdkConfigBuilder != nil) {
+        _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigBuilder];
     } else {
         _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
     }
 
-    _logController = [[ADJLogController alloc] initWithInstanceId:nil
-                                                    sdkConfigData:_sdkConfigData];
-
-    _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
-
-    _clientExecutor =
-        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                     sourceDescription:@"clientExecutor"];
-
-    _commonExecutor =
-        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                     sourceDescription:@"commonExecutor"];
-
-    [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
-
-    _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
-
-    _rootLogger = [_logController createLoggerWithSource:@"EntryRoot"];
-
-    _preSdkInitRootController = nil;
-
-    _postSdkInitRootController = nil;
-
-    __typeof(self) __weak weakSelf = self;
-    [_clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        strongSelf.preSdkInitRootController =
-            [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
-                                                             entryRoot:strongSelf];
-    } source:@"init"];
+    // TODO: (Gena) instance id validation
+    NSString *localInstanceid = (instanceId) ? : ADJDefaultInstanceId;
+    ADJInstanceRoot *instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:_sdkConfigData
+                                                                     instanceId:localInstanceid];
+    [_instanceMap setObject:instanceRoot forKey:localInstanceid];
 
     return self;
 }
@@ -85,46 +49,24 @@
 }
 
 #pragma mark Public API
-+ (void)executeBlockInClientContext:
-    (nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))
-        blockInClientContext
-{
-    ADJEntryRoot *_Nonnull root = [ADJAdjustInternal rootInstance];
+- (nonnull ADJInstanceRoot *)instanceForId:(nullable NSString *)instanceId {
+    @synchronized ([ADJEntryRoot class]) {
 
-    // TODO: (Gena) Why do we need ths check👇🏻? ('preSdkInitRootController' is created by ADJEntryRoot initializer)
-    // no weak/strong self needed since it does not use self inside
-    [root.clientExecutor executeInSequenceWithBlock:^{
-        if (root.preSdkInitRootController == nil) {
-            [root.adjustApiLogger debugDev:
-                @"Cannot execute in client context without pre sdk init controller"
-            issueType:ADJIssueLogicError];
-            return;
+        NSString *localInstanceid = (instanceId) ? : ADJDefaultInstanceId;
+        ADJInstanceRoot * instanceRoot = [self.instanceMap objectForKey:localInstanceid];
+        if (!instanceRoot) {
+            // TODO: (Gena) instance id validation
+            instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
+                                                            instanceId:localInstanceid];
+            [self.instanceMap setObject:instanceRoot forKey:localInstanceid];
         }
-
-        blockInClientContext(root.preSdkInitRootController, root.adjustApiLogger);
-    } source:@"execute in client context"];
-}
-
-- (nonnull ADJPostSdkInitRootController *)ccCreatePostSdkInitRootControllerWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                                                                       preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController {
-    self.postSdkInitRootController =
-    [[ADJPostSdkInitRootController alloc] initWithLoggerFactory:self.logController
-                                               clientConfigData:clientConfigData
-                                                      entryRoot:self
-                                       preSdkInitRootController:preSdkInitRootController];
-
-    return self.postSdkInitRootController;
-}
-
-- (nonnull id<ADJClientReturnExecutor>)clientReturnExecutor {
-    if (self.sdkConfigData.clientReturnExecutorOverwrite != nil) {
-        return self.sdkConfigData.clientReturnExecutorOverwrite;
+        return instanceRoot;
     }
-
-    return self.threadController;
 }
 
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock {
+    // TODO: (Gena) Implement the teardown logic
+    /*
     __typeof(self) __weak weakSelf = self;
     BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -145,13 +87,7 @@
     if (! canExecuteTask && closeStorageBlock != nil) {
         closeStorageBlock();
     }
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeAndSetPostSdkInitDependenciesWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                             publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
-    [self.logController ccSubscribeToPublishersWithSdkInitPublisher:sdkInitPublisher
-                                            publishingGatePublisher:publishingGatePublisher];
+     */
 }
 
 @end

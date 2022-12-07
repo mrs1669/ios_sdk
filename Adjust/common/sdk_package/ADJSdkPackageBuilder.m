@@ -49,7 +49,8 @@
               globalCallbackParametersStorage:(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
                globalPartnerParametersStorage:(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
                             eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage {
+               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
 
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
     _clockWeak = clock;
@@ -62,6 +63,7 @@
     _measurementSessionStateStorageWeak = measurementSessionStateStorage;
 
     _sdkPackageCreatingPublisher = [[ADJSdkPackageCreatingPublisher alloc] init];
+    [pubRegistry addPublisher:_sdkPackageCreatingPublisher];
 
     return self;
 }

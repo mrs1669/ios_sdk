@@ -9,10 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
-#import "ADJClientAPI.h"
-#import "ADJSdkInitSubscriber.h"
-#import "ADJPublishingGateSubscriber.h"
-#import "ADJGdprForgetSubscriber.h"
 #import "ADJClock.h"
 #import "ADJStorageRootController.h"
 #import "ADJGdprForgetController.h"
@@ -20,41 +16,42 @@
 #import "ADJOfflineController.h"
 #import "ADJClientActionController.h"
 #import "ADJDeviceController.h"
-#import "ADJSdkActiveSubscriber.h"
 #import "ADJClientCallbacksController.h"
 #import "ADJPluginController.h"
+#import "ADJSdkConfigData.h"
+#import "ADJPublishersRegistry.h"
+#import "ADJThreadController.h"
+#import "ADJLogController.h"
+#import "ADJSdkActiveController.h"
 
-//#import "ADJPostSdkInitRootController.h"
-@class ADJPostSdkInitRootController;
-//#import "ADJEntryRoot.h"
-@class ADJEntryRoot;
-
-@interface ADJPreSdkInitRootController : ADJCommonBase<
-    ADJClientAPI,
-    // subscriptions
-    ADJPublishingGateSubscriber,
-    ADJGdprForgetSubscriber
->
-- (void)ccSubscribeAndSetPostSdkInitDependenciesWithEntryRoot:(nonnull ADJEntryRoot *) entryRoot
-                                    postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController
-                                             sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                      publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
-// publishers
-@property (nonnull, readonly, strong, nonatomic) ADJSdkActivePublisher *sdkActivePublisher;
-
-// instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                    entryRoot:(nonnull ADJEntryRoot *)entryRoot;
-
-// public properties
-@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
+@interface ADJPreSdkInitRootController : ADJCommonBase
+@property (nonnull, readonly, strong, nonatomic) ADJSdkActiveController *sdkActiveController;
 @property (nonnull, readonly, strong, nonatomic) ADJStorageRootController *storageRootController;
+@property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
+@property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
 @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetController *gdprForgetController;
 @property (nonnull, readonly, strong, nonatomic) ADJLifecycleController *lifecycleController;
 @property (nonnull, readonly, strong, nonatomic) ADJOfflineController *offlineController;
-@property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
-@property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
 @property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
 @property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
+
+- (nonnull instancetype)initWithInstanceId:(nonnull NSString *)instanceId
+                                     clock:(nonnull ADJClock *)clock
+                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+                             threadFactory:(nonnull ADJThreadController *)threadFactory
+                             loggerFactory:(nonnull ADJLogController *)loggerFactory
+                            clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+                      clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+                        publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+
+
+- (void)
+    setDependenciesWithPackageBuilder:(ADJSdkPackageBuilder *)sdkPackageBuilder
+    clock:(ADJClock *)clock
+    loggerFactory:(id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageSenderFactory:(id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+
+- (void)subscribeToPublishers:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 @end

@@ -15,30 +15,20 @@
 #import "ADJClientActionStorage.h"
 #import "ADJClock.h"
 
-//#import "ADJPostSdkInitRootController.h"
 @class ADJPostSdkInitRootController;
-
 @interface ADJClientActionController : ADJCommonBase<ADJClientActionsAPI,
 // subscriptions
     ADJPreFirstMeasurementSessionStartSubscriber,
     ADJMeasurementSessionStartSubscriber
 >
+
 // subscriptions and dependencies
 - (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController;
-- (void)ccSubscribeToPublishersWithPreFirstMeasurementSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                           clientActionStorage:(nonnull ADJClientActionStorage *)clientActionStorage
                                         clock:(nonnull ADJClock *)clock;
 
-/*
- public void ccSetDependenciesAtSdkInit(
- @NonNull final PostSdkInitRootController postSdkInitRootController)
- {
- postSdkInitControllerWeakRef = new WeakReference<>(postSdkInitRootController);
- }
-
- */
 @end
 

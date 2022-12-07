@@ -25,8 +25,6 @@
     ADJSdkInitSubscriber,
     ADJPausingSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                   pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory

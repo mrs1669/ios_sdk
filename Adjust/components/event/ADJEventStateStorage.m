@@ -61,8 +61,7 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 
     ADJEventStateData *_Nullable eventStateData =
     [ADJEventStateData instanceFromExternalWithEventCountNumberInt:v4ActivityState.eventCountNumberInt
-     logger:self.logger];
-
+                                                            logger:self.logger];
     if (eventStateData == nil) {
         return;
     }

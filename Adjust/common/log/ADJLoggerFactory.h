@@ -6,8 +6,6 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-@import Foundation;
-
 #import "ADJLogger.h"
 
 @protocol ADJLoggerFactory <NSObject>

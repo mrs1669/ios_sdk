@@ -11,17 +11,19 @@
 #import "ADJCommonBase.h"
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJOfflineSubscriber.h"
+#import "ADJPublishersRegistry.h"
 
 @interface ADJOfflineController : ADJCommonBase<
     // subscriptions
     ADJPublishingGateSubscriber
 >
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher;
+
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJOfflinePublisher *offlinePublisher;
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 // public api
 - (void)ccPutSdkOffline;

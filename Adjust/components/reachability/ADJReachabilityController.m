@@ -69,7 +69,9 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
-                               targetEndpoint:(nonnull NSString *)targetEndpoint {
+                               targetEndpoint:(nonnull NSString *)targetEndpoint
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"ReachabilityController"];
     _targetEndpoint = targetEndpoint;
 
@@ -77,6 +79,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
                                                             sourceDescription:self.source];
 
     _reachabilityPublisher = [[ADJReachabilityPublisher alloc] init];
+    [pubRegistry addPublisher:_reachabilityPublisher];
 
     //_reachableNetwork = nil;
 
@@ -97,11 +100,6 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         [strongSelf startNetworkReachabilityWithDispatchQueue:
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
     } source:@"measurement session start"];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher {
-    [measurementSessionStartPublisher addSubscriber:self];
 }
 
 #pragma mark Internal Methods
