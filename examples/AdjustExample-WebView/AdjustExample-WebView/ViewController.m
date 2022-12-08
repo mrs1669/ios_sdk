@@ -27,6 +27,10 @@
 
 - (void)loadWKWebView {
 
+
+//    NSString *path1 = [[NSBundle mainBundle]  pathForResource:@"test" ofType:@"js"];
+//    NSURL *instructionsURL = [NSURL fileURLWithPath:path1];
+
     NSString *path = [[NSBundle mainBundle] pathForResource:@"AdjustExample-WebView" ofType:@"html"];
     NSURL *url = [NSURL fileURLWithPath:path];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];

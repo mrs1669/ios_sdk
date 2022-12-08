@@ -115,13 +115,13 @@
 
     } else if ([action isEqual: @"adjust_addGlobalCallbackParameter"]) {
 
-        NSString *key = [data objectForKey:@"key"];
-        NSString *value = [data objectForKey:@"value"];
+        NSString *key = [message objectForKey:@"key"];
+        NSString *value = [message objectForKey:@"value"];
         [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
 
     } else if ([action isEqual: @"adjust_removeGlobalCallbackParameterByKey"]) {
 
-        NSString *key = [data objectForKey:@"key"];
+        NSString *key = [message objectForKey:@"key"];
         [ADJAdjust removeGlobalCallbackParameterByKey:key];
 
     } else if ([action isEqual: @"adjust_clearAllGlobalCallbackParameters"]) {
@@ -130,13 +130,13 @@
 
     } else if ([action isEqual: @"adjust_addGlobalPartnerParameter"]) {
 
-        NSString *key = [data objectForKey:@"key"];
-        NSString *value = [data objectForKey:@"value"];
+        NSString *key = [message objectForKey:@"key"];
+        NSString *value = [message objectForKey:@"value"];
         [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
 
     } else if ([action isEqual: @"adjust_removeGlobalPartnerParameterByKey"]) {
 
-        NSString *key = [data objectForKey:@"key"];
+        NSString *key = [message objectForKey:@"key"];
         [ADJAdjust removeGlobalPartnerParameterByKey:key];
 
     } else if ([action isEqual: @"adjust_clearAllGlobalPartnerParameters"]) {
@@ -207,7 +207,7 @@
 
 - (void)trackEvent:(NSDictionary *)data {
 
-    NSString *eventToken = [data objectForKey:@"eventToken"];
+    NSString *eventToken = [data objectForKey:@"eventId"];
     NSString *revenue = [data objectForKey:@"revenue"];
     NSString *currency = [data objectForKey:@"currency"];
     NSString *deduplicationId = [data objectForKey:@"deduplicationId"];

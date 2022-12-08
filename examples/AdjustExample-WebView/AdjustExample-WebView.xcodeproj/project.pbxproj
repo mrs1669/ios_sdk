@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		073935C52941DF82006BF6FF /* adjust.js in Resources */ = {isa = PBXBuildFile; fileRef = 073935C42941DF82006BF6FF /* adjust.js */; };
+		073935C72941E8F4006BF6FF /* adjust_event.js in Resources */ = {isa = PBXBuildFile; fileRef = 073935C62941E8F4006BF6FF /* adjust_event.js */; };
+		073935C92941F4AC006BF6FF /* adjust_config.js in Resources */ = {isa = PBXBuildFile; fileRef = 073935C82941F4AC006BF6FF /* adjust_config.js */; };
 		07558843290A342300A3AD50 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 07558842290A342300A3AD50 /* AppDelegate.m */; };
 		07558849290A342300A3AD50 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07558848290A342300A3AD50 /* ViewController.m */; };
 		0755884C290A342300A3AD50 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0755884A290A342300A3AD50 /* Main.storyboard */; };
@@ -14,10 +17,15 @@
 		07558851290A342300A3AD50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0755884F290A342300A3AD50 /* LaunchScreen.storyboard */; };
 		07558854290A342300A3AD50 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 07558853290A342300A3AD50 /* main.m */; };
 		0755885D290A407A00A3AD50 /* AdjustExample-WebView.html in Resources */ = {isa = PBXBuildFile; fileRef = 0755885C290A407A00A3AD50 /* AdjustExample-WebView.html */; };
+		076D696E2941F731006FF6D3 /* adjust_third_party_sharing.js in Resources */ = {isa = PBXBuildFile; fileRef = 076D696D2941F731006FF6D3 /* adjust_third_party_sharing.js */; };
+		076D697029420DB3006FF6D3 /* adjust_revenue.js in Resources */ = {isa = PBXBuildFile; fileRef = 076D696F29420DB3006FF6D3 /* adjust_revenue.js */; };
 		AF43E8D596501442A19AF42E /* Pods_AdjustExample_WebView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A45DBAA85F58CFB0586EB1 /* Pods_AdjustExample_WebView.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		073935C42941DF82006BF6FF /* adjust.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = adjust.js; sourceTree = "<group>"; };
+		073935C62941E8F4006BF6FF /* adjust_event.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = adjust_event.js; sourceTree = "<group>"; };
+		073935C82941F4AC006BF6FF /* adjust_config.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = adjust_config.js; sourceTree = "<group>"; };
 		0755883E290A342300A3AD50 /* AdjustExample-WebView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AdjustExample-WebView.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		07558841290A342300A3AD50 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		07558842290A342300A3AD50 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -29,6 +37,8 @@
 		07558852290A342300A3AD50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07558853290A342300A3AD50 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0755885C290A407A00A3AD50 /* AdjustExample-WebView.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "AdjustExample-WebView.html"; sourceTree = "<group>"; };
+		076D696D2941F731006FF6D3 /* adjust_third_party_sharing.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = adjust_third_party_sharing.js; sourceTree = "<group>"; };
+		076D696F29420DB3006FF6D3 /* adjust_revenue.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = adjust_revenue.js; sourceTree = "<group>"; };
 		20A45DBAA85F58CFB0586EB1 /* Pods_AdjustExample_WebView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdjustExample_WebView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B65FDE5BDE1516D7B9A86994 /* Pods-AdjustExample-WebView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-WebView.release.xcconfig"; path = "Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView.release.xcconfig"; sourceTree = "<group>"; };
 		BCF06B57F6BFD1E16D3ED973 /* Pods-AdjustExample-WebView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-WebView.debug.xcconfig"; path = "Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView.debug.xcconfig"; sourceTree = "<group>"; };
@@ -72,6 +82,11 @@
 				07558847290A342300A3AD50 /* ViewController.h */,
 				07558848290A342300A3AD50 /* ViewController.m */,
 				0755885C290A407A00A3AD50 /* AdjustExample-WebView.html */,
+				073935C42941DF82006BF6FF /* adjust.js */,
+				073935C62941E8F4006BF6FF /* adjust_event.js */,
+				076D696F29420DB3006FF6D3 /* adjust_revenue.js */,
+				073935C82941F4AC006BF6FF /* adjust_config.js */,
+				076D696D2941F731006FF6D3 /* adjust_third_party_sharing.js */,
 				0755884A290A342300A3AD50 /* Main.storyboard */,
 				0755884D290A342300A3AD50 /* Assets.xcassets */,
 				0755884F290A342300A3AD50 /* LaunchScreen.storyboard */,
@@ -95,7 +110,6 @@
 				BCF06B57F6BFD1E16D3ED973 /* Pods-AdjustExample-WebView.debug.xcconfig */,
 				B65FDE5BDE1516D7B9A86994 /* Pods-AdjustExample-WebView.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -158,10 +172,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				073935C52941DF82006BF6FF /* adjust.js in Resources */,
 				07558851290A342300A3AD50 /* LaunchScreen.storyboard in Resources */,
+				076D697029420DB3006FF6D3 /* adjust_revenue.js in Resources */,
+				073935C72941E8F4006BF6FF /* adjust_event.js in Resources */,
 				0755884E290A342300A3AD50 /* Assets.xcassets in Resources */,
 				0755885D290A407A00A3AD50 /* AdjustExample-WebView.html in Resources */,
 				0755884C290A342300A3AD50 /* Main.storyboard in Resources */,
+				073935C92941F4AC006BF6FF /* adjust_config.js in Resources */,
+				076D696E2941F731006FF6D3 /* adjust_third_party_sharing.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
