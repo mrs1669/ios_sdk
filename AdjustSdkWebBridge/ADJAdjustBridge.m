@@ -17,19 +17,54 @@
 
 @implementation ADJAdjustBridge
 
-- (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView withAdjustConfig:(ADJAdjustConfig *)adjustConfig {
-
-    if ([webView isKindOfClass:WKWebView.class]) {
-        self.webView = webView;
-        WKUserContentController *controller = webView.configuration.userContentController;
-        [controller addScriptMessageHandler:self name:@"adjust"];
-    }
-}
-
 - (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
+
     if ([webView isKindOfClass:WKWebView.class]) {
+
         self.webView = webView;
+
+        NSString *adjustScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust" ofType:@"js"];
+        NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath encoding:NSUTF8StringEncoding error:nil];
+
+        NSString *adjustEventScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_event" ofType:@"js"];
+        NSString *adjustEventScript = [NSString stringWithContentsOfFile:adjustEventScriptPath encoding:NSUTF8StringEncoding error:nil];
+
+        NSString *adjustRevenueScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_revenue" ofType:@"js"];
+        NSString *adjustRevenueScript = [NSString stringWithContentsOfFile:adjustRevenueScriptPath encoding:NSUTF8StringEncoding error:nil];
+
+        NSString *adjustConfigScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_config" ofType:@"js"];
+        NSString *adjustConfigScript = [NSString stringWithContentsOfFile:adjustConfigScriptPath encoding:NSUTF8StringEncoding error:nil];
+
+        NSString *adjustThirdPartySharingScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_third_party_sharing" ofType:@"js"];
+        NSString *adjustThirdPartySharingScript = [NSString stringWithContentsOfFile:adjustThirdPartySharingScriptPath encoding:NSUTF8StringEncoding error:nil];
+
         WKUserContentController *controller = webView.configuration.userContentController;
+
+        [controller addUserScript:[[WKUserScript.class alloc]
+                                   initWithSource:adjustScript
+                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                   forMainFrameOnly:NO]];
+
+        [controller addUserScript:[[WKUserScript.class alloc]
+                                   initWithSource:adjustEventScript
+                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                   forMainFrameOnly:NO]];
+
+        [controller addUserScript:[[WKUserScript.class alloc]
+                                   initWithSource:adjustRevenueScript
+                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                   forMainFrameOnly:NO]];
+        
+        [controller addUserScript:[[WKUserScript.class alloc]
+                                   initWithSource:adjustConfigScript
+                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                   forMainFrameOnly:NO]];
+
+        [controller addUserScript:[[WKUserScript.class alloc]
+                                   initWithSource:adjustThirdPartySharingScript
+                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                   forMainFrameOnly:NO]];
+
         [controller addScriptMessageHandler:self name:@"adjust"];
     }
 }
