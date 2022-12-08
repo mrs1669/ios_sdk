@@ -85,7 +85,7 @@ removeGlobalCallbackParameter: function(key) {
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
-clearGlobalCallbackParameters: function() {
+clearAllGlobalCallbackParameters: function() {
     const message = {
     action:'adjust_clearAllGlobalCallbackParameters',
     };
@@ -109,7 +109,7 @@ removeGlobalPartnerParameter: function(key) {
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
-clearGlobalPartnerParameters: function() {
+clearAllGlobalPartnerParameters: function() {
     const message = {
     action:'adjust_clearAllGlobalPartnerParameters',
     };
