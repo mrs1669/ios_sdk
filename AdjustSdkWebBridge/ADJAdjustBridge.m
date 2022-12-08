@@ -23,16 +23,19 @@
 
         self.webView = webView;
 
-        NSString *adjustScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust" ofType:@"js"];
+        NSBundle *mainBundle = [NSBundle mainBundle];
+        NSBundle *sourceBundle = [NSBundle bundleForClass:self.class];
+
+        NSString *adjustScriptPath = [sourceBundle pathForResource:@"adjust" ofType:@"js"];
         NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath encoding:NSUTF8StringEncoding error:nil];
 
-        NSString *adjustEventScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_event" ofType:@"js"];
+        NSString *adjustEventScriptPath = [sourceBundle pathForResource:@"adjust_event" ofType:@"js"];
         NSString *adjustEventScript = [NSString stringWithContentsOfFile:adjustEventScriptPath encoding:NSUTF8StringEncoding error:nil];
 
-        NSString *adjustRevenueScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_revenue" ofType:@"js"];
+        NSString *adjustRevenueScriptPath = [sourceBundle pathForResource:@"adjust_revenue" ofType:@"js"];
         NSString *adjustRevenueScript = [NSString stringWithContentsOfFile:adjustRevenueScriptPath encoding:NSUTF8StringEncoding error:nil];
 
-        NSString *adjustConfigScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_config" ofType:@"js"];
+        NSString *adjustConfigScriptPath = [sourceBundle pathForResource:@"adjust_config" ofType:@"js"];
         NSString *adjustConfigScript = [NSString stringWithContentsOfFile:adjustConfigScriptPath encoding:NSUTF8StringEncoding error:nil];
 
         NSString *adjustThirdPartySharingScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_third_party_sharing" ofType:@"js"];
