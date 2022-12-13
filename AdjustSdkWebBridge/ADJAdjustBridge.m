@@ -23,53 +23,31 @@
 
         self.webView = webView;
 
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSBundle *sourceBundle = [NSBundle bundleForClass:self.class];
-
-        NSString *adjustScriptPath = [sourceBundle pathForResource:@"adjust" ofType:@"js"];
-        NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath encoding:NSUTF8StringEncoding error:nil];
-
-        NSString *adjustEventScriptPath = [sourceBundle pathForResource:@"adjust_event" ofType:@"js"];
-        NSString *adjustEventScript = [NSString stringWithContentsOfFile:adjustEventScriptPath encoding:NSUTF8StringEncoding error:nil];
-
-        NSString *adjustRevenueScriptPath = [sourceBundle pathForResource:@"adjust_revenue" ofType:@"js"];
-        NSString *adjustRevenueScript = [NSString stringWithContentsOfFile:adjustRevenueScriptPath encoding:NSUTF8StringEncoding error:nil];
-
-        NSString *adjustConfigScriptPath = [sourceBundle pathForResource:@"adjust_config" ofType:@"js"];
-        NSString *adjustConfigScript = [NSString stringWithContentsOfFile:adjustConfigScriptPath encoding:NSUTF8StringEncoding error:nil];
-
-        NSString *adjustThirdPartySharingScriptPath = [[NSBundle mainBundle] pathForResource:@"adjust_third_party_sharing" ofType:@"js"];
-        NSString *adjustThirdPartySharingScript = [NSString stringWithContentsOfFile:adjustThirdPartySharingScriptPath encoding:NSUTF8StringEncoding error:nil];
-
         WKUserContentController *controller = webView.configuration.userContentController;
 
-        [controller addUserScript:[[WKUserScript.class alloc]
-                                   initWithSource:adjustScript
-                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                   forMainFrameOnly:NO]];
-
-        [controller addUserScript:[[WKUserScript.class alloc]
-                                   initWithSource:adjustEventScript
-                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                   forMainFrameOnly:NO]];
-
-        [controller addUserScript:[[WKUserScript.class alloc]
-                                   initWithSource:adjustRevenueScript
-                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                   forMainFrameOnly:NO]];
-        
-        [controller addUserScript:[[WKUserScript.class alloc]
-                                   initWithSource:adjustConfigScript
-                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                   forMainFrameOnly:NO]];
-
-        [controller addUserScript:[[WKUserScript.class alloc]
-                                   initWithSource:adjustThirdPartySharingScript
-                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                   forMainFrameOnly:NO]];
+        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust"]];
+        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_config"]];
+        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_event"]];
+        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_revenue"]];
+        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_third_party_sharing"]];
 
         [controller addScriptMessageHandler:self name:@"adjust"];
     }
+}
+
+- (NSString *)getWebBridgeScriptFor:(NSString *)resource {
+    NSBundle *sourceBundle = [NSBundle bundleForClass:self.class];
+    NSString *adjustScriptPath = [sourceBundle pathForResource:resource ofType:@"js"];
+    NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath encoding:NSUTF8StringEncoding error:nil];
+    return adjustScript;
+}
+
+- (void)addUserScript:(WKUserContentController *)controller withScript:(NSString *)javascript {
+    [controller addUserScript:[[WKUserScript.class alloc]
+                               initWithSource:javascript
+                               injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                               forMainFrameOnly:NO]];
+
 }
 
 - (void)didReadWithAdjustAttribution:(ADJAdjustAttribution *)adjustAttribution {

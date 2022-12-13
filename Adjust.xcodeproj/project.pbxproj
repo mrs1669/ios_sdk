@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07066DF429473DF800ABF24D /* adjust_config.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DEF29473DF700ABF24D /* adjust_config.js */; };
+		07066DF529473DF800ABF24D /* adjust_revenue.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF029473DF700ABF24D /* adjust_revenue.js */; };
+		07066DF629473DF800ABF24D /* adjust_event.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF129473DF700ABF24D /* adjust_event.js */; };
+		07066DF729473DF800ABF24D /* adjust_third_party_sharing.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF229473DF800ABF24D /* adjust_third_party_sharing.js */; };
+		07066DF829473DF800ABF24D /* adjust.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF329473DF800ABF24D /* adjust.js */; };
 		070DA83628882B3A008486CB /* ADJClock.m in Sources */ = {isa = PBXBuildFile; fileRef = 070DA83428882B3A008486CB /* ADJClock.m */; };
 		071594042886E3B400E7F2F8 /* ADJV4RestMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = 071594022886E3B400E7F2F8 /* ADJV4RestMigration.m */; };
 		071594082886E41C00E7F2F8 /* ADJAdjustAttribution.m in Sources */ = {isa = PBXBuildFile; fileRef = 071594062886E41C00E7F2F8 /* ADJAdjustAttribution.m */; };
@@ -3366,6 +3371,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07066DEF29473DF700ABF24D /* adjust_config.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_config.js; sourceTree = "<group>"; };
+		07066DF029473DF700ABF24D /* adjust_revenue.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_revenue.js; sourceTree = "<group>"; };
+		07066DF129473DF700ABF24D /* adjust_event.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_event.js; sourceTree = "<group>"; };
+		07066DF229473DF800ABF24D /* adjust_third_party_sharing.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_third_party_sharing.js; sourceTree = "<group>"; };
+		07066DF329473DF800ABF24D /* adjust.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust.js; sourceTree = "<group>"; };
 		070DA83328882B3A008486CB /* ADJClock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClock.h; sourceTree = "<group>"; };
 		070DA83428882B3A008486CB /* ADJClock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClock.m; sourceTree = "<group>"; };
 		071594012886E3B400E7F2F8 /* ADJV4RestMigration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJV4RestMigration.h; sourceTree = "<group>"; };
@@ -4321,6 +4331,11 @@
 				0755868229092F1000A3AD50 /* AdjustSdkWebBridge.h */,
 				075586A329093BDB00A3AD50 /* ADJAdjustBridge.h */,
 				075586A429093BDB00A3AD50 /* ADJAdjustBridge.m */,
+				07066DEF29473DF700ABF24D /* adjust_config.js */,
+				07066DF129473DF700ABF24D /* adjust_event.js */,
+				07066DF029473DF700ABF24D /* adjust_revenue.js */,
+				07066DF229473DF800ABF24D /* adjust_third_party_sharing.js */,
+				07066DF329473DF800ABF24D /* adjust.js */,
 			);
 			path = AdjustSdkWebBridge;
 			sourceTree = "<group>";
@@ -7089,6 +7104,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07066DF529473DF800ABF24D /* adjust_revenue.js in Resources */,
+				07066DF429473DF800ABF24D /* adjust_config.js in Resources */,
+				07066DF829473DF800ABF24D /* adjust.js in Resources */,
+				07066DF629473DF800ABF24D /* adjust_event.js in Resources */,
+				07066DF729473DF800ABF24D /* adjust_third_party_sharing.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
