@@ -11,20 +11,16 @@
 #pragma mark Fields
 @interface ADJSQLiteStoragePropertiesActionBase ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic)
-    ADJSQLiteStoragePropertiesBase *sqliteStoragePropertiesWeak;
+@property (nullable, readonly, weak, nonatomic) ADJSQLiteStoragePropertiesBase *sqliteStoragePropertiesWeak;
 @property (nonnull, readonly, strong, nonatomic) id data;
 
 @end
 
 @implementation ADJSQLiteStoragePropertiesActionBase
 #pragma mark Instantiation
-- (nonnull instancetype)
-initWithPropertiesStorage:(nonnull ADJSQLiteStoragePropertiesBase *)sqliteStorageProperties
-    data:(nonnull id)data
-    decoratedSQLiteStorageAction:
-        (nullable ADJSQLiteStorageActionBase *)decoratedSQLiteStorageAction
-{
+- (nonnull instancetype)initWithPropertiesStorage:(nonnull ADJSQLiteStoragePropertiesBase *)sqliteStorageProperties
+                                             data:(nonnull id)data
+                     decoratedSQLiteStorageAction:(nullable ADJSQLiteStorageActionBase *)decoratedSQLiteStorageAction {
     self = [super initWithDecoratedSQLiteStorageAction:decoratedSQLiteStorageAction];
     _sqliteStoragePropertiesWeak = sqliteStorageProperties;
     _data = data;
@@ -38,14 +34,15 @@ initWithPropertiesStorage:(nonnull ADJSQLiteStoragePropertiesBase *)sqliteStorag
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageActionBase
 - (BOOL)concretePerformStorageActionInDbTransaction:(nonnull ADJSQLiteDb *)sqliteDb
-                                             logger:(nonnull ADJLogger *)logger
-{
+                                             logger:(nonnull ADJLogger *)logger {
     ADJSQLiteStoragePropertiesBase *_Nullable sqliteStorageProperties =
-        self.sqliteStoragePropertiesWeak;
+    self.sqliteStoragePropertiesWeak;
 
     if (sqliteStorageProperties == nil) {
-        [logger error:@"Cannot perform properties storage action"
-            " in db transaction without a reference to storage"];
+        [logger debugDev:
+         @"Cannot perform properties storage action"
+         " in db transaction without a reference to storage"
+               issueType:ADJIssueWeakReference];
         // rollback rest of transaction
         return NO;
     }
@@ -56,7 +53,7 @@ initWithPropertiesStorage:(nonnull ADJSQLiteStoragePropertiesBase *)sqliteStorag
 
 - (void)concretePerformStorageActionSelfContained {
     ADJSQLiteStoragePropertiesBase *_Nullable sqliteStorageProperties =
-        self.sqliteStoragePropertiesWeak;
+    self.sqliteStoragePropertiesWeak;
 
     if (sqliteStorageProperties == nil) {
         return;
@@ -66,3 +63,4 @@ initWithPropertiesStorage:(nonnull ADJSQLiteStoragePropertiesBase *)sqliteStorag
 }
 
 @end
+

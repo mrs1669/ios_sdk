@@ -15,7 +15,8 @@
 
 #pragma mark Fields
 #pragma mark - Public constants
-NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue = @"ClientClearGlobalParametersData";
+NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue =
+@"ClientClearGlobalParametersData";
 
 @implementation ADJClientClearGlobalParametersData
 #pragma mark Instantiation
@@ -25,17 +26,21 @@ NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue = @"ClientCl
                                                           pairValueWithKey:ADJClientActionTypeKey];
 
     if (clientActionTypeValue == nil) {
-        [logger error:@"Cannot create ClientClearGlobalParametersData"
-         " instance from client action io data without client action type value"];
+        [logger debugDev:@"Cannot create ClientClearGlobalParametersData"
+         " from client action io data without client action type value"
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
-    if (! [ADJClientClearGlobalParametersDataMetadataTypeValue isEqualToString:clientActionTypeValue.stringValue]) {
-        [logger error:@"Cannot create ClientClearGlobalParametersData"
-         " instance from client action io data"
-         " with read client action type value %@"
-         " different than expected %@",
-         clientActionInjectedIoData, ADJClientClearGlobalParametersDataMetadataTypeValue];
+    if (! [ADJClientClearGlobalParametersDataMetadataTypeValue
+           isEqualToString:clientActionTypeValue.stringValue])
+    {
+        [logger debugDev:
+         @"Cannot create ClientClearGlobalParametersData from client action io data"
+         " with different client action type"
+           expectedValue:ADJClientClearGlobalParametersDataMetadataTypeValue
+             actualValue:clientActionTypeValue.stringValue
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
@@ -92,4 +97,5 @@ NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue = @"ClientCl
 }
 
 @end
+
 

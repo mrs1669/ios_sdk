@@ -45,12 +45,13 @@ static NSString *const kErrorReasonKey = @"errorReason";
     }
 
     ADJBooleanWrapper *_Nullable hasReceivedValidAsaClickResponse =
-    [ADJBooleanWrapper instanceFromIoValue:
-     [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]
-                                    logger:logger];
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]
+                                        logger:logger];
     if (hasReceivedValidAsaClickResponse == nil) {
-        [logger error:@"Cannot create instance from Io data without valid %@",
-         kHasReceivedValidAsaClickResponseKey];
+        [logger debugDev:@"Cannot create instance from Io data with invalid io value"
+               valueName:kHasReceivedValidAsaClickResponseKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
@@ -59,8 +60,9 @@ static NSString *const kErrorReasonKey = @"errorReason";
      [ioData.propertiesMap pairValueWithKey:kHasReceivedAdjustAttributionKey]
                                     logger:logger];
     if (hasReceivedAdjustAttribution == nil) {
-        [logger error:@"Cannot create instance from Io data without valid %@",
-         kHasReceivedAdjustAttributionKey];
+        [logger debugDev:@"Cannot create instance from Io data with invalid io value"
+               valueName:kHasReceivedAdjustAttributionKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 

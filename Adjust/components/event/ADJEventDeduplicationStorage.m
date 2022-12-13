@@ -48,12 +48,12 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
-        [self.logger debug:@"Activity state v4 file not found"];
+        [self.logger debugDev:@"Activity state v4 file not found"];
         return;
     }
 
     if (v4ActivityState.transactionIds == nil) {
-        [self.logger debug:@"Cannot find event deduplication list"
+        [self.logger debugDev:@"Cannot find event deduplication list"
          " in  v4 activity state file"];
         return;
     }

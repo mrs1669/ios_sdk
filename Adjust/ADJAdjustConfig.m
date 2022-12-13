@@ -19,10 +19,11 @@
  @property (nullable, readonly, strong, nonatomic) NSString *appToken;
  @property (nullable, readonly, strong, nonatomic) NSString *environment;
  @property (nullable, readonly, strong, nonatomic) NSString *defaultTracker;
- @property (nullable, readonly, strong, nonatomic) NSString *logLevel;
  @property (nullable, readonly, strong, nonatomic) NSString *urlStrategy;
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
+ @property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
+ @property (nullable, readonly, strong, nonatomic) NSNumber *doNotLogAnyNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
@@ -59,8 +60,11 @@ NSString *const ADJUrlStategyIndia = @"INDIA";
     _defaultTracker = [ADJUtilObj copyStringWithInput:defaultTracker];
 }
 
-- (void)setLogLevel:(nonnull NSString *)logLevel {
-    _logLevel = [ADJUtilObj copyStringWithInput:logLevel];
+- (void)doLogAll {
+    _doLogAllNumberBool = @(YES);
+}
+- (void)doNotLogAny {
+    _doNotLogAnyNumberBool = @(YES);
 }
 
 - (void)setUrlStrategy:(nonnull NSString *)urlStrategy {

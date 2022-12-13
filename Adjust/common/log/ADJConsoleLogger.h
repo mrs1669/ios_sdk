@@ -9,29 +9,27 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJNonEmptyString.h"
+#import "ADJSdkConfigData.h"
+#import "ADJLogMessageData.h"
+#import "ADJInputLogMessageData.h"
 
 //#import <os/log.h>
 
 @interface ADJConsoleLogger : NSObject
 // instantiation
-- (nonnull instancetype)init NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+    NS_DESIGNATED_INITIALIZER;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (void)setEnvironmentToSandbox;
-
-- (void)didLogMessage:(nonnull NSString *)logMessage
-               source:(nonnull NSString *)source
-      messageLogLevel:(nonnull NSString *)messageLogLevel;
+- (void)didLogMessage:(nonnull ADJLogMessageData *)logMessageData;
 
 - (void)didSdkInitWithIsSandboxEnvironment:(BOOL)isSandboxEnvironment
-                                  logLevel:(nullable ADJNonEmptyString *)logLevel;
+                                  doLogAll:(BOOL)doLogAll
+                               doNotLogAny:(BOOL)doNotLogAny;
 
-/*
- - (void)didLogMessage:(nonnull NSString *)logMessage
- source:(nonnull NSString *)source
- adjustLogLevel:(nonnull NSString *)adjustLogLevel
- osLogLogger:(nonnull os_log_t)osLogLogger
- API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0));
- */
++ (nonnull NSString *)clientFormatMessage:(nonnull ADJInputLogMessageData *)inputLogMessageData
+                             isPreSdkInit:(BOOL)isPreSdkInit;
 
 @end

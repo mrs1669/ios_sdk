@@ -10,8 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NSString *ADJAdjustLogLevel NS_TYPED_ENUM;
+FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelTrace;
 FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelDebug;
 FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelInfo;
+FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelNotice;
 FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelError;
 
 NS_ASSUME_NONNULL_END
@@ -19,21 +22,12 @@ NS_ASSUME_NONNULL_END
 @interface ADJAdjustLogMessageData : NSObject
 // instantiation
 - (nonnull instancetype)initWithLogMessage:(nonnull NSString *)logMessage
-                                    source:(nonnull NSString *)source
-                           messageLogLevel:(nonnull NSString *)messageLogLevel
+                           messageLogLevel:(nonnull ADJAdjustLogLevel)messageLogLevel
 NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSString *logMessage;
-@property (nonnull, readonly, strong, nonatomic) NSString *source;
-@property (nonnull, readonly, strong, nonatomic) NSString *messageLogLevel;
-
-// public api
-- (nonnull NSString *)generateFullLog;
-
-+ (nonnull NSString *)generateFullLogWithMessage:(nonnull NSString *)logMessage
-                                          source:(nonnull NSString *)source
-                                 messageLogLevel:(nonnull NSString *)messageLogLevel;
+@property (nonnull, readonly, strong, nonatomic) ADJAdjustLogLevel messageLogLevel;
 
 @end

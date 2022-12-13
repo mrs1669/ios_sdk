@@ -29,7 +29,4 @@
 
 @property (nullable, strong, nonatomic) NSDictionary *attributionJson;
 
-// public api
-- (nonnull ADJNonEmptyString *)generateSentShortDescription;
-
 @end

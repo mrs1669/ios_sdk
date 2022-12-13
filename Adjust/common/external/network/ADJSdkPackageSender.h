@@ -12,7 +12,7 @@
 #import "ADJSdkResponseData.h"
 #import "ADJSdkPackageSendingSubscriber.h"
 #import "ADJSdkResponseSubscriber.h"
-#import "ADJThreadPool.h"
+#import "ADJThreadExecutorFactory.h"
 #import "ADJNetworkEndpointData.h"
 #import "ADJClientConfigData.h"
 #import "ADJSdkPackageData.h"
@@ -28,7 +28,7 @@
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sourceDescription:(nonnull NSString *)sourceDescription
-                                   threadpool:(nonnull id<ADJThreadPool>)threadpool
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                    sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
                          sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
                           networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData

@@ -14,7 +14,7 @@
 
 @interface ADJSessionDeviceIdsController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) id<ADJThreadPool> threadPoolWeak;
+@property (nullable, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nullable, readonly, strong, nonatomic) ADJTimeLengthMilli *timeoutPerAttempt;
 @property (readonly, assign, nonatomic) BOOL canCacheData;
 
@@ -30,11 +30,12 @@
 }
 
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                             timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
                                  canCacheData:(BOOL)canCacheData {
     self = [super initWithLoggerFactory:loggerFactory source:@"SessionDeviceIdsController"];
-    _threadPoolWeak = threadPool;
+    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                                                                 sourceDescription:self.source];
     _timeoutPerAttempt = timeoutPerAttempt;
     _canCacheData = canCacheData;
 
@@ -62,24 +63,19 @@
     }
 
     if (self.timeoutPerAttempt == nil) {
-        return [self returnFailed:@"without timeout per attempt"];
-    }
-
-    id<ADJThreadPool> _Nullable threadPool = self.threadPoolWeak;
-    if (threadPool == nil) {
-        return [self returnFailed:@"without reference to thread pool"];
+        return [[ADJSessionDeviceIdsData alloc]
+                initWithFailMessage:@"without timeout per attempt"];
     }
 
     ADJNonEmptyString *_Nullable identifierForVendor =
-    [self getIdentifierForVendorWithThreadPool:threadPool
-                             timeoutPerAttempt:self.timeoutPerAttempt];
+    [self getIdentifierForVendorWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
     ADJNonEmptyString *_Nullable advertisingIdentifier =
-    [self getAdvertisingIdentifierWithThreadPool:threadPool
-                               timeoutPerAttempt:self.timeoutPerAttempt];
+    [self getAdvertisingIdentifierWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
     if (identifierForVendor == nil && advertisingIdentifier == nil) {
-        return [self returnFailed:@"either session device ids"];
+        return [[ADJSessionDeviceIdsData alloc]
+                initWithFailMessage:@"either session device ids"];
     }
 
     ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
@@ -96,13 +92,9 @@
 }
 
 #pragma mark Internal Methods
-- (nonnull ADJSessionDeviceIdsData *)returnFailed:(nonnull NSString *)failReason {
-    [self.logger debug:@"Cannot get session device ids %@", failReason];
-    return [[ADJSessionDeviceIdsData alloc] initWithFailMessage:failReason];
-}
-
-- (nullable ADJNonEmptyString *)getIdentifierForVendorWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
-                                                   timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt {
+- (nullable ADJNonEmptyString *)
+    getIdentifierForVendorWithTimeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
+{
     if (self.identifierForVendorCached != nil) {
         return self.identifierForVendorCached;
     }
@@ -113,8 +105,8 @@
     [[ADJValueWO alloc] init];
 
     BOOL readIdentifierForVendorFinishedSuccessfully =
-    [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                 blockToExecute:
+    [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                    blockToExecute:
      ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
@@ -124,7 +116,7 @@
         ADJNonEmptyString *_Nullable identifierForVendor =
         [self readIdentifierForVendorWithCurrentDevice:currentDevice];
         [identifierForVendorWO setNewValue:identifierForVendor];
-    }];
+    } source:@"read system idfv with timeout"];
 
     if (! readIdentifierForVendorFinishedSuccessfully) {
         return nil;
@@ -133,16 +125,17 @@
     return [identifierForVendorWO changedValue];
 }
 
-- (nullable ADJNonEmptyString *)getAdvertisingIdentifierWithThreadPool:(nonnull id<ADJThreadPool>)threadPool
-                                                     timeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt {
+- (nullable ADJNonEmptyString *)
+    getAdvertisingIdentifierWithTimeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
+{
     __typeof(self) __weak weakSelf = self;
 
     __block ADJValueWO<ADJNonEmptyString *> *_Nonnull advertisingIdentifierWO =
     [[ADJValueWO alloc] init];
 
     BOOL readAdvertisingIdentifierFinishedSuccessfully =
-    [threadPool executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                 blockToExecute:
+    [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                    blockToExecute:
      ^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
@@ -150,7 +143,7 @@
         ADJNonEmptyString *_Nullable advertisingIdentifier =
         [strongSelf readAdvertisingIdentifier];
         [advertisingIdentifierWO setNewValue:advertisingIdentifier];
-    }];
+    } source:@"read system idfa"];
 
     if (! readAdvertisingIdentifierFinishedSuccessfully) {
         return  nil;

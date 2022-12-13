@@ -38,7 +38,8 @@ NSString *const ADJBooleanFalseString = @"false";
 + (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
                                       logger:(nonnull ADJLogger *)logger {
     if (ioValue == nil) {
-        [logger error:@"Cannot create boolean from Io value when it is null"];
+        [logger debugDev:@"Cannot create boolean from Io value when it is null"
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
 
@@ -50,8 +51,8 @@ NSString *const ADJBooleanFalseString = @"false";
         return [self falseInstance];
     }
 
-    [logger error:@"Cannot create boolean from Io value"
-     " when it does not match either valid value"];
+    [logger debugDev:@"Cannot create boolean from Io value"
+           issueType:ADJIssueInvalidInput];
 
     return nil;
 }

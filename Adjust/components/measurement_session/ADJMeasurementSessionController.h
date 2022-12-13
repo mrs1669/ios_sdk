@@ -54,7 +54,6 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 - (void)ccForeground;
 - (void)ccBackground;
 
-- (nullable ADJMeasurementSessionStateData *)currentMeasurementSessionStateDataWithLogger:
-(nonnull ADJLogger *)logger;
+- (nullable ADJMeasurementSessionStateData *)currentMeasurementSessionStateDataWithLogger:(nonnull ADJLogger *)logger;
 
 @end

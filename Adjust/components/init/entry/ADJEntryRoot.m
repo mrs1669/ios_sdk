@@ -38,33 +38,30 @@
 - (nonnull instancetype)initWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     self = [super init];
 
-    _logController = [[ADJLogController alloc] init];
-
-    _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
-
-    _clientExecutor =
-    [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                 sourceDescription:@"clientExecutor"];
-
-    _commonExecutor =
-    [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                 sourceDescription:@"commonExecutor"];
-
-    [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
-
-    _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
-
-    _rootLogger = [_logController createLoggerWithSource:@"EntryRoot"];
-
     if (sdkConfigDataBuilder != nil) {
         _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigDataBuilder];
     } else {
         _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
     }
 
-    if (_sdkConfigData.assumeSandboxEnvironmentForLogging) {
-        [_logController setEnvironmentToSandbox];
-    }
+    _logController = [[ADJLogController alloc] initWithInstanceId:nil
+                                                    sdkConfigData:_sdkConfigData];
+
+    _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
+
+    _clientExecutor =
+        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
+                                                     sourceDescription:@"clientExecutor"];
+
+    _commonExecutor =
+        [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
+                                                     sourceDescription:@"commonExecutor"];
+
+    [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
+
+    _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
+
+    _rootLogger = [_logController createLoggerWithSource:@"EntryRoot"];
 
     _preSdkInitRootController = nil;
 
@@ -76,9 +73,9 @@
         if (strongSelf == nil) { return; }
 
         strongSelf.preSdkInitRootController =
-        [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
-                                                         entryRoot:strongSelf];
-    }];
+            [[ADJPreSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
+                                                             entryRoot:strongSelf];
+    } source:@"init"];
 
     return self;
 }
@@ -89,20 +86,24 @@
 }
 
 #pragma mark Public API
-+ (void)executeBlockInClientContext:(nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))blockInClientContext {
++ (void)executeBlockInClientContext:
+    (nonnull void (^)(id<ADJClientAPI> _Nonnull adjustAPI, ADJLogger *_Nonnull apiLogger))
+        blockInClientContext
+{
     ADJEntryRoot *_Nonnull root = [ADJAdjustInternal rootInstance];
 
     // TODO: (Gena) Why do we need ths check👇🏻? ('preSdkInitRootController' is created by ADJEntryRoot initializer)
     // no weak/strong self needed since it does not use self inside
     [root.clientExecutor executeInSequenceWithBlock:^{
         if (root.preSdkInitRootController == nil) {
-            [root.adjustApiLogger error:
-             @"Cannot execute in client context without pre sdk init controller"];
+            [root.adjustApiLogger debugDev:
+                @"Cannot execute in client context without pre sdk init controller"
+            issueType:ADJIssueLogicError];
             return;
         }
 
         blockInClientContext(root.preSdkInitRootController, root.adjustApiLogger);
-    }];
+    } source:@"execute in client context"];
 }
 
 - (nonnull ADJPostSdkInitRootController *)ccCreatePostSdkInitRootControllerWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData
@@ -130,7 +131,8 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         if (strongSelf.preSdkInitRootController != nil) {
-            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+            [strongSelf.preSdkInitRootController.storageRootController
+                finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
             [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
         }
 
@@ -139,7 +141,7 @@
         }
 
         [strongSelf.threadController finalizeAtTeardown];
-    }];
+    } source:@"finalize at teardown"];
 
     if (! canExecuteTask && closeStorageBlock != nil) {
         closeStorageBlock();
@@ -154,6 +156,3 @@
 }
 
 @end
-
-
-

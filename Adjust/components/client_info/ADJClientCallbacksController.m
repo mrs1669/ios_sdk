@@ -10,6 +10,8 @@
 
 #import "ADJSessionDeviceIdsData.h"
 #import "ADJUtilF.h"
+#import "ADJConsoleLogger.h"
+#import "ADJAdjustLogMessageData.h"
 
 @interface ADJClientCallbacksController ()
 #pragma mark - Injected dependencies
@@ -34,27 +36,32 @@
 }
 
 #pragma mark Public API
-- (void)ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback{
+- (void)ccAttributionWithCallback:
+    (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
+{
     id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
     if (clientReturnExecutor == nil) {
-        [self.logger error:@"Cannot return attribution in callback"
-         " without a client return executor"];
+        [self.logger debugDev:
+         @"Cannot return attribution in callback without a client return executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
-    ADJAttributionStateStorage *_Nullable attributionStateStorage = self.attributionStateStorageWeak;
+    ADJAttributionStateStorage *_Nullable attributionStateStorage =
+        self.attributionStateStorageWeak;
     if (attributionStateStorage == nil) {
-        [self.logger error:@"Cannot get attribution state without reference to storage"];
+        [self.logger debugDev:@"Cannot get attribution state without reference to storage"
+                    issueType:ADJIssueWeakReference];
         [clientReturnExecutor executeClientReturnWithBlock:^{
             [adjustAttributionCallback unableToReadAdjustAttributionWithMessage:
-             @"Cannot get attribution data"
-             " because it was unexpectedly unable to access the storage"];
+                 @"Cannot get attribution data"
+                 " because it was unexpectedly unable to access the storage"];
         }];
         return;
     }
 
     ADJAttributionStateData *_Nonnull attributionStateData =
-    [attributionStateStorage readOnlyStoredDataValue];
+        [attributionStateStorage readOnlyStoredDataValue];
 
     ADJAttributionData *_Nullable attributionData = attributionStateData.attributionData;
 
@@ -84,17 +91,18 @@
 - (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
     id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
     if (clientReturnExecutor == nil) {
-        [self.logger error:@"Cannot return device ids in callback"
-         " without a client return executor"];
+        [self.logger debugDev:
+         @"Cannot return device ids in callback without a client return executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJDeviceController *_Nullable deviceController = self.deviceControllerWeak;
     if (deviceController == nil) {
-        NSString *_Nonnull errorMessage = @"Cannot return device ids in callback"
-        " without a reference to the controller";
+        NSString *_Nonnull errorMessage =
+            @"Cannot return device ids in callback without a reference to the controller";
 
-        [self.logger error:@"%@", errorMessage];
+        [self.logger debugDev:errorMessage issueType:ADJIssueWeakReference];
         [clientReturnExecutor executeClientReturnWithBlock:^{
             [adjustDeviceIdsCallback unableToReadAdjustDeviceIdsWithMessage:errorMessage];
         }];
@@ -102,17 +110,25 @@
     }
 
     ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
-    [deviceController getSessionDeviceIdsSync];
+        [deviceController getSessionDeviceIdsSync];
 
     if (sessionDeviceIdsData.failMessage != nil) {
-        [self.logger info:@"Returning fail on client device ids callback %@",
-         sessionDeviceIdsData.failMessage];
+        ADJInputLogMessageData *_Nonnull clientInputLog =
+            [[ADJInputLogMessageData alloc]
+             initWithMessage:@"Cannot get device ids for callback"
+             level:ADJAdjustLogLevelInfo
+             messageParams:
+                    [[NSDictionary alloc] initWithObjectsAndKeys:
+                     sessionDeviceIdsData.failMessage, @"reason", nil]];
+        
+        [self.logger logWithInput:clientInputLog];
 
-        NSString *_Nonnull clientFailMessage =
-        [NSString stringWithFormat:@"Cannot get device ids %@", sessionDeviceIdsData.failMessage];
+        NSString *_Nonnull clientMessage =
+            [ADJConsoleLogger clientFormatMessage:clientInputLog
+                                     isPreSdkInit:NO];
 
         [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustDeviceIdsCallback unableToReadAdjustDeviceIdsWithMessage:clientFailMessage];
+            [adjustDeviceIdsCallback unableToReadAdjustDeviceIdsWithMessage:clientMessage];
         }];
         return;
     }

@@ -86,7 +86,7 @@ static dispatch_once_t entryRootOnceToken = 0;
             entryRootOnceToken = 0;
             dispatch_once(&entryRootOnceToken, ^{
                 entryRootInstance =
-                [[ADJEntryRoot alloc] initWithSdkConfigDataBuilder:sdkConfigDataBuilder];
+                    [[ADJEntryRoot alloc] initWithSdkConfigDataBuilder:sdkConfigDataBuilder];
             });
         } else {
             [returnMessage appendString:

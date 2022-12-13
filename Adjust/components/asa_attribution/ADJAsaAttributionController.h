@@ -16,6 +16,7 @@
 #import "ADJSdkPackageSendingSubscriber.h"
 
 #import "ADJThreadExecutorFactory.h"
+#import "ADJConcurrentThreadExecutor.h"
 #import "ADJLogQueueController.h"
 #import "ADJMainQueueController.h"
 #import "ADJSdkPackageBuilder.h"
@@ -23,7 +24,6 @@
 #import "ADJClock.h"
 #import "ADJClientConfigData.h"
 #import "ADJExternalConfigData.h"
-#import "ADJThreadPool.h"
 #import "ADJAttributionStateStorage.h"
 
 @interface ADJAsaAttributionController : ADJCommonBase<
@@ -46,7 +46,6 @@
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                    asaAttributionStateStorage:(nonnull ADJAsaAttributionStateStorage *)asaAttributionStateStorage
                                         clock:(nonnull ADJClock *)clock
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
                              clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
                          asaAttributionConfig:(nonnull ADJExternalConfigData *)asaAttributionConfig
                            logQueueController:(nonnull ADJLogQueueController *)logQueueController

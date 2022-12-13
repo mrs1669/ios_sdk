@@ -50,26 +50,33 @@
                                             isOptional:(BOOL)isOptional {
     if (doubleNumberValue == nil) {
         if (! isOptional) {
-            [logger error:@"Cannot create money amount with nil double number value"];
+            [logger debugDev:@"Cannot create money amount with nil double number value"
+                   issueType:ADJIssueInvalidInput];
         }
         return nil;
     }
     
     if ([ADJUtilF isNotANumber:doubleNumberValue]) {
-        [logger error:@"Cannot create money amount with invalid double number %@ value",
-         doubleNumberValue];
+        [logger debugDev:@"Cannot create money amount with invalid double number"
+                     key:@"doubleNumberValue"
+                   value:doubleNumberValue.description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
     if (doubleNumberValue.doubleValue != 0.0 && ! isnormal(doubleNumberValue.doubleValue)) {
-        [logger error:@"Cannot create money amount with invalid double number %@ value",
-         doubleNumberValue];
+        [logger debugDev:@"Cannot create money amount with invalid double number"
+                     key:@"doubleNumberValue"
+                   value:doubleNumberValue.description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
     if (doubleNumberValue.doubleValue < 0.0) {
-        [logger error:@"Cannot create money amount with negative double number %@ value",
-         doubleNumberValue];
+        [logger debugDev:@"Cannot create money amount with negative double number"
+                     key:@"doubleNumberValue"
+                   value:doubleNumberValue.description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     

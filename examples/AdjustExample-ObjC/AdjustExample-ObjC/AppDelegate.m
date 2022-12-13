@@ -9,6 +9,7 @@
 
 #import "ADJAdjust.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustConfig.h"
 
 @interface AppDelegate ()
 
@@ -21,18 +22,18 @@
 
     ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc"
                                                                            environment:ADJEnvironmentSandbox];
-    [adjustConfig setAdjustAttributionSubscriber:self];
+    [adjustConfig doLogAll];
     [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 
     return YES;
 }
 
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
-    NSLog(@"Adjust attribution read: %@", adjustAttribution);
+    NSLog(@"Adjust Attribution: %@", adjustAttribution);
 }
 
-- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
-    NSLog(@"Adjust attribution changed: %@", adjustAttribution);
+- (void)unableToReadAdjustAttributionWithMessage:(nonnull NSString *)message {
+    NSLog(@"Adjust Attribution: %@", message);
 }
 
 @end

@@ -29,24 +29,23 @@ static NSString *const kPushTokenStringKey = @"pushTokenString";
 + (nullable instancetype)instanceFromClientWithAdjustPushToken:(nullable ADJAdjustPushToken *)adjustPushToken
                                                         logger:(nonnull ADJLogger *)logger {
     if (adjustPushToken == nil) {
-        [logger error:@"Cannot create push token"
-         " with nil adjust push token"];
+        [logger errorClient:@"Cannot create push token with nil adjust push token"];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable pushTokenDataString = [ADJNonEmptyString instanceFromOptionalString:
-                                                        [ADJUtilConv convertToBase64StringWithDataValue:
-                                                         adjustPushToken.dataPushToken]
-                                                                                   sourceDescription:@"push token data string"
-                                                                                              logger:logger];
+    ADJNonEmptyString *_Nullable pushTokenDataString =
+    [ADJNonEmptyString instanceFromOptionalString:
+     [ADJUtilConv convertToBase64StringWithDataValue:adjustPushToken.dataPushToken]
+                                sourceDescription:@"push token data string"
+                                           logger:logger];
 
-    ADJNonEmptyString *_Nullable pushTokenString = [ADJNonEmptyString instanceFromOptionalString:adjustPushToken.stringPushToken
-                                                                               sourceDescription:@"push token string"
-                                                                                          logger:logger];
+    ADJNonEmptyString *_Nullable pushTokenString =
+    [ADJNonEmptyString instanceFromOptionalString:adjustPushToken.stringPushToken
+                                sourceDescription:@"push token string"
+                                           logger:logger];
 
     if (pushTokenDataString == nil && pushTokenString == nil) {
-        [logger error:@"Cannot create push token"
-         " with an invalid push token"];
+        [logger errorClient:@"Cannot create push token with an invalid push token"];
         return nil;
     }
 
@@ -126,5 +125,6 @@ static NSString *const kPushTokenStringKey = @"pushTokenString";
 }
 
 @end
+
 
 

@@ -8,13 +8,17 @@
 
 #import "ADJClientSubscriptionsController.h"
 
+#import "ADJAdjustLogMessageData.h"
+
 @import UIKit;
 
 @interface ADJClientSubscriptionsController ()
 #pragma mark - Injected dependencies
 @property (nullable, readonly, weak, nonatomic) ADJThreadController *threadControllerWeak;
-@property (nullable, readonly, weak, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutorWeak;
-@property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+@property (nullable, readonly, weak, nonatomic)
+    id<ADJClientReturnExecutor> clientReturnExecutorWeak;
+@property (nullable, readonly, strong, nonatomic)
+    id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
 
@@ -24,12 +28,15 @@
 
 @implementation ADJClientSubscriptionsController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                             threadController:(nonnull ADJThreadController *)threadController
-                         clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-                  adjustAttributionSubscriber:(nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
-                          adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
-                    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadController:(nonnull ADJThreadController *)threadController
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    adjustAttributionSubscriber:
+        (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
+    adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
+    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"ClientSubscriptionsController"];
     _threadControllerWeak = threadController;
     _clientReturnExecutorWeak = clientReturnExecutor;
@@ -43,13 +50,15 @@
 #pragma mark Public API
 #pragma mark - ADJAttributionSubscriber
 - (void)didAttributionWithData:(nullable ADJAttributionData *)attributionData
-             attributionStatus:(nonnull NSString *)attributionStatus {
+             attributionStatus:(nonnull NSString *)attributionStatus
+{
     ADJAdjustAttribution *_Nullable adjustAttribution =
-    attributionData != nil ? [attributionData toAdjustAttribution] : nil;
+        attributionData != nil ? [attributionData toAdjustAttribution] : nil;
 
     if ([attributionStatus isEqualToString:ADJAttributionStatusRead]) {
         if (adjustAttribution == nil) {
-            [self.logger error:@"Unexpected nil attribution with Read attribution status"];
+            [self.logger debugDev:@"Unexpected nil attribution with Read attribution status"
+                        issueType:ADJIssueLogicError];
             return;
         }
         [self attributionReadWithAdjustData:adjustAttribution];
@@ -71,42 +80,26 @@
         || [attributionStatus isEqualToString:ADJAttributionStatusWaiting])
     {
         if (attributionData != nil) {
-            [self.logger error:@"Unexpected valid attribution data on %@ status",
-             attributionStatus];
+            [self.logger debugDev:@"Unexpected valid attribution data"
+                              key:@"status"
+                            value:attributionStatus
+                        issueType:ADJIssueLogicError];
         } else {
-            [self.logger debug:@"Cannot notify client on attribution with %@ status",
-             attributionStatus];
+            [self.logger debugDev:@"Cannot notify client on attribution due to its status"
+                              key:@"status"
+                            value:attributionStatus];
         }
         return;
     }
 
-    [self.logger error:@"Cannot notify client on valid attribution with unknown status %@",
-     attributionStatus];
+    [self.logger debugDev:@"Cannot notify client on valid attribution with unknown status"
+                      key:@"statue"
+                    value:attributionStatus
+                issueType:ADJIssueUnexpectedInput];
 }
 
 #pragma mark - ADJLogSubscriber
-- (void)didLogWithMessage:(nonnull NSString *)logMessage
-                   source:(nonnull NSString *)source
-           adjustLogLevel:(nonnull NSString *)adjustLogLevel {
-    if (self.adjustLogSubscriber == nil) {
-        return;
-    }
-
-    id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
-    if (clientReturnExecutor == nil) {
-        [self.logger error:@"Cannot publish adjust log message"
-         " without reference to client return executor"];
-        return;
-    }
-
-    [clientReturnExecutor executeClientReturnWithBlock:^{
-        [ADJAdjustLogMessageData generateFullLogWithMessage:logMessage
-                                                     source:source
-                                            messageLogLevel:adjustLogLevel];
-    }];
-}
-
-- (void)didLogMessagesPreInitWithArray:(nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray {
+- (void)didLogMessage:(nonnull ADJLogMessageData *)logMessageData {
     id<ADJAdjustLogSubscriber> localAdjustLogSubscriber = self.adjustLogSubscriber;
     if (localAdjustLogSubscriber == nil) {
         return;
@@ -114,13 +107,48 @@
 
     id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
     if (clientReturnExecutor == nil) {
-        [self.logger error:@"Cannot publish adjust pre init log message"
-         " without reference to client return executor"];
+        /* Must not use the "normal" logging downstream of the log collector
+            to prevent becoming in a loop
+        [self.logger debugDev:
+         @"Cannot publish adjust log message without reference to client return executor"
+                    issueType:ADJIssueWeakReference];
+         */
         return;
     }
 
     [clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustLogSubscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
+        [localAdjustLogSubscriber didLogWithMessage:logMessageData.inputData.message
+                                           logLevel:logMessageData.inputData.level];
+    }];
+}
+
+- (void)didLogMessagesPreInitWithArray:
+    (nonnull NSArray<ADJLogMessageData *> *)preInitLogMessageArray
+{
+    id<ADJAdjustLogSubscriber> localAdjustLogSubscriber = self.adjustLogSubscriber;
+    if (localAdjustLogSubscriber == nil) {
+        return;
+    }
+
+    id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
+    if (clientReturnExecutor == nil) {
+        [self.logger debugDev:
+         @"Cannot publish adjust pre init log message without reference to client return executor"
+                    issueType:ADJIssueWeakReference];
+        return;
+    }
+    
+    NSMutableArray<ADJAdjustLogMessageData *> *_Nonnull adjustLogArray =
+        [[NSMutableArray alloc] initWithCapacity:preInitLogMessageArray.count];
+    
+    for (ADJLogMessageData *_Nonnull logData in preInitLogMessageArray) {
+        [adjustLogArray addObject:[[ADJAdjustLogMessageData alloc]
+                                   initWithLogMessage:@""
+                                   messageLogLevel:logData.inputData.level]];
+    }
+
+    [clientReturnExecutor executeClientReturnWithBlock:^{
+        [localAdjustLogSubscriber didLogMessagesPreInitWithArray:adjustLogArray];
     }];
 }
 
@@ -136,7 +164,7 @@
 #pragma mark Internal Methods
 - (void)attributionReadWithAdjustData:(nonnull ADJAdjustAttribution *)adjustAttribution {
     id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
-    self.adjustAttributionSubscriber;
+        self.adjustAttributionSubscriber;
 
     if (localAdjustAttributionSubscriber == nil) {
         return;
@@ -144,8 +172,9 @@
 
     id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
     if (clientReturnExecutor == nil) {
-        [self.logger error:@"Cannot publish read adjust attribution"
-         " without reference to client return executor"];
+        [self.logger debugDev:
+         @"Cannot publish read adjust attribution without reference to client return executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -164,8 +193,9 @@
 
     id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
     if (clientReturnExecutor == nil) {
-        [self.logger error:@"Cannot publish changed adjust attribution"
-         " without reference to client return executor"];
+        [self.logger debugDev:
+         @"Cannot publish changed adjust attribution without reference to client return executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -175,11 +205,9 @@
 }
 
 - (void)attributionChangedWithDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {
-
 #if defined(ADJUST_IM)
     return;
 #else
-
     if (self.doNotOpenDeferredDeeplink) {
         return;
     }
@@ -190,21 +218,25 @@
 
     ADJThreadController *_Nullable threadController = self.threadControllerWeak;
     if (threadController == nil) {
-        [self.logger error:@"Cannot open deferred deeplink on main thread"
-         " without reference to thread controller"];
+        [self.logger debugDev:
+         @"Cannot open deferred deeplink on main thread without reference to thread controller"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     NSURL *_Nullable deferredDeeplinkUrl = [NSURL URLWithString:deferredDeeplink.stringValue];
 
     if (deferredDeeplinkUrl == nil) {
-        [self.logger info:@"Could not parse deferred deeplink NSURL: %@", deferredDeeplink];
+        [self.logger infoClient:@"Could not parse deferred deeplink as NSURL"
+                            key:@"deferred deeplink"
+                          value:deferredDeeplink.stringValue];
         return;
     }
 
     UIApplication *sharedApplication = UIApplication.sharedApplication;
     if (sharedApplication == nil) {
-        [self.logger debug:@"Could not obtain the shared application"];
+        [self.logger debugDev:@"Could not obtain the shared application"
+                    issueType:ADJIssueExternalApi];
         return;
     }
 
@@ -238,20 +270,21 @@
         return;
     }
 
-    [self.logger error:
-     @"Could not find selector in shared application to open deferred deeplink"];
+    [self.logger debugDev:
+     @"Could not find selector in shared application to open deferred deeplink"
+                issueType:ADJIssueExternalApi];
 #endif
 }
 
 + (void)openDeferredDeeplinkWithUrl:(nonnull NSURL *)deferredDeeplinkUrl
                   sharedApplication:(nonnull UIApplication *)sharedApplication
                              logger:(nullable ADJLogger *)logger
-         openUrlSelectorWithOptions:(nonnull SEL)openUrlSelectorWithOptions {
+         openUrlSelectorWithOptions:(nonnull SEL)openUrlSelectorWithOptions
+{
     NSMethodSignature *openUrlMethodSignatureWithOptions =
-    [sharedApplication
-     methodSignatureForSelector:openUrlSelectorWithOptions];
+        [sharedApplication methodSignatureForSelector:openUrlSelectorWithOptions];
     NSInvocation *invocation =
-    [NSInvocation invocationWithMethodSignature:openUrlMethodSignatureWithOptions];
+        [NSInvocation invocationWithMethodSignature:openUrlMethodSignatureWithOptions];
     [invocation setSelector:openUrlSelectorWithOptions];
     [invocation setTarget:sharedApplication];
 
@@ -262,9 +295,10 @@
         }
 
         if (success) {
-            [logger debug:@"Deferrerd deeplink open wih options"];
+            [logger debugDev:@"Deferrerd deeplink open wih options"];
         } else {
-            [logger error:@"Unable to open deferrerd deeplink with options"];
+            [logger debugDev:@"Unable to open deferrerd deeplink with options"
+                   issueType:ADJIssueExternalApi];
         }
     };
 
@@ -282,13 +316,14 @@
 + (void)openDeferredDeeplinkWithUrl:(nonnull NSURL *)deferredDeeplinkUrl
                   sharedApplication:(nonnull UIApplication *)sharedApplication
                              logger:(nullable ADJLogger *)logger
-      openUrlSelectorWithoutOptions:(nonnull SEL)openUrlSelectorWithoutOptions {
+      openUrlSelectorWithoutOptions:(nonnull SEL)openUrlSelectorWithoutOptions
+{
     IMP imp = [sharedApplication methodForSelector:openUrlSelectorWithoutOptions];
 
     BOOL (*func)(id, SEL, NSURL *) = (void *)imp;
 
     BOOL openURLResult =
-    func(sharedApplication, openUrlSelectorWithoutOptions, deferredDeeplinkUrl);
+        func(sharedApplication, openUrlSelectorWithoutOptions, deferredDeeplinkUrl);
     /*
      BOOL openURLResult = [sharedApplication openURL:deferredDeeplinkUrl];
      */
@@ -298,9 +333,10 @@
     }
 
     if (openURLResult) {
-        [logger debug:@"Deferrerd deeplink open wihout options"];
+        [logger debugDev:@"Deferrerd deeplink open wihout options"];
     } else {
-        [logger error:@"Unable to open deferrerd deeplink without options"];
+        [logger debugDev:@"Unable to open deferrerd deeplink without options"
+               issueType:ADJIssueExternalApi];
     }
 }
 

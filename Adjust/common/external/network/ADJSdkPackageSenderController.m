@@ -44,11 +44,11 @@
     _networkEndpointData = networkEndpointData;
     _adjustUrlStrategy = adjustUrlStrategy;
     _clientCustomEndpointData = clientCustomEndpointData;
-    
+
     _sdkPackageSendingPublisher = [[ADJSdkPackageSendingPublisher alloc] init];
-    
+
     _sdkResponsePublisher = [[ADJSdkResponsePublisher alloc] init];
-    
+
     return self;
 }
 
@@ -56,10 +56,10 @@
 #pragma mark - ADJSdkPackageSenderFactory
 - (nonnull ADJSdkPackageSender *)createSdkPackageSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                                        sourceDescription:(nonnull NSString *)sourceDescription
-                                                              threadpool:(nonnull id<ADJThreadPool>)threadpool {
+                                                   threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory {
     return [[ADJSdkPackageSender alloc] initWithLoggerFactory:loggerFactory
                                             sourceDescription:sourceDescription
-                                                   threadpool:threadpool
+                                        threadExecutorFactory:threadExecutorFactory
                                    sdkPackageSendingCollector:self
                                          sdkResponseCollector:self
                                           networkEndpointData:self.networkEndpointData
@@ -82,8 +82,10 @@
 
 #pragma mark - ADJSdkResponseSubscriber
 - (void)didReceiveSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
-    [self.logger debug:@"%@", [sdkResponseData generateSentShortDescription]];
-    
+    [self.logger debugDev:@"Received response"
+                      key:@"sdk response"
+                    value:sdkResponseData.description];
+
     [self.sdkResponsePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJSdkResponseSubscriber> _Nonnull subscriber)
      {
@@ -92,3 +94,4 @@
 }
 
 @end
+

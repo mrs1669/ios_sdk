@@ -10,7 +10,7 @@
 
 #import "ADJCommonBase.h"
 #import "ADJLifecycleSubscriber.h"
-#import "ADJThreadPool.h"
+#import "ADJThreadExecutorFactory.h"
 #import "ADJClock.h"
 #import "ADJSdkInitSubscriber.h"
 #import "ADJDeviceIdsStorage.h"
@@ -28,7 +28,7 @@
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                                         clock:(nonnull ADJClock *)clock
                              deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
                               keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage

@@ -28,6 +28,7 @@
 
     return self;
 }
+
 #pragma mark Public API
 #pragma mark - ADJAdjustPackageSendingPublisher
 - (void)addPackageSendingSubscriber:(nonnull id<ADJAdjustPackageSendingSubscriber>)packageSendingSubscriber {

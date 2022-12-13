@@ -71,8 +71,9 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
              clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
-        [self.logger error:@"Cannot Track Third Party Sharing"
-         " without a reference to sdk package builder"];
+        [self.logger debugDev:
+         @"Cannot Track Third Party Sharing without a reference to sdk package builder"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
@@ -80,8 +81,9 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
 
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
-        [self.logger error:@"Cannot Track Third Party Sharing"
-         " without a reference to main queue controller"];
+        [self.logger debugDev:
+         @"Cannot Track Third Party Sharing without a reference to main queue controller"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
@@ -97,3 +99,4 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
 }
 
 @end
+

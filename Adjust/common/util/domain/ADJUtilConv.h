@@ -26,6 +26,8 @@
 + (nullable id)convertToJsonFoundationValueWithJsonData :(nonnull NSData *)jsonData
                                                 errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
 
++ (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
+
 + (nullable ADJStringMap *)convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
                                              sourceDescription:(nonnull NSString *)sourceDescription
                                                         logger:(nonnull ADJLogger *)logger;

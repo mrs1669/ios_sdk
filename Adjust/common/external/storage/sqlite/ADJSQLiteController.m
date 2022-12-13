@@ -58,22 +58,26 @@ static int const kDatabaseVersion = 5000; // v5.00.0
 }
 
 - (void)readAllIntoMemorySync {
-    [self.logger debug:@"Trying to read all database tables into memory"];
+    [self.logger debugDev:@"Trying to read all database tables into memory"];
     
     if (self.sqliteDb.databasePath == nil) {
-        [self.logger error:@"Cannot read into memory without a sqlite file path"];
+        [self.logger debugDev:@"Cannot read into memory without a sqlite file path"
+                    issueType:ADJIssueStorageIo];
         return;
     }
     
     NSFileManager *_Nonnull fileManager = [NSFileManager defaultManager];
     BOOL didDbExisted = [fileManager fileExistsAtPath:self.sqliteDb.databasePath];
     
-    [self.logger debug:@"Did find db file: %@", [ADJUtilF boolFormat:didDbExisted]];
+    [self.logger debugDev:@"Db file found?"
+                      key:@"didDbExisted"
+                    value:[ADJUtilF boolFormat:didDbExisted].description];
     
     BOOL openSuccess = [self.sqliteDb openDb];
     
     if (! openSuccess) {
-        [self.logger error:@"Cannot read into memory without being able to open the db"];
+        [self.logger debugDev:@"Cannot read into memory without being able to open the db"
+                    issueType:ADJIssueStorageIo];
         return;
     }
     
@@ -118,7 +122,7 @@ static int const kDatabaseVersion = 5000; // v5.00.0
 }
 
 - (void)createTables {
-    [self.logger debug:@"Creating database tables"];
+    [self.logger debugDev:@"Creating database tables"];
     
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
@@ -126,15 +130,15 @@ static int const kDatabaseVersion = 5000; // v5.00.0
         [self.sqliteDb executeStatements:[sqliteStorage sqlStringForOnCreate]];
     }];
     
-    [self.logger debug:@"All database tables created"];
+    [self.logger debugDev:@"All database tables created"];
 }
 
 - (void)migrateFromV4 {
     ADJV4FilesData *_Nonnull v4FilesData = [[ADJV4FilesData alloc] initWithLogger:self.logger];
     ADJV4UserDefaultsData *_Nonnull v4UserDefaultsData =
-    [[ADJV4UserDefaultsData alloc] initWithLogger:self.logger];
+        [[ADJV4UserDefaultsData alloc] initWithLogger:self.logger];
     
-    [self.logger debug:@"Migrating data from v4 to database"];
+    [self.logger debugDev:@"Migrating data from v4 to database"];
     
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
@@ -146,26 +150,31 @@ static int const kDatabaseVersion = 5000; // v5.00.0
     [self.v4RestMigration migrateFromV4WithV4FilesData:v4FilesData
                                     v4UserDefaultsData:v4UserDefaultsData];
     
-    [self.logger debug:@"All data migrated from v4 to database"];
+    [self.logger debugDev:@"All data migrated from v4 to database"];
 }
 
 - (void)didUpgradeWithOldVersion:(int)oldDbVersion {
-    [self.logger debug:@"Upgrading database from %@ version to %@",
-     [ADJUtilF intFormat:oldDbVersion],
-     [ADJUtilF intFormat:kDatabaseVersion]];
+    [self.logger debugDev:@"Upgrading database"
+                     key1:@"old version"
+                   value1:[ADJUtilF integerFormat:oldDbVersion]
+                     key2:@"new version"
+                   value2:[ADJUtilF integerFormat:kDatabaseVersion]];
     
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
         NSString *_Nullable sqlStringForOnUpgrade =
-        [sqliteStorage sqlStringForOnUpgrade:oldDbVersion];
+            [sqliteStorage sqlStringForOnUpgrade:oldDbVersion];
         
         if (sqlStringForOnUpgrade == nil) {
-            [self.logger debug:@"Not upgrading sqlite storage for %@", sqliteStorage];
+            [self.logger debugDev:@"Not upgrading sqlite storage"
+                        issueType:ADJIssueStorageIo];
             return;
         }
         
-        [self.logger debug:@"Upgrading sqlite storage for %@", sqliteStorage];
+        [self.logger debugDev:@"Upgrading sqlite storage"
+                          key:@"sqlStringForOnUpgrade"
+                        value:sqlStringForOnUpgrade];
         
         [self.sqliteDb executeStatements:sqlStringForOnUpgrade];
     }];

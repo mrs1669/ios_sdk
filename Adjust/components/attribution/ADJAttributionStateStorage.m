@@ -52,25 +52,27 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4Attribution *_Nullable v4Attribution = [v4FilesData v4Attribution];
     if (v4Attribution == nil) {
-        [self.logger debug:@"Attribution v4 file not found"];
+        [self.logger debugDev:@"Attribution v4 file not found"];
         return;
     }
 
-    [self.logger debug:@"Read v4 attribution: %@", v4Attribution];
+    [self.logger debugDev:@"Read v4 attribution"
+                      key:@"attribution"
+                    value:[v4Attribution description]];
 
     ADJAttributionData *_Nonnull v4AttributionData =
-    [[ADJAttributionData alloc] initFromExternalDataWithLogger:self.logger
-                                            trackerTokenString:v4Attribution.trackerToken
-                                             trackerNameString:v4Attribution.trackerName
-                                                 networkString:v4Attribution.network
-                                                campaignString:v4Attribution.campaign
-                                                 adgroupString:v4Attribution.adgroup
-                                                creativeString:v4Attribution.creative
-                                              clickLabelString:v4Attribution.clickLabel
-                                                    adidString:v4Attribution.adid
-                                                costTypeString:v4Attribution.costType
-                                        costAmountDoubleNumber:v4Attribution.costAmount
-                                            costCurrencyString:v4Attribution.costCurrency];
+        [[ADJAttributionData alloc] initFromExternalDataWithLogger:self.logger
+                                                trackerTokenString:v4Attribution.trackerToken
+                                                 trackerNameString:v4Attribution.trackerName
+                                                     networkString:v4Attribution.network
+                                                    campaignString:v4Attribution.campaign
+                                                     adgroupString:v4Attribution.adgroup
+                                                    creativeString:v4Attribution.creative
+                                                  clickLabelString:v4Attribution.clickLabel
+                                                        adidString:v4Attribution.adid
+                                                    costTypeString:v4Attribution.costType
+                                            costAmountDoubleNumber:v4Attribution.costAmount
+                                                costCurrencyString:v4Attribution.costCurrency];
 
     ADJAttributionStateData *_Nonnull intialAttributionStateData =
     [self readOnlyStoredDataValue];

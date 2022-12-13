@@ -276,27 +276,27 @@
 }
 
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
-                                                 logLevel:(nonnull NSString *)logLevel
+                                                 logLevel:(nonnull ADJAdjustLogLevel)logLevel
                                                 logSource:(nonnull NSString *)logSource {
     ADJStringMapBuilder *_Nonnull parametersBuilder =
     [self generateParametersBuilderWithPath:ADJLogPackageDataPath];
-    
+
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamLogMessageKey
                          packageParamValueSerializable:logMessage];
-    
+
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamLogLevelKey
                                             constValue:logLevel];
-    
+
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamLogSourceKey
                                             constValue:logSource];
-    
+
     ADJStringMap *_Nonnull parameters =
     [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                        path:ADJLogPackageDataPath];
-    
+
     return [[ADJLogPackageData alloc] initWithClientSdk:self.clientSdk
                                              parameters:parameters];
 }
@@ -313,7 +313,7 @@
 }
 
 - (nonnull ADJThirdPartySharingPackageData *)buildThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
-apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+                                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 
     ADJStringMapBuilder *_Nonnull parametersBuilder =
     [self generateParametersBuilderWithPath:ADJThirdPartySharingPackageDataPath
@@ -354,11 +354,11 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 - (nonnull ADJGdprForgetPackageData *)buildGdprForgetPackage {
     ADJStringMapBuilder *_Nonnull parametersBuilder =
     [self generateParametersBuilderWithPath:ADJGdprForgetPackageDataPath];
-    
+
     ADJStringMap *_Nonnull parameters =
     [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                        path:ADJGdprForgetPackageDataPath];
-    
+
     return [[ADJGdprForgetPackageData alloc] initWithClientSdk:self.clientSdk
                                                     parameters:parameters];
 }
@@ -468,15 +468,16 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 - (void)injectTimestampsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                          path:(nullable NSString *)path
                                  apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
-
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamCalledAtKey
                          packageParamValueSerializable:apiTimestamp];
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
-        [self.logger error:@"Cannot inject %@ for package with %@ path"
-         " without a reference to clock", ADJParamCreatedAtKey, path];
+        [self.logger debugDev:@"Cannot inject created at for package without a reference to clock"
+                          key:@"path"
+                        value:path
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -484,8 +485,10 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
     [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
 
     if (nowTimestamp == nil) {
-        [self.logger error:@"Cannot inject %@ for package with %@ path"
-         " without a now timestamp", ADJParamCreatedAtKey, path];
+        [self.logger debugDev:@"Cannot inject created at for package without a now timestamp"
+                          key:@"path"
+                        value:path
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -496,11 +499,12 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 
 - (void)injectDeviceWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                      path:(nullable NSString *)path {
-
     ADJDeviceController *_Nullable deviceController = self.deviceControllerWeak;
     if (deviceController == nil) {
-        [self.logger error:@"Cannot inject device info for package with %@ path"
-         " without a reference to device controller", path];
+        [self.logger debugDev:@"Cannot inject device info for package without a reference to device controller"
+                          key:@"path"
+                        value:path
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -515,7 +519,8 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
                              packageParamValueSerializable:[deviceController nonKeychainUuid]];
     }
 
-    ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData = [deviceController getSessionDeviceIdsSync];
+    ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
+    [deviceController getSessionDeviceIdsSync];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamIdfaKey
@@ -606,12 +611,14 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 }
 
 - (void)injectEventStateFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
-                                               path:(nullable NSString *)path {
+                                               path:(nullable NSString *)path{
     ADJEventStateStorage *_Nullable eventStateStorage = self.eventStateStorageWeak;
 
     if (eventStateStorage == nil) {
-        [self.logger error:@"Cannot inject event data"
-         "for package with %@ path without a reference to event state storage", path];
+        [self.logger debugDev:@"Cannot inject event data for package without a reference to event state storage"
+                          key:@"path"
+                        value:path
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -622,16 +629,20 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
                          packageParamValueSerializable:eventStateData.eventCount];
 }
 
-
 - (void)injectCallbackParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                        path:(nullable NSString *)path
                                 callbackParametersOverwrite:(nullable ADJStringMap *)callbackParametersOverwrite {
-    ADJGlobalCallbackParametersStorage *_Nullable globalCallbackParametersStorage = self.globalCallbackParametersStorageWeak;
+    ADJGlobalCallbackParametersStorage *_Nullable globalCallbackParametersStorage =
+    self.globalCallbackParametersStorageWeak;
     ADJStringMap *_Nullable globalCallbackParametersMap;
 
     if (globalCallbackParametersStorage == nil) {
-        [self.logger error:@"Cannot inject global callback parameters for package with %@ path"
-         " without a reference to global callback parameters storage", path];
+        [self.logger debugDev:
+         @"Cannot inject global callback parameters for package"
+         " without a reference to global callback parameters storage"
+                          key:@"path"
+                        value:path
+                    issueType:ADJIssueWeakReference];
         globalCallbackParametersMap = nil;
     } else {
         globalCallbackParametersMap = [globalCallbackParametersStorage allPairs];
@@ -646,12 +657,17 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 - (void)injectPartnerParametersFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                                       path:(nullable NSString *)path
                                 partnerParametersOverwrite:(nullable ADJStringMap *)partnerParametersOverwrite {
-    ADJGlobalPartnerParametersStorage *_Nullable globalPartnerParametersStorage = self.globalPartnerParametersStorageWeak;
+    ADJGlobalPartnerParametersStorage *_Nullable globalPartnerParametersStorage =
+    self.globalPartnerParametersStorageWeak;
     ADJStringMap *_Nullable globalPartnerParametersMap;
 
     if (globalPartnerParametersStorage == nil) {
-        [self.logger error:@"Cannot inject global partner parameters for package with %@ path"
-         " without a reference to global partner parameters storage", path];
+        [self.logger debugDev:
+         @"Cannot inject global partner parameters for package"
+         " without a reference to global partner parameters storage"
+                          key:@"path"
+                        value:path
+                    issueType:ADJIssueWeakReference];
         globalPartnerParametersMap = nil;
     } else {
         globalPartnerParametersMap = [globalPartnerParametersStorage allPairs];
@@ -750,5 +766,6 @@ apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 }
 
 @end
+
 
 

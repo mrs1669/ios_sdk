@@ -39,8 +39,9 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
     [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
     
     if (deduplicationId == nil) {
-        [logger error:@"Cannot create instance from Io data without valid %@",
-         kDeduplicationIdKey];
+        [logger debugDev:@"Cannot create instance from io data with invalid io value"
+               valueName:kDeduplicationIdKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
     

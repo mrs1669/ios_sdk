@@ -44,11 +44,7 @@
 #pragma mark - Injected dependencies
 
 #pragma mark - Internal variables
-@property (readwrite, assign, nonatomic) BOOL failedToProcessLocally;
-@property (readwrite, assign, nonatomic) BOOL okResponseCode;
 @property (readwrite, assign, nonatomic) NSUInteger retries;
-//@property (nullable, readwrite, strong, nonatomic) id jsonResponseFoundation;
-@property (nullable, readwrite, strong, nonatomic) NSString *errorMessages;
 
 @end
 
@@ -56,23 +52,13 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
                                sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
-                           previousErrorMessages:(nullable NSString *)previousErrorMessages {
+                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback {
     self = [super init];
     _sourcePackage = sourcePackage;
     _sendingParameters = sendingParameters;
     _sourceCallback = sourceCallback;
-    
     _jsonDictionary = nil;
-    
-    _failedToProcessLocally = NO;
-    
-    _okResponseCode = NO;
-    
-    //_jsonResponseFoundation = nil;
-    
-    _errorMessages = previousErrorMessages;
-    
+
     return self;
 }
 
@@ -86,29 +72,15 @@
               errorMessage:(nonnull NSString *)errorMessage {
     if (nsError != nil) {
         if (logger != nil) {
-            [logger errorWithNSError:nsError message:@"%@", errorMessage];
+            [logger debugDev:errorMessage
+                     nserror:nsError
+                   issueType:ADJIssueNetworkRequest];
         }
-        
-        [self appendErrorWithMessage:
-         [NSString stringWithFormat:@"%@, with NSError: %@",
-          errorMessage,
-          [ADJUtilF errorFormat:nsError]]];
     } else {
         if (logger != nil) {
-            [logger error:@"%@", errorMessage];
+            [logger debugDev:errorMessage issueType:ADJIssueNetworkRequest];
         }
-        
-        [self appendErrorWithMessage:
-         [NSString stringWithFormat:@"Without NSError, %@", errorMessage]];
     }
-}
-
-- (void)cannotProcessLocally {
-    self.failedToProcessLocally = YES;
-}
-
-- (void)setOkResponseCode {
-    self.okResponseCode = YES;
 }
 
 - (void)incrementRetries {
@@ -137,22 +109,17 @@ logger:logger];                                             \
     tryBuildResponse(ADJThirdPartySharingPackageData, ADJThirdPartySharingResponseData, thirdPartySharingPackageData)
 
     if (logger != nil) {
-        [logger error:@"Could not match source sdk package of: %@, to one of the know types."
-         " Will still be created with unknown type", self.sourcePackage];
+        [logger debugDev:
+         @"Could not match source sdk package, to one of the know types."
+         " Will still be created with unknown type"
+                     key:@"sourcePackage class"
+                   value:NSStringFromClass([self.sourcePackage class])];
     }
-    
+
     return [[ADJUnknownResponseData alloc] initWithBuilder:self
                                             sdkPackageData:self.sourcePackage
                                                     logger:logger];
 }
 
-- (void)appendErrorWithMessage:(nonnull NSString *)errorMessage {
-    if (self.errorMessages != nil) {
-        self.errorMessages =
-        [NSString stringWithFormat:@"%@\n%@", self.errorMessages, errorMessage];
-    } else {
-        self.errorMessages = errorMessage;
-    }
-}
-
 @end
+

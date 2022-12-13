@@ -37,7 +37,6 @@ static NSString *const kReachableViaWWAN = @"reachableViaWWAN";
 
 @interface ADJReachabilityController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) id<ADJThreadPool> threadpoolWeak;
 @property (nonnull, readonly, strong, nonatomic) NSString *targetEndpoint;
 
 #pragma mark - Internal variables
@@ -72,7 +71,6 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
                              threadController:(nonnull ADJThreadController *)threadController
                                targetEndpoint:(nonnull NSString *)targetEndpoint {
     self = [super initWithLoggerFactory:loggerFactory source:@"ReachabilityController"];
-    _threadpoolWeak = threadController;
     _targetEndpoint = targetEndpoint;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
@@ -90,22 +88,15 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 #pragma mark Public API
 #pragma mark - ADJMeasurementSessionStartSubscriber
 - (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
-    id<ADJThreadPool> threadpool = self.threadpoolWeak;
-
-    if (threadpool == nil) {
-        [self.logger error:@"Cannot start network reachability"
-         " without a reference to threadpool"];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [threadpool executeAsyncWithBlock:^{
+    [self.executor executeAsyncWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
+        // TODO possibly use private queue
         [strongSelf startNetworkReachabilityWithDispatchQueue:
-         [threadpool backgroundAsyncDispatchQueue]];
-    }];
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
+    } source:@"measurement session start"];
 }
 
 #pragma mark - Subscriptions
@@ -118,7 +109,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
     _reachabilityRef = [self createReachabilityRef];
 
     BOOL didSubscribeToSystemReachability =
-    [self subscribeToSystemReachabilityWithDispatchQueue:dispatchQueue];
+        [self subscribeToSystemReachabilityWithDispatchQueue:dispatchQueue];
 
     // when it cannot subscribe to the system reachability service
     //  do not publish even if it could on demand
@@ -160,7 +151,8 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 - (BOOL)subscribeToSystemReachabilityWithDispatchQueue:(nonnull dispatch_queue_t)dispatchQueue {
     SCNetworkReachabilityRef localStrongReachabilityRef = _reachabilityRef;
     if (! localStrongReachabilityRef) {
-        [self.logger debug:@"Cannot subscribe to system reachability with nil reachabilityRef"];
+        [self.logger debugDev:@"Cannot subscribe to system reachability with nil reachabilityRef"
+                    issueType:ADJIssueExternalApi];
         return NO;
     }
 
@@ -172,13 +164,15 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
                                           ADJReachabilityCallback,
                                           &context))
     {
-        [self.logger debug:@"Could not set reachability callback"];
+        [self.logger debugDev:@"Could not set reachability callback"
+                    issueType:ADJIssueExternalApi];
         return NO;
     }
 
     // dispatch queue will be retained, needs to be set NULL to release
     if(! SCNetworkReachabilitySetDispatchQueue(localStrongReachabilityRef, dispatchQueue)) {
-        [self.logger debug:@"Could not set dispatch queue"];
+        [self.logger debugDev:@"Could not set dispatch queue"
+                    issueType:ADJIssueExternalApi];
 
         // remove callback and release 'self'
         SCNetworkReachabilitySetCallback(localStrongReachabilityRef, NULL, NULL);
@@ -192,7 +186,8 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 - (nullable NSString *)readReachabilitySync {
     SCNetworkReachabilityRef localStrongReachabilityRef = _reachabilityRef;
     if (! localStrongReachabilityRef) {
-        [self.logger debug:@"Cannot read reachability with nil reachabilityRef"];
+        [self.logger debugDev:@"Cannot read reachability with nil reachabilityRef"
+                    issueType:ADJIssueExternalApi];
 
         return nil;
     }
@@ -335,7 +330,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         [strongSelf reachableNetworkWithFlags:flags];
 
         [strongSelf updateAndPublishWithReachability:reachableNetworkFromFlags];
-    }];
+    } source:@"reachability changed"];
 }
 
 - (void)stopNetworkReachability {

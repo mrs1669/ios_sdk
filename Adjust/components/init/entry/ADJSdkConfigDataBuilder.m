@@ -24,6 +24,7 @@
  @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
  @property (nonnull, readwrite, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerIntervalMilli;
  @property (readwrite, assign, nonatomic) BOOL assumeSandboxEnvironmentForLogging;
+ @property (readwrite, assign, nonatomic) BOOL assumeDevLogs;
  @property (readwrite, assign, nonatomic) BOOL doNotReadCurrentLifecycleStatus;
  @property (readwrite, assign, nonatomic) BOOL doNotInitiateAttributionFromSdk;
  */
@@ -81,6 +82,8 @@
     _foregroundTimerIntervalMilli = oneMinuteLength;
 
     _assumeSandboxEnvironmentForLogging = NO;
+
+    _assumeDevLogs = NO;
 
     _doNotReadCurrentLifecycleStatus = NO;
 

@@ -18,8 +18,7 @@
 // instantiation
 - (nonnull instancetype)initWithSourceSdkPackage:(nonnull id<ADJSdkPackageData>)sourcePackage
                                sendingParameters:(nonnull ADJStringMapBuilder *)sendingParameters
-                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback
-                           previousErrorMessages:(nullable NSString *)previousErrorMessages;
+                                  sourceCallback:(nonnull id<ADJSdkResponseCallbackSubscriber>)sourceCallback;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
@@ -28,21 +27,11 @@
 @property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
 
 // public api
-- (BOOL)failedToProcessLocally;
-
 - (BOOL)didReceiveJsonResponse;
-
-- (nullable NSString *)errorMessages;
-
-- (BOOL)okResponseCode;
 
 - (void)logErrorWithLogger:(nullable ADJLogger *)logger
                    nsError:(nullable NSError *)nsError
               errorMessage:(nonnull NSString *)errorMessage;
-
-- (void)cannotProcessLocally;
-
-- (void)setOkResponseCode;
 
 - (void)incrementRetries;
 
@@ -51,3 +40,4 @@
 - (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger;
 
 @end
+

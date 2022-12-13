@@ -29,7 +29,8 @@ NS_DESIGNATED_INITIALIZER;
 
 // public api
 - (void)setDefaultTracker:(nonnull NSString *)defaultTracker;
-- (void)setLogLevel:(nonnull NSString *)logLevel;
+- (void)doLogAll;
+- (void)doNotLogAny;
 - (void)setUrlStrategy:(nonnull NSString *)urlStrategy;
 - (void)setCustomEndpointWithUrl:(nonnull NSString *)customEndpointUrl
         optionalPublicKeyKeyHash:(nullable NSString *)optionalPublicKeyKeyHash;
@@ -44,10 +45,11 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSString *appToken;
 @property (nullable, readonly, strong, nonatomic) NSString *environment;
 @property (nullable, readonly, strong, nonatomic) NSString *defaultTracker;
-@property (nullable, readonly, strong, nonatomic) NSString *logLevel;
 @property (nullable, readonly, strong, nonatomic) NSString *urlStrategy;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
+@property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
+@property (nullable, readonly, strong, nonatomic) NSNumber *doNotLogAnyNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;

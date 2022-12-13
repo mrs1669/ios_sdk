@@ -149,7 +149,8 @@
     self.isPaused = NO;
 
     if (! self.canPublish) {
-        [self.logger debug:@"Cannot publish resume sending from %@ yet", source];
+        [self.logger debugDev:@"Cannot publish resume sending yet"
+                         from:source];
         return NO;
     }
 
@@ -157,14 +158,16 @@
 }
 
 - (void)logCannotResumeWithSource:(nonnull NSString *)source reason:(nonnull NSString *)reason {
-    [self.logger debug:@"Cannot resume sending from %@, since the SDK is %@", source, reason];
+    [self.logger debugDev:@"Cannot resume sending"
+                     from:source
+                      key:@"reason"
+                    value:reason];
 }
 
 - (BOOL)publishPauseSendingWithSource:(nonnull NSString *)source {
-
     if (self.isPaused) {
-        [self.logger debug:@"Cannot pause sending from %@,"
-         " since the SDK is already paused", source];
+        [self.logger debugDev:@"Cannot pause sending, since the SDK is already paused"
+                         from:source];
 
         return NO;
     }
@@ -172,7 +175,8 @@
     self.isPaused = YES;
 
     if (! self.canPublish) {
-        [self.logger debug:@"Cannot publish pause sending from %@ yet", source];
+        [self.logger debugDev:@"Cannot publish pause sending yet"
+                         from:source];
         return NO;
     }
 
