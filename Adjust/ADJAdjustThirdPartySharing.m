@@ -91,7 +91,7 @@
         if (self.partnerSharingSettingsByNameDictMut.count == 0) {
             return nil;
         }
-        return  [self.partnerSharingSettingsByNameDictMut copy];
+        return [self.partnerSharingSettingsByNameDictMut copy];
     }
 }
 

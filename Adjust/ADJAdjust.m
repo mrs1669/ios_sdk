@@ -161,9 +161,8 @@
         }
 
         ADJClientThirdPartySharingData *_Nullable clientThirdPartySharingData =
-        [ADJClientThirdPartySharingData
-         instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
-         logger:apiLogger];
+        [ADJClientThirdPartySharingData instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
+                                                                               logger:apiLogger];
 
         if (clientThirdPartySharingData == nil) {
             return;
