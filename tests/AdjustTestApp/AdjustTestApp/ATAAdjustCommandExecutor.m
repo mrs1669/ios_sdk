@@ -210,8 +210,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"callbackParams"]) {
         [self iterateWithKey:@"callbackParams"
                       source:@"event callback"
-               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-         {
+               keyValueBlock:^(NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
             [adjustEvent addCallbackParameterWithKey:key value:value];
         }];
     }
@@ -219,8 +219,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"partnerParams"]) {
         [self iterateWithKey:@"partnerParams"
                       source:@"event partner"
-               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-         {
+               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value) {
             [adjustEvent addPartnerParameterWithKey:key value:value];
         }];
     }
@@ -417,11 +416,9 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"partnerSharingSettings"]) {
         [self iterateWithKey:@"partnerSharingSettings"
                       source:@"third party partner sharing settings"
-           nameKeyValueBlock:
-         ^(NSString * _Nonnull name,
+           nameKeyValueBlock:^(NSString * _Nonnull name,
            NSString * _Nonnull key,
-           NSString * _Nonnull value)
-         {
+           NSString * _Nonnull value) {
             [adjustThirdPartySharing
              addPartnerSharingSettingWithPartnerName:name key:key value:value];
         }];
@@ -534,7 +531,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)iterateWithKey:(nonnull NSString *)key
                 source:(nonnull NSString *)source
-         keyValueBlock:(nonnull void (^)(NSString *_Nonnull key, NSString *_Nonnull value))keyValueBlock{
+         keyValueBlock:(nonnull void (^)(NSString *_Nonnull key,
+                                         NSString *_Nonnull value))keyValueBlock {
     NSArray<NSString *> *_Nullable array = [self.commandParameters objectForKey:key];
 
     if (array == nil) {
