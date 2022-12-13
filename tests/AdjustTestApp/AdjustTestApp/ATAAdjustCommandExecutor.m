@@ -575,7 +575,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     [self logDebug:@"iterating %@ with %@ name-key-value", source, @(array.count / 3)];
 
-    for (NSUInteger i = 0; i < array.count - 1 ; i += 3) {
+    for (NSUInteger i = 0; i < array.count; i += 3) {
         NSString *_Nonnull name = [array objectAtIndex:i];
         NSString *_Nonnull key = [array objectAtIndex:(i + 1)];
         NSString *_Nonnull value = [array objectAtIndex:(i + 2)];
