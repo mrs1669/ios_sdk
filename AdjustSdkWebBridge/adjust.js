@@ -2,7 +2,7 @@ var Adjust = {
 
 initSDK: function (adjustConfig) {
     const message = {
-    action:'adjust_appDidLaunch',
+    action:'adjust_initSdk',
     data: adjustConfig,
     };
     window.webkit.messageHandlers.adjust.postMessage(message);

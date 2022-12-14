@@ -6,7 +6,7 @@
 
     <body style="background-color:#08d1ff; font-size: 20px; ">
         <h2><center>Webview</center></h2><br></br>
-        <button onclick="appDidLaunch()">App Did Launch</button><br>
+        <button onclick="adjustInitSdk()">Initialise Adjust SDK</button><br>
         <button onclick="trackEvent()">Track Event</button><br>
         <button onclick="trackRevenue()">Track Revenue</button><br>
         <button onclick="trackPushToken()">Track Push Token</button><br>
@@ -28,10 +28,10 @@
         <script>
 
             window.onload = event => {
-                appDidLaunch();
+                adjustInitSdk();
             };
 
-            function appDidLaunch() {
+            function adjustInitSdk() {
                 var adjustConfig = new AdjustConfig('2fm9gkqubvpc', AdjustConfig.EnvironmentSandbox);
                 Adjust.initSDK(adjustConfig);
             }

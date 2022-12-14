@@ -7,13 +7,13 @@
 //
 
 #import "ADJAdjustBridge.h"
-
+#import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustPushToken.h"
 #import "ADJAdjustAttribution.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
-#import "ADJAdjustAdRevenue.h"
 
 @implementation ADJAdjustBridge
 
@@ -25,11 +25,11 @@
 
         WKUserContentController *controller = webView.configuration.userContentController;
 
-        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust"]];
-        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_config"]];
-        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_event"]];
-        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_revenue"]];
-        [self addUserScript:controller withScript:[self getWebBridgeScriptFor:@"adjust_third_party_sharing"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_config"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_event"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_revenue"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_third_party_sharing"]];
 
         [controller addScriptMessageHandler:self name:@"adjust"];
     }
@@ -42,11 +42,10 @@
     return adjustScript;
 }
 
-- (void)addUserScript:(WKUserContentController *)controller withScript:(NSString *)javascript {
-    [controller addUserScript:[[WKUserScript.class alloc]
-                               initWithSource:javascript
-                               injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                               forMainFrameOnly:NO]];
+- (void)userContentController:(WKUserContentController *)controller didAddUserScript:(NSString *)javascript {
+    [controller addUserScript:[[WKUserScript.class alloc] initWithSource:javascript
+                                                           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                                        forMainFrameOnly:NO]];
 
 }
 
@@ -75,9 +74,9 @@
     NSString *action = [message objectForKey:@"action"];
     NSDictionary *data = [message objectForKey:@"data"];
 
-    if ([action isEqual:@"adjust_appDidLaunch"]) {
+    if ([action isEqual:@"adjust_initSdk"]) {
 
-        [self setAdjustConfig:data];
+        [self sdkInitWithAdjustConfig:data];
 
     } else  if ([action isEqual:@"adjust_trackEvent"]) {
 
@@ -165,7 +164,7 @@
     }
 }
 
-- (void)setAdjustConfig:(NSDictionary *)data {
+- (void)sdkInitWithAdjustConfig:(NSDictionary *)data {
 
     NSString *appToken = [data objectForKey:@"appToken"];
     NSString *environment = [data objectForKey:@"environment"];
