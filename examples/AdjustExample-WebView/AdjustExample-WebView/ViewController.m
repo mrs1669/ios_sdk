@@ -35,7 +35,6 @@
     [self.webView loadRequest:request];
     [self.view addSubview:self.webView];
 
-    /// Another way of initialising the SDK
     [[ADJAdjustBridge alloc] augmentedHybridWebView:_webView];
 }
 

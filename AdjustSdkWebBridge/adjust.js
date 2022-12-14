@@ -69,6 +69,10 @@ reactivateSDK: function() {
 },
 
 addGlobalCallbackParameter: function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
     const message = {
     action:'adjust_addGlobalCallbackParameter',
     key: key,
@@ -78,6 +82,10 @@ addGlobalCallbackParameter: function(key, value) {
 },
 
 removeGlobalCallbackParameter: function(key) {
+    if (typeof key !== 'string') {
+        console.log('Passed key is not of string type');
+        return;
+    }
     const message = {
     action:'adjust_removeGlobalCallbackParameterByKey',
     key: key,
@@ -93,6 +101,10 @@ clearAllGlobalCallbackParameters: function() {
 },
 
 addGlobalPartnerParameter: function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
     const message = {
     action:'adjust_addGlobalPartnerParameter',
     key: key,
@@ -102,6 +114,10 @@ addGlobalPartnerParameter: function(key, value) {
 },
 
 removeGlobalPartnerParameter: function(key) {
+    if (typeof key !== 'string') {
+        console.log('Passed key is not of string type');
+        return;
+    }
     const message = {
     action:'adjust_removeGlobalPartnerParameterByKey',
     key: key,
