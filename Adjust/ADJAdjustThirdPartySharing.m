@@ -19,8 +19,8 @@
 
 @interface ADJAdjustThirdPartySharing ()
 #pragma mark - Internal variables
-@property (nonnull, readwrite, strong, nonatomic)NSMutableDictionary *granularOptionsByNameDictMut;
-@property (nonnull, readwrite, strong, nonatomic)NSMutableDictionary *partnerSharingSettingsByNameDictMut;
+@property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary *granularOptionsByNameDictMut;
+@property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary *partnerSharingSettingsByNameDictMut;
 
 @end
 
@@ -30,7 +30,6 @@
     self = [super init];
 
     _enabledOrElseDisabledSharingNumberBool = nil;
-
     _granularOptionsByNameDictMut = [[NSMutableDictionary alloc] init];
     _partnerSharingSettingsByNameDictMut = [[NSMutableDictionary alloc] init];
 
@@ -66,7 +65,7 @@
                                           value:(BOOL)value {
 
     NSMutableDictionary *partnerSharingSettings = [self.partnerSharingSettingsByNameDictMut
-                                                  objectForKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
+                                                   objectForKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
     if (partnerSharingSettings == nil) {
         partnerSharingSettings = [[NSMutableDictionary alloc] init];
         [self.partnerSharingSettingsByNameDictMut setObject:partnerSharingSettings
@@ -96,4 +95,5 @@
 }
 
 @end
+
 
