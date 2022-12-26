@@ -13,7 +13,7 @@
 @implementation ADJUtilSys
 
 #pragma mark Public API
-+ (nullable NSString *)getFilePathInDocumentsDir:(nonnull NSString *)fileName {
++ (nullable NSString *)filePathInDocumentsDir:(nonnull NSString *)fileName {
     // TODO figure out if this is the "right" way
     //  like for example using NSFileManager URLsForDirectory:inDomains:
     NSArray *_Nonnull paths =
@@ -28,7 +28,20 @@
     return filePath;
 }
 
-+ (nullable NSString *)getFilePathInAppSupportDir:(NSString *)fileName {
++ (nullable NSString *)filePathInAdjustAppSupportDir:(NSString *)fileName {
+
+    NSString *_Nullable adjustAppSupportDirPath = [self adjustAppSupportDir];
+    if (! adjustAppSupportDirPath) {
+        return nil;
+    }
+
+    NSString *_Nonnull filePath =
+    [adjustAppSupportDirPath stringByAppendingPathComponent:fileName];
+
+    return filePath;
+}
+
++ (nullable NSString *)adjustAppSupportDir {
     NSArray *_Nonnull paths =
     NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
                                         NSUserDomainMask,
@@ -36,41 +49,50 @@
     if (paths.count == 0) {
         return nil;
     }
-    
+
     NSString *_Nonnull appSupportDirPath = [paths objectAtIndex:0];
     NSString *_Nonnull adjustAppSupportDirPath =
     [appSupportDirPath stringByAppendingPathComponent:@"Adjust"];
-    NSString *_Nonnull filePath =
-    [adjustAppSupportDirPath stringByAppendingPathComponent:fileName];
-    
-    return filePath;
+
+    return adjustAppSupportDirPath;
 }
 
 + (BOOL)createAdjustAppSupportDir {
     // return value indicates if directory was created successfully or not
     // error won't be reported if directory already exists
-    NSArray *_Nonnull paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
-                                                                  NSUserDomainMask,
-                                                                  YES);
-    if (paths.count == 0) {
+
+    NSString *_Nullable adjustAppSupportDirPath = [self adjustAppSupportDir];
+    if (! adjustAppSupportDirPath) {
         return NO;
     }
+    NSLog(@"%@", adjustAppSupportDirPath);
     
-    NSString *_Nonnull appSupportDirPath = [paths objectAtIndex:0];
-    NSString *_Nonnull adjustAppSupportDirPath =
-    [appSupportDirPath stringByAppendingPathComponent:@"Adjust"];
     NSError *_Nullable error = nil;
-    [[NSFileManager defaultManager] createDirectoryAtPath:adjustAppSupportDirPath
-                              withIntermediateDirectories:YES
-                                               attributes:nil
-                                                    error:&error];
-    if (error != nil) {
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:adjustAppSupportDirPath
+                                             withIntermediateDirectories:YES
+                                                              attributes:nil
+                                                                   error:&error];
+    if (! success && error != nil) {
         //NSLog(@"Error while creating directory: %@", adjustAppSupportDirPath);
         //NSLog(@"Error: %@", error);
         return NO;
     }
     
     return YES;
+}
+
++ (void)moveFromDocumentsToSupportFolderOldDbFilename:(nonnull NSString *)oldName
+                                        newDbFileName:(nonnull NSString *)newName {
+    NSString *oldFilePath = [self filePathInDocumentsDir:oldName];
+    NSString *newFilePath = [self filePathInAdjustAppSupportDir:newName];
+
+    NSError *error = nil;
+    BOOL success = [[NSFileManager defaultManager] moveItemAtPath:oldFilePath
+                                                           toPath:newFilePath
+                                                            error:&error];
+    if (! success && error != nil) {
+        //NSLog(@"%@", [error localizedDescription]);
+    }
 }
 
 + (nonnull ADJNonEmptyString *)generateUuid {

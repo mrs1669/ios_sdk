@@ -36,6 +36,6 @@ NS_ASSUME_NONNULL_END
 @property (readonly, assign, nonatomic) BOOL askedToForgetBySdk;
 
 // public api
-- (BOOL)isNotForgotten;
+- (BOOL)isForgotten;
 
 @end

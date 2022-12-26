@@ -47,11 +47,18 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     
     _v4RestMigration = [[ADJV4RestMigration alloc] initWithLoggerFactory:loggerFactory
                                                               instanceId:instanceId];
+    [ADJUtilSys createAdjustAppSupportDir];
 
+    NSString *oldDbFileName = [NSString stringWithFormat:@"%@.db", ADJDatabaseNamePrefix];
     NSString *dbFileName = [NSString stringWithFormat:@"%@_%@.db", ADJDatabaseNamePrefix, instanceId];
+
+    // Move an 'adjust.db' file if found in '/Documents' folder to an '/Application Support/Adjust'
+    // while renaming it to a coming first instance id named db file.
+    [ADJUtilSys moveFromDocumentsToSupportFolderOldDbFilename:oldDbFileName
+                                                newDbFileName:dbFileName];
+
     _sqliteDb = [[ADJSQLiteDb alloc] initWithLoggerFactory:loggerFactory
-                                              databasePath:[ADJUtilSys getFilePathInDocumentsDir:dbFileName]];
-    
+                                              databasePath:[ADJUtilSys filePathInAdjustAppSupportDir:dbFileName]];
     return self;
 }
 

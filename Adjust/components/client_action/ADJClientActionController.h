@@ -16,8 +16,9 @@
 #import "ADJClock.h"
 
 @class ADJPostSdkInitRootController;
-@interface ADJClientActionController : ADJCommonBase<ADJClientActionsAPI,
-// subscriptions
+@interface ADJClientActionController : ADJCommonBase<
+    ADJClientActionsAPI,
+    // subscriptions
     ADJPreFirstMeasurementSessionStartSubscriber,
     ADJMeasurementSessionStartSubscriber
 >

@@ -71,14 +71,13 @@
                                 class:(nonnull Class)classToRead
                                logger:(nonnull ADJLogger *)logger {
     // Try to read from Application Support directory first.
-    NSString *_Nullable appSupportFilePath = [ADJUtilSys getFilePathInAppSupportDir:fileName];
+    NSString *_Nullable appSupportFilePath = [ADJUtilSys filePathInAdjustAppSupportDir:fileName];
     
-    id _Nullable appSupportReadObject =
-    [self readObjectWithFilePath:appSupportFilePath
-                        fileName:fileName
-                      objectName:objectName
-                           class:classToRead
-                          logger:logger];
+    id _Nullable appSupportReadObject = [self readObjectWithFilePath:appSupportFilePath
+                                                            fileName:fileName
+                                                          objectName:objectName
+                                                               class:classToRead
+                                                              logger:logger];
     
     if (appSupportReadObject != nil) {
         return appSupportReadObject;
@@ -86,14 +85,13 @@
     
     // If in here, for some reason, reading of file from Application Support folder failed.
     // Let's check the Documents folder.
-    NSString *_Nullable documentsFilePath = [ADJUtilSys getFilePathInDocumentsDir:fileName];
+    NSString *_Nullable documentsFilePath = [ADJUtilSys filePathInDocumentsDir:fileName];
     
-    id _Nullable documentsReadObject =
-    [self readObjectWithFilePath:documentsFilePath
-                        fileName:fileName
-                      objectName:objectName
-                           class:classToRead
-                          logger:logger];
+    id _Nullable documentsReadObject = [self readObjectWithFilePath:documentsFilePath
+                                                           fileName:fileName
+                                                         objectName:objectName
+                                                              class:classToRead
+                                                             logger:logger];
     
     return documentsReadObject;
 }

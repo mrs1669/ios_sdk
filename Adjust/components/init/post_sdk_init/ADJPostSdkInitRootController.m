@@ -12,7 +12,6 @@
 #import "ADJSdkInitSubscriber.h"
 #import "ADJAttributionController.h"
 #import "ADJKeepAliveController.h"
-#import "ADJReachabilityController.h"
 #import "ADJPausingController.h"
 #import "ADJClientSubscriptionsController.h"
 #import "ADJLogQueueController.h"
@@ -48,7 +47,6 @@
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
 @property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
-@property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
 @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
 @property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
 @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;

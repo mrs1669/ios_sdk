@@ -23,8 +23,7 @@ static NSString *const kGdprForgetStateStorageTableName = @"gdpr_forget_state";
                        sqliteController:sqliteController
                               tableName:kGdprForgetStateStorageTableName
                       metadataTypeValue:ADJGdprForgetStateDataMetadataTypeValue
-                initialDefaultDataValue:
-            [[ADJGdprForgetStateData alloc] initWithInitialState]];
+                initialDefaultDataValue:[[ADJGdprForgetStateData alloc] initWithInitialState]];
 
     return self;
 }

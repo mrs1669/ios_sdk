@@ -34,7 +34,6 @@
 
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkActiveController"];
 
-    // TODO: (Gena) - check whether we need `weak` reference to next two properties
     _activeStateStorage = activeStateStorage;
     _clientExecutor = clientExecutor;
 
@@ -87,8 +86,12 @@
 - (BOOL)ccGdprForgetDevice {
 
     ADJValueWO<NSString *> * sdkActiveStatusEventWO = [self.sdkActiveState gdprForgottenByClient];
-    return [self handleSdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
-                                     source:@"ccGdprForgetDevice"];
+    if (! sdkActiveStatusEventWO) {
+        return NO;
+    }
+
+    [self handleSdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue source:@"ccGdprForgetDevice"];
+    return YES;
 }
 
 #pragma mark - ADJGdprForgetSubscriber
@@ -127,18 +130,17 @@
         [self.activeStateStorage updateWithNewDataValue:changedSdkActiveStateData];
     }
 
-    [self handleSdkActiveStatusEvent:sdkActiveStatusEvent
-                              source:source];
+    [self handleSdkActiveStatusEvent:sdkActiveStatusEvent source:source];
 }
 
-- (BOOL)handleSdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
+- (void)handleSdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
                             source:(nonnull NSString *)source {
     if (sdkActiveStatusEvent == nil) {
-        return NO;
+        return;
     }
 
     if (! self.canPublish) {
-        return NO;
+        return;
     }
 
     [self.logger debugDev:@"Publishing Sdk Active Status"
@@ -150,7 +152,6 @@
      ^(id<ADJSdkActiveSubscriber> _Nonnull subscriber) {
         [subscriber ccSdkActiveWithStatus:sdkActiveStatusEvent];
     }];
-    return YES;
 }
 
 - (void)processGdprForgetEvent {

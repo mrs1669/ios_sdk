@@ -56,8 +56,6 @@
           forProtocol:(Protocol *)protocol
           toPublisher:(NSString *)publisherName {
 
-    // TODO: (Gena) check if the following is sufficient for our case (instance based call)
-    //if ([[subscriber class] conformsToProtocol:protocol]) {
     if ([subscriber conformsToProtocol:protocol]) {
         ADJPublisherBase *publisher = [self.publishersMap objectForKey:publisherName];
         if(! publisher) {
@@ -67,7 +65,7 @@
                                          userInfo:nil];
         }
 
-// TODO: (Gena) - Add the following log to a Verbose log level
+// TODO: (Gena) - Add the following log to a Verbose log level after merging latest Logger changes
 //        NSString *subscriptionText = [NSString stringWithFormat:@"Subscribing [%@] to [%@]...",
 //                                      NSStringFromClass([subscriber class]),
 //                                      NSStringFromClass([publisher class])];

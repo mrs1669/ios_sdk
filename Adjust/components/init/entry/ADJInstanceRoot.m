@@ -130,12 +130,10 @@
                                                               clock:strongSelf.clock
                                                  publishersRegistry:strongSelf.publishersRegistry];
 
-        // Inject remaining dependencies before subscriptions
+        // Inject remaining dependencies before subscribing to publishers
         // 1. Self (InstanceRoot) dependencies - subscribe to publishers
         [strongSelf.publishersRegistry addSubscriberToPublishers:strongSelf.logController];
-
         // 2. PreSdkInit dependencies
-        // TODO: (Gena) All these dependecies from PostInitRootC should be extracted to a different class and passed here (or other place in the code) as a dependency.
         // Set dependencies from PostInitRootController
         [strongSelf.preSdkInitRootController.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:self.postSdkInitRootController];
 
@@ -631,7 +629,7 @@
 - (nullable id<ADJClientActionsAPI>)clientActionsApiForInstanceRoot:(ADJInstanceRoot *)instanceRoot
                                                        actionSource:(NSString *)source {
     NSString *errMsg = nil;
-    if (! [instanceRoot.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:@"trackAdRevenue"
+    if (! [instanceRoot.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:source
                                                                                      errorMessage:&errMsg]) {
         if (errMsg != nil && errMsg.length > 0) {
             [instanceRoot.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
@@ -640,4 +638,33 @@
     }
     return [instanceRoot.postSdkInitRootController sdkStartClientActionAPI] ? : instanceRoot.preSdkInitRootController.clientActionController;
 }
+
+
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock {
+
+    __typeof(self) __weak weakSelf = self;
+    BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
+
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        if (strongSelf.preSdkInitRootController != nil) {
+            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+            [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
+        }
+
+        if (strongSelf.postSdkInitRootController != nil) {
+            [strongSelf.postSdkInitRootController.reachabilityController finalizeAtTeardown];
+        }
+
+        [strongSelf.threadController finalizeAtTeardown];
+    } source:@"finalizeAtTeardownWithBlock"];
+
+    if (! canExecuteTask && closeStorageBlock != nil) {
+        closeStorageBlock();
+    }
+}
+
 @end

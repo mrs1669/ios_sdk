@@ -15,6 +15,7 @@
 - (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
                                 instanceId:(nonnull NSString *)instanceId;
 - (nullable instancetype)init NS_UNAVAILABLE;
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end
 

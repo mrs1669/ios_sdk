@@ -24,6 +24,7 @@
 #import "ADJThirdPartySharingController.h"
 #import "ADJPublishersRegistry.h"
 #import "ADJStorageRootController.h"
+#import "ADJReachabilityController.h"
 #import "ADJSdkConfigData.h"
 
 @interface ADJPostSdkInitRootController : ADJCommonBase<
@@ -42,6 +43,8 @@ ADJMeasurementSessionStartSubscriber
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersController *globalPartnerParametersController;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
 @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
+@property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
+
 
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                 threadFactory:(nonnull ADJThreadController *)threadFactory

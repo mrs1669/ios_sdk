@@ -61,7 +61,7 @@ NSString *const ADJUserDefaultsMigrationCompleted = @"adj_migration_completed";
 }
 
 - (BOOL)isMigrationCompleted {
-    return (self.migrationCompletedNumberBool) ? [self.migrationCompletedNumberBool boolValue] : NO;
+    return (self.migrationCompletedNumberBool != nil) ? [self.migrationCompletedNumberBool boolValue] : NO;
 }
 
 - (void)setMigrationCompleted {

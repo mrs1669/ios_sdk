@@ -96,7 +96,7 @@
     ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
     [gdprForgetStateStorage readOnlyStoredDataValue];
     
-    return ! [currentGdprForgetStateData isNotForgotten];
+    return [currentGdprForgetStateData isForgotten];
 }
 
 - (void)forgetDevice {
@@ -199,8 +199,7 @@
 
 #pragma mark Internal Methods
 - (void)processForgetDevice {
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage =
-    self.gdprForgetStateStorageWeak;
+    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage = self.gdprForgetStateStorageWeak;
     if (gdprForgetStateStorage == nil) {
         [self.logger debugDev:@"Cannot forget device without a reference to the storage"
                     issueType:ADJIssueWeakReference];
@@ -209,23 +208,21 @@
     
     ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
     [gdprForgetStateStorage readOnlyStoredDataValue];
+
     ADJValueWO<ADJGdprForgetStateData *> *_Nonnull changedGdprForgetStateDataWO =
     [[ADJValueWO alloc] init];
+
     ADJValueWO<NSString *> *_Nonnull gdprForgetStatusEventWO = [[ADJValueWO alloc] init];
     
-    BOOL shouldStartTracking =
-    [self.gdprForgetState
-     shouldStartTrackingWhenForgottenByClientWithCurrentStateData:
-         currentGdprForgetStateData
-     changedGdprForgetStateDataWO:changedGdprForgetStateDataWO
-     gdprForgetStatusEventWO:gdprForgetStatusEventWO];
+    BOOL shouldStartTracking = [self.gdprForgetState  shouldStartTrackingWhenForgottenByClientWithCurrentStateData:currentGdprForgetStateData
+                                                                                      changedGdprForgetStateDataWO:changedGdprForgetStateDataWO
+                                                                                           gdprForgetStatusEventWO:gdprForgetStatusEventWO];
     
-    [self
-     handleStartingStateSideEffectsWithShouldStart:shouldStartTracking
-     changedGdprForgetStateData:[changedGdprForgetStateDataWO changedValue]
-     gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
-     gdprForgetStateStorage:gdprForgetStateStorage
-     sourceDescription:@"forgetDevice"];
+    [self handleStartingStateSideEffectsWithShouldStart:shouldStartTracking
+                             changedGdprForgetStateData:[changedGdprForgetStateDataWO changedValue]
+                                  gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
+                                 gdprForgetStateStorage:gdprForgetStateStorage
+                                      sourceDescription:@"forgetDevice"];
 }
 
 - (void)processGdprForgetResponseInStateWithData:(nonnull ADJGdprForgetResponseData *)gdprForgetResponseData {

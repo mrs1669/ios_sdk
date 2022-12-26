@@ -148,8 +148,8 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     }
 
     NSString *_Nonnull returnMessage =
-        [ADJAdjustInternal teardownWithShouldClearStorage:cachedTestOptions.clearStorage
-                                      sdkConfigDataBuilder:sdkConfigDataBuilder];
+        [ADJAdjustInternal teardownWithSdkConfigDataBuilder:sdkConfigDataBuilder
+                                               clearStorage:cachedTestOptions.clearStorage];
 
     [[ATOLogger sharedInstance] debugDev:returnMessage
                                      key:@"from"

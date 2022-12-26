@@ -35,7 +35,6 @@ static dispatch_once_t entryRootOnceToken = 0;
 #endif
 }
 
-
 + (nonnull NSString *)sdkVersion {
     return ADJClientSdk;
 }
@@ -65,7 +64,6 @@ static dispatch_once_t entryRootOnceToken = 0;
 }
 
 // Resets the sdk state, as if it was not initialized or used before.
-// TODO: (Gena) add multiple instance logic
 + (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
                                           clearStorage:(BOOL)clearStorage {
     // restrict teardown to debug builds
@@ -159,22 +157,19 @@ static dispatch_once_t entryRootOnceToken = 0;
     }
 }
 
-
-// TODO: (Gena) To be implemented using muliple instance logic.
 + (nonnull NSString *)clearStorage {
 
-    //NSString *_Nullable sqliteFilePath = [ADJUtilSys getFilePathInDocumentsDir:ADJDatabaseName];
-    NSString *_Nullable sqliteFilePath = [ADJUtilSys getFilePathInDocumentsDir:@"adjust.db"];
-
+    NSString *_Nullable pathToDelete = [ADJUtilSys adjustAppSupportDir];
     NSFileManager *_Nonnull fileManager = [NSFileManager defaultManager];
     NSError *error = nil;
-    BOOL removedSuccessfully = [fileManager removeItemAtPath:sqliteFilePath
+    BOOL removedSuccessfully = [fileManager removeItemAtPath:pathToDelete
                                                        error:&error];
     if (error) {
         return [ADJUtilF errorFormat:error];
     }
     return [NSString stringWithFormat:@"fileManager removedSuccessfully: %d", removedSuccessfully];
 }
+
 
 @end
 

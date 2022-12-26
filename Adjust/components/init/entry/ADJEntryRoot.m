@@ -9,11 +9,10 @@
 #import "ADJEntryRoot.h"
 #import "ADJInstanceRoot.h"
 #import "ADJSdkConfigData.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
-// TODO: (Gena) - discuss this reference
-NSString *const ADJDefaultInstanceId = @"ADJUST_DEFAULT_INSTANCE";
 
 @interface ADJEntryRoot ()
 @property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
@@ -65,29 +64,12 @@ NSString *const ADJDefaultInstanceId = @"ADJUST_DEFAULT_INSTANCE";
 }
 
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock {
-    // TODO: (Gena) Implement the teardown logic
-    /*
-    __typeof(self) __weak weakSelf = self;
-    BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-        if (strongSelf.preSdkInitRootController != nil) {
-            [strongSelf.preSdkInitRootController.storageRootController
-                finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
-            [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
-        }
-
-        if (strongSelf.postSdkInitRootController != nil) {
-            [strongSelf.postSdkInitRootController.reachabilityController finalizeAtTeardown];
-        }
-
-        [strongSelf.threadController finalizeAtTeardown];
-    } source:@"finalize at teardown"];
-
-    if (! canExecuteTask && closeStorageBlock != nil) {
-        closeStorageBlock();
+    @synchronized ([ADJEntryRoot class]) {
+        [self.instanceMap enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+            ADJInstanceRoot * instanceRoot = (ADJInstanceRoot *)obj;
+            [instanceRoot finalizeAtTeardownWithBlock:closeStorageBlock];
+        }];
     }
-     */
 }
 
 @end
