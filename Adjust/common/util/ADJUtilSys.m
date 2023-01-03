@@ -65,14 +65,14 @@
     if (! adjustAppSupportDirPath) {
         return NO;
     }
-    NSLog(@"%@", adjustAppSupportDirPath);
-    
+
     NSError *_Nullable error = nil;
     BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:adjustAppSupportDirPath
                                              withIntermediateDirectories:YES
                                                               attributes:nil
                                                                    error:&error];
     if (! success && error != nil) {
+        // TODO: (Gena) - write these logs into an appropriate loger instance.
         //NSLog(@"Error while creating directory: %@", adjustAppSupportDirPath);
         //NSLog(@"Error: %@", error);
         return NO;
@@ -91,6 +91,7 @@
                                                            toPath:newFilePath
                                                             error:&error];
     if (! success && error != nil) {
+        // TODO: (Gena) - write these logs into an appropriate loger instance.
         //NSLog(@"%@", [error localizedDescription]);
     }
 }
