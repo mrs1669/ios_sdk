@@ -10,10 +10,10 @@
 
 @interface ADJUtilObj : NSObject
 
-+ (nonnull id)copyStringForCollectionWithInput:(nullable id)inputValue;
 + (nullable NSString *)copyStringWithInput:(nullable id)inputValue;
++ (nonnull id)copyStringOrNSNullWithInput:(nullable id)inputValue;
 + (nullable id)copyObjectWithInput:(nullable id)inputValue
-                       classObject:(nullable Class)classObject;
+                       classObject:(nonnull Class)classObject;
 
 + (BOOL)objectEquals:(nullable id)one other:(nullable id)other;
 

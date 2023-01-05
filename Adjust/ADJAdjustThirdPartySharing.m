@@ -15,12 +15,14 @@
 /* .h
  @property (nullable, readonly, strong, nonatomic) NSNumber *enabledOrElseDisabledSharingNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *granularOptionsByNameArray;
- */
+ @property (nullable, readonly, strong, nonatomic) NSArray *partnerSharingSettingsByNameArray;
+*/
 
 @interface ADJAdjustThirdPartySharing ()
 #pragma mark - Internal variables
-@property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary *granularOptionsByNameDictMut;
-@property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary *partnerSharingSettingsByNameDictMut;
+@property (nullable, readonly, strong, nonatomic) NSMutableArray *granularOptionsByNameArrayMut;
+@property (nullable, readonly, strong, nonatomic)
+    NSMutableArray *partnerSharingSettingsByNameArrayMut;
 
 @end
 
@@ -30,8 +32,8 @@
     self = [super init];
 
     _enabledOrElseDisabledSharingNumberBool = nil;
-    _granularOptionsByNameDictMut = [[NSMutableDictionary alloc] init];
-    _partnerSharingSettingsByNameDictMut = [[NSMutableDictionary alloc] init];
+    _granularOptionsByNameArrayMut = [[NSMutableArray alloc] init];
+    _partnerSharingSettingsByNameArrayMut = [[NSMutableArray alloc] init];
 
     return self;
 }
@@ -47,53 +49,49 @@
 
 - (void)addGranularOptionWithPartnerName:(nonnull NSString *)partnerName
                                      key:(nonnull NSString *)key
-                                   value:(nonnull NSString *)value {
-
-    NSMutableDictionary *granularOptions = [self.granularOptionsByNameDictMut
-                                            objectForKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
-    if (granularOptions == nil) {
-        granularOptions = [[NSMutableDictionary alloc] init];
-        [self.granularOptionsByNameDictMut setObject:granularOptions
-                                              forKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
+                                   value:(nonnull NSString *)value
+{
+    @synchronized (self.granularOptionsByNameArrayMut) {
+        [self.granularOptionsByNameArrayMut addObject:
+         [ADJUtilObj copyStringOrNSNullWithInput:partnerName]];
+        [self.granularOptionsByNameArrayMut addObject:
+         [ADJUtilObj copyStringOrNSNullWithInput:key]];
+        [self.granularOptionsByNameArrayMut addObject:
+         [ADJUtilObj copyStringOrNSNullWithInput:value]];
     }
-
-    [granularOptions setObject:[ADJUtilObj copyStringForCollectionWithInput:value] forKey:[ADJUtilObj copyStringForCollectionWithInput:key]];
 }
 
 - (void)addPartnerSharingSettingWithPartnerName:(nonnull NSString *)partnerName
                                             key:(nonnull NSString *)key
-                                          value:(BOOL)value {
-
-    NSMutableDictionary *partnerSharingSettings = [self.partnerSharingSettingsByNameDictMut
-                                                   objectForKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
-    if (partnerSharingSettings == nil) {
-        partnerSharingSettings = [[NSMutableDictionary alloc] init];
-        [self.partnerSharingSettingsByNameDictMut setObject:partnerSharingSettings
-                                                     forKey:[ADJUtilObj copyStringForCollectionWithInput:partnerName]];
+                                          value:(BOOL)value
+{
+    @synchronized (self.partnerSharingSettingsByNameArrayMut) {
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [ADJUtilObj copyStringOrNSNullWithInput:partnerName]];
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [ADJUtilObj copyStringOrNSNullWithInput:key]];
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [NSNumber numberWithBool:value]];
     }
-
-    [partnerSharingSettings setObject:[NSNumber numberWithBool:value] forKey:[ADJUtilObj copyStringForCollectionWithInput:key]];
 }
 
 #pragma mark - Generated properties
-- (nullable NSDictionary *)granularOptionsByNameDictionary {
-    @synchronized (self.granularOptionsByNameDictMut) {
-        if (self.granularOptionsByNameDictMut.count == 0) {
+- (nullable NSArray<NSString *> *)granularOptionsByNameArray {
+    @synchronized (self.granularOptionsByNameArrayMut) {
+        if (self.granularOptionsByNameArrayMut.count  == 0) {
             return nil;
         }
-        return [self.granularOptionsByNameDictMut copy];
+        return [self.granularOptionsByNameArrayMut copy];
     }
 }
 
-- (nullable NSDictionary *)partnerSharingSettingsByNameDictionary {
-    @synchronized (self.partnerSharingSettingsByNameDictMut) {
-        if (self.partnerSharingSettingsByNameDictMut.count == 0) {
+- (nullable NSArray *)partnerSharingSettingsByNameArray {
+    @synchronized (self.partnerSharingSettingsByNameArrayMut) {
+        if (self.partnerSharingSettingsByNameArrayMut.count == 0) {
             return nil;
         }
-        return [self.partnerSharingSettingsByNameDictMut copy];
+        return [self.partnerSharingSettingsByNameArrayMut copy];
     }
 }
 
 @end
-
-

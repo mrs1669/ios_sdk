@@ -17,15 +17,6 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 
 @implementation ADJUtilObj
 
-+ (nonnull id)copyStringForCollectionWithInput:(nullable id)inputValue {
-    NSString *_Nullable sanitizedString = [self copyStringWithInput:inputValue];
-    if (sanitizedString == nil) {
-        return [NSNull null];
-    }
-    
-    return sanitizedString;
-}
-
 + (nullable NSString *)copyStringWithInput:(nullable id)inputValue {
     if (inputValue == nil) {
         return nil;
@@ -38,17 +29,21 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     return [inputValue description];
 }
 
++ (nonnull id)copyStringOrNSNullWithInput:(nullable id)inputValue {
+    id _Nullable copyStringOrNil = [self copyObjectWithInput:inputValue
+                                                 classObject:[NSString class]];
+
+    return copyStringOrNil != nil ? copyStringOrNil : [NSNull null];
+}
+
 + (nullable id)copyObjectWithInput:(nullable id)inputValue
-                       classObject:(nullable Class)classObject {
-    if (inputValue == nil) {
-        return nil;
+                       classObject:(nonnull Class)classObject
+{
+    if (inputValue != nil && [inputValue isKindOfClass:classObject]) {
+        return [inputValue copy];
     }
-    
-    if (classObject != nil && ! [inputValue isKindOfClass:classObject]) {
-        return nil;
-    }
-    
-    return [inputValue copy];
+
+    return nil;
 }
 
 + (BOOL)objectEquals:(nullable id)one other:(nullable id)other {

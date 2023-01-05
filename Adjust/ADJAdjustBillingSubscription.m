@@ -70,18 +70,18 @@
 - (void)addCallbackParameterWithKey:(nonnull NSString *)key
                               value:(nonnull NSString *)value {
     @synchronized (self.callbackParametersMut) {
-        [self.callbackParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:key]];
+        [self.callbackParametersMut addObject:[ADJUtilObj copyStringOrNSNullWithInput:key]];
         [self.callbackParametersMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:value]];
+         [ADJUtilObj copyStringOrNSNullWithInput:value]];
     }
 }
 
 - (void)addPartnerParameterWithKey:(nonnull NSString *)key
                              value:(nonnull NSString *)value {
     @synchronized (self.partnerParametersMut) {
-        [self.partnerParametersMut addObject:[ADJUtilObj copyStringForCollectionWithInput:key]];
+        [self.partnerParametersMut addObject:[ADJUtilObj copyStringOrNSNullWithInput:key]];
         [self.partnerParametersMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:value]];
+         [ADJUtilObj copyStringOrNSNullWithInput:value]];
     }
 }
 

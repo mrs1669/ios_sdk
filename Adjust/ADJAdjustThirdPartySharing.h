@@ -26,8 +26,8 @@
 
 // public properties
 @property (nullable, readonly, strong, nonatomic) NSNumber *enabledOrElseDisabledSharingNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSDictionary *granularOptionsByNameDictionary;
-@property (nullable, readonly, strong, nonatomic) NSDictionary *partnerSharingSettingsByNameDictionary;
+@property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *granularOptionsByNameArray;
+@property (nullable, readonly, strong, nonatomic) NSArray *partnerSharingSettingsByNameArray;
 
 @end
 
