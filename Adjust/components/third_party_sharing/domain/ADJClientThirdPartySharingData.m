@@ -49,7 +49,7 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
                adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue]
             : nil;
 
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *_Nullable
+    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
      granularOptionsByName =
         [ADJUtilConv
          convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
@@ -62,7 +62,7 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
          sourceDescription:@"third party sharing granular options string parsing"
          logger:logger];
 
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSNumber *> *> *_Nullable
+    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
      partnerSharingSettingsByName =
         [ADJUtilConv
          convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:

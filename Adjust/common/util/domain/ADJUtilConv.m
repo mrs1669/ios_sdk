@@ -247,7 +247,7 @@
     return [[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder];
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *)
++ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
 convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
 (nullable NSArray<NSString *> *)nameKeyStringValueArray
 sourceDescription:(nonnull NSString *)sourceDescription
@@ -258,7 +258,7 @@ logger:(nonnull ADJLogger *)logger {
                                                             isValueString:YES];
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSNumber *> *> *)
++ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
 convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray *)nameKeyNumberBooleanValueArray
 sourceDescription:(nonnull NSString *)sourceDescription
 logger:(nonnull ADJLogger *)logger {
