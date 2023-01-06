@@ -168,7 +168,7 @@
 
 + (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData {
     NSString *_Nullable converted =
-        [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
     if (converted == nil) {
         return nil;
@@ -183,8 +183,8 @@
 
     NSError *error;
     NSData *_Nullable jsonData =
-        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
-                                                     errorPtr:&error];
+    [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
+                                                 errorPtr:&error];
 
     if (jsonData == nil) {
         return nil;
@@ -207,8 +207,7 @@
 }
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
-                    regex:(nonnull NSRegularExpression *)regex
-{
+                    regex:(nonnull NSRegularExpression *)regex {
     return [regex matchesInString:stringValue
                           options:0
                             range:NSMakeRange(0, stringValue.length)].count > 0;
@@ -289,5 +288,3 @@
 }
 
 @end
-
-

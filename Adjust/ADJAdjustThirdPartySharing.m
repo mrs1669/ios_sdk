@@ -16,13 +16,12 @@
  @property (nullable, readonly, strong, nonatomic) NSNumber *enabledOrElseDisabledSharingNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *granularOptionsByNameArray;
  @property (nullable, readonly, strong, nonatomic) NSArray *partnerSharingSettingsByNameArray;
-*/
+ */
 
 @interface ADJAdjustThirdPartySharing ()
 #pragma mark - Internal variables
 @property (nullable, readonly, strong, nonatomic) NSMutableArray *granularOptionsByNameArrayMut;
-@property (nullable, readonly, strong, nonatomic)
-    NSMutableArray *partnerSharingSettingsByNameArrayMut;
+@property (nullable, readonly, strong, nonatomic) NSMutableArray *partnerSharingSettingsByNameArrayMut;
 
 @end
 
@@ -49,8 +48,7 @@
 
 - (void)addGranularOptionWithPartnerName:(nonnull NSString *)partnerName
                                      key:(nonnull NSString *)key
-                                   value:(nonnull NSString *)value
-{
+                                   value:(nonnull NSString *)value {
     @synchronized (self.granularOptionsByNameArrayMut) {
         [self.granularOptionsByNameArrayMut addObject:
          [ADJUtilObj copyStringOrNSNullWithInput:partnerName]];
@@ -63,8 +61,7 @@
 
 - (void)addPartnerSharingSettingWithPartnerName:(nonnull NSString *)partnerName
                                             key:(nonnull NSString *)key
-                                          value:(BOOL)value
-{
+                                          value:(BOOL)value {
     @synchronized (self.partnerSharingSettingsByNameArrayMut) {
         [self.partnerSharingSettingsByNameArrayMut addObject:
          [ADJUtilObj copyStringOrNSNullWithInput:partnerName]];
@@ -78,7 +75,7 @@
 #pragma mark - Generated properties
 - (nullable NSArray<NSString *> *)granularOptionsByNameArray {
     @synchronized (self.granularOptionsByNameArrayMut) {
-        if (self.granularOptionsByNameArrayMut.count  == 0) {
+        if (self.granularOptionsByNameArrayMut.count == 0) {
             return nil;
         }
         return [self.granularOptionsByNameArrayMut copy];
@@ -95,3 +92,4 @@
 }
 
 @end
+

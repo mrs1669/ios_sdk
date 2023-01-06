@@ -196,8 +196,8 @@
 }
 
 + (nullable ADJStringMap *)convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
-sourceDescription:(nonnull NSString *)sourceDescription
-logger:(nonnull ADJLogger *)logger {
+                                             sourceDescription:(nonnull NSString *)sourceDescription
+                                                        logger:(nonnull ADJLogger *)logger {
     if (keyValueArray == nil) {
         return nil;
     }
@@ -212,26 +212,26 @@ logger:(nonnull ADJLogger *)logger {
     }
 
     ADJStringMapBuilder *_Nonnull stringMapBuilder =
-        [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     for (NSUInteger i = 0; i < keyValueArray.count; i = i + 2) {
         NSString *_Nullable key =
-            [self extractFieldWithStringObject:[keyValueArray objectAtIndex:i]
-                             sourceDescription:sourceDescription
-                              fieldDescription:@"key"
-                                        logger:logger];
+        [self extractFieldWithStringObject:[keyValueArray objectAtIndex:i]
+                         sourceDescription:sourceDescription
+                          fieldDescription:@"key"
+                                    logger:logger];
         if (key == nil) { continue; }
 
         ADJNonEmptyString *_Nullable value =
-            [self extractNonEmptyFieldWithStringObject:[keyValueArray objectAtIndex:i + 1]
-                             sourceDescription:sourceDescription
-                              fieldDescription:@"value"
-                                        logger:logger];
+        [self extractNonEmptyFieldWithStringObject:[keyValueArray objectAtIndex:i + 1]
+                                 sourceDescription:sourceDescription
+                                  fieldDescription:@"value"
+                                            logger:logger];
         if (value == nil) { continue; }
 
         ADJNonEmptyString *_Nullable previousValue =
-            [stringMapBuilder addPairWithValue:value
-                                           key:key];
+        [stringMapBuilder addPairWithValue:value
+                                       key:key];
         if (previousValue != nil) {
             [logger debugDev:@"Value was overwritten"
                         from:sourceDescription
@@ -248,11 +248,10 @@ logger:(nonnull ADJLogger *)logger {
 }
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *)
-    convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray<NSString *> *)nameKeyStringValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger
-{
+convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
+(nullable NSArray<NSString *> *)nameKeyStringValueArray
+sourceDescription:(nonnull NSString *)sourceDescription
+logger:(nonnull ADJLogger *)logger {
     return [self convertToMapCollectionByNameBuilderWithNameKeyValueArray:nameKeyStringValueArray
                                                         sourceDescription:sourceDescription
                                                                    logger:logger
@@ -260,11 +259,9 @@ logger:(nonnull ADJLogger *)logger {
 }
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSNumber *> *> *)
-    convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray *)nameKeyNumberBooleanValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger
-{
+convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray *)nameKeyNumberBooleanValueArray
+sourceDescription:(nonnull NSString *)sourceDescription
+logger:(nonnull ADJLogger *)logger {
     return [self
             convertToMapCollectionByNameBuilderWithNameKeyValueArray:nameKeyNumberBooleanValueArray
             sourceDescription:sourceDescription
@@ -273,12 +270,10 @@ logger:(nonnull ADJLogger *)logger {
 }
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
-    convertToMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray<NSString *> *)nameKeyValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger
-    isValueString:(BOOL)isValueString
-{
+convertToMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray<NSString *> *)nameKeyValueArray
+sourceDescription:(nonnull NSString *)sourceDescription
+logger:(nonnull ADJLogger *)logger
+isValueString:(BOOL)isValueString {
     if (nameKeyValueArray == nil) {
         return nil;
     }
@@ -294,21 +289,21 @@ logger:(nonnull ADJLogger *)logger {
 
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nonnull
     mapCollectionByNameBuilder =
-        [[NSMutableDictionary alloc] initWithCapacity:(nameKeyValueArray.count / 3)];
+    [[NSMutableDictionary alloc] initWithCapacity:(nameKeyValueArray.count / 3)];
 
     for (NSUInteger i = 0; i < nameKeyValueArray.count; i = i + 3) {
         NSString *_Nullable name =
-            [self extractFieldWithStringObject:[nameKeyValueArray objectAtIndex:i]
-                             sourceDescription:sourceDescription
-                              fieldDescription:@"name"
-                                        logger:logger];
+        [self extractFieldWithStringObject:[nameKeyValueArray objectAtIndex:i]
+                         sourceDescription:sourceDescription
+                          fieldDescription:@"name"
+                                    logger:logger];
         if (name == nil) { continue; }
 
         NSString *_Nullable key =
-            [self extractFieldWithStringObject:[nameKeyValueArray objectAtIndex:i + 1]
-                             sourceDescription:sourceDescription
-                              fieldDescription:@"key"
-                                        logger:logger];
+        [self extractFieldWithStringObject:[nameKeyValueArray objectAtIndex:i + 1]
+                         sourceDescription:sourceDescription
+                          fieldDescription:@"key"
+                                    logger:logger];
         if (key == nil) { continue; }
 
         id _Nullable value;
@@ -323,12 +318,12 @@ logger:(nonnull ADJLogger *)logger {
         if (value == nil) { continue; }
 
         NSMutableDictionary<NSString *, id> *_Nullable mapBuilder =
-            [mapCollectionByNameBuilder objectForKey:name];
+        [mapCollectionByNameBuilder objectForKey:name];
 
         if (mapBuilder == nil) {
             mapBuilder = [[NSMutableDictionary alloc] init];
             [mapCollectionByNameBuilder setObject:mapBuilder
-                                                 forKey:name];
+                                           forKey:name];
         }
 
         NSString *_Nullable previousValue = [mapBuilder objectForKey:key];
@@ -353,23 +348,20 @@ logger:(nonnull ADJLogger *)logger {
 + (nullable NSString *)extractFieldWithStringObject:(nonnull id)stringObject
                                   sourceDescription:(nonnull NSString *)sourceDescription
                                    fieldDescription:(nonnull NSString *)fieldDescription
-                                             logger:(nonnull ADJLogger *)logger
-{
+                                             logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable field =
-        [self extractNonEmptyFieldWithStringObject:stringObject
-                                 sourceDescription:sourceDescription
-                                  fieldDescription:fieldDescription
-                                            logger:logger];
+    [self extractNonEmptyFieldWithStringObject:stringObject
+                             sourceDescription:sourceDescription
+                              fieldDescription:fieldDescription
+                                        logger:logger];
 
     return field != nil ? field.stringValue : nil;
 }
 
-+ (nullable ADJNonEmptyString *)
-    extractNonEmptyFieldWithStringObject:(nonnull id)stringObject
-    sourceDescription:(nonnull NSString *)sourceDescription
-    fieldDescription:(nonnull NSString *)fieldDescription
-    logger:(nonnull ADJLogger *)logger
-{
++ (nullable ADJNonEmptyString *)extractNonEmptyFieldWithStringObject:(nonnull id)stringObject
+                                                   sourceDescription:(nonnull NSString *)sourceDescription
+                                                    fieldDescription:(nonnull NSString *)fieldDescription
+                                                              logger:(nonnull ADJLogger *)logger {
     if ([stringObject isEqual:[NSNull null]]) {
         [logger debugDev:@"Cannot add to map with NSNull"
                     key1:@"from"
@@ -381,9 +373,9 @@ logger:(nonnull ADJLogger *)logger {
     }
 
     ADJNonEmptyString *_Nullable stringValue =
-         [ADJNonEmptyString instanceFromString:stringObject
-                            sourceDescription:sourceDescription
-                                       logger:logger];
+    [ADJNonEmptyString instanceFromString:stringObject
+                        sourceDescription:sourceDescription
+                                   logger:logger];
     if (stringValue == nil) {
         [logger debugDev:@"Cannot add to map with invalid string"
                     key1:@"from"
@@ -397,3 +389,4 @@ logger:(nonnull ADJLogger *)logger {
 }
 
 @end
+
