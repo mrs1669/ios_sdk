@@ -34,7 +34,7 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+
     [self v5TestSession];
 }
 
@@ -47,28 +47,28 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
                                       testLibrary:self.testLibrary];
 
     self.testLibrary.dictionaryParametersDelegate = self.adjustCommandExecutor;
-    
-//    [self.testLibrary addTestDirectory:@"ad-revenue"];
-//    [self.testLibrary addTestDirectory:@"attribution"];
-//    [self.testLibrary addTestDirectory:@"attribution-callback"];
-//    // [self.testLibrary addTestDirectory:@"background-tracking"];
-//    // [self.testLibrary addTestDirectory:@"certificate"];
-//    [self.testLibrary addTestDirectory:@"continue-in"];
-//    // [self.testLibrary addTestDirectory:@"coppa"];
-//    [self.testLibrary addTestDirectory:@"deeplink"];
-//    // [self.testLibrary addTestDirectory:@"default-tracker"];
-//    [self.testLibrary addTestDirectory:@"disable-third-party-sharing"];
-//    [self.testLibrary addTestDirectory:@"event-tracking"];
-//    [self.testLibrary addTestDirectory:@"gdpr"];
-//    [self.testLibrary addTestDirectory:@"global-parameters"];
-//    [self.testLibrary addTestDirectory:@"init-malformed"];
-//    // [self.testLibrary addTestDirectory:@"measurement-consent"];
-//    // [self.testLibrary addTestDirectory:@"migration"];
-//    [self.testLibrary addTestDirectory:@"offline-mode"];
-//    [self.testLibrary addTestDirectory:@"push-token"];
-//    [self.testLibrary addTestDirectory:@"retry-in"];
-//    [self.testLibrary addTestDirectory:@"session-tracking"];
-//    [self.testLibrary addTestDirectory:@"stop-restart"];
+
+    [self.testLibrary addTestDirectory:@"ad-revenue"];
+    [self.testLibrary addTestDirectory:@"attribution"];
+    [self.testLibrary addTestDirectory:@"attribution-callback"];
+    [self.testLibrary addTestDirectory:@"background-tracking"];
+    [self.testLibrary addTestDirectory:@"certificate"];
+    [self.testLibrary addTestDirectory:@"continue-in"];
+    [self.testLibrary addTestDirectory:@"coppa"];
+    [self.testLibrary addTestDirectory:@"deeplink"];
+    [self.testLibrary addTestDirectory:@"default-tracker"];
+    [self.testLibrary addTestDirectory:@"disable-third-party-sharing"];
+    [self.testLibrary addTestDirectory:@"event-tracking"];
+    [self.testLibrary addTestDirectory:@"gdpr"];
+    [self.testLibrary addTestDirectory:@"global-parameters"];
+    [self.testLibrary addTestDirectory:@"init-malformed"];
+    [self.testLibrary addTestDirectory:@"measurement-consent"];
+    [self.testLibrary addTestDirectory:@"migration"];
+    [self.testLibrary addTestDirectory:@"offline-mode"];
+    [self.testLibrary addTestDirectory:@"push-token"];
+    [self.testLibrary addTestDirectory:@"retry-in"];
+    [self.testLibrary addTestDirectory:@"session-tracking"];
+    [self.testLibrary addTestDirectory:@"stop-restart"];
     [self.testLibrary addTestDirectory:@"third-party-sharing"];
 
 }
@@ -78,3 +78,4 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 }
 
 @end
+
