@@ -9,6 +9,8 @@
 #import "WKWebViewController.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 
+#import "ADJAdjustConfig.h"
+
 @import AdjustSdkWebBridge;
 #import "TestLibraryBridge.h"
 
@@ -22,18 +24,19 @@
 
 @implementation WKWebViewController
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
+
     WKWebView *webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
-    webView.navigationDelegate = self;
     [self.view addSubview:webView];
 
-     ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc"
-                                                                               environment:ADJEnvironmentSandbox];
-
     _adjustBridge = [[ADJAdjustBridge alloc] init];
-    [_adjustBridge augmentedHybridWebView:webView withAdjustConfig:adjustConfig];
+    [_adjustBridge augmentedHybridWebView:webView];
 
-//    self.testLibraryBridge = [[TestLibraryBridge alloc] initWithAdjustBridgeRegister:[self.adjustBridge bridgeRegister]];
+    self.testLibraryBridge = [[TestLibraryBridge alloc] initWithAdjustBridgeRegister:self.adjustBridge];
 
     NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"AdjustTestApp-WebView" ofType:@"html"];
     NSString *appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];

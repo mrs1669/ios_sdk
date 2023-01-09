@@ -12,13 +12,14 @@
 
 //@property WVJBResponseCallback commandExecutorCallback;
 @property (nonatomic, strong) ATLTestLibrary *testLibrary;
-//@property (nonatomic, weak) AdjustBridgeRegister *adjustBridgeRegister;
+@property (nonatomic, weak) WKWebView *webview;
+@property (nonatomic, weak) ADJAdjustBridge *adjustBridge;
 
 @end
 
 @implementation TestLibraryBridge
 
-- (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridgeRegister {
+- (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridge {
     self = [super init];
     if (self == nil) {
         return nil;
@@ -27,57 +28,37 @@
     self.testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:baseUrl
                                                 andControlUrl:controlUrl
                                            andCommandDelegate:self];
-/*
-    [adjustBridgeRegister registerHandler:@"adjustTLB_startTestSession" handler:^(id data, WVJBResponseCallback responseCallback) {
-        NSLog(@"TestLibraryBridge adjustTLB_startTestSession");
-        // self.commandExecutorCallback = responseCallback;
-        [self.adjustBridgeRegister callHandler:@"adjustjs_commandExecutor" data:@"test"];
-        [self.testLibrary startTestSession:(NSString *)data];
-    }];
+    self.webview = adjustBridge.webView;
 
-    [adjustBridgeRegister registerHandler:@"adjustTLB_addInfoToSend" handler:^(id data, WVJBResponseCallback responseCallback) {
-        NSLog(@"TestLibraryBridge adjustTLB_addInfoToSend");
-        NSString *key = [data objectForKey:@"key"];
-        NSString *value = [data objectForKey:@"value"];
-        [self.testLibrary addInfoToSend:key value:value];
-    }];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 20 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.webview evaluateJavaScript:@"TestLibraryBridge.javaScriptTest()" completionHandler:nil];
+    });
 
-    [adjustBridgeRegister registerHandler:@"adjustTLB_sendInfoToServer" handler:^(id data, WVJBResponseCallback responseCallback) {
-        NSLog(@"TestLibraryBridge adjustTLB_sendInfoToServer");
-        if (![data isKindOfClass:[NSString class]]) {
-            NSLog(@"TestLibraryBridge adjustTLB_sendInfoToServer data not string %@", data);
-            return;
-        }
-
-        NSString *extraPath = (NSString *)data;
-        [self.testLibrary sendInfoToServer:extraPath];
-    }];
-    
-    [adjustBridgeRegister registerHandler:@"adjustTLB_addTestDirectory" handler:^(id data, WVJBResponseCallback responseCallback) {
-        NSLog(@"TestLibraryBridge adjustTLB_addTestDirectory");
-        NSString *directoryName = [data objectForKey:@"directoryName"];
-        [self.testLibrary addTestDirectory:directoryName];
-    }];
-    
-    [adjustBridgeRegister registerHandler:@"adjustTLB_addTest" handler:^(id data, WVJBResponseCallback responseCallback) {
-        NSLog(@"TestLibraryBridge adjustTLB_addTest");
-        NSString *testName = [data objectForKey:@"testName"];
-        [self.testLibrary addTest:testName];
-    }];
- */
-
-//    self.adjustBridgeRegister = adjustBridgeRegister;
-    NSLog(@"TestLibraryBridge initWithAdjustBridgeRegister");
     return self;
+}
+
+- (void)startTestSession:(NSString *)clientSdk {
+    [self.testLibrary startTestSession:clientSdk];
+}
+
+- (void)addTestDirectory:(NSString *)directoryName {
+    [self.testLibrary addTestDirectory:directoryName];
+}
+
+- (void)addTest:(NSString *)testName {
+    [self.testLibrary addTest:testName];
+}
+
+- (void)addInfoToSend:(NSString *)key andValue:(NSString *)value {
+    [self.testLibrary addInfoToSend:key value:value];
+}
+
+- (void)sendInfoToServer:(NSString *)extraPath {
+    [self.testLibrary sendInfoToServer:extraPath];
 }
 
 - (void)executeCommandRawJson:(NSString *)json {
     NSLog(@"TestLibraryBridge executeCommandRawJson: %@", json);
-//    if (self.commandExecutorCallback == nil) {
-//        NSLog(@"TestLibraryBridge nil commandExecutorCallback");
-//    }
-    // self.commandExecutorCallback(json);
-//    [self.adjustBridgeRegister callHandler:@"adjustJS_commandExecutor" data:json];
 }
 
 @end

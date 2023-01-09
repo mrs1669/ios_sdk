@@ -69,7 +69,7 @@
     }
 }
 
-- (void)handleMessageFromWebview:(NSDictionary<NSString *,id> *)message{
+- (void)handleMessageFromWebview:(NSDictionary<NSString *,id> *)message {
 
     NSString *action = [message objectForKey:@"action"];
     NSDictionary *data = [message objectForKey:@"data"];

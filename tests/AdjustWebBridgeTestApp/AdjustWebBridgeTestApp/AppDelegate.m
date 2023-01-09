@@ -7,21 +7,10 @@
 //
 
 #import "AppDelegate.h"
-#import "WKWebViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-    UITabBarController *tabBarController = [[UITabBarController alloc] init];
-
-    WKWebViewController *wkWebViewExampleController = [[WKWebViewController alloc] init];
-    wkWebViewExampleController.tabBarItem.title = @"WKWebView";
-    [tabBarController addChildViewController:wkWebViewExampleController];
-
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = tabBarController;
-    [self.window makeKeyAndVisible];
 
     return YES;
 }

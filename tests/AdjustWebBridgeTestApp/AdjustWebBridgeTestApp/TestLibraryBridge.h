@@ -24,6 +24,6 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 
 @interface TestLibraryBridge : NSObject<AdjustCommandDelegate>
 
-- (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridgeRegister;
+- (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridge;
 
 @end

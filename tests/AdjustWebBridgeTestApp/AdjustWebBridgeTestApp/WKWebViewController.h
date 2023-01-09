@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WKWebViewController : UINavigationController<WKNavigationDelegate>
+@interface WKWebViewController : UIViewController
 
 @end
 

@@ -11,35 +11,34 @@ var localGdprUrl = 'http://127.0.0.1:8080';
 var localAdjustCommandExecutor;
 
 var TestLibraryBridge = {
-    adjustCommandExecutor: function(commandRawJson) {
-        console.log('TestLibraryBridge adjustCommandExecutor');
-        const command = JSON.parse(commandRawJson);
-        console.log('className: ' + command.className);
-        console.log('functionName: ' + command.functionName);
-        console.log('params: ' + JSON.stringify(command.params));
+adjustCommandExecutor: function(commandRawJson) {
+    console.log('TestLibraryBridge adjustCommandExecutor');
+    const command = JSON.parse(commandRawJson);
+    console.log('className: ' + command.className);
+    console.log('functionName: ' + command.functionName);
+    console.log('params: ' + JSON.stringify(command.params));
 
-        // reflection based technique to call functions with the same name as the command function
-        localAdjustCommandExecutor[command.functionName](command.params);
-    },
-    startTestSession: function () {
-        console.log('TestLibraryBridge startTestSession');
-        if (WebViewJavascriptBridge) {
-            console.log('TestLibraryBridge startTestSession callHandler');
-            localAdjustCommandExecutor = new AdjustCommandExecutor(localBaseUrl, localGdprUrl);
-            // register objc->JS function for commands
-            WebViewJavascriptBridge.registerHandler('adjustJS_commandExecutor', TestLibraryBridge.adjustCommandExecutor);
-            // start test session in obj-c
-            Adjust.getSdkVersion(function(sdkVersion) {
-                WebViewJavascriptBridge.callHandler('adjustTLB_startTestSession', sdkVersion, null);
-            });
-        }
-    },
-    addTestDirectory: function(directoryName) {
-        WebViewJavascriptBridge.callHandler('adjustTLB_addTestDirectory', {directoryName: directoryName}, null);
-    },
-    addTest: function(testName) {
-        WebViewJavascriptBridge.callHandler('adjustTLB_addTest', {testName: testName}, null);
-    }
+    // reflection based technique to call functions with the same name as the command function
+    localAdjustCommandExecutor[command.functionName](command.params);
+},
+
+startTestSession: function () {
+    console.log('TestLibraryBridge startTestSession');
+    console.log('TestLibraryBridge startTestSession callHandler');
+    localAdjustCommandExecutor = new AdjustCommandExecutor(localBaseUrl, localGdprUrl);
+},
+
+addTestDirectory: function(directoryName) {
+    TestLibraryBridge.addTestDirectory(directoryName);
+},
+
+javaScriptTest: function() {
+    console.log('aditi 3');
+},
+
+addTest: function(testName) {
+    TestLibraryBridge.addTest(testName);
+}
 };
 
 var AdjustCommandExecutor = function(baseUrl, gdprUrl) {
@@ -297,88 +296,88 @@ AdjustCommandExecutor.prototype.config = function(params) {
         console.log('AdjustCommandExecutor.prototype.config attributionCallbackSendAll');
         var extraPath = this.extraPath;
         adjustConfig.setAttributionCallback(
-            function(attribution) {
-                console.log('attributionCallback: ' + JSON.stringify(attribution));
-                addInfoToSend('trackerToken', attribution.trackerToken);
-                addInfoToSend('trackerName', attribution.trackerName);
-                addInfoToSend('network', attribution.network);
-                addInfoToSend('campaign', attribution.campaign);
-                addInfoToSend('adgroup', attribution.adgroup);
-                addInfoToSend('creative', attribution.creative);
-                addInfoToSend('clickLabel', attribution.click_label);
-                addInfoToSend('adid', attribution.adid);
-                addInfoToSend('costType', attribution.costType);
-                addInfoToSend('costAmount', attribution.costAmount);
-                addInfoToSend('costCurrency', attribution.costCurrency);
-                WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-            }
-        );
+                                            function(attribution) {
+                                                console.log('attributionCallback: ' + JSON.stringify(attribution));
+                                                addInfoToSend('trackerToken', attribution.trackerToken);
+                                                addInfoToSend('trackerName', attribution.trackerName);
+                                                addInfoToSend('network', attribution.network);
+                                                addInfoToSend('campaign', attribution.campaign);
+                                                addInfoToSend('adgroup', attribution.adgroup);
+                                                addInfoToSend('creative', attribution.creative);
+                                                addInfoToSend('clickLabel', attribution.click_label);
+                                                addInfoToSend('adid', attribution.adid);
+                                                addInfoToSend('costType', attribution.costType);
+                                                addInfoToSend('costAmount', attribution.costAmount);
+                                                addInfoToSend('costCurrency', attribution.costCurrency);
+                                                WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
+                                            }
+                                            );
     }
 
     if ('sessionCallbackSendSuccess' in params) {
         console.log('AdjustCommandExecutor.prototype.config sessionCallbackSendSuccess');
         var extraPath = this.extraPath;
         adjustConfig.setSessionSuccessCallback(
-            function(sessionSuccessResponseData) {
-                console.log('sessionSuccessCallback: ' + JSON.stringify(sessionSuccessResponseData));
-                addInfoToSend('message', sessionSuccessResponseData.message);
-                addInfoToSend('timestamp', sessionSuccessResponseData.timestamp);
-                addInfoToSend('adid', sessionSuccessResponseData.adid);
-                addInfoToSend('jsonResponse', sessionSuccessResponseData.jsonResponse);
-                WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-            }
-        );
+                                               function(sessionSuccessResponseData) {
+                                                   console.log('sessionSuccessCallback: ' + JSON.stringify(sessionSuccessResponseData));
+                                                   addInfoToSend('message', sessionSuccessResponseData.message);
+                                                   addInfoToSend('timestamp', sessionSuccessResponseData.timestamp);
+                                                   addInfoToSend('adid', sessionSuccessResponseData.adid);
+                                                   addInfoToSend('jsonResponse', sessionSuccessResponseData.jsonResponse);
+                                                   WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
+                                               }
+                                               );
     }
 
     if ('sessionCallbackSendFailure' in params) {
         console.log('AdjustCommandExecutor.prototype.config sessionCallbackSendFailure');
         var extraPath = this.extraPath;
         adjustConfig.setSessionFailureCallback(
-            function(sessionFailureResponseData) {
-                console.log('sessionFailureCallback: ' + JSON.stringify(sessionFailureResponseData));
-                addInfoToSend('message', sessionFailureResponseData.message);
-                addInfoToSend('timestamp', sessionFailureResponseData.timestamp);
-                addInfoToSend('adid', sessionFailureResponseData.adid);
-                addInfoToSend('willRetry', sessionFailureResponseData.willRetry ? 'true' : 'false');
-                addInfoToSend('jsonResponse', sessionFailureResponseData.jsonResponse);
-                WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-            }
-        );
+                                               function(sessionFailureResponseData) {
+                                                   console.log('sessionFailureCallback: ' + JSON.stringify(sessionFailureResponseData));
+                                                   addInfoToSend('message', sessionFailureResponseData.message);
+                                                   addInfoToSend('timestamp', sessionFailureResponseData.timestamp);
+                                                   addInfoToSend('adid', sessionFailureResponseData.adid);
+                                                   addInfoToSend('willRetry', sessionFailureResponseData.willRetry ? 'true' : 'false');
+                                                   addInfoToSend('jsonResponse', sessionFailureResponseData.jsonResponse);
+                                                   WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
+                                               }
+                                               );
     }
 
     if ('eventCallbackSendSuccess' in params) {
         console.log('AdjustCommandExecutor.prototype.config eventCallbackSendSuccess');
         var extraPath = this.extraPath;
         adjustConfig.setEventSuccessCallback(
-            function(eventSuccessResponseData) {
-                console.log('eventSuccessCallback: ' + JSON.stringify(eventSuccessResponseData));
-                addInfoToSend('message', eventSuccessResponseData.message);
-                addInfoToSend('timestamp', eventSuccessResponseData.timestamp);
-                addInfoToSend('adid', eventSuccessResponseData.adid);
-                addInfoToSend('eventToken', eventSuccessResponseData.eventToken);
-                addInfoToSend('callbackId', eventSuccessResponseData.callbackId);
-                addInfoToSend('jsonResponse', eventSuccessResponseData.jsonResponse);
-                WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-            }
-        );
+                                             function(eventSuccessResponseData) {
+                                                 console.log('eventSuccessCallback: ' + JSON.stringify(eventSuccessResponseData));
+                                                 addInfoToSend('message', eventSuccessResponseData.message);
+                                                 addInfoToSend('timestamp', eventSuccessResponseData.timestamp);
+                                                 addInfoToSend('adid', eventSuccessResponseData.adid);
+                                                 addInfoToSend('eventToken', eventSuccessResponseData.eventToken);
+                                                 addInfoToSend('callbackId', eventSuccessResponseData.callbackId);
+                                                 addInfoToSend('jsonResponse', eventSuccessResponseData.jsonResponse);
+                                                 WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
+                                             }
+                                             );
     }
 
     if ('eventCallbackSendFailure' in params) {
         console.log('AdjustCommandExecutor.prototype.config eventCallbackSendFailure');
         var extraPath = this.extraPath;
         adjustConfig.setEventFailureCallback(
-            function(eventFailureResponseData) {
-                console.log('eventFailureCallback: ' + JSON.stringify(eventFailureResponseData));
-                addInfoToSend('message', eventFailureResponseData.message);
-                addInfoToSend('timestamp', eventFailureResponseData.timestamp);
-                addInfoToSend('adid', eventFailureResponseData.adid);
-                addInfoToSend('eventToken', eventFailureResponseData.eventToken);
-                addInfoToSend('callbackId', eventFailureResponseData.callbackId);
-                addInfoToSend('willRetry', eventFailureResponseData.willRetry ? 'true' : 'false');
-                addInfoToSend('jsonResponse', eventFailureResponseData.jsonResponse);
-                WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-            }
-        );
+                                             function(eventFailureResponseData) {
+                                                 console.log('eventFailureCallback: ' + JSON.stringify(eventFailureResponseData));
+                                                 addInfoToSend('message', eventFailureResponseData.message);
+                                                 addInfoToSend('timestamp', eventFailureResponseData.timestamp);
+                                                 addInfoToSend('adid', eventFailureResponseData.adid);
+                                                 addInfoToSend('eventToken', eventFailureResponseData.eventToken);
+                                                 addInfoToSend('callbackId', eventFailureResponseData.callbackId);
+                                                 addInfoToSend('willRetry', eventFailureResponseData.willRetry ? 'true' : 'false');
+                                                 addInfoToSend('jsonResponse', eventFailureResponseData.jsonResponse);
+                                                 WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
+                                             }
+                                             );
     }
 
     if ('deferredDeeplinkCallback' in params) {
@@ -392,12 +391,12 @@ AdjustCommandExecutor.prototype.config = function(params) {
         }
         var extraPath = this.extraPath;
         adjustConfig.setDeferredDeeplinkCallback(
-            function(deeplink) {
-                console.log('deferredDeeplinkCallback: ' + JSON.stringify(deeplink));
-                addInfoToSend('deeplink', deeplink);
-                WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-            }
-        );
+                                                 function(deeplink) {
+                                                     console.log('deferredDeeplinkCallback: ' + JSON.stringify(deeplink));
+                                                     addInfoToSend('deeplink', deeplink);
+                                                     WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
+                                                 }
+                                                 );
     }
 };
 
