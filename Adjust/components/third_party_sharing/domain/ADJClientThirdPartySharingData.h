@@ -35,5 +35,7 @@ NS_ASSUME_NONNULL_END
 // public properties
 @property (nullable, readonly, strong, nonatomic) ADJBooleanWrapper *enabledOrElseDisabledSharing;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *stringGranularOptionsByName;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *stringPartnerSharingSettingsByName;
+
 
 @end

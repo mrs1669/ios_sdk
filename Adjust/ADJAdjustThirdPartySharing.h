@@ -20,8 +20,16 @@
                                      key:(nonnull NSString *)key
                                    value:(nonnull NSString *)value;
 
+- (void)addPartnerSharingSettingWithPartnerName:(nonnull NSString *)partnerName
+                                     key:(nonnull NSString *)key
+                                   value:(BOOL)value;
+
 // public properties
 @property (nullable, readonly, strong, nonatomic) NSNumber *enabledOrElseDisabledSharingNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *granularOptionsByNameArray;
+@property (nullable, readonly, strong, nonatomic) NSArray *partnerSharingSettingsByNameArray;
 
 @end
+
+
+//private @NonNull final Map<String, Map<String, Boolean>> partnerSharingSettingsMap;

@@ -29,7 +29,7 @@
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error;
 
 + (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData;
-+ (nullable NSString *)jsonFoundationValueFormat:(nonnull id)jsonFoundationValue;
++ (nullable NSString *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue;
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber;
 

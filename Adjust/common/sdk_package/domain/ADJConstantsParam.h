@@ -131,6 +131,7 @@ FOUNDATION_EXPORT NSString *const ADJParamThirdPartySharingKey;
 FOUNDATION_EXPORT NSString *const ADJParamThirdPartySharingEnabledValue;
 FOUNDATION_EXPORT NSString *const ADJParamThirdPartySharingDisabledValue;
 FOUNDATION_EXPORT NSString *const ADJParamThirdPartySharingGranularOptionsKey;
+FOUNDATION_EXPORT NSString *const ADJParamThirdPartySharingPartnerSharingSettingsKey;
 
 // test server params
 FOUNDATION_EXPORT NSString *const ADJParamTestServerCustomEndPointKey;

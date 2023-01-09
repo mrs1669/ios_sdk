@@ -32,9 +32,15 @@
                                              sourceDescription:(nonnull NSString *)sourceDescription
                                                         logger:(nonnull ADJLogger *)logger;
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSString *> *> *)
-convertToMapCollectionByNameBuilderWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
++ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
+convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray<NSString *> *)nameKeyStringValueArray
+sourceDescription:(nonnull NSString *)sourceDescription
+logger:(nonnull ADJLogger *)logger;
+
++ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
+convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray *)nameKeyNumberBooleanValueArray
 sourceDescription:(nonnull NSString *)sourceDescription
 logger:(nonnull ADJLogger *)logger;
 
 @end
+

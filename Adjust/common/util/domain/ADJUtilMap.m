@@ -36,8 +36,7 @@
 
 + (void)injectIntoPackageParametersWithBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
                                            key:(nonnull NSString *)key
-                 packageParamValueSerializable:
-(nullable id<ADJPackageParamValueSerializable>)packageParamValueSerializable {
+                 packageParamValueSerializable:(nullable id<ADJPackageParamValueSerializable>)packageParamValueSerializable {
     if (packageParamValueSerializable == nil) {
         return;
     }

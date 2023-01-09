@@ -210,8 +210,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"callbackParams"]) {
         [self iterateWithKey:@"callbackParams"
                       source:@"event callback"
-               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-         {
+               keyValueBlock:^(NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
             [adjustEvent addCallbackParameterWithKey:key value:value];
         }];
     }
@@ -219,8 +219,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"partnerParams"]) {
         [self iterateWithKey:@"partnerParams"
                       source:@"event partner"
-               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-         {
+               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value) {
             [adjustEvent addPartnerParameterWithKey:key value:value];
         }];
     }
@@ -389,11 +388,9 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)thirdPartySharing {
 
-    ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
-    [[ADJAdjustThirdPartySharing alloc] init];
+    ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing = [[ADJAdjustThirdPartySharing alloc] init];
 
-    NSNumber *_Nullable sharingEnabledNumberBool =
-    [self strictParseNumberBoolWithKey:@"enableOrElseDisable"];
+    NSNumber *_Nullable sharingEnabledNumberBool = [self strictParseNumberBoolWithKey:@"isEnabled"];
 
     if (sharingEnabledNumberBool != nil) {
         if (sharingEnabledNumberBool.boolValue) {
@@ -406,15 +403,24 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"granularOptions"]) {
         [self iterateWithKey:@"granularOptions"
                       source:@"third party granular options"
-           nameKeyValueBlock:
-         ^(NSString * _Nonnull name,
-           NSString * _Nonnull key,
-           NSString * _Nonnull value)
-         {
+           nameKeyValueBlock:^(NSString * _Nonnull name,
+                               NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
             [adjustThirdPartySharing
              addGranularOptionWithPartnerName:name
              key:key
              value:value];
+        }];
+    }
+
+    if ([self containsKey:@"partnerSharingSettings"]) {
+        [self iterateWithKey:@"partnerSharingSettings"
+                      source:@"third party partner sharing settings"
+           nameKeyValueBlock:^(NSString * _Nonnull name,
+           NSString * _Nonnull key,
+           NSString * _Nonnull value) {
+            [adjustThirdPartySharing
+             addPartnerSharingSettingWithPartnerName:name key:key value:value];
         }];
     }
 
@@ -505,10 +511,9 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)iterateWithKey:(nonnull NSString *)key
                 source:(nonnull NSString *)source
-              keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock
-{
-    NSArray<NSString *> *_Nullable array =
-    [self.commandParameters objectForKey:key];
+              keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock {
+
+    NSArray<NSString *> *_Nullable array = [self.commandParameters objectForKey:key];
 
     if (array == nil) {
         [self logError:@"%@ is null", source];
@@ -526,9 +531,9 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)iterateWithKey:(nonnull NSString *)key
                 source:(nonnull NSString *)source
-         keyValueBlock:(nonnull void (^)(NSString *_Nonnull key, NSString *_Nonnull value))keyValueBlock{
-    NSArray<NSString *> *_Nullable array =
-    [self.commandParameters objectForKey:key];
+         keyValueBlock:(nonnull void (^)(NSString *_Nonnull key,
+                                         NSString *_Nonnull value))keyValueBlock {
+    NSArray<NSString *> *_Nullable array = [self.commandParameters objectForKey:key];
 
     if (array == nil) {
         [self logError:@"%@ is null", source];
@@ -570,11 +575,10 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     [self logDebug:@"iterating %@ with %@ name-key-value", source, @(array.count / 3)];
 
-    for (NSUInteger i = 0; i < array.count ; i = i + 2) {
+    for (NSUInteger i = 0; i < array.count; i += 3) {
         NSString *_Nonnull name = [array objectAtIndex:i];
         NSString *_Nonnull key = [array objectAtIndex:(i + 1)];
         NSString *_Nonnull value = [array objectAtIndex:(i + 2)];
-
         nameKeyValueBlock(name, key, value);
     }
 }

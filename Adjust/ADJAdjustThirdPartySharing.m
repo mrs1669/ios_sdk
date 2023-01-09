@@ -15,11 +15,13 @@
 /* .h
  @property (nullable, readonly, strong, nonatomic) NSNumber *enabledOrElseDisabledSharingNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *granularOptionsByNameArray;
+ @property (nullable, readonly, strong, nonatomic) NSArray *partnerSharingSettingsByNameArray;
  */
 
 @interface ADJAdjustThirdPartySharing ()
 #pragma mark - Internal variables
-@property (nonnull, readwrite, strong, nonatomic)NSMutableArray<NSString *> *granularOptionsByNameArrayMut;
+@property (nullable, readonly, strong, nonatomic) NSMutableArray *granularOptionsByNameArrayMut;
+@property (nullable, readonly, strong, nonatomic) NSMutableArray *partnerSharingSettingsByNameArrayMut;
 
 @end
 
@@ -29,8 +31,8 @@
     self = [super init];
 
     _enabledOrElseDisabledSharingNumberBool = nil;
-
     _granularOptionsByNameArrayMut = [[NSMutableArray alloc] init];
+    _partnerSharingSettingsByNameArrayMut = [[NSMutableArray alloc] init];
 
     return self;
 }
@@ -49,21 +51,43 @@
                                    value:(nonnull NSString *)value {
     @synchronized (self.granularOptionsByNameArrayMut) {
         [self.granularOptionsByNameArrayMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:partnerName]];
+         [ADJUtilObj copyStringOrNSNullWithInput:partnerName]];
         [self.granularOptionsByNameArrayMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:key]];
+         [ADJUtilObj copyStringOrNSNullWithInput:key]];
         [self.granularOptionsByNameArrayMut addObject:
-         [ADJUtilObj copyStringForCollectionWithInput:value]];
+         [ADJUtilObj copyStringOrNSNullWithInput:value]];
+    }
+}
+
+- (void)addPartnerSharingSettingWithPartnerName:(nonnull NSString *)partnerName
+                                            key:(nonnull NSString *)key
+                                          value:(BOOL)value {
+    @synchronized (self.partnerSharingSettingsByNameArrayMut) {
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [ADJUtilObj copyStringOrNSNullWithInput:partnerName]];
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [ADJUtilObj copyStringOrNSNullWithInput:key]];
+        [self.partnerSharingSettingsByNameArrayMut addObject:
+         [NSNumber numberWithBool:value]];
     }
 }
 
 #pragma mark - Generated properties
-- (nullable NSArray<NSString *> *)granularOptionMapByName {
+- (nullable NSArray<NSString *> *)granularOptionsByNameArray {
     @synchronized (self.granularOptionsByNameArrayMut) {
         if (self.granularOptionsByNameArrayMut.count == 0) {
             return nil;
         }
         return [self.granularOptionsByNameArrayMut copy];
+    }
+}
+
+- (nullable NSArray *)partnerSharingSettingsByNameArray {
+    @synchronized (self.partnerSharingSettingsByNameArrayMut) {
+        if (self.partnerSharingSettingsByNameArrayMut.count == 0) {
+            return nil;
+        }
+        return [self.partnerSharingSettingsByNameArrayMut copy];
     }
 }
 
