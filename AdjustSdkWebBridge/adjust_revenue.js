@@ -1,4 +1,3 @@
-
 function AdjustRevenue(source) {
     this.source = source;
     this.revenue = null;

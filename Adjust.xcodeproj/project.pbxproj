@@ -605,6 +605,7 @@
 		07C6204F28B76EF700404236 /* ADJGlobalPartnerParametersController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C6204D28B76EF700404236 /* ADJGlobalPartnerParametersController.m */; };
 		07D5C366289024040022F31F /* ADJMainQueueStateAndTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C364289024040022F31F /* ADJMainQueueStateAndTracker.m */; };
 		07D5C36A289025240022F31F /* ADJDelayData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07D5C368289025240022F31F /* ADJDelayData.m */; };
+		07D991E1296C27E7002B540C /* ADJAdjustForegroundSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */; };
 		07DD775128B4E2E0005A2245 /* ADJAdjustAdRevenue.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD774F28B4E2E0005A2245 /* ADJAdjustAdRevenue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07DD775228B4E2E0005A2245 /* ADJAdjustAdRevenue.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DD775028B4E2E0005A2245 /* ADJAdjustAdRevenue.m */; };
 		07DD775728B4EE24005A2245 /* ADJAdRevenueController.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD775528B4EE24005A2245 /* ADJAdRevenueController.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -5399,6 +5400,7 @@
 				0755878B29096AE800A3AD50 /* ADJAttributionStateStorage.h in Headers */,
 				075586D829096A2000A3AD50 /* ADJThirdPartySharingPackageData.h in Headers */,
 				0755869D2909354E00A3AD50 /* ADJAdjustDeviceIds.h in Headers */,
+				07D991E1296C27E7002B540C /* ADJAdjustForegroundSubscriber.h in Headers */,
 				075586D129096A1700A3AD50 /* ADJSdkPackageCreatingSubscriber.h in Headers */,
 				075587E429096B5D00A3AD50 /* ADJMeasurementSessionStartSubscriber.h in Headers */,
 				0755870B29096A5E00A3AD50 /* ADJSdkResponseData.h in Headers */,
