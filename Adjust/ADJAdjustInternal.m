@@ -41,7 +41,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 
 + (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
     if ([self isSdkPrefixValid:sdkPrefix]) {
-        return [NSString stringWithFormat:@"%@@%@", [self sdkVersion], ADJClientSdk];
+        return [NSString stringWithFormat:@"%@@%@", sdkPrefix, [self sdkVersion]];
     } else {
         return [self sdkVersion];
     }
