@@ -16,7 +16,7 @@
 + (nonnull id<ADJAdjustInstance>)sdkInstanceForId:(nullable NSString *)instanceId;
 
 + (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
-                                          clearStorage:(BOOL)clearStorage;
+                                    shouldClearStorage:(BOOL)shouldClearStorage;
 
 + (nonnull NSString *)sdkVersion;
 

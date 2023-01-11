@@ -65,7 +65,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 
 // Resets the sdk state, as if it was not initialized or used before.
 + (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
-                                          clearStorage:(BOOL)clearStorage {
+                                    shouldClearStorage:(BOOL)shouldClearStorage {
     // restrict teardown to debug builds
 #ifndef DEBUG
     return @"Teardown cannot be done in non-debug mode";
@@ -73,7 +73,7 @@ static dispatch_once_t entryRootOnceToken = 0;
     NSMutableString *_Nonnull returnMessage = [[NSMutableString alloc] initWithString:@"Entry root teardown"];
 
     @synchronized ([ADJEntryRoot class]) {
-        if (clearStorage) {
+        if (shouldClearStorage) {
             [self teardownWhileClearingStorageWithReturnMessage:returnMessage];
         } else {
             [self teardownWithoutClearingStorageWithReturnMessage:returnMessage];
