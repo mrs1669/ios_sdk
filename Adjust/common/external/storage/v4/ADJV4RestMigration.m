@@ -14,7 +14,7 @@
 #import "ADJAdjustPushToken.h"
 
 @interface ADJV4RestMigration ()
-@property (nonnull, readonly, nonatomic, copy) NSString *instanceId;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
 @end
 
 @implementation ADJV4RestMigration
@@ -23,7 +23,7 @@
                                    instanceId:(nonnull NSString *)instanceId {
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"ADJV4RestMigration"];
-    _instanceId = instanceId;
+    _instanceId = [instanceId copy];
     return self;
 }
 

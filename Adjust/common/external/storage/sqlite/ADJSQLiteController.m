@@ -34,7 +34,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSQLiteStorageAggregator *sqliteStorageAggregator;
 @property (nonnull, readonly, strong, nonatomic) ADJV4RestMigration *v4RestMigration;
-@property (nonnull, readonly, copy, nonatomic) NSString *instanceId;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
 @end
 
 @implementation ADJSQLiteController
@@ -42,7 +42,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                    instanceId:(nonnull NSString *)instanceId {
     self = [super initWithLoggerFactory:loggerFactory source:@"SQLiteController"];
-    _instanceId = instanceId;
+    _instanceId = [instanceId copy];
     _sqliteStorageAggregator = [[ADJSQLiteStorageAggregator alloc] init];
     
     _v4RestMigration = [[ADJV4RestMigration alloc] initWithLoggerFactory:loggerFactory

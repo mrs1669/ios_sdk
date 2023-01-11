@@ -25,8 +25,8 @@
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) NSMutableArray<ADJLogMessageData *> *logMessageDataArray;
 @property (nonnull, readonly, strong, nonatomic) ADJConsoleLogger *consoleLogger;
-@property (nullable, readonly, strong, nonatomic) NSString *instanceId;
-@property (assign, readwrite, nonatomic) BOOL canPublish;
+@property (readwrite, assign, nonatomic) BOOL canPublish;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
 @end
 
 @implementation ADJLogController
@@ -37,7 +37,7 @@
 {
     self = [super init];
 
-    _instanceId = instanceId;
+    _instanceId = [instanceId copy];
 
     _logPublisher = [[ADJLogPublisher alloc] init];
     [pubRegistry addPublisher:_logPublisher];

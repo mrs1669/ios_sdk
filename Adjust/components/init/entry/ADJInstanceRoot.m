@@ -17,7 +17,7 @@
 #import "ADJPublishersRegistry.h"
 
 @interface ADJInstanceRoot ()
-@property (nullable, readonly, copy, nonatomic) NSString *instanceId;
+@property (nullable, readonly, strong, nonatomic) NSString *instanceId;
 @property (nonnull, readonly, strong, nonatomic) ADJLogController *logController;
 @property (nonnull, readonly, strong, nonatomic) ADJThreadController *threadController;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
@@ -37,7 +37,7 @@
 
     self = [super init];
 
-    _instanceId = instanceId;
+    _instanceId = [instanceId copy];
     _clock = [[ADJClock alloc] init];
     _sdkConfigData = configData;
 
