@@ -49,16 +49,23 @@
 
 #pragma mark Public API
 - (nonnull ADJInstanceRoot *)instanceForId:(nullable NSString *)instanceId {
-    @synchronized ([ADJEntryRoot class]) {
 
-        NSString *localInstanceid = (instanceId) ? : ADJDefaultInstanceId;
-        ADJInstanceRoot * instanceRoot = [self.instanceMap objectForKey:localInstanceid];
-        if (!instanceRoot) {
-            // TODO: (Gena) instance id validation
-            instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
-                                                            instanceId:localInstanceid];
-            [self.instanceMap setObject:instanceRoot forKey:localInstanceid];
+    NSString *localInstanceid = (instanceId) ? : ADJDefaultInstanceId;
+    ADJInstanceRoot * instanceRoot = [self.instanceMap objectForKey:localInstanceid];
+    if(instanceRoot != nil) {
+        return instanceRoot;
+    }
+
+    @synchronized ([ADJEntryRoot class]) {
+        instanceRoot = [self.instanceMap objectForKey:localInstanceid];
+        if (instanceRoot != nil) {
+            return instanceRoot;
         }
+
+        // TODO: (Gena) instance id validation
+        instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
+                                                        instanceId:localInstanceid];
+        [self.instanceMap setObject:instanceRoot forKey:localInstanceid];
         return instanceRoot;
     }
 }
