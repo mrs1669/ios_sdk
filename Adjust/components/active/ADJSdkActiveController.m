@@ -17,8 +17,8 @@
 // publishers
 @property (nonnull, readwrite, strong, nonatomic) ADJSdkActivePublisher *sdkActivePublisher;
 #pragma mark - Internal variables
-@property (nonnull, strong, nonatomic) ADJSdkActiveStateStorage *activeStateStorage;
-@property (nonnull, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *activeStateStorage;
+@property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
 @property (nonnull, readwrite, strong, nonatomic) ADJSdkActiveState *sdkActiveState;
 @property (readwrite, assign, nonatomic) BOOL canPublish;
 @end
@@ -47,6 +47,11 @@
 
     return self;
 }
+
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}A
 
 - (BOOL)ccTrySdkInit {
     return [self.sdkActiveState trySdkInit];

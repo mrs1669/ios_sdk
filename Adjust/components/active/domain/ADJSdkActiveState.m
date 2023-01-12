@@ -36,6 +36,11 @@ NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     return self;
 }
 
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 #pragma mark Public API
 - (BOOL)trySdkInit {
 

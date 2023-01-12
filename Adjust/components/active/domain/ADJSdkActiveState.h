@@ -18,6 +18,8 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                            sdkActiveStateData:(nonnull ADJSdkActiveStateData *)sdkActiveStateData
                               isGdprForgotten:(BOOL)isGdprForgotten;
+- (nullable instancetype)init NS_UNAVAILABLE;
+
 // public api
 - (BOOL)trySdkInit;
 - (void)inactivateSdkWithActiveStatusEventWO:(nonnull ADJValueWO<NSString *> *)activeStatusEventWO

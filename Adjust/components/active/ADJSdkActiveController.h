@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
                        clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
                           isForgotten:(BOOL)isForgotten
                    publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (nullable instancetype)init NS_UNAVAILABLE;
 
 - (BOOL)ccTrySdkInit;
 - (BOOL)ccCanPerformActionWithSource:(nonnull NSString *)source
