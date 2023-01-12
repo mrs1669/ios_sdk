@@ -80,71 +80,71 @@
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJSdkPackageCreatingSubscriber)
-            toPublisher:@"ADJSdkPackageCreatingPublisher"];
+            toPublisher:NSStringFromClass([ADJSdkPackageCreatingPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJLogSubscriber)
-            toPublisher:@"ADJLogPublisher"];
+            toPublisher:NSStringFromClass([ADJLogPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJSdkPackageSendingSubscriber)
-            toPublisher:@"ADJSdkPackageSendingPublisher"];
+            toPublisher:NSStringFromClass([ADJSdkPackageSendingPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJSdkResponseSubscriber)
-            toPublisher:@"ADJSdkResponsePublisher"];
+            toPublisher:NSStringFromClass([ADJSdkResponsePublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJSdkActiveSubscriber)
-            toPublisher:@"ADJSdkActivePublisher"];
+            toPublisher:NSStringFromClass([ADJSdkActivePublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJAttributionSubscriber)
-            toPublisher:@"ADJAttributionPublisher"];
+            toPublisher:NSStringFromClass([ADJAttributionPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJGdprForgetSubscriber)
-            toPublisher:@"ADJGdprForgetPublisher"];
+            toPublisher:NSStringFromClass([ADJGdprForgetPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJSubscribingGateSubscriber)
-            toPublisher:@"ADJSubscribingGatePublisher"];
+            toPublisher:NSStringFromClass([ADJSubscribingGatePublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJPublishingGateSubscriber)
-            toPublisher:@"ADJPublishingGatePublisher"];
+            toPublisher:NSStringFromClass([ADJPublishingGatePublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJSdkInitSubscriber)
-            toPublisher:@"ADJSdkInitPublisher"];
+            toPublisher:NSStringFromClass([ADJSdkInitPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJKeepAliveSubscriber)
-            toPublisher:@"ADJKeepAlivePublisher"];
+            toPublisher:NSStringFromClass([ADJKeepAlivePublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJLifecycleSubscriber)
-            toPublisher:@"ADJLifecyclePublisher"];
+            toPublisher:NSStringFromClass([ADJLifecyclePublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJPreFirstMeasurementSessionStartSubscriber)
-            toPublisher:@"ADJPreFirstMeasurementSessionStartPublisher"];
+            toPublisher:NSStringFromClass([ADJPreFirstMeasurementSessionStartPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJMeasurementSessionStartSubscriber)
-            toPublisher:@"ADJMeasurementSessionStartPublisher"];
+            toPublisher:NSStringFromClass([ADJMeasurementSessionStartPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJOfflineSubscriber)
-            toPublisher:@"ADJOfflinePublisher"];
+            toPublisher:NSStringFromClass([ADJOfflinePublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJPausingSubscriber)
-            toPublisher:@"ADJPausingPublisher"];
+            toPublisher:NSStringFromClass([ADJPausingPublisher class])];
 
     [self addSubscriber:subscriber
             forProtocol:@protocol(ADJReachabilitySubscriber)
-            toPublisher:@"ADJReachabilityPublisher"];
+            toPublisher:NSStringFromClass([ADJReachabilityPublisher class])];
 }
 
 
