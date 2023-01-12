@@ -34,10 +34,10 @@
     }
 
     // TODO: (Gena) instance id validation
-    NSString *localInstanceid = (instanceId) ? : ADJDefaultInstanceId;
+    NSString *localInstanceId = (instanceId) ? : ADJDefaultInstanceId;
     ADJInstanceRoot *instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:_sdkConfigData
-                                                                     instanceId:localInstanceid];
-    [_instanceMap setObject:instanceRoot forKey:localInstanceid];
+                                                                     instanceId:localInstanceId];
+    [_instanceMap setObject:instanceRoot forKey:localInstanceId];
 
     return self;
 }
@@ -50,22 +50,22 @@
 #pragma mark Public API
 - (nonnull ADJInstanceRoot *)instanceForId:(nullable NSString *)instanceId {
 
-    NSString *localInstanceid = (instanceId) ? : ADJDefaultInstanceId;
-    ADJInstanceRoot * instanceRoot = [self.instanceMap objectForKey:localInstanceid];
+    NSString *localInstanceId = (instanceId) ? : ADJDefaultInstanceId;
+    ADJInstanceRoot * instanceRoot = [self.instanceMap objectForKey:localInstanceId];
     if(instanceRoot != nil) {
         return instanceRoot;
     }
 
     @synchronized ([ADJEntryRoot class]) {
-        instanceRoot = [self.instanceMap objectForKey:localInstanceid];
+        instanceRoot = [self.instanceMap objectForKey:localInstanceId];
         if (instanceRoot != nil) {
             return instanceRoot;
         }
 
         // TODO: (Gena) instance id validation
         instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
-                                                        instanceId:localInstanceid];
-        [self.instanceMap setObject:instanceRoot forKey:localInstanceid];
+                                                        instanceId:localInstanceId];
+        [self.instanceMap setObject:instanceRoot forKey:localInstanceId];
         return instanceRoot;
     }
 }
