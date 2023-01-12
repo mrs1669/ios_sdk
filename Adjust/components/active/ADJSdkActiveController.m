@@ -51,7 +51,7 @@
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
-}A
+}
 
 - (BOOL)ccTrySdkInit {
     return [self.sdkActiveState trySdkInit];
