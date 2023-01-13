@@ -32,7 +32,7 @@
 // instantiation
 - (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
                            publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry
-                                   InstanceId:(nullable NSString *)instanceId
+                                   instanceId:(nullable NSString *)instanceId
     NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 

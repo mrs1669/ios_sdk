@@ -33,7 +33,7 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
                            publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry
-                                   InstanceId:(nullable NSString *)instanceId
+                                   instanceId:(nullable NSString *)instanceId
 {
     self = [super init];
 

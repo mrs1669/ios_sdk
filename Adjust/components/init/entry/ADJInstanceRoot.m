@@ -47,7 +47,7 @@
     // Controllers
     _logController = [[ADJLogController alloc] initWithSdkConfigData:configData
                                                   publishersRegistry:_publishersRegistry
-                                                          InstanceId:instanceId];
+                                                          instanceId:instanceId];
 
     _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
 
