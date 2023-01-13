@@ -67,13 +67,14 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
               doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+                          publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"LifecycleController"];
     _threadControllerWeak = threadController;
 
-    _lifecyclePublisher = [[ADJLifecyclePublisher alloc] init];
-    [pubRegistry addPublisher:_lifecyclePublisher];
+    _lifecyclePublisher = [[ADJLifecyclePublisher alloc]
+                           initWithSubscriberProtocol:@protocol(ADJLifecycleSubscriber)
+                           controller:publisherController];
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];

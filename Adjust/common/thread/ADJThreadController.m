@@ -32,7 +32,7 @@
     self = [super initWithLoggerFactory:loggerFactory source:@"ThreadController"];
 
     _concurrentQueue = dispatch_queue_create(self.source.UTF8String, DISPATCH_QUEUE_CONCURRENT);
-    _threadExecutorAggregator = [[ADJThreadExecutorAggregator alloc] init];
+    _threadExecutorAggregator = [[ADJThreadExecutorAggregator alloc] initWithoutSubscriberProtocol];
     _hasFinalized = NO;
 
     return self;

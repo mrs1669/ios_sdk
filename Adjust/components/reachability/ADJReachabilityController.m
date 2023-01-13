@@ -70,16 +70,17 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
                                targetEndpoint:(nonnull NSString *)targetEndpoint
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+                          publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"ReachabilityController"];
     _targetEndpoint = targetEndpoint;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];
 
-    _reachabilityPublisher = [[ADJReachabilityPublisher alloc] init];
-    [pubRegistry addPublisher:_reachabilityPublisher];
+    _reachabilityPublisher = [[ADJReachabilityPublisher alloc]
+                              initWithSubscriberProtocol:@protocol(ADJReachabilitySubscriber)
+                              controller:publisherController];
 
     //_reachableNetwork = nil;
 

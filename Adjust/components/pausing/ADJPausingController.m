@@ -42,16 +42,19 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 
 @implementation ADJPausingController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                          canSendInBackground:(BOOL)canSendInBackground
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    canSendInBackground:(BOOL)canSendInBackground
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
 
     self = [super initWithLoggerFactory:loggerFactory source:@"PausingController"];
     _canSendInBackground = canSendInBackground;
 
-    _pausingPublisher = [[ADJPausingPublisher alloc] init];
-    [pubRegistry addPublisher:_pausingPublisher];
+    _pausingPublisher = [[ADJPausingPublisher alloc]
+                         initWithSubscriberProtocol:@protocol(ADJPausingSubscriber)
+                         controller:publisherController];
 
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];

@@ -13,7 +13,7 @@
 #import "ADJMeasurementSessionStartSubscriber.h"
 #import "ADJReachabilitySubscriber.h"
 #import "ADJThreadController.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 //- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus;
 
@@ -30,7 +30,7 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
                                targetEndpoint:(nonnull NSString *)targetEndpoint
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+                          publisherController:(nonnull ADJPublisherController *)publisherController;
 
 @end
 

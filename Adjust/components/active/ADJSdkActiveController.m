@@ -30,15 +30,16 @@
                    activeStateStorage:(ADJSdkActiveStateStorage *)activeStateStorage
                        clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
                           isForgotten:(BOOL)isForgotten
-                   publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+                  publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkActiveController"];
 
     _activeStateStorage = activeStateStorage;
     _clientExecutor = clientExecutor;
 
-    _sdkActivePublisher = [[ADJSdkActivePublisher alloc] init];
-    [pubRegistry addPublisher:_sdkActivePublisher];
+    _sdkActivePublisher = [[ADJSdkActivePublisher alloc]
+                           initWithSubscriberProtocol:@protocol(ADJSdkActiveSubscriber)
+                           controller:publisherController];
 
     _sdkActiveState = [[ADJSdkActiveState alloc] initWithLoggerFactory:loggerFactory
                                                     sdkActiveStateData:[_activeStateStorage readOnlyStoredDataValue]

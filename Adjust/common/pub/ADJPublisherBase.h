@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+//import "ADJPublisherController.h"
+@class ADJPublisherController;
+
 @interface ADJPublisherBase<T> : NSObject
 // instantiation
-- (nonnull instancetype)init NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithSubscriberProtocol:(nonnull Protocol *)subscriberProtocol
+                                        controller:(nonnull ADJPublisherController *)controller;
+
+- (nonnull instancetype)initWithoutSubscriberProtocol;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSHashTable<T> *subscriberSet;

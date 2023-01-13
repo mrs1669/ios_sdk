@@ -23,7 +23,7 @@
 #import "ADJNetworkEndpointData.h"
 #import "ADJClientConfigData.h"
 #import "ADJMainQueueController.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 @interface ADJAttributionController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -38,16 +38,17 @@
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionPublisher *attributionPublisher;
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                      attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
-                                        clock:(nonnull ADJClock *)clock
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                             threadController:(nonnull ADJThreadController *)threadController
-                   attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
+    clock:(nonnull ADJClock *)clock
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    threadController:(nonnull ADJThreadController *)threadController
+    attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
 @end
 

@@ -19,7 +19,7 @@
 #import "ADJClientCallbacksController.h"
 #import "ADJPluginController.h"
 #import "ADJSdkConfigData.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 #import "ADJThreadController.h"
 #import "ADJLogController.h"
 #import "ADJSdkActiveController.h"
@@ -35,15 +35,14 @@
 @property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
 @property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
 
-- (nonnull instancetype)initWithInstanceId:(nonnull NSString *)instanceId
-                                     clock:(nonnull ADJClock *)clock
-                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
-                             threadFactory:(nonnull ADJThreadController *)threadFactory
-                             loggerFactory:(nonnull ADJLogController *)loggerFactory
-                            clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                      clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-                        publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
-
+- (nonnull instancetype)
+    initWithInstanceId:(nonnull NSString *)instanceId
+    clock:(nonnull ADJClock *)clock
+    sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+    threadController:(nonnull ADJThreadController *)threadController
+    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
 - (void)
     setDependenciesWithPackageBuilder:(ADJSdkPackageBuilder *)sdkPackageBuilder
@@ -52,6 +51,6 @@
     threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
     sdkPackageSenderFactory:(id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
-- (void)subscribeToPublishers:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (void)subscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
 
 @end

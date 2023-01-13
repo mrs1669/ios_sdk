@@ -57,28 +57,34 @@
 
 @implementation ADJPostSdkInitRootController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                threadFactory:(nonnull ADJThreadController *)threadFactory
-                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                         clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-                        storageRootController:(nonnull ADJStorageRootController *)storageRootController
-                             deviceController:(nonnull ADJDeviceController *)deviceController
-                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                                sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
-                                        clock:(nonnull ADJClock *)clock
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadFactory:(nonnull ADJThreadController *)threadFactory
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    storageRootController:(nonnull ADJStorageRootController *)storageRootController
+    deviceController:(nonnull ADJDeviceController *)deviceController
+    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+    sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+    clock:(nonnull ADJClock *)clock
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"PostSdkInitRootController"];
     _clientConfigData = clientConfigData;
 
     _hasMeasurementSessionStart = NO;
 
-    _subscribingGatePublisher = [[ADJSubscribingGatePublisher alloc] init];
-    [pubRegistry addPublisher:_subscribingGatePublisher];
-    _publishingGatePublisher = [[ADJPublishingGatePublisher alloc] init];
-    [pubRegistry addPublisher:_publishingGatePublisher];
-    _sdkInitPublisher = [[ADJSdkInitPublisher alloc] init];
-    [pubRegistry addPublisher:_sdkInitPublisher];
+    _subscribingGatePublisher = [[ADJSubscribingGatePublisher alloc]
+                                 initWithSubscriberProtocol:@protocol(ADJSubscribingGateSubscriber)
+                                 controller:publisherController];
+
+    _publishingGatePublisher = [[ADJPublishingGatePublisher alloc]
+                                initWithSubscriberProtocol:@protocol(ADJPublishingGateSubscriber)
+                                controller:publisherController];
+
+    _sdkInitPublisher = [[ADJSdkInitPublisher alloc]
+                         initWithSubscriberProtocol:@protocol(ADJSdkInitSubscriber)
+                         controller:publisherController];
 
     _globalCallbackParametersController = [[ADJGlobalCallbackParametersController alloc] initWithLoggerFactory:loggerFactory
                                                                                                        storage:storageRootController.globalCallbackParametersStorage];
@@ -86,55 +92,66 @@
     _globalPartnerParametersController = [[ADJGlobalPartnerParametersController alloc] initWithLoggerFactory:loggerFactory
                                                                                                      storage:storageRootController.globalPartnerParametersStorage];
 
-    _sdkPackageBuilder = [[ADJSdkPackageBuilder alloc] initWithLoggerFactory:loggerFactory
-                                                                       clock:clock
-                                                                   clientSdk:ADJClientSdk
-                                                            clientConfigData:clientConfigData
-                                                            deviceController:deviceController
-                                             globalCallbackParametersStorage:storageRootController.globalCallbackParametersStorage
-                                              globalPartnerParametersStorage:storageRootController.globalPartnerParametersStorage
-                                                           eventStateStorage:storageRootController.eventStateStorage
-                                              measurementSessionStateStorage:storageRootController.measurementSessionStateStorage
-                                                          publishersRegistry:pubRegistry];
+    _sdkPackageBuilder =
+        [[ADJSdkPackageBuilder alloc]
+         initWithLoggerFactory:loggerFactory
+         clock:clock
+         clientSdk:ADJClientSdk
+         clientConfigData:clientConfigData
+         deviceController:deviceController
+         globalCallbackParametersStorage:storageRootController.globalCallbackParametersStorage
+         globalPartnerParametersStorage:storageRootController.globalPartnerParametersStorage
+         eventStateStorage:storageRootController.eventStateStorage
+         measurementSessionStateStorage:storageRootController.measurementSessionStateStorage
+         publisherController:publisherController];
 
-    _sdkPackageSenderController = [[ADJSdkPackageSenderController alloc] initWithLoggerFactory:loggerFactory
-                                                                           networkEndpointData:sdkConfigData.networkEndpointData
-                                                                             adjustUrlStrategy:clientConfigData.urlStrategy
-                                                                      clientCustomEndpointData:clientConfigData.clientCustomEndpointData
-                                                                            publishersRegistry:pubRegistry];
+    _sdkPackageSenderController =
+        [[ADJSdkPackageSenderController alloc]
+         initWithLoggerFactory:loggerFactory
+         networkEndpointData:sdkConfigData.networkEndpointData
+         adjustUrlStrategy:clientConfigData.urlStrategy
+         clientCustomEndpointData:clientConfigData.clientCustomEndpointData
+         publisherController:publisherController];
 
-    _mainQueueController = [[ADJMainQueueController alloc] initWithLoggerFactory:loggerFactory
-                                                                mainQueueStorage:storageRootController.mainQueueStorage
-                                                                threadController:threadFactory
-                                                                           clock:clock
-                                                                 backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
-                                                         sdkPackageSenderFactory:self.sdkPackageSenderController];
+    _mainQueueController =
+        [[ADJMainQueueController alloc]
+         initWithLoggerFactory:loggerFactory
+         mainQueueStorage:storageRootController.mainQueueStorage
+         threadController:threadFactory
+         clock:clock
+         backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
+         sdkPackageSenderFactory:self.sdkPackageSenderController];
 
-    _measurementSessionController = [[ADJMeasurementSessionController alloc] initWithLoggerFactory:loggerFactory
-                                                                minMeasurementSessionIntervalMilli:sdkConfigData.minMeasurementSessionIntervalMilli
-                                                     overwriteFirstMeasurementSessionIntervalMilli:sdkConfigData.overwriteFirstMeasurementSessionIntervalMilli
-                                                                                    clientExecutor:clientExecutor
-                                                                                 sdkPackageBuilder:self.sdkPackageBuilder
-                                                                    measurementSessionStateStorage:storageRootController.measurementSessionStateStorage
-                                                                               mainQueueController:self.mainQueueController
-                                                                                             clock:clock
-                                                                                publishersRegistry:pubRegistry];
+    _measurementSessionController =
+        [[ADJMeasurementSessionController alloc]
+         initWithLoggerFactory:loggerFactory
+         minMeasurementSessionIntervalMilli:sdkConfigData.minMeasurementSessionIntervalMilli
+         overwriteFirstMeasurementSessionIntervalMilli:sdkConfigData.overwriteFirstMeasurementSessionIntervalMilli
+         clientExecutor:clientExecutor
+         sdkPackageBuilder:self.sdkPackageBuilder
+         measurementSessionStateStorage:storageRootController.measurementSessionStateStorage
+         mainQueueController:self.mainQueueController
+         clock:clock
+         publisherController:publisherController];
 
-    _adRevenueController = [[ADJAdRevenueController alloc] initWithLoggerFactory:loggerFactory
-                                                               sdkPackageBuilder:self.sdkPackageBuilder
-                                                             mainQueueController:self.mainQueueController];
+    _adRevenueController = [[ADJAdRevenueController alloc]
+                            initWithLoggerFactory:loggerFactory
+                            sdkPackageBuilder:self.sdkPackageBuilder
+                            mainQueueController:self.mainQueueController];
 
 
-    _attributionController = [[ADJAttributionController alloc] initWithLoggerFactory:loggerFactory
-                                                             attributionStateStorage:storageRootController.attributionStateStorage
-                                                                               clock:clock
-                                                                   sdkPackageBuilder:self.sdkPackageBuilder
-                                                                    threadController:threadFactory
-                                                          attributionBackoffStrategy:sdkConfigData.attributionBackoffStrategy
-                                                             sdkPackageSenderFactory:self.sdkPackageSenderController
-                                                                 mainQueueController:self.mainQueueController
-                                                     doNotInitiateAttributionFromSdk:sdkConfigData.doNotInitiateAttributionFromSdk
-                                                                  publishersRegistry:pubRegistry];
+    _attributionController =
+        [[ADJAttributionController alloc]
+         initWithLoggerFactory:loggerFactory
+         attributionStateStorage:storageRootController.attributionStateStorage
+         clock:clock
+         sdkPackageBuilder:self.sdkPackageBuilder
+         threadController:threadFactory
+         attributionBackoffStrategy:sdkConfigData.attributionBackoffStrategy
+         sdkPackageSenderFactory:self.sdkPackageSenderController
+         mainQueueController:self.mainQueueController
+         doNotInitiateAttributionFromSdk:sdkConfigData.doNotInitiateAttributionFromSdk
+         publisherController:publisherController];
 
     _billingSubscriptionController = [[ADJBillingSubscriptionController alloc] initWithLoggerFactory:loggerFactory
                                                                                    sdkPackageBuilder:self.sdkPackageBuilder
@@ -156,21 +173,24 @@
                                                            pushTokenStateStorage:storageRootController.pushTokenStorage
                                                              mainQueueController:self.mainQueueController];
 
-    _keepAliveController = [[ADJKeepAliveController alloc] initWithLoggerFactory:loggerFactory
-                                                           threadExecutorFactory:threadFactory
-                                                       foregroundTimerStartMilli:sdkConfigData.foregroundTimerStartMilli
-                                                    foregroundTimerIntervalMilli:sdkConfigData.foregroundTimerIntervalMilli
-                                                              publishersRegistry:pubRegistry];
+    _keepAliveController = [[ADJKeepAliveController alloc]
+                            initWithLoggerFactory:loggerFactory
+                            threadExecutorFactory:threadFactory
+                            foregroundTimerStartMilli:sdkConfigData.foregroundTimerStartMilli
+                            foregroundTimerIntervalMilli:sdkConfigData.foregroundTimerIntervalMilli
+                            publisherController:publisherController];
 
-    _reachabilityController = [[ADJReachabilityController alloc] initWithLoggerFactory:loggerFactory
-                                                                      threadController:threadFactory
-                                                                        targetEndpoint:[self.mainQueueController defaultTargetUrl]
-                                                                    publishersRegistry:pubRegistry];
+    _reachabilityController = [[ADJReachabilityController alloc]
+                               initWithLoggerFactory:loggerFactory
+                               threadController:threadFactory
+                               targetEndpoint:[self.mainQueueController defaultTargetUrl]
+                               publisherController:publisherController];
 
-    _pausingController = [[ADJPausingController alloc] initWithLoggerFactory:loggerFactory
-                                                       threadExecutorFactory:threadFactory
-                                                         canSendInBackground:clientConfigData.canSendInBackground
-                                                          publishersRegistry:pubRegistry];
+    _pausingController = [[ADJPausingController alloc]
+                          initWithLoggerFactory:loggerFactory
+                          threadExecutorFactory:threadFactory
+                          canSendInBackground:clientConfigData.canSendInBackground
+                          publisherController:publisherController];
 
     _clientSubscriptionsController = [[ADJClientSubscriptionsController alloc] initWithLoggerFactory:loggerFactory
                                                                                     threadController:threadFactory
@@ -209,20 +229,19 @@
 }
 
 #pragma mark Public API
-- (void)subscribeToPublishers:(ADJPublishersRegistry *)pubRegistry {
-
+- (void)subscribeToPublishers:(nonnull ADJPublisherController *)publisherController {
     // subscribe controllers to publishers
-    [pubRegistry addSubscriberToPublishers:self.attributionController];
-    [pubRegistry addSubscriberToPublishers:self.keepAliveController];
-    [pubRegistry addSubscriberToPublishers:self.clientSubscriptionsController];
-    [pubRegistry addSubscriberToPublishers:self.asaAttributionController];
-    [pubRegistry addSubscriberToPublishers:self.logQueueController];
-    [pubRegistry addSubscriberToPublishers:self.mainQueueController];
-    [pubRegistry addSubscriberToPublishers:self.pausingController];
-    [pubRegistry addSubscriberToPublishers:self.reachabilityController];
-    [pubRegistry addSubscriberToPublishers:self.measurementSessionController];
+    [publisherController subscribeToPublisher:self.attributionController];
+    [publisherController subscribeToPublisher:self.keepAliveController];
+    [publisherController subscribeToPublisher:self.clientSubscriptionsController];
+    [publisherController subscribeToPublisher:self.asaAttributionController];
+    [publisherController subscribeToPublisher:self.logQueueController];
+    [publisherController subscribeToPublisher:self.mainQueueController];
+    [publisherController subscribeToPublisher:self.pausingController];
+    [publisherController subscribeToPublisher:self.reachabilityController];
+    [publisherController subscribeToPublisher:self.measurementSessionController];
     // subscribe self to publishers
-    [pubRegistry addSubscriberToPublishers:self];
+    [publisherController subscribeToPublisher:self];
 }
 
 - (void)startSdk {

@@ -32,16 +32,16 @@
 @implementation ADJLogController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry
+                          publisherController:(nonnull ADJPublisherController *)publisherController
                                    instanceId:(nullable NSString *)instanceId
 {
     self = [super init];
 
     _instanceId = [instanceId copy];
 
-    _logPublisher = [[ADJLogPublisher alloc] init];
-    [pubRegistry addPublisher:_logPublisher];
-    
+    _logPublisher = [[ADJLogPublisher alloc] initWithSubscriberProtocol:@protocol(ADJLogSubscriber)
+                                                             controller:publisherController];
+
     _logMessageDataArray = [NSMutableArray array];
     
     _consoleLogger = [[ADJConsoleLogger alloc] initWithSdkConfigData:sdkConfigData];

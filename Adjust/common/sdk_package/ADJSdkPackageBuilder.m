@@ -41,17 +41,21 @@
 
 @implementation ADJSdkPackageBuilder
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                        clock:(nonnull ADJClock *)clock
-                                    clientSdk:(nonnull NSString *)clientSdk
-                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                             deviceController:(nonnull ADJDeviceController *)deviceController
-              globalCallbackParametersStorage:(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
-               globalPartnerParametersStorage:(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
-                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    clock:(nonnull ADJClock *)clock
+    clientSdk:(nonnull NSString *)clientSdk
+    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+    deviceController:(nonnull ADJDeviceController *)deviceController
+    globalCallbackParametersStorage:
+        (nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
+    globalPartnerParametersStorage:
+        (nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
+    eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+    measurementSessionStateStorage:
+        (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
     _clockWeak = clock;
     _clientSdk = clientSdk;
@@ -62,8 +66,10 @@
     _eventStateStorageWeak = eventStateStorage;
     _measurementSessionStateStorageWeak = measurementSessionStateStorage;
 
-    _sdkPackageCreatingPublisher = [[ADJSdkPackageCreatingPublisher alloc] init];
-    [pubRegistry addPublisher:_sdkPackageCreatingPublisher];
+    _sdkPackageCreatingPublisher =
+        [[ADJSdkPackageCreatingPublisher alloc]
+         initWithSubscriberProtocol:@protocol(ADJSdkPackageCreatingSubscriber)
+         controller:publisherController];
 
     return self;
 }

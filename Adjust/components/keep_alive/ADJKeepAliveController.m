@@ -36,18 +36,21 @@
 
 @implementation ADJKeepAliveController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                    foregroundTimerStartMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerStartMilli
-                 foregroundTimerIntervalMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerIntervalMilli
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    foregroundTimerStartMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerStartMilli
+    foregroundTimerIntervalMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerIntervalMilli
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
 
     self = [super initWithLoggerFactory:loggerFactory source:@"KeepAliveController"];
     _foregroundTimerStartMilli = foregroundTimerStartMilli;
     _foregroundTimerIntervalMilli = foregroundTimerIntervalMilli;
     
-    _keepAlivePublisher = [[ADJKeepAlivePublisher alloc] init];
-    [pubRegistry addPublisher:_keepAlivePublisher];
+    _keepAlivePublisher = [[ADJKeepAlivePublisher alloc]
+                           initWithSubscriberProtocol:@protocol(ADJKeepAliveSubscriber)
+                           controller:publisherController];
     
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];

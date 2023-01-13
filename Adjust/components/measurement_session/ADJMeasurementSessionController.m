@@ -41,16 +41,20 @@
 
 @implementation ADJMeasurementSessionController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-           minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
-overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
-                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                                        clock:(nonnull ADJClock *)clock
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    minMeasurementSessionIntervalMilli:
+        (nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
+    overwriteFirstMeasurementSessionIntervalMilli:
+        (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    measurementSessionStateStorage:
+        (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    clock:(nonnull ADJClock *)clock
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionController"];
     _overwriteFirstMeasurementSessionIntervalMilli = overwriteFirstMeasurementSessionIntervalMilli;
     _clientExecutorWeak = clientExecutor;
@@ -59,10 +63,15 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     _mainQueueControllerWeak = mainQueueController;
     _clockWeak = clock;
 
-    _preFirstMeasurementSessionStartPublisher = [[ADJPreFirstMeasurementSessionStartPublisher alloc] init];
-    [pubRegistry addPublisher:_preFirstMeasurementSessionStartPublisher];
-    _measurementSessionStartPublisher = [[ADJMeasurementSessionStartPublisher alloc] init];
-    [pubRegistry addPublisher:_measurementSessionStartPublisher];
+    _preFirstMeasurementSessionStartPublisher =
+        [[ADJPreFirstMeasurementSessionStartPublisher alloc]
+         initWithSubscriberProtocol:@protocol(ADJPreFirstMeasurementSessionStartSubscriber)
+         controller:publisherController];
+
+    _measurementSessionStartPublisher =
+        [[ADJMeasurementSessionStartPublisher alloc]
+         initWithSubscriberProtocol:@protocol(ADJMeasurementSessionStartSubscriber)
+         controller:publisherController];
 
     _measurementSessionState = [[ADJMeasurementSessionState alloc]
                                 initWithLoggerFactory:loggerFactory

@@ -8,6 +8,8 @@
 
 #import "ADJPublisherBase.h"
 
+#import "ADJPublisherController.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -16,17 +18,28 @@
 
 @implementation ADJPublisherBase
 #pragma mark Instantiation
-- (nonnull instancetype)init {
+- (nonnull instancetype)initWithSubscriberProtocol:(nonnull Protocol *)subscriberProtocol
+                                        controller:(nonnull ADJPublisherController *)controller
+{
+    self = [self initWithoutSubscriberProtocol];
+
+    [controller addPairWithSubscriberPublisher:subscriberProtocol
+                                     publisher:self];
+
+    return self;
+}
+
+- (nonnull instancetype)initWithoutSubscriberProtocol {
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJPublisherBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
         return nil;
     }
-    
+
     self = [super init];
-    
+
     _subscriberSet = [NSHashTable weakObjectsHashTable];
-    
+
     return self;
 }
 

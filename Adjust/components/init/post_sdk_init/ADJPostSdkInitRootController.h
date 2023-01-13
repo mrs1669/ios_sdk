@@ -22,7 +22,7 @@
 #import "ADJLaunchedDeeplinkController.h"
 #import "ADJPushTokenController.h"
 #import "ADJThirdPartySharingController.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 #import "ADJStorageRootController.h"
 #import "ADJReachabilityController.h"
 #import "ADJSdkConfigData.h"
@@ -46,18 +46,19 @@ ADJMeasurementSessionStartSubscriber
 @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
 
 
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                threadFactory:(nonnull ADJThreadController *)threadFactory
-                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                         clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-                        storageRootController:(nonnull ADJStorageRootController *)storageRootController
-                             deviceController:(nonnull ADJDeviceController *)deviceController
-                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                                sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
-                                        clock:(nonnull ADJClock *)clock
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadFactory:(nonnull ADJThreadController *)threadFactory
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    storageRootController:(nonnull ADJStorageRootController *)storageRootController
+    deviceController:(nonnull ADJDeviceController *)deviceController
+    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+    sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+    clock:(nonnull ADJClock *)clock
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
-- (void)subscribeToPublishers:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (void)subscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
 - (void)startSdk;
 
 - (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPI;

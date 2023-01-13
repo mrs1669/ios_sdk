@@ -14,7 +14,7 @@
 #import "ADJSdkConfigData.h"
 #import "ADJPreSdkInitRootController.h"
 #import "ADJPostSdkInitRootController.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 @interface ADJInstanceRoot ()
 @property (nullable, readonly, strong, nonatomic) NSString *instanceId;
@@ -23,42 +23,44 @@
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *commonExecutor;
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *adjustApiLogger;
-@property (nullable, readwrite, strong, nonatomic) ADJPreSdkInitRootController *preSdkInitRootController;
-@property (nullable, readwrite, strong, nonatomic) ADJPostSdkInitRootController *postSdkInitRootController;
+@property (nullable, readwrite, strong, nonatomic)
+    ADJPreSdkInitRootController *preSdkInitRootController;
+@property (nullable, readwrite, strong, nonatomic)
+    ADJPostSdkInitRootController *postSdkInitRootController;
 @property (nonnull, readwrite, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
-@property (nonnull, readwrite, strong, nonatomic) ADJPublishersRegistry *publishersRegistry;
+@property (nonnull, readonly, strong, nonatomic) ADJPublisherController *publisherController;
+
 @end
 
 @implementation ADJInstanceRoot
 
 - (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
-                                instanceId:(nonnull NSString *)instanceId {
-
+                                instanceId:(nonnull NSString *)instanceId
+{
     self = [super init];
-
-    _instanceId = [instanceId copy];
-    _clock = [[ADJClock alloc] init];
     _sdkConfigData = configData;
+    _instanceId = [instanceId copy];
 
-    // Publishers registry
-    _publishersRegistry = [[ADJPublishersRegistry alloc] init];
+    _clock = [[ADJClock alloc] init];
 
-    // Controllers
+    _publisherController = [[ADJPublisherController alloc] init];
+
     _logController = [[ADJLogController alloc] initWithSdkConfigData:configData
-                                                  publishersRegistry:_publishersRegistry
+                                                 publisherController:_publisherController
                                                           instanceId:instanceId];
 
     _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
 
     // Executors
-    _clientExecutor = [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                                   sourceDescription:@"clientExecutor"];
-    _commonExecutor = [_threadController createSingleThreadExecutorWithLoggerFactory:_logController
-                                                                   sourceDescription:@"commonExecutor"];
+    _clientExecutor = [_threadController
+                       createSingleThreadExecutorWithLoggerFactory:_logController
+                       sourceDescription:@"clientExecutor"];
+    _commonExecutor = [_threadController
+                       createSingleThreadExecutorWithLoggerFactory:_logController
+                       sourceDescription:@"commonExecutor"];
     [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
 
-    // Loggers
     _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
 
     __typeof(self) __weak weakSelf = self;
@@ -68,22 +70,17 @@
             return;
         }
 
-        id<ADJClientReturnExecutor> clentReturnExecutor =
-        (strongSelf.sdkConfigData.clientReturnExecutorOverwrite) ? : strongSelf.threadController;
-
         strongSelf.preSdkInitRootController =
-        [[ADJPreSdkInitRootController alloc] initWithInstanceId:instanceId
-                                                          clock:strongSelf.clock
-                                                  sdkConfigData:strongSelf.sdkConfigData
-                                                  threadFactory:strongSelf.threadController
-                                                  loggerFactory:strongSelf.logController
-                                                 clientExecutor:strongSelf.clientExecutor
-                                           clientReturnExecutor:clentReturnExecutor
-                                             publishersRegistry:strongSelf.publishersRegistry];
+            [[ADJPreSdkInitRootController alloc] initWithInstanceId:instanceId
+                                                              clock:strongSelf.clock
+                                                      sdkConfigData:strongSelf.sdkConfigData
+                                                   threadController:strongSelf.threadController
+                                                      loggerFactory:strongSelf.logController
+                                                     clientExecutor:strongSelf.clientExecutor
+                                                publisherController:strongSelf.publisherController];
     } source:@"ADJInstanceRoot init"];
 
     return self;
-
 }
 
 - (nullable instancetype)init {
@@ -128,11 +125,11 @@
                                                    clientConfigData:clientConfigData
                                                       sdkConfigData:strongSelf.sdkConfigData
                                                               clock:strongSelf.clock
-                                                 publishersRegistry:strongSelf.publishersRegistry];
+                                                 publisherController:strongSelf.publisherController];
 
         // Inject remaining dependencies before subscribing to publishers
         // 1. Self (InstanceRoot) dependencies - subscribe to publishers
-        [strongSelf.publishersRegistry addSubscriberToPublishers:strongSelf.logController];
+        [strongSelf.publisherController subscribeToPublisher:strongSelf.logController];
         // 2. PreSdkInit dependencies
         // Set dependencies from PostInitRootController
         [strongSelf.preSdkInitRootController.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:self.postSdkInitRootController];
@@ -146,11 +143,11 @@
              sdkPackageSenderFactory:
                 strongSelf.postSdkInitRootController.sdkPackageSenderController];
         // Subscribe to publishers
-        [strongSelf.preSdkInitRootController subscribeToPublishers:strongSelf.publishersRegistry];
+        [strongSelf.preSdkInitRootController subscribeToPublishers:strongSelf.publisherController];
 
         // 3. PostSdkInit dependencies
         // Subscribe to publishers
-        [strongSelf.postSdkInitRootController subscribeToPublishers:strongSelf.publishersRegistry];
+        [strongSelf.postSdkInitRootController subscribeToPublishers:strongSelf.publisherController];
         // Finalize init flow and start Sdk
         [strongSelf.postSdkInitRootController startSdk];
     } source:@"initSdkWithConfiguration"];

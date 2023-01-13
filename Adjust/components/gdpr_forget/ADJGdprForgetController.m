@@ -38,19 +38,21 @@
 
 @implementation ADJGdprForgetController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                       gdprForgetStateStorage:(nonnull ADJGdprForgetStateStorage *)gdprForgetStateStorage
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    gdprForgetStateStorage:(nonnull ADJGdprForgetStateStorage *)gdprForgetStateStorage
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetController"];
     _gdprForgetStateStorageWeak = gdprForgetStateStorage;
     _sdkPackageBuilderWeak = nil;
     _clockWeak = nil;
     
-    _gdprForgetPublisher = [[ADJGdprForgetPublisher alloc] init];
-    [pubRegistry addPublisher:_gdprForgetPublisher];
+    _gdprForgetPublisher = [[ADJGdprForgetPublisher alloc]
+                            initWithSubscriberProtocol:@protocol(ADJGdprForgetSubscriber)
+                            controller:publisherController];
     
     _gdprForgetState = [[ADJGdprForgetState alloc] initWithLoggerFactory:loggerFactory];
     

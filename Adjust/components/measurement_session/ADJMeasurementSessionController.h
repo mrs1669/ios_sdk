@@ -23,7 +23,7 @@
 #import "ADJClock.h"
 #import "ADJMeasurementSessionStateData.h"
 #import "ADJLogger.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 @interface ADJMeasurementSessionController : ADJCommonBase<
     // subscriptions
@@ -38,15 +38,19 @@
 @property (nonnull, readonly, strong, nonatomic) ADJPreFirstMeasurementSessionStartPublisher *preFirstMeasurementSessionStartPublisher;
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-           minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
-overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
-                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                                        clock:(nonnull ADJClock *)clock
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    minMeasurementSessionIntervalMilli:
+        (nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli
+    overwriteFirstMeasurementSessionIntervalMilli:
+        (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionIntervalMilli
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    measurementSessionStateStorage:
+        (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    clock:(nonnull ADJClock *)clock
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
 // public api
 - (void)ccForeground;

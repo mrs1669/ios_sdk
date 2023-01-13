@@ -36,24 +36,26 @@
 
 @implementation ADJAttributionController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                      attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
-                                        clock:(nonnull ADJClock *)clock
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                             threadController:(nonnull ADJThreadController *)threadController
-                   attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
+    clock:(nonnull ADJClock *)clock
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    threadController:(nonnull ADJThreadController *)threadController
+    attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"AttributionController"];
     _attributionStateStorageWeak = attributionStateStorage;
     _clockWeak = clock;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     
-    _attributionPublisher = [[ADJAttributionPublisher alloc] init];
-    [pubRegistry addPublisher:_attributionPublisher];
+    _attributionPublisher = [[ADJAttributionPublisher alloc]
+                             initWithSubscriberProtocol:@protocol(ADJAttributionSubscriber)
+                             controller:publisherController];
     
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];

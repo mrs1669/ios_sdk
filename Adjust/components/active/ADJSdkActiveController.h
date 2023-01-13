@@ -11,7 +11,7 @@
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJGdprForgetSubscriber.h"
 #import "ADJSdkActiveStateStorage.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
                    activeStateStorage:(ADJSdkActiveStateStorage *)activeStateStorage
                        clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
                           isForgotten:(BOOL)isForgotten
-                   publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+                  publisherController:(nonnull ADJPublisherController *)publisherController;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 - (BOOL)ccTrySdkInit;
