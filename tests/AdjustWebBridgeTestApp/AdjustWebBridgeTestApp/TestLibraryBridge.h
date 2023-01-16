@@ -22,7 +22,7 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 // static NSString * gdprUrl = @"http://192.168.86.65:8080";
 // static NSString * controlUrl = @"ws://192.168.86.65:1987";
 
-@interface TestLibraryBridge : NSObject<AdjustCommandDelegate>
+@interface TestLibraryBridge : NSObject<AdjustCommandDelegate, WKScriptMessageHandler>
 
 - (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridge;
 

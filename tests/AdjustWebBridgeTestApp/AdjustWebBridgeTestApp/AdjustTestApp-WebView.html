@@ -27,6 +27,12 @@
         setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
     }
 
+        function btnStartTestSession() {
+            console.log('btnStartTestSession');
+            // TestLibraryBridge.addTestDirectory('parameters');
+            TestLibraryBridge.startTestSession();
+        }
+
     setupWebViewJavascriptBridge(function(bridge) {
 		var uniqueId = 1
 		function log(message, data) {
@@ -37,19 +43,11 @@
 			if (log.children.length) { log.insertBefore(el, log.children[0]) }
 			else { log.appendChild(el) }
 		}
-
-        var btnTrackSimpleEvent = document.getElementById('btnStartTestSession');
-        btnTrackSimpleEvent.onclick = function(e) {
-            e.preventDefault();
-            console.log('btnStartTestSession');
-            // TestLibraryBridge.addTestDirectory('parameters');
-            TestLibraryBridge.startTestSession();
-        };
     });
 	</script>
 	<div id='buttons'>
         <div style="width:300px;height:35px;text-align:center;">
-            <button id='btnStartTestSession'>Start test session</button>
+            <button onclick="btnStartTestSession()">Start test session</button><br>
         </div>
     </div>
     <div id='log'></div>

@@ -12,12 +12,12 @@
 
 //@property WVJBResponseCallback commandExecutorCallback;
 @property (nonatomic, strong) ATLTestLibrary *testLibrary;
-@property (nonatomic, weak) WKWebView *webview;
+@property (nonatomic, weak) WKWebView *webView;
 @property (nonatomic, weak) ADJAdjustBridge *adjustBridge;
 
 @end
 
-@implementation TestLibraryBridge
+@implementation TestLibraryBridge 
 
 - (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridge {
     self = [super init];
@@ -28,13 +28,53 @@
     self.testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:baseUrl
                                                 andControlUrl:controlUrl
                                            andCommandDelegate:self];
-    self.webview = adjustBridge.webView;
+
+
+    [self augmentedHybridWebView:adjustBridge.webView];
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 20 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [self.webview evaluateJavaScript:@"TestLibraryBridge.javaScriptTest()" completionHandler:nil];
+        [self.webView evaluateJavaScript:@"TestLibraryBridge.javaScriptTest()" completionHandler:nil];
     });
 
     return self;
+}
+
+- (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
+
+    if ([webView isKindOfClass:WKWebView.class]) {
+
+        self.webView = webView;
+
+        WKUserContentController *controller = webView.configuration.userContentController;
+
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_config"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_event"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_revenue"]];
+        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_third_party_sharing"]];
+
+        [controller addScriptMessageHandler:self name:@"adjustTest"];
+    }
+}
+
+- (NSString *)getWebBridgeScriptFor:(NSString *)resource {
+    NSBundle *sourceBundle = [NSBundle bundleForClass:self.class];
+    NSString *adjustScriptPath = [sourceBundle pathForResource:resource ofType:@"js"];
+    NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath encoding:NSUTF8StringEncoding error:nil];
+    return adjustScript;
+}
+
+- (void)userContentController:(WKUserContentController *)controller didAddUserScript:(NSString *)javascript {
+    [controller addUserScript:[[WKUserScript.class alloc] initWithSource:javascript
+                                                           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                                        forMainFrameOnly:NO]];
+
+}
+
+- (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
+    if ([message.body isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"Called made from Javascript to Native Part");
+    }
 }
 
 - (void)startTestSession:(NSString *)clientSdk {

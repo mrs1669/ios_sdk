@@ -20,11 +20,15 @@ adjustCommandExecutor: function(commandRawJson) {
 
     // reflection based technique to call functions with the same name as the command function
     localAdjustCommandExecutor[command.functionName](command.params);
+
+    window.webkit.messageHandlers.adjustTest.postMessage("message");
+
 },
 
 startTestSession: function () {
     console.log('TestLibraryBridge startTestSession');
     console.log('TestLibraryBridge startTestSession callHandler');
+    window.webkit.messageHandlers.adjustTest.postMessage("message");
     localAdjustCommandExecutor = new AdjustCommandExecutor(localBaseUrl, localGdprUrl);
 },
 
@@ -33,12 +37,13 @@ addTestDirectory: function(directoryName) {
 },
 
 javaScriptTest: function() {
-    console.log('aditi 3');
+    console.log('Call from native to Javascript.');
 },
 
 addTest: function(testName) {
     TestLibraryBridge.addTest(testName);
 }
+
 };
 
 var AdjustCommandExecutor = function(baseUrl, gdprUrl) {
