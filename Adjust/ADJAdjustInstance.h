@@ -21,35 +21,34 @@
 
 @protocol ADJAdjustInstance <NSObject>
 
-// public api
 - (void)sdkInitWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig;
-
-- (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
-
-- (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue;
-
-- (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken;
-
-- (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink;
-
-- (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription;
-
-- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing;
-
-- (void)adjustAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;
-
-- (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
-
-- (void)gdprForgetDevice;
 
 - (void)inactivateSdk;
 - (void)reactivateSdk;
 
-- (void)switchToOfflineMode;
-- (void)switchBackToOnlineMode;
+- (void)gdprForgetDevice;
 
 - (void)appWentToTheForegroundManualCall;
 - (void)appWentToTheBackgroundManualCall;
+
+- (void)switchToOfflineMode;
+- (void)switchBackToOnlineMode;
+
+- (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
+- (void)adjustAttributionWithCallback:
+    (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;
+
+- (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
+
+- (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink;
+
+- (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken;
+
+- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing;
+
+- (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue;
+
+- (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription;
 
 - (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key
                                     value:(nonnull NSString *)value;

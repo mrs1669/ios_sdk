@@ -17,7 +17,11 @@
 #import "ADJPublisherController.h"
 
 @interface ADJInstanceRoot ()
+#pragma mark - Internal variables
+@property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 @property (nullable, readonly, strong, nonatomic) NSString *instanceId;
+
+#pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJLogController *logController;
 @property (nonnull, readonly, strong, nonatomic) ADJThreadController *threadController;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
@@ -28,13 +32,12 @@
 @property (nullable, readwrite, strong, nonatomic)
     ADJPostSdkInitRootController *postSdkInitRootController;
 @property (nonnull, readwrite, strong, nonatomic) ADJClock *clock;
-@property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 @property (nonnull, readonly, strong, nonatomic) ADJPublisherController *publisherController;
 
 @end
 
 @implementation ADJInstanceRoot
-
+#pragma mark Instantiation
 - (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
                                 instanceId:(nonnull NSString *)instanceId
 {
@@ -88,6 +91,34 @@
     return nil;
 }
 
+#pragma mark Public API
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock {
+    __typeof(self) __weak weakSelf = self;
+    BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
+
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        if (strongSelf.preSdkInitRootController != nil) {
+            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+            [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
+        }
+
+        if (strongSelf.postSdkInitRootController != nil) {
+            [strongSelf.postSdkInitRootController.reachabilityController finalizeAtTeardown];
+        }
+
+        [strongSelf.threadController finalizeAtTeardown];
+    } source:@"finalizeAtTeardownWithBlock"];
+
+    if (! canExecuteTask && closeStorageBlock != nil) {
+        closeStorageBlock();
+    }
+}
+
+#pragma mark - ADJAdjustInstance
 - (void)sdkInitWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig {
     __typeof(self) __weak weakSelf = self;
     [self.clientExecutor executeInSequenceWithBlock:^{
@@ -149,227 +180,7 @@
         [strongSelf.postSdkInitRootController subscribeToPublishers:strongSelf.publisherController];
         // Finalize init flow and start Sdk
         [strongSelf.postSdkInitRootController startSdk];
-    } source:@"initSdkWithConfiguration"];
-}
-
-- (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [self clientActionsApiForInstanceRoot:strongSelf
-                                                                                      actionSource:@"trackEvent"];
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientEventData *_Nullable clientEventData =
-        [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
-                                                       logger:strongSelf.adjustApiLogger];
-
-        if (clientEventData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Event"];
-            return;
-        }
-        [clientActionsAPI ccTrackEventWithClientData:clientEventData];
-    } source:@"trackEvent"];
-}
-
-- (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackAdRevenue"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientAdRevenueData *_Nullable clientAdRevenueData =
-        [ADJClientAdRevenueData instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
-                                                               logger:strongSelf.adjustApiLogger];
-
-        if (clientAdRevenueData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Ad Revenue Event"];
-            return;
-        }
-        [clientActionsAPI ccTrackAdRevenueWithClientData:clientAdRevenueData];
-    } source:@"trackAdRevenue"];
-}
-
-- (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackPushToken"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientPushTokenData *_Nullable clientPushTokenData =
-        [ADJClientPushTokenData instanceFromClientWithAdjustPushToken:adjustPushToken
-                                                               logger:strongSelf.adjustApiLogger];
-
-        if (clientPushTokenData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Push Token"];
-            return;
-        }
-        [clientActionsAPI ccTrackPushTokenWithClientData:clientPushTokenData];
-    } source:@"trackPushToken"];
-}
-
-- (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackLaunchedDeeplink"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientLaunchedDeeplinkData *_Nullable clientLaunchedDeeplinkData =
-        [ADJClientLaunchedDeeplinkData instanceFromClientWithAdjustLaunchedDeeplink:adjustLaunchedDeeplink
-                                                                             logger:strongSelf.adjustApiLogger];
-
-        if (clientLaunchedDeeplinkData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Deep Link"];
-            return;
-        }
-        [clientActionsAPI ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
-    } source:@"trackLaunchedDeeplink"];
-}
-
-- (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackBillingSubscription"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientBillingSubscriptionData *_Nullable clientBillingSubscriptionData =
-        [ADJClientBillingSubscriptionData instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
-                                                                                   logger:strongSelf.adjustApiLogger];
-        if (clientBillingSubscriptionData == nil) {
-            return;
-        }
-        [clientActionsAPI ccTrackBillingSubscriptionWithClientData:clientBillingSubscriptionData];
-    } source:@"trackBillingSubscription"];
-}
-
-- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackThirdPartySharing"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientThirdPartySharingData *_Nullable clientThirdPartySharingData =
-        [ADJClientThirdPartySharingData instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
-                                                                               logger:strongSelf.adjustApiLogger];
-        if (clientThirdPartySharingData == nil) {
-            return;
-        }
-        [clientActionsAPI ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
-    } source:@"trackThirdPartySharing"];
-}
-
-- (void)adjustAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        if (adjustAttributionCallback == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot get Adjust Attribution with nil callback"];
-            return;
-        }
-
-        [strongSelf.preSdkInitRootController.clientCallbacksController ccAttributionWithCallback:adjustAttributionCallback];
-    } source:@"adjustAttributionWithCallback"];
-}
-
-- (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        if (adjustDeviceIdsCallback == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot get Adjust Device Ids with nil callback"];
-            return;
-        }
-
-        [strongSelf.preSdkInitRootController.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
-    } source:@"deviceIdsWithCallback"];
-}
-
-- (void)gdprForgetDevice {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        BOOL bUpdatedForgottenStatus = [strongSelf.preSdkInitRootController.sdkActiveController ccGdprForgetDevice];
-        if (! bUpdatedForgottenStatus) {
-            return;
-        }
-        [strongSelf.preSdkInitRootController.gdprForgetController forgetDevice];
-    } source:@"gdprForgetDevice"];
+    } source:@"sdkInitWithConfiguration"];
 }
 
 - (void)inactivateSdk {
@@ -394,8 +205,7 @@
     } source:@"reactivateSdk"];
 }
 
-- (void)switchToOfflineMode {
-
+- (void)gdprForgetDevice {
     __typeof(self) __weak weakSelf = self;
     [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -403,39 +213,12 @@
             return;
         }
 
-        NSString *errMsg = nil;
-        if (! [strongSelf.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:@"switchToOfflineMode"
-                                                                                       errorMessage:&errMsg]) {
-            if (errMsg != nil && errMsg.length > 0) {
-                [strongSelf.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
-            }
+        BOOL bUpdatedForgottenStatus = [strongSelf.preSdkInitRootController.sdkActiveController ccGdprForgetDevice];
+        if (! bUpdatedForgottenStatus) {
             return;
         }
-
-        [strongSelf.preSdkInitRootController.offlineController ccPutSdkOffline];
-    } source:@"switchToOfflineMode"];
-}
-
-- (void)switchBackToOnlineMode {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        NSString *errMsg = nil;
-        if (! [strongSelf.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:@"switchBackToOnlineMode"
-                                                                                       errorMessage:&errMsg]) {
-            if (errMsg != nil && errMsg.length > 0) {
-                [strongSelf.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
-            }
-            return;
-        }
-
-        [strongSelf.preSdkInitRootController.offlineController ccPutSdkOnline];
-    } source:@"switchBackToOnlineMode"];
+        [strongSelf.preSdkInitRootController.gdprForgetController forgetDevice];
+    } source:@"gdprForgetDevice"];
 }
 
 - (void)appWentToTheForegroundManualCall {
@@ -470,6 +253,255 @@
         }
         [strongSelf.postSdkInitRootController.measurementSessionController ccBackground];
     } source:@"appWentToTheBackgroundManualCall"];
+}
+
+- (void)switchToOfflineMode {
+
+     __typeof(self) __weak weakSelf = self;
+     [self.clientExecutor executeInSequenceWithBlock:^{
+         __typeof(weakSelf) __strong strongSelf = weakSelf;
+         if (strongSelf == nil) {
+             return;
+         }
+
+         NSString *errMsg = nil;
+         if (! [strongSelf.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:@"switchToOfflineMode"
+                                                                                        errorMessage:&errMsg]) {
+             if (errMsg != nil && errMsg.length > 0) {
+                 [strongSelf.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
+             }
+             return;
+         }
+
+         [strongSelf.preSdkInitRootController.offlineController ccPutSdkOffline];
+     } source:@"switchToOfflineMode"];
+ }
+
+ - (void)switchBackToOnlineMode {
+
+     __typeof(self) __weak weakSelf = self;
+     [self.clientExecutor executeInSequenceWithBlock:^{
+         __typeof(weakSelf) __strong strongSelf = weakSelf;
+         if (strongSelf == nil) {
+             return;
+         }
+
+         NSString *errMsg = nil;
+         if (! [strongSelf.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:@"switchBackToOnlineMode"
+                                                                                        errorMessage:&errMsg]) {
+             if (errMsg != nil && errMsg.length > 0) {
+                 [strongSelf.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
+             }
+             return;
+         }
+
+         [strongSelf.preSdkInitRootController.offlineController ccPutSdkOnline];
+     } source:@"switchBackToOnlineMode"];
+ }
+
+
+- (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        if (adjustDeviceIdsCallback == nil) {
+            [strongSelf.adjustApiLogger errorClient:@"Cannot get Adjust Device Ids with nil callback"];
+            return;
+        }
+
+        [strongSelf.preSdkInitRootController.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
+    } source:@"deviceIdsWithCallback"];
+}
+
+- (void)adjustAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        if (adjustAttributionCallback == nil) {
+            [strongSelf.adjustApiLogger errorClient:@"Cannot get Adjust Attribution with nil callback"];
+            return;
+        }
+
+        [strongSelf.preSdkInitRootController.clientCallbacksController ccAttributionWithCallback:adjustAttributionCallback];
+    } source:@"adjustAttributionWithCallback"];
+}
+
+- (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [self clientActionsApiForInstanceRoot:strongSelf
+                                                                                      actionSource:@"trackEvent"];
+        if (! clientActionsAPI) {
+            return;
+        }
+
+        ADJClientEventData *_Nullable clientEventData =
+        [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
+                                                       logger:strongSelf.adjustApiLogger];
+
+        if (clientEventData == nil) {
+            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Event"];
+            return;
+        }
+        [clientActionsAPI ccTrackEventWithClientData:clientEventData];
+    } source:@"trackEvent"];
+}
+
+- (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [self clientActionsApiForInstanceRoot:strongSelf
+                                 actionSource:@"trackLaunchedDeeplink"];
+
+        if (! clientActionsAPI) {
+            return;
+        }
+
+        ADJClientLaunchedDeeplinkData *_Nullable clientLaunchedDeeplinkData =
+        [ADJClientLaunchedDeeplinkData instanceFromClientWithAdjustLaunchedDeeplink:adjustLaunchedDeeplink
+                                                                             logger:strongSelf.adjustApiLogger];
+
+        if (clientLaunchedDeeplinkData == nil) {
+            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Deep Link"];
+            return;
+        }
+        [clientActionsAPI ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
+    } source:@"trackLaunchedDeeplink"];
+}
+
+- (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [self clientActionsApiForInstanceRoot:strongSelf
+                                 actionSource:@"trackPushToken"];
+
+        if (! clientActionsAPI) {
+            return;
+        }
+
+        ADJClientPushTokenData *_Nullable clientPushTokenData =
+        [ADJClientPushTokenData instanceFromClientWithAdjustPushToken:adjustPushToken
+                                                               logger:strongSelf.adjustApiLogger];
+
+        if (clientPushTokenData == nil) {
+            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Push Token"];
+            return;
+        }
+        [clientActionsAPI ccTrackPushTokenWithClientData:clientPushTokenData];
+    } source:@"trackPushToken"];
+}
+
+- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [self clientActionsApiForInstanceRoot:strongSelf
+                                 actionSource:@"trackThirdPartySharing"];
+
+        if (! clientActionsAPI) {
+            return;
+        }
+
+        ADJClientThirdPartySharingData *_Nullable clientThirdPartySharingData =
+        [ADJClientThirdPartySharingData instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
+                                                                               logger:strongSelf.adjustApiLogger];
+        if (clientThirdPartySharingData == nil) {
+            return;
+        }
+        [clientActionsAPI ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
+    } source:@"trackThirdPartySharing"];
+}
+
+- (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [self clientActionsApiForInstanceRoot:strongSelf
+                                 actionSource:@"trackAdRevenue"];
+
+        if (! clientActionsAPI) {
+            return;
+        }
+
+        ADJClientAdRevenueData *_Nullable clientAdRevenueData =
+        [ADJClientAdRevenueData instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
+                                                               logger:strongSelf.adjustApiLogger];
+
+        if (clientAdRevenueData == nil) {
+            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Ad Revenue Event"];
+            return;
+        }
+        [clientActionsAPI ccTrackAdRevenueWithClientData:clientAdRevenueData];
+    } source:@"trackAdRevenue"];
+}
+
+- (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription {
+
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
+        [self clientActionsApiForInstanceRoot:strongSelf
+                                 actionSource:@"trackBillingSubscription"];
+
+        if (! clientActionsAPI) {
+            return;
+        }
+
+        ADJClientBillingSubscriptionData *_Nullable clientBillingSubscriptionData =
+        [ADJClientBillingSubscriptionData instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
+                                                                                   logger:strongSelf.adjustApiLogger];
+        if (clientBillingSubscriptionData == nil) {
+            return;
+        }
+        [clientActionsAPI ccTrackBillingSubscriptionWithClientData:clientBillingSubscriptionData];
+    } source:@"trackBillingSubscription"];
 }
 
 - (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key value:(nonnull NSString *)value {
@@ -633,34 +665,6 @@
         return nil;
     }
     return [instanceRoot.postSdkInitRootController sdkStartClientActionAPI] ? : instanceRoot.preSdkInitRootController.clientActionController;
-}
-
-
-- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock {
-
-    __typeof(self) __weak weakSelf = self;
-    BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
-
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        if (strongSelf.preSdkInitRootController != nil) {
-            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
-            [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
-        }
-
-        if (strongSelf.postSdkInitRootController != nil) {
-            [strongSelf.postSdkInitRootController.reachabilityController finalizeAtTeardown];
-        }
-
-        [strongSelf.threadController finalizeAtTeardown];
-    } source:@"finalizeAtTeardownWithBlock"];
-
-    if (! canExecuteTask && closeStorageBlock != nil) {
-        closeStorageBlock();
-    }
 }
 
 @end
