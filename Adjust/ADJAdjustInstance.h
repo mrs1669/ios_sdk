@@ -22,7 +22,7 @@
 @protocol ADJAdjustInstance <NSObject>
 
 // public api
-- (void)initSdkWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig;
+- (void)sdkInitWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig;
 
 - (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
 

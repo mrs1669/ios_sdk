@@ -88,8 +88,7 @@
     return nil;
 }
 
-- (void)initSdkWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig {
-
+- (void)sdkInitWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig {
     __typeof(self) __weak weakSelf = self;
     [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
