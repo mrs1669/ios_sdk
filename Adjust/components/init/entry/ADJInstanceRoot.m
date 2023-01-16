@@ -183,75 +183,37 @@
     } source:@"sdkInitWithConfiguration"];
 }
 
+
 - (void)inactivateSdk {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-        [strongSelf.preSdkInitRootController.sdkActiveController ccInactivateSdk];
+    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+        [preSdkInitRoot.sdkActiveController ccInactivateSdk];
     } source:@"inactivateSdk"];
 }
 
 - (void)reactivateSdk {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-        [strongSelf.preSdkInitRootController.sdkActiveController ccReactivateSdk];
+    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+        [preSdkInitRoot.sdkActiveController ccReactivateSdk];
     } source:@"reactivateSdk"];
 }
 
 - (void)gdprForgetDevice {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
+    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+        BOOL updatedForgottenStatus = [preSdkInitRoot.sdkActiveController ccGdprForgetDevice];
+        if (! updatedForgottenStatus) { return; }
 
-        BOOL bUpdatedForgottenStatus = [strongSelf.preSdkInitRootController.sdkActiveController ccGdprForgetDevice];
-        if (! bUpdatedForgottenStatus) {
-            return;
-        }
-        [strongSelf.preSdkInitRootController.gdprForgetController forgetDevice];
+        [preSdkInitRoot.gdprForgetController forgetDevice];
     } source:@"gdprForgetDevice"];
 }
 
 - (void)appWentToTheForegroundManualCall {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        [strongSelf.preSdkInitRootController.lifecycleController ccForeground];
-
-        if (! strongSelf.postSdkInitRootController) {
-            return;
-        }
-        [strongSelf.postSdkInitRootController.measurementSessionController ccForeground];
+    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+        [preSdkInitRoot.lifecycleController ccForeground];
     } source:@"appWentToTheForegroundManualCall"];
 }
 
 - (void)appWentToTheBackgroundManualCall {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        [strongSelf.preSdkInitRootController.lifecycleController ccBackground];
-
-        if (! strongSelf.postSdkInitRootController) {
-            return;
-        }
-        [strongSelf.postSdkInitRootController.measurementSessionController ccBackground];
+    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+        [preSdkInitRoot.lifecycleController ccForeground];
     } source:@"appWentToTheBackgroundManualCall"];
 }
 
@@ -654,6 +616,27 @@
 }
 
 #pragma mark Internal methods
+- (void)
+    ccExecuteWithPre:(void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))block
+    source:(nonnull NSString *)source
+{
+    __typeof(self) __weak weakSelf = self;
+    [self.clientExecutor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        ADJPreSdkInitRootController *_Nullable preSdkInitRootLocal =
+            strongSelf.preSdkInitRootController;
+        if (preSdkInitRootLocal == nil) {
+            [strongSelf.adjustApiLogger debugDev:@"Unexpected invalid PreSdkInitRoot"
+                                            from:source
+                                       issueType:ADJIssueLogicError];
+            return;
+        }
+        block(preSdkInitRootLocal);
+    } source:source];
+}
+
 - (nullable id<ADJClientActionsAPI>)clientActionsApiForInstanceRoot:(ADJInstanceRoot *)instanceRoot
                                                        actionSource:(NSString *)source {
     NSString *errMsg = nil;
