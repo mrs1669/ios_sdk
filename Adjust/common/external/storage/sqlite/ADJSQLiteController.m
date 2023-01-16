@@ -90,22 +90,18 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
                     issueType:ADJIssueStorageIo];
         return;
     }
-    
+
     int dbVersion = [self.sqliteDb dbVersion];
-    
-    BOOL migrateFromV4 = NO;
-    BOOL upgradeVersion = NO;
-    
+
     if (dbVersion != kDatabaseVersion) {
         [self.sqliteDb setDbVersion:kDatabaseVersion];
         
         if (dbVersion == 0) {
             [self createTables];
             
-            migrateFromV4 = YES;
+            [self migrateFromV4];
         } else {
-            //[self didUpgradeWithOldVersion:dbVersion];
-            upgradeVersion = YES;
+            [self didUpgradeWithOldVersion:dbVersion];
         }
     }
     
@@ -114,14 +110,6 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
      {
         [sqliteStorage readIntoMemorySync:self.sqliteDb];
     }];
-    
-    if (migrateFromV4) {
-        [self migrateFromV4];
-    }
-    
-    if (upgradeVersion) {
-        [self didUpgradeWithOldVersion:dbVersion];
-    }
 }
 
 #pragma mark Internal Methods
