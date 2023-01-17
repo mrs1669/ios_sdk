@@ -18,6 +18,12 @@ adjustCommandExecutor: function(commandRawJson) {
     console.log('functionName: ' + command.functionName);
     console.log('params: ' + JSON.stringify(command.params));
 
+//    if (command.className == 'TestOptions') {
+//        if (command.functionName != "teardown") {
+//            console.log('TestLibraryBridge TestOption only method should be teardown');
+//            return;
+//        }
+//    }
     // reflection based technique to call functions with the same name as the command function
     localAdjustCommandExecutor[command.functionName](command.params);
 },

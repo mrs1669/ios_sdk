@@ -8,7 +8,7 @@
         <h2><center>Webview</center></h2><br></br>
         <button onclick="adjustInitSdk()">Initialise Adjust SDK</button><br>
         <button onclick="trackEvent()">Track Event</button><br>
-        <button onclick="trackRevenue()">Track Revenue</button><br>
+        <button onclick="trackAdRevenue()">Track AdRevenue</button><br>
         <button onclick="trackPushToken()">Track Push Token</button><br>
         <button onclick="goOffline()">Go Offline</button><br>
         <button onclick="goOnline()">Go Online</button><br>
@@ -49,9 +49,9 @@
                 Adjust.trackEvent(adjustEvent);
             }
 
-            function trackRevenue() {
-                var adjustRevenue = new AdjustRevenue('applovin_max_sdk');
-                adjustRevenue.setRevenue(0.01, 'EUR');
+            function trackAdRevenue() {
+                var adjustRevenue = new AdjustAdRevenue('applovin_max_sdk');
+                adjustRevenue.setAdRevenue(0.01, 'EUR');
                 adjustRevenue.setAdImpressionsCount(100);
                 adjustRevenue.addCallbackParameter('key', 'value');
                 adjustRevenue.addCallbackParameter('x', 'y');
@@ -60,7 +60,7 @@
                 adjustRevenue.addPartnerParameter('x', 'y');
                 adjustRevenue.addPartnerParameter('foo', 'foot');
                 adjustRevenue.addPartnerParameter('x', 'z');
-                Adjust.trackRevenue(adjustRevenue);
+                Adjust.trackAdRevenue(adjustRevenue);
             }
 
             function trackPushToken() {
