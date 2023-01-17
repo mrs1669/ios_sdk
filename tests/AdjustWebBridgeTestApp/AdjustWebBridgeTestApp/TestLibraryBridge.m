@@ -28,30 +28,15 @@
     self.testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:baseUrl
                                                 andControlUrl:controlUrl
                                            andCommandDelegate:self];
-
-    [self augmentedHybridWebView:adjustBridge.webView];
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 20 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [self.webView evaluateJavaScript:@"TestLibraryBridge.javaScriptTest()" completionHandler:nil];
-    });
-
+    [self augmentedHybridTestWebView:adjustBridge.webView];
     return self;
 }
 
-- (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
+- (void)augmentedHybridTestWebView:(WKWebView *_Nonnull)webView {
 
     if ([webView isKindOfClass:WKWebView.class]) {
-
         self.webView = webView;
-
         WKUserContentController *controller = webView.configuration.userContentController;
-
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_config"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_event"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_revenue"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_third_party_sharing"]];
-
         [controller addScriptMessageHandler:self name:@"adjustTest"];
     }
 }
@@ -90,6 +75,14 @@
             NSString *key = [data objectForKey:@"key"];
             NSString *value = [data objectForKey:@"value"];
             [self addInfoToSend:key andValue:value];
+
+        } else if ([action isEqual:@"adjustTLB_addTest"]) {
+
+            [self addTest:(NSString *)data];
+            
+        } else if ([action isEqual:@"adjustTLB_addTestDirectory"]) {
+
+            [self addTestDirectory:(NSString *)data];
         }
     }
 }
@@ -113,6 +106,12 @@
 - (void)sendInfoToServer:(NSString *)extraPath {
     [self.testLibrary sendInfoToServer:extraPath];
 }
+
+- (void)teardownAndApplyAddedTestOptionsSet {
+    NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownAndApplyAddedTestOptionsSet('%@')", baseUrl];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
+    });}
 
 - (void)executeCommandRawJson:(NSString *)json {
     NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];

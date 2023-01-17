@@ -16,14 +16,6 @@ trackEvent: function (adjustEvent) {
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
-teardown: function(adjustConfig) {
-    const message = {
-    action:'adjust_teardown',
-    data: adjustConfig
-    };
-    window.webkit.messageHandlers.adjust.postMessage(message);
-},
-
 trackAdRevenue: function (adjustRevenue) {
     const message = {
     action:'adjust_trackAdRevenue',
@@ -154,6 +146,15 @@ trackThirdPartySharing: function(adjustThirdPartySharing) {
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
+
+teardown: function(adjustConfig) {
+    const message = {
+    action:'adjust_teardown',
+    data: adjustConfig
+    };
+    window.webkit.messageHandlers.adjust.postMessage(message);
+},
+
 
 }
 
