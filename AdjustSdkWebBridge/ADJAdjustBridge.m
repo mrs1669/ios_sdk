@@ -14,6 +14,7 @@
 #import "ADJAdjustAttribution.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustInternal.h"
 
 @implementation ADJAdjustBridge
 
@@ -161,6 +162,10 @@
     } else if ([action isEqual:@"adjust_gdprForgetMe"]) {
 
         [ADJAdjust gdprForgetDevice];
+
+    } else if ([action isEqual:@"adjust_teardown"]) {
+
+//        [ADJAdjustInternal teardownWithShouldClearStorage:YES sdkConfigDataBuilder:d];
     }
 }
 

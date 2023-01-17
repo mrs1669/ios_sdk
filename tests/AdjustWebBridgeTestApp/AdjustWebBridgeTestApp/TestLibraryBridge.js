@@ -28,36 +28,13 @@ startTestSession: function () {
 
     localAdjustCommandExecutor = new AdjustCommandExecutor(localBaseUrl, localGdprUrl);
 
-    // pass the sdk version to native side 
+    // pass the sdk version to native side
     const message = {
     action:'adjustTLB_startTestSession',
     data: 'web-bridge5.0.0@ios5.0.0'
     };
     window.webkit.messageHandlers.adjustTest.postMessage(message);
 },
-
-addTestDirectory: function(directoryName) {
-    const message = {
-    action:'adjustTLB_addTestDirectory',
-    data: directoryName
-    };
-    window.webkit.messageHandlers.adjustTest.postMessage(directoryName);
-
-},
-
-javaScriptTest: function() {
-    console.log('Call from native to Javascript.');
-},
-
-addTest: function(testName) {
-
-    const message = {
-    action:'adjustTLB_addTest',
-    data: testName
-    };
-    window.webkit.messageHandlers.adjustTest.postMessage(testName);
-}
-
 };
 
 var AdjustCommandExecutor = function(baseUrl, gdprUrl) {
@@ -166,7 +143,7 @@ AdjustCommandExecutor.prototype.testOptions = function(params) {
             }
         }
     }
-    Adjust.setTestOptions(testOptions);
+//    Adjust.teardown(testOptions);
 };
 
 AdjustCommandExecutor.prototype.config = function(params) {
@@ -228,14 +205,14 @@ AdjustCommandExecutor.prototype.config = function(params) {
         var defaultTracker = getFirstValue(params, 'defaultTracker');
         adjustConfig.setDefaultTracker(defaultTracker);
     }
-    
+
     if ('externalDeviceId' in params) {
         var externalDeviceId = getFirstValue(params, 'externalDeviceId');
         adjustConfig.setExternalDeviceId(externalDeviceId);
     }
 
     if ('appSecret' in params) {
-        var appSecretArray = getValues(params, 'appSecret');
+        var appSecretArray = getValueFromKey(params, 'appSecret');
         var secretId = appSecretArray[0].toString();
         var info1    = appSecretArray[1].toString();
         var info2    = appSecretArray[2].toString();
@@ -255,31 +232,31 @@ AdjustCommandExecutor.prototype.config = function(params) {
         var deviceKnown = deviceKnownS == 'true';
         adjustConfig.setIsDeviceKnown(deviceKnown);
     }
-    
+
     if ('needsCost' in params) {
         var needsCostS = getFirstValue(params, 'needsCost');
         var needsCost = needsCostS == 'true';
         adjustConfig.setNeedsCost(needsCost);
     }
-    
+
     if ('allowiAdInfoReading' in params) {
         var allowiAdInfoReadingS = getFirstValue(params, 'allowiAdInfoReading');
         var allowiAdInfoReading = allowiAdInfoReadingS == 'true';
         adjustConfig.setAllowiAdInfoReading(allowiAdInfoReading);
     }
-    
+
     if ('allowAdServicesInfoReading' in params) {
         var allowAdServicesInfoReadingS = getFirstValue(params, 'allowAdServicesInfoReading');
         var allowAdServicesInfoReading = allowAdServicesInfoReadingS == 'true';
         adjustConfig.setAllowAdServicesInfoReading(allowAdServicesInfoReading);
     }
-    
+
     if ('allowIdfaReading' in params) {
         var allowIdfaReadingS = getFirstValue(params, 'allowIdfaReading');
         var allowIdfaReading = allowIdfaReadingS == 'true';
         adjustConfig.setAllowIdfaReading(allowIdfaReading);
     }
-    
+
     if ('allowSkAdNetworkHandling' in params) {
         var allowSkAdNetworkHandlingS = getFirstValue(params, 'allowSkAdNetworkHandling');
         var allowSkAdNetworkHandling = allowSkAdNetworkHandlingS == 'true';
@@ -293,7 +270,7 @@ AdjustCommandExecutor.prototype.config = function(params) {
         var eventBufferingEnabled = eventBufferingEnabledS == 'true';
         adjustConfig.setEventBufferingEnabled(eventBufferingEnabled);
     }
-    
+
     if ('coppaCompliant' in params) {
         var coppaCompliantEnabledS = getFirstValue(params, 'coppaCompliant');
         var coppaCompliantEnabled = coppaCompliantEnabledS == 'true';
@@ -329,6 +306,12 @@ AdjustCommandExecutor.prototype.config = function(params) {
                                                 addInfoToSend('costAmount', attribution.costAmount);
                                                 addInfoToSend('costCurrency', attribution.costCurrency);
                                                 WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
+
+                                                const message = {
+                                                action:'adjustTLB_sendInfoToServer',
+                                                data: extraPath
+                                                };
+                                                window.webkit.messageHandlers.adjustTest.postMessage(message);
                                             }
                                             );
     }
@@ -343,8 +326,12 @@ AdjustCommandExecutor.prototype.config = function(params) {
                                                    addInfoToSend('timestamp', sessionSuccessResponseData.timestamp);
                                                    addInfoToSend('adid', sessionSuccessResponseData.adid);
                                                    addInfoToSend('jsonResponse', sessionSuccessResponseData.jsonResponse);
-                                                   WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-                                               }
+
+                                                   const message = {
+                                                   action:'adjustTLB_sendInfoToServer',
+                                                   data: extraPath
+                                                   };
+                                                   window.webkit.messageHandlers.adjustTest.postMessage(message);                                               }
                                                );
     }
 
@@ -359,8 +346,11 @@ AdjustCommandExecutor.prototype.config = function(params) {
                                                    addInfoToSend('adid', sessionFailureResponseData.adid);
                                                    addInfoToSend('willRetry', sessionFailureResponseData.willRetry ? 'true' : 'false');
                                                    addInfoToSend('jsonResponse', sessionFailureResponseData.jsonResponse);
-                                                   WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-                                               }
+                                                   const message = {
+                                                   action:'adjustTLB_sendInfoToServer',
+                                                   data: extraPath
+                                                   };
+                                                   window.webkit.messageHandlers.adjustTest.postMessage(message);                                               }
                                                );
     }
 
@@ -376,8 +366,11 @@ AdjustCommandExecutor.prototype.config = function(params) {
                                                  addInfoToSend('eventToken', eventSuccessResponseData.eventToken);
                                                  addInfoToSend('callbackId', eventSuccessResponseData.callbackId);
                                                  addInfoToSend('jsonResponse', eventSuccessResponseData.jsonResponse);
-                                                 WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-                                             }
+                                                 const message = {
+                                                 action:'adjustTLB_sendInfoToServer',
+                                                 data: extraPath
+                                                 };
+                                                 window.webkit.messageHandlers.adjustTest.postMessage(message);                                             }
                                              );
     }
 
@@ -394,8 +387,11 @@ AdjustCommandExecutor.prototype.config = function(params) {
                                                  addInfoToSend('callbackId', eventFailureResponseData.callbackId);
                                                  addInfoToSend('willRetry', eventFailureResponseData.willRetry ? 'true' : 'false');
                                                  addInfoToSend('jsonResponse', eventFailureResponseData.jsonResponse);
-                                                 WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-                                             }
+                                                 const message = {
+                                                 action:'adjustTLB_sendInfoToServer',
+                                                 data: extraPath
+                                                 };
+                                                 window.webkit.messageHandlers.adjustTest.postMessage(message);                                             }
                                              );
     }
 
@@ -413,14 +409,21 @@ AdjustCommandExecutor.prototype.config = function(params) {
                                                  function(deeplink) {
                                                      console.log('deferredDeeplinkCallback: ' + JSON.stringify(deeplink));
                                                      addInfoToSend('deeplink', deeplink);
-                                                     WebViewJavascriptBridge.callHandler('adjustTLB_sendInfoToServer', extraPath, null);
-                                                 }
+                                                     const message = {
+                                                     action:'adjustTLB_sendInfoToServer',
+                                                     data: extraPath
+                                                     };
+                                                     window.webkit.messageHandlers.adjustTest.postMessage(message);                                                 }
                                                  );
     }
 };
 
 var addInfoToSend = function(key, value) {
-    WebViewJavascriptBridge.callHandler('adjustTLB_addInfoToSend', {key: key, value: value}, null);
+    const message = {
+    action:'adjustTLB_addInfoToSend',
+    data: {key: key, value: value}
+    };
+    window.webkit.messageHandlers.adjustTest.postMessage(message);
 };
 
 AdjustCommandExecutor.prototype.start = function(params) {
@@ -454,14 +457,14 @@ AdjustCommandExecutor.prototype.event = function(params) {
     }
 
     if ('revenue' in params) {
-        var revenueParams = getValues(params, 'revenue');
+        var revenueParams = getValueFromKey(params, 'revenue');
         var currency = revenueParams[0];
         var revenue = parseFloat(revenueParams[1]);
         adjustEvent.setRevenue(revenue, currency);
     }
 
     if ('callbackParams' in params) {
-        var callbackParams = getValues(params, 'callbackParams');
+        var callbackParams = getValueFromKey(params, 'callbackParams');
         for (var i = 0; i < callbackParams.length; i = i + 2) {
             var key = callbackParams[i];
             var value = callbackParams[i + 1];
@@ -470,7 +473,7 @@ AdjustCommandExecutor.prototype.event = function(params) {
     }
 
     if ('partnerParams' in params) {
-        var partnerParams = getValues(params, 'partnerParams');
+        var partnerParams = getValueFromKey(params, 'partnerParams');
         for (var i = 0; i < partnerParams.length; i = i + 2) {
             var key = partnerParams[i];
             var value = partnerParams[i + 1];
@@ -530,7 +533,7 @@ AdjustCommandExecutor.prototype.gdprForgetMe = function(params) {
 };
 
 AdjustCommandExecutor.prototype.addSessionCallbackParameter = function(params) {
-    var list = getValues(params, 'KeyValue');
+    var list = getValueFromKey(params, 'KeyValue');
 
     for (var i = 0; i < list.length; i = i+2){
         var key = list[i];
@@ -540,7 +543,7 @@ AdjustCommandExecutor.prototype.addSessionCallbackParameter = function(params) {
 };
 
 AdjustCommandExecutor.prototype.addSessionPartnerParameter = function(params) {
-    var list = getValues(params, 'KeyValue');
+    var list = getValueFromKey(params, 'KeyValue');
 
     for (var i = 0; i < list.length; i = i+2){
         var key = list[i];
@@ -550,7 +553,7 @@ AdjustCommandExecutor.prototype.addSessionPartnerParameter = function(params) {
 };
 
 AdjustCommandExecutor.prototype.removeSessionCallbackParameter = function(params) {
-    var list = getValues(params, 'key');
+    var list = getValueFromKey(params, 'key');
 
     for (var i = 0; i < list.length; i++) {
         var key = list[i];
@@ -559,7 +562,7 @@ AdjustCommandExecutor.prototype.removeSessionCallbackParameter = function(params
 };
 
 AdjustCommandExecutor.prototype.removeSessionPartnerParameter = function(params) {
-    var list = getValues(params, 'key');
+    var list = getValueFromKey(params, 'key');
 
     for (var i = 0; i < list.length; i++) {
         var key = list[i];
@@ -586,13 +589,50 @@ AdjustCommandExecutor.prototype.openDeeplink = function(params) {
 };
 
 AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
-    var source = getFirstValue(params, 'adRevenueSource');
-    var payload = getFirstValue(params, 'adRevenueJsonString');
-    if (payload === null) {
-        Adjust.trackAdRevenue(source, '');
-    } else {
-        Adjust.trackAdRevenue(source, payload);
-    }
+
+    var source = getFirstValue(params, "adRevenueSource");
+
+        var adjustAdRevenue = new AdjustAdRevenue(source);
+
+        if ('currencyAndRevenue' in params) {
+            var revenueParams = getValueFromKey(params, 'currencyAndRevenue');
+            var currency = revenueParams[0];
+            var revenue = parseFloat(revenueParams[1]);
+            adjustAdRevenue.setAdRevenue(revenue, currency);
+        }
+
+        var adImpressionsCount = getFirstValue(params, 'adImpressionsCount');
+        adjustAdRevenue.setAdImpressionsCount(adImpressionsCount);
+
+        var adRevenueNetwork = getFirstValue(params, 'adRevenueNetwork');
+        adjustAdRevenue.setAdRevenueNetwork(adRevenueNetwork);
+
+        var adRevenueUnit = getFirstValue(params, 'adRevenueUnit');
+        adjustAdRevenue.setAdRevenueUnit(adRevenueUnit);
+
+        var adRevenuePlacement = getFirstValue(params, 'adRevenuePlacement');
+        adjustAdRevenue.setAdRevenuePlacement(adRevenuePlacement);
+
+        if ('callbackParams' in params) {
+            var callbackParams = getValueFromKey(params, "callbackParams");
+            for (var i = 0; i < callbackParams.length; i = i + 2) {
+                var key = callbackParams[i];
+                var value = callbackParams[i + 1];
+                adjustAdRevenue.addCallbackParameter(key, value);
+            }
+        }
+
+        if ('partnerParams' in params) {
+            var partnerParams = getValueFromKey(params, "partnerParams");
+            for (var i = 0; i < partnerParams.length; i = i + 2) {
+                var key = partnerParams[i];
+                var value = partnerParams[i + 1];
+                adjustAdRevenue.addPartnerParameter(key, value);
+            }
+        }
+
+    Adjust.trackAdRevenue(adjustAdRevenue);
+
 };
 
 AdjustCommandExecutor.prototype.disableThirdPartySharing = function(params) {
@@ -612,7 +652,7 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
 
     var adjustThirdPartySharing = new AdjustThirdPartySharing(isEnabled);
     if ('granularOptions' in params) {
-        var granularOptions = getValues(params, 'granularOptions');
+        var granularOptions = getValueFromKey(params, 'granularOptions');
         for (var i = 0; i < granularOptions.length; i = i + 3) {
             var partnerName = granularOptions[i];
             var key = granularOptions[i + 1];
@@ -621,7 +661,7 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
         }
     }
     if ('partnerSharingSettings' in params) {
-        var partnerSharingSettings = getValues(params, 'partnerSharingSettings');
+        var partnerSharingSettings = getValueFromKey(params, 'partnerSharingSettings');
         for (var i = 0; i < partnerSharingSettings.length; i = i + 3) {
             var partnerName = partnerSharingSettings[i];
             var key = partnerSharingSettings[i + 1];
@@ -639,7 +679,7 @@ AdjustCommandExecutor.prototype.measurementConsent = function(params) {
 };
 
 // Util
-function getValues(params, key) {
+function getValueFromKey(params, key) {
     if (key in params) {
         return params[key];
     }
@@ -660,3 +700,4 @@ function getFirstValue(params, key) {
 }
 
 module.exports = TestLibraryBridge;
+

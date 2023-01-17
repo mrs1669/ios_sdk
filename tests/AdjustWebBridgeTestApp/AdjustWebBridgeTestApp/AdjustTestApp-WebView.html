@@ -13,7 +13,7 @@
 
 	<script>
 	window.onerror = function(err) {
-		log('window.onerror: ' + err)
+        
 	}
 
     function setupWebViewJavascriptBridge(callback) {
@@ -29,7 +29,7 @@
 
         function btnStartTestSession() {
             console.log('btnStartTestSession');
-            // TestLibraryBridge.addTestDirectory('parameters');
+            TestLibraryBridge.addTestDirectory('event-tracking');
             TestLibraryBridge.startTestSession();
         }
 

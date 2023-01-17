@@ -71,9 +71,9 @@
 }
 
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
-
+    
     if ([message.body isKindOfClass:[NSDictionary class]]) {
-
+        
         NSString *action = [message.body objectForKey:@"action"];
         NSDictionary *data = [message.body objectForKey:@"data"];
 
@@ -83,9 +83,13 @@
 
         } else if ([action isEqual:@"adjustTLB_sendInfoToServer"]) {
 
+            [self sendInfoToServer:(NSString *)data];
 
         } else if ([action isEqual:@"adjustTLB_addInfoToSend"]) {
 
+            NSString *key = [data objectForKey:@"key"];
+            NSString *value = [data objectForKey:@"value"];
+            [self addInfoToSend:key andValue:value];
         }
     }
 }
