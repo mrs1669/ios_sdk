@@ -21,38 +21,51 @@
  @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSNumber *> *iAdErrors;
  @property (nullable, readonly, strong, nonatomic) NSNumber *adServicesTrackedNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSDate * skadRegisterCallTimestamp;
+ @property (nullable, readonly, strong, nonatomic) NSNumber *migrationCompletedNumberBool;
  */
+
+NSString *const ADJUserDefaultsPushToken = @"adj_push_token";
+NSString *const ADJUserDefaultsPushTokenString = @"adj_push_token_string";
+NSString *const ADJUserDefaultsInstallTracked = @"adj_install_tracked";
+NSString *const ADJUserDefaultsGdprForgetMe = @"adj_gdpr_forget_me";
+NSString *const ADJUserDefaultsDepplinkUrk = @"adj_deeplink_url";
+NSString *const ADJUserDefaultsDepplinkClickTime = @"adj_deeplink_click_time";
+NSString *const ADJUserDefaultsDisableThirdPartySharing = @"adj_disable_third_party_sharing";
+NSString *const ADJUserDefaultsIadErrors = @"adj_iad_errors";
+NSString *const ADJUserDefaultsAdServicesTracked = @"adj_adservices_tracked";
+NSString *const ADJUserDefaultsSkadRegisterCallTime = @"adj_skad_register_call_time";
+NSString *const ADJUserDefaultsMigrationCompleted = @"adj_migration_completed";
 
 @implementation ADJV4UserDefaultsData
 - (nonnull instancetype)initWithLogger:(nonnull ADJLogger *)logger {
     self = [super init];
     
-    _pushTokenData = [ADJV4UserDefaultsData dataWithKey:@"adj_push_token"];
-    
-    _pushTokenString = [ADJV4UserDefaultsData stringWithKey:@"adj_push_token_string"];
-    
-    _installTrackedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:@"adj_install_tracked"];
-    
-    _gdprForgetMeNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:@"adj_gdpr_forget_me"];
-    
-    _deeplinkUrl = [ADJV4UserDefaultsData urlWithKey:@"adj_deeplink_url"];
-    
-    _deeplinkClickTime = [ADJV4UserDefaultsData dateWithKey:@"adj_deeplink_click_time"];
-    
-    _disableThirdPartySharingNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:@"adj_disable_third_party_sharing"];
-    
-    _iAdErrors = [ADJV4UserDefaultsData dictionaryWithKey:@"adj_iad_errors"];
-    
-    _adServicesTrackedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:@"adj_adservices_tracked"];
-    
-    _skadRegisterCallTimestamp = [ADJV4UserDefaultsData dateWithKey:@"adj_skad_register_call_time"];
-    
+    _pushTokenData = [ADJV4UserDefaultsData dataWithKey:ADJUserDefaultsPushToken];
+    _pushTokenString = [ADJV4UserDefaultsData stringWithKey:ADJUserDefaultsPushTokenString];
+    _installTrackedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsInstallTracked];
+    _gdprForgetMeNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsGdprForgetMe];
+    _deeplinkUrl = [ADJV4UserDefaultsData urlWithKey:ADJUserDefaultsDepplinkUrk];
+    _deeplinkClickTime = [ADJV4UserDefaultsData dateWithKey:ADJUserDefaultsDepplinkClickTime];
+    _disableThirdPartySharingNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsDisableThirdPartySharing];
+    _iAdErrors = [ADJV4UserDefaultsData dictionaryWithKey:ADJUserDefaultsIadErrors];
+    _adServicesTrackedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsAdServicesTracked];
+    _skadRegisterCallTimestamp = [ADJV4UserDefaultsData dateWithKey:ADJUserDefaultsSkadRegisterCallTime];
+    _migrationCompletedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsMigrationCompleted];
+
     return self;
 }
 
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+- (BOOL)isMigrationCompleted {
+    return (self.migrationCompletedNumberBool != nil) ? [self.migrationCompletedNumberBool boolValue] : NO;
+}
+
+- (void)setMigrationCompleted {
+    [NSUserDefaults.standardUserDefaults setBool:YES forKey:ADJUserDefaultsMigrationCompleted];
 }
 
 #pragma mark Internal Methods

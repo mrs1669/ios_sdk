@@ -54,11 +54,11 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     _deviceInfoData = [[ADJDeviceInfoData alloc] initWithLogger:self.logger];
 
     _sessionDeviceIdsController =
-    [[ADJSessionDeviceIdsController alloc]
-     initWithLoggerFactory:loggerFactory
-     threadExecutorFactory:threadExecutorFactory
-     timeoutPerAttempt:deviceIdsConfigData.timeoutPerAttempt
-     canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
+        [[ADJSessionDeviceIdsController alloc]
+         initWithLoggerFactory:loggerFactory
+         threadExecutorFactory:threadExecutorFactory
+         timeoutPerAttempt:deviceIdsConfigData.timeoutPerAttempt
+         canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
 
     _uuidKeychainCache =
     [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger
@@ -86,15 +86,6 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 
 - (nonnull ADJSessionDeviceIdsData *)getSessionDeviceIdsSync {
     return [self.sessionDeviceIdsController getSessionDeviceIdsSync];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithLifecylePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher {
-    if (self.deviceIdsConfigData.cacheValidityPeriod != nil
-        && ! [self.deviceIdsConfigData.cacheValidityPeriod isMaxValue])
-    {
-        [lifecyclePublisher addSubscriber:self];
-    }
 }
 
 #pragma mark - ADJLifecycleSubscriber

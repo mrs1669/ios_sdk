@@ -72,8 +72,7 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
             continue;
         }
 
-        [mapBuilder addPairWithValue:verifiedValue
-                                 key:key];
+        [mapBuilder addPairWithValue:verifiedValue key:key];
     }
 
     [self replaceAllWithStringMap:[[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder]

@@ -150,21 +150,6 @@
     } source:@"update asa attribution"];
 }
 
-#pragma mark Public API
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithKeepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
-             preFirstMeasurementSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher
-                                 sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher
-                                 attributionPublisher:(nonnull ADJAttributionPublisher *)attributionPublisher
-                           sdkPackageSendingPublisher:(nonnull ADJSdkPackageSendingPublisher *)sdkPackageSendingPublisher {
-
-    [keepAlivePublisher addSubscriber:self];
-    [preFirstMeasurementSessionStartPublisher addSubscriber:self];
-    [sdkResponsePublisher addSubscriber:self];
-    [attributionPublisher addSubscriber:self];
-    [sdkPackageSendingPublisher addSubscriber:self];
-}
-
 #pragma mark - ADJKeepAliveSubscriber
 - (void)didKeepAlivePing {
     if (! self.canReadToken || self.isFinishedReading) {

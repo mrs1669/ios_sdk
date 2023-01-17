@@ -44,11 +44,14 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                          canSendInBackground:(BOOL)canSendInBackground {
+                          canSendInBackground:(BOOL)canSendInBackground
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"PausingController"];
     _canSendInBackground = canSendInBackground;
 
     _pausingPublisher = [[ADJPausingPublisher alloc] init];
+    [pubRegistry addPublisher:_pausingPublisher];
 
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -225,21 +228,6 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
             }
         }
     } source:@"sdk active"];
-}
-
-#pragma mark - Subscriptions
-- (void) ccSubscribeToPublishersWithPublishingGate:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                                  offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher
-                             reachabilityPublisher:(nonnull ADJReachabilityPublisher *)reachabilityPublisher
-                                lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-                  measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-                                sdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher {
-    [publishingGatePublisher addSubscriber:self];
-    [offlinePublisher addSubscriber:self];
-    [reachabilityPublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
-    [measurementSessionStartPublisher addSubscriber:self];
-    [sdkActivePublisher addSubscriber:self];
 }
 
 #pragma mark Internal Methods

@@ -149,7 +149,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 
 #pragma mark Internal Methods
 - (BOOL)canChangeToAskedToForgetWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData {
-    if ([currentGdprForgetStateData isNotForgotten]) {
+    if (! [currentGdprForgetStateData isForgotten]) {
         return YES;
     }
 
@@ -186,7 +186,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
         return NO;
     }
 
-    if ([currentGdprForgetStateData isNotForgotten]) {
+    if (! [currentGdprForgetStateData isForgotten]) {
         [self.logger debugDev:@"Cannot start tracking GDPR forget when not forgotten"];
         return NO;
     }
@@ -221,7 +221,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 - (void)notifyGdprForgetStateEventWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
                                gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO {
     // nothing to notify when not forgotten
-    if ([currentGdprForgetStateData isNotForgotten]) {
+    if (! [currentGdprForgetStateData isForgotten]) {
         return;
     }
 
@@ -245,7 +245,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 
 - (BOOL)canChangeToForgottenByBackendWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
                                                    source:(nonnull NSString *)source {
-    if ([currentGdprForgetStateData isNotForgotten]) {
+    if (! [currentGdprForgetStateData isForgotten]) {
         [self.logger debugDev:
          @"Changing to ForgottenByBackend while not previously asked by sdk"
                          from:source];

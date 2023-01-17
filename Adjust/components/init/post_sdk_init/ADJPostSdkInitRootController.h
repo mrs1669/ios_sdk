@@ -7,80 +7,59 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "ADJCommonBase.h"
 #import "ADJClientActionsAPI.h"
 #import "ADJMeasurementSessionStartSubscriber.h"
-#import "ADJSubscribingGateSubscriber.h"
-#import "ADJPublishingGateSubscriber.h"
-#import "ADJSdkInitSubscriber.h"
 #import "ADJMeasurementSessionController.h"
 #import "ADJClientConfigData.h"
 #import "ADJSdkPackageBuilder.h"
 #import "ADJSdkPackageSenderController.h"
-#import "ADJMainQueueController.h"
 #import "ADJEventController.h"
 #import "ADJAdRevenueController.h"
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
-#import "ADJAttributionController.h"
 #import "ADJBillingSubscriptionController.h"
-#import "ADJKeepAliveController.h"
 #import "ADJLaunchedDeeplinkController.h"
 #import "ADJPushTokenController.h"
-#import "ADJReachabilityController.h"
-#import "ADJPausingController.h"
-#import "ADJClientSubscriptionsController.h"
 #import "ADJThirdPartySharingController.h"
-#import "ADJLogQueueController.h"
-#import "ADJAsaAttributionController.h"
+#import "ADJPublishersRegistry.h"
+#import "ADJStorageRootController.h"
+#import "ADJReachabilityController.h"
+#import "ADJSdkConfigData.h"
 
-//#import "ADJEntryRoot.h"
-@class ADJEntryRoot;
-//#import "ADJPreSdkInitRootController.h"
-@class ADJPreSdkInitRootController;
-
-@interface ADJPostSdkInitRootController : ADJCommonBase<ADJClientActionsAPI,
+@interface ADJPostSdkInitRootController : ADJCommonBase<
+ADJClientActionsAPI,
 // subscriptions
-   ADJMeasurementSessionStartSubscriber
+ADJMeasurementSessionStartSubscriber
 >
-
-- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
-// publishers
-@property (nonnull, readonly, strong, nonatomic) ADJSubscribingGatePublisher *subscribingGatePublisher;
-@property (nonnull, readonly, strong, nonatomic) ADJPublishingGatePublisher *publishingGatePublisher;
-@property (nonnull, readonly, strong, nonatomic) ADJSdkInitPublisher *sdkInitPublisher;
-
-// instantiation
-- (nonnull instancetype) initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                              clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                                     entryRoot:(nonnull ADJEntryRoot *)entryRoot
-                      preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
-// public properties
-@property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfigData;
-@property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionController *measurementSessionController;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilder;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSenderController *sdkPackageSenderController;
-@property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
-@property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
+@property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionController *measurementSessionController;
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
-@property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
-@property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
 @property (nonnull, readonly, strong, nonatomic) ADJBillingSubscriptionController *billingSubscriptionController;
-@property (nonnull, readonly, strong, nonatomic) ADJKeepAliveController *keepAliveController;
+@property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
+@property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersController *globalCallbackParametersController;
 @property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersController *globalPartnerParametersController;
-@property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
-@property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
-@property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkController *launchedDeeplinkController;
-@property (nonnull, readonly, strong, nonatomic) ADJClientSubscriptionsController *clientSubscriptionsController;
+@property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
 @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
-@property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
-@property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionController *asaAttributionController;
+@property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
 
-// public api
-- (void)ccSdkInitWithEntryRoot:(nonnull ADJEntryRoot *)entryRoot
-      preSdkInitRootController:(nonnull ADJPreSdkInitRootController *)preSdkInitRootController;
+
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                threadFactory:(nonnull ADJThreadController *)threadFactory
+                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+                         clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+                        storageRootController:(nonnull ADJStorageRootController *)storageRootController
+                             deviceController:(nonnull ADJDeviceController *)deviceController
+                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+                                sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+                                        clock:(nonnull ADJClock *)clock
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+
+- (void)subscribeToPublishers:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (void)startSdk;
 
 - (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPI;
+
 @end

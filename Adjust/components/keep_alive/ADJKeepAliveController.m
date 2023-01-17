@@ -39,12 +39,15 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                     foregroundTimerStartMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerStartMilli
-                 foregroundTimerIntervalMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerIntervalMilli {
+                 foregroundTimerIntervalMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerIntervalMilli
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"KeepAliveController"];
     _foregroundTimerStartMilli = foregroundTimerStartMilli;
     _foregroundTimerIntervalMilli = foregroundTimerIntervalMilli;
     
     _keepAlivePublisher = [[ADJKeepAlivePublisher alloc] init];
+    [pubRegistry addPublisher:_keepAlivePublisher];
     
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -56,13 +59,6 @@
     _hasMeasurementSessionStarted = NO;
     
     return self;
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-                                         lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher {
-    [measurementSessionStartPublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
 }
 
 #pragma mark - ADJMeasurementSessionStartSubscriber

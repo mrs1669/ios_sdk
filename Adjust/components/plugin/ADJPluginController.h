@@ -18,8 +18,6 @@
     ADJSdkPackageSendingSubscriber,
     ADJLifecycleSubscriber
 >
-- (void)ccSubscribeToPublishersWithSdkPackageSendingPublisher:(nonnull ADJSdkPackageSendingPublisher *)sdkPackageSendingPublisher
-                                           lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;

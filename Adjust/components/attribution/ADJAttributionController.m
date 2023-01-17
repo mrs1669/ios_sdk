@@ -44,13 +44,16 @@
                    attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
                       sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk {
+              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"AttributionController"];
     _attributionStateStorageWeak = attributionStateStorage;
     _clockWeak = clock;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     
     _attributionPublisher = [[ADJAttributionPublisher alloc] init];
+    [pubRegistry addPublisher:_attributionPublisher];
     
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];
@@ -62,12 +65,10 @@
     _attributionTracker = [[ADJAttributionTracker alloc]
                            initWithLoggerFactory:loggerFactory
                            attributionBackoffStrategy:attributionBackoffStrategy];
-    
-    _attributionState =
-    [[ADJAttributionState alloc]
-     initWithLoggerFactory:loggerFactory
-     doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
-     isFirstSessionInQueue:[mainQueueController containsFirstSessionPackage]];
+
+    _attributionState = [[ADJAttributionState alloc] initWithLoggerFactory:loggerFactory
+                                           doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
+                                                     isFirstSessionInQueue:[mainQueueController containsFirstSessionPackage]];
     
     return self;
 }
@@ -297,17 +298,6 @@
         
         [strongSelf.attributionTracker pauseSending];
     } source:@"pause sending"];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                          measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-                                      sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher
-                                          pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher;{
-    [publishingGatePublisher addSubscriber:self];
-    [measurementSessionStartPublisher addSubscriber:self];
-    [sdkResponsePublisher addSubscriber:self];
-    [pausingPublisher addSubscriber:self];
 }
 
 #pragma mark Internal Methods

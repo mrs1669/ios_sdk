@@ -24,7 +24,7 @@
     // subscriptions
     ADJLifecycleSubscriber
 >
-- (void)ccSubscribeToPublishersWithLifecylePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJDeviceInfoData *deviceInfoData;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -37,9 +37,6 @@
 // public api
 - (nullable ADJNonEmptyString *)keychainUuid;
 - (nullable ADJNonEmptyString *)nonKeychainUuid;
-
-@property (nonnull, readonly, strong, nonatomic) ADJDeviceInfoData *deviceInfoData;
-
 - (nonnull ADJSessionDeviceIdsData *)getSessionDeviceIdsSync;
 
 @end

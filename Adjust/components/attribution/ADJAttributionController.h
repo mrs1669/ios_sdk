@@ -23,6 +23,7 @@
 #import "ADJNetworkEndpointData.h"
 #import "ADJClientConfigData.h"
 #import "ADJMainQueueController.h"
+#import "ADJPublishersRegistry.h"
 
 @interface ADJAttributionController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -32,10 +33,6 @@
     ADJSdkResponseSubscriber,
     ADJPausingSubscriber
 >
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                          measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-                                      sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher
-                                          pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionPublisher *attributionPublisher;
@@ -49,7 +46,8 @@
                    attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
                       sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk;
+              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 @end
 

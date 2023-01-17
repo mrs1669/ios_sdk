@@ -41,19 +41,21 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                        gdprForgetStateStorage:(nonnull ADJGdprForgetStateStorage *)gdprForgetStateStorage
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy {
+                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetController"];
     _gdprForgetStateStorageWeak = gdprForgetStateStorage;
     _sdkPackageBuilderWeak = nil;
     _clockWeak = nil;
     
     _gdprForgetPublisher = [[ADJGdprForgetPublisher alloc] init];
+    [pubRegistry addPublisher:_gdprForgetPublisher];
     
     _gdprForgetState = [[ADJGdprForgetState alloc] initWithLoggerFactory:loggerFactory];
     
-    _gdprForgetTracker =
-    [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
-                              gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
+    _gdprForgetTracker = [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
+                                                   gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
     
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -94,7 +96,7 @@
     ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
     [gdprForgetStateStorage readOnlyStoredDataValue];
     
-    return ! [currentGdprForgetStateData isNotForgotten];
+    return [currentGdprForgetStateData isForgotten];
 }
 
 - (void)forgetDevice {
@@ -195,21 +197,9 @@
     } source:@"received opt out sdk response"];
 }
 
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                            publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                                 lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-                               sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher {
-    [sdkInitPublisher addSubscriber:self];
-    [publishingGatePublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
-    [sdkResponsePublisher addSubscriber:self];
-}
-
 #pragma mark Internal Methods
 - (void)processForgetDevice {
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage =
-    self.gdprForgetStateStorageWeak;
+    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage = self.gdprForgetStateStorageWeak;
     if (gdprForgetStateStorage == nil) {
         [self.logger debugDev:@"Cannot forget device without a reference to the storage"
                     issueType:ADJIssueWeakReference];
@@ -218,23 +208,21 @@
     
     ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
     [gdprForgetStateStorage readOnlyStoredDataValue];
+
     ADJValueWO<ADJGdprForgetStateData *> *_Nonnull changedGdprForgetStateDataWO =
     [[ADJValueWO alloc] init];
+
     ADJValueWO<NSString *> *_Nonnull gdprForgetStatusEventWO = [[ADJValueWO alloc] init];
     
-    BOOL shouldStartTracking =
-    [self.gdprForgetState
-     shouldStartTrackingWhenForgottenByClientWithCurrentStateData:
-         currentGdprForgetStateData
-     changedGdprForgetStateDataWO:changedGdprForgetStateDataWO
-     gdprForgetStatusEventWO:gdprForgetStatusEventWO];
+    BOOL shouldStartTracking = [self.gdprForgetState  shouldStartTrackingWhenForgottenByClientWithCurrentStateData:currentGdprForgetStateData
+                                                                                      changedGdprForgetStateDataWO:changedGdprForgetStateDataWO
+                                                                                           gdprForgetStatusEventWO:gdprForgetStatusEventWO];
     
-    [self
-     handleStartingStateSideEffectsWithShouldStart:shouldStartTracking
-     changedGdprForgetStateData:[changedGdprForgetStateDataWO changedValue]
-     gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
-     gdprForgetStateStorage:gdprForgetStateStorage
-     sourceDescription:@"forgetDevice"];
+    [self handleStartingStateSideEffectsWithShouldStart:shouldStartTracking
+                             changedGdprForgetStateData:[changedGdprForgetStateDataWO changedValue]
+                                  gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
+                                 gdprForgetStateStorage:gdprForgetStateStorage
+                                      sourceDescription:@"forgetDevice"];
 }
 
 - (void)processGdprForgetResponseInStateWithData:(nonnull ADJGdprForgetResponseData *)gdprForgetResponseData {
@@ -415,8 +403,7 @@
                                         gdprForgetStateStorage:gdprForgetStateStorage];
 }
 
-- (void)handleStateSideEffectsWithChangedGdprForgetStateData:
-(nullable ADJGdprForgetStateData *)changedGdprForgetStateData
+- (void)handleStateSideEffectsWithChangedGdprForgetStateData:(nullable ADJGdprForgetStateData *)changedGdprForgetStateData
                                        gdprForgetStatusEvent:(nullable NSString *)gdprForgetStatusEvent
                                       gdprForgetStateStorage:(nullable ADJGdprForgetStateStorage *)gdprForgetStateStorage {
     if (changedGdprForgetStateData != nil) {

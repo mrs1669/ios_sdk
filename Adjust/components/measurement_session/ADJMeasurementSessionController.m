@@ -48,7 +48,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                                        clock:(nonnull ADJClock *)clock {
+                                        clock:(nonnull ADJClock *)clock
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionController"];
     _overwriteFirstMeasurementSessionIntervalMilli = overwriteFirstMeasurementSessionIntervalMilli;
     _clientExecutorWeak = clientExecutor;
@@ -58,8 +60,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     _clockWeak = clock;
 
     _preFirstMeasurementSessionStartPublisher = [[ADJPreFirstMeasurementSessionStartPublisher alloc] init];
-
+    [pubRegistry addPublisher:_preFirstMeasurementSessionStartPublisher];
     _measurementSessionStartPublisher = [[ADJMeasurementSessionStartPublisher alloc] init];
+    [pubRegistry addPublisher:_measurementSessionStartPublisher];
 
     _measurementSessionState = [[ADJMeasurementSessionState alloc]
                                 initWithLoggerFactory:loggerFactory
@@ -88,17 +91,6 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     }
 
     return [measurementSessionStateStorage readOnlyStoredDataValue];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher
-                                     sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                   keepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
-                                   lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher {
-    [sdkActivePublisher addSubscriber:self];
-    [sdkInitPublisher addSubscriber:self];
-    [keepAlivePublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
 }
 
 #pragma mark - ADJSdkActiveSubscriber

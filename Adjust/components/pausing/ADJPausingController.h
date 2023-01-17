@@ -17,6 +17,7 @@
 #import "ADJSdkActiveSubscriber.h"
 #import "ADJPausingSubscriber.h"
 #import "ADJThreadExecutorFactory.h"
+#import "ADJPublishersRegistry.h"
 
 @interface ADJPausingController : ADJCommonBase<
     // subscriptions
@@ -27,12 +28,6 @@
     ADJMeasurementSessionStartSubscriber,
     ADJSdkActiveSubscriber
 >
-- (void)ccSubscribeToPublishersWithPublishingGate:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                                 offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher
-                            reachabilityPublisher:(nonnull ADJReachabilityPublisher *)reachabilityPublisher
-                               lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-                 measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-                               sdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJPausingPublisher *pausingPublisher;
@@ -40,7 +35,8 @@
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                          canSendInBackground:(BOOL)canSendInBackground;
+                          canSendInBackground:(BOOL)canSendInBackground
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 @end
 

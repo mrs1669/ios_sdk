@@ -13,21 +13,23 @@
 #import "ADJConstants.h"
 #import "ADJConstantsSys.h"
 #import "ADJUtilF.h"
+#import "ADJAdjustInstance.h"
 
 static ADJEntryRoot *entryRootInstance = nil;
 static dispatch_once_t entryRootOnceToken = 0;
 
 @implementation ADJAdjustInternal
 
-+ (nonnull ADJEntryRoot *)rootInstance {
++ (nonnull id<ADJAdjustInstance>)sdkInstanceForId:(nullable NSString *)instanceId {
     // add syncronization for testing teardown
 #ifdef DEBUG
     @synchronized ([ADJEntryRoot class]) {
 #endif
         dispatch_once(&entryRootOnceToken, ^{
-            entryRootInstance = [[ADJEntryRoot alloc] initWithSdkConfigDataBuilder:nil];
+            entryRootInstance = [[ADJEntryRoot alloc] initWithInstanceId:instanceId
+                                                        sdkConfigBuilder:nil];
         });
-        return entryRootInstance;
+        return [entryRootInstance instanceForId:instanceId];
 #ifdef DEBUG
     }
 #endif
@@ -39,7 +41,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 
 + (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
     if ([self isSdkPrefixValid:sdkPrefix]) {
-        return [NSString stringWithFormat:@"%@@%@", [self sdkVersion], ADJClientSdk];
+        return [NSString stringWithFormat:@"%@@%@", sdkPrefix, [self sdkVersion]];
     } else {
         return [self sdkVersion];
     }
@@ -62,14 +64,13 @@ static dispatch_once_t entryRootOnceToken = 0;
 }
 
 // Resets the sdk state, as if it was not initialized or used before.
-+ (nonnull NSString *)teardownWithShouldClearStorage:(BOOL)shouldClearStorage
-                                sdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
++ (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
+                                    shouldClearStorage:(BOOL)shouldClearStorage {
     // restrict teardown to debug builds
 #ifndef DEBUG
     return @"Teardown cannot be done in non-debug mode";
 #else
-    NSMutableString *_Nonnull returnMessage =
-    [[NSMutableString alloc] initWithString:@"Entry root teardown"];
+    NSMutableString *_Nonnull returnMessage = [[NSMutableString alloc] initWithString:@"Entry root teardown"];
 
     @synchronized ([ADJEntryRoot class]) {
         if (shouldClearStorage) {
@@ -80,17 +81,15 @@ static dispatch_once_t entryRootOnceToken = 0;
 
         entryRootInstance = nil;
 
-        if (sdkConfigDataBuilder != nil) {
-            [returnMessage appendString:
-             @". Creating new entry root instance with injected sdk config"];
+        if (sdkConfigBuilder != nil) {
+            [returnMessage appendString:@". Creating new entry root instance with injected sdk config"];
             entryRootOnceToken = 0;
             dispatch_once(&entryRootOnceToken, ^{
-                entryRootInstance =
-                    [[ADJEntryRoot alloc] initWithSdkConfigDataBuilder:sdkConfigDataBuilder];
+                entryRootInstance = [[ADJEntryRoot alloc] initWithInstanceId:nil
+                                                            sdkConfigBuilder:sdkConfigBuilder];
             });
         } else {
-            [returnMessage appendString:
-             @". Not creating new entry root instance without injected sdk config"];
+            [returnMessage appendString:@". Not creating new entry root instance without injected sdk config"];
         }
     }
 
@@ -100,24 +99,19 @@ static dispatch_once_t entryRootOnceToken = 0;
 
 + (void)teardownWithoutClearingStorageWithReturnMessage:(nonnull NSMutableString *)returnMessage {
     if (entryRootInstance == nil) {
-        [returnMessage appendString:
-         @". No singleton root instance to null without clearing storage"];
+        [returnMessage appendString:@". No singleton root instance to null without clearing storage"];
         return;
     }
-
     [returnMessage appendString:@". Nulling singleton root instance without clearing storage"];
 
     __block dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-
     void (^ closeStorageBlockSync)(void) = ^{
         dispatch_semaphore_signal(sem);
     };
 
     [entryRootInstance finalizeAtTeardownWithCloseStorageBlock:closeStorageBlockSync];
 
-    if (dispatch_semaphore_wait
-        (sem, [ADJUtilSys dispatchTimeWithMilli:(ADJOneSecondMilli * 5)]) == 0)
-    {
+    if (dispatch_semaphore_wait(sem, [ADJUtilSys dispatchTimeWithMilli:(ADJOneSecondMilli * 5)]) == 0) {
         [returnMessage appendString:@". Teardown finalized within close storage timeout"];
     } else {
         [returnMessage appendString:@". Teardown not finalized within close storage timeout"];
@@ -126,27 +120,25 @@ static dispatch_once_t entryRootOnceToken = 0;
 
 + (void)teardownWhileClearingStorageWithReturnMessage:(nonnull NSMutableString *)returnMessage {
     __block NSMutableString *returnMessageInBlock = returnMessage;
-
     __weak NSMutableString *returnMessageWeak = returnMessageInBlock;
 
     __block void (^ clearStorageBlock)(void) = ^{
         NSString *_Nonnull clearMessage = [ADJAdjustInternal clearStorage];
         __strong NSMutableString *returnMessageStrong = returnMessageWeak;
-        if (returnMessageStrong == nil) { return; }
+        if (returnMessageStrong == nil) {
+            return;
+        }
 
         [returnMessageStrong appendFormat:@". %@", clearMessage];
     };
 
     if (entryRootInstance == nil) {
-        [returnMessage appendString:
-         @". No singleton root instance to null while clearing storage"];
-
+        [returnMessage appendString:@". No singleton root instance to null while clearing storage"];
         clearStorageBlock();
         return;
     }
 
     [returnMessage appendString:@". Nulling singleton root instance while clearing storage"];
-
     __block dispatch_semaphore_t sem = dispatch_semaphore_create(0);
 
     void (^ closeAndClearStorageBlock)(void) = ^{
@@ -156,37 +148,28 @@ static dispatch_once_t entryRootOnceToken = 0;
 
     [entryRootInstance finalizeAtTeardownWithCloseStorageBlock:closeAndClearStorageBlock];
 
-    if (dispatch_semaphore_wait
-        (sem, [ADJUtilSys dispatchTimeWithMilli:(ADJOneSecondMilli * 5)]) == 0)
-    {
-        [returnMessage appendString:
-         @". Teardown finalized within close and clear storage timeout"];
+    if (dispatch_semaphore_wait(sem, [ADJUtilSys dispatchTimeWithMilli:(ADJOneSecondMilli * 5)]) == 0) {
+        [returnMessage appendString:@". Teardown finalized within close and clear storage timeout"];
     } else {
         // nil to avoid being accessed inside the unfinished block
         returnMessageInBlock = nil;
-        [returnMessage appendString:
-         @". Teardown not finalized within close and clear storage timeout"];
+        [returnMessage appendString:@". Teardown not finalized within close and clear storage timeout"];
     }
 }
 
 + (nonnull NSString *)clearStorage {
-    NSString *_Nullable sqliteFilePath =
-    [ADJUtilSys getFilePathInDocumentsDir:ADJDatabaseName];
 
+    NSString *_Nullable pathToDelete = [ADJUtilSys adjustAppSupportDir];
     NSFileManager *_Nonnull fileManager = [NSFileManager defaultManager];
-
     NSError *error = nil;
-
-    BOOL removedSuccessfully = [fileManager removeItemAtPath:sqliteFilePath
+    BOOL removedSuccessfully = [fileManager removeItemAtPath:pathToDelete
                                                        error:&error];
-
     if (error) {
         return [ADJUtilF errorFormat:error];
     }
-
-    return [NSString stringWithFormat:
-            @"fileManager removedSuccessfully: %d", removedSuccessfully];
+    return [NSString stringWithFormat:@"fileManager removedSuccessfully: %d", removedSuccessfully];
 }
+
 
 @end
 

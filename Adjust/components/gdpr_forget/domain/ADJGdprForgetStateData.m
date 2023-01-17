@@ -97,8 +97,8 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
 }
 
 #pragma mark Public API
-- (BOOL)isNotForgotten {
-    return ! self.askedToForgetBySdk && ! self.forgottenByBackend;
+- (BOOL)isForgotten {
+    return self.askedToForgetBySdk || self.forgottenByBackend;
 }
 
 #pragma mark - ADJIoDataSerializable

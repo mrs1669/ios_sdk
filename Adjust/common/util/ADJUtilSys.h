@@ -15,9 +15,11 @@
 
 + (BOOL)createAdjustAppSupportDir;
 
-+ (nullable NSString *)getFilePathInDocumentsDir:(nonnull NSString *)fileName;
++ (nullable NSString *)filePathInDocumentsDir:(nonnull NSString *)fileName;
 
-+ (nullable NSString *)getFilePathInAppSupportDir:(nonnull NSString *)fileName;
++ (nullable NSString *)filePathInAdjustAppSupportDir:(nonnull NSString *)fileName;
+
++ (nullable NSString *)adjustAppSupportDir;
 
 + (nonnull ADJNonEmptyString *)generateUuid;
 
@@ -28,6 +30,9 @@
 + (void)finalizeAtRuntime:(nullable id<ADJRuntimeFinalizer>)runtimeFinalizer;
 
 + (nonnull NSArray<NSString *> *)pluginsClassNameList;
+
++ (void)moveFromDocumentsToSupportFolderOldDbFilename:(nonnull NSString *)oldName
+                                        newDbFileName:(nonnull NSString *)newName;
 
 @end
 

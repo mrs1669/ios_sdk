@@ -13,6 +13,7 @@
 #import "ADJMeasurementSessionStartSubscriber.h"
 #import "ADJReachabilitySubscriber.h"
 #import "ADJThreadController.h"
+#import "ADJPublishersRegistry.h"
 
 //- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus;
 
@@ -21,7 +22,6 @@
    // subscriptions
    ADJMeasurementSessionStartSubscriber
 >
-- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic)ADJReachabilityPublisher *reachabilityPublisher;
@@ -29,7 +29,8 @@
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
-                               targetEndpoint:(nonnull NSString *)targetEndpoint;
+                               targetEndpoint:(nonnull NSString *)targetEndpoint
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 @end
 

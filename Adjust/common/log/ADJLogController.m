@@ -25,17 +25,22 @@
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) NSMutableArray<ADJLogMessageData *> *logMessageDataArray;
 @property (nonnull, readonly, strong, nonatomic) ADJConsoleLogger *consoleLogger;
-@property (nullable, readonly, strong, nonatomic) NSString *instanceId;
-@property (assign, readwrite, nonatomic) BOOL canPublish;
+@property (readwrite, assign, nonatomic) BOOL canPublish;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
 @end
 
 @implementation ADJLogController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                             sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData {
+- (nonnull instancetype)initWithSdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry
+                                   instanceId:(nullable NSString *)instanceId
+{
     self = [super init];
 
+    _instanceId = [instanceId copy];
+
     _logPublisher = [[ADJLogPublisher alloc] init];
+    [pubRegistry addPublisher:_logPublisher];
     
     _logMessageDataArray = [NSMutableArray array];
     
@@ -86,13 +91,6 @@
 - (nonnull ADJLogger *)createLoggerWithSource:(nonnull NSString *)source {
     return [[ADJLogger alloc] initWithSource:source
                                 logCollector:self];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                            publishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
-    [sdkInitPublisher addSubscriber:self];
-    [publishingGatePublisher addSubscriber:self];
 }
 
 #pragma mark - ADJSdkInitStateSubscriber

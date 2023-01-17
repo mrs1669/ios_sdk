@@ -9,15 +9,21 @@
 #import "ADJV4RestMigration.h"
 
 #import "ADJAdjust.h"
+#import "ADJAdjustInstance.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustPushToken.h"
 
+@interface ADJV4RestMigration ()
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
+@end
+
 @implementation ADJV4RestMigration
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                                   instanceId:(nonnull NSString *)instanceId {
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"ADJV4RestMigration"];
-
+    _instanceId = [instanceId copy];
     return self;
 }
 
@@ -39,10 +45,8 @@
         return;
     }
 
-    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
-        [[ADJAdjustLaunchedDeeplink alloc] initWithUrl:v4DeeplinkUrl];
-
-    [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
+    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithUrl:v4DeeplinkUrl];
+    [[ADJAdjust instanceForId:self.instanceId] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)migrateV4PushTokenWithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
@@ -53,9 +57,8 @@
 
         if (v4ActivityState.deviceToken != nil) {
             [self.logger debugDev:@"Push token found in v4 Activity state"];
-            ADJAdjustPushToken *_Nonnull adjustPushToken =
-                [[ADJAdjustPushToken alloc] initWithStringPushToken:v4ActivityState.deviceToken];
-            [ADJAdjust trackPushToken:adjustPushToken];
+            ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:v4ActivityState.deviceToken];
+            [[ADJAdjust instanceForId:self.instanceId] trackPushToken:adjustPushToken];
             return;
         }
 
@@ -67,9 +70,8 @@
     NSString *_Nullable pushTokenString = v4UserDefaultsData.pushTokenString;
     if (pushTokenString != nil) {
         [self.logger debugDev:@"Push token string found in v4 user defaults"];
-        ADJAdjustPushToken *_Nonnull adjustPushToken =
-            [[ADJAdjustPushToken alloc] initWithStringPushToken:pushTokenString];
-        [ADJAdjust trackPushToken:adjustPushToken];
+        ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:pushTokenString];
+        [[ADJAdjust instanceForId:self.instanceId] trackPushToken:adjustPushToken];
         return;
     }
 
@@ -78,9 +80,8 @@
     NSData *_Nullable pushTokenData = v4UserDefaultsData.pushTokenData;
     if (pushTokenData != nil) {
         [self.logger debugDev:@"Push token data found in v4 user defaults"];
-        ADJAdjustPushToken *_Nonnull adjustPushToken =
-            [[ADJAdjustPushToken alloc] initWithDataPushToken:pushTokenData];
-        [ADJAdjust trackPushToken:adjustPushToken];
+        ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithDataPushToken:pushTokenData];
+        [[ADJAdjust instanceForId:self.instanceId] trackPushToken:adjustPushToken];
         return;
     }
 
