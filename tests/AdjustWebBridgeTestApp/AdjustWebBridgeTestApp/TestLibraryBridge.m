@@ -29,7 +29,6 @@
                                                 andControlUrl:controlUrl
                                            andCommandDelegate:self];
 
-
     [self augmentedHybridWebView:adjustBridge.webView];
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 20 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
@@ -72,8 +71,22 @@
 }
 
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
+
     if ([message.body isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"Called made from Javascript to Native Part");
+
+        NSString *action = [message.body objectForKey:@"action"];
+        NSDictionary *data = [message.body objectForKey:@"data"];
+
+        if ([action isEqual:@"adjustTLB_startTestSession"]) {
+
+            [self startTestSession:(NSString *)data];
+
+        } else if ([action isEqual:@"adjustTLB_sendInfoToServer"]) {
+
+
+        } else if ([action isEqual:@"adjustTLB_addInfoToSend"]) {
+
+        }
     }
 }
 
@@ -98,7 +111,10 @@
 }
 
 - (void)executeCommandRawJson:(NSString *)json {
-    NSLog(@"TestLibraryBridge executeCommandRawJson: %@", json);
+    NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
+    });
 }
 
 @end

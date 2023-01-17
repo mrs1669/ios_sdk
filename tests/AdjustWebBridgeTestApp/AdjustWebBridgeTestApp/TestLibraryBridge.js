@@ -20,20 +20,29 @@ adjustCommandExecutor: function(commandRawJson) {
 
     // reflection based technique to call functions with the same name as the command function
     localAdjustCommandExecutor[command.functionName](command.params);
-
-    window.webkit.messageHandlers.adjustTest.postMessage("message");
-
 },
 
 startTestSession: function () {
     console.log('TestLibraryBridge startTestSession');
     console.log('TestLibraryBridge startTestSession callHandler');
-    window.webkit.messageHandlers.adjustTest.postMessage("message");
+
     localAdjustCommandExecutor = new AdjustCommandExecutor(localBaseUrl, localGdprUrl);
+
+    // pass the sdk version to native side 
+    const message = {
+    action:'adjustTLB_startTestSession',
+    data: 'web-bridge5.0.0@ios5.0.0'
+    };
+    window.webkit.messageHandlers.adjustTest.postMessage(message);
 },
 
 addTestDirectory: function(directoryName) {
-    TestLibraryBridge.addTestDirectory(directoryName);
+    const message = {
+    action:'adjustTLB_addTestDirectory',
+    data: directoryName
+    };
+    window.webkit.messageHandlers.adjustTest.postMessage(directoryName);
+
 },
 
 javaScriptTest: function() {
@@ -41,7 +50,12 @@ javaScriptTest: function() {
 },
 
 addTest: function(testName) {
-    TestLibraryBridge.addTest(testName);
+
+    const message = {
+    action:'adjustTLB_addTest',
+    data: testName
+    };
+    window.webkit.messageHandlers.adjustTest.postMessage(testName);
 }
 
 };
@@ -418,7 +432,7 @@ AdjustCommandExecutor.prototype.start = function(params) {
     }
 
     var adjustConfig = this.savedConfigs[configNumber];
-    Adjust.appDidLaunch(adjustConfig);
+    Adjust.initSDK(adjustConfig);
 
     delete this.savedConfigs[0];
 };
