@@ -207,7 +207,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 }
 
 #pragma mark - ADJSdkActiveSubscriber
-- (void)ccSdkActiveWithStatus:(nonnull NSString *)status {
+- (void)ccSdkActiveWithStatus:(nonnull ADJSdkActiveStatus)status {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;

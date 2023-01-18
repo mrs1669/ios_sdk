@@ -4349,10 +4349,10 @@
 		0A67F200291E6AF700AC684A /* active */ = {
 			isa = PBXGroup;
 			children = (
+				0737C21C287F3F32004C7D59 /* ADJSdkActiveSubscriber.h */,
 				0A67F201291E6B1800AC684A /* domain */,
 				0A67F202291E6B4700AC684A /* ADJSdkActiveController.h */,
 				0A67F203291E6B4700AC684A /* ADJSdkActiveController.m */,
-				0737C21C287F3F32004C7D59 /* ADJSdkActiveSubscriber.h */,
 				0737C21E287F3F32004C7D59 /* ADJSdkActiveStateStorage.h */,
 				0737C21A287F3F31004C7D59 /* ADJSdkActiveStateStorage.m */,
 			);

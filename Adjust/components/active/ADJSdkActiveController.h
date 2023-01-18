@@ -13,28 +13,30 @@
 #import "ADJSdkActiveStateStorage.h"
 #import "ADJPublisherController.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ADJSdkActiveController : ADJCommonBase <
+@interface ADJSdkActiveController : ADJCommonBase<
     // subscriptions
     ADJPublishingGateSubscriber,
     ADJGdprForgetSubscriber
 >
-
-- (instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                   activeStateStorage:(ADJSdkActiveStateStorage *)activeStateStorage
-                       clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                          isForgotten:(BOOL)isForgotten
-                  publisherController:(nonnull ADJPublisherController *)publisherController;
+// instantiation
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    activeStateStorage:(nonnull ADJSdkActiveStateStorage *)activeStateStorage
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    isForgotten:(BOOL)isForgotten
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
+// public api
 - (BOOL)ccTrySdkInit;
-- (BOOL)ccCanPerformActionWithSource:(nonnull NSString *)source
-                        errorMessage:(NSString * _Nullable * _Nullable)errorMessage;
+
+- (BOOL)ccCanPerformActionWithClientSource:(nonnull NSString *)clientSource;
+- (nullable NSString *)ccCanPerformActionOrElseMessageWithClientSource:
+    (nonnull NSString *)clientSource;
+
 - (void)ccInactivateSdk;
 - (void)ccReactivateSdk;
+
 - (BOOL)ccGdprForgetDevice;
 
 @end
-
-NS_ASSUME_NONNULL_END

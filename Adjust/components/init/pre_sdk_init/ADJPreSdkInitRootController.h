@@ -45,11 +45,11 @@
     publisherController:(nonnull ADJPublisherController *)publisherController;
 
 - (void)
-    setDependenciesWithPackageBuilder:(ADJSdkPackageBuilder *)sdkPackageBuilder
-    clock:(ADJClock *)clock
-    loggerFactory:(id<ADJLoggerFactory>)loggerFactory
+    setDependenciesWithPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    clock:(nonnull ADJClock *)clock
+    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    sdkPackageSenderFactory:(id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
 - (void)subscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
 

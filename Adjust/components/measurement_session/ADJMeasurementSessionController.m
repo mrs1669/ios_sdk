@@ -103,7 +103,7 @@
 }
 
 #pragma mark - ADJSdkActiveSubscriber
-- (void)ccSdkActiveWithStatus:(nonnull NSString *)status {
+- (void)ccSdkActiveWithStatus:(nonnull ADJSdkActiveStatus)status {
     [self.logger debugDev:@"Handling ccSdkActiveState with"
                       key:@"status"
                     value:status];

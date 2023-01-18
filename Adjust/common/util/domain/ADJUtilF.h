@@ -35,6 +35,9 @@
 
 + (nonnull NSString *)dateTimestampFormat:(nonnull ADJTimestampMilli *)timestamp;
 
++ (nonnull NSString *)logMessageAndParamsFormat:
+    (nonnull ADJInputLogMessageData *)inputLogMessageData;
+
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex;
 

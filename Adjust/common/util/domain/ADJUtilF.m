@@ -206,6 +206,18 @@
               timestamp.millisecondsSince1970Int.uIntegerValue]]];
 }
 
++ (nonnull NSString *)logMessageAndParamsFormat:
+    (nonnull ADJInputLogMessageData *)inputLogMessageData
+{
+    if (inputLogMessageData.messageParams == nil) {
+        return inputLogMessageData.message;
+    }
+
+    return [NSString stringWithFormat:@"%@ %@", inputLogMessageData.message,
+            [ADJLogMessageData generateJsonFromFoundationDictionary:
+             inputLogMessageData.messageParams]];
+}
+
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex {
     return [regex matchesInString:stringValue

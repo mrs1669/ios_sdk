@@ -218,7 +218,6 @@
 }
 
 - (void)switchToOfflineMode {
-
      __typeof(self) __weak weakSelf = self;
      [self.clientExecutor executeInSequenceWithBlock:^{
          __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -226,21 +225,15 @@
              return;
          }
 
-         NSString *errMsg = nil;
-         if (! [strongSelf.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:@"switchToOfflineMode"
-                                                                                        errorMessage:&errMsg]) {
-             if (errMsg != nil && errMsg.length > 0) {
-                 [strongSelf.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
-             }
-             return;
+         if ([strongSelf.preSdkInitRootController.sdkActiveController
+             ccCanPerformActionWithClientSource:@"switchToOfflineMode"])
+         {
+             [strongSelf.preSdkInitRootController.offlineController ccPutSdkOffline];
          }
-
-         [strongSelf.preSdkInitRootController.offlineController ccPutSdkOffline];
      } source:@"switchToOfflineMode"];
  }
 
  - (void)switchBackToOnlineMode {
-
      __typeof(self) __weak weakSelf = self;
      [self.clientExecutor executeInSequenceWithBlock:^{
          __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -248,19 +241,13 @@
              return;
          }
 
-         NSString *errMsg = nil;
-         if (! [strongSelf.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:@"switchBackToOnlineMode"
-                                                                                        errorMessage:&errMsg]) {
-             if (errMsg != nil && errMsg.length > 0) {
-                 [strongSelf.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
-             }
-             return;
+         if ([strongSelf.preSdkInitRootController.sdkActiveController
+             ccCanPerformActionWithClientSource:@"switchBackToOnlineMode"])
+         {
+             [strongSelf.preSdkInitRootController.offlineController ccPutSdkOnline];
          }
-
-         [strongSelf.preSdkInitRootController.offlineController ccPutSdkOnline];
      } source:@"switchBackToOnlineMode"];
  }
-
 
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
 
@@ -639,15 +626,13 @@
 
 - (nullable id<ADJClientActionsAPI>)clientActionsApiForInstanceRoot:(ADJInstanceRoot *)instanceRoot
                                                        actionSource:(NSString *)source {
-    NSString *errMsg = nil;
-    if (! [instanceRoot.preSdkInitRootController.sdkActiveController ccCanPerformActionWithSource:source
-                                                                                     errorMessage:&errMsg]) {
-        if (errMsg != nil && errMsg.length > 0) {
-            [instanceRoot.adjustApiLogger errorClient:[NSString stringWithFormat:@"%@", errMsg]];
-        }
-        return nil;
+    if ([instanceRoot.preSdkInitRootController.sdkActiveController
+         ccCanPerformActionWithClientSource:source])
+    {
+        return [instanceRoot.postSdkInitRootController sdkStartClientActionAPI] ? : instanceRoot.preSdkInitRootController.clientActionController;
     }
-    return [instanceRoot.postSdkInitRootController sdkStartClientActionAPI] ? : instanceRoot.preSdkInitRootController.clientActionController;
+
+    return nil;
 }
 
 @end

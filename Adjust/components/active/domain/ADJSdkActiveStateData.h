@@ -35,6 +35,4 @@ NS_ASSUME_NONNULL_END
 // public properties
 @property (nonatomic, assign) BOOL isSdkActive;
 
-// public api
-
 @end
