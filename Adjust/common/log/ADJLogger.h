@@ -25,6 +25,7 @@ NS_DESIGNATED_INITIALIZER;
                             runningThreadId:(nonnull NSString *)runningThreadId
                           callerDescription:(nonnull NSString *)callerDescription;
 
+// debug dev without issue
 - (void)debugDev:(nonnull NSString *)message;
 - (void)debugDev:(nonnull NSString *)message
             from:(nonnull NSString *)from;
@@ -43,6 +44,7 @@ NS_DESIGNATED_INITIALIZER;
 - (void)debugDev:(nonnull NSString *)message
    messageParams:(nonnull NSDictionary<NSString *, id> *)messageParams;
 
+// debug dev with issue
 - (void)debugDev:(nonnull NSString *)message
        issueType:(nonnull ADJIssue)issueType;
 - (void)debugDev:(nonnull NSString *)message
@@ -72,6 +74,7 @@ NS_DESIGNATED_INITIALIZER;
    messageParams:(nonnull NSDictionary<NSString *, id> *)messageParams
        issueType:(nonnull ADJIssue)issueType;
 
+// info client
 - (void)infoClient:(nonnull NSString *)message;
 - (void)infoClient:(nonnull NSString *)message
                key:(nonnull NSString *)key
@@ -82,11 +85,15 @@ NS_DESIGNATED_INITIALIZER;
               key2:(nonnull NSString *)key2
             value2:(nullable NSString *)value2;
 
+// notice client
 - (void)noticeClient:(nonnull NSString *)message;
 - (void)noticeClient:(nonnull NSString *)message
                  key:(nonnull NSString *)key
                value:(nullable NSString *)value;
+- (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
+                                            from:(nonnull NSString *)from;
 
+// error client
 - (void)errorClient:(nonnull NSString *)message;
 - (void)errorClient:(nonnull NSString *)message
             nserror:(nullable NSError *)nserror;
@@ -96,6 +103,8 @@ NS_DESIGNATED_INITIALIZER;
 - (void)errorClient:(nonnull NSString *)message
       expectedValue:(nonnull NSString *)expectedValue
         actualValue:(nullable NSString *)actualValue;
+- (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
+                                           from:(nonnull NSString *)from;
 
 - (void)logWithInput:(nonnull ADJInputLogMessageData *)inputLogMessageData;
 
