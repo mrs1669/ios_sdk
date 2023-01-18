@@ -18,14 +18,24 @@ adjustCommandExecutor: function(commandRawJson) {
     console.log('functionName: ' + command.functionName);
     console.log('params: ' + JSON.stringify(command.params));
 
-//    if (command.className == 'TestOptions') {
-//        if (command.functionName != "teardown") {
-//            console.log('TestLibraryBridge TestOption only method should be teardown');
-//            return;
-//        }
-//    }
+    if (command.className == 'TestOptions') {
+        if (command.functionName != "teardown") {
+            console.log('TestLibraryBridge TestOption only method should be teardown');
+            return;
+        }
+
+        //this.testOptions(command.params);
+
+        //return;
+    }
     // reflection based technique to call functions with the same name as the command function
     localAdjustCommandExecutor[command.functionName](command.params);
+},
+
+teardownReturnExtraPath: function(extraPath) {
+    this.extraPath = extraPath;
+    // TODO - pending implementatio
+    // Adjust.teardown;
 },
 
 startTestSession: function () {
@@ -35,7 +45,7 @@ startTestSession: function () {
     // pass the sdk version to native side
     const message = {
     action:'adjustTLB_startTestSession',
-    data: 'web-bridge5.0.0@ios5.0.0'
+    data: 'ios5.0.0'
     };
     window.webkit.messageHandlers.adjustTest.postMessage(message);
 },
@@ -54,7 +64,7 @@ addTest: function(testName) {
     data: testName
     };
     window.webkit.messageHandlers.adjustTest.postMessage(message);
-}
+},
 };
 
 var AdjustCommandExecutor = function(baseUrl, gdprUrl) {
@@ -67,104 +77,26 @@ var AdjustCommandExecutor = function(baseUrl, gdprUrl) {
     this.nextToSendCounter = 0;
 };
 
-AdjustCommandExecutor.prototype.testOptions = function(params) {
-    console.log('TestLibraryBridge testOptions');
+AdjustCommandExecutor.prototype.teardown = function(params) {
+    console.log('TestLibraryBridge teardown');
     console.log('params: ' + JSON.stringify(params));
 
-    var TestOptions = function() {
-        this.baseUrl = null;
-        this.gdprUrl = null;
-        this.extraPath = null;
-        this.timerIntervalInMilliseconds = null;
-        this.timerStartInMilliseconds = null;
-        this.sessionIntervalInMilliseconds = null;
-        this.subsessionIntervalInMilliseconds = null;
-        this.teardown = null;
-        this.deleteState = null;
-        this.noBackoffWait = null;
-        this.iAdFrameworkEnabled = null;
-        this.adServicesFrameworkEnabled = null;
-    };
-
-    var testOptions = new TestOptions();
-    testOptions.baseUrl = this.baseUrl;
-    testOptions.gdprUrl = this.gdprUrl;
-
-    if ('basePath' in params) {
-        this.extraPath = getFirstValue(params, 'basePath');
-    }
-    if ('timerInterval' in params) {
-        testOptions.timerIntervalInMilliseconds = getFirstValue(params, 'timerInterval');
-    }
-    if ('timerStart' in params) {
-        testOptions.timerStartInMilliseconds = getFirstValue(params, 'timerStart');
-    }
-    if ('sessionInterval' in params) {
-        testOptions.sessionIntervalInMilliseconds = getFirstValue(params, 'sessionInterval');
-    }
-    if ('subsessionInterval' in params) {
-        testOptions.subsessionIntervalInMilliseconds = getFirstValue(params, 'subsessionInterval');
-    }
-    if ('noBackoffWait' in params) {
-        var noBackoffWait = getFirstValue(params, 'noBackoffWait');
-        testOptions.noBackoffWait = noBackoffWait == 'true';
-    }
-    // iAd will not be used in test app by default
-    testOptions.iAdFrameworkEnabled = false;
-    if ('iAdFrameworkEnabled' in params) {
-        var iAdFrameworkEnabled = getFirstValue(params, 'iAdFrameworkEnabled');
-        testOptions.iAdFrameworkEnabled = iAdFrameworkEnabled == 'true';
-    }
-    // AdServices will not be used in test app by default
-    testOptions.adServicesFrameworkEnabled = false;
-    if ('adServicesFrameworkEnabled' in params) {
-        var adServicesFrameworkEnabled = getFirstValue(params, 'adServicesFrameworkEnabled');
-        testOptions.adServicesFrameworkEnabled = adServicesFrameworkEnabled == 'true';
-    }
-    if ('teardown' in params) {
-        console.log('TestLibraryBridge hasOwnProperty teardown: ' + params['teardown']);
-
-        var teardownOptions = params['teardown'];
-        var teardownOptionsLength = teardownOptions.length;
-
-        for (var i = 0; i < teardownOptionsLength; i++) {
-            let teardownOption = teardownOptions[i];
-            console.log('TestLibraryBridge teardown option nr ' + i + ' with value: ' + teardownOption);
-            switch(teardownOption) {
-                case 'resetSdk':
-                    testOptions.teardown = true;
-                    testOptions.extraPath = this.extraPath;
-                    break;
-                case 'deleteState':
-                    testOptions.deleteState = true;
-                    break;
-                case 'resetTest':
-                    // TODO: reset configs
-                    // TODO: reset events
-                    testOptions.timerIntervalInMilliseconds = -1;
-                    testOptions.timerStartInMilliseconds = -1;
-                    testOptions.sessionIntervalInMilliseconds = -1;
-                    testOptions.subsessionIntervalInMilliseconds = -1;
-                    break;
-                case 'sdk':
-                    testOptions.teardown = true;
-                    testOptions.extraPath = null;
-                    break;
-                case 'test':
-                    // TODO: null configs
-                    // TODO: null events
-                    // TODO: null delegate
-                    this.extraPath = null;
-                    testOptions.timerIntervalInMilliseconds = -1;
-                    testOptions.timerStartInMilliseconds = -1;
-                    testOptions.sessionIntervalInMilliseconds = -1;
-                    testOptions.subsessionIntervalInMilliseconds = -1;
-                    break;
-            }
+    for (key in params) {
+        for (var i = 0; i < params[key].length; i += 1) {
+            value = params[key][i];
+            // send to test options to native side
+            const message = {
+            action:'adjustTLB_addToTestOptionsSet',
+            data: {key: key, value: value}
+            };
+            window.webkit.messageHandlers.adjustTest.postMessage(message);
         }
     }
 
-//    Adjust.teardown(testOptions);
+    const message = {
+    action:'adjustTLB_teardownAndApplyAddedTestOptionsSet'
+    };
+    window.webkit.messageHandlers.adjustTest.postMessage(message);
 };
 
 AdjustCommandExecutor.prototype.config = function(params) {
@@ -488,10 +420,10 @@ AdjustCommandExecutor.prototype.event = function(params) {
         }
     }
 
-    if ('orderId' in params) {
-        var orderId = getFirstValue(params, 'orderId');
-        adjustEvent.setTransactionId(orderId);
-    }
+//    if ('orderId' in params) {
+//        var orderId = getFirstValue(params, 'orderId');
+//        adjustEvent.setTransactionId(orderId);
+//    }
 
     if ('callbackId' in params) {
         var callbackId = getFirstValue(params, 'callbackId');

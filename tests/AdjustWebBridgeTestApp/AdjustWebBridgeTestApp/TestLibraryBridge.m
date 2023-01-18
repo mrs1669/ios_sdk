@@ -7,17 +7,17 @@
 //
 
 #import "TestLibraryBridge.h"
+#import "ATOAdjustTestOptions.h"
 
 @interface TestLibraryBridge ()
 
-//@property WVJBResponseCallback commandExecutorCallback;
 @property (nonatomic, strong) ATLTestLibrary *testLibrary;
 @property (nonatomic, weak) WKWebView *webView;
 @property (nonatomic, weak) ADJAdjustBridge *adjustBridge;
 
 @end
 
-@implementation TestLibraryBridge 
+@implementation TestLibraryBridge
 
 - (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridge {
     self = [super init];
@@ -56,9 +56,9 @@
 }
 
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
-    
+
     if ([message.body isKindOfClass:[NSDictionary class]]) {
-        
+
         NSString *action = [message.body objectForKey:@"action"];
         NSDictionary *data = [message.body objectForKey:@"data"];
 
@@ -79,10 +79,20 @@
         } else if ([action isEqual:@"adjustTLB_addTest"]) {
 
             [self addTest:(NSString *)data];
-            
+
         } else if ([action isEqual:@"adjustTLB_addTestDirectory"]) {
 
             [self addTestDirectory:(NSString *)data];
+
+        } else if ([action isEqual:@"adjustTLB_addToTestOptionsSet"]) {
+
+            NSString *key = [data objectForKey:@"key"];
+            NSString *value = [data objectForKey:@"value"];
+            [self addToTestOptionsSet:key andValue:value];
+
+        } else if ([action isEqual:@"adjustTLB_teardownAndApplyAddedTestOptionsSet"]) {
+
+            [self teardownAndApplyAddedTestOptionsSet];
         }
     }
 }
@@ -108,10 +118,16 @@
 }
 
 - (void)teardownAndApplyAddedTestOptionsSet {
-    NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownAndApplyAddedTestOptionsSet('%@')", baseUrl];
+    NSString *extraPath = [ATOAdjustTestOptions teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:baseUrl];
+    NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')", extraPath];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
-    });}
+    });
+}
+
+- (void)addToTestOptionsSet:(NSString *)key andValue:(NSString *)value {
+    [ATOAdjustTestOptions addToOptionsSetWithKey:key value:value];
+}
 
 - (void)executeCommandRawJson:(NSString *)json {
     NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];
@@ -121,3 +137,4 @@
 }
 
 @end
+
