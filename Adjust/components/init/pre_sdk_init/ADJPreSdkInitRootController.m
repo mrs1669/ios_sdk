@@ -20,7 +20,8 @@
  @property (nonnull, readonly, strong, nonatomic) ADJOfflineController *offlineController;
  @property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
  @property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
- */
+ @property (nonnull, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
+*/
 
 @implementation ADJPreSdkInitRootController
 #pragma mark Instantiation
@@ -70,14 +71,11 @@
                          keychainStorage:_storageRootController.keychainStorage
                          deviceIdsConfigData:sdkConfigData.sessionDeviceIdsConfigData];
 
-    id<ADJClientReturnExecutor> clentReturnExecutor =
+    _clientReturnExecutor =
         (sdkConfigData.clientReturnExecutorOverwrite) ? : threadController;
+
     _clientCallbacksController = [[ADJClientCallbacksController alloc]
-                                  initWithLoggerFactory:loggerFactory
-                                  attributionStateStorage:
-                                      _storageRootController.attributionStateStorage
-                                  clientReturnExecutor:clentReturnExecutor
-                                  deviceController:_deviceController];
+                                  initWithLoggerFactory:loggerFactory];
 
     _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
 

@@ -6,12 +6,12 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
+#import "ADJAdjustCallback.h"
+
 @class ADJAdjustAttribution;
 
-@protocol ADJAdjustAttributionCallback <NSObject>
+@protocol ADJAdjustAttributionCallback <ADJAdjustCallback>
 
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution;
-
-- (void)unableToReadAdjustAttributionWithMessage:(nonnull NSString *)message;
 
 @end

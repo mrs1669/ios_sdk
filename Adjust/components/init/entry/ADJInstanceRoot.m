@@ -142,20 +142,18 @@
             return;
         }
 
-        id<ADJClientReturnExecutor> clentReturnExecutor =
-        (strongSelf.sdkConfigData.clientReturnExecutorOverwrite) ? : strongSelf.threadController;
-
         strongSelf.postSdkInitRootController =
-        [[ADJPostSdkInitRootController alloc] initWithLoggerFactory:strongSelf.logController
-                                                      threadFactory:strongSelf.threadController
-                                                     clientExecutor:strongSelf.clientExecutor
-                                               clientReturnExecutor:clentReturnExecutor
-                                              storageRootController:strongSelf.preSdkInitRootController.storageRootController
-                                                   deviceController:strongSelf.preSdkInitRootController.deviceController
-                                                   clientConfigData:clientConfigData
-                                                      sdkConfigData:strongSelf.sdkConfigData
-                                                              clock:strongSelf.clock
-                                                 publisherController:strongSelf.publisherController];
+            [[ADJPostSdkInitRootController alloc]
+             initWithLoggerFactory:strongSelf.logController
+             threadFactory:strongSelf.threadController
+             clientExecutor:strongSelf.clientExecutor
+             clientReturnExecutor:strongSelf.preSdkInitRootController.clientReturnExecutor
+             storageRootController:strongSelf.preSdkInitRootController.storageRootController
+             deviceController:strongSelf.preSdkInitRootController.deviceController
+             clientConfigData:clientConfigData
+             sdkConfigData:strongSelf.sdkConfigData
+             clock:strongSelf.clock
+             publisherController:strongSelf.publisherController];
 
         // Inject remaining dependencies before subscribing to publishers
         // 1. Self (InstanceRoot) dependencies - subscribe to publishers
@@ -230,39 +228,27 @@
  }
 
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        if (adjustDeviceIdsCallback == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot get Adjust Device Ids with nil callback"];
-            return;
-        }
-
-        [strongSelf.preSdkInitRootController.clientCallbacksController ccDeviceIdsWithCallback:adjustDeviceIdsCallback];
-    } source:@"deviceIdsWithCallback"];
+    [self ccWithAdjustCallback:adjustDeviceIdsCallback
+                      preBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot)
+     {
+        [preSdkInitRoot.clientCallbacksController
+         ccDeviceIdsWithCallback:adjustDeviceIdsCallback
+         clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
+         deviceController:preSdkInitRoot.deviceController];
+    } clientSource:@"deviceIdsWithCallback"];
 }
 
-- (void)adjustAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback {
-
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        if (adjustAttributionCallback == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot get Adjust Attribution with nil callback"];
-            return;
-        }
-
-        [strongSelf.preSdkInitRootController.clientCallbacksController ccAttributionWithCallback:adjustAttributionCallback];
-    } source:@"adjustAttributionWithCallback"];
+- (void)adjustAttributionWithCallback:
+    (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
+{
+    [self ccWithAdjustCallback:adjustAttributionCallback
+                      preBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot)
+     {
+        [preSdkInitRoot.clientCallbacksController
+         ccAttributionWithCallback:adjustAttributionCallback
+         clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
+         attributionStateStorage:preSdkInitRoot.storageRootController.attributionStateStorage];
+    } clientSource:@"adjustAttributionWithCallback"];
 }
 
 - (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
@@ -610,11 +596,11 @@
         (void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
     clientSource:(nonnull NSString *)clientSource
 {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRootInner) {
-        if ([preSdkInitRootInner.sdkActiveController
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+        if ([preSdkInitRoot.sdkActiveController
              ccCanPerformActionWithClientSource:clientSource])
         {
-            preBlock(preSdkInitRootInner);
+            preBlock(preSdkInitRoot);
         }
     } source:clientSource];
 }
@@ -629,6 +615,35 @@
     }
 
     return nil;
+}
+
+
+- (void)
+    ccWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
+    preBlock:(void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
+    clientSource:(nonnull NSString *)clientSource
+{
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+        if (adjustCallback == nil) {
+            [preSdkInitRoot.logger errorClient:@"Cannot use invalid callback"
+                                               from:clientSource];
+            return;
+        }
+
+        NSString *_Nullable cannotPerformMessage =
+            [preSdkInitRoot.sdkActiveController
+             ccCanPerformActionOrElseMessageWithClientSource:clientSource];
+
+        if (cannotPerformMessage != nil) {
+            [preSdkInitRoot.clientCallbacksController
+             failWithAdjustCallback:adjustCallback
+             clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
+             cannotPerformMessage:cannotPerformMessage];
+            return;
+        }
+
+        preBlock(preSdkInitRoot);
+    } source:clientSource];
 }
 
 @end

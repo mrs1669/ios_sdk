@@ -14,7 +14,6 @@
 
 #pragma mark Private class
 @interface ADJThreadExecutorAggregator : ADJPublisherBase<ADJSingleThreadExecutor *> @end
-
 @implementation ADJThreadExecutorAggregator @end
 
 #pragma mark Fields

@@ -34,6 +34,7 @@
 @property (nonnull, readonly, strong, nonatomic) ADJOfflineController *offlineController;
 @property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
 @property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
+@property (nonnull, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
 
 - (nonnull instancetype)
     initWithInstanceId:(nonnull NSString *)instanceId

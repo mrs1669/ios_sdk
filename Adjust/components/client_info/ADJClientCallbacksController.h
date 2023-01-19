@@ -15,14 +15,21 @@
 
 @interface ADJClientCallbacksController : ADJCommonBase
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                      attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
-                         clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-                             deviceController:(nonnull ADJDeviceController *)deviceController;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
 
 // public api
-- (void)ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;
+- (void)failWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
+          clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+          cannotPerformMessage:(nonnull NSString *)cannotPerformMessage;
 
-- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
+- (void)
+    ccAttributionWithCallback:
+        (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage;
+
+- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
+           clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+               deviceController:(nonnull ADJDeviceController *)deviceController;
 
 @end
