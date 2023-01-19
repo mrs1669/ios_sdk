@@ -185,19 +185,19 @@
 
 
 - (void)inactivateSdk {
-    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.sdkActiveController ccInactivateSdk];
     } source:@"inactivateSdk"];
 }
 
 - (void)reactivateSdk {
-    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.sdkActiveController ccReactivateSdk];
     } source:@"reactivateSdk"];
 }
 
 - (void)gdprForgetDevice {
-    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
         BOOL updatedForgottenStatus = [preSdkInitRoot.sdkActiveController ccGdprForgetDevice];
         if (! updatedForgottenStatus) { return; }
 
@@ -206,47 +206,27 @@
 }
 
 - (void)appWentToTheForegroundManualCall {
-    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.lifecycleController ccForeground];
     } source:@"appWentToTheForegroundManualCall"];
 }
 
 - (void)appWentToTheBackgroundManualCall {
-    [self ccExecuteWithPre:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.lifecycleController ccForeground];
     } source:@"appWentToTheBackgroundManualCall"];
 }
 
 - (void)switchToOfflineMode {
-     __typeof(self) __weak weakSelf = self;
-     [self.clientExecutor executeInSequenceWithBlock:^{
-         __typeof(weakSelf) __strong strongSelf = weakSelf;
-         if (strongSelf == nil) {
-             return;
-         }
-
-         if ([strongSelf.preSdkInitRootController.sdkActiveController
-             ccCanPerformActionWithClientSource:@"switchToOfflineMode"])
-         {
-             [strongSelf.preSdkInitRootController.offlineController ccPutSdkOffline];
-         }
-     } source:@"switchToOfflineMode"];
- }
+    [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+        [preSdkInitRoot.offlineController ccPutSdkOffline];
+    } clientSource:@"switchToOfflineMode"];
+}
 
  - (void)switchBackToOnlineMode {
-     __typeof(self) __weak weakSelf = self;
-     [self.clientExecutor executeInSequenceWithBlock:^{
-         __typeof(weakSelf) __strong strongSelf = weakSelf;
-         if (strongSelf == nil) {
-             return;
-         }
-
-         if ([strongSelf.preSdkInitRootController.sdkActiveController
-             ccCanPerformActionWithClientSource:@"switchBackToOnlineMode"])
-         {
-             [strongSelf.preSdkInitRootController.offlineController ccPutSdkOnline];
-         }
-     } source:@"switchBackToOnlineMode"];
+     [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+         [preSdkInitRoot.offlineController ccPutSdkOffline];
+     } clientSource:@"switchBackToOnlineMode"];
  }
 
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
@@ -604,7 +584,8 @@
 
 #pragma mark Internal methods
 - (void)
-    ccExecuteWithPre:(void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))block
+    ccExecuteWithPreBlock:
+        (void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
     source:(nonnull NSString *)source
 {
     __typeof(self) __weak weakSelf = self;
@@ -620,9 +601,24 @@
                                        issueType:ADJIssueLogicError];
             return;
         }
-        block(preSdkInitRootLocal);
+        preBlock(preSdkInitRootLocal);
     } source:source];
 }
+
+- (void)
+    ccWhenActiveWithPreBlock:
+        (void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
+    clientSource:(nonnull NSString *)clientSource
+{
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRootInner) {
+        if ([preSdkInitRootInner.sdkActiveController
+             ccCanPerformActionWithClientSource:clientSource])
+        {
+            preBlock(preSdkInitRootInner);
+        }
+    } source:clientSource];
+}
+
 
 - (nullable id<ADJClientActionsAPI>)clientActionsApiForInstanceRoot:(ADJInstanceRoot *)instanceRoot
                                                        actionSource:(NSString *)source {
