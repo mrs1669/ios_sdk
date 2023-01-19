@@ -252,320 +252,164 @@
 }
 
 - (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientEventData *_Nullable clientData =
+            [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
+                                                           logger:logger];
+        if (clientData == nil) { return; }
 
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI = [self clientActionsApiForInstanceRoot:strongSelf
-                                                                                      actionSource:@"trackEvent"];
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientEventData *_Nullable clientEventData =
-        [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
-                                                       logger:strongSelf.adjustApiLogger];
-
-        if (clientEventData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Event"];
-            return;
-        }
-        [clientActionsAPI ccTrackEventWithClientData:clientEventData];
-    } source:@"trackEvent"];
+        [clientActionsAPI ccTrackEventWithClientData:clientData];
+    } clientSource:@"trackEvent"];
 }
 
 - (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientLaunchedDeeplinkData *_Nullable clientData =
+            [ADJClientLaunchedDeeplinkData
+             instanceFromClientWithAdjustLaunchedDeeplink:adjustLaunchedDeeplink
+             logger:logger];
+        if (clientData == nil) { return; }
 
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackLaunchedDeeplink"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientLaunchedDeeplinkData *_Nullable clientLaunchedDeeplinkData =
-        [ADJClientLaunchedDeeplinkData instanceFromClientWithAdjustLaunchedDeeplink:adjustLaunchedDeeplink
-                                                                             logger:strongSelf.adjustApiLogger];
-
-        if (clientLaunchedDeeplinkData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Deep Link"];
-            return;
-        }
-        [clientActionsAPI ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData];
-    } source:@"trackLaunchedDeeplink"];
+        [clientActionsAPI ccTrackLaunchedDeeplinkWithClientData:clientData];
+    } clientSource:@"trackLaunchedDeeplink"];
 }
 
 - (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientPushTokenData *_Nullable clientData =
+            [ADJClientPushTokenData
+             instanceFromClientWithAdjustPushToken:adjustPushToken
+             logger:logger];
+        if (clientData == nil) { return; }
 
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackPushToken"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientPushTokenData *_Nullable clientPushTokenData =
-        [ADJClientPushTokenData instanceFromClientWithAdjustPushToken:adjustPushToken
-                                                               logger:strongSelf.adjustApiLogger];
-
-        if (clientPushTokenData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Push Token"];
-            return;
-        }
-        [clientActionsAPI ccTrackPushTokenWithClientData:clientPushTokenData];
-    } source:@"trackPushToken"];
+        [clientActionsAPI ccTrackPushTokenWithClientData:clientData];
+    } clientSource:@"trackPushToken"];
 }
 
 - (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientThirdPartySharingData *_Nullable clientData =
+            [ADJClientThirdPartySharingData
+             instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
+             logger:logger];
+        if (clientData == nil) { return; }
 
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackThirdPartySharing"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientThirdPartySharingData *_Nullable clientThirdPartySharingData =
-        [ADJClientThirdPartySharingData instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
-                                                                               logger:strongSelf.adjustApiLogger];
-        if (clientThirdPartySharingData == nil) {
-            return;
-        }
-        [clientActionsAPI ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
-    } source:@"trackThirdPartySharing"];
+        [clientActionsAPI ccTrackThirdPartySharingWithClientData:clientData];
+    } clientSource:@"trackThirdPartySharing"];
 }
 
 - (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientAdRevenueData *_Nullable clientData =
+            [ADJClientAdRevenueData
+             instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
+             logger:logger];
+        if (clientData == nil) { return; }
 
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackAdRevenue"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientAdRevenueData *_Nullable clientAdRevenueData =
-        [ADJClientAdRevenueData instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
-                                                               logger:strongSelf.adjustApiLogger];
-
-        if (clientAdRevenueData == nil) {
-            [strongSelf.adjustApiLogger errorClient:@"Cannot track invalid Ad Revenue Event"];
-            return;
-        }
-        [clientActionsAPI ccTrackAdRevenueWithClientData:clientAdRevenueData];
-    } source:@"trackAdRevenue"];
+        [clientActionsAPI ccTrackAdRevenueWithClientData:clientData];
+    } clientSource:@"trackAdRevenue"];
 }
 
 - (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientBillingSubscriptionData *_Nullable clientData =
+            [ADJClientBillingSubscriptionData
+             instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
+             logger:logger];
+        if (clientData == nil) { return; }
 
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"trackBillingSubscription"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientBillingSubscriptionData *_Nullable clientBillingSubscriptionData =
-        [ADJClientBillingSubscriptionData instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
-                                                                                   logger:strongSelf.adjustApiLogger];
-        if (clientBillingSubscriptionData == nil) {
-            return;
-        }
-        [clientActionsAPI ccTrackBillingSubscriptionWithClientData:clientBillingSubscriptionData];
-    } source:@"trackBillingSubscription"];
+        [clientActionsAPI ccTrackBillingSubscriptionWithClientData:clientData];
+    } clientSource:@"trackBillingSubscription"];
 }
 
 - (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key value:(nonnull NSString *)value {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientAddGlobalParameterData *_Nullable clientData =
+            [ADJClientAddGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToAdd:key
+             valueToAdd:value
+             logger:logger];
+        if (clientData == nil) { return; }
 
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
-
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"addGlobalCallbackParameter"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
-        [ADJClientAddGlobalParameterData instanceFromClientWithAdjustConfigWithKeyToAdd:key
-                                                                             valueToAdd:value
-                                                                                 logger:strongSelf.adjustApiLogger];
-        if (clientAddGlobalParameterData == nil) {
-            return;
-        }
-        [clientActionsAPI ccAddGlobalCallbackParameterWithClientData:clientAddGlobalParameterData];
-    } source:@"addGlobalCallbackParameterWithKey"];
+        [clientActionsAPI ccAddGlobalCallbackParameterWithClientData:clientData];
+    } clientSource:@"addGlobalCallbackParameter"];
 }
-
 - (void)removeGlobalCallbackParameterByKey:(nonnull NSString *)key {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientRemoveGlobalParameterData *_Nullable clientData =
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToRemove:key
+             logger:logger];
+        if (clientData == nil) { return; }
 
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"removeGlobalCallbackParameter"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
-        [ADJClientRemoveGlobalParameterData instanceFromClientWithAdjustConfigWithKeyToRemove:key
-                                                                                       logger:strongSelf.adjustApiLogger];
-
-        if (clientRemoveGlobalParameterData == nil) {
-            return;
-        }
-        [clientActionsAPI ccRemoveGlobalCallbackParameterWithClientData:clientRemoveGlobalParameterData];
-    } source:@"removeGlobalCallbackParameterByKey"];
+        [clientActionsAPI ccRemoveGlobalCallbackParameterWithClientData:clientData];
+    } clientSource:@"removeGlobalCallbackParameter"];
 }
-
 - (void)clearAllGlobalCallbackParameters {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientClearGlobalParametersData *_Nonnull clientData =
+            [[ADJClientClearGlobalParametersData alloc] init];
 
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"clearAllGlobalCallbackParameters"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-        ADJClientClearGlobalParametersData *_Nonnull clientClearGlobalParametersData = [[ADJClientClearGlobalParametersData alloc] init];
-        [clientActionsAPI ccClearGlobalCallbackParametersWithClientData:clientClearGlobalParametersData];
-    } source:@"clearAllGlobalCallbackParameters"];
+        [clientActionsAPI ccClearGlobalCallbackParametersWithClientData:clientData];
+    } clientSource:@"clearAllGlobalCallbackParameters"];
 }
 
 - (void)addGlobalPartnerParameterWithKey:(nonnull NSString *)key value:(nonnull NSString *)value {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientAddGlobalParameterData *_Nullable clientData =
+            [ADJClientAddGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToAdd:key
+             valueToAdd:value
+             logger:logger];
+        if (clientData == nil) { return; }
 
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"addGlobalPartnerParameter"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
-        [ADJClientAddGlobalParameterData instanceFromClientWithAdjustConfigWithKeyToAdd:key
-                                                                             valueToAdd:value
-                                                                                 logger:strongSelf.adjustApiLogger];
-        if (clientAddGlobalParameterData == nil) {
-            return;
-        }
-        [clientActionsAPI ccAddGlobalPartnerParameterWithClientData:clientAddGlobalParameterData];
-    } source:@"addGlobalPartnerParameterWithKey"];
+        [clientActionsAPI ccAddGlobalPartnerParameterWithClientData:clientData];
+    } clientSource:@"addGlobalPartnerParameter"];
 }
 
 - (void)removeGlobalPartnerParameterByKey:(nonnull NSString *)key {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientRemoveGlobalParameterData *_Nullable clientData =
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToRemove:key
+             logger:logger];
+        if (clientData == nil) { return; }
 
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"removeGlobalPartnerParameter"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-
-        ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
-        [ADJClientRemoveGlobalParameterData instanceFromClientWithAdjustConfigWithKeyToRemove:key
-                                                                                       logger:strongSelf.adjustApiLogger];
-
-        if (clientRemoveGlobalParameterData == nil) {
-            return;
-        }
-        [clientActionsAPI ccRemoveGlobalPartnerParameterWithClientData:clientRemoveGlobalParameterData];
-    } source:@"removeGlobalPartnerParameterByKey"];
+        [clientActionsAPI ccRemoveGlobalPartnerParameterWithClientData:clientData];
+    } clientSource:@"removeGlobalPartnerParameter"];
 }
 
 - (void)clearAllGlobalPartnerParameters {
-    __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientClearGlobalParametersData *_Nonnull clientData =
+            [[ADJClientClearGlobalParametersData alloc] init];
 
-        id<ADJClientActionsAPI> _Nullable clientActionsAPI =
-        [self clientActionsApiForInstanceRoot:strongSelf
-                                 actionSource:@"clearAllGlobalPartnerParameters"];
-
-        if (! clientActionsAPI) {
-            return;
-        }
-        ADJClientClearGlobalParametersData *_Nonnull clientClearGlobalParametersData = [[ADJClientClearGlobalParametersData alloc] init];
-        [clientActionsAPI ccClearGlobalPartnerParametersWithClientData:clientClearGlobalParametersData];
-    } source:@"clearAllGlobalPartnerParameters"];
+        [clientActionsAPI ccClearGlobalPartnerParametersWithClientData:clientData];
+    } clientSource:@"clearAllGlobalPartnerParameters"];
 }
 
 #pragma mark Internal methods
@@ -605,19 +449,6 @@
     } source:clientSource];
 }
 
-
-- (nullable id<ADJClientActionsAPI>)clientActionsApiForInstanceRoot:(ADJInstanceRoot *)instanceRoot
-                                                       actionSource:(NSString *)source {
-    if ([instanceRoot.preSdkInitRootController.sdkActiveController
-         ccCanPerformActionWithClientSource:source])
-    {
-        return [instanceRoot.postSdkInitRootController sdkStartClientActionAPI] ? : instanceRoot.preSdkInitRootController.clientActionController;
-    }
-
-    return nil;
-}
-
-
 - (void)
     ccWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
     preBlock:(void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
@@ -644,6 +475,22 @@
 
         preBlock(preSdkInitRoot);
     } source:clientSource];
+}
+
+- (void)
+    ccExecuteWithClientActionsBlock:
+        (void (^_Nonnull)(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                          ADJLogger *_Nonnull logger))clientActionsBlock
+    clientSource:(nonnull NSString *)clientSource
+{
+    [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+        // TODO change to sync with Android
+        id<ADJClientActionsAPI> _Nonnull clientActionsAPI =
+            [self.postSdkInitRootController sdkStartClientActionAPI]
+            ? : preSdkInitRoot.clientActionController;
+
+        clientActionsBlock(clientActionsAPI, preSdkInitRoot.logger);
+    } clientSource:clientSource];
 }
 
 @end
