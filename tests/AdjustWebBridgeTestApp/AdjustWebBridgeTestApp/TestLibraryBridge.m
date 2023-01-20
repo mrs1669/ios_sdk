@@ -33,7 +33,6 @@
 }
 
 - (void)augmentedHybridTestWebView:(WKWebView *_Nonnull)webView {
-
     if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;
@@ -120,7 +119,7 @@
 - (void)teardownAndApplyAddedTestOptionsSet {
     NSString *extraPath = [ATOAdjustTestOptions teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:baseUrl];
     NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')", extraPath];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
 }
@@ -131,7 +130,7 @@
 
 - (void)executeCommandRawJson:(NSString *)json {
     NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
 }
