@@ -33,20 +33,6 @@ adjustCommandExecutor: function(commandRawJson) {
     localAdjustCommandExecutor[command.functionName](command.params);
 },
 
-teardownReturnExtraPath: function(extraPath) {
-    this.extraPath = extraPath;
-    // TODO - pending implementatio
-    // Adjust.teardown;
-},
-
-didChangeWithAdjustAttribution: function(attributionValue) {
-    console.log('TestLibraryBridge didChangeWithAdjustAttribution');
-},
-
-didReadWithAdjustAttribution: function(attributionValue) {
-    console.log('TestLibraryBridge didReadWithAdjustAttribution');
-},
-
 startTestSession: function () {
     console.log('TestLibraryBridge startTestSession');
     console.log('TestLibraryBridge startTestSession callHandler');
@@ -74,6 +60,21 @@ addTest: function(testName) {
     };
     window.webkit.messageHandlers.adjustTest.postMessage(message);
 },
+
+teardownReturnExtraPath: function(extraPath) {
+    this.extraPath = extraPath;
+    // TODO - pending implementatio
+    // Adjust.teardown;
+},
+
+didChangeWithAdjustAttribution: function(attributionValue) {
+    console.log('TestLibraryBridge didChangeWithAdjustAttribution');
+},
+
+didReadWithAdjustAttribution: function(attributionValue) {
+    console.log('TestLibraryBridge didReadWithAdjustAttribution');
+},
+    
 };
 
 var AdjustCommandExecutor = function(baseUrl, gdprUrl) {
@@ -108,7 +109,7 @@ AdjustCommandExecutor.prototype.teardown = function(params) {
     window.webkit.messageHandlers.adjustTest.postMessage(message);
 };
 
-var addInfoToSend = function(key, value) {
+addInfoToSend = function(key, value) {
     const message = {
     action:'adjustTLB_addInfoToSend',
     data: {key: key, value: value}
@@ -116,7 +117,7 @@ var addInfoToSend = function(key, value) {
     window.webkit.messageHandlers.adjustTest.postMessage(message);
 };
 
-var sendInfoToServer = function(extraPath) {
+sendInfoToServer = function(extraPath) {
     const message = {
     action:'adjustTLB_sendInfoToServer',
     data: extraPath
@@ -380,7 +381,7 @@ AdjustCommandExecutor.prototype.openDeeplink = function(params) {
 
 AdjustCommandExecutor.prototype.gdprForgetMe = function(params) {
     Adjust.gdprForgetDevice();
-}
+};
 
 AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
 
@@ -487,7 +488,7 @@ function getValueFromKey(params, key) {
     }
 
     return null;
-}
+};
 
 function getFirstParameterValue(params, key) {
     if (key in params) {
@@ -499,7 +500,7 @@ function getFirstParameterValue(params, key) {
     }
 
     return null;
-}
+};
 
 module.exports = TestLibraryBridge;
 

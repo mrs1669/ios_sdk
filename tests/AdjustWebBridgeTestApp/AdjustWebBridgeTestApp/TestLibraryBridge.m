@@ -24,7 +24,6 @@
     if (self == nil) {
         return nil;
     }
-
     self.testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:baseUrl
                                                 andControlUrl:controlUrl
                                            andCommandDelegate:self];
@@ -32,7 +31,7 @@
     return self;
 }
 
-#pragma mark - Webbridge Method
+#pragma mark - Test Webview Methods
 
 #pragma mark Set up Test Webview
 
@@ -55,7 +54,6 @@
     [controller addUserScript:[[WKUserScript.class alloc] initWithSource:javascript
                                                            injectionTime:WKUserScriptInjectionTimeAtDocumentStart
                                                         forMainFrameOnly:NO]];
-
 }
 
 #pragma mark Handle Message from Test Webview
@@ -106,12 +104,12 @@
     [self.testLibrary startTestSession:clientSdk];
 }
 
-- (void)addTestDirectory:(NSString *)directoryName {
-    [self.testLibrary addTestDirectory:directoryName];
-}
-
 - (void)addTest:(NSString *)testName {
     [self.testLibrary addTest:testName];
+}
+
+- (void)addTestDirectory:(NSString *)directoryName {
+    [self.testLibrary addTestDirectory:directoryName];
 }
 
 - (void)addInfoToSend:(NSString *)key andValue:(NSString *)value {
@@ -122,16 +120,16 @@
     [self.testLibrary sendInfoToServer:extraPath];
 }
 
+- (void)addToTestOptionsSet:(NSString *)key andValue:(NSString *)value {
+    [ATOAdjustTestOptions addToOptionsSetWithKey:key value:value];
+}
+
 - (void)teardownAndApplyAddedTestOptionsSet {
     NSString *extraPath = [ATOAdjustTestOptions teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:baseUrl];
     NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')", extraPath];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
-}
-
-- (void)addToTestOptionsSet:(NSString *)key andValue:(NSString *)value {
-    [ATOAdjustTestOptions addToOptionsSetWithKey:key value:value];
 }
 
 #pragma mark - Test cases command handler
@@ -144,4 +142,5 @@
 }
 
 @end
+
 
