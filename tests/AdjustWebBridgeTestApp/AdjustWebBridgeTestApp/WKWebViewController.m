@@ -24,6 +24,8 @@
 
 @implementation WKWebViewController
 
+#pragma mark - View Controller Life cycle Methods
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 }
@@ -42,14 +44,6 @@
     NSString *appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
     [webView loadHTMLString:appHtml baseURL:baseURL];
-}
-
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidStartLoad");
-}
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidFinishLoad");
 }
 
 @end

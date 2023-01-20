@@ -32,6 +32,10 @@
     return self;
 }
 
+#pragma mark - Webbridge Method
+
+#pragma mark Set up Test Webview
+
 - (void)augmentedHybridTestWebView:(WKWebView *_Nonnull)webView {
     if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
@@ -53,6 +57,8 @@
                                                         forMainFrameOnly:NO]];
 
 }
+
+#pragma mark Handle Message from Test Webview
 
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
 
@@ -127,6 +133,8 @@
 - (void)addToTestOptionsSet:(NSString *)key andValue:(NSString *)value {
     [ATOAdjustTestOptions addToOptionsSetWithKey:key value:value];
 }
+
+#pragma mark - Test cases command handler
 
 - (void)executeCommandRawJson:(NSString *)json {
     NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];

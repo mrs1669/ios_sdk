@@ -18,6 +18,8 @@
 
 @implementation ADJAdjustBridge
 
+#pragma mark - Init Web View
+
 - (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
 
     if ([webView isKindOfClass:WKWebView.class]) {
@@ -63,6 +65,8 @@
     NSString *javaScript = [NSString stringWithFormat:@"didChangeWithAdjustAttribution('%@')", adjustAttributionString];
     [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 }
+
+#pragma mark - Handle Message from Web View
 
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
     if ([message.body isKindOfClass:[NSDictionary class]]) {
