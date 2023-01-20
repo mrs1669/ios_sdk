@@ -143,6 +143,21 @@ AdjustCommandExecutor.prototype.start = function(params) {
         }
     }
 
+    if ('customEndpointUrl' in params || 'customEndpointPublicKeyHash' in params || 'testServerBaseUrlEndpointUrl' in params) {
+        console.log("TORMV endpoint");
+
+        var customEndpointPublicKeyHash = getFirstParameterValue(params, 'customEndpointPublicKeyHash');
+
+        var customEndpointUrl = null;
+        if ('testServerBaseUrlEndpointUrl' in params) {
+            customEndpointUrl = baseUrl;
+        } else {
+            customEndpointUrl = getFirstParameterValue(params, 'customEndpointUrl');
+        }
+
+        adjustConfig.setCustomEndpoint(customEndpointUrl, customEndpointPublicKeyHash);
+    }
+
     if ('attributionCallbackSendAll' in params) {
         console.log('AdjustCommandExecutor.prototype.config attributionCallbackSendAll');
         var extraPath = this.extraPath;
@@ -418,6 +433,14 @@ AdjustCommandExecutor.prototype.disableThirdPartySharing = function(params) {
     Adjust.disableThirdPartySharing();
 };
 
+AdjustCommandExecutor.prototype.resume = function(params) {
+    Adjust.appWentToTheForegroundManualCall();
+};
+
+AdjustCommandExecutor.prototype.pause = function(params) {
+    Adjust.appWentToTheBackgroundManualCall();
+};
+
 AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
     var isEnabledS = getFirstParameterValue(params, 'isEnabled');
 
@@ -454,7 +477,7 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
 
 AdjustCommandExecutor.prototype.measurementConsent = function(params) {
     var consentMeasurement = getFirstParameterValue(params, 'isEnabled') == 'true';
-    Adjust.trackMeasurementConsent(consentMeasurement);
+//    Adjust.trackMeasurementConsent(consentMeasurement);
 };
 
 // Util

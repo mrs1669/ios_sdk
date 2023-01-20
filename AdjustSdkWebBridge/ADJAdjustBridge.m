@@ -163,9 +163,17 @@
 
         [ADJAdjust gdprForgetDevice];
 
+    } else if ([action isEqual:@"adjust_appWentToTheBackgroundManualCall"]) {
+
+        [ADJAdjust appWentToTheBackgroundManualCall];
+
+    } else if ([action isEqual:@"adjust_appWentToTheForegroundManualCall"]) {
+
+        [ADJAdjust appWentToTheForegroundManualCall];
+        
     } else if ([action isEqual:@"adjust_teardown"]) {
 
-//        [ADJAdjustInternal teardownWithShouldClearStorage:YES sdkConfigDataBuilder:d];
+        //        [ADJAdjustInternal teardownWithShouldClearStorage:YES sdkConfigDataBuilder:d];
     }
 }
 
@@ -174,6 +182,7 @@
     NSString *appToken = [data objectForKey:@"appToken"];
     NSString *environment = [data objectForKey:@"environment"];
     NSString *customEndpointUrl = [data objectForKey:@"customEndpointUrl"];
+    NSString *customEndpointPublicKeyHash = [data objectForKey:@"customEndpointPublicKeyHash"];
     NSString *defaultTracker = [data objectForKey:@"defaultTracker"];
     NSNumber *sendInBackground = [data objectForKey:@"sendInBackground"];
     NSString *logLevel = [data objectForKey:@"logLevel"];
@@ -206,8 +215,7 @@
     }
 
     if ([self isFieldValid:logLevel]) {
-        // TODO: add option to take Public Key Hash
-        [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:nil];
+        [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
     }
 
     if ([self isFieldValid:openDeferredDeeplink]) {
@@ -216,6 +224,10 @@
 
     if ([self isFieldValid:sendInBackground]) {
         [adjustConfig allowSendingFromBackground];
+    }
+
+    if ([self isFieldValid:attributionCallback]) {
+        [adjustConfig setAdjustAttributionSubscriber:self];
     }
 
     if ([self isFieldValid:attributionCallback]) {

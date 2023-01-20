@@ -155,6 +155,19 @@ teardown: function(adjustConfig) {
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
+appWentToTheBackgroundManualCall: function() {
+    const message = {
+    action:'adjust_appWentToTheBackgroundManualCall',
+    };
+    window.webkit.messageHandlers.adjust.postMessage(message);
+},
+
+appWentToTheForegroundManualCall: function() {
+    const message = {
+    action:'adjust_appWentToTheForegroundManualCall',
+    };
+    window.webkit.messageHandlers.adjust.postMessage(message);
+},
 
 }
 

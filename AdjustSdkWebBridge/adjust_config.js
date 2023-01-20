@@ -15,12 +15,13 @@ function AdjustConfig(appToken, environment, legacy) {
     this.openDeferredDeeplink = null;
     this.eventDeduplicationListLimit = null;
     this.externalDeviceId = null;
-    this.playStoreKidsAppEnabled = null;
     this.coppaCompliantEnabled = null;
     this.preinstallConfig = null;
     this.urlStrategy = null;
     this.dataResidency = null;
     this.needsCost = null;
+    this.customEndpointUrl = null;
+    this.customEndpointPublicKeyHash = null;
 }
 
 AdjustConfig.EnvironmentSandbox = 'sandbox';
@@ -79,15 +80,15 @@ AdjustConfig.prototype.setOpenDeferredDeeplink = function(shouldOpen) {
 
 AdjustConfig.prototype.allowSendingFromBackground = function() {
     this.sendInBackground = true;
-}
+};
 
 AdjustConfig.prototype.setEventDeduplicationListLimit = function(limit) {
     this.eventDeduplicationListLimit = limit;
-}
+};
 
 AdjustConfig.prototype.setExternalDeviceId = function(externalDevId){
     this.externalDeviceId = externalDevId;
-}
+};
 
 AdjustConfig.prototype.setPlayStoreKidsAppEnabled = function(isEnabled) {
     this.playStoreKidsAppEnabled = isEnabled;
@@ -107,4 +108,9 @@ AdjustConfig.prototype.setDataResidency = function(dataResidency) {
 
 AdjustConfig.prototype.setNeedsCostEnabled = function(){
     this.needsCost = true;
+};
+
+AdjustConfig.prototype.setCustomEndpoint = function(customEndpointUrl, optionalPublicKeyKeyHash) {
+    this.customEndpointUrl = customEndpointUrl;
+    this.customEndpointPublicKeyHash = optionalPublicKeyKeyHash
 };
