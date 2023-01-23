@@ -27,7 +27,7 @@
 #pragma mark Instantiation
 
 - (nonnull instancetype)
-    initWithInstanceId:(nonnull NSString *)instanceId
+    initWithInstanceId:(nonnull ADJInstanceIdData *)instanceId
     clock:(nonnull ADJClock *)clock
     sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
     threadController:(nonnull ADJThreadController *)threadController
@@ -37,9 +37,10 @@
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"PreSdkInitRootController"];
     
-    _storageRootController = [[ADJStorageRootController alloc] initWithLoggerFactory:loggerFactory
-                                                               threadExecutorFactory:threadController
-                                                                          instanceId:instanceId];
+    _storageRootController = [[ADJStorageRootController alloc]
+                              initWithLoggerFactory:loggerFactory
+                              threadExecutorFactory:threadController
+                              instanceId:instanceId];
 
     _gdprForgetController = [[ADJGdprForgetController alloc]
                              initWithLoggerFactory:loggerFactory

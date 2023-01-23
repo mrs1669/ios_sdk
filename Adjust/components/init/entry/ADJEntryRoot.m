@@ -10,19 +10,22 @@
 #import "ADJInstanceRoot.h"
 #import "ADJSdkConfigData.h"
 #import "ADJConstants.h"
+#import "ADJInstanceIdData.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
 
 @interface ADJEntryRoot ()
-@property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
+@property (nonnull, readwrite, strong, nonatomic)
+    NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
 @property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 @end
 
 @implementation ADJEntryRoot
 #pragma mark Instantiation
-- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                          sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder {
+- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
+                        sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
+{
     self = [super init];
 
     _instanceMap = [[NSMutableDictionary alloc] init];
@@ -33,11 +36,13 @@
         _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
     }
 
-    // TODO: (Gena) instance id validation
-    NSString *localInstanceId = (instanceId) ? : ADJDefaultInstanceId;
+    ADJInstanceIdData *_Nonnull firstInstanceId =
+        [[ADJInstanceIdData alloc] initWithClientId:clientId];
+
     ADJInstanceRoot *instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:_sdkConfigData
-                                                                     instanceId:localInstanceId];
-    [_instanceMap setObject:instanceRoot forKey:localInstanceId];
+                                                                     instanceId:firstInstanceId];
+
+    [_instanceMap setObject:instanceRoot forKey:firstInstanceId.idString];
 
     return self;
 }
@@ -48,25 +53,31 @@
 }
 
 #pragma mark Public API
-- (nonnull ADJInstanceRoot *)instanceForId:(nullable NSString *)instanceId {
-
-    NSString *localInstanceId = (instanceId) ? : ADJDefaultInstanceId;
-    ADJInstanceRoot * instanceRoot = [self.instanceMap objectForKey:localInstanceId];
-    if(instanceRoot != nil) {
+- (nonnull ADJInstanceRoot *)instanceForClientId:(nullable NSString *)clientId {
+    ADJInstanceRoot *_Nullable instanceRoot =
+        [self.instanceMap objectForKey:[ADJInstanceIdData toIdStringWithClientId:clientId]];
+    if (instanceRoot != nil) {
         return instanceRoot;
     }
 
     @synchronized ([ADJEntryRoot class]) {
-        instanceRoot = [self.instanceMap objectForKey:localInstanceId];
+        // repeat map query to detect duplicate concurrent access
+        instanceRoot =
+            [self.instanceMap objectForKey:[ADJInstanceIdData toIdStringWithClientId:clientId]];
         if (instanceRoot != nil) {
             return instanceRoot;
         }
 
-        // TODO: (Gena) instance id validation
-        instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
-                                                        instanceId:localInstanceId];
-        [self.instanceMap setObject:instanceRoot forKey:localInstanceId];
-        return instanceRoot;
+        ADJInstanceIdData *_Nonnull newInstanceId =
+            [[ADJInstanceIdData alloc] initWithClientId:clientId];
+
+        ADJInstanceRoot *newInstanceRoot =
+            [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
+                                             instanceId:newInstanceId];
+
+        [self.instanceMap setObject:newInstanceRoot forKey:newInstanceId.idString];
+
+        return newInstanceRoot;
     }
 }
 

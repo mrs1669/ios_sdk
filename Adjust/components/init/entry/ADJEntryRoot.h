@@ -12,10 +12,14 @@
 
 @interface ADJEntryRoot : NSObject
 // instantiation
-- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                          sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
+                        sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
+    NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
-- (nonnull ADJInstanceRoot *)instanceForId:(nullable NSString *)instanceId;
+
+// public api
+- (nonnull ADJInstanceRoot *)instanceForClientId:(nullable NSString *)clientId;
+
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end

@@ -37,7 +37,7 @@
 @property (nonnull, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
 
 - (nonnull instancetype)
-    initWithInstanceId:(nonnull NSString *)instanceId
+    initWithInstanceId:(nonnull ADJInstanceIdData *)instanceId
     clock:(nonnull ADJClock *)clock
     sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
     threadController:(nonnull ADJThreadController *)threadController

@@ -3049,6 +3049,20 @@
 		6FCD537329784D9D007542FB /* ADJAdjustCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD536D29784D9D007542FB /* ADJAdjustCallback.h */; };
 		6FCD537429784D9D007542FB /* ADJAdjustCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD536D29784D9D007542FB /* ADJAdjustCallback.h */; };
 		6FCD537529784D9D007542FB /* ADJAdjustCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD536D29784D9D007542FB /* ADJAdjustCallback.h */; };
+		6FCD53832979960B007542FB /* ADJInstanceIdData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53812979960B007542FB /* ADJInstanceIdData.h */; };
+		6FCD53842979960B007542FB /* ADJInstanceIdData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53812979960B007542FB /* ADJInstanceIdData.h */; };
+		6FCD53852979960B007542FB /* ADJInstanceIdData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53812979960B007542FB /* ADJInstanceIdData.h */; };
+		6FCD53862979960B007542FB /* ADJInstanceIdData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53812979960B007542FB /* ADJInstanceIdData.h */; };
+		6FCD53872979960B007542FB /* ADJInstanceIdData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53812979960B007542FB /* ADJInstanceIdData.h */; };
+		6FCD53882979960B007542FB /* ADJInstanceIdData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53812979960B007542FB /* ADJInstanceIdData.h */; };
+		6FCD53892979960B007542FB /* ADJInstanceIdData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53812979960B007542FB /* ADJInstanceIdData.h */; };
+		6FCD538A2979960B007542FB /* ADJInstanceIdData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53822979960B007542FB /* ADJInstanceIdData.m */; };
+		6FCD538B2979960B007542FB /* ADJInstanceIdData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53822979960B007542FB /* ADJInstanceIdData.m */; };
+		6FCD538C2979960B007542FB /* ADJInstanceIdData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53822979960B007542FB /* ADJInstanceIdData.m */; };
+		6FCD538D2979960B007542FB /* ADJInstanceIdData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53822979960B007542FB /* ADJInstanceIdData.m */; };
+		6FCD538E2979960B007542FB /* ADJInstanceIdData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53822979960B007542FB /* ADJInstanceIdData.m */; };
+		6FCD538F2979960B007542FB /* ADJInstanceIdData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53822979960B007542FB /* ADJInstanceIdData.m */; };
+		6FCD53902979960B007542FB /* ADJInstanceIdData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53822979960B007542FB /* ADJInstanceIdData.m */; };
 		6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
 		6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -3524,6 +3538,8 @@
 		6FAC5711288FE9E10070F564 /* ADJSdkPackageSenderController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSdkPackageSenderController.h; sourceTree = "<group>"; };
 		6FAC5712288FE9E10070F564 /* ADJSdkPackageSenderController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSdkPackageSenderController.m; sourceTree = "<group>"; };
 		6FCD536D29784D9D007542FB /* ADJAdjustCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAdjustCallback.h; sourceTree = "<group>"; };
+		6FCD53812979960B007542FB /* ADJInstanceIdData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInstanceIdData.h; sourceTree = "<group>"; };
+		6FCD53822979960B007542FB /* ADJInstanceIdData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInstanceIdData.m; sourceTree = "<group>"; };
 		6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInputLogMessageData.h; sourceTree = "<group>"; };
 		6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInputLogMessageData.m; sourceTree = "<group>"; };
 		6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLogMessageData.h; sourceTree = "<group>"; };
@@ -3707,6 +3723,8 @@
 				0737C1B7287F3E2A004C7D59 /* ADJSdkConfigData.m */,
 				0A67F1AB29151AFB00AC684A /* ADJInstanceRoot.h */,
 				0A67F1AC29151AFB00AC684A /* ADJInstanceRoot.m */,
+				6FCD53812979960B007542FB /* ADJInstanceIdData.h */,
+				6FCD53822979960B007542FB /* ADJInstanceIdData.m */,
 			);
 			path = entry;
 			sourceTree = "<group>";
@@ -4865,6 +4883,7 @@
 				0A7ED73F2892B11B00CC20DE /* ADJV4ActivityState.h in Headers */,
 				0A7ED7402892B11B00CC20DE /* ADJV4Attribution.h in Headers */,
 				0A7ED7412892B11B00CC20DE /* ADJV4ActivityPackage.h in Headers */,
+				6FCD53832979960B007542FB /* ADJInstanceIdData.h in Headers */,
 				0A7ED7422892B11B00CC20DE /* ADJV4UserDefaultsData.h in Headers */,
 				076BDBED28D49AA300E098C9 /* ADJAttributionPackageData.h in Headers */,
 				0A7ED7432892B11B00CC20DE /* ADJV4RestMigration.h in Headers */,
@@ -5131,6 +5150,7 @@
 				0A25F96128E5CAC7001988A1 /* ADJAttributionTracker.h in Headers */,
 				0A25F96228E5CAC7001988A1 /* ADJAttributionController.h in Headers */,
 				0A25F96328E5CAC7001988A1 /* ADJAttributionStateStorage.h in Headers */,
+				6FCD53842979960B007542FB /* ADJInstanceIdData.h in Headers */,
 				0A25F96428E5CAC7001988A1 /* ADJClientPushTokenData.h in Headers */,
 				0A25F96528E5CAC7001988A1 /* ADJPushTokenController.h in Headers */,
 				0A25F96628E5CAC7001988A1 /* ADJClientAdRevenueData.h in Headers */,
@@ -5382,6 +5402,7 @@
 				0A25FB5E28F42381001988A1 /* ADJAttributionTracker.h in Headers */,
 				0A25FB5F28F42381001988A1 /* ADJAttributionController.h in Headers */,
 				0A25FB6028F42381001988A1 /* ADJAttributionStateStorage.h in Headers */,
+				6FCD53852979960B007542FB /* ADJInstanceIdData.h in Headers */,
 				0A25FB6128F42381001988A1 /* ADJClientPushTokenData.h in Headers */,
 				0A25FB6228F42381001988A1 /* ADJPushTokenController.h in Headers */,
 				0A25FB6328F42381001988A1 /* ADJClientAdRevenueData.h in Headers */,
@@ -5633,6 +5654,7 @@
 				0A25FD2D28F43C2C001988A1 /* ADJAttributionTracker.h in Headers */,
 				0A25FD2E28F43C2C001988A1 /* ADJAttributionController.h in Headers */,
 				0A25FD2F28F43C2C001988A1 /* ADJAttributionStateStorage.h in Headers */,
+				6FCD53862979960B007542FB /* ADJInstanceIdData.h in Headers */,
 				0A25FD3028F43C2C001988A1 /* ADJClientPushTokenData.h in Headers */,
 				0A25FD3128F43C2C001988A1 /* ADJPushTokenController.h in Headers */,
 				0A25FD3228F43C2C001988A1 /* ADJClientAdRevenueData.h in Headers */,
@@ -5884,6 +5906,7 @@
 				0A7E490E28F8276C00827F0B /* ADJAttributionTracker.h in Headers */,
 				0A7E490F28F8276C00827F0B /* ADJAttributionController.h in Headers */,
 				0A7E491028F8276C00827F0B /* ADJAttributionStateStorage.h in Headers */,
+				6FCD53872979960B007542FB /* ADJInstanceIdData.h in Headers */,
 				0A7E491128F8276C00827F0B /* ADJClientPushTokenData.h in Headers */,
 				0A7E491228F8276C00827F0B /* ADJPushTokenController.h in Headers */,
 				0A7E491328F8276C00827F0B /* ADJClientAdRevenueData.h in Headers */,
@@ -6135,6 +6158,7 @@
 				0A7E49FE28F82F6C00827F0B /* ADJAttributionTracker.h in Headers */,
 				0A7E49FF28F82F6C00827F0B /* ADJAttributionController.h in Headers */,
 				0A7E4A0028F82F6C00827F0B /* ADJAttributionStateStorage.h in Headers */,
+				6FCD53882979960B007542FB /* ADJInstanceIdData.h in Headers */,
 				0A7E4A0128F82F6C00827F0B /* ADJClientPushTokenData.h in Headers */,
 				0A7E4A0228F82F6C00827F0B /* ADJPushTokenController.h in Headers */,
 				0A7E4A0328F82F6C00827F0B /* ADJClientAdRevenueData.h in Headers */,
@@ -6386,6 +6410,7 @@
 				0A7E4AE928F830AE00827F0B /* ADJAttributionTracker.h in Headers */,
 				0A7E4AEA28F830AE00827F0B /* ADJAttributionController.h in Headers */,
 				0A7E4AEB28F830AE00827F0B /* ADJAttributionStateStorage.h in Headers */,
+				6FCD53892979960B007542FB /* ADJInstanceIdData.h in Headers */,
 				0A7E4AEC28F830AE00827F0B /* ADJClientPushTokenData.h in Headers */,
 				0A7E4AED28F830AE00827F0B /* ADJPushTokenController.h in Headers */,
 				0A7E4AEE28F830AE00827F0B /* ADJClientAdRevenueData.h in Headers */,
@@ -6851,6 +6876,7 @@
 				6FAC56F8288FE7530070F564 /* ADJSdkResponseDataBuilder.m in Sources */,
 				07D5C366289024040022F31F /* ADJMainQueueStateAndTracker.m in Sources */,
 				6FAC5704288FE8900070F564 /* ADJSdkPackageSenderPinningDelegate.m in Sources */,
+				6FCD538A2979960B007542FB /* ADJInstanceIdData.m in Sources */,
 				6F214E60288AA43F002319D7 /* ADJPostSdkInitRootController.m in Sources */,
 				07F8025F289287B30068902F /* ADJClientEventData.m in Sources */,
 				0741CDCF28D59FEE0041C816 /* ADJAdjustBillingSubscription.m in Sources */,
@@ -7052,6 +7078,7 @@
 				0A25FA1728E5CB2F001988A1 /* ADJPluginPackageSendingPublisher.m in Sources */,
 				0A25FA1828E5CB2F001988A1 /* ADJAsaAttributionStateData.m in Sources */,
 				0A25FA1928E5CB2F001988A1 /* ADJAsaAttributionController.m in Sources */,
+				6FCD538B2979960B007542FB /* ADJInstanceIdData.m in Sources */,
 				0A25FA1A28E5CB2F001988A1 /* ADJAsaAttributionStateStorage.m in Sources */,
 				0A25FA1B28E5CB2F001988A1 /* ADJAsaAttributionStateStorageAction.m in Sources */,
 				0A25FA1C28E5CB2F001988A1 /* ADJLogQueueStateAndTracker.m in Sources */,
@@ -7253,6 +7280,7 @@
 				0A25FC1D28F43027001988A1 /* ADJPluginPackageSendingPublisher.m in Sources */,
 				0A25FC1E28F43027001988A1 /* ADJAsaAttributionStateData.m in Sources */,
 				0A25FC1F28F43027001988A1 /* ADJAsaAttributionController.m in Sources */,
+				6FCD538C2979960B007542FB /* ADJInstanceIdData.m in Sources */,
 				0A25FC2028F43027001988A1 /* ADJAsaAttributionStateStorage.m in Sources */,
 				0A25FC2128F43027001988A1 /* ADJAsaAttributionStateStorageAction.m in Sources */,
 				0A25FC2228F43027001988A1 /* ADJLogQueueStateAndTracker.m in Sources */,
@@ -7454,6 +7482,7 @@
 				0A25FE1C28F442DE001988A1 /* ADJPluginPackageSendingPublisher.m in Sources */,
 				0A25FE1D28F442DE001988A1 /* ADJAsaAttributionStateData.m in Sources */,
 				0A25FE1E28F442DE001988A1 /* ADJAsaAttributionController.m in Sources */,
+				6FCD538D2979960B007542FB /* ADJInstanceIdData.m in Sources */,
 				0A25FE1F28F442DE001988A1 /* ADJAsaAttributionStateStorage.m in Sources */,
 				0A25FE2028F442DE001988A1 /* ADJAsaAttributionStateStorageAction.m in Sources */,
 				0A25FE2128F442DE001988A1 /* ADJLogQueueStateAndTracker.m in Sources */,
@@ -7655,6 +7684,7 @@
 				0A2BF95F28F6053000852E17 /* ADJPluginPackageSendingPublisher.m in Sources */,
 				0A2BF96028F6053000852E17 /* ADJAsaAttributionStateData.m in Sources */,
 				0A2BF96128F6053000852E17 /* ADJAsaAttributionController.m in Sources */,
+				6FCD538E2979960B007542FB /* ADJInstanceIdData.m in Sources */,
 				0A2BF96228F6053000852E17 /* ADJAsaAttributionStateStorage.m in Sources */,
 				0A2BF96328F6053000852E17 /* ADJAsaAttributionStateStorageAction.m in Sources */,
 				0A2BF96428F6053000852E17 /* ADJLogQueueStateAndTracker.m in Sources */,
@@ -7856,6 +7886,7 @@
 				0A2BFA3C28F6072400852E17 /* ADJPluginPackageSendingPublisher.m in Sources */,
 				0A2BFA3D28F6072400852E17 /* ADJAsaAttributionStateData.m in Sources */,
 				0A2BFA3E28F6072400852E17 /* ADJAsaAttributionController.m in Sources */,
+				6FCD538F2979960B007542FB /* ADJInstanceIdData.m in Sources */,
 				0A2BFA3F28F6072400852E17 /* ADJAsaAttributionStateStorage.m in Sources */,
 				0A2BFA4028F6072400852E17 /* ADJAsaAttributionStateStorageAction.m in Sources */,
 				0A2BFA4128F6072400852E17 /* ADJLogQueueStateAndTracker.m in Sources */,
@@ -8057,6 +8088,7 @@
 				0A2BFB1F28F60B8C00852E17 /* ADJPluginPackageSendingPublisher.m in Sources */,
 				0A2BFB2028F60B8C00852E17 /* ADJAsaAttributionStateData.m in Sources */,
 				0A2BFB2128F60B8C00852E17 /* ADJAsaAttributionController.m in Sources */,
+				6FCD53902979960B007542FB /* ADJInstanceIdData.m in Sources */,
 				0A2BFB2228F60B8C00852E17 /* ADJAsaAttributionStateStorage.m in Sources */,
 				0A2BFB2328F60B8C00852E17 /* ADJAsaAttributionStateStorageAction.m in Sources */,
 				0A2BFB2428F60B8C00852E17 /* ADJLogQueueStateAndTracker.m in Sources */,

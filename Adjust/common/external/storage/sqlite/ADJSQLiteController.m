@@ -34,23 +34,25 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSQLiteStorageAggregator *sqliteStorageAggregator;
 @property (nonnull, readonly, strong, nonatomic) ADJV4RestMigration *v4RestMigration;
-@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
+@property (nonnull, readonly, strong, nonatomic) ADJInstanceIdData *instanceId;
 @end
 
 @implementation ADJSQLiteController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   instanceId:(nonnull NSString *)instanceId {
+                                   instanceId:(nonnull ADJInstanceIdData *)instanceId
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"SQLiteController"];
-    _instanceId = [instanceId copy];
+    _instanceId = instanceId;
     _sqliteStorageAggregator = [[ADJSQLiteStorageAggregator alloc] init];
     
     _v4RestMigration = [[ADJV4RestMigration alloc] initWithLoggerFactory:loggerFactory
                                                               instanceId:instanceId];
     [ADJUtilSys createAdjustAppSupportDir];
 
-    NSString *oldDbFileName = [NSString stringWithFormat:@"%@.db", ADJDatabaseNamePrefix];
-    NSString *dbFileName = [NSString stringWithFormat:@"%@_%@.db", ADJDatabaseNamePrefix, instanceId];
+    NSString *oldDbFileName = [NSString stringWithFormat:@"%@.db", @"adjust"];
+    NSString *dbFileName = [NSString stringWithFormat:@"%@_%@.db",
+                            @"adjust", instanceId.idString];
 
     // Move an 'adjust.db' file if found in '/Documents' folder to an '/Application Support/Adjust'
     // while renaming it to a coming first instance id named db file.
@@ -132,7 +134,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
         [self.logger debugDev:
          @"Migration has been already completed. Skipping v4 data migration for instance"
                           key:@"instanceId"
-                        value:self.instanceId];
+                        value:self.instanceId.idString];
         return;
     }
 
@@ -141,10 +143,10 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     if (primaryInstanceId != nil && primaryInstanceId.length > 0) {
         [self.logger debugDev:@"Adjust v4 data migration configured to primary instance"
                           key:@"primaryInstanceId" value:primaryInstanceId];
-        if ([primaryInstanceId caseInsensitiveCompare:self.instanceId] != NSOrderedSame) {
+        if ([primaryInstanceId caseInsensitiveCompare:self.instanceId.idString] != NSOrderedSame) {
             [self.logger debugDev:@"Skipping Adjust v4 data migration for instance"
                               key:@"instanceId"
-                            value:self.instanceId];
+                            value:self.instanceId.idString];
             return;
         }
     }

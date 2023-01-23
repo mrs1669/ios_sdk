@@ -13,7 +13,7 @@
 
 @interface ADJAdjustInternal : NSObject
 
-+ (nonnull id<ADJAdjustInstance>)sdkInstanceForId:(nullable NSString *)instanceId;
++ (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId;
 
 + (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
                                     shouldClearStorage:(BOOL)shouldClearStorage;

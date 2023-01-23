@@ -181,7 +181,7 @@
 - (nonnull NSString *)devFormatMessage:(nonnull ADJLogMessageData *)logMessageData
                           isPreSdkInit:(BOOL)isPreSdkInit {
     NSMutableDictionary <NSString *, id> *_Nonnull foundationDictionary =
-    [logMessageData generateFoundationDictionary];
+        [logMessageData generateFoundationDictionary];
 
     if (isPreSdkInit) {
         [foundationDictionary setObject:@(YES) forKey:ADJLogIsPreSdkInitKey];
@@ -189,22 +189,22 @@
 
     [foundationDictionary removeObjectForKey:ADJLogInstanceIdKey];
     NSString *_Nonnull instanceIdFormat =
-    logMessageData.instanceId == nil ?
-    @"" : [NSString stringWithFormat:@"_%@_", logMessageData.instanceId];
+        logMessageData.idString == nil ?
+        @"" : [NSString stringWithFormat:@"_%@_", logMessageData.idString];
 
     [foundationDictionary removeObjectForKey:ADJLogCallerThreadIdKey];
     [foundationDictionary removeObjectForKey:ADJLogRunningThreadIdKey];
     NSString *_Nonnull threadIdFormat =
-    [ADJConsoleLogger threadIdFormat:logMessageData];
+        [ADJConsoleLogger threadIdFormat:logMessageData];
 
     [foundationDictionary removeObjectForKey:ADJLogIssueKey];
     NSString *_Nonnull issueFormat =
-    logMessageData.inputData.issueType == nil ? @""
-    : [NSString stringWithFormat:@"{%@}", logMessageData.inputData.issueType];
+        logMessageData.inputData.issueType == nil ?
+        @"" : [NSString stringWithFormat:@"{%@}", logMessageData.inputData.issueType];
 
     [foundationDictionary removeObjectForKey:ADJLogLevelKey];
     ADJAdjustLogLevel _Nonnull logLevelFormat =
-    [ADJConsoleLogger logLevelFormat:logMessageData.inputData.level];
+        [ADJConsoleLogger logLevelFormat:logMessageData.inputData.level];
 
     [foundationDictionary removeObjectForKey:ADJLogSourceKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];

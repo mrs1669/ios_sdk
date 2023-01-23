@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "ADJAdjustInstance.h"
 #import "ADJSdkConfigData.h"
+#import "ADJInstanceIdData.h"
 
 @interface ADJInstanceRoot : NSObject <ADJAdjustInstance>
 // instantiation
 - (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
-                                instanceId:(nonnull NSString *)instanceId;
+                                instanceId:(nonnull ADJInstanceIdData *)instanceId;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api

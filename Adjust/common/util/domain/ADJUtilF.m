@@ -245,6 +245,11 @@
                                                  withString:@"+"];
 }
 
++ (nonnull NSString *)normaliseFilename:(nonnull NSString *)filename {
+    // TODO add rules as mentioned here https://stackoverflow.com/questions/6102333/what-characters-are-allowed-in-a-ios-file-name
+    return filename;
+}
+
 + (nonnull NSString *)joinString:(nonnull NSString *)first, ... {
     NSString *iter, *_Nonnull result = first;
     va_list strings;

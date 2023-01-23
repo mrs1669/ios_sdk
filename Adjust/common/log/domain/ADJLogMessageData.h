@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)initWithInputData:(nonnull ADJInputLogMessageData *)inputData
     sourceDescription:(nonnull NSString *)sourceDescription
     runningThreadId:(nullable NSString *)runningThreadId
-    instanceId:(nullable NSString *)instanceId
+    idString:(nullable NSString *)idString
 
 NS_DESIGNATED_INITIALIZER;
 
@@ -43,7 +43,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
 @property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
 @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
-@property (nullable, readonly, strong, nonatomic) NSString *instanceId;
+@property (nullable, readonly, strong, nonatomic) NSString *idString;
 
 // public API
 - (nonnull NSMutableDictionary <NSString *, id>*)generateFoundationDictionary;

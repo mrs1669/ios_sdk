@@ -20,9 +20,6 @@ FOUNDATION_EXPORT NSUInteger const ADJOneMinuteMilli;
 FOUNDATION_EXPORT NSUInteger const ADJThirtyMinutesMilli;
 FOUNDATION_EXPORT NSUInteger const ADJOneHourMilli;
 
-FOUNDATION_EXPORT NSString *const ADJDatabaseNamePrefix;
-FOUNDATION_EXPORT NSString *const ADJDefaultInstanceId;
-
 FOUNDATION_EXPORT NSString *const ADJAdjustSubSystem;
 FOUNDATION_EXPORT NSString *const ADJAdjustCategory;
 

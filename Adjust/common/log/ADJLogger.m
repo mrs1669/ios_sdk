@@ -56,7 +56,7 @@
                                                   initWithInputData:inputLogMessageData
                                                   sourceDescription:self.source
                                                   runningThreadId:runningThreadId
-                                                  instanceId:nil];
+                                                  idString:nil];
 
     [logCollector collectLogMessage:logMessageData];
 

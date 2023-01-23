@@ -45,6 +45,8 @@
 
 + (nullable NSString *)urlReservedEncodeWithSpaceAsPlus:(nonnull NSString *)stringToEncode;
 
++ (nonnull NSString *)normaliseFilename:(nonnull NSString *)filename;
+
 + (nonnull NSString *)joinString:(nonnull NSString *)first, ...;
 
 + (nullable NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value;

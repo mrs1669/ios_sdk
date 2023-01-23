@@ -46,9 +46,11 @@ storageExecutor:self.storageExecutor            \
 sqliteController:self.sqliteController];        \
 [self.sqliteController addSqlStorage:self.varName]  \
 
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                                   instanceId:(nonnull NSString *)instanceId {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    instanceId:(nonnull ADJInstanceIdData *)instanceId
+{
     self = [super init];
 
     _storageExecutor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory

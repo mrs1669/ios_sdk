@@ -19,7 +19,7 @@
 @interface ADJInstanceRoot ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
-@property (nullable, readonly, strong, nonatomic) NSString *instanceId;
+@property (nonnull, readonly, strong, nonatomic) ADJInstanceIdData *instanceId;
 
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJLogController *logController;
@@ -31,7 +31,7 @@
     ADJPreSdkInitRootController *preSdkInitRootController;
 @property (nullable, readwrite, strong, nonatomic)
     ADJPostSdkInitRootController *postSdkInitRootController;
-@property (nonnull, readwrite, strong, nonatomic) ADJClock *clock;
+@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJPublisherController *publisherController;
 
 @end
@@ -39,11 +39,11 @@
 @implementation ADJInstanceRoot
 #pragma mark Instantiation
 - (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
-                                instanceId:(nonnull NSString *)instanceId
+                                instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
     self = [super init];
     _sdkConfigData = configData;
-    _instanceId = [instanceId copy];
+    _instanceId = instanceId;
 
     _clock = [[ADJClock alloc] init];
 

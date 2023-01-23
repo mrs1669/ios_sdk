@@ -20,16 +20,16 @@ static dispatch_once_t entryRootOnceToken = 0;
 
 @implementation ADJAdjustInternal
 
-+ (nonnull id<ADJAdjustInstance>)sdkInstanceForId:(nullable NSString *)instanceId {
++ (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId {
     // add syncronization for testing teardown
 #ifdef DEBUG
     @synchronized ([ADJEntryRoot class]) {
 #endif
         dispatch_once(&entryRootOnceToken, ^{
-            entryRootInstance = [[ADJEntryRoot alloc] initWithInstanceId:instanceId
-                                                        sdkConfigBuilder:nil];
+            entryRootInstance = [[ADJEntryRoot alloc] initWithClientId:clientId
+                                                      sdkConfigBuilder:nil];
         });
-        return [entryRootInstance instanceForId:instanceId];
+        return [entryRootInstance instanceForClientId:clientId];
 #ifdef DEBUG
     }
 #endif
@@ -85,8 +85,8 @@ static dispatch_once_t entryRootOnceToken = 0;
             [returnMessage appendString:@". Creating new entry root instance with injected sdk config"];
             entryRootOnceToken = 0;
             dispatch_once(&entryRootOnceToken, ^{
-                entryRootInstance = [[ADJEntryRoot alloc] initWithInstanceId:nil
-                                                            sdkConfigBuilder:sdkConfigBuilder];
+                entryRootInstance = [[ADJEntryRoot alloc] initWithClientId:nil
+                                                          sdkConfigBuilder:sdkConfigBuilder];
             });
         } else {
             [returnMessage appendString:@". Not creating new entry root instance without injected sdk config"];
