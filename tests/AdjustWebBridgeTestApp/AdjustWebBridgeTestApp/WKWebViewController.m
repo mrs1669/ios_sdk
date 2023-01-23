@@ -10,8 +10,8 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 
 #import "ADJAdjustConfig.h"
-
-@import AdjustSdkWebBridge;
+#import "AdjustSdkWebBridge.h"
+//@import AdjustSdkWebBridge;
 #import "TestLibraryBridge.h"
 
 

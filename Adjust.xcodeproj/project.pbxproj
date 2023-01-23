@@ -3356,7 +3356,34 @@
 		6FE447A7288E892800FF06E0 /* ADJLifecycleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE447A5288E892800FF06E0 /* ADJLifecycleController.m */; };
 		6FE447AB288E8D3400FF06E0 /* ADJSdkPackageBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE447A9288E8D3400FF06E0 /* ADJSdkPackageBuilder.m */; };
 		6FE447B0288E8D5600FF06E0 /* ADJMainQueueController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE447AE288E8D5600FF06E0 /* ADJMainQueueController.m */; };
+		9D3B833A297ED5FD00F7A49E /* ADJAdjustLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88F28E24313001988A1 /* ADJAdjustLogger.h */; };
+		9D3B833B297ED5FD00F7A49E /* ADJAdjustPackageSendingSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88C28E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h */; };
+		9D3B833C297ED5FD00F7A49E /* ADJAdjustPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88E28E24313001988A1 /* ADJAdjustPlugin.h */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9D3B832C297ED56900F7A49E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D3B8325297ED56900F7A49E /* AdjustWebBridgeTestApp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6F7AF626211878B900F730B2;
+			remoteInfo = AdjustWebBridgeTestApp;
+		};
+		9D3B8332297ED57E00F7A49E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D3B832E297ED57E00F7A49E /* AdjustTestLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A530E812891509700FD7EFB;
+			remoteInfo = AdjustTestLibrary;
+		};
+		9D3B8338297ED58700F7A49E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D3B8334297ED58700F7A49E /* AdjustTestOptionsLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0AB7AFB72892AEAA00FE60CF;
+			remoteInfo = AdjustTestOptionsLibrary;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		075D8FC428731314005019E3 /* CopyFiles */ = {
@@ -3814,6 +3841,9 @@
 		6FE447A9288E8D3400FF06E0 /* ADJSdkPackageBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSdkPackageBuilder.m; sourceTree = "<group>"; };
 		6FE447AD288E8D5600FF06E0 /* ADJMainQueueController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJMainQueueController.h; sourceTree = "<group>"; };
 		6FE447AE288E8D5600FF06E0 /* ADJMainQueueController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJMainQueueController.m; sourceTree = "<group>"; };
+		9D3B8325297ED56900F7A49E /* AdjustWebBridgeTestApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustWebBridgeTestApp.xcodeproj; path = tests/AdjustWebBridgeTestApp/AdjustWebBridgeTestApp.xcodeproj; sourceTree = "<group>"; };
+		9D3B832E297ED57E00F7A49E /* AdjustTestLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestLibrary.xcodeproj; path = tests/AdjustTestLibrary/AdjustTestLibrary.xcodeproj; sourceTree = "<group>"; };
+		9D3B8334297ED58700F7A49E /* AdjustTestOptionsLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestOptionsLibrary.xcodeproj; path = tests/AdjustTestOptionsLibrary/AdjustTestOptionsLibrary.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4344,6 +4374,9 @@
 		075D8FBD28731314005019E3 = {
 			isa = PBXGroup;
 			children = (
+				9D3B832E297ED57E00F7A49E /* AdjustTestLibrary.xcodeproj */,
+				9D3B8334297ED58700F7A49E /* AdjustTestOptionsLibrary.xcodeproj */,
+				9D3B8325297ED56900F7A49E /* AdjustWebBridgeTestApp.xcodeproj */,
 				075D8FC828731314005019E3 /* Adjust */,
 				075D901428731C2D005019E3 /* AdjustSdk */,
 				075D903728744D17005019E3 /* AdjustSdkTv */,
@@ -4972,6 +5005,30 @@
 			path = main_queue;
 			sourceTree = "<group>";
 		};
+		9D3B8326297ED56900F7A49E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9D3B832D297ED56900F7A49E /* AdjustWebBridgeTestApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9D3B832F297ED57E00F7A49E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9D3B8333297ED57E00F7A49E /* libAdjustTestLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9D3B8335297ED58700F7A49E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9D3B8339297ED58700F7A49E /* libAdjustTestOptionsLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -5275,6 +5332,7 @@
 				0755875229096A9300A3AD50 /* ADJSQLiteStorageActionBase.h in Headers */,
 				0755871129096A6400A3AD50 /* ADJDelayData.h in Headers */,
 				075586E629096A2000A3AD50 /* ADJGdprForgetPackageData.h in Headers */,
+				9D3B833C297ED5FD00F7A49E /* ADJAdjustPlugin.h in Headers */,
 				0755880F29096B7F00A3AD50 /* ADJPostSdkInitRootController.h in Headers */,
 				0755879829096AFD00A3AD50 /* ADJReachabilityController.h in Headers */,
 				075586C629096A0B00A3AD50 /* ADJConstantsSys.h in Headers */,
@@ -5428,6 +5486,8 @@
 				075587ED29096B6200A3AD50 /* ADJMeasurementSessionStateData.h in Headers */,
 				075587C829096B3200A3AD50 /* ADJDeviceIdsData.h in Headers */,
 				075586962909354E00A3AD50 /* ADJAdjustDeviceIdsCallback.h in Headers */,
+				9D3B833A297ED5FD00F7A49E /* ADJAdjustLogger.h in Headers */,
+				9D3B833B297ED5FD00F7A49E /* ADJAdjustPackageSendingSubscriber.h in Headers */,
 				0755873729096A8800A3AD50 /* ADJV4FilesData.h in Headers */,
 				075587E029096B5400A3AD50 /* ADJClientActionsAPI.h in Headers */,
 				0755874129096A8E00A3AD50 /* ADJSQLiteStatement.h in Headers */,
@@ -7087,6 +7147,20 @@
 			mainGroup = 075D8FBD28731314005019E3;
 			productRefGroup = 075D8FC728731314005019E3 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9D3B832F297ED57E00F7A49E /* Products */;
+					ProjectRef = 9D3B832E297ED57E00F7A49E /* AdjustTestLibrary.xcodeproj */;
+				},
+				{
+					ProductGroup = 9D3B8335297ED58700F7A49E /* Products */;
+					ProjectRef = 9D3B8334297ED58700F7A49E /* AdjustTestOptionsLibrary.xcodeproj */;
+				},
+				{
+					ProductGroup = 9D3B8326297ED56900F7A49E /* Products */;
+					ProjectRef = 9D3B8325297ED56900F7A49E /* AdjustWebBridgeTestApp.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				075D8FC528731314005019E3 /* Adjust */,
@@ -7100,6 +7174,30 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		9D3B832D297ED56900F7A49E /* AdjustWebBridgeTestApp.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = AdjustWebBridgeTestApp.app;
+			remoteRef = 9D3B832C297ED56900F7A49E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D3B8333297ED57E00F7A49E /* libAdjustTestLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustTestLibrary.a;
+			remoteRef = 9D3B8332297ED57E00F7A49E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D3B8339297ED58700F7A49E /* libAdjustTestOptionsLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustTestOptionsLibrary.a;
+			remoteRef = 9D3B8338297ED58700F7A49E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0755867E29092F1000A3AD50 /* Resources */ = {
