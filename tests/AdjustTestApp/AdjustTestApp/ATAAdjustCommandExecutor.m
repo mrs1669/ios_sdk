@@ -174,7 +174,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [adjustConfig doNotReadAppleSearchAdsAttribution];
     }
 
-    [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
+    [[ADJAdjust instance] sdkInitWithConfiguration:adjustConfig];
 }
 /*
  if (parameters.containsKey("defaultTracker")) {

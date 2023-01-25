@@ -14,6 +14,7 @@
 #import "ADJConstantsSys.h"
 #import "ADJUtilF.h"
 #import "ADJAdjustInstance.h"
+#import "ADJUtilFiles.h"
 
 static ADJEntryRoot *entryRootInstance = nil;
 static dispatch_once_t entryRootOnceToken = 0;
@@ -157,13 +158,19 @@ static dispatch_once_t entryRootOnceToken = 0;
     }
 }
 
+// TODO: add delete of all instances
 + (nonnull NSString *)clearStorage {
+    NSString *_Nullable adjustAppDirDbPath =
+        [ADJUtilFiles filePathInAdjustAppSupportDirWithFilename:
+         [ADJInstanceIdData toDbNameWithIdString:@""]];
 
-    NSString *_Nullable pathToDelete = [ADJUtilSys adjustAppSupportDir];
-    NSFileManager *_Nonnull fileManager = [NSFileManager defaultManager];
+    if (adjustAppDirDbPath == nil) {
+        return @"Cannot obtain adjust app support dir db filename path";
+    }
+
     NSError *error = nil;
-    BOOL removedSuccessfully = [fileManager removeItemAtPath:pathToDelete
-                                                       error:&error];
+    BOOL removedSuccessfully = [[NSFileManager defaultManager] removeItemAtPath:adjustAppDirDbPath
+                                                                          error:&error];
     if (error) {
         return [ADJUtilF errorFormat:error];
     }

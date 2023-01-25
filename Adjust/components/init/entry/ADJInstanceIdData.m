@@ -23,12 +23,12 @@ static NSString *const kDbNameBase = @"adjust";
  */
 
 @implementation ADJInstanceIdData
-- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId {
-    self = [super init];
 
-    _idString = [[ADJInstanceIdData toIdStringWithClientId:clientId] copy];
-
-    return self;
+- (nonnull instancetype)initFirstInstanceWithClientId:(nullable NSString *)clientId {
+    return [self initWithClientId:clientId isFirstInstance:YES];
+}
+- (nonnull instancetype)initNonFirstWithClientId:(nullable NSString *)clientId {
+    return [self initWithClientId:clientId isFirstInstance:NO];
 }
 
 - (nullable instancetype)init {
@@ -36,14 +36,29 @@ static NSString *const kDbNameBase = @"adjust";
     return nil;
 }
 
-// public api
-- (nonnull NSString *)toDbName {
-    if ([self.idString isEqualToString:kDefaultId]) {
+#pragma mark - Private Constructors
+- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
+                         isFirstInstance:(BOOL)isFirstInstance
+{
+    self = [super init];
+
+    _idString = [[ADJInstanceIdData toIdStringWithClientId:clientId] copy];
+    _isFirstInstance = isFirstInstance;
+
+    return self;
+}
+
+#pragma mark Public API
++ (nonnull NSString *)toDbNameWithIdString:(nonnull NSString *)idString {
+    if ([idString isEqualToString:kDefaultId]) {
         return [NSString stringWithFormat:@"%@.db", kDbNameBase];
     }
 
     return [NSString stringWithFormat:@"%@_%@.db",
-            kDbNameBase, [ADJUtilF normaliseFilename:self.idString]];
+            kDbNameBase, [ADJUtilF normaliseFilename:idString]];
+}
+- (nonnull NSString *)toDbName {
+    return [ADJInstanceIdData toDbNameWithIdString:self.idString];
 }
 
 + (nonnull NSString *)toIdStringWithClientId:(nullable NSString *)clientId {

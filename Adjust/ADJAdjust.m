@@ -12,11 +12,11 @@
 @implementation ADJAdjust
 
 + (nonnull id<ADJAdjustInstance>)instance {
-    return [ADJAdjustInternal sdkInstanceForId:nil];
+    return [ADJAdjustInternal sdkInstanceForClientId:nil];
 }
 
 + (nonnull id<ADJAdjustInstance>)instanceForId:(NSString *)instanceId {
-    return [ADJAdjustInternal sdkInstanceForId:instanceId];
+    return [ADJAdjustInternal sdkInstanceForClientId:instanceId];
 }
 
 - (nullable instancetype)init {

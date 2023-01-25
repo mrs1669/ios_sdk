@@ -55,6 +55,11 @@ NS_DESIGNATED_INITIALIZER;
                                      nserror:(nullable NSError *)nserror
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                     nserror:(nullable NSError *)nserror
+                                         key:(nonnull NSString *)key
+                                       value:(nullable NSString *)value
+                                   issueType:(nonnull ADJIssue)issueType;
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                expectedValue:(nonnull NSString *)expectedValue
                                  actualValue:(nullable NSString *)actualValue
                                    issueType:(nonnull ADJIssue)issueType;

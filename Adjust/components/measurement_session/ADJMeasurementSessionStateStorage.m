@@ -47,7 +47,7 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 
 #pragma mark Public API
 #pragma mark - ADJSQLiteStorage
-- (nullable NSString *)sqlStringForOnUpgrade:(int)oldVersion {
+- (nullable NSString *)sqlStringForOnUpgrade:(nonnull ADJNonNegativeInt *)oldVersion {
     // nothing to upgrade from (yet)
     return nil;
 }

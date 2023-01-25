@@ -15,11 +15,6 @@
 #import "ADJAdjustLogMessageData.h"
 
 #pragma mark Fields
-#pragma mark - Protected properties
-/* .h
- @property (nullable, readonly, strong, nonatomic) NSString *databasePath;
- */
-
 @interface ADJSQLiteDb ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) NSMutableSet<NSValue *> *openStatementValueSet;
@@ -32,10 +27,8 @@
 }
 
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                 databasePath:(nullable NSString *)databasePath {
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
     self = [super initWithLoggerFactory:loggerFactory source:@"SQLiteDb"];
-    _databasePath = databasePath;
 
     _openStatementValueSet = [[NSMutableSet alloc] init];
 
@@ -43,7 +36,7 @@
 }
 
 #pragma mark Public API
-- (int)dbVersion {
+- (nonnull ADJNonNegativeInt *)dbVersion {
     [self beginTransaction];
 
     ADJSQLiteStatement *_Nullable queryStatement =
@@ -53,7 +46,7 @@
         [self.logger debugDev:@"Could not prepare statement to get db version"
                     issueType:ADJIssueStorageIo];
         [self rollback];
-        return 0;
+        return [ADJNonNegativeInt instanceAtZero];
     }
 
     BOOL readValue = [queryStatement nextInQueryStatementWithLogger:self.logger];
@@ -62,21 +55,24 @@
         [self.logger debugDev:@"Could not read value from query statement to get db version"];
         [queryStatement closeStatement];
         [self rollback];
-        return 0;
+        return [ADJNonNegativeInt instanceAtZero];
     }
 
-    NSNumber *dbVersionNumber = [queryStatement numberIntForColumnIndex:0];
-    if (dbVersionNumber == nil) {
+    NSNumber *dbVersionNsNumber = [queryStatement numberIntForColumnIndex:0];
+    ADJNonNegativeInt *_Nullable dbVersion =
+        [ADJNonNegativeInt instanceFromIntegerNumber:dbVersionNsNumber
+                                              logger:self.logger];
+    if (dbVersion == nil) {
         [self.logger debugDev:@"Could not get number value from query to get db version"];
         [queryStatement closeStatement];
         [self rollback];
-        return 0;
+        return [ADJNonNegativeInt instanceAtZero];
     }
 
     [queryStatement closeStatement];
     [self commit];
 
-    return [dbVersionNumber intValue];
+    return dbVersion;
 }
 
 - (void)setDbVersion:(int)dbVersion {
@@ -108,7 +104,7 @@
     [self commit];
 }
 
-- (BOOL)openDb {
+- (BOOL)openDbWithPath:(nonnull NSString *)dbPath {
     if (_sqlite3) {
         [self.logger debugDev:@"sqlite3 already open"
                     issueType:ADJIssueStorageIo];
@@ -124,7 +120,7 @@
      openFlags,
      NULL);
      */
-    int errCode = sqlite3_open(self.databasePath.fileSystemRepresentation, &_sqlite3);
+    int errCode = sqlite3_open(dbPath.fileSystemRepresentation, &_sqlite3);
     if(errCode != SQLITE_OK) {
         [self.logger debugDev:@"sqlite3_open error"
                           key:@"errCode"

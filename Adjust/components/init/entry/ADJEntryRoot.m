@@ -37,7 +37,7 @@
     }
 
     ADJInstanceIdData *_Nonnull firstInstanceId =
-        [[ADJInstanceIdData alloc] initWithClientId:clientId];
+        [[ADJInstanceIdData alloc] initFirstInstanceWithClientId:clientId];
 
     ADJInstanceRoot *instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:_sdkConfigData
                                                                      instanceId:firstInstanceId];
@@ -69,7 +69,7 @@
         }
 
         ADJInstanceIdData *_Nonnull newInstanceId =
-            [[ADJInstanceIdData alloc] initWithClientId:clientId];
+            [[ADJInstanceIdData alloc] initNonFirstWithClientId:clientId];
 
         ADJInstanceRoot *newInstanceRoot =
             [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData

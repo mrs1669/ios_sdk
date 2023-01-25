@@ -73,7 +73,7 @@
 }
 
 // - implemented by final class
-- (nullable NSString *)sqlStringForOnUpgrade:(int)oldVersion {
+- (nullable NSString *)sqlStringForOnUpgrade:(nonnull ADJNonNegativeInt *)oldVersion {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }

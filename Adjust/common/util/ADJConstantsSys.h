@@ -15,4 +15,8 @@ FOUNDATION_EXPORT NSString *const ADJClientSdk;
 
 FOUNDATION_EXPORT NSString *const ADJPluginSignerClassName;
 
+FOUNDATION_EXPORT NSString *const ADJAdjustDirPath;
+
+FOUNDATION_EXPORT NSString *const ADJUserDefaultsPrimaryInstanceIdKey;
+
 NS_ASSUME_NONNULL_END

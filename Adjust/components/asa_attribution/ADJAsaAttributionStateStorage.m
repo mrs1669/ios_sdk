@@ -40,7 +40,7 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 
 #pragma mark Public API
 #pragma mark - ADJSQLiteStorage
-- (nullable NSString *)sqlStringForOnUpgrade:(int)oldVersion {
+- (nullable NSString *)sqlStringForOnUpgrade:(nonnull ADJNonNegativeInt *)oldVersion {
     // nothing to upgrade from (yet)
     return nil;
 }

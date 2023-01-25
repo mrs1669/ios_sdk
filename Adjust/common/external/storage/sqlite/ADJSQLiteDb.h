@@ -12,20 +12,17 @@
 #import "ADJSQLiteDbMessageProvider.h"
 #import "ADJTeardownFinalizer.h"
 #import "ADJSQLiteStatement.h"
+#import "ADJNonNegativeInt.h"
 
 @interface ADJSQLiteDb : ADJCommonBase<ADJSQLiteDbMessageProvider, ADJTeardownFinalizer>
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                 databasePath:(nullable NSString *)databasePath;
-
-// public properties
-@property (nullable, readonly, strong, nonatomic) NSString *databasePath;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
 
 // public api
-- (int)dbVersion;
+- (nonnull ADJNonNegativeInt *)dbVersion;
 - (void)setDbVersion:(int)dbVersion;
 
-- (BOOL)openDb;
+- (BOOL)openDbWithPath:(nonnull NSString *)dbPath;
 - (BOOL)beginTransaction;
 - (BOOL)commit;
 - (BOOL)rollback;
