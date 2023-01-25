@@ -10,8 +10,8 @@
 
 #import "ATLTestLibrary.h"
 #import "ADJAdjustBridge.h"
-#import "AdjustSdkWebBridge.h"
-// @import AdjustSdkWebBridge;
+
+@import AdjustSdkWebBridge;
 
 // simulator
 static NSString * baseUrl = @"http://127.0.0.1:8080";
