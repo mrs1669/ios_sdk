@@ -24,7 +24,7 @@ trackAdRevenue: function (adjustRevenue) {
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
-trackDeeplink: function(url) {
+trackLaunchedDeeplink: function(url) {
     const message = {
     action:'adjust_trackDeeplink',
     data: url
