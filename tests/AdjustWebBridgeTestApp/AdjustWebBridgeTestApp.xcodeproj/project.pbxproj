@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		071286B22936521D001C0A1E /* libAdjustTestLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 071286AF2936520C001C0A1E /* libAdjustTestLibrary.a */; };
+		075B05EF293652FB00BBCDED /* libAdjust.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B05E0293652F500BBCDED /* libAdjust.a */; };
+		075B05F02936530100BBCDED /* AdjustSdkWebBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */; };
+		075B067D29377C5700BBCDED /* libAdjustTestOptionsLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B067C29377C4E00BBCDED /* libAdjustTestOptionsLibrary.a */; };
 		6F7AF62B211878BA00F730B2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AF62A211878BA00F730B2 /* AppDelegate.m */; };
 		6F7AF631211878BA00F730B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF62F211878BA00F730B2 /* Main.storyboard */; };
 		6F7AF633211878BC00F730B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF632211878BC00F730B2 /* Assets.xcassets */; };
@@ -17,87 +21,109 @@
 		6F7AF790211888B500F730B2 /* TestLibraryBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AF78F211888B500F730B2 /* TestLibraryBridge.m */; };
 		6F7AF7B02118949C00F730B2 /* TestLibraryBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF7AF2118949C00F730B2 /* TestLibraryBridge.js */; };
 		6F7AF7BB2118992200F730B2 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F7AF7BA2118992200F730B2 /* WebKit.framework */; };
-		9D3B830D297EA8ED00F7A49E /* libAdjustTestLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D3B82F1297EA8AA00F7A49E /* libAdjustTestLibrary.a */; };
-		9D3B830E297EA8ED00F7A49E /* libAdjustTestOptionsLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D3B82EB297EA8A100F7A49E /* libAdjustTestOptionsLibrary.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9D3B82EA297EA8A100F7A49E /* PBXContainerItemProxy */ = {
+		071286AE2936520C001C0A1E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82E6297EA8A100F7A49E /* AdjustTestOptionsLibrary.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0AB7AFB72892AEAA00FE60CF;
-			remoteInfo = AdjustTestOptionsLibrary;
-		};
-		9D3B82F0297EA8AA00F7A49E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82EC297EA8AA00F7A49E /* AdjustTestLibrary.xcodeproj */;
+			containerPortal = 071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0A530E812891509700FD7EFB;
 			remoteInfo = AdjustTestLibrary;
 		};
-		9D3B82FD297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05DF293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 075D8FC628731314005019E3;
 			remoteInfo = Adjust;
 		};
-		9D3B82FF297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05E1293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 075D901328731C2D005019E3;
 			remoteInfo = AdjustSdk;
 		};
-		9D3B8301297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05E3293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 075D903628744D17005019E3;
 			remoteInfo = AdjustSdkTv;
 		};
-		9D3B8303297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05E5293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 075D905228745EBB005019E3;
 			remoteInfo = AdjustSdkIm;
 		};
-		9D3B8305297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05E7293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0A2BF8EF28F6040F00852E17;
 			remoteInfo = AdjustSdkStatic;
 		};
-		9D3B8307297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05E9293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0A2BF9CC28F606AC00852E17;
 			remoteInfo = AdjustSdkTvStatic;
 		};
-		9D3B8309297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05EB293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0A2BFAAB28F608EE00852E17;
 			remoteInfo = AdjustSdkImStatic;
 		};
-		9D3B830B297EA8B000F7A49E /* PBXContainerItemProxy */ = {
+		075B05ED293652F500BBCDED /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 0755868029092F1000A3AD50;
 			remoteInfo = AdjustSdkWebBridge;
 		};
+		075B064F29376E9000BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A530E802891509700FD7EFB;
+			remoteInfo = AdjustTestLibrary;
+		};
+		075B065A29376E9600BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 075D8FC528731314005019E3;
+			remoteInfo = Adjust;
+		};
+		075B067B29377C4E00BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0AB7AFB72892AEAA00FE60CF;
+			remoteInfo = AdjustTestOptionsLibrary;
+		};
+		075B067E29377C5F00BBCDED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AB7AFB62892AEAA00FE60CF;
+			remoteInfo = AdjustTestOptionsLibrary;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestLibrary.xcodeproj; path = ../AdjustTestLibrary/AdjustTestLibrary.xcodeproj; sourceTree = "<group>"; };
 		071286B029365213001C0A1E /* libAdjust.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAdjust.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		075B05D0293652D200BBCDED /* libAdjust.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAdjust.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		075B05D2293652D500BBCDED /* AdjustSdkWebBridge.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AdjustSdkWebBridge.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		075B05D4293652F500BBCDED /* Adjust.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Adjust.xcodeproj; path = ../../Adjust.xcodeproj; sourceTree = "<group>"; };
+		075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestOptionsLibrary.xcodeproj; path = ../AdjustTestOptionsLibrary/AdjustTestOptionsLibrary.xcodeproj; sourceTree = "<group>"; };
 		6F7AF626211878B900F730B2 /* AdjustWebBridgeTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdjustWebBridgeTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F7AF629211878BA00F730B2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6F7AF62A211878BA00F730B2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -117,9 +143,6 @@
 		6FD0412D211C71D9008D42D0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		6FD0412F211C71E8008D42D0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6FD04131211C71EE008D42D0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		9D3B82E6297EA8A100F7A49E /* AdjustTestOptionsLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestOptionsLibrary.xcodeproj; path = ../AdjustTestOptionsLibrary/AdjustTestOptionsLibrary.xcodeproj; sourceTree = "<group>"; };
-		9D3B82EC297EA8AA00F7A49E /* AdjustTestLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestLibrary.xcodeproj; path = ../AdjustTestLibrary/AdjustTestLibrary.xcodeproj; sourceTree = "<group>"; };
-		9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Adjust.xcodeproj; path = ../../Adjust.xcodeproj; sourceTree = "<group>"; };
 		9DAA5C6B25B0F81F00C718DD /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -128,21 +151,54 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D3B830D297EA8ED00F7A49E /* libAdjustTestLibrary.a in Frameworks */,
-				9D3B830E297EA8ED00F7A49E /* libAdjustTestOptionsLibrary.a in Frameworks */,
+				075B05F02936530100BBCDED /* AdjustSdkWebBridge.framework in Frameworks */,
+				075B05EF293652FB00BBCDED /* libAdjust.a in Frameworks */,
+				071286B22936521D001C0A1E /* libAdjustTestLibrary.a in Frameworks */,
 				6F7AF7BB2118992200F730B2 /* WebKit.framework in Frameworks */,
+				075B067D29377C5700BBCDED /* libAdjustTestOptionsLibrary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		071286AB2936520C001C0A1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				071286AF2936520C001C0A1E /* libAdjustTestLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		075B05D5293652F500BBCDED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				075B05E0293652F500BBCDED /* libAdjust.a */,
+				075B05E2293652F500BBCDED /* AdjustSdk.framework */,
+				075B05E4293652F500BBCDED /* AdjustSdkTv.framework */,
+				075B05E6293652F500BBCDED /* AdjustSdkIm.framework */,
+				075B05E8293652F500BBCDED /* libAdjustSdk.a */,
+				075B05EA293652F500BBCDED /* libAdjustSdkTv.a */,
+				075B05EC293652F500BBCDED /* libAdjustSdkIm.a */,
+				075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		075B067129377C4E00BBCDED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				075B067C29377C4E00BBCDED /* libAdjustTestOptionsLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		6F7AF61D211878B900F730B2 = {
 			isa = PBXGroup;
 			children = (
-				9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */,
-				9D3B82EC297EA8AA00F7A49E /* AdjustTestLibrary.xcodeproj */,
-				9D3B82E6297EA8A100F7A49E /* AdjustTestOptionsLibrary.xcodeproj */,
+				075B05D4293652F500BBCDED /* Adjust.xcodeproj */,
+				071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */,
+				075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */,
 				6F7AF628211878B900F730B2 /* AdjustWebBridgeTestApp */,
 				6F7AF627211878B900F730B2 /* Products */,
 				6F7AF7B92118992200F730B2 /* Frameworks */,
@@ -193,37 +249,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9D3B82E7297EA8A100F7A49E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9D3B82EB297EA8A100F7A49E /* libAdjustTestOptionsLibrary.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		9D3B82ED297EA8AA00F7A49E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9D3B82F1297EA8AA00F7A49E /* libAdjustTestLibrary.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		9D3B82F3297EA8B000F7A49E /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9D3B82FE297EA8B000F7A49E /* libAdjust.a */,
-				9D3B8300297EA8B000F7A49E /* AdjustSdk.framework */,
-				9D3B8302297EA8B000F7A49E /* AdjustSdkTv.framework */,
-				9D3B8304297EA8B000F7A49E /* AdjustSdkIm.framework */,
-				9D3B8306297EA8B000F7A49E /* libAdjustSdk.a */,
-				9D3B8308297EA8B000F7A49E /* libAdjustSdkTv.a */,
-				9D3B830A297EA8B000F7A49E /* libAdjustSdkIm.a */,
-				9D3B830C297EA8B000F7A49E /* AdjustSdkWebBridge.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -238,6 +263,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				075B065B29376E9600BBCDED /* PBXTargetDependency */,
+				075B065029376E9000BBCDED /* PBXTargetDependency */,
+				075B067F29377C5F00BBCDED /* PBXTargetDependency */,
 			);
 			name = AdjustWebBridgeTestApp;
 			productName = AdjustWebBridgeTestApp;
@@ -271,16 +299,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 9D3B82F3297EA8B000F7A49E /* Products */;
-					ProjectRef = 9D3B82F2297EA8B000F7A49E /* Adjust.xcodeproj */;
+					ProductGroup = 075B05D5293652F500BBCDED /* Products */;
+					ProjectRef = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
 				},
 				{
-					ProductGroup = 9D3B82ED297EA8AA00F7A49E /* Products */;
-					ProjectRef = 9D3B82EC297EA8AA00F7A49E /* AdjustTestLibrary.xcodeproj */;
+					ProductGroup = 071286AB2936520C001C0A1E /* Products */;
+					ProjectRef = 071286AA2936520C001C0A1E /* AdjustTestLibrary.xcodeproj */;
 				},
 				{
-					ProductGroup = 9D3B82E7297EA8A100F7A49E /* Products */;
-					ProjectRef = 9D3B82E6297EA8A100F7A49E /* AdjustTestOptionsLibrary.xcodeproj */;
+					ProductGroup = 075B067129377C4E00BBCDED /* Products */;
+					ProjectRef = 075B067029377C4E00BBCDED /* AdjustTestOptionsLibrary.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -291,74 +319,74 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		9D3B82EB297EA8A100F7A49E /* libAdjustTestOptionsLibrary.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libAdjustTestOptionsLibrary.a;
-			remoteRef = 9D3B82EA297EA8A100F7A49E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9D3B82F1297EA8AA00F7A49E /* libAdjustTestLibrary.a */ = {
+		071286AF2936520C001C0A1E /* libAdjustTestLibrary.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAdjustTestLibrary.a;
-			remoteRef = 9D3B82F0297EA8AA00F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 071286AE2936520C001C0A1E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B82FE297EA8B000F7A49E /* libAdjust.a */ = {
+		075B05E0293652F500BBCDED /* libAdjust.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAdjust.a;
-			remoteRef = 9D3B82FD297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05DF293652F500BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B8300297EA8B000F7A49E /* AdjustSdk.framework */ = {
+		075B05E2293652F500BBCDED /* AdjustSdk.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AdjustSdk.framework;
-			remoteRef = 9D3B82FF297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05E1293652F500BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B8302297EA8B000F7A49E /* AdjustSdkTv.framework */ = {
+		075B05E4293652F500BBCDED /* AdjustSdkTv.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AdjustSdkTv.framework;
-			remoteRef = 9D3B8301297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05E3293652F500BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B8304297EA8B000F7A49E /* AdjustSdkIm.framework */ = {
+		075B05E6293652F500BBCDED /* AdjustSdkIm.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AdjustSdkIm.framework;
-			remoteRef = 9D3B8303297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05E5293652F500BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B8306297EA8B000F7A49E /* libAdjustSdk.a */ = {
+		075B05E8293652F500BBCDED /* libAdjustSdk.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAdjustSdk.a;
-			remoteRef = 9D3B8305297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05E7293652F500BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B8308297EA8B000F7A49E /* libAdjustSdkTv.a */ = {
+		075B05EA293652F500BBCDED /* libAdjustSdkTv.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAdjustSdkTv.a;
-			remoteRef = 9D3B8307297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05E9293652F500BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B830A297EA8B000F7A49E /* libAdjustSdkIm.a */ = {
+		075B05EC293652F500BBCDED /* libAdjustSdkIm.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libAdjustSdkIm.a;
-			remoteRef = 9D3B8309297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05EB293652F500BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9D3B830C297EA8B000F7A49E /* AdjustSdkWebBridge.framework */ = {
+		075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AdjustSdkWebBridge.framework;
-			remoteRef = 9D3B830B297EA8B000F7A49E /* PBXContainerItemProxy */;
+			remoteRef = 075B05ED293652F500BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		075B067C29377C4E00BBCDED /* libAdjustTestOptionsLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustTestOptionsLibrary.a;
+			remoteRef = 075B067B29377C4E00BBCDED /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -391,6 +419,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		075B065029376E9000BBCDED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AdjustTestLibrary;
+			targetProxy = 075B064F29376E9000BBCDED /* PBXContainerItemProxy */;
+		};
+		075B065B29376E9600BBCDED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Adjust;
+			targetProxy = 075B065A29376E9600BBCDED /* PBXContainerItemProxy */;
+		};
+		075B067F29377C5F00BBCDED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AdjustTestOptionsLibrary;
+			targetProxy = 075B067E29377C5F00BBCDED /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		6F7AF62F211878BA00F730B2 /* Main.storyboard */ = {
