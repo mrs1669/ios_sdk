@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		071286B22936521D001C0A1E /* libAdjustTestLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 071286AF2936520C001C0A1E /* libAdjustTestLibrary.a */; };
-		075B05EF293652FB00BBCDED /* libAdjust.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B05E0293652F500BBCDED /* libAdjust.a */; };
-		075B05F02936530100BBCDED /* AdjustSdkWebBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */; };
 		075B067D29377C5700BBCDED /* libAdjustTestOptionsLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B067C29377C4E00BBCDED /* libAdjustTestOptionsLibrary.a */; };
+		07773F9229815B8A00DF4914 /* AdjustSdkWebBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */; };
 		6F7AF62B211878BA00F730B2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7AF62A211878BA00F730B2 /* AppDelegate.m */; };
 		6F7AF631211878BA00F730B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF62F211878BA00F730B2 /* Main.storyboard */; };
 		6F7AF633211878BC00F730B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F7AF632211878BC00F730B2 /* Assets.xcassets */; };
@@ -151,8 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				075B05F02936530100BBCDED /* AdjustSdkWebBridge.framework in Frameworks */,
-				075B05EF293652FB00BBCDED /* libAdjust.a in Frameworks */,
+				07773F9229815B8A00DF4914 /* AdjustSdkWebBridge.framework in Frameworks */,
 				071286B22936521D001C0A1E /* libAdjustTestLibrary.a in Frameworks */,
 				6F7AF7BB2118992200F730B2 /* WebKit.framework in Frameworks */,
 				075B067D29377C5700BBCDED /* libAdjustTestOptionsLibrary.a in Frameworks */,

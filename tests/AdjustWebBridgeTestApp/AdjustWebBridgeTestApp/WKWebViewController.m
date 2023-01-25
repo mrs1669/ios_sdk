@@ -9,11 +9,8 @@
 #import "WKWebViewController.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 
-#import "ADJAdjustConfig.h"
-
-@import AdjustSdkWebBridge;
 #import "TestLibraryBridge.h"
-
+#import "ADJAdjustBridge.h"
 
 @interface WKWebViewController ()
 
@@ -35,8 +32,8 @@
     WKWebView *webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:webView];
 
-    _adjustBridge = [[ADJAdjustBridge alloc] init];
-    [_adjustBridge augmentedHybridWebView:webView];
+    self.adjustBridge = [[ADJAdjustBridge alloc] init];
+    [self.adjustBridge augmentedHybridWebView:webView];
 
     self.testLibraryBridge = [[TestLibraryBridge alloc] initWithAdjustBridgeRegister:self.adjustBridge];
 

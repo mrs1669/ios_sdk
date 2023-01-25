@@ -123,6 +123,7 @@ sendInfoToServer = function(extraPath) {
 };
 
 AdjustCommandExecutor.prototype.start = function(params) {
+    console.log("AdjustCommandExecutor.prototype.start");
     var adjustConfig = new AdjustConfig();
 
     var appToken = getFirstParameterValue(params, "appToken");
