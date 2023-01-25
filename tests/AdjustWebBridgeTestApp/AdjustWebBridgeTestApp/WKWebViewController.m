@@ -10,7 +10,7 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 
 #import "TestLibraryBridge.h"
-#import "ADJAdjustBridge.h"
+#import <AdjustSdkWebBridge/AdjustSdkWebBridge.h>
 
 @interface WKWebViewController ()
 

@@ -551,7 +551,6 @@
 		07773F8E2981467100DF4914 /* ADJAdjustLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88F28E24313001988A1 /* ADJAdjustLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07773F8F298151D000DF4914 /* ADJAdjustPackageSendingSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88C28E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07773F90298152FA00DF4914 /* ADJAdjustPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88E28E24313001988A1 /* ADJAdjustPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		07773F95298166E500DF4914 /* ADJAdjustBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 075586A329093BDB00A3AD50 /* ADJAdjustBridge.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0781AE5128B7628100818672 /* ADJGlobalParametersControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 0781AE4F28B7628100818672 /* ADJGlobalParametersControllerBase.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0781AE5228B7628100818672 /* ADJGlobalParametersControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0781AE5028B7628100818672 /* ADJGlobalParametersControllerBase.m */; };
 		0781AE5528B7660300818672 /* ADJSQLiteStorageStringMapBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 0781AE5328B7660300818672 /* ADJSQLiteStorageStringMapBase.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -5112,7 +5111,6 @@
 				0A7ED7342892B11B00CC20DE /* ADJDelayData.h in Headers */,
 				0A7ED7362892B11B00CC20DE /* ADJSdkResponseDataBuilder.h in Headers */,
 				0A7ED7372892B11B00CC20DE /* ADJUnknownResponseData.h in Headers */,
-				07773F95298166E500DF4914 /* ADJAdjustBridge.h in Headers */,
 				0A7ED7382892B11B00CC20DE /* ADJSdkResponseBaseData.h in Headers */,
 				0A7ED73A2892B11B00CC20DE /* ADJSdkPackageSender.h in Headers */,
 				0A7ED73B2892B11B00CC20DE /* ADJSdkPackageUrlBuilder.h in Headers */,
