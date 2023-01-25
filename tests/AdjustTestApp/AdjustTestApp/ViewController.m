@@ -67,9 +67,9 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 //    [self.testLibrary addTestDirectory:@"offline-mode"];
 //    [self.testLibrary addTestDirectory:@"push-token"];
 //    [self.testLibrary addTestDirectory:@"retry-in"];
-//    [self.testLibrary addTestDirectory:@"session-tracking"];
+    [self.testLibrary addTestDirectory:@"session-tracking"];
 //    [self.testLibrary addTestDirectory:@"stop-restart"];
-    [self.testLibrary addTestDirectory:@"third-party-sharing"];
+//    [self.testLibrary addTestDirectory:@"third-party-sharing"];
 
 }
 

@@ -12,8 +12,7 @@
 @interface TestLibraryBridge ()
 
 @property (nonatomic, strong) ATLTestLibrary *testLibrary;
-@property (nonatomic, weak) WKWebView *webView;
-@property (nonatomic, weak) ADJAdjustBridge *adjustBridge;
+@property (nonatomic, strong) WKWebView *webView;
 
 @end
 
@@ -41,19 +40,6 @@
         WKUserContentController *controller = webView.configuration.userContentController;
         [controller addScriptMessageHandler:self name:@"adjustTest"];
     }
-}
-
-- (NSString *)getWebBridgeScriptFor:(NSString *)resource {
-    NSBundle *sourceBundle = [NSBundle bundleForClass:self.class];
-    NSString *adjustScriptPath = [sourceBundle pathForResource:resource ofType:@"js"];
-    NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath encoding:NSUTF8StringEncoding error:nil];
-    return adjustScript;
-}
-
-- (void)userContentController:(WKUserContentController *)controller didAddUserScript:(NSString *)javascript {
-    [controller addUserScript:[[WKUserScript.class alloc] initWithSource:javascript
-                                                           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                                        forMainFrameOnly:NO]];
 }
 
 #pragma mark Handle Message from Test Webview
@@ -125,18 +111,19 @@
 }
 
 - (void)teardownAndApplyAddedTestOptionsSet {
-    NSString *extraPath = [ATOAdjustTestOptions teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:baseUrl];
-    NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')", extraPath];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
+        NSString *extraPath = [ATOAdjustTestOptions teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:baseUrl];
+        NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')", extraPath];
+            [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
+
 }
 
 #pragma mark - Test cases command handler
 
 - (void)executeCommandRawJson:(NSString *)json {
-    NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
 }

@@ -25,6 +25,7 @@ static dispatch_once_t entryRootOnceToken = 0;
     @synchronized ([ADJEntryRoot class]) {
 #endif
         dispatch_once(&entryRootOnceToken, ^{
+            NSLog(@"prod NSProcessInfo %@ %@", @([[NSProcessInfo processInfo] processIdentifier]), [[NSProcessInfo processInfo] processName]);
             entryRootInstance = [[ADJEntryRoot alloc] initWithSdkConfigDataBuilder:nil];
         });
         return entryRootInstance;
@@ -85,6 +86,7 @@ static dispatch_once_t entryRootOnceToken = 0;
              @". Creating new entry root instance with injected sdk config"];
             entryRootOnceToken = 0;
             dispatch_once(&entryRootOnceToken, ^{
+                NSLog(@"teardown NSProcessInfo %@ %@", @([[NSProcessInfo processInfo] processIdentifier]), [[NSProcessInfo processInfo] processName]);
                 entryRootInstance =
                 [[ADJEntryRoot alloc] initWithSdkConfigDataBuilder:sdkConfigDataBuilder];
             });

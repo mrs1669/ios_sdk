@@ -96,9 +96,6 @@ AdjustCommandExecutor.prototype.teardown = function(params) {
             data: {key: key, value: value}
             };
 
-            if(key == 'extraPath') {
-                this.extraPath = value;
-            }
             window.webkit.messageHandlers.adjustTest.postMessage(message);
         }
     }
