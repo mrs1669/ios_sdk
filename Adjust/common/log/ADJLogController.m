@@ -90,7 +90,8 @@
 #pragma mark - ADJLoggerFactory
 - (nonnull ADJLogger *)createLoggerWithSource:(nonnull NSString *)source {
     return [[ADJLogger alloc] initWithSource:source
-                                logCollector:self];
+                                logCollector:self
+                                  instanceId:self.instanceId];
 }
 
 #pragma mark - ADJSdkInitStateSubscriber

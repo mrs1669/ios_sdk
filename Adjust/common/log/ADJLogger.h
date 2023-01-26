@@ -10,11 +10,16 @@
 #import "ADJLogCollector.h"
 #import "ADJInputLogMessageData.h"
 
+// TODO: fix import references
+@class ADJInstanceIdData;
+//#import "ADJInstanceIdData.h"
+
 @interface ADJLogger : NSObject
 // instantiation
 - (nonnull instancetype)initWithSource:(nonnull NSString *)source
                           logCollector:(nonnull id<ADJLogCollector>)logCollector
-NS_DESIGNATED_INITIALIZER;
+                            instanceId:(nonnull ADJInstanceIdData *)instanceId
+    NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

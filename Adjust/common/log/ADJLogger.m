@@ -13,22 +13,27 @@
 #import "ADJConstants.h"
 #import "ADJLocalThreadController.h"
 
+#import "ADJInstanceIdData.h"
 //#import <os/log.h>
 
 @interface ADJLogger ()
 // Injected variables
 @property (nullable, readonly, weak, nonatomic) id<ADJLogCollector> logCollectorWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJInstanceIdData *instanceId;
 
 @end
 
 @implementation ADJLogger
 #pragma mark Constructors
 - (nonnull instancetype)initWithSource:(nonnull NSString *)source
-                          logCollector:(nonnull id<ADJLogCollector>)logCollector {
+                          logCollector:(nonnull id<ADJLogCollector>)logCollector
+                            instanceId:(nonnull ADJInstanceIdData *)instanceId
+{
     self = [super init];
     
     _source = source;
     _logCollectorWeak = logCollector;
+    _instanceId = instanceId;
     
     return self;
 }
@@ -56,7 +61,7 @@
                                                   initWithInputData:inputLogMessageData
                                                   sourceDescription:self.source
                                                   runningThreadId:runningThreadId
-                                                  idString:nil];
+                                                  idString:self.instanceId.idString];
 
     [logCollector collectLogMessage:logMessageData];
 
