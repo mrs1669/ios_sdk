@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ADJSdkConfigDataBuilder.h"
+#import "ADJSdkConfigData.h"
 #import "ADJInstanceRoot.h"
 
 @interface ADJEntryRoot : NSObject
 // instantiation
 - (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
-                        sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
+                           sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
     NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 

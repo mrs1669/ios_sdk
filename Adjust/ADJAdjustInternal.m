@@ -28,7 +28,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 #endif
         dispatch_once(&entryRootOnceToken, ^{
             entryRootInstance = [[ADJEntryRoot alloc] initWithClientId:clientId
-                                                      sdkConfigBuilder:nil];
+                                                         sdkConfigData:nil];
         });
         return [entryRootInstance instanceForClientId:clientId];
 #ifdef DEBUG
@@ -65,8 +65,9 @@ static dispatch_once_t entryRootOnceToken = 0;
 }
 
 // Resets the sdk state, as if it was not initialized or used before.
-+ (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
-                                    shouldClearStorage:(BOOL)shouldClearStorage {
++ (nonnull NSString *)teardownWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
+                             shouldClearStorage:(BOOL)shouldClearStorage
+{
     // restrict teardown to debug builds
 #ifndef DEBUG
     return @"Teardown cannot be done in non-debug mode";
@@ -82,12 +83,12 @@ static dispatch_once_t entryRootOnceToken = 0;
 
         entryRootInstance = nil;
 
-        if (sdkConfigBuilder != nil) {
+        if (sdkConfigData != nil) {
             [returnMessage appendString:@". Creating new entry root instance with injected sdk config"];
             entryRootOnceToken = 0;
             dispatch_once(&entryRootOnceToken, ^{
                 entryRootInstance = [[ADJEntryRoot alloc] initWithClientId:nil
-                                                          sdkConfigBuilder:sdkConfigBuilder];
+                                                             sdkConfigData:sdkConfigData];
             });
         } else {
             [returnMessage appendString:@". Not creating new entry root instance without injected sdk config"];

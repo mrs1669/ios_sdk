@@ -24,17 +24,13 @@
 @implementation ADJEntryRoot
 #pragma mark Instantiation
 - (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
-                        sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
+                           sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
 {
     self = [super init];
 
     _instanceMap = [[NSMutableDictionary alloc] init];
 
-    if (sdkConfigBuilder != nil) {
-        _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigBuilder];
-    } else {
-        _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
-    }
+    _sdkConfigData = sdkConfigData ?: [[ADJSdkConfigData alloc] initWithDefaultValues];
 
     ADJInstanceIdData *_Nonnull firstInstanceId =
         [[ADJInstanceIdData alloc] initFirstInstanceWithClientId:clientId];
