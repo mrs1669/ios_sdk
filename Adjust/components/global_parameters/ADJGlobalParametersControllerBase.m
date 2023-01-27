@@ -75,7 +75,7 @@
     }
 
     ADJNonEmptyString *_Nullable previousValueBeforeAdding =
-    [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd.stringValue];
+    [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd];
 
     if ([clientAddGlobalParameterData.valueToAdd isEqual:previousValueBeforeAdding]) {
         [self.logger noticeClient:
@@ -86,7 +86,7 @@
     }
 
     [storage addPairWithValue:clientAddGlobalParameterData.valueToAdd
-                          key:clientAddGlobalParameterData.keyToAdd.stringValue
+                          key:clientAddGlobalParameterData.keyToAdd
           sqliteStorageAction:clientActionRemoveStorageActionData];
 
     if (previousValueBeforeAdding != nil) {
@@ -117,7 +117,7 @@
     }
 
     ADJNonEmptyString *_Nullable removedValue =
-    [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove.stringValue
+    [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove
            sqliteStorageAction:clientActionRemoveStorageActionData];
 
     if (removedValue != nil) {

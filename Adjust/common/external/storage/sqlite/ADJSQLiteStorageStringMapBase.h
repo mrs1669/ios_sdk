@@ -27,15 +27,15 @@
 // public api
 - (NSUInteger)countPairs;
 
-- (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull NSString *)key;
+- (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull ADJNonEmptyString *)key;
 
 - (nullable ADJNonEmptyString *)
     addPairWithValue:(nonnull ADJNonEmptyString *)value
-    key:(nonnull NSString *)key
+    key:(nonnull ADJNonEmptyString *)key
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 - (nullable ADJNonEmptyString *)
-    removePairWithKey:(nonnull NSString *)key
+    removePairWithKey:(nonnull ADJNonEmptyString *)key
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 - (NSUInteger)removeAllPairsWithSqliteStorageAction:

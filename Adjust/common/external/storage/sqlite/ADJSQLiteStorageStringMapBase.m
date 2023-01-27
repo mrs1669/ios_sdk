@@ -59,41 +59,42 @@ static NSString *const kColumnValue = @"value";
     return [self.inMemoryMapRO countPairs];
 }
 
-- (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull NSString *)key {
-    return [self.inMemoryMapRO pairValueWithKey:key];
+- (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull ADJNonEmptyString *)key {
+    return [self.inMemoryMapRO pairValueWithKey:key.stringValue];
 }
 
 - (nullable ADJNonEmptyString *)
     addPairWithValue:(nonnull ADJNonEmptyString *)value
-    key:(nonnull NSString *)key
+    key:(nonnull ADJNonEmptyString *)key
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     ADJStringMapBuilder *_Nonnull mapBuilder =
         [[ADJStringMapBuilder alloc] initWithStringMap:self.inMemoryMapRO];
 
-    ADJNonEmptyString *_Nullable valueRemoved = [mapBuilder addPairWithValue:value key:key];
+    ADJNonEmptyString *_Nullable valueRemoved = [mapBuilder addPairWithValue:value
+                                                                         key:key.stringValue];
 
     self.inMemoryMapRO = [[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder];
 
     [self addPairToStorageWithValue:value
-                                key:key
+                                key:key.stringValue
                 sqliteStorageAction:sqliteStorageAction];
 
     return valueRemoved;
 }
 
 - (nullable ADJNonEmptyString *)
-    removePairWithKey:(nonnull NSString *)key
+    removePairWithKey:(nonnull ADJNonEmptyString *)key
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     ADJStringMapBuilder *_Nonnull mapBuilder =
         [[ADJStringMapBuilder alloc] initWithStringMap:self.inMemoryMapRO];
 
-    ADJNonEmptyString *_Nullable valueRemoved = [mapBuilder removePairWithKey:key];
+    ADJNonEmptyString *_Nullable valueRemoved = [mapBuilder removePairWithKey:key.stringValue];
 
     self.inMemoryMapRO = [[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder];
 
-    [self removePairFromStorageWithKey:key
+    [self removePairFromStorageWithKey:key.stringValue
                    sqliteStorageAction:sqliteStorageAction];
 
     return valueRemoved;
