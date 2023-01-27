@@ -11,6 +11,7 @@
 #import "ADJConstants.h"
 #import "ADJUtilF.h"
 #import "ADJUtilObj.h"
+#import "ADJUtilConv.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -41,6 +42,82 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
++ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
+                                      logger:(nonnull ADJLogger *)logger
+{
+    if (ioValue == nil) {
+        [logger debugDev:@"Cannot create string map instance with nil IoValue"
+               issueType:ADJIssueStorageIo];
+        return nil;
+    }
+
+    NSError *_Nullable error = nil;
+
+    id _Nullable foundationObject =
+        [ADJUtilConv convertToFoundationObjectWithJsonString:ioValue.stringValue
+                                                    errorPtr:&error];
+
+    if (error != nil) {
+        [logger debugDev:
+         @"Cannot create string map with error converting json string into foundation object"
+                 nserror:error
+               issueType:ADJIssueStorageIo];
+        return nil;
+    }
+    if (foundationObject == nil) {
+        [logger debugDev:
+         @"Cannot create string map with converting json string into nil foundation object"
+               issueType:ADJIssueStorageIo];
+        return nil;
+    }
+    if (! [foundationObject isKindOfClass:[NSDictionary class]]) {
+        [logger debugDev:@"Cannot create string map with converting json string into"
+         " non dictionary foundation object"
+               issueType:ADJIssueStorageIo];
+        return nil;
+    }
+
+    NSDictionary *_Nonnull foundationDictionary = (NSDictionary *)foundationObject;
+
+    NSMutableDictionary <NSString *, ADJNonEmptyString *> *_Nonnull map =
+        [NSMutableDictionary dictionaryWithCapacity:foundationDictionary.count];
+    for (id _Nullable key in foundationObject) {
+        if(key == nil || ![key isKindOfClass:[NSString class]]) {
+            [logger debugDev:@"Cannot create string map with invalid string key"
+                   issueType:ADJIssueStorageIo];
+            return nil;
+        }
+        NSString *_Nonnull keyString = (NSString *)key;
+
+        id _Nullable value = [foundationObject objectForKey:keyString];
+        if(value == nil || ![value isKindOfClass:[NSString class]]) {
+            [logger debugDev:@"Cannot create string map with invalid string value"
+                   issueType:ADJIssueStorageIo];
+            return nil;
+        }
+
+        ADJNonEmptyString *_Nullable valueString =
+            [ADJNonEmptyString instanceFromString:(NSString *)value
+                                sourceDescription:@"string map value from IoValue"
+                                           logger:logger];
+        if (valueString == nil) {
+            return nil;
+        }
+
+        [map setObject:valueString forKey:keyString];
+    }
+
+    ADJStringMap *_Nonnull instance = [[ADJStringMap alloc] initWithMap:[map copy]];
+
+    dispatch_once(&(instance->_cachedJsonStringToken), ^{
+        instance.cachedFoundationStringMap = foundationDictionary;
+
+        instance.cachedJsonString = ioValue;
+    });
+
+    return instance;
 }
 
 #pragma mark - Private constructors
@@ -76,6 +153,15 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     [self injectCachedProperties];
+    return self.cachedJsonString;
+}
+
+#pragma mark - ADJIoValueSerializable
+- (nonnull ADJNonEmptyString *)toIoValue {
+    [self injectCachedProperties];
+    if (self.cachedJsonString == nil) {
+        return [[ADJNonEmptyString alloc] initWithConstStringValue:@"{}"];
+    }
     return self.cachedJsonString;
 }
 

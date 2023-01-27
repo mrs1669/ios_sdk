@@ -9,13 +9,20 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJPackageParamValueSerializable.h"
+#import "ADJIoValueSerializable.h"
 #import "ADJStringMapBuilder.h"
 #import "ADJNonEmptyString.h"
 
-@interface ADJStringMap : NSObject<ADJPackageParamValueSerializable>
+@interface ADJStringMap : NSObject<
+    ADJPackageParamValueSerializable,
+    ADJIoValueSerializable
+>
 // instantiation
 - (nonnull instancetype)initWithStringMapBuilder:(nonnull ADJStringMapBuilder *)stringMapBuilder;
 - (nullable instancetype)init NS_UNAVAILABLE;
+
++ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
+                                       logger:(nonnull ADJLogger *)logger;
 
 // public properties
 @property (nonnull, readwrite, strong, nonatomic) NSDictionary<NSString *, ADJNonEmptyString *> *map;

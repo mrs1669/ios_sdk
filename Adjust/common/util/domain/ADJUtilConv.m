@@ -112,14 +112,24 @@
                                                options:0];
 }
 
-+ (nullable NSData *)convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
-                                                     errorPtr:(NSError * _Nullable * _Nonnull)errorPtr {
++ (nullable NSData *)
+    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
+    errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
+{
     // todo check isValidJSONObject:
     return [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:errorPtr];
 }
 
-+ (nullable id)convertToJsonFoundationValueWithJsonData :(nonnull NSData *)jsonData
-                                                errorPtr:(NSError * _Nullable * _Nonnull)errorPtr {
++ (nullable id)convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString
+                                              errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
+{
+    return [ADJUtilConv convertToJsonFoundationValueWithJsonData:
+             [jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                         errorPtr:errorPtr];
+}
+
++ (nullable id)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData
+                                               errorPtr:(NSError * _Nullable * _Nonnull)errorPtr {
     return [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:errorPtr];
 }
 
