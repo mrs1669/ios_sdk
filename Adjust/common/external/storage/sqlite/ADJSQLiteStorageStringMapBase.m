@@ -31,7 +31,8 @@ static NSString *const kColumnValue = @"value";
                                        source:(nonnull NSString *)source
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
-                                    tableName:(nonnull NSString *)tableName {
+                                    tableName:(nonnull NSString *)tableName
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSQLiteStorageStringMapBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -62,10 +63,13 @@ static NSString *const kColumnValue = @"value";
     return [self.inMemoryMapRO pairValueWithKey:key];
 }
 
-- (nullable ADJNonEmptyString *)addPairWithValue:(nonnull ADJNonEmptyString *)value
-                                             key:(nonnull NSString *)key
-                             sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
-    ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithStringMap:self.inMemoryMapRO];
+- (nullable ADJNonEmptyString *)
+    addPairWithValue:(nonnull ADJNonEmptyString *)value
+    key:(nonnull NSString *)key
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
+    ADJStringMapBuilder *_Nonnull mapBuilder =
+        [[ADJStringMapBuilder alloc] initWithStringMap:self.inMemoryMapRO];
 
     ADJNonEmptyString *_Nullable valueRemoved = [mapBuilder addPairWithValue:value key:key];
 
@@ -78,9 +82,12 @@ static NSString *const kColumnValue = @"value";
     return valueRemoved;
 }
 
-- (nullable ADJNonEmptyString *)removePairWithKey:(nonnull NSString *)key
-                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
-    ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithStringMap:self.inMemoryMapRO];
+- (nullable ADJNonEmptyString *)
+    removePairWithKey:(nonnull NSString *)key
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
+    ADJStringMapBuilder *_Nonnull mapBuilder =
+        [[ADJStringMapBuilder alloc] initWithStringMap:self.inMemoryMapRO];
 
     ADJNonEmptyString *_Nullable valueRemoved = [mapBuilder removePairWithKey:key];
 
@@ -92,10 +99,14 @@ static NSString *const kColumnValue = @"value";
     return valueRemoved;
 }
 
-- (NSUInteger)removeAllPairsWithSqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (NSUInteger)removeAllPairsWithSqliteStorageAction:
+    (nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     NSUInteger removedPairsCount = [self.inMemoryMapRO countPairs];
 
-    ADJStringMap *_Nonnull emptyMap = [[ADJStringMap alloc] initWithStringMapBuilder: [[ADJStringMapBuilder alloc] initWithEmptyMap]];
+    ADJStringMap *_Nonnull emptyMap =
+        [[ADJStringMap alloc] initWithStringMapBuilder:
+         [[ADJStringMapBuilder alloc] initWithEmptyMap]];
 
     [self replaceAllWithStringMap:emptyMap
               sqliteStorageAction:sqliteStorageAction];
@@ -104,7 +115,8 @@ static NSString *const kColumnValue = @"value";
 }
 
 - (void)replaceAllWithStringMap:(nonnull ADJStringMap *)stringMap
-            sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+            sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     self.inMemoryMapRO = stringMap;
 
     [self replaceAllFromStorageWithStringMap:stringMap
@@ -122,31 +134,31 @@ static NSString *const kColumnValue = @"value";
     //  so, there is nothing to do
 }
 
-- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:(nonnull ADJSQLiteStatement *)selectStatement {
+- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:
+    (nonnull ADJSQLiteStatement *)selectStatement
+{
     BOOL atLeastOneElementAdded = NO;
 
     ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
     do {
         NSString *_Nullable pairKeyString =
-        [selectStatement stringForColumnIndex:kSelectKeyFieldIndex];
+            [selectStatement stringForColumnIndex:kSelectKeyFieldIndex];
 
         ADJNonEmptyString *_Nullable pairKey =
-        [ADJNonEmptyString instanceFromString:pairKeyString
-                            sourceDescription:@"SQLite string map key"
-                                       logger:self.logger];
-
+            [ADJNonEmptyString instanceFromString:pairKeyString
+                                sourceDescription:@"SQLite string map key"
+                                           logger:self.logger];
         if (pairKey == nil) {
             continue;
         }
 
         NSString *_Nullable pairValueString =
-        [selectStatement stringForColumnIndex:kSelectValueFieldIndex];
+            [selectStatement stringForColumnIndex:kSelectValueFieldIndex];
 
         ADJNonEmptyString *_Nullable pairValue =
-        [ADJNonEmptyString instanceFromString:pairValueString
-                            sourceDescription:@"SQLite string map value"
-                                       logger:self.logger];
-
+            [ADJNonEmptyString instanceFromString:pairValueString
+                                sourceDescription:@"SQLite string map value"
+                                           logger:self.logger];
         if (pairValue == nil) {
             continue;
         }
@@ -171,7 +183,9 @@ static NSString *const kColumnValue = @"value";
     return atLeastOneElementAdded;
 }
 
-- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:
+    (nonnull NSString *)tableName
+{
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:[NSString stringWithFormat:@"SELECT %@, %@ FROM %@",
                                       kColumnKey, kColumnValue, tableName]];
@@ -180,7 +194,9 @@ static NSString *const kColumnValue = @"value";
 static int const kSelectKeyFieldIndex = 0;
 static int const kSelectValueFieldIndex = 1;
 
-- (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)concreteGenerateInsertSqlWithTableName:
+    (nonnull NSString *)tableName
+{
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
             [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (%@, %@) VALUES (?, ?)",
              tableName,
@@ -203,7 +219,9 @@ static int const kInsertValueFieldPosition = 2;
 }
 
 #pragma mark Internal Methods
-- (nonnull ADJNonEmptyString *)generateDeleteWhereKeySqlWithTableName:(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)generateDeleteWhereKeySqlWithTableName:
+    (nonnull NSString *)tableName
+{
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
             [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?",
              tableName,
@@ -214,7 +232,8 @@ static int const kDeleteKeyFieldPosition = 1;
 
 - (void)addPairToStorageWithValue:(nonnull ADJNonEmptyString *)value
                               key:(nonnull NSString *)key
-              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
         [self.logger debugDev:
@@ -233,7 +252,7 @@ static int const kDeleteKeyFieldPosition = 1;
         }
 
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        strongSelf.sqliteDatabaseProviderWeak;
+            strongSelf.sqliteDatabaseProviderWeak;
 
         if (sqliteDatabaseProvider == nil) {
             [strongSelf.logger debugDev:
@@ -253,11 +272,12 @@ static int const kDeleteKeyFieldPosition = 1;
 - (void)addPairToDatabase:(nonnull ADJSQLiteDb *)sqliteDb
                     value:(nonnull ADJNonEmptyString *)value
                       key:(nonnull NSString *)key
-      sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+      sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     [sqliteDb beginTransaction];
 
     ADJSQLiteStatement *_Nullable insertStatement =
-    [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
 
     if (insertStatement == nil) {
         [self.logger debugDev:
@@ -292,7 +312,8 @@ static int const kDeleteKeyFieldPosition = 1;
 
 - (void)addPairInInsertStatement:(nonnull ADJSQLiteStatement *)insertStatement
                              key:(nonnull NSString *)key
-                           value:(nonnull ADJNonEmptyString *)value {
+                           value:(nonnull ADJNonEmptyString *)value
+{
     // clear bindings
     [insertStatement resetStatement];
 
@@ -303,7 +324,8 @@ static int const kDeleteKeyFieldPosition = 1;
 }
 
 - (void)removePairFromStorageWithKey:(nonnull NSString *)key
-                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
         [self.logger debugDev:
@@ -322,7 +344,7 @@ static int const kDeleteKeyFieldPosition = 1;
         }
 
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        strongSelf.sqliteDatabaseProviderWeak;
+            strongSelf.sqliteDatabaseProviderWeak;
 
         if (sqliteDatabaseProvider == nil) {
             [strongSelf.logger debugDev:
@@ -340,11 +362,12 @@ static int const kDeleteKeyFieldPosition = 1;
 
 - (void)removePairFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
                            key:(nonnull NSString *)key
-           sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+           sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     [sqliteDb beginTransaction];
 
     ADJSQLiteStatement *_Nullable deleteKeyValueStatement =
-    [sqliteDb prepareStatementWithSqlString:self.deleteWhereKeySql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.deleteWhereKeySql.stringValue];
 
     if (deleteKeyValueStatement == nil) {
         [self.logger debugDev:
@@ -378,8 +401,10 @@ static int const kDeleteKeyFieldPosition = 1;
     [self.logger debugDev:@"Key/Value removed from database"];
 }
 
-- (void)replaceAllFromStorageWithStringMap:(nonnull ADJStringMap *)stringMap
-                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    replaceAllFromStorageWithStringMap:(nonnull ADJStringMap *)stringMap
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
         [self.logger debugDev:
@@ -398,7 +423,7 @@ static int const kDeleteKeyFieldPosition = 1;
         }
 
         id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        strongSelf.sqliteDatabaseProviderWeak;
+            strongSelf.sqliteDatabaseProviderWeak;
 
         if (sqliteDatabaseProvider == nil) {
             [strongSelf.logger debugDev:
@@ -417,11 +442,12 @@ static int const kDeleteKeyFieldPosition = 1;
 
 - (void)replaceAllFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
                      stringMap:(nonnull ADJStringMap *)stringMap
-           sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+           sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     [sqliteDb beginTransaction];
 
     ADJSQLiteStatement *_Nullable clearStatement =
-    [sqliteDb prepareStatementWithSqlString:self.deleteAllSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.deleteAllSql.stringValue];
 
     if (clearStatement == nil) {
         [self.logger debugDev:
@@ -437,7 +463,7 @@ static int const kDeleteKeyFieldPosition = 1;
     [clearStatement closeStatement];
 
     ADJSQLiteStatement *_Nullable insertStatement =
-    [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
 
     if (insertStatement == nil) {
         [self.logger debugDev:
