@@ -134,6 +134,11 @@
     return NO;
 }
 
+#pragma mark - NSObject
+ - (nonnull NSString *)description {
+     return self.source;
+ }
+
 #pragma mark Internal Methods
 - (BOOL)transactReadIntoMemory:(nonnull ADJSQLiteDb *)sqliteDb {
     [sqliteDb beginTransaction];

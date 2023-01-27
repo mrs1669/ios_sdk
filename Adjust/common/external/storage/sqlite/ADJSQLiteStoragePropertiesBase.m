@@ -158,10 +158,11 @@ static NSString *const kColumnValue = @"value";
                              newDataValue:self.inMemoryDataValue];
 }
 
-- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:(nonnull ADJSQLiteStatement *)selectStatement {
+- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:
+    (nonnull ADJSQLiteStatement *)selectStatement
+{
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
-    [[ADJIoDataBuilder alloc]
-     initWithMetadataTypeValue:self.metadataTypeValue];
+        [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:self.metadataTypeValue];
     
     do {
         [self readFromSelectStatementIntoBuildingData:selectStatement
@@ -169,7 +170,7 @@ static NSString *const kColumnValue = @"value";
     } while ([selectStatement nextInQueryStatementWithLogger:self.logger]);
     
     ADJIoData *_Nonnull ioData =
-    [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
+        [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
     
     _Nullable id valueFromIoData = [self concreteGenerateValueFromIoData:ioData];
     
@@ -186,7 +187,9 @@ static NSString *const kColumnValue = @"value";
     return valueFromIoData != nil;
 }
 
-- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:
+    (nonnull NSString *)tableName
+{
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:
                 [NSString stringWithFormat:@"SELECT %@, %@, %@ FROM %@",
@@ -237,7 +240,8 @@ static int const kInsertValueFieldPosition = 3;
 
 #pragma mark Internal Methods
 - (void)updateInStorageSyncWithSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb
-                           newDataValue:(nonnull id)newDataValue {
+                           newDataValue:(nonnull id)newDataValue
+{
     [sqliteDb beginTransaction];
     
     [self updateInTransactionWithsSQLiteDb:sqliteDb newDataValue:newDataValue];

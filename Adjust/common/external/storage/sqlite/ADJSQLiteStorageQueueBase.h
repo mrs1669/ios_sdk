@@ -40,13 +40,18 @@
 - (nonnull NSArray<ADJNonNegativeInt *> *)copySortedElementPositionList;
 - (nonnull NSDictionary<ADJNonNegativeInt *, E> *)copyElementWithPositionList;
 
-- (nonnull ADJNonNegativeInt *)enqueueElementToLast:(nonnull E)newElement
-                                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+- (nonnull ADJNonNegativeInt *)
+    enqueueElementToLast:(nonnull E)newElement
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+
 - (nullable E)removeElementAtFront;
+
 - (nullable E)removeElementByPosition:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
 - (BOOL)removeElementByPositionInTransaction:(nonnull ADJNonNegativeInt *)elementPositionToRemove
                                     sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb;
-- (nullable E)removeElementByPositionInMemoryOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
+- (nullable E)removeElementByPositionInMemoryOnly:
+    (nonnull ADJNonNegativeInt *)elementPositionToRemove;
+
 - (void)removeElementByPositionInStorageOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
 - (void)removeAllElements;
 

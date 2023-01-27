@@ -325,7 +325,8 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 
         if (sqlStringForOnUpgrade == nil) {
             [self.logger debugDev:@"Not upgrading sqlite storage"
-                        issueType:ADJIssueStorageIo];
+                              key:@"storage description"
+                            value:sqliteStorage.description];
             return;
         }
 
