@@ -66,6 +66,7 @@
     deviceController:(nonnull ADJDeviceController *)deviceController
     clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
     sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+    sdkPrefix:(nullable NSString *)sdkPrefix
     clock:(nonnull ADJClock *)clock
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
@@ -96,7 +97,7 @@
         [[ADJSdkPackageBuilder alloc]
          initWithLoggerFactory:loggerFactory
          clock:clock
-         clientSdk:ADJClientSdk
+         sdkPrefix:sdkPrefix
          clientConfigData:clientConfigData
          deviceController:deviceController
          globalCallbackParametersStorage:storageRootController.globalCallbackParametersStorage

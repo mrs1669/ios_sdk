@@ -39,6 +39,30 @@
     return [[NSArray alloc] initWithObjects:ADJPluginSignerClassName, nil];
 }
 
++ (nonnull NSString *)clientSdkWithPrefix:(nullable NSString *)sdkPrefix {
+    if ([self isSdkPrefixValid:sdkPrefix]) {
+        return [NSString stringWithFormat:@"%@@%@", sdkPrefix, ADJClientSdk];
+    } else {
+        return ADJClientSdk;
+    }
+}
+
+
 #pragma mark - Private methods
++ (BOOL)isSdkPrefixValid:(nullable NSString *)sdkPrefix {
+    if (sdkPrefix == nil || sdkPrefix.length == 0) {
+        return NO;
+    }
+
+    /* TODO
+     // it has to follow allowed prefixes and version format
+     final String sdkPrefixRegex = "("
+     + Constants.ALLOWED_SDK_PREFIXES
+     + ")\\d.\\d{1,2}.\\d{1,2}";
+
+     return sdkPrefix.matches(sdkPrefixRegex);
+     */
+    return YES;
+}
 
 @end

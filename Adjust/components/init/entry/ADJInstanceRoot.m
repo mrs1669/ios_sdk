@@ -152,6 +152,7 @@
              deviceController:strongSelf.preSdkInitRootController.deviceController
              clientConfigData:clientConfigData
              sdkConfigData:strongSelf.sdkConfigData
+             sdkPrefix:nil //TODO: to inject with session refac
              clock:strongSelf.clock
              publisherController:strongSelf.publisherController];
 

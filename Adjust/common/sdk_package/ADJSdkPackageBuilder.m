@@ -14,6 +14,7 @@
 #import "ADJTimestampMilli.h"
 #import "ADJConstantsParam.h"
 #import "ADJTallyCounter.h"
+#import "ADJUtilSys.h"
 
 #pragma mark Private class
 @implementation ADJSdkPackageCreatingPublisher @end
@@ -44,7 +45,7 @@
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     clock:(nonnull ADJClock *)clock
-    clientSdk:(nonnull NSString *)clientSdk
+    sdkPrefix:(nullable NSString *)sdkPrefix
     clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
     deviceController:(nonnull ADJDeviceController *)deviceController
     globalCallbackParametersStorage:
@@ -58,7 +59,7 @@
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
     _clockWeak = clock;
-    _clientSdk = clientSdk;
+    _clientSdk = [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
     _clientConfigData = clientConfigData;
     _deviceControllerWeak = deviceController;
     _globalCallbackParametersStorageWeak = globalCallbackParametersStorage;

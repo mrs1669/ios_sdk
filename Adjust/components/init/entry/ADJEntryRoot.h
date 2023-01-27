@@ -17,8 +17,13 @@
     NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
+// public properties
+@property (nullable, readonly, strong, nonatomic) NSString *sdkPrefix;
+
 // public api
 - (nonnull ADJInstanceRoot *)instanceForClientId:(nullable NSString *)clientId;
+
+- (void)setSdkPrefix:(nullable NSString *)sdkPrefix;
 
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;
 

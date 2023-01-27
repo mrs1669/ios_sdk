@@ -22,6 +22,9 @@ static dispatch_once_t entryRootOnceToken = 0;
 @implementation ADJAdjustInternal
 
 + (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId {
+    return [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+}
++ (nonnull ADJEntryRoot *)entryRootForClientId:(nullable NSString *)clientId {
     // add syncronization for testing teardown
 #ifdef DEBUG
     @synchronized ([ADJEntryRoot class]) {
@@ -30,7 +33,7 @@ static dispatch_once_t entryRootOnceToken = 0;
             entryRootInstance = [[ADJEntryRoot alloc] initWithClientId:clientId
                                                          sdkConfigData:nil];
         });
-        return [entryRootInstance instanceForClientId:clientId];
+        return entryRootInstance;
 #ifdef DEBUG
     }
 #endif
@@ -40,28 +43,15 @@ static dispatch_once_t entryRootOnceToken = 0;
     return ADJClientSdk;
 }
 
-+ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
-    if ([self isSdkPrefixValid:sdkPrefix]) {
-        return [NSString stringWithFormat:@"%@@%@", sdkPrefix, [self sdkVersion]];
-    } else {
-        return [self sdkVersion];
-    }
++ (void)
+    setSdkPrefix:(nullable NSString *)sdkPrefix
+    fromInstanceWithClientId:(nullable NSString *)clientId;
+{
+    [[ADJAdjustInternal entryRootForClientId:clientId] setSdkPrefix:sdkPrefix];
 }
 
-+ (BOOL)isSdkPrefixValid:(nullable NSString *)sdkPrefix {
-    if (sdkPrefix == nil || sdkPrefix.length == 0) {
-        return NO;
-    }
-
-    /* TODO
-     // it has to follow allowed prefixes and version format
-     final String sdkPrefixRegex = "("
-     + Constants.ALLOWED_SDK_PREFIXES
-     + ")\\d.\\d{1,2}.\\d{1,2}";
-
-     return sdkPrefix.matches(sdkPrefixRegex);
-     */
-    return YES;
++ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
+    return [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
 }
 
 // Resets the sdk state, as if it was not initialized or used before.

@@ -45,7 +45,7 @@
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     clock:(nonnull ADJClock *)clock
-    clientSdk:(nonnull NSString *)clientSdk
+    sdkPrefix:(nullable NSString *)sdkPrefix
     clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
     deviceController:(nonnull ADJDeviceController *)deviceController
     globalCallbackParametersStorage:

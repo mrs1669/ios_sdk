@@ -55,6 +55,7 @@ ADJMeasurementSessionStartSubscriber
     deviceController:(nonnull ADJDeviceController *)deviceController
     clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
     sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
+    sdkPrefix:(nullable NSString *)sdkPrefix
     clock:(nonnull ADJClock *)clock
     publisherController:(nonnull ADJPublisherController *)publisherController;
 

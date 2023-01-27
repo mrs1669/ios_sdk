@@ -14,11 +14,19 @@
 
 #pragma mark Fields
 #pragma mark - Public properties
+/* .h
+ @property (nullable, readonly, strong, nonatomic) NSString *sdkPrefix;
+ */
 
 @interface ADJEntryRoot ()
+#pragma mark - Injected dependencies
+@property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
+@property (nullable, readwrite, strong, nonatomic) NSString *sdkPrefix;
+
+#pragma mark - Internal variables
 @property (nonnull, readwrite, strong, nonatomic)
     NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
-@property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
+
 @end
 
 @implementation ADJEntryRoot
@@ -28,8 +36,6 @@
 {
     self = [super init];
 
-    _instanceMap = [[NSMutableDictionary alloc] init];
-
     _sdkConfigData = sdkConfigData ?: [[ADJSdkConfigData alloc] initWithDefaultValues];
 
     ADJInstanceIdData *_Nonnull firstInstanceId =
@@ -37,6 +43,8 @@
 
     ADJInstanceRoot *instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:_sdkConfigData
                                                                      instanceId:firstInstanceId];
+
+    _instanceMap = [[NSMutableDictionary alloc] init];
 
     [_instanceMap setObject:instanceRoot forKey:firstInstanceId.idString];
 

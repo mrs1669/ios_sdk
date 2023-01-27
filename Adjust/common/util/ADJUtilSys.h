@@ -23,5 +23,7 @@
 
 + (nonnull NSArray<NSString *> *)pluginsClassNameList;
 
++ (nonnull NSString *)clientSdkWithPrefix:(nullable NSString *)sdkPrefix;
+
 @end
 
