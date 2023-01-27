@@ -27,6 +27,8 @@ static NSString *const kColumnValue = @"value";
 @property (nonnull, readonly, strong, nonatomic) NSMutableIndexSet *inMemoryPositionIndexSet;
 @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *deleteElementByPositionSql;
 @property (nonnull, readwrite, strong, nonatomic) ADJTallyCounter *lastElementPosition;
+@property (nonnull, readwrite, strong, nonatomic) ADJStringMap *metadataMap;
+
 @end
 
 @implementation ADJSQLiteStorageQueueBase
@@ -57,7 +59,14 @@ static NSString *const kColumnValue = @"value";
 
     _deleteElementByPositionSql = [self generateDeleteElementSqlWithTableName:tableName];
 
+    // starts at zero, but it is always increments before adding
+    //  therefore, no element added will be less than one
     _lastElementPosition = [ADJTallyCounter instanceStartingAtZero];
+
+    ADJIoDataBuilder *_Nonnull ioDataBuilder =
+        [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:self.metadataTypeValue];
+    ADJIoData *_Nonnull ioData = [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
+    _metadataMap = ioData.metadataMap;
 
     return self;
 }
@@ -248,11 +257,21 @@ static NSString *const kColumnValue = @"value";
     } source:@"remove all elements"];
 }
 
+- (void)updateMetadataMap:(nonnull ADJStringMap *)newMetadataMap {
+    self.metadataMap = newMetadataMap;
+
+    [self addElementToStorage:newMetadataMap
+           newElementPosition:[ADJNonNegativeInt instanceAtZero]
+          sqliteStorageAction:nil];
+}
+
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageBase
 - (void)concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb {
-    // an empty queue does not have anything written in storage
-    //  so, there is nothing to do
+    [self addElementToSqliteDb:sqliteDb
+                     newElement:self.metadataMap
+             newElementPosition:[ADJNonNegativeInt instanceAtZero]
+            sqliteStorageAction:nil];
 }
 
 - (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:
@@ -424,6 +443,11 @@ static int const kDeleteElementPositionFieldPosition = 1;
         return NO;
     }
 
+    if (elementPositionToAdd.uIntegerValue == 0) {
+         self.metadataMap = readIoData.metadataMap;
+         return YES;
+     }
+
     id _Nullable lastReadElement = [self concreteGenerateElementFromIoData:readIoData];
     if (lastReadElement == nil) {
         [self.logger debugDev:@"Cannot create element of last read"
@@ -554,7 +578,8 @@ static int const kDeleteElementPositionFieldPosition = 1;
     }
 
     ADJIoData *_Nonnull newElementIoData =
-        [self concreteGenerateIoDataFromElement:newElement];
+        [self generateIoDataFromElement:newElement
+                     newElementPosition:newElementPosition];
 
     [self insertElementWithStatement:insertStatement
                     newElementIoData:newElementIoData
@@ -576,6 +601,27 @@ static int const kDeleteElementPositionFieldPosition = 1;
 
     [sqliteDb commit];
     [self.logger debugDev:@"Element added to database"];
+}
+
+- (nonnull ADJIoData *)generateIoDataFromElement:(nonnull id)newElement
+                              newElementPosition:(nonnull ADJNonNegativeInt *)newElementPosition
+{
+    if (newElementPosition.uIntegerValue != 0) {
+        return [self concreteGenerateIoDataFromElement:newElement];;
+    }
+
+    ADJIoDataBuilder *_Nonnull ioDataBuilder =
+        [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:self.metadataTypeValue];
+
+    if (! [newElement isKindOfClass:[ADJStringMap class]]) {
+        [self.logger debugDev:@"Element at position 0 should be a metadata string map"
+                    issueType:ADJIssueLogicError];
+    } else {
+        ADJStringMap *_Nonnull elementMetadataMap = (ADJStringMap *)newElement;
+        [ioDataBuilder.metadataMapBuilder addAllPairsWithStringMap:elementMetadataMap];
+    }
+
+    return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
 
 - (void)insertElementWithStatement:(nonnull ADJSQLiteStatement *)insertStatement

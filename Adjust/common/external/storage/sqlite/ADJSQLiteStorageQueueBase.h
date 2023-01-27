@@ -15,6 +15,7 @@
 #import "ADJNonNegativeInt.h"
 #import "ADJSQLiteStorageActionBase.h"
 #import "ADJSQLiteDb.h"
+#import "ADJStringMap.h"
 
 @interface ADJSQLiteStorageQueueBase<E> : ADJSQLiteStorageBase
 // instantiation
@@ -54,5 +55,8 @@
 
 - (void)removeElementByPositionInStorageOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
 - (void)removeAllElements;
+
+- (nonnull ADJStringMap *)metadataMap;
+- (void)updateMetadataMap:(nonnull ADJStringMap *)newMetadataMap;
 
 @end
