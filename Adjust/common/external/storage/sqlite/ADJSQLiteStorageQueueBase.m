@@ -188,34 +188,17 @@ static NSString *const kColumnValue = @"value";
 
     return elementRemoved;
 }
-
 - (void)removeElementByPositionInStorageOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove {
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot remove element by position in storage without a reference to storageExecutor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-            strongSelf.sqliteDatabaseProviderWeak;
-
-        if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger debugDev:
-             @"Cannot remove element by position in storage"
-             " without a reference to sqliteDatabaseProvider"
-                              issueType:ADJIssueWeakReference];
+        if (strongSelf == nil) {
+            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
         [strongSelf removeElementByPosition:elementPositionToRemove
-                                   sqliteDb:[sqliteDatabaseProvider sqliteDb]];
+                                   sqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]];
     } source:@"remove element by position in storage only"];
 }
 
@@ -229,30 +212,12 @@ static NSString *const kColumnValue = @"value";
     [self.inMemoryPositionIndexSet removeAllIndexes];
 
     // in storage
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot remove all elements in storage without a reference to storageExecutor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-            strongSelf.sqliteDatabaseProviderWeak;
-
-        if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger debugDev:
-             @"Cannot remove all elements in storage without a reference to sqliteDatabaseProvider"
-                              issueType:ADJIssueWeakReference];
-            return;
-        }
-
-        ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
+        ADJSQLiteDb *_Nonnull sqliteDb = [strongSelf.sqliteDatabaseProvider sqliteDb];
         [sqliteDb executeStatements:strongSelf.deleteAllSql.stringValue];
     } source:@"remove all elements"];
 }
@@ -522,36 +487,15 @@ static int const kDeleteElementPositionFieldPosition = 1;
          newElementPosition:(nonnull ADJNonNegativeInt *)newElementPosition
         sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot add element by position in storage without a reference to storageExecutor"
-                    issueType:ADJIssueWeakReference];
-        [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
-        id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        strongSelf.sqliteDatabaseProviderWeak;
-
-        if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger debugDev:
-             @"Cannot add element by position in storage"
-             " without a reference to sqliteDatabaseProvider"
-                              issueType:ADJIssueWeakReference];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-
-        [strongSelf addElementToSqliteDb:[sqliteDatabaseProvider sqliteDb]
+        [strongSelf addElementToSqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                               newElement:newElement
                       newElementPosition:newElementPosition
                      sqliteStorageAction:sqliteStorageAction];

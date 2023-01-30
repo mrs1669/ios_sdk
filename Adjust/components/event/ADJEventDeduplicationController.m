@@ -131,7 +131,7 @@
                               key:@"unexpected duplicated id"
                             value:deduplicationIdElement.deduplicationId.stringValue
                         issueType:ADJIssueStorageIo];
-            [storage removeElementByPosition:elementPosition];
+            [storage removeElementByPosition:elementPosition sqliteStorageAction:nil];
         } else {
             [self.deduplicationIdSet
              addObject:deduplicationIdElement.deduplicationId.stringValue];

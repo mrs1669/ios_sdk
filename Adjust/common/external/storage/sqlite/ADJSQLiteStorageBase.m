@@ -11,9 +11,9 @@
 #pragma mark Fields
 #pragma mark - Protected properties
 /* .h
- @property (nullable, readonly, weak, nonatomic) ADJSingleThreadExecutor *storageExecutorWeak;
- @property (nullable, readonly, weak, nonatomic)
- id<ADJSQLiteDatabaseProvider> sqliteDatabaseProviderWeak;
+ @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *storageExecutor;
+ @property (nonnull, readonly, strong, nonatomic)
+     id<ADJSQLiteDatabaseProvider> sqliteDatabaseProvider;
  @property (nonnull, readonly, strong, nonatomic) NSString *tableName;
  @property (nonnull, readonly, strong, nonatomic) NSString *metadataTypeValue;
 
@@ -24,12 +24,14 @@
 
 @implementation ADJSQLiteStorageBase
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
-                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                       sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
-                                    tableName:(nonnull NSString *)tableName
-                            metadataTypeValue:(nonnull NSString *)metadataTypeValue {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    source:(nonnull NSString *)source
+    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+    sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
+    tableName:(nonnull NSString *)tableName
+    metadataTypeValue:(nonnull NSString *)metadataTypeValue
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSQLiteStorageBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -37,8 +39,8 @@
     }
 
     self = [super initWithLoggerFactory:loggerFactory source:source];
-    _storageExecutorWeak = storageExecutor;
-    _sqliteDatabaseProviderWeak = sqliteDatabaseProvider;
+    _storageExecutor = storageExecutor;
+    _sqliteDatabaseProvider = sqliteDatabaseProvider;
     _tableName = tableName;
     _metadataTypeValue = metadataTypeValue;
 

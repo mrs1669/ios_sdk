@@ -235,35 +235,15 @@ static int const kDeleteKeyFieldPosition = 1;
                               key:(nonnull NSString *)key
               sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot put key/value in storage without a reference to storageExecutor"
-                    issueType:ADJIssueWeakReference];
-        [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
-        id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-            strongSelf.sqliteDatabaseProviderWeak;
-
-        if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger debugDev:
-             @"Cannot put key/value in storage without a reference to sqliteDatabaseProvider"
-                              issueType:ADJIssueWeakReference];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-
-        [strongSelf addPairToDatabase:[sqliteDatabaseProvider sqliteDb]
+        [strongSelf addPairToDatabase:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                 value:value
                                   key:key
                   sqliteStorageAction:sqliteStorageAction];
@@ -327,35 +307,15 @@ static int const kDeleteKeyFieldPosition = 1;
 - (void)removePairFromStorageWithKey:(nonnull NSString *)key
                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot remove key/value in storage without a reference to storageExecutor"
-                    issueType:ADJIssueWeakReference];
-        [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
-        id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-            strongSelf.sqliteDatabaseProviderWeak;
-
-        if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger debugDev:
-             @"Cannot remove key/value in storage without a reference to sqliteDatabaseProvider"
-                              issueType:ADJIssueWeakReference];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-
-        [strongSelf removePairFromDatabase:[sqliteDatabaseProvider sqliteDb]
+        [strongSelf removePairFromDatabase:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        key:key
                        sqliteStorageAction:sqliteStorageAction];
     } source:@"remove pair from storage"];
@@ -406,36 +366,15 @@ static int const kDeleteKeyFieldPosition = 1;
     replaceAllFromStorageWithStringMap:(nonnull ADJStringMap *)stringMap
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot replace all key/values in storage without a reference to storageExecutor"
-                    issueType:ADJIssueWeakReference];
-        [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-        return;
-    }
-
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
-        id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-            strongSelf.sqliteDatabaseProviderWeak;
-
-        if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger debugDev:
-             @"Cannot replace all key/values in storage"
-             " without a reference to sqliteDatabaseProvider"
-                              issueType:ADJIssueWeakReference];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-
-        [strongSelf replaceAllFromDatabase:[sqliteDatabaseProvider sqliteDb]
+        [strongSelf replaceAllFromDatabase:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                  stringMap:stringMap
                        sqliteStorageAction:sqliteStorageAction];
     } source:@"replace all from storage"];

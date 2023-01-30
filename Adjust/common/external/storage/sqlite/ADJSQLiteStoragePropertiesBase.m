@@ -92,43 +92,19 @@ static NSString *const kColumnValue = @"value";
 }
 
 - (void)updateInStorageOnlyWithNewDataValue:(nonnull id)newDataValue {
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot update new value in storage without a reference to storage executor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        self.sqliteDatabaseProviderWeak;
-    if (sqliteDatabaseProvider == nil) {
-        [self.logger debugDev:
-         @"Cannot update new value in storage without a reference to sqliteDatabaseProvider"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJSQLiteDb *_Nullable sqliteDb = sqliteDatabaseProvider.sqliteDb;
-    if (sqliteDb == nil) {
-        [self.logger debugDev:
-         @"Cannot update new value in storage without a reference to sqliteDb"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
-        [strongSelf updateInStorageSyncWithSqliteDb:sqliteDb
+        [strongSelf updateInStorageSyncWithSqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        newDataValue:newDataValue];
     } source:@"update in storage only"];
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb
-                            newDataValue:(nonnull id)newDataValue {
+                            newDataValue:(nonnull id)newDataValue
+{
     //[self printRowNumberWithSQLiteDb:sqliteDb];
     // delete all rows
     BOOL deletedSuccess = [self deleteAllInTransactionWithDb:sqliteDb];
