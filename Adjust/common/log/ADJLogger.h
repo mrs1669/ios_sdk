@@ -79,6 +79,11 @@
                                        value:(nullable NSString *)value
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                        from:(nonnull NSString *)from
+                                         key:(nonnull NSString *)key
+                                       value:(nullable NSString *)value
+                                   issueType:(nonnull ADJIssue)issueType;
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         key1:(nonnull NSString *)key1
                                       value1:(nullable NSString *)value1
                                         key2:(nonnull NSString *)key2

@@ -37,6 +37,7 @@
 
 + (nonnull NSString *)logMessageAndParamsFormat:
     (nonnull ADJInputLogMessageData *)inputLogMessageData;
++ (nonnull id)stringOrNsNull:(nullable NSString *)string;
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex;

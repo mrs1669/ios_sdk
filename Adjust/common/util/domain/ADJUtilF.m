@@ -217,6 +217,10 @@
             [ADJLogMessageData generateJsonFromFoundationDictionary:
              inputLogMessageData.messageParams]];
 }
++ (nonnull id)stringOrNsNull:(nullable NSString *)string {
+    return string == nil ? [NSNull null] : string;
+}
+
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex {
