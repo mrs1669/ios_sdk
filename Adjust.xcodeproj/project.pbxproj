@@ -3091,6 +3091,20 @@
 		6FCD53CC2981D61C007542FB /* ADJUtilFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53C02981D61C007542FB /* ADJUtilFiles.m */; };
 		6FCD53CD2981D61C007542FB /* ADJUtilFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53C02981D61C007542FB /* ADJUtilFiles.m */; };
 		6FCD53CE2981D61C007542FB /* ADJUtilFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53C02981D61C007542FB /* ADJUtilFiles.m */; };
+		6FCD53F22987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */; };
+		6FCD53F32987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */; };
+		6FCD53F42987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */; };
+		6FCD53F52987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */; };
+		6FCD53F62987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */; };
+		6FCD53F72987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */; };
+		6FCD53F82987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */; };
+		6FCD53F92987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */; };
+		6FCD53FA2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */; };
+		6FCD53FB2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */; };
+		6FCD53FC2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */; };
+		6FCD53FD2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */; };
+		6FCD53FE2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */; };
+		6FCD53FF2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */; };
 		6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
 		6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -3572,6 +3586,8 @@
 		6FCD53B0298176B2007542FB /* ADJUtilUserDefaults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJUtilUserDefaults.m; sourceTree = "<group>"; };
 		6FCD53BF2981D61C007542FB /* ADJUtilFiles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJUtilFiles.h; sourceTree = "<group>"; };
 		6FCD53C02981D61C007542FB /* ADJUtilFiles.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJUtilFiles.m; sourceTree = "<group>"; };
+		6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSQLiteStorageQueueMetadataAction.h; sourceTree = "<group>"; };
+		6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSQLiteStorageQueueMetadataAction.m; sourceTree = "<group>"; };
 		6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInputLogMessageData.h; sourceTree = "<group>"; };
 		6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInputLogMessageData.m; sourceTree = "<group>"; };
 		6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLogMessageData.h; sourceTree = "<group>"; };
@@ -4529,6 +4545,8 @@
 				6F214E95288AD5D1002319D7 /* ADJSQLiteStoragePropertiesActionBase.m */,
 				6F278FAD288AD72600804594 /* ADJSQLiteStorageActionBase.h */,
 				6F278FAE288AD72600804594 /* ADJSQLiteStorageActionBase.m */,
+				6FCD53F02987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h */,
+				6FCD53F12987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m */,
 			);
 			path = storage_action;
 			sourceTree = "<group>";
@@ -4782,6 +4800,7 @@
 				0A25F89328E24313001988A1 /* ADJAdjustPublishers.h in Headers */,
 				0A25F89528E24313001988A1 /* ADJAdjustLogger.h in Headers */,
 				0A25F89128E24313001988A1 /* ADJAdjustForegroundSubscriber.h in Headers */,
+				6FCD53F22987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */,
 				0A25F89428E24313001988A1 /* ADJAdjustPlugin.h in Headers */,
 				0A25F89228E24313001988A1 /* ADJAdjustPackageSendingSubscriber.h in Headers */,
 				0735D61728D367D400614B88 /* ADJAttributionData.h in Headers */,
@@ -5137,6 +5156,7 @@
 				6F854775291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A25F92D28E5CAC5001988A1 /* ADJV4Attribution.h in Headers */,
 				0A25F92E28E5CAC6001988A1 /* ADJV4ActivityPackage.h in Headers */,
+				6FCD53F32987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */,
 				0A25F92F28E5CAC6001988A1 /* ADJV4UserDefaultsData.h in Headers */,
 				0A25F93028E5CAC6001988A1 /* ADJV4RestMigration.h in Headers */,
 				0A25F93128E5CAC6001988A1 /* ADJSQLiteStoragePropertiesActionBase.h in Headers */,
@@ -5391,6 +5411,7 @@
 				6F854776291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A25FB2A28F42381001988A1 /* ADJV4Attribution.h in Headers */,
 				0A25FB2B28F42381001988A1 /* ADJV4ActivityPackage.h in Headers */,
+				6FCD53F42987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */,
 				0A25FB2C28F42381001988A1 /* ADJV4UserDefaultsData.h in Headers */,
 				0A25FB2D28F42381001988A1 /* ADJV4RestMigration.h in Headers */,
 				0A25FB2E28F42381001988A1 /* ADJSQLiteStoragePropertiesActionBase.h in Headers */,
@@ -5645,6 +5666,7 @@
 				6F854777291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A25FCF928F43C2C001988A1 /* ADJV4Attribution.h in Headers */,
 				0A25FCFA28F43C2C001988A1 /* ADJV4ActivityPackage.h in Headers */,
+				6FCD53F52987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */,
 				0A25FCFB28F43C2C001988A1 /* ADJV4UserDefaultsData.h in Headers */,
 				0A25FCFC28F43C2C001988A1 /* ADJV4RestMigration.h in Headers */,
 				0A25FCFD28F43C2C001988A1 /* ADJSQLiteStoragePropertiesActionBase.h in Headers */,
@@ -5899,6 +5921,7 @@
 				6F854778291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A7E48DA28F8276C00827F0B /* ADJV4Attribution.h in Headers */,
 				0A7E48DB28F8276C00827F0B /* ADJV4ActivityPackage.h in Headers */,
+				6FCD53F62987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */,
 				0A7E48DC28F8276C00827F0B /* ADJV4UserDefaultsData.h in Headers */,
 				0A7E48DD28F8276C00827F0B /* ADJV4RestMigration.h in Headers */,
 				0A7E48DE28F8276C00827F0B /* ADJSQLiteStoragePropertiesActionBase.h in Headers */,
@@ -6153,6 +6176,7 @@
 				6F854779291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A7E49CA28F82F6C00827F0B /* ADJV4Attribution.h in Headers */,
 				0A7E49CB28F82F6C00827F0B /* ADJV4ActivityPackage.h in Headers */,
+				6FCD53F72987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */,
 				0A7E49CC28F82F6C00827F0B /* ADJV4UserDefaultsData.h in Headers */,
 				0A7E49CD28F82F6C00827F0B /* ADJV4RestMigration.h in Headers */,
 				0A7E49CE28F82F6C00827F0B /* ADJSQLiteStoragePropertiesActionBase.h in Headers */,
@@ -6407,6 +6431,7 @@
 				6F85477A291851EB008F6F42 /* ADJAtomicTallyCounter.h in Headers */,
 				0A7E4AB528F830AD00827F0B /* ADJV4Attribution.h in Headers */,
 				0A7E4AB628F830AD00827F0B /* ADJV4ActivityPackage.h in Headers */,
+				6FCD53F82987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.h in Headers */,
 				0A7E4AB728F830AD00827F0B /* ADJV4UserDefaultsData.h in Headers */,
 				0A7E4AB828F830AD00827F0B /* ADJV4RestMigration.h in Headers */,
 				0A7E4AB928F830AD00827F0B /* ADJSQLiteStoragePropertiesActionBase.h in Headers */,
@@ -6842,6 +6867,7 @@
 				6FAC56CA288FE2140070F564 /* ADJGlobalCallbackParametersStorage.m in Sources */,
 				0A25F89628E24313001988A1 /* ADJAdjustPublishers.m in Sources */,
 				071E44BF2886DC5800695D89 /* ADJV4FilesData.m in Sources */,
+				6FCD53F92987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */,
 				0781F24228D9ECDA0041AAA3 /* ADJUtilR.m in Sources */,
 				0735D61428D3676700614B88 /* ADJAttributionStateData.m in Sources */,
 				070DA83628882B3A008486CB /* ADJClock.m in Sources */,
@@ -7046,6 +7072,7 @@
 				0A25F9C728E5CB2E001988A1 /* ADJMoney.m in Sources */,
 				0A25F9C828E5CB2E001988A1 /* ADJMoneyAmountBase.m in Sources */,
 				0A25F9C928E5CB2E001988A1 /* ADJMoneyDecimalAmount.m in Sources */,
+				6FCD53FA2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */,
 				0A25F9CA28E5CB2E001988A1 /* ADJMoneyDoubleAmount.m in Sources */,
 				0A25F9CB28E5CB2E001988A1 /* ADJUtilSys.m in Sources */,
 				0A25F9CC28E5CB2E001988A1 /* ADJConstantsSys.m in Sources */,
@@ -7250,6 +7277,7 @@
 				0A25FBCD28F43027001988A1 /* ADJMoney.m in Sources */,
 				0A25FBCE28F43027001988A1 /* ADJMoneyAmountBase.m in Sources */,
 				0A25FBCF28F43027001988A1 /* ADJMoneyDecimalAmount.m in Sources */,
+				6FCD53FB2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */,
 				0A25FBD028F43027001988A1 /* ADJMoneyDoubleAmount.m in Sources */,
 				0A25FBD128F43027001988A1 /* ADJUtilSys.m in Sources */,
 				0A25FBD228F43027001988A1 /* ADJConstantsSys.m in Sources */,
@@ -7454,6 +7482,7 @@
 				0A25FDCC28F442DE001988A1 /* ADJMoney.m in Sources */,
 				0A25FDCD28F442DE001988A1 /* ADJMoneyAmountBase.m in Sources */,
 				0A25FDCE28F442DE001988A1 /* ADJMoneyDecimalAmount.m in Sources */,
+				6FCD53FC2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */,
 				0A25FDCF28F442DE001988A1 /* ADJMoneyDoubleAmount.m in Sources */,
 				0A25FDD028F442DE001988A1 /* ADJUtilSys.m in Sources */,
 				0A25FDD128F442DE001988A1 /* ADJConstantsSys.m in Sources */,
@@ -7658,6 +7687,7 @@
 				0A2BF90F28F6053000852E17 /* ADJMoney.m in Sources */,
 				0A2BF91028F6053000852E17 /* ADJMoneyAmountBase.m in Sources */,
 				0A2BF91128F6053000852E17 /* ADJMoneyDecimalAmount.m in Sources */,
+				6FCD53FD2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */,
 				0A2BF91228F6053000852E17 /* ADJMoneyDoubleAmount.m in Sources */,
 				0A2BF91328F6053000852E17 /* ADJUtilSys.m in Sources */,
 				0A2BF91428F6053000852E17 /* ADJConstantsSys.m in Sources */,
@@ -7862,6 +7892,7 @@
 				0A2BF9EC28F6072400852E17 /* ADJMoney.m in Sources */,
 				0A2BF9ED28F6072400852E17 /* ADJMoneyAmountBase.m in Sources */,
 				0A2BF9EE28F6072400852E17 /* ADJMoneyDecimalAmount.m in Sources */,
+				6FCD53FE2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */,
 				0A2BF9EF28F6072400852E17 /* ADJMoneyDoubleAmount.m in Sources */,
 				0A2BF9F028F6072400852E17 /* ADJUtilSys.m in Sources */,
 				0A2BF9F128F6072400852E17 /* ADJConstantsSys.m in Sources */,
@@ -8066,6 +8097,7 @@
 				0A2BFACF28F60B8C00852E17 /* ADJMoney.m in Sources */,
 				0A2BFAD028F60B8C00852E17 /* ADJMoneyAmountBase.m in Sources */,
 				0A2BFAD128F60B8C00852E17 /* ADJMoneyDecimalAmount.m in Sources */,
+				6FCD53FF2987F29B007542FB /* ADJSQLiteStorageQueueMetadataAction.m in Sources */,
 				0A2BFAD228F60B8C00852E17 /* ADJMoneyDoubleAmount.m in Sources */,
 				0A2BFAD328F60B8C00852E17 /* ADJUtilSys.m in Sources */,
 				0A2BFAD428F60B8C00852E17 /* ADJConstantsSys.m in Sources */,
