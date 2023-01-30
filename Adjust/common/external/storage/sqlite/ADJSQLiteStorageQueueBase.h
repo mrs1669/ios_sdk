@@ -34,8 +34,9 @@
 // public api
 - (nonnull ADJNonNegativeInt *)count;
 - (BOOL)isEmpty;
+- (nullable ADJNonNegativeInt *)positionAtFront;
 - (nullable E)elementAtFront;
-- (nullable E)elementByPosition:(nonnull ADJNonNegativeInt *)elementPosition;
+- (nullable E)elementByPosition:(nullable ADJNonNegativeInt *)elementPosition;
 
 - (nonnull NSArray<E> *) copyElementList;
 - (nonnull NSArray<ADJNonNegativeInt *> *)copySortedElementPositionList;
@@ -47,16 +48,21 @@
 
 - (nullable E)removeElementAtFront;
 
-- (nullable E)removeElementByPosition:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
+- (nullable E)removeElementByPosition:(nonnull ADJNonNegativeInt *)elementPositionToRemove
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 - (BOOL)removeElementByPositionInTransaction:(nonnull ADJNonNegativeInt *)elementPositionToRemove
                                     sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb;
 - (nullable E)removeElementByPositionInMemoryOnly:
     (nonnull ADJNonNegativeInt *)elementPositionToRemove;
-
 - (void)removeElementByPositionInStorageOnly:(nonnull ADJNonNegativeInt *)elementPositionToRemove;
+
 - (void)removeAllElements;
 
 - (nonnull ADJStringMap *)metadataMap;
-- (void)updateMetadataMap:(nonnull ADJStringMap *)newMetadataMap;
+- (void)updateMetadataWithMap:(nonnull ADJStringMap *)newMetadataMap;
+- (void)updateMetadataInMemoryOnlyWithMap:(nonnull ADJStringMap *)newMetadataMap;
+- (BOOL)updateMetadataInTransactionWithMap:(nonnull ADJStringMap *)newMetadataMap
+                                  sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb;
+- (void)updateMetadataInStorageOnlyWitMap:(nonnull ADJStringMap *)newMetadataMap;
 
 @end
