@@ -19,7 +19,7 @@
 #pragma mark Fields
 @interface ADJMainQueueController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) ADJMainQueueStorage *mainQueueStorageWeak;
+@property (nullable, readonly, weak, nonatomic) ADJMainQueueStorage *storage;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
 
 #pragma mark - Internal variables
@@ -31,14 +31,16 @@
 
 @implementation ADJMainQueueController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                             mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-                             threadController:(nonnull ADJThreadController *)threadController
-                                        clock:(nonnull ADJClock *)clock
-                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
+    threadController:(nonnull ADJThreadController *)threadController
+    clock:(nonnull ADJClock *)clock
+    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"MainQueueController"];
-    _mainQueueStorageWeak = mainQueueStorage;
+    _storage = mainQueueStorage;
     _clockWeak = clock;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
@@ -57,16 +59,8 @@
 #pragma mark Public API
 // TODO possibly move containsXpackage responsability to their callers
 - (BOOL)containsFirstSessionPackage {
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger debugDev:
-         @"Cannot determine if it contains first session package without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-        return NO;
-    }
-
     NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy =
-    [mainQueueStorage copyElementList];
+        [self.storage copyElementList];
 
     for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
         if ([self isFirstSessionPackageWithSdkPackage:sdkPackageData]) {
@@ -78,15 +72,8 @@
 }
 
 - (BOOL)containsAsaClickPackage {
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger debugDev:
-         @"Cannot determine if it contains first session package without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-        return NO;
-    }
-
-    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy = [mainQueueStorage copyElementList];
+    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy =
+        [self.storage copyElementList];
 
     for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
         if ([self isAsaClickPackageWithData:sdkPackageData]) {
@@ -247,31 +234,23 @@
 
 #pragma mark Internal Methods
 - (void)addSdkPackageToSendWithData:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
-                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger debugDev:
-         @"Cannot add sdk package to send without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-        return;
-    }
+                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
 
-    [mainQueueStorage enqueueElementToLast:sdkPackageDataToAdd
-                       sqliteStorageAction:sqliteStorageAction];
+    [self.storage enqueueElementToLast:sdkPackageDataToAdd
+                   sqliteStorageAction:sqliteStorageAction];
 
-    id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
+    id<ADJSdkPackageData> _Nullable packageAtFront = [self.storage elementAtFront];
     BOOL sendPackageAtFront =
-    [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
-                                          mainQueueSdkPackageCount:[mainQueueStorage count]
-                                                 hasPackageAtFront:packageAtFront != nil];
+        [self.mainQueueStateAndTracker sendWhenPackageAddedWithPackage:sdkPackageDataToAdd
+                                              mainQueueSdkPackageCount:[self.storage count]
+                                                     hasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         NSString *_Nonnull source = [NSString stringWithFormat:@"%@ added",
                                      [sdkPackageDataToAdd generateShortDescription]];
 
         [self sendPackageWithData:packageAtFront
-                 mainQueueStorage:mainQueueStorage
                            source:source];
     }
 }
@@ -303,55 +282,34 @@
 }
 
 - (void)handleSdkInit {
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger debugDev:@"Cannot handle sdk init without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
+    id<ADJSdkPackageData> _Nullable packageAtFront = [self.storage elementAtFront];
 
     BOOL sendPackageAtFront =
-    [self.mainQueueStateAndTracker
-     sendWhenSdkInitWithHasPackageAtFront:packageAtFront != nil];
+        [self.mainQueueStateAndTracker
+         sendWhenSdkInitWithHasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                 mainQueueStorage:mainQueueStorage
                            source:@"sdk init"];
     }
 }
 
 - (void)handleResumeSending {
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger debugDev:@"Cannot handle resuming sending without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
+    id<ADJSdkPackageData> _Nullable packageAtFront = [self.storage elementAtFront];
 
-    id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
-
-    BOOL sendPackageAtFront = [self.mainQueueStateAndTracker sendWhenResumeSendingWithHasPackageAtFront:packageAtFront != nil];
+    BOOL sendPackageAtFront =
+        [self.mainQueueStateAndTracker
+         sendWhenResumeSendingWithHasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                 mainQueueStorage:mainQueueStorage
                            source:@"resume sending"];
     }
 }
 
 - (void)handleResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger debugDev:@"Cannot handle response without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
     ADJMainQueueResponseProcessingData *_Nonnull mainQueueResponseProcessingData =
-    [self.mainQueueStateAndTracker processReceivedSdkResponseWithData:sdkResponseData];
+        [self.mainQueueStateAndTracker processReceivedSdkResponseWithData:sdkResponseData];
 
     if (mainQueueResponseProcessingData.removePackageAtFront) {
         [self removePackageAtFrontWithStorage:mainQueueStorage];
@@ -362,7 +320,7 @@
         return;
     }
 
-    id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
+    id<ADJSdkPackageData> _Nullable packageAtFront = [self.storage elementAtFront];
 
     BOOL sendPackageAtFront =
     [self.mainQueueStateAndTracker
@@ -370,7 +328,6 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                 mainQueueStorage:mainQueueStorage
                            source:@"handle response"];
     }
 }
@@ -403,29 +360,21 @@
     [self.logger debugDev:@"Delay ended"
                      from:source];
 
-    ADJMainQueueStorage *_Nullable mainQueueStorage = self.mainQueueStorageWeak;
-    if (mainQueueStorage == nil) {
-        [self.logger debugDev:@"Cannot handle delay end without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    id<ADJSdkPackageData> _Nullable packageAtFront = [mainQueueStorage elementAtFront];
+    id<ADJSdkPackageData> _Nullable packageAtFront = [self.storage elementAtFront];
 
     BOOL sendPackageAtFront =
-    [self.mainQueueStateAndTracker
-     sendWhenDelayEndedWithHasPackageAtFront:packageAtFront != nil];
+        [self.mainQueueStateAndTracker
+         sendWhenDelayEndedWithHasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                 mainQueueStorage:mainQueueStorage
                            source:@"handle delay end"];
     }
 }
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
-           mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-                     source:(nonnull NSString *)source {
+                     source:(nonnull NSString *)source
+{
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package it is nil"
                          from:source];
@@ -438,7 +387,7 @@
                     value:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
-    [self generateSendingParametersWithStorage:mainQueueStorage];
+        [self generateSendingParametersWithStorage:self.storage];
 
     [self.sender sendSdkPackageWithData:packageToSend
                       sendingParameters:sendingParameters
