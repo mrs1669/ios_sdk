@@ -73,7 +73,9 @@
 
     _isInDelay = NO;
 
-    _mainQueueContainsAsaClickPackage = [mainQueueController containsAsaClickPackage];
+    ADJNonNegativeInt *_Nullable asaClickCount = [mainQueueController asaClickCount];
+    _mainQueueContainsAsaClickPackage = asaClickCount != nil
+        && asaClickCount.uIntegerValue > 0;
 
     [ADJAsaAttributionController
      updateAdjustAttributionWithStateData:[adjustAttributionStateStorage readOnlyStoredDataValue]

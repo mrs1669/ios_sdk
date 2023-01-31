@@ -27,4 +27,7 @@ NS_ASSUME_NONNULL_END
                                    ioData:(nonnull ADJIoData *)ioData
                                    logger:(nonnull ADJLogger *)logger;
 
+// public api
+- (BOOL)isAsaClick;
+
 @end

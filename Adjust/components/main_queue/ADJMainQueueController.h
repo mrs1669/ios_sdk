@@ -27,6 +27,8 @@
 #import "ADJInfoResponseData.h"
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJSessionPackageData.h"
+#import "ADJInstallSessionTrackedSubscriber.h"
+#import "ADJAsaClickTrackedSubscriber.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -44,9 +46,15 @@
                               backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
                       sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
+// publishers
+@property (nonnull, readonly, strong, nonatomic)
+    ADJInstallSessionTrackedPublisher *installSessionTrackedPublisher;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJAsaClickTrackedPublisher *asaClickTrackedPublisher;
+
 // public api
-- (BOOL)containsFirstSessionPackage;
-- (BOOL)containsAsaClickPackage;
+- (nullable ADJNonNegativeInt *)firstSessionCount;
+- (nullable ADJNonNegativeInt *)asaClickCount;
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;

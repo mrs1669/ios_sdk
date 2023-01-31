@@ -17,20 +17,19 @@
 #import "ADJUtilF.h"
 #import "ADJConstantsParam.h"
 #import "ADJSQLiteStorageQueueMetadataAction.h"
+#import "ADJMainQueueTrackedPackages.h"
 
 #pragma mark Fields
-#pragma mark - Private constants
-static NSString *const kFirstSessionCountKey = @"firstSessionCount";
-
 @interface ADJMainQueueController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) ADJMainQueueStorage *storage;
+@property (nonnull, readonly, strong, nonatomic) ADJMainQueueStorage *storage;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
 
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSender *sender;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStateAndTracker *mainQueueStateAndTracker;
+@property (nonnull, readonly, strong, nonatomic) ADJMainQueueTrackedPackages *trackedPackages;
 
 @end
 
@@ -55,38 +54,29 @@ static NSString *const kFirstSessionCountKey = @"firstSessionCount";
                                                              sourceDescription:self.source
                                                          threadExecutorFactory:threadController];
 
-    _mainQueueStateAndTracker = [[ADJMainQueueStateAndTracker alloc] initWithLoggerFactory:loggerFactory
-                                                                           backoffStrategy:backoffStrategy];
+    _mainQueueStateAndTracker =
+        [[ADJMainQueueStateAndTracker alloc] initWithLoggerFactory:loggerFactory
+                                                   backoffStrategy:backoffStrategy];
+
+    _trackedPackages = [[ADJMainQueueTrackedPackages alloc]
+                        initWithLoggerFactory:loggerFactory
+                        mainQueueStorage:mainQueueStorage];
 
     return self;
 }
 
 #pragma mark Public API
-// TODO possibly move containsXpackage responsability to their callers
-- (BOOL)containsFirstSessionPackage {
-    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy =
-        [self.storage copyElementList];
-
-    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
-        if ([self isFirstSessionPackageWithSdkPackage:sdkPackageData]) {
-            return YES;
-        }
-    }
-
-    return NO;
+- (nullable ADJNonNegativeInt *)firstSessionCount {
+    return [self.trackedPackages firstSessionCount];
 }
-
-- (BOOL)containsAsaClickPackage {
-    NSArray<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataListCopy =
-        [self.storage copyElementList];
-
-    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in sdkPackageDataListCopy) {
-        if ([self isAsaClickPackageWithData:sdkPackageData]) {
-            return YES;
-        }
-    }
-
-    return NO;
+- (nullable ADJNonNegativeInt *)asaClickCount {
+    return [self.trackedPackages asaClickCount];
+}
+- (nonnull ADJInstallSessionTrackedPublisher *)installSessionTrackedPublisher {
+    return [self.trackedPackages installSessionTrackedPublisher];
+}
+- (nonnull ADJAsaClickTrackedPublisher *)asaClickTrackedPublisher {
+    return [self.trackedPackages asaClickTrackedPublisher];
 }
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
@@ -242,8 +232,8 @@ static NSString *const kFirstSessionCountKey = @"firstSessionCount";
                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     ADJSQLiteStorageActionBase *_Nullable decoratedSqliteStorageAction =
-        [self incrementFirstSessionCountWithPackageToAdd:sdkPackageDataToAdd
-                               sqliteStorageActionForAdd:sqliteStorageAction];
+        [self.trackedPackages incrementTrackedCountWithPackageToAdd:sdkPackageDataToAdd
+                                          sqliteStorageActionForAdd:sqliteStorageAction];
 
     [self.storage enqueueElementToLast:sdkPackageDataToAdd
                    sqliteStorageAction:decoratedSqliteStorageAction];
@@ -261,87 +251,6 @@ static NSString *const kFirstSessionCountKey = @"firstSessionCount";
         [self sendPackageWithData:packageAtFront
                            source:source];
     }
-}
-
-- (nullable ADJSQLiteStorageActionBase *)
-    incrementFirstSessionCountWithPackageToAdd:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
-    sqliteStorageActionForAdd:(nullable ADJSQLiteStorageActionBase *)sqliteStorageActionForAdd
-{
-    if (! [self isFirstSessionPackageWithSdkPackage:sdkPackageDataToAdd]) {
-        return sqliteStorageActionForAdd;
-    }
-
-    ADJStringMap *_Nonnull currentMetadataMap = [self.storage metadataMap];
-
-    ADJStringMapBuilder *_Nonnull metadataBuilder =
-        [[ADJStringMapBuilder alloc] initWithStringMap:currentMetadataMap];
-
-    ADJNonNegativeInt *_Nonnull newFirstSessionCount =
-        [self incrementedFirstSessionCountWithMetadataMap:currentMetadataMap];
-
-    [metadataBuilder addPairWithValue:[newFirstSessionCount toIoValue]
-                                  key:kFirstSessionCountKey];
-
-    ADJStringMap *_Nonnull updatedMetadaMap =
-        [[ADJStringMap alloc] initWithStringMapBuilder:metadataBuilder];
-
-    return [[ADJSQLiteStorageQueueMetadataAction alloc]
-            initWithQueueStorage:self.storage
-            metadataMap:updatedMetadaMap
-            decoratedSQLiteStorageAction:sqliteStorageActionForAdd];
-}
-
-- (nonnull ADJNonNegativeInt *)incrementedFirstSessionCountWithMetadataMap:
-    (nonnull ADJStringMap *)metadataMap
-{
-    ADJNonEmptyString *_Nullable currentFirstSessionCountIoValue =
-        [metadataMap pairValueWithKey:kFirstSessionCountKey];
-
-    if (currentFirstSessionCountIoValue == nil) {
-        return [ADJNonNegativeInt instanceAtOne];
-    }
-
-    [self.logger debugDev:@"Previous first sesssion count found"
-                      key:@"currentFirstSessionCountIoValue"
-                    value:currentFirstSessionCountIoValue.stringValue
-                issueType:ADJIssueUnexpectedInput];
-
-    ADJNonNegativeInt *_Nullable currentFirstSessionCount =
-        [ADJNonNegativeInt instanceFromIoDataValue:currentFirstSessionCountIoValue
-                                            logger:self.logger];
-
-    if (currentFirstSessionCount == nil) {
-        return [ADJNonNegativeInt instanceAtOne];
-    }
-
-    return [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-            currentFirstSessionCount.uIntegerValue + 1];
-}
-
-- (BOOL)isFirstSessionPackageWithSdkPackage:(nullable id<ADJSdkPackageData>)sdkPackageData {
-    if (sdkPackageData == nil
-        || ! [sdkPackageData isKindOfClass:[ADJSessionPackageData class]])
-    {
-        return NO;
-    }
-
-    ADJSessionPackageData *_Nonnull sessionPackageData = (ADJSessionPackageData *)sdkPackageData;
-
-    return [sessionPackageData isFirstSession];
-}
-
-- (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
-    if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
-        return NO;
-    }
-
-    ADJNonEmptyString *_Nullable clickSourceValue =
-    [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
-    if (clickSourceValue == nil) {
-        return NO;
-    }
-
-    return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
 }
 
 - (void)handleSdkInit {
@@ -395,74 +304,6 @@ static NSString *const kFirstSessionCountKey = @"firstSessionCount";
     }
 }
 
-- (nullable ADJSQLiteStorageActionBase *)decrementFirstSessionCountWithPackageToRemove:
-    (nonnull id<ADJSdkPackageData>)sourceResponsePackage
-{
-    if (! [self isFirstSessionPackageWithSdkPackage:sourceResponsePackage]) {
-        return nil;
-    }
-
-    ADJStringMap *_Nonnull currentMetadataMap = [self.storage metadataMap];
-
-    ADJStringMapBuilder *_Nonnull metadataBuilder =
-        [[ADJStringMapBuilder alloc] initWithStringMap:currentMetadataMap];
-
-    ADJNonNegativeInt *_Nonnull newFirstSessionCount =
-        [self decrementedFirstSessionCountWithMetadataMap:currentMetadataMap];
-
-    [metadataBuilder addPairWithValue:[newFirstSessionCount toIoValue]
-                                  key:kFirstSessionCountKey];
-
-    ADJStringMap *_Nonnull updatedMetadaMap =
-        [[ADJStringMap alloc] initWithStringMapBuilder:metadataBuilder];
-
-    return [[ADJSQLiteStorageQueueMetadataAction alloc]
-            initWithQueueStorage:self.storage
-            metadataMap:updatedMetadaMap
-            decoratedSQLiteStorageAction:nil];
-}
-
-- (nonnull ADJNonNegativeInt *)decrementedFirstSessionCountWithMetadataMap:
-    (nonnull ADJStringMap *)metadataMap
-{
-    ADJNonEmptyString *_Nullable currentFirstSessionCountIoValue =
-        [metadataMap pairValueWithKey:kFirstSessionCountKey];
-
-    if (currentFirstSessionCountIoValue == nil) {
-        [self.logger debugDev:@"Previous first sesssion count not found"
-                         from:@"decrementing first session count"
-                          key:@"currentFirstSessionCountIoValue"
-                        value:currentFirstSessionCountIoValue.stringValue
-                    issueType:ADJIssueUnexpectedInput];
-        return [ADJNonNegativeInt instanceAtZero];
-    }
-
-    ADJNonNegativeInt *_Nullable currentFirstSessionCount =
-        [ADJNonNegativeInt instanceFromIoDataValue:currentFirstSessionCountIoValue
-                                            logger:self.logger];
-
-    if (currentFirstSessionCount == nil) {
-        [self.logger debugDev:@"Previous first sesssion count could not be parsed to int"
-                         from:@"decrementing first session count"
-                          key:@"currentFirstSessionCountIoValue"
-                        value:currentFirstSessionCountIoValue.stringValue
-                    issueType:ADJIssueUnexpectedInput];
-        return [ADJNonNegativeInt instanceAtZero];
-    }
-
-    if (currentFirstSessionCount.uIntegerValue == 0) {
-        [self.logger debugDev:@"Previous first sesssion count was zero, an invalid value"
-                         from:@"decrementing first session count"
-                          key:@"currentFirstSessionCountIoValue"
-                        value:currentFirstSessionCountIoValue.stringValue
-                    issueType:ADJIssueUnexpectedInput];
-        return [ADJNonNegativeInt instanceAtZero];
-    }
-
-    return [[ADJNonNegativeInt alloc]
-            initWithUIntegerValue:currentFirstSessionCount.uIntegerValue - 1];
-}
-
 - (void)removePackageAtFrontWithSourceResponsePackage:
     (nonnull id<ADJSdkPackageData>)sourceResponsePackage
 {
@@ -470,7 +311,7 @@ static NSString *const kFirstSessionCountKey = @"firstSessionCount";
         [self positionOfPackageWithWithSourceResponsePackage:sourceResponsePackage];
 
     ADJSQLiteStorageActionBase *_Nullable updateMetadataSqliteStorageAction =
-        [self decrementFirstSessionCountWithPackageToRemove:sourceResponsePackage];
+        [self.trackedPackages decrementTrackedCountWithPackageToRemove:sourceResponsePackage];
 
     id<ADJSdkPackageData> _Nullable removedSdkPackage =
         [self.storage removeElementByPosition:positionAtFront
@@ -615,5 +456,3 @@ static NSString *const kFirstSessionCountKey = @"firstSessionCount";
 }
 
 @end
-
-

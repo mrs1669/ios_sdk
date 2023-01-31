@@ -68,9 +68,12 @@
                            initWithLoggerFactory:loggerFactory
                            attributionBackoffStrategy:attributionBackoffStrategy];
 
-    _attributionState = [[ADJAttributionState alloc] initWithLoggerFactory:loggerFactory
-                                           doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
-                                                     isFirstSessionInQueue:[mainQueueController containsFirstSessionPackage]];
+    ADJNonNegativeInt *_Nullable firstSessionCount = [mainQueueController firstSessionCount];
+    BOOL isFirstSessionInQueue = firstSessionCount != nil && firstSessionCount.uIntegerValue > 0;
+    _attributionState = [[ADJAttributionState alloc]
+                         initWithLoggerFactory:loggerFactory
+                         doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
+                         isFirstSessionInQueue:isFirstSessionInQueue];
     
     return self;
 }
