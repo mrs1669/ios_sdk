@@ -13,6 +13,7 @@
 #import "ADJTeardownFinalizer.h"
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJThreadController.h"
+#import "ADJSingleThreadExecutor.h"
 #import "ADJPublisherController.h"
 
 @interface ADJLifecycleController : ADJCommonBase<
@@ -27,6 +28,7 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
               doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus
+                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
                           publisherController:(nonnull ADJPublisherController *)publisherController;
 
 // public api

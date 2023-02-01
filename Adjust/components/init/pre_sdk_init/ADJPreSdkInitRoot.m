@@ -54,6 +54,7 @@
                             threadController:threadController
                             doNotReadCurrentLifecycleStatus:
                                 sdkConfigData.doNotReadCurrentLifecycleStatus
+                            clientExecutor:clientExecutor
                             publisherController:publisherController];
 
     _offlineController = [[ADJOfflineController alloc] initWithLoggerFactory:loggerFactory

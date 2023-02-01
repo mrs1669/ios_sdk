@@ -53,9 +53,6 @@
     publisherController:(nonnull ADJPublisherController *)publisherController;
 
 // public api
-- (void)ccForeground;
-- (void)ccBackground;
-
 - (nullable ADJMeasurementSessionStateData *)currentMeasurementSessionStateDataWithLogger:(nonnull ADJLogger *)logger;
 
 @end

@@ -159,7 +159,7 @@
 }
 
 #pragma mark - ADJLifecycleSubscriber
-- (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidForeground {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -171,7 +171,7 @@
     } source:@"foreground"];
 }
 
-- (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidBackground {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;

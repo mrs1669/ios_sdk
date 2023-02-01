@@ -149,7 +149,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 }
 
 #pragma mark - ADJLifecycleSubscriber
-- (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidForeground {
     if ([self.pausingState ignoringForegroundOrBackground]) {
         return;
     }
@@ -169,7 +169,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     } source:@"foreground"];
 }
 
-- (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidBackground {
     if ([self.pausingState ignoringForegroundOrBackground]) {
         return;
     }

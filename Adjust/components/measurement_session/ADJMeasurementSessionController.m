@@ -81,14 +81,6 @@
 }
 
 #pragma mark Public API
-- (void)ccForeground {
-    [self processForegroundWithSource:@"ccForeground"];
-}
-
-- (void)ccBackground {
-    [self processBackground];
-}
-
 - (nullable ADJMeasurementSessionStateData *)currentMeasurementSessionStateDataWithLogger:(nonnull ADJLogger *)logger {
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage = self.measurementSessionStateStorageWeak;
 
@@ -144,54 +136,12 @@
 }
 
 #pragma mark - ADJLifecycleSubscriber
-- (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
-    /*
-    // no need to process foreground from client,
-    //  since it's already processed by 'ccForeground'
-    if (isFromClientContext) {
-        return;
-    }
-*/
-    ADJSingleThreadExecutor *_Nullable clientExecutor = self.clientExecutorWeak;
-    if (clientExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot process Foreground without a reference to client executor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    __typeof(self) __weak weakSelf = self;
-    [clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        [strongSelf processForegroundWithSource:@"onForeground"];
-    } source:@"foreground"];
+- (void)ccDidForeground {
+    [self processForegroundWithSource:@"ccDidForeground"];
 }
 
-- (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
-    /*
-    // no need to process background from client,
-    //  since it's already processed by 'ccBackground'
-    if (isFromClientContext) {
-        return;
-    }
-*/
-    ADJSingleThreadExecutor *_Nullable clientExecutor = self.clientExecutorWeak;
-    if (clientExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot process Background without a reference to client executor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    __typeof(self) __weak weakSelf = self;
-    [clientExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        [strongSelf processBackground];
-    } source:@"background"];
+- (void)ccDidBackground {
+    [self processBackground];
 }
 
 #pragma mark Internal Methods
