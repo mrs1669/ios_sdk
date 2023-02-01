@@ -14,8 +14,8 @@
 #import "ADJMeasurementSessionStartSubscriber.h"
 #import "ADJClientActionStorage.h"
 #import "ADJClock.h"
+#import "ADJPostSdkStartRoot.h"
 
-@class ADJPostSdkInitRoot;
 @interface ADJClientActionController : ADJCommonBase<
     ADJClientActionsAPI,
     // subscriptions
@@ -24,8 +24,8 @@
 >
 
 // subscriptions and dependencies
-- (void)ccSetDependenciesAtSdkInitWithPostSdkInitRoot:
-    (nonnull ADJPostSdkInitRoot *)postSdkInitRoot;
+- (void)ccSetDependenciesAtSdkInitWithPostSdkStartRoot:
+    (nonnull ADJPostSdkStartRoot *)postSdkStartRoot;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory

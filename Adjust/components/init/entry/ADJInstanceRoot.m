@@ -145,7 +145,7 @@
         strongSelf.postSdkInitRoot =
             [[ADJPostSdkInitRoot alloc]
              initWithLoggerFactory:strongSelf.logController
-             threadFactory:strongSelf.threadController
+             threadController:strongSelf.threadController
              clientExecutor:strongSelf.clientExecutor
              clientReturnExecutor:strongSelf.preSdkInitRoot.clientReturnExecutor
              storageRoot:strongSelf.preSdkInitRoot.storageRoot
@@ -161,7 +161,8 @@
         [strongSelf.publisherController subscribeToPublisher:strongSelf.logController];
         // 2. PreSdkInit dependencies
         // Set dependencies from PostInitRoot
-        [strongSelf.preSdkInitRoot.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRoot:self.postSdkInitRoot];
+        [strongSelf.preSdkInitRoot.clientActionController
+         ccSetDependenciesAtSdkInitWithPostSdkStartRoot:self.postSdkInitRoot.postSdkStartRoot];
 
         [strongSelf.preSdkInitRoot
              setDependenciesWithPackageBuilder:

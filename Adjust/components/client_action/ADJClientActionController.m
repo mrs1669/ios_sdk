@@ -9,7 +9,6 @@
 #import "ADJClientActionController.h"
 
 #import "ADJUtilF.h"
-#import "ADJPostSdkInitRoot.h"
 #import "ADJClientActionIoDataInjectable.h"
 #import "ADJIoDataBuilder.h"
 #import "ADJClientActionHandler.h"
@@ -29,7 +28,7 @@
 @property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
 @property (nullable, readwrite, weak, nonatomic)
-    ADJPostSdkInitRoot *postSdkInitRootWeak;
+    ADJPostSdkStartRoot *postSdkStartRootWeak;
 
 @end
 
@@ -37,10 +36,10 @@
 
 #pragma mark Subscriptions and Dependencies
 
-- (void)ccSetDependenciesAtSdkInitWithPostSdkInitRoot:
-    (nonnull ADJPostSdkInitRoot *)postSdkInitRoot
+- (void)ccSetDependenciesAtSdkInitWithPostSdkStartRoot:
+    (nonnull ADJPostSdkStartRoot *)postSdkStartRoot
 {
-    self.postSdkInitRootWeak = postSdkInitRoot;
+    self.postSdkStartRootWeak = postSdkStartRoot;
 }
 
 #pragma mark Instantiation
@@ -52,7 +51,7 @@
                                  source:@"ClientActionController"];
     _clientActionStorageWeak = clientActionStorage;
     _clockWeak = clock;
-    _postSdkInitRootWeak = nil;
+    _postSdkStartRootWeak = nil;
 
     return self;
 }
@@ -178,10 +177,10 @@
         return;
     }
 
-    ADJPostSdkInitRoot *_Nullable postSdkInitRoot = self.postSdkInitRootWeak;
-    if (postSdkInitRoot == nil) {
+    ADJPostSdkStartRoot *_Nullable postSdkStartRoot = self.postSdkStartRootWeak;
+    if (postSdkStartRoot == nil) {
         [self.logger debugDev:@"Cannot process client actions"
-         " without a reference to post sdk init controller"
+         " without a reference to post sdk start controller"
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -206,8 +205,8 @@
         }
 
         id<ADJClientActionHandler> _Nullable clientActionHandler =
-        [self clientActionHandlerWithId:clientActionData.clientActionHandlerId
-              postSdkInitRoot:postSdkInitRoot];
+            [postSdkStartRoot handlerById:clientActionData.clientActionHandlerId];
+
         if (clientActionHandler == nil) {
             [self.logger debugDev:@"Cannot process client action with handler id"
                               key:@"clientActionHandlerId"
@@ -238,44 +237,6 @@
          apiTimestamp:clientActionData.apiTimestamp
          clientActionRemoveStorageAction:clientActionRemoveStorageAction];
     }
-}
-
-- (nullable id<ADJClientActionHandler>)clientActionHandlerWithId:(nonnull ADJNonEmptyString *)clientActionHandlerId
-                                       postSdkInitRoot:(nonnull ADJPostSdkInitRoot *)postSdkInitRoot {
-
-    if ([ADJAdRevenueControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRoot.adRevenueController;
-    }
-
-    if ([ADJBillingSubscriptionControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]){
-        return postSdkInitRoot.billingSubscriptionController;
-    }
-
-    if ([ADJLaunchedDeeplinkClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRoot.launchedDeeplinkController;
-    }
-
-    if ([ADJEventControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRoot.eventController;
-    }
-
-    if ([ADJGlobalCallbackParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRoot.globalCallbackParametersController;
-    }
-
-    if ([ADJGlobalPartnerParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRoot.globalPartnerParametersController;
-    }
-
-    if ([ADJPushTokenControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRoot.pushTokenController;
-    }
-
-    if ([ADJThirdPartySharingControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRoot.thirdPartySharingController;
-    }
-
-    return nil;
 }
 
 @end
