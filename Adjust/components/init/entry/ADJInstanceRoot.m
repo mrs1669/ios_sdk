@@ -212,7 +212,7 @@
 
 - (void)appWentToTheBackgroundManualCall {
     [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
-        [preSdkInitRoot.lifecycleController ccForeground];
+        [preSdkInitRoot.lifecycleController ccBackground];
     } source:@"appWentToTheBackgroundManualCall"];
 }
 
@@ -224,7 +224,7 @@
 
  - (void)switchBackToOnlineMode {
      [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
-         [preSdkInitRoot.offlineController ccPutSdkOffline];
+         [preSdkInitRoot.offlineController ccPutSdkOnline];
      } clientSource:@"switchBackToOnlineMode"];
  }
 

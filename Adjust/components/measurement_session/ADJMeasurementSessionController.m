@@ -145,12 +145,13 @@
 
 #pragma mark - ADJLifecycleSubscriber
 - (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+    /*
     // no need to process foreground from client,
     //  since it's already processed by 'ccForeground'
     if (isFromClientContext) {
         return;
     }
-
+*/
     ADJSingleThreadExecutor *_Nullable clientExecutor = self.clientExecutorWeak;
     if (clientExecutor == nil) {
         [self.logger debugDev:
@@ -169,12 +170,13 @@
 }
 
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
+    /*
     // no need to process background from client,
     //  since it's already processed by 'ccBackground'
     if (isFromClientContext) {
         return;
     }
-
+*/
     ADJSingleThreadExecutor *_Nullable clientExecutor = self.clientExecutorWeak;
     if (clientExecutor == nil) {
         [self.logger debugDev:
