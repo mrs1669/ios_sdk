@@ -190,7 +190,7 @@
     [foundationDictionary removeObjectForKey:ADJLogInstanceIdKey];
     NSString *_Nonnull instanceIdFormat =
         logMessageData.idString == nil ?
-        @"" : [NSString stringWithFormat:@"_%@_", logMessageData.idString];
+        @"" : [NSString stringWithFormat:@"_%@", logMessageData.idString];
 
     [foundationDictionary removeObjectForKey:ADJLogCallerThreadIdKey];
     [foundationDictionary removeObjectForKey:ADJLogRunningThreadIdKey];
@@ -208,13 +208,13 @@
 
     [foundationDictionary removeObjectForKey:ADJLogSourceKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];
-    return [NSString stringWithFormat:@"%@%@[%@]%@ %@ %@%@",
+    return [NSString stringWithFormat:@"%@%@%@[%@]%@ %@ %@",
             logLevelFormat,
             instanceIdFormat,
+            threadIdFormat,
             logMessageData.sourceDescription,
             issueFormat,
             logMessageData.inputData.message,
-            threadIdFormat,
             [ADJLogMessageData
              generateJsonFromFoundationDictionary:foundationDictionary]];
 }

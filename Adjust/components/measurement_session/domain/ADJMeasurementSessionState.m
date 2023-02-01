@@ -97,7 +97,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
                                           packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
                                  nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
                                                         source:(nonnull NSString *)source {
-    [self.logger debugDev:@"Changing to ActiveState from %@ in %@"
+    [self.logger debugDev:@"Changing to ActiveState"
                      from:source
                       key:@"measurementSessionStatus"
                     value:self.measurementSessionStatus];
