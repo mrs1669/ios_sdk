@@ -44,7 +44,8 @@
     threadController:(nonnull ADJThreadController *)threadController
     attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
     sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    mainQueueTrackedPackagesProvider:
+        (nonnull id<ADJMainQueueTrackedPackagesProvider>)mainQueueTrackedPackagesProvider
     doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
@@ -68,7 +69,8 @@
                            initWithLoggerFactory:loggerFactory
                            attributionBackoffStrategy:attributionBackoffStrategy];
 
-    ADJNonNegativeInt *_Nullable firstSessionCount = [mainQueueController firstSessionCount];
+    ADJNonNegativeInt *_Nullable firstSessionCount =
+        [mainQueueTrackedPackagesProvider firstSessionCount];
     BOOL isFirstSessionInQueue = firstSessionCount != nil && firstSessionCount.uIntegerValue > 0;
     _attributionState = [[ADJAttributionState alloc]
                          initWithLoggerFactory:loggerFactory

@@ -3133,6 +3133,13 @@
 		6FCD542D29894CC1007542FB /* ADJMainQueueTrackedPackages.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD542129894CC1007542FB /* ADJMainQueueTrackedPackages.m */; };
 		6FCD542E29894CC1007542FB /* ADJMainQueueTrackedPackages.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD542129894CC1007542FB /* ADJMainQueueTrackedPackages.m */; };
 		6FCD542F29894CC1007542FB /* ADJMainQueueTrackedPackages.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD542129894CC1007542FB /* ADJMainQueueTrackedPackages.m */; };
+		6FCD54352989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */; };
+		6FCD54362989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */; };
+		6FCD54372989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */; };
+		6FCD54382989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */; };
+		6FCD54392989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */; };
+		6FCD543A2989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */; };
+		6FCD543B2989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */; };
 		6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
 		6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -3620,6 +3627,7 @@
 		6FCD541029894BF8007542FB /* ADJAsaClickTrackedSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAsaClickTrackedSubscriber.h; sourceTree = "<group>"; };
 		6FCD542029894CC1007542FB /* ADJMainQueueTrackedPackages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJMainQueueTrackedPackages.h; sourceTree = "<group>"; };
 		6FCD542129894CC1007542FB /* ADJMainQueueTrackedPackages.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJMainQueueTrackedPackages.m; sourceTree = "<group>"; };
+		6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJMainQueueTrackedPackagesProvider.h; sourceTree = "<group>"; };
 		6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInputLogMessageData.h; sourceTree = "<group>"; };
 		6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInputLogMessageData.m; sourceTree = "<group>"; };
 		6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLogMessageData.h; sourceTree = "<group>"; };
@@ -4809,6 +4817,7 @@
 			children = (
 				6FCD540029894BDB007542FB /* ADJInstallSessionTrackedSubscriber.h */,
 				6FCD541029894BF8007542FB /* ADJAsaClickTrackedSubscriber.h */,
+				6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */,
 				07D5C3622890236F0022F31F /* domain */,
 				6FE447AD288E8D5600FF06E0 /* ADJMainQueueController.h */,
 				6FE447AE288E8D5600FF06E0 /* ADJMainQueueController.m */,
@@ -5061,6 +5070,7 @@
 				0A7ED77D2892B11B00CC20DE /* ADJSubscribingGateSubscriber.h in Headers */,
 				0741CDD228D5A2260041C816 /* ADJBillingSubscriptionResponseData.h in Headers */,
 				0A7ED77E2892B11B00CC20DE /* ADJPublishingGateSubscriber.h in Headers */,
+				6FCD54352989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */,
 				0735D62728D36EB200614B88 /* ADJClientSubscriptionsController.h in Headers */,
 				079E154928CA0CE5006E84EF /* ADJClientLaunchedDeeplinkData.h in Headers */,
 				0735D61F28D367FB00614B88 /* ADJAttributionTracker.h in Headers */,
@@ -5316,6 +5326,7 @@
 				0A25F99D28E5CAC8001988A1 /* ADJClientReturnExecutor.h in Headers */,
 				0A25F99E28E5CAC8001988A1 /* ADJClientCallbacksController.h in Headers */,
 				0A25F99F28E5CAC9001988A1 /* ADJClientSubscriptionsController.h in Headers */,
+				6FCD54362989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */,
 				0A25F9A028E5CAC9001988A1 /* ADJEntryRoot.h in Headers */,
 				0A25F9A128E5CAC9001988A1 /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A25F9A228E5CAC9001988A1 /* ADJSdkConfigData.h in Headers */,
@@ -5574,6 +5585,7 @@
 				0A25FB9A28F42382001988A1 /* ADJClientReturnExecutor.h in Headers */,
 				0A25FB9B28F42382001988A1 /* ADJClientCallbacksController.h in Headers */,
 				0A25FB9C28F42382001988A1 /* ADJClientSubscriptionsController.h in Headers */,
+				6FCD54372989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */,
 				0A25FB9D28F42382001988A1 /* ADJEntryRoot.h in Headers */,
 				0A25FB9E28F42382001988A1 /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A25FB9F28F42382001988A1 /* ADJSdkConfigData.h in Headers */,
@@ -5832,6 +5844,7 @@
 				0A25FD6928F43C2D001988A1 /* ADJClientReturnExecutor.h in Headers */,
 				0A25FD6A28F43C2D001988A1 /* ADJClientCallbacksController.h in Headers */,
 				0A25FD6B28F43C2D001988A1 /* ADJClientSubscriptionsController.h in Headers */,
+				6FCD54382989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */,
 				0A25FD6C28F43C2D001988A1 /* ADJEntryRoot.h in Headers */,
 				0A25FD6D28F43C2D001988A1 /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A25FD6E28F43C2D001988A1 /* ADJSdkConfigData.h in Headers */,
@@ -6090,6 +6103,7 @@
 				0A7E494A28F8276D00827F0B /* ADJClientReturnExecutor.h in Headers */,
 				0A7E494B28F8276D00827F0B /* ADJClientCallbacksController.h in Headers */,
 				0A7E494C28F8276D00827F0B /* ADJClientSubscriptionsController.h in Headers */,
+				6FCD54392989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */,
 				0A7E494D28F8276D00827F0B /* ADJEntryRoot.h in Headers */,
 				0A7E494E28F8276D00827F0B /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A7E494F28F8276D00827F0B /* ADJSdkConfigData.h in Headers */,
@@ -6348,6 +6362,7 @@
 				0A7E4A3A28F82F6D00827F0B /* ADJClientReturnExecutor.h in Headers */,
 				0A7E4A3B28F82F6D00827F0B /* ADJClientCallbacksController.h in Headers */,
 				0A7E4A3C28F82F6D00827F0B /* ADJClientSubscriptionsController.h in Headers */,
+				6FCD543A2989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */,
 				0A7E4A3D28F82F6D00827F0B /* ADJEntryRoot.h in Headers */,
 				0A7E4A3E28F82F6D00827F0B /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A7E4A3F28F82F6D00827F0B /* ADJSdkConfigData.h in Headers */,
@@ -6606,6 +6621,7 @@
 				0A7E4B2528F830AF00827F0B /* ADJClientReturnExecutor.h in Headers */,
 				0A7E4B2628F830AF00827F0B /* ADJClientCallbacksController.h in Headers */,
 				0A7E4B2728F830AF00827F0B /* ADJClientSubscriptionsController.h in Headers */,
+				6FCD543B2989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h in Headers */,
 				0A7E4B2828F830AF00827F0B /* ADJEntryRoot.h in Headers */,
 				0A7E4B2928F830AF00827F0B /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A7E4B2A28F830AF00827F0B /* ADJSdkConfigData.h in Headers */,

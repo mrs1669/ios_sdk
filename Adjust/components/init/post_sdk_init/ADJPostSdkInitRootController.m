@@ -150,7 +150,7 @@
          threadController:threadFactory
          attributionBackoffStrategy:sdkConfigData.attributionBackoffStrategy
          sdkPackageSenderFactory:self.sdkPackageSenderController
-         mainQueueController:self.mainQueueController
+         mainQueueTrackedPackagesProvider:[self.mainQueueController trackedPackagesProvider]
          doNotInitiateAttributionFromSdk:sdkConfigData.doNotInitiateAttributionFromSdk
          publisherController:publisherController];
 

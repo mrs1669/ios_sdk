@@ -66,17 +66,8 @@
 }
 
 #pragma mark Public API
-- (nullable ADJNonNegativeInt *)firstSessionCount {
-    return [self.trackedPackages firstSessionCount];
-}
-- (nullable ADJNonNegativeInt *)asaClickCount {
-    return [self.trackedPackages asaClickCount];
-}
-- (nonnull ADJInstallSessionTrackedPublisher *)installSessionTrackedPublisher {
-    return [self.trackedPackages installSessionTrackedPublisher];
-}
-- (nonnull ADJAsaClickTrackedPublisher *)asaClickTrackedPublisher {
-    return [self.trackedPackages asaClickTrackedPublisher];
+- (nonnull id<ADJMainQueueTrackedPackagesProvider>)trackedPackagesProvider {
+    return self.trackedPackages;
 }
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData

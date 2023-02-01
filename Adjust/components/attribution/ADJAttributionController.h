@@ -24,6 +24,7 @@
 #import "ADJClientConfigData.h"
 #import "ADJMainQueueController.h"
 #import "ADJPublisherController.h"
+#import "ADJMainQueueTrackedPackagesProvider.h"
 
 @interface ADJAttributionController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -46,7 +47,8 @@
     threadController:(nonnull ADJThreadController *)threadController
     attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
     sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    mainQueueTrackedPackagesProvider:
+        (nonnull id<ADJMainQueueTrackedPackagesProvider>)mainQueueTrackedPackagesProvider
     doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
     publisherController:(nonnull ADJPublisherController *)publisherController;
 

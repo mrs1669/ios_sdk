@@ -73,7 +73,8 @@
 
     _isInDelay = NO;
 
-    ADJNonNegativeInt *_Nullable asaClickCount = [mainQueueController asaClickCount];
+    ADJNonNegativeInt *_Nullable asaClickCount =
+        [mainQueueController.trackedPackagesProvider asaClickCount];
     _mainQueueContainsAsaClickPackage = asaClickCount != nil
         && asaClickCount.uIntegerValue > 0;
 

@@ -9,22 +9,20 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
+#import "ADJMainQueueTrackedPackagesProvider.h"
 #import "ADJMainQueueStorage.h"
 #import "ADJSQLiteStorageActionBase.h"
 #import "ADJSdkPackageData.h"
 #import "ADJInstallSessionTrackedSubscriber.h"
 #import "ADJAsaClickTrackedSubscriber.h"
 
-@interface ADJMainQueueTrackedPackages : ADJCommonBase
+@interface ADJMainQueueTrackedPackages : ADJCommonBase <ADJMainQueueTrackedPackagesProvider>
 // instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage;
 
 // public API
-- (nullable ADJNonNegativeInt *)firstSessionCount;
-- (nullable ADJNonNegativeInt *)asaClickCount;
-
 - (nullable ADJSQLiteStorageActionBase *)
     incrementTrackedCountWithPackageToAdd:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
     sqliteStorageActionForAdd:(nullable ADJSQLiteStorageActionBase *)sqliteStorageActionForAdd;

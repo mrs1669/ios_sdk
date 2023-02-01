@@ -29,6 +29,7 @@
 #import "ADJSessionPackageData.h"
 #import "ADJInstallSessionTrackedSubscriber.h"
 #import "ADJAsaClickTrackedSubscriber.h"
+#import "ADJMainQueueTrackedPackagesProvider.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -39,22 +40,16 @@
 >
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                             mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-                             threadController:(nonnull ADJThreadController *)threadController
-                                        clock:(nonnull ADJClock *)clock
-                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
-
-// publishers
-@property (nonnull, readonly, strong, nonatomic)
-    ADJInstallSessionTrackedPublisher *installSessionTrackedPublisher;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJAsaClickTrackedPublisher *asaClickTrackedPublisher;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
+    threadController:(nonnull ADJThreadController *)threadController
+    clock:(nonnull ADJClock *)clock
+    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
 // public api
-- (nullable ADJNonNegativeInt *)firstSessionCount;
-- (nullable ADJNonNegativeInt *)asaClickCount;
+- (nonnull id<ADJMainQueueTrackedPackagesProvider>)trackedPackagesProvider;
 
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
