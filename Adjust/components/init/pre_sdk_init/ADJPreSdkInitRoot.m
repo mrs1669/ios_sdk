@@ -1,18 +1,18 @@
 //
-//  ADJPreSdkInitRootController.m
+//  ADJPreSdkInitRoot.m
 //  AdjustV5
 //
 //  Created by Pedro S. on 24.01.21.
 //  Copyright © 2021 adjust GmbH. All rights reserved.
 //
 
-#import "ADJPreSdkInitRootController.h"
+#import "ADJPreSdkInitRoot.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveController *sdkActiveController;
- @property (nonnull, readonly, strong, nonatomic) ADJStorageRootController *storageRootController;
+ @property (nonnull, readonly, strong, nonatomic) ADJStorageRoot *storageRoot;
  @property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
  @property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
  @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetController *gdprForgetController;
@@ -23,7 +23,7 @@
  @property (nonnull, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
 */
 
-@implementation ADJPreSdkInitRootController
+@implementation ADJPreSdkInitRoot
 #pragma mark Instantiation
 
 - (nonnull instancetype)
@@ -35,16 +35,16 @@
     clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"PreSdkInitRootController"];
+    self = [super initWithLoggerFactory:loggerFactory source:@"PreSdkInitRoot"];
     
-    _storageRootController = [[ADJStorageRootController alloc]
+    _storageRoot = [[ADJStorageRoot alloc]
                               initWithLoggerFactory:loggerFactory
                               threadExecutorFactory:threadController
                               instanceId:instanceId];
 
     _gdprForgetController = [[ADJGdprForgetController alloc]
                              initWithLoggerFactory:loggerFactory
-                             gdprForgetStateStorage:_storageRootController.gdprForgetStateStorage
+                             gdprForgetStateStorage:_storageRoot.gdprForgetStateStorage
                              threadExecutorFactory:threadController
                              gdprForgetBackoffStrategy:sdkConfigData.gdprForgetBackoffStrategy
                              publisherController:publisherController];
@@ -61,15 +61,15 @@
 
     _clientActionController = [[ADJClientActionController alloc]
                                initWithLoggerFactory:loggerFactory
-                               clientActionStorage:_storageRootController.clientActionStorage
+                               clientActionStorage:_storageRoot.clientActionStorage
                                clock:clock];
 
     _deviceController = [[ADJDeviceController alloc]
                          initWithLoggerFactory:loggerFactory
                          threadExecutorFactory:threadController
                          clock:clock
-                         deviceIdsStorage:_storageRootController.deviceIdsStorage
-                         keychainStorage:_storageRootController.keychainStorage
+                         deviceIdsStorage:_storageRoot.deviceIdsStorage
+                         keychainStorage:_storageRoot.keychainStorage
                          deviceIdsConfigData:sdkConfigData.sessionDeviceIdsConfigData];
 
     _clientReturnExecutor =
@@ -82,7 +82,7 @@
 
     _sdkActiveController = [[ADJSdkActiveController alloc]
                             initWithLoggerFactory:loggerFactory
-                            activeStateStorage:_storageRootController.sdkActiveStateStorage
+                            activeStateStorage:_storageRoot.sdkActiveStateStorage
                             clientExecutor:clientExecutor
                             isForgotten:[_gdprForgetController isForgotten]
                             publisherController:publisherController];

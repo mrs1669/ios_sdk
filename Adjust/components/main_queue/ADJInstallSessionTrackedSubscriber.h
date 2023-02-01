@@ -11,7 +11,6 @@
 #import "ADJSessionResponseData.h"
 
 @protocol ADJInstallSessionTrackedSubscriber <NSObject>
-
 - (void)ccInstallSessionTrackedWithSessionResponse:
     (nullable ADJSessionResponseData *)sessionResponse;
 

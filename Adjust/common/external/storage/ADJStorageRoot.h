@@ -1,5 +1,5 @@
 //
-//  ADJStorageRootController.h
+//  ADJStorageRoot.h
 //  Adjust
 //
 //  Created by Aditi Agrawal on 20/07/22.
@@ -28,7 +28,7 @@
 #import "ADJSdkActiveStateStorage.h"
 #import "ADJMeasurementSessionStateStorage.h"
 
-@interface ADJStorageRootController : NSObject<ADJTeardownFinalizer>
+@interface ADJStorageRoot : NSObject<ADJTeardownFinalizer>
 // instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory

@@ -1,5 +1,5 @@
 //
-//  ADJPostSdkInitRootController.h
+//  ADJPostSdkInitRoot.h
 //  Adjust
 //
 //  Created by Pedro Silva on 22.07.22.
@@ -23,11 +23,11 @@
 #import "ADJPushTokenController.h"
 #import "ADJThirdPartySharingController.h"
 #import "ADJPublisherController.h"
-#import "ADJStorageRootController.h"
+#import "ADJStorageRoot.h"
 #import "ADJReachabilityController.h"
 #import "ADJSdkConfigData.h"
 
-@interface ADJPostSdkInitRootController : ADJCommonBase<
+@interface ADJPostSdkInitRoot : ADJCommonBase<
 ADJClientActionsAPI,
 // subscriptions
 ADJMeasurementSessionStartSubscriber
@@ -51,7 +51,7 @@ ADJMeasurementSessionStartSubscriber
     threadFactory:(nonnull ADJThreadController *)threadFactory
     clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
     clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-    storageRootController:(nonnull ADJStorageRootController *)storageRootController
+    storageRoot:(nonnull ADJStorageRoot *)storageRoot
     deviceController:(nonnull ADJDeviceController *)deviceController
     clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
     sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData

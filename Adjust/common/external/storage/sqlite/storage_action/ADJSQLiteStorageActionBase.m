@@ -22,7 +22,8 @@
 
 @implementation ADJSQLiteStorageActionBase
 - (nonnull instancetype)initWithDecoratedSQLiteStorageAction:
-    (nullable ADJSQLiteStorageActionBase *)decoratedSQLiteStorageAction {
+    (nullable ADJSQLiteStorageActionBase *)decoratedSQLiteStorageAction
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSQLiteStorageActionBase class]]) {
         [self doesNotRecognizeSelector:_cmd];

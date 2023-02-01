@@ -12,8 +12,8 @@
 #import "ADJSingleThreadExecutor.h"
 #import "ADJLogger.h"
 #import "ADJSdkConfigData.h"
-#import "ADJPreSdkInitRootController.h"
-#import "ADJPostSdkInitRootController.h"
+#import "ADJPreSdkInitRoot.h"
+#import "ADJPostSdkInitRoot.h"
 #import "ADJPublisherController.h"
 
 @interface ADJInstanceRoot ()
@@ -28,9 +28,9 @@
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *commonExecutor;
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *adjustApiLogger;
 @property (nullable, readwrite, strong, nonatomic)
-    ADJPreSdkInitRootController *preSdkInitRootController;
+    ADJPreSdkInitRoot *preSdkInitRoot;
 @property (nullable, readwrite, strong, nonatomic)
-    ADJPostSdkInitRootController *postSdkInitRootController;
+    ADJPostSdkInitRoot *postSdkInitRoot;
 @property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJPublisherController *publisherController;
 
@@ -73,8 +73,8 @@
             return;
         }
 
-        strongSelf.preSdkInitRootController =
-            [[ADJPreSdkInitRootController alloc] initWithInstanceId:instanceId
+        strongSelf.preSdkInitRoot =
+            [[ADJPreSdkInitRoot alloc] initWithInstanceId:instanceId
                                                               clock:strongSelf.clock
                                                       sdkConfigData:strongSelf.sdkConfigData
                                                    threadController:strongSelf.threadController
@@ -101,13 +101,13 @@
             return;
         }
 
-        if (strongSelf.preSdkInitRootController != nil) {
-            [strongSelf.preSdkInitRootController.storageRootController finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
-            [strongSelf.preSdkInitRootController.lifecycleController finalizeAtTeardown];
+        if (strongSelf.preSdkInitRoot != nil) {
+            [strongSelf.preSdkInitRoot.storageRoot finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+            [strongSelf.preSdkInitRoot.lifecycleController finalizeAtTeardown];
         }
 
-        if (strongSelf.postSdkInitRootController != nil) {
-            [strongSelf.postSdkInitRootController.reachabilityController finalizeAtTeardown];
+        if (strongSelf.postSdkInitRoot != nil) {
+            [strongSelf.postSdkInitRoot.reachabilityController finalizeAtTeardown];
         }
 
         [strongSelf.threadController finalizeAtTeardown];
@@ -138,18 +138,18 @@
             return;
         }
 
-        if (NO == [strongSelf.preSdkInitRootController.sdkActiveController ccTrySdkInit]) {
+        if (NO == [strongSelf.preSdkInitRoot.sdkActiveController ccTrySdkInit]) {
             return;
         }
 
-        strongSelf.postSdkInitRootController =
-            [[ADJPostSdkInitRootController alloc]
+        strongSelf.postSdkInitRoot =
+            [[ADJPostSdkInitRoot alloc]
              initWithLoggerFactory:strongSelf.logController
              threadFactory:strongSelf.threadController
              clientExecutor:strongSelf.clientExecutor
-             clientReturnExecutor:strongSelf.preSdkInitRootController.clientReturnExecutor
-             storageRootController:strongSelf.preSdkInitRootController.storageRootController
-             deviceController:strongSelf.preSdkInitRootController.deviceController
+             clientReturnExecutor:strongSelf.preSdkInitRoot.clientReturnExecutor
+             storageRoot:strongSelf.preSdkInitRoot.storageRoot
+             deviceController:strongSelf.preSdkInitRoot.deviceController
              clientConfigData:clientConfigData
              sdkConfigData:strongSelf.sdkConfigData
              sdkPrefix:nil //TODO: to inject with session refac
@@ -160,43 +160,43 @@
         // 1. Self (InstanceRoot) dependencies - subscribe to publishers
         [strongSelf.publisherController subscribeToPublisher:strongSelf.logController];
         // 2. PreSdkInit dependencies
-        // Set dependencies from PostInitRootController
-        [strongSelf.preSdkInitRootController.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRootController:self.postSdkInitRootController];
+        // Set dependencies from PostInitRoot
+        [strongSelf.preSdkInitRoot.clientActionController ccSetDependenciesAtSdkInitWithPostSdkInitRoot:self.postSdkInitRoot];
 
-        [strongSelf.preSdkInitRootController
+        [strongSelf.preSdkInitRoot
              setDependenciesWithPackageBuilder:
-                strongSelf.postSdkInitRootController.sdkPackageBuilder
+                strongSelf.postSdkInitRoot.sdkPackageBuilder
              clock:strongSelf.clock
              loggerFactory:strongSelf.logController
              threadExecutorFactory:strongSelf.threadController
              sdkPackageSenderFactory:
-                strongSelf.postSdkInitRootController.sdkPackageSenderController];
+                strongSelf.postSdkInitRoot.sdkPackageSenderController];
         // Subscribe to publishers
-        [strongSelf.preSdkInitRootController subscribeToPublishers:strongSelf.publisherController];
+        [strongSelf.preSdkInitRoot subscribeToPublishers:strongSelf.publisherController];
 
         // 3. PostSdkInit dependencies
         // Subscribe to publishers
-        [strongSelf.postSdkInitRootController subscribeToPublishers:strongSelf.publisherController];
+        [strongSelf.postSdkInitRoot subscribeToPublishers:strongSelf.publisherController];
         // Finalize init flow and start Sdk
-        [strongSelf.postSdkInitRootController startSdk];
+        [strongSelf.postSdkInitRoot startSdk];
     } source:@"sdkInitWithConfiguration"];
 }
 
 
 - (void)inactivateSdk {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.sdkActiveController ccInactivateSdk];
     } source:@"inactivateSdk"];
 }
 
 - (void)reactivateSdk {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.sdkActiveController ccReactivateSdk];
     } source:@"reactivateSdk"];
 }
 
 - (void)gdprForgetDevice {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
         BOOL updatedForgottenStatus = [preSdkInitRoot.sdkActiveController ccGdprForgetDevice];
         if (! updatedForgottenStatus) { return; }
 
@@ -205,32 +205,32 @@
 }
 
 - (void)appWentToTheForegroundManualCall {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.lifecycleController ccForeground];
     } source:@"appWentToTheForegroundManualCall"];
 }
 
 - (void)appWentToTheBackgroundManualCall {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
         [preSdkInitRoot.lifecycleController ccBackground];
     } source:@"appWentToTheBackgroundManualCall"];
 }
 
 - (void)switchToOfflineMode {
-    [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+    [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
         [preSdkInitRoot.offlineController ccPutSdkOffline];
     } clientSource:@"switchToOfflineMode"];
 }
 
  - (void)switchBackToOnlineMode {
-     [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+     [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
          [preSdkInitRoot.offlineController ccPutSdkOnline];
      } clientSource:@"switchBackToOnlineMode"];
  }
 
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
     [self ccWithAdjustCallback:adjustDeviceIdsCallback
-                      preBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot)
+                      preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
      {
         [preSdkInitRoot.clientCallbacksController
          ccDeviceIdsWithCallback:adjustDeviceIdsCallback
@@ -243,12 +243,12 @@
     (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
 {
     [self ccWithAdjustCallback:adjustAttributionCallback
-                      preBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot)
+                      preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
      {
         [preSdkInitRoot.clientCallbacksController
          ccAttributionWithCallback:adjustAttributionCallback
          clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
-         attributionStateStorage:preSdkInitRoot.storageRootController.attributionStateStorage];
+         attributionStateStorage:preSdkInitRoot.storageRoot.attributionStateStorage];
     } clientSource:@"adjustAttributionWithCallback"];
 }
 
@@ -416,7 +416,7 @@
 #pragma mark Internal methods
 - (void)
     ccExecuteWithPreBlock:
-        (void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
+        (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
     source:(nonnull NSString *)source
 {
     __typeof(self) __weak weakSelf = self;
@@ -424,8 +424,8 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        ADJPreSdkInitRootController *_Nullable preSdkInitRootLocal =
-            strongSelf.preSdkInitRootController;
+        ADJPreSdkInitRoot *_Nullable preSdkInitRootLocal =
+            strongSelf.preSdkInitRoot;
         if (preSdkInitRootLocal == nil) {
             [strongSelf.adjustApiLogger debugDev:@"Unexpected invalid PreSdkInitRoot"
                                             from:source
@@ -438,10 +438,10 @@
 
 - (void)
     ccWhenActiveWithPreBlock:
-        (void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
+        (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
     clientSource:(nonnull NSString *)clientSource
 {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
         if ([preSdkInitRoot.sdkActiveController
              ccCanPerformActionWithClientSource:clientSource])
         {
@@ -452,10 +452,10 @@
 
 - (void)
     ccWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
-    preBlock:(void (^_Nonnull)(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot))preBlock
+    preBlock:(void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
     clientSource:(nonnull NSString *)clientSource
 {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRootController * _Nonnull preSdkInitRoot) {
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
         if (adjustCallback == nil) {
             [preSdkInitRoot.logger errorClient:@"Cannot use invalid callback"
                                                from:clientSource];
@@ -484,10 +484,10 @@
                           ADJLogger *_Nonnull logger))clientActionsBlock
     clientSource:(nonnull NSString *)clientSource
 {
-    [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRootController *_Nonnull preSdkInitRoot) {
+    [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
         // TODO change to sync with Android
         id<ADJClientActionsAPI> _Nonnull clientActionsAPI =
-            [self.postSdkInitRootController sdkStartClientActionAPI]
+            [self.postSdkInitRoot sdkStartClientActionAPI]
             ? : preSdkInitRoot.clientActionController;
 
         clientActionsBlock(clientActionsAPI, preSdkInitRoot.logger);

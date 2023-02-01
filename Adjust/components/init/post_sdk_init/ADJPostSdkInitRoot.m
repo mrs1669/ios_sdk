@@ -1,11 +1,11 @@
 //
-//  ADJPostSdkInitRootController.m
+//  ADJPostSdkInitRoot.m
 //  Adjust
 //
 //  Created by Pedro Silva on 22.07.22.
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
-#import "ADJPostSdkInitRootController.h"
+#import "ADJPostSdkInitRoot.h"
 #import "ADJConstantsSys.h"
 #import "ADJSubscribingGateSubscriber.h"
 #import "ADJPublishingGateSubscriber.h"
@@ -38,7 +38,7 @@
  @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingController *thirdPartySharingController;
  */
 
-@interface ADJPostSdkInitRootController ()
+@interface ADJPostSdkInitRoot ()
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJSubscribingGatePublisher *subscribingGatePublisher;
 @property (nonnull, readonly, strong, nonatomic) ADJPublishingGatePublisher *publishingGatePublisher;
@@ -55,14 +55,14 @@
 @property (readwrite, assign, nonatomic) BOOL hasMeasurementSessionStart;
 @end
 
-@implementation ADJPostSdkInitRootController
+@implementation ADJPostSdkInitRoot
 #pragma mark Instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     threadFactory:(nonnull ADJThreadController *)threadFactory
     clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
     clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-    storageRootController:(nonnull ADJStorageRootController *)storageRootController
+    storageRoot:(nonnull ADJStorageRoot *)storageRoot
     deviceController:(nonnull ADJDeviceController *)deviceController
     clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
     sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
@@ -70,7 +70,7 @@
     clock:(nonnull ADJClock *)clock
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"PostSdkInitRootController"];
+    self = [super initWithLoggerFactory:loggerFactory source:@"PostSdkInitRoot"];
     _clientConfigData = clientConfigData;
 
     _hasMeasurementSessionStart = NO;
@@ -88,10 +88,10 @@
                          controller:publisherController];
 
     _globalCallbackParametersController = [[ADJGlobalCallbackParametersController alloc] initWithLoggerFactory:loggerFactory
-                                                                                                       storage:storageRootController.globalCallbackParametersStorage];
+                                                                                                       storage:storageRoot.globalCallbackParametersStorage];
 
     _globalPartnerParametersController = [[ADJGlobalPartnerParametersController alloc] initWithLoggerFactory:loggerFactory
-                                                                                                     storage:storageRootController.globalPartnerParametersStorage];
+                                                                                                     storage:storageRoot.globalPartnerParametersStorage];
 
     _sdkPackageBuilder =
         [[ADJSdkPackageBuilder alloc]
@@ -100,10 +100,10 @@
          sdkPrefix:sdkPrefix
          clientConfigData:clientConfigData
          deviceController:deviceController
-         globalCallbackParametersStorage:storageRootController.globalCallbackParametersStorage
-         globalPartnerParametersStorage:storageRootController.globalPartnerParametersStorage
-         eventStateStorage:storageRootController.eventStateStorage
-         measurementSessionStateStorage:storageRootController.measurementSessionStateStorage
+         globalCallbackParametersStorage:storageRoot.globalCallbackParametersStorage
+         globalPartnerParametersStorage:storageRoot.globalPartnerParametersStorage
+         eventStateStorage:storageRoot.eventStateStorage
+         measurementSessionStateStorage:storageRoot.measurementSessionStateStorage
          publisherController:publisherController];
 
     _sdkPackageSenderController =
@@ -117,7 +117,7 @@
     _mainQueueController =
         [[ADJMainQueueController alloc]
          initWithLoggerFactory:loggerFactory
-         mainQueueStorage:storageRootController.mainQueueStorage
+         mainQueueStorage:storageRoot.mainQueueStorage
          threadController:threadFactory
          clock:clock
          backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
@@ -130,7 +130,7 @@
          overwriteFirstMeasurementSessionIntervalMilli:sdkConfigData.overwriteFirstMeasurementSessionIntervalMilli
          clientExecutor:clientExecutor
          sdkPackageBuilder:self.sdkPackageBuilder
-         measurementSessionStateStorage:storageRootController.measurementSessionStateStorage
+         measurementSessionStateStorage:storageRoot.measurementSessionStateStorage
          mainQueueController:self.mainQueueController
          clock:clock
          publisherController:publisherController];
@@ -144,7 +144,7 @@
     _attributionController =
         [[ADJAttributionController alloc]
          initWithLoggerFactory:loggerFactory
-         attributionStateStorage:storageRootController.attributionStateStorage
+         attributionStateStorage:storageRoot.attributionStateStorage
          clock:clock
          sdkPackageBuilder:self.sdkPackageBuilder
          threadController:threadFactory
@@ -164,8 +164,8 @@
 
     _eventController = [[ADJEventController alloc] initWithLoggerFactory:loggerFactory
                                                        sdkPackageBuilder:self.sdkPackageBuilder
-                                                       eventStateStorage:storageRootController.eventStateStorage
-                                               eventDeduplicationStorage:storageRootController.eventDeduplicationStorage
+                                                       eventStateStorage:storageRoot.eventStateStorage
+                                               eventDeduplicationStorage:storageRoot.eventDeduplicationStorage
                                                      mainQueueController:self.mainQueueController
                                            maxCapacityEventDeduplication:clientConfigData.eventIdDeduplicationMaxCapacity];
 
@@ -206,7 +206,7 @@
 
 
     _logQueueController = [[ADJLogQueueController alloc] initWithLoggerFactory:loggerFactory
-                                                                       storage:storageRootController.logQueueStorage
+                                                                       storage:storageRoot.logQueueStorage
                                                               threadController:threadFactory
                                                                          clock:clock
                                                                backoffStrategy:sdkConfigData.mainQueueBackoffStrategy
@@ -218,13 +218,13 @@
             initWithLoggerFactory:loggerFactory
             threadExecutorFactory:threadFactory
             sdkPackageBuilder:self.sdkPackageBuilder
-            asaAttributionStateStorage:storageRootController.asaAttributionStateStorage
+            asaAttributionStateStorage:storageRoot.asaAttributionStateStorage
             clock:clock
             clientConfigData:clientConfigData
             asaAttributionConfig:sdkConfigData.asaAttributionConfigData
             logQueueController:self.logQueueController
             mainQueueController:self.mainQueueController
-            adjustAttributionStateStorage:storageRootController.attributionStateStorage];
+            adjustAttributionStateStorage:storageRoot.attributionStateStorage];
 
     return self;
 }

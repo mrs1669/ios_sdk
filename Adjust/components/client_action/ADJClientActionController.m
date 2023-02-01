@@ -9,7 +9,7 @@
 #import "ADJClientActionController.h"
 
 #import "ADJUtilF.h"
-#import "ADJPostSdkInitRootController.h"
+#import "ADJPostSdkInitRoot.h"
 #import "ADJClientActionIoDataInjectable.h"
 #import "ADJIoDataBuilder.h"
 #import "ADJClientActionHandler.h"
@@ -29,7 +29,7 @@
 @property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
 @property (nullable, readwrite, weak, nonatomic)
-ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
+    ADJPostSdkInitRoot *postSdkInitRootWeak;
 
 @end
 
@@ -37,9 +37,10 @@ ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
 
 #pragma mark Subscriptions and Dependencies
 
-- (void)ccSetDependenciesAtSdkInitWithPostSdkInitRootController:
-(nonnull ADJPostSdkInitRootController *)postSdkInitRootController {
-    self.postSdkInitRootControllerWeak = postSdkInitRootController;
+- (void)ccSetDependenciesAtSdkInitWithPostSdkInitRoot:
+    (nonnull ADJPostSdkInitRoot *)postSdkInitRoot
+{
+    self.postSdkInitRootWeak = postSdkInitRoot;
 }
 
 #pragma mark Instantiation
@@ -51,7 +52,7 @@ ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
                                  source:@"ClientActionController"];
     _clientActionStorageWeak = clientActionStorage;
     _clockWeak = clock;
-    _postSdkInitRootControllerWeak = nil;
+    _postSdkInitRootWeak = nil;
 
     return self;
 }
@@ -177,8 +178,8 @@ ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
         return;
     }
 
-    ADJPostSdkInitRootController *_Nullable postSdkInitRootController = self.postSdkInitRootControllerWeak;
-    if (postSdkInitRootController == nil) {
+    ADJPostSdkInitRoot *_Nullable postSdkInitRoot = self.postSdkInitRootWeak;
+    if (postSdkInitRoot == nil) {
         [self.logger debugDev:@"Cannot process client actions"
          " without a reference to post sdk init controller"
                     issueType:ADJIssueWeakReference];
@@ -206,7 +207,7 @@ ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
 
         id<ADJClientActionHandler> _Nullable clientActionHandler =
         [self clientActionHandlerWithId:clientActionData.clientActionHandlerId
-              postSdkInitRootController:postSdkInitRootController];
+              postSdkInitRoot:postSdkInitRoot];
         if (clientActionHandler == nil) {
             [self.logger debugDev:@"Cannot process client action with handler id"
                               key:@"clientActionHandlerId"
@@ -239,38 +240,38 @@ ADJPostSdkInitRootController *postSdkInitRootControllerWeak;
 }
 
 - (nullable id<ADJClientActionHandler>)clientActionHandlerWithId:(nonnull ADJNonEmptyString *)clientActionHandlerId
-                                       postSdkInitRootController:(nonnull ADJPostSdkInitRootController *)postSdkInitRootController {
+                                       postSdkInitRoot:(nonnull ADJPostSdkInitRoot *)postSdkInitRoot {
 
     if ([ADJAdRevenueControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRootController.adRevenueController;
+        return postSdkInitRoot.adRevenueController;
     }
 
     if ([ADJBillingSubscriptionControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]){
-        return postSdkInitRootController.billingSubscriptionController;
+        return postSdkInitRoot.billingSubscriptionController;
     }
 
     if ([ADJLaunchedDeeplinkClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRootController.launchedDeeplinkController;
+        return postSdkInitRoot.launchedDeeplinkController;
     }
 
     if ([ADJEventControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRootController.eventController;
+        return postSdkInitRoot.eventController;
     }
 
     if ([ADJGlobalCallbackParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRootController.globalCallbackParametersController;
+        return postSdkInitRoot.globalCallbackParametersController;
     }
 
     if ([ADJGlobalPartnerParametersControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRootController.globalPartnerParametersController;
+        return postSdkInitRoot.globalPartnerParametersController;
     }
 
     if ([ADJPushTokenControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRootController.pushTokenController;
+        return postSdkInitRoot.pushTokenController;
     }
 
     if ([ADJThirdPartySharingControllerClientActionHandlerId isEqualToString:clientActionHandlerId.stringValue]) {
-        return postSdkInitRootController.thirdPartySharingController;
+        return postSdkInitRoot.thirdPartySharingController;
     }
 
     return nil;

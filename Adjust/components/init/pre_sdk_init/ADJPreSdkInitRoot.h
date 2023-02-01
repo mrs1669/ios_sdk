@@ -1,5 +1,5 @@
 //
-//  ADJPreSdkInitRootController.h
+//  ADJPreSdkInitRoot.h
 //  AdjustV5
 //
 //  Created by Pedro S. on 24.01.21.
@@ -10,7 +10,7 @@
 
 #import "ADJCommonBase.h"
 #import "ADJClock.h"
-#import "ADJStorageRootController.h"
+#import "ADJStorageRoot.h"
 #import "ADJGdprForgetController.h"
 #import "ADJLifecycleController.h"
 #import "ADJOfflineController.h"
@@ -24,9 +24,9 @@
 #import "ADJLogController.h"
 #import "ADJSdkActiveController.h"
 
-@interface ADJPreSdkInitRootController : ADJCommonBase
+@interface ADJPreSdkInitRoot : ADJCommonBase
 @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveController *sdkActiveController;
-@property (nonnull, readonly, strong, nonatomic) ADJStorageRootController *storageRootController;
+@property (nonnull, readonly, strong, nonatomic) ADJStorageRoot *storageRoot;
 @property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
 @property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
 @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetController *gdprForgetController;
