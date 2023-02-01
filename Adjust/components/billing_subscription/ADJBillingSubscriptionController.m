@@ -41,14 +41,17 @@ NSString *const ADJBillingSubscriptionControllerClientActionHandlerId = @"Billin
 }
 
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // cannot handle pre first session
-    return ! isPreFirstSession;
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
+    return NO;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)
+    ccHandleClientActionWithClientActionIoInjectedData:
+        (nonnull ADJIoData *)clientActionIoInjectedData
+    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
     ADJClientBillingSubscriptionData *_Nullable clientBillingSubscriptionData =
     [ADJClientBillingSubscriptionData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData

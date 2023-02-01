@@ -42,14 +42,18 @@ NSString *const ADJAdRevenueControllerClientActionHandlerId = @"AdRevenueControl
 }
 
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // cannot handle pre first session
-    return ! isPreFirstSession;
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
+    return NO;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+
+- (void)
+    ccHandleClientActionWithClientActionIoInjectedData:
+        (nonnull ADJIoData *)clientActionIoInjectedData
+    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
     ADJClientAdRevenueData *_Nullable clientAdRevenueData = [ADJClientAdRevenueData
                                                              instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
                                                              logger:self.logger];

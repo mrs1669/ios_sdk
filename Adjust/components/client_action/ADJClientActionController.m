@@ -216,15 +216,16 @@
             continue;
         }
 
-        BOOL canHandleClientAction =
-        [clientActionHandler ccCanHandleClientActionWithIsPreFirstSession:isPreFirstSession];
-        if (! canHandleClientAction) {
-            [self.logger debugDev:@"Client Actino Handler cannot proccess client"
-                             key1:@"is pre first session"
-                           value1:[ADJUtilF boolFormat:isPreFirstSession]
-                             key2:@"clientActionHandlerId"
-                           value2:clientActionData.clientActionHandlerId.stringValue];
-            continue;
+        if (isPreFirstSession) {
+            BOOL canHandleClientAction =
+                [clientActionHandler ccCanHandlePreFirstSessionClientAction];
+
+            if (! canHandleClientAction) {
+                [self.logger debugDev:@"Client Actino Handler cannot proccess pre first session"
+                                  key:@"clientActionHandlerId"
+                                value:clientActionData.clientActionHandlerId.stringValue];
+                continue;
+            }
         }
 
         ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =

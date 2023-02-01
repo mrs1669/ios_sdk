@@ -42,14 +42,17 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
 }
 
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // can handle pre first session
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
     return YES;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)
+    ccHandleClientActionWithClientActionIoInjectedData:
+        (nonnull ADJIoData *)clientActionIoInjectedData
+    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
     ADJClientThirdPartySharingData *_Nullable clientThirdPartySharingData =
     [ADJClientThirdPartySharingData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData

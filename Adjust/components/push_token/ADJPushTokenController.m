@@ -45,14 +45,17 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 }
 
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // cannot handle pre first session
-    return !isPreFirstSession;
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
+    return YES;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)
+    ccHandleClientActionWithClientActionIoInjectedData:
+        (nonnull ADJIoData *)clientActionIoInjectedData
+    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
     ADJClientPushTokenData *_Nullable clientPushTokenData = [ADJClientPushTokenData
                                                              instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
                                                              logger:self.logger];
