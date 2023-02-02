@@ -41,8 +41,9 @@
     ADJInstanceIdData *_Nonnull firstInstanceId =
         [[ADJInstanceIdData alloc] initFirstInstanceWithClientId:clientId];
 
-    ADJInstanceRoot *instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:_sdkConfigData
-                                                                     instanceId:firstInstanceId];
+    ADJInstanceRoot *instanceRoot = [ADJInstanceRoot instanceWithConfigData:_sdkConfigData
+                                                                 instanceId:firstInstanceId
+                                                                  sdkPrefix:nil];//TODO: to inject with session refac
 
     _instanceMap = [[NSMutableDictionary alloc] init];
 
@@ -76,8 +77,9 @@
             [[ADJInstanceIdData alloc] initNonFirstWithClientId:clientId];
 
         ADJInstanceRoot *newInstanceRoot =
-            [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
-                                             instanceId:newInstanceId];
+            [ADJInstanceRoot instanceWithConfigData:self.sdkConfigData
+                                         instanceId:newInstanceId
+                                          sdkPrefix:nil];//TODO: to inject with session refac
 
         [self.instanceMap setObject:newInstanceRoot forKey:newInstanceId.idString];
 

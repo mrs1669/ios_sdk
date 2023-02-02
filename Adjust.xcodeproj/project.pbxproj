@@ -3154,6 +3154,20 @@
 		6FCD54B2298ABED4007542FB /* ADJPostSdkStartRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD54A6298ABED4007542FB /* ADJPostSdkStartRoot.m */; };
 		6FCD54B3298ABED4007542FB /* ADJPostSdkStartRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD54A6298ABED4007542FB /* ADJPostSdkStartRoot.m */; };
 		6FCD54B4298ABED4007542FB /* ADJPostSdkStartRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD54A6298ABED4007542FB /* ADJPostSdkStartRoot.m */; };
+		6FCD54C7298BAA68007542FB /* ADJInstanceRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */; };
+		6FCD54C8298BAA68007542FB /* ADJInstanceRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */; };
+		6FCD54C9298BAA68007542FB /* ADJInstanceRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */; };
+		6FCD54CA298BAA68007542FB /* ADJInstanceRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */; };
+		6FCD54CB298BAA68007542FB /* ADJInstanceRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */; };
+		6FCD54CC298BAA68007542FB /* ADJInstanceRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */; };
+		6FCD54CD298BAA68007542FB /* ADJInstanceRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */; };
+		6FCD54D7298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
+		6FCD54D8298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
+		6FCD54D9298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
+		6FCD54DA298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
+		6FCD54DB298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
+		6FCD54DC298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
+		6FCD54DD298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
 		6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
 		6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -3644,6 +3658,8 @@
 		6FCD54332989ACD7007542FB /* ADJMainQueueTrackedPackagesProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJMainQueueTrackedPackagesProvider.h; sourceTree = "<group>"; };
 		6FCD54A5298ABED4007542FB /* ADJPostSdkStartRoot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJPostSdkStartRoot.h; sourceTree = "<group>"; };
 		6FCD54A6298ABED4007542FB /* ADJPostSdkStartRoot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJPostSdkStartRoot.m; sourceTree = "<group>"; };
+		6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInstanceRootBag.h; sourceTree = "<group>"; };
+		6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJPreSdkInitRootBag.h; sourceTree = "<group>"; };
 		6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInputLogMessageData.h; sourceTree = "<group>"; };
 		6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInputLogMessageData.m; sourceTree = "<group>"; };
 		6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLogMessageData.h; sourceTree = "<group>"; };
@@ -3812,6 +3828,7 @@
 				0737C21B287F3F32004C7D59 /* ADJClientAPI.h */,
 				0737C219287F3F31004C7D59 /* ADJPreSdkInitRoot.h */,
 				0737C21D287F3F32004C7D59 /* ADJPreSdkInitRoot.m */,
+				6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */,
 			);
 			path = pre_sdk_init;
 			sourceTree = "<group>";
@@ -3819,6 +3836,7 @@
 		0737C1B2287F3E2A004C7D59 /* entry */ = {
 			isa = PBXGroup;
 			children = (
+				6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */,
 				0737C1B8287F3E2A004C7D59 /* ADJEntryRoot.h */,
 				0737C1B5287F3E2A004C7D59 /* ADJEntryRoot.m */,
 				0737C1B6287F3E2A004C7D59 /* ADJSdkConfigDataBuilder.h */,
@@ -4946,9 +4964,11 @@
 				0A7ED70C2892B11B00CC20DE /* ADJTallyCounter.h in Headers */,
 				0A7ED70D2892B11B00CC20DE /* ADJAtomicBoolean.h in Headers */,
 				6FCD542229894CC1007542FB /* ADJMainQueueTrackedPackages.h in Headers */,
+				6FCD54C7298BAA68007542FB /* ADJInstanceRootBag.h in Headers */,
 				0A7ED70E2892B11B00CC20DE /* ADJMoney.h in Headers */,
 				0A7ED70F2892B11B00CC20DE /* ADJMoneyAmountBase.h in Headers */,
 				0A7ED7102892B11B00CC20DE /* ADJMoneyDecimalAmount.h in Headers */,
+				6FCD54D7298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
 				0A7ED7112892B11B00CC20DE /* ADJMoneyDoubleAmount.h in Headers */,
 				0A7ED7122892B11B00CC20DE /* ADJUtilSys.h in Headers */,
 				0A7ED7132892B11B00CC20DE /* ADJConstantsSys.h in Headers */,
@@ -5204,6 +5224,7 @@
 				0A25F91B28E5CAC5001988A1 /* ADJDelayData.h in Headers */,
 				0A25F91C28E5CAC5001988A1 /* ADJAttributionResponseData.h in Headers */,
 				6FCD53B2298176B2007542FB /* ADJUtilUserDefaults.h in Headers */,
+				6FCD54C8298BAA68007542FB /* ADJInstanceRootBag.h in Headers */,
 				0A25F91D28E5CAC5001988A1 /* ADJBillingSubscriptionResponseData.h in Headers */,
 				0A25F91E28E5CAC5001988A1 /* ADJClickResponseData.h in Headers */,
 				0A25F91F28E5CAC5001988A1 /* ADJThirdPartySharingResponseData.h in Headers */,
@@ -5353,6 +5374,7 @@
 				0A25F9A428E5CAC9001988A1 /* ADJSdkActiveSubscriber.h in Headers */,
 				0A25F9A528E5CAC9001988A1 /* ADJPreSdkInitRoot.h in Headers */,
 				0A25F9A628E5CAC9001988A1 /* ADJSdkActiveStateStorage.h in Headers */,
+				6FCD54D8298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
 				0A25F9A728E5CAC9001988A1 /* ADJSdkActiveState.h in Headers */,
 				6FCD54A8298ABED4007542FB /* ADJPostSdkStartRoot.h in Headers */,
 				0A25F9A828E5CAC9001988A1 /* ADJSdkActiveStateData.h in Headers */,
@@ -5464,6 +5486,7 @@
 				0A25FB1828F42381001988A1 /* ADJDelayData.h in Headers */,
 				0A25FB1928F42381001988A1 /* ADJAttributionResponseData.h in Headers */,
 				6FCD53B3298176B2007542FB /* ADJUtilUserDefaults.h in Headers */,
+				6FCD54C9298BAA68007542FB /* ADJInstanceRootBag.h in Headers */,
 				0A25FB1A28F42381001988A1 /* ADJBillingSubscriptionResponseData.h in Headers */,
 				0A25FB1B28F42381001988A1 /* ADJClickResponseData.h in Headers */,
 				0A25FB1C28F42381001988A1 /* ADJThirdPartySharingResponseData.h in Headers */,
@@ -5613,6 +5636,7 @@
 				0A25FBA128F42382001988A1 /* ADJSdkActiveSubscriber.h in Headers */,
 				0A25FBA228F42382001988A1 /* ADJPreSdkInitRoot.h in Headers */,
 				0A25FBA328F42382001988A1 /* ADJSdkActiveStateStorage.h in Headers */,
+				6FCD54D9298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
 				0A25FBA428F42382001988A1 /* ADJSdkActiveState.h in Headers */,
 				6FCD54A9298ABED4007542FB /* ADJPostSdkStartRoot.h in Headers */,
 				0A25FBA528F42382001988A1 /* ADJSdkActiveStateData.h in Headers */,
@@ -5724,6 +5748,7 @@
 				0A25FCE728F43C2C001988A1 /* ADJDelayData.h in Headers */,
 				0A25FCE828F43C2C001988A1 /* ADJAttributionResponseData.h in Headers */,
 				6FCD53B4298176B2007542FB /* ADJUtilUserDefaults.h in Headers */,
+				6FCD54CA298BAA68007542FB /* ADJInstanceRootBag.h in Headers */,
 				0A25FCE928F43C2C001988A1 /* ADJBillingSubscriptionResponseData.h in Headers */,
 				0A25FCEA28F43C2C001988A1 /* ADJClickResponseData.h in Headers */,
 				0A25FCEB28F43C2C001988A1 /* ADJThirdPartySharingResponseData.h in Headers */,
@@ -5873,6 +5898,7 @@
 				0A25FD7028F43C2D001988A1 /* ADJSdkActiveSubscriber.h in Headers */,
 				0A25FD7128F43C2D001988A1 /* ADJPreSdkInitRoot.h in Headers */,
 				0A25FD7228F43C2D001988A1 /* ADJSdkActiveStateStorage.h in Headers */,
+				6FCD54DA298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
 				0A25FD7328F43C2D001988A1 /* ADJSdkActiveState.h in Headers */,
 				6FCD54AA298ABED4007542FB /* ADJPostSdkStartRoot.h in Headers */,
 				0A25FD7428F43C2D001988A1 /* ADJSdkActiveStateData.h in Headers */,
@@ -5984,6 +6010,7 @@
 				0A7E48C828F8276C00827F0B /* ADJDelayData.h in Headers */,
 				0A7E48C928F8276C00827F0B /* ADJAttributionResponseData.h in Headers */,
 				6FCD53B5298176B2007542FB /* ADJUtilUserDefaults.h in Headers */,
+				6FCD54CB298BAA68007542FB /* ADJInstanceRootBag.h in Headers */,
 				0A7E48CA28F8276C00827F0B /* ADJBillingSubscriptionResponseData.h in Headers */,
 				0A7E48CB28F8276C00827F0B /* ADJClickResponseData.h in Headers */,
 				0A7E48CC28F8276C00827F0B /* ADJThirdPartySharingResponseData.h in Headers */,
@@ -6133,6 +6160,7 @@
 				0A7E495128F8276D00827F0B /* ADJSdkActiveSubscriber.h in Headers */,
 				0A7E495228F8276D00827F0B /* ADJPreSdkInitRoot.h in Headers */,
 				0A7E495328F8276D00827F0B /* ADJSdkActiveStateStorage.h in Headers */,
+				6FCD54DB298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
 				0A7E495428F8276D00827F0B /* ADJSdkActiveState.h in Headers */,
 				6FCD54AB298ABED4007542FB /* ADJPostSdkStartRoot.h in Headers */,
 				0A7E495528F8276D00827F0B /* ADJSdkActiveStateData.h in Headers */,
@@ -6244,6 +6272,7 @@
 				0A7E49B828F82F6C00827F0B /* ADJDelayData.h in Headers */,
 				0A7E49B928F82F6C00827F0B /* ADJAttributionResponseData.h in Headers */,
 				6FCD53B6298176B2007542FB /* ADJUtilUserDefaults.h in Headers */,
+				6FCD54CC298BAA68007542FB /* ADJInstanceRootBag.h in Headers */,
 				0A7E49BA28F82F6C00827F0B /* ADJBillingSubscriptionResponseData.h in Headers */,
 				0A7E49BB28F82F6C00827F0B /* ADJClickResponseData.h in Headers */,
 				0A7E49BC28F82F6C00827F0B /* ADJThirdPartySharingResponseData.h in Headers */,
@@ -6393,6 +6422,7 @@
 				0A7E4A4128F82F6D00827F0B /* ADJSdkActiveSubscriber.h in Headers */,
 				0A7E4A4228F82F6D00827F0B /* ADJPreSdkInitRoot.h in Headers */,
 				0A7E4A4328F82F6D00827F0B /* ADJSdkActiveStateStorage.h in Headers */,
+				6FCD54DC298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
 				0A7E4A4428F82F6D00827F0B /* ADJSdkActiveState.h in Headers */,
 				6FCD54AC298ABED4007542FB /* ADJPostSdkStartRoot.h in Headers */,
 				0A7E4A4528F82F6D00827F0B /* ADJSdkActiveStateData.h in Headers */,
@@ -6504,6 +6534,7 @@
 				0A7E4AA328F830AD00827F0B /* ADJDelayData.h in Headers */,
 				0A7E4AA428F830AD00827F0B /* ADJAttributionResponseData.h in Headers */,
 				6FCD53B7298176B2007542FB /* ADJUtilUserDefaults.h in Headers */,
+				6FCD54CD298BAA68007542FB /* ADJInstanceRootBag.h in Headers */,
 				0A7E4AA528F830AD00827F0B /* ADJBillingSubscriptionResponseData.h in Headers */,
 				0A7E4AA628F830AD00827F0B /* ADJClickResponseData.h in Headers */,
 				0A7E4AA728F830AD00827F0B /* ADJThirdPartySharingResponseData.h in Headers */,
@@ -6653,6 +6684,7 @@
 				0A7E4B2C28F830AF00827F0B /* ADJSdkActiveSubscriber.h in Headers */,
 				0A7E4B2D28F830AF00827F0B /* ADJPreSdkInitRoot.h in Headers */,
 				0A7E4B2E28F830AF00827F0B /* ADJSdkActiveStateStorage.h in Headers */,
+				6FCD54DD298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
 				0A7E4B2F28F830AF00827F0B /* ADJSdkActiveState.h in Headers */,
 				6FCD54AD298ABED4007542FB /* ADJPostSdkStartRoot.h in Headers */,
 				0A7E4B3028F830AF00827F0B /* ADJSdkActiveStateData.h in Headers */,

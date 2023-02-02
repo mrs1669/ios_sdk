@@ -8,10 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "ADJLogController.h"
+#import "ADJThreadController.h"
+#import "ADJSingleThreadExecutor.h"
+#import "ADJClock.h"
+#import "ADJPublisherController.h"
 
-@interface ADJInstanceRootBag : NSObject
+@protocol ADJInstanceRootBag <NSObject>
+
+// public properties
+@property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
+@property (nonnull, readonly, strong, nonatomic) ADJInstanceIdData *instanceId;
+@property (nullable, readonly, strong, nonatomic) NSString *sdkPrefix;
+
+@property (nonnull, readonly, strong, nonatomic) ADJLogController *logController;
+@property (nonnull, readonly, strong, nonatomic) ADJThreadController *threadController;
+@property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
+@property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *commonExecutor;
+@property (nonnull, readonly, strong, nonatomic) ADJLogger *adjustApiLogger;
+@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
+@property (nonnull, readonly, strong, nonatomic) ADJPublisherController *publisherController;
 
 @end
-
-NS_ASSUME_NONNULL_END

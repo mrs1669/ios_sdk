@@ -10,11 +10,17 @@
 #import "ADJAdjustInstance.h"
 #import "ADJSdkConfigData.h"
 #import "ADJInstanceIdData.h"
+#import "ADJInstanceRootBag.h"
 
-@interface ADJInstanceRoot : NSObject <ADJAdjustInstance>
+@interface ADJInstanceRoot : NSObject <
+    ADJAdjustInstance,
+    ADJInstanceRootBag
+>
 // instantiation
-- (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
-                                instanceId:(nonnull ADJInstanceIdData *)instanceId;
++ (nonnull instancetype)instanceWithConfigData:(nonnull ADJSdkConfigData *)configData
+                                    instanceId:(nonnull ADJInstanceIdData *)instanceId
+                                     sdkPrefix:(nullable NSString*)sdkPrefix;
+
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api

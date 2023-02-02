@@ -9,84 +9,84 @@
 #import "ADJPreSdkInitRoot.h"
 
 #pragma mark Fields
-#pragma mark - Public properties
-/* .h
- @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveController *sdkActiveController;
- @property (nonnull, readonly, strong, nonatomic) ADJStorageRoot *storageRoot;
- @property (nonnull, readonly, strong, nonatomic) ADJDeviceController *deviceController;
- @property (nonnull, readonly, strong, nonatomic) ADJClientActionController *clientActionController;
- @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetController *gdprForgetController;
- @property (nonnull, readonly, strong, nonatomic) ADJLifecycleController *lifecycleController;
- @property (nonnull, readonly, strong, nonatomic) ADJOfflineController *offlineController;
- @property (nonnull, readonly, strong, nonatomic) ADJClientCallbacksController *clientCallbacksController;
- @property (nonnull, readonly, strong, nonatomic) ADJPluginController *pluginController;
- @property (nonnull, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
-*/
-
 @implementation ADJPreSdkInitRoot
+#pragma mark - Synthesize protocol properties
+@synthesize sdkActiveController = _sdkActiveController;
+@synthesize storageRoot = _storageRoot;
+@synthesize deviceController = _deviceController;
+@synthesize clientActionController = _clientActionController;
+@synthesize gdprForgetController = _gdprForgetController;
+@synthesize lifecycleController = _lifecycleController;
+@synthesize offlineController = _offlineController;
+@synthesize clientCallbacksController = _clientCallbacksController;
+@synthesize pluginController = _pluginController;
+@synthesize clientReturnExecutor = _clientReturnExecutor;
+
 #pragma mark Instantiation
-
 - (nonnull instancetype)
-    initWithInstanceId:(nonnull ADJInstanceIdData *)instanceId
-    clock:(nonnull ADJClock *)clock
-    sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
-    threadController:(nonnull ADJThreadController *)threadController
-    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-    publisherController:(nonnull ADJPublisherController *)publisherController
+    initWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"PreSdkInitRoot"];
-    
-    _storageRoot = [[ADJStorageRoot alloc]
-                              initWithLoggerFactory:loggerFactory
-                              threadExecutorFactory:threadController
-                              instanceId:instanceId];
+    self = [super initWithLoggerFactory:instanceRootBag.logController source:@"PreSdkInitRoot"];
 
-    _gdprForgetController = [[ADJGdprForgetController alloc]
-                             initWithLoggerFactory:loggerFactory
-                             gdprForgetStateStorage:_storageRoot.gdprForgetStateStorage
-                             threadExecutorFactory:threadController
-                             gdprForgetBackoffStrategy:sdkConfigData.gdprForgetBackoffStrategy
-                             publisherController:publisherController];
-
-    _lifecycleController = [[ADJLifecycleController alloc]
-                            initWithLoggerFactory:loggerFactory
-                            threadController:threadController
-                            doNotReadCurrentLifecycleStatus:
-                                sdkConfigData.doNotReadCurrentLifecycleStatus
-                            clientExecutor:clientExecutor
-                            publisherController:publisherController];
-
-    _offlineController = [[ADJOfflineController alloc] initWithLoggerFactory:loggerFactory
-                                                          publisherController:publisherController];
-
-    _clientActionController = [[ADJClientActionController alloc]
-                               initWithLoggerFactory:loggerFactory
-                               clientActionStorage:_storageRoot.clientActionStorage
-                               clock:clock];
-
-    _deviceController = [[ADJDeviceController alloc]
-                         initWithLoggerFactory:loggerFactory
-                         threadExecutorFactory:threadController
-                         clock:clock
-                         deviceIdsStorage:_storageRoot.deviceIdsStorage
-                         keychainStorage:_storageRoot.keychainStorage
-                         deviceIdsConfigData:sdkConfigData.sessionDeviceIdsConfigData];
+    // without local dependencies
+    _clientCallbacksController = [[ADJClientCallbacksController alloc]
+                                  initWithLoggerFactory:instanceRootBag.logController];
 
     _clientReturnExecutor =
-        (sdkConfigData.clientReturnExecutorOverwrite) ? : threadController;
+        (instanceRootBag.sdkConfigData.clientReturnExecutorOverwrite)
+        ? : instanceRootBag.threadController;
 
-    _clientCallbacksController = [[ADJClientCallbacksController alloc]
-                                  initWithLoggerFactory:loggerFactory];
+    _gdprForgetController = [[ADJGdprForgetController alloc]
+                             initWithLoggerFactory:instanceRootBag.logController
+                             gdprForgetStateStorage:_storageRoot.gdprForgetStateStorage
+                             threadExecutorFactory:instanceRootBag.threadController
+                             gdprForgetBackoffStrategy:
+                                 instanceRootBag.sdkConfigData.gdprForgetBackoffStrategy
+                             publisherController:instanceRootBag.publisherController];
 
-    _pluginController = [[ADJPluginController alloc] initWithLoggerFactory:loggerFactory];
+    _lifecycleController = [[ADJLifecycleController alloc]
+                            initWithLoggerFactory:instanceRootBag.logController
+                            threadController:instanceRootBag.threadController
+                            doNotReadCurrentLifecycleStatus:
+                                instanceRootBag.sdkConfigData.doNotReadCurrentLifecycleStatus
+                            clientExecutor:instanceRootBag.clientExecutor
+                            publisherController:instanceRootBag.publisherController];
+
+    _offlineController = [[ADJOfflineController alloc]
+                          initWithLoggerFactory:instanceRootBag.logController
+                          publisherController:instanceRootBag.publisherController];
+
+
+    _pluginController = [[ADJPluginController alloc]
+                         initWithLoggerFactory:instanceRootBag.logController];
+
+    _storageRoot = [[ADJStorageRoot alloc]
+                              initWithLoggerFactory:instanceRootBag.logController
+                              threadExecutorFactory:instanceRootBag.threadController
+                              instanceId:instanceRootBag.instanceId];
+
+    // local dependencies 1
+    _clientActionController = [[ADJClientActionController alloc]
+                               initWithLoggerFactory:instanceRootBag.logController
+                               clientActionStorage:_storageRoot.clientActionStorage
+                               clock:instanceRootBag.clock];
+
+    _deviceController = [[ADJDeviceController alloc]
+                         initWithLoggerFactory:instanceRootBag.logController
+                         threadExecutorFactory:instanceRootBag.threadController
+                         clock:instanceRootBag.clock
+                         deviceIdsStorage:_storageRoot.deviceIdsStorage
+                         keychainStorage:_storageRoot.keychainStorage
+                         deviceIdsConfigData:
+                             instanceRootBag.sdkConfigData.sessionDeviceIdsConfigData];
+
 
     _sdkActiveController = [[ADJSdkActiveController alloc]
-                            initWithLoggerFactory:loggerFactory
+                            initWithLoggerFactory:instanceRootBag.logController
                             activeStateStorage:_storageRoot.sdkActiveStateStorage
-                            clientExecutor:clientExecutor
+                            clientExecutor:instanceRootBag.clientExecutor
                             isForgotten:[_gdprForgetController isForgotten]
-                            publisherController:publisherController];
+                            publisherController:instanceRootBag.publisherController];
     return self;
 }
 

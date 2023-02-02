@@ -12,15 +12,8 @@
 #import "ADJClientActionsAPI.h"
 #import "ADJMeasurementSessionStartSubscriber.h"
 
-#import "ADJThreadController.h"
-#import "ADJSingleThreadExecutor.h"
-#import "ADJClientReturnExecutor.h"
-#import "ADJStorageRoot.h"
-#import "ADJDeviceController.h"
-#import "ADJClientConfigData.h"
-#import "ADJSdkConfigData.h"
-#import "ADJClock.h"
-#import "ADJPublisherController.h"
+#import "ADJInstanceRootBag.h"
+#import "ADJPreSdkInitRootBag.h"
 
 #import "ADJClientSubscriptionsController.h"
 #import "ADJPausingController.h"
@@ -39,19 +32,11 @@
     // subscriptions
     ADJMeasurementSessionStartSubscriber
 >
-
+// instantiation
 - (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadController:(nonnull ADJThreadController *)threadController
-    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-    storageRoot:(nonnull ADJStorageRoot *)storageRoot
-    deviceController:(nonnull ADJDeviceController *)deviceController
-    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-    sdkConfigData:(nonnull ADJSdkConfigData *)sdkConfigData
-    sdkPrefix:(nullable NSString *)sdkPrefix
-    clock:(nonnull ADJClock *)clock
-    publisherController:(nonnull ADJPublisherController *)publisherController;
+    initWithClientConfig:(nonnull ADJClientConfigData *)clientConfig
+    instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+    preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag;
 
 - (void)subscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
 - (void)startSdk;
@@ -59,7 +44,7 @@
 - (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPI;
 
 // public properties
-@property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfigData;
+@property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfig;
 @property (nonnull, readonly, strong, nonatomic)
     ADJClientSubscriptionsController *clientSubscriptionsController;
 @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;

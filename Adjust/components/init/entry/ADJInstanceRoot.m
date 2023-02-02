@@ -7,9 +7,7 @@
 //
 
 #import "ADJInstanceRoot.h"
-#import "ADJLogController.h"
-#import "ADJThreadController.h"
-#import "ADJSingleThreadExecutor.h"
+
 #import "ADJLogger.h"
 #import "ADJSdkConfigData.h"
 #import "ADJPreSdkInitRoot.h"
@@ -18,32 +16,48 @@
 
 @interface ADJInstanceRoot ()
 #pragma mark - Internal variables
-@property (nonnull, readonly, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
-@property (nonnull, readonly, strong, nonatomic) ADJInstanceIdData *instanceId;
-
-#pragma mark - Internal variables
-@property (nonnull, readonly, strong, nonatomic) ADJLogController *logController;
-@property (nonnull, readonly, strong, nonatomic) ADJThreadController *threadController;
-@property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
-@property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *commonExecutor;
-@property (nonnull, readonly, strong, nonatomic) ADJLogger *adjustApiLogger;
-@property (nullable, readwrite, strong, nonatomic)
-    ADJPreSdkInitRoot *preSdkInitRoot;
-@property (nullable, readwrite, strong, nonatomic)
-    ADJPostSdkInitRoot *postSdkInitRoot;
-@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
-@property (nonnull, readonly, strong, nonatomic) ADJPublisherController *publisherController;
+@property (nullable, readwrite, strong, nonatomic) ADJPreSdkInitRoot *preSdkInitRoot;
+@property (nullable, readwrite, strong, nonatomic) ADJPostSdkInitRoot *postSdkInitRoot;
 
 @end
 
 @implementation ADJInstanceRoot
+#pragma mark - Synthesize protocol properties
+@synthesize sdkConfigData = _sdkConfigData;
+@synthesize instanceId = _instanceId;
+@synthesize sdkPrefix = _sdkPrefix;
+
+@synthesize logController = _logController;
+@synthesize threadController = _threadController;
+@synthesize clientExecutor = _clientExecutor;
+@synthesize commonExecutor = _commonExecutor;
+@synthesize adjustApiLogger = _adjustApiLogger;
+@synthesize clock = _clock;
+@synthesize publisherController = _publisherController;
+
 #pragma mark Instantiation
++ (nonnull instancetype)instanceWithConfigData:(nonnull ADJSdkConfigData *)configData
+                                    instanceId:(nonnull ADJInstanceIdData *)instanceId
+                                     sdkPrefix:(nullable NSString*)sdkPrefix
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJInstanceRoot alloc] initWithConfigData:configData
+                                         instanceId:instanceId
+                                          sdkPrefix:sdkPrefix];
+
+    [instanceRoot createSdkInitRootInClientContext];
+
+    return instanceRoot;
+}
+
 - (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
                                 instanceId:(nonnull ADJInstanceIdData *)instanceId
+                                 sdkPrefix:(nullable NSString*)sdkPrefix
 {
     self = [super init];
     _sdkConfigData = configData;
     _instanceId = instanceId;
+    _sdkPrefix = sdkPrefix;
 
     _clock = [[ADJClock alloc] init];
 
@@ -55,7 +69,6 @@
 
     _threadController = [[ADJThreadController alloc] initWithLoggerFactory:_logController];
 
-    // Executors
     _clientExecutor = [_threadController
                        createSingleThreadExecutorWithLoggerFactory:_logController
                        sourceDescription:@"clientExecutor"];
@@ -66,6 +79,9 @@
 
     _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
 
+    return self;
+}
+- (void)createSdkInitRootInClientContext {
     __typeof(self) __weak weakSelf = self;
     [_clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -74,16 +90,8 @@
         }
 
         strongSelf.preSdkInitRoot =
-            [[ADJPreSdkInitRoot alloc] initWithInstanceId:instanceId
-                                                              clock:strongSelf.clock
-                                                      sdkConfigData:strongSelf.sdkConfigData
-                                                   threadController:strongSelf.threadController
-                                                      loggerFactory:strongSelf.logController
-                                                     clientExecutor:strongSelf.clientExecutor
-                                                publisherController:strongSelf.publisherController];
+            [[ADJPreSdkInitRoot alloc] initWithInstanceRootBag:strongSelf];
     } source:@"ADJInstanceRoot init"];
-
-    return self;
 }
 
 - (nullable instancetype)init {
@@ -144,17 +152,9 @@
 
         strongSelf.postSdkInitRoot =
             [[ADJPostSdkInitRoot alloc]
-             initWithLoggerFactory:strongSelf.logController
-             threadController:strongSelf.threadController
-             clientExecutor:strongSelf.clientExecutor
-             clientReturnExecutor:strongSelf.preSdkInitRoot.clientReturnExecutor
-             storageRoot:strongSelf.preSdkInitRoot.storageRoot
-             deviceController:strongSelf.preSdkInitRoot.deviceController
-             clientConfigData:clientConfigData
-             sdkConfigData:strongSelf.sdkConfigData
-             sdkPrefix:nil //TODO: to inject with session refac
-             clock:strongSelf.clock
-             publisherController:strongSelf.publisherController];
+             initWithClientConfig:clientConfigData
+             instanceRootBag:strongSelf
+             preSdkInitRootBag:strongSelf.preSdkInitRoot];
 
         // Inject remaining dependencies before subscribing to publishers
         // 1. Self (InstanceRoot) dependencies - subscribe to publishers
