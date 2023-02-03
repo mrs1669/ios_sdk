@@ -186,8 +186,8 @@
 
     // local dependencies 2
     _attributionController =
-        [[ADJAttributionController alloc]
-         initWithLoggerFactory:loggerFactory
+        [ADJAttributionController
+         instanceWithLoggerFactory:loggerFactory
          attributionStateStorage:storageRoot.attributionStateStorage
          clock:instanceRootBag.clock
          sdkPackageBuilder:_sdkPackageBuilder

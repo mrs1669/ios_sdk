@@ -34,12 +34,9 @@
     ADJPausingSubscriber
 >
 
-// publishers
-@property (nonnull, readonly, strong, nonatomic) ADJAttributionPublisher *attributionPublisher;
-
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
++ (nonnull ADJAttributionController *)
+    instanceWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
     clock:(nonnull ADJClock *)clock
     sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder

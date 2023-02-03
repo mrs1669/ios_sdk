@@ -18,7 +18,7 @@
 #import "ADJUtilObj.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
-
+#import "ADJMainQueueTrackedPackages.h"
 
 #pragma mark Fields
 
@@ -27,8 +27,8 @@
 @property (nullable, readonly, weak, nonatomic) ADJLogQueueController *logQueueControllerWeak;
 @property (nullable, readonly, weak, nonatomic) ADJMainQueueController *mainQueueControllerWeak;
 @property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
-@property (nullable, readonly, weak, nonatomic) ADJAsaAttributionStateStorage *storageWeak;
-@property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionStateStorage *storage;
+@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJExternalConfigData *asaAttributionConfig;
 
 #pragma mark - Internal variables
@@ -41,24 +41,25 @@
 @end
 
 @implementation ADJAsaAttributionController
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                   asaAttributionStateStorage:(nonnull ADJAsaAttributionStateStorage *)asaAttributionStateStorage
-                                        clock:(nonnull ADJClock *)clock
-                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                         asaAttributionConfig:(nonnull ADJExternalConfigData *)asaAttributionConfig
-                           logQueueController:(nonnull ADJLogQueueController *)logQueueController
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                adjustAttributionStateStorage:(nonnull ADJAttributionStateStorage *)adjustAttributionStateStorage {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    asaAttributionStateStorage:(nonnull ADJAsaAttributionStateStorage *)asaAttributionStateStorage
+    clock:(nonnull ADJClock *)clock
+    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+    asaAttributionConfig:(nonnull ADJExternalConfigData *)asaAttributionConfig
+    logQueueController:(nonnull ADJLogQueueController *)logQueueController
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    adjustAttributionStateStorage:
+        (nonnull ADJAttributionStateStorage *)adjustAttributionStateStorage
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"AsaAttributionController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _logQueueControllerWeak = logQueueController;
     _mainQueueControllerWeak = mainQueueController;
-    _storageWeak = asaAttributionStateStorage;
-    _clockWeak = clock;
-    _storageWeak = asaAttributionStateStorage;
-    _clockWeak = clock;
+    _storage = asaAttributionStateStorage;
+    _clock = clock;
     _asaAttributionConfig = asaAttributionConfig;
 
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
@@ -77,11 +78,6 @@
         [mainQueueController.trackedPackagesProvider asaClickCount];
     _mainQueueContainsAsaClickPackage = asaClickCount != nil
         && asaClickCount.uIntegerValue > 0;
-
-    [ADJAsaAttributionController
-     updateAdjustAttributionWithStateData:[adjustAttributionStateStorage readOnlyStoredDataValue]
-     storage:asaAttributionStateStorage
-     executor:self.executor];
 
     return self;
 }
@@ -115,42 +111,6 @@
                       @(hasMininumOsVersion).description, @"hasMininumOsVersion", nil]];
 
     return canReadTokenFromClient && canReadTokenFromConfig && hasMininumOsVersion;
-}
-
-+ (void)updateAdjustAttributionWithStateData:
-(nonnull ADJAttributionStateData *)adjustAttributionStateData
-                                     storage:(nonnull ADJAsaAttributionStateStorage *)storage
-                                    executor:(nonnull ADJSingleThreadExecutor *)executor {
-    ADJAsaAttributionStateData *_Nonnull stateData = [storage readOnlyStoredDataValue];
-
-    // no need to update, since it already received a final adjust attribution previously
-    if (stateData.hasReceivedAdjustAttribution) {
-        return;
-    }
-
-    [executor executeInSequenceWithBlock:^{
-        // read again, since it could, in theory, been updated betwwen threads
-        ADJAsaAttributionStateData *_Nonnull currentStateData = [storage readOnlyStoredDataValue];
-
-        if (currentStateData.hasReceivedAdjustAttribution) {
-            return;
-        }
-
-        if (! ([adjustAttributionStateData unavailableStatus]
-               || [adjustAttributionStateData hasAttributionStatus]))
-        {
-            return;
-        }
-
-        [storage updateWithNewDataValue:
-         [[ADJAsaAttributionStateData alloc]
-          initWithHasReceivedValidAsaClickResponse:
-              currentStateData.hasReceivedValidAsaClickResponse
-          hasReceivedAdjustAttribution:YES
-          cachedToken:currentStateData.cachedToken
-          cacheReadTimestamp:currentStateData.cacheReadTimestamp
-          errorReason:currentStateData.errorReason]];
-    } source:@"update asa attribution"];
 }
 
 #pragma mark - ADJKeepAlivePingSubscriber
@@ -191,7 +151,7 @@
         return;
     }
 
-    if (! [self isAsaClickPackageWithData:sdkResponseData.sourcePackage]) {
+    if (! [ADJMainQueueTrackedPackages isAsaClickPackageWithData:sdkResponseData.sourcePackage]) {
         return;
     }
 
@@ -205,51 +165,28 @@
 }
 
 #pragma mark - ADJAttributionSubscriber
-- (void)didAttributionWithData:(nullable ADJAttributionData *)attributionData
-             attributionStatus:(nonnull NSString *)attributionStatus {
-    ADJAsaAttributionStateStorage *_Nullable storage = self.storageWeak;
-    if (storage == nil) {
-        [self.logger debugDev:
-         @"Cannot check if it has received adjust attribution without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-
-        return;
-    }
-
-    ADJAsaAttributionStateData *_Nonnull stateData = [storage readOnlyStoredDataValue];
-
-    // no need to update, since it already received a final adjust attribution previously
-    if (stateData.hasReceivedAdjustAttribution) {
-        return;
-    }
-
+- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData
+             previousAttribution:(nullable ADJAttributionData *)previousAttribution
+{
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf handleAdjustAttributionWithStatus:attributionStatus
-                                              storage:storage];
+        [strongSelf handleAdjustAttributionStateData:attributionStateData];
     } source:@"handle adjust attribution"];
 }
 
 #pragma mark - ADJSdkPackageSendingSubscriber
 - (void)willSendSdkPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData
                    parametersToAdd:(nonnull ADJStringMapBuilder *)parametersToAdd
-                      headersToAdd:(nonnull ADJStringMapBuilder *)headersToAdd {
-    if (! [self isAsaClickPackageWithData:sdkPackageData]) {
+                      headersToAdd:(nonnull ADJStringMapBuilder *)headersToAdd
+{
+    if (! [ADJMainQueueTrackedPackages isAsaClickPackageWithData:sdkPackageData]) {
         return;
     }
 
-    ADJAsaAttributionStateStorage *_Nullable storage = self.storageWeak;
-    if (storage == nil) {
-        [self.logger debugDev:
-         @"Cannot update sending asa attribution token without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    ADJAsaAttributionStateData *_Nonnull stateData = [storage readOnlyStoredDataValue];
+    ADJAsaAttributionStateData *_Nonnull stateData = [self.storage readOnlyStoredDataValue];
 
     [ADJUtilMap
      injectIntoPackageParametersWithBuilder:parametersToAdd
@@ -263,76 +200,28 @@
 }
 
 #pragma mark Internal Methods
-- (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
-    if (! [sdkPackageData.path isEqualToString:ADJClickPackageDataPath]) {
-        return NO;
-    }
+- (void)handleAdjustAttributionStateData:
+    (nonnull ADJAttributionStateData *)adjustAttributionStateData
+{
+    ADJAsaAttributionStateData *_Nonnull currentStateData = [self.storage readOnlyStoredDataValue];
 
-    ADJNonEmptyString *_Nullable clickSourceValue =
-    [sdkPackageData.parameters pairValueWithKey:ADJParamClickSourceKey];
-    if (clickSourceValue == nil) {
-        return NO;
-    }
+    if (currentStateData.hasReceivedAdjustAttribution) { return; }
+    if (! [adjustAttributionStateData hasAcceptedResponseFromBackend]) { return; }
 
-    return [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
+    [self.storage updateWithNewDataValue:[currentStateData withHasReceivedAdjustAttribution]];
 }
 
 - (void)handleAsaClickPackage {
     self.mainQueueContainsAsaClickPackage = NO;
 
-    ADJAsaAttributionStateStorage *_Nullable storage = self.storageWeak;
-    if (storage == nil) {
-        [self.logger debugDev:
-         @"Cannot check if it has received asa click without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    ADJAsaAttributionStateData *_Nonnull currentStateData = [storage readOnlyStoredDataValue];
+    ADJAsaAttributionStateData *_Nonnull currentStateData = [self.storage readOnlyStoredDataValue];
 
     // no need to update, since it already received a asa click previously
     if (currentStateData.hasReceivedValidAsaClickResponse) {
         return;
     }
 
-    [storage updateWithNewDataValue:
-     [[ADJAsaAttributionStateData alloc]
-      initWithHasReceivedValidAsaClickResponse:YES
-      hasReceivedAdjustAttribution:currentStateData.hasReceivedAdjustAttribution
-      cachedToken:currentStateData.cachedToken
-      cacheReadTimestamp:currentStateData.cacheReadTimestamp
-      errorReason:currentStateData.errorReason]];
-}
-
-- (void)handleAdjustAttributionWithStatus:(nonnull NSString *)adjustAttributionStatus
-                                  storage:(nonnull ADJAsaAttributionStateStorage *)storage {
-    ADJAsaAttributionStateData *_Nonnull currentStateData = [storage readOnlyStoredDataValue];
-
-    if (currentStateData.hasReceivedAdjustAttribution) {
-        return;
-    }
-
-    BOOL attributionCreated = [adjustAttributionStatus isEqualToString:ADJAttributionStatusCreated];
-    BOOL attributionUpdated = [adjustAttributionStatus isEqualToString:ADJAttributionStatusUpdated];
-    BOOL attributionRead = [adjustAttributionStatus isEqualToString:ADJAttributionStatusRead];
-    BOOL attributionNotAvailableFromBackend =
-    [adjustAttributionStatus isEqualToString:ADJAttributionStatusNotAvailableFromBackend];
-
-    if (! (attributionCreated
-           || attributionUpdated
-           || attributionRead
-           || attributionNotAvailableFromBackend))
-    {
-        return;
-    }
-
-    [storage updateWithNewDataValue:
-     [[ADJAsaAttributionStateData alloc]
-      initWithHasReceivedValidAsaClickResponse:currentStateData.hasReceivedValidAsaClickResponse
-      hasReceivedAdjustAttribution:YES
-      cachedToken:currentStateData.cachedToken
-      cacheReadTimestamp:currentStateData.cacheReadTimestamp
-      errorReason:currentStateData.errorReason]];
+    [self.storage updateWithNewDataValue:[currentStateData withHasReceivedValidAsaClickResponse]];
 }
 
 - (void)processAsaAttibutionWithAttemptsLeft:(nullable ADJNonNegativeInt *)attemptsLeft {
@@ -340,18 +229,10 @@
         return;
     }
 
-    ADJAsaAttributionStateStorage *_Nullable storage = self.storageWeak;
-    if (storage == nil) {
-        [self.logger debugDev:
-         @"Cannot check Asa Attribution before sending without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    ADJAsaAttributionStateData *_Nonnull stateData = [storage readOnlyStoredDataValue];
+    ADJAsaAttributionStateData *_Nonnull stateData = [self.storage readOnlyStoredDataValue];
 
     BOOL hasFinishedReadingAsaAttribution =
-    stateData.hasReceivedAdjustAttribution && stateData.hasReceivedValidAsaClickResponse;
+        stateData.hasReceivedAdjustAttribution && stateData.hasReceivedValidAsaClickResponse;
 
     [self.logger debugDev:@"Has Finished Reading Asa Attribution?"
                      key1:@"hasReceivedAdjustAttribution"
@@ -364,19 +245,15 @@
         return;
     }
 
-    BOOL stateDataUpdated =
-    [self refreshTokenWithStorage:storage
-                     attemptsLeft:attemptsLeft];
-
+    BOOL stateDataUpdated = [self refreshTokenWithAttemptsLeft:attemptsLeft];
     if (stateDataUpdated) {
-        stateData = [storage readOnlyStoredDataValue];
+        stateData = [self.storage readOnlyStoredDataValue];
     }
 
     [self trackAsaClickWithStateData:stateData];
 }
 
-- (BOOL)refreshTokenWithStorage:(nonnull ADJAsaAttributionStateStorage *)storage
-                   attemptsLeft:(nullable ADJNonNegativeInt *)attemptsLeft {
+- (BOOL)refreshTokenWithAttemptsLeft:(nullable ADJNonNegativeInt *)attemptsLeft {
     if (attemptsLeft == nil) {
         [self.logger debugDev:@"Cannot refresh token with invalid number of attempts left"];
         return NO;
@@ -387,7 +264,7 @@
         return NO;
     }
 
-    ADJAsaAttributionStateData *_Nonnull currentStateData = [storage readOnlyStoredDataValue];
+    ADJAsaAttributionStateData *_Nonnull currentStateData = [self.storage readOnlyStoredDataValue];
 
     ADJValueWO<NSString *> *_Nonnull readAsaAttributionTokenWO = [[ADJValueWO alloc] init];
 
@@ -418,7 +295,7 @@
         && ! [ADJUtilObj objectEquals:readAsaAttributionToken other:currentStateData.cachedToken])
     {
         tokenToWrite = readAsaAttributionToken;
-        timestampToWrite = [self nowTimestamp];
+        timestampToWrite = [self.clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
 
         tokenUpdated = YES;
     } else {
@@ -453,21 +330,16 @@
         return NO;
     }
 
-    ADJAsaAttributionStateData *_Nonnull updatedStateData =
-    [[ADJAsaAttributionStateData alloc]
-     initWithHasReceivedValidAsaClickResponse:currentStateData.hasReceivedValidAsaClickResponse
-     hasReceivedAdjustAttribution:currentStateData.hasReceivedAdjustAttribution
-     cachedToken:tokenToWrite
-     cacheReadTimestamp:timestampToWrite
-     errorReason:errorReasonToWrite];
-
-    [storage updateWithNewDataValue:updatedStateData];
+    [self.storage updateWithNewDataValue:[currentStateData withToken:tokenToWrite
+                                                           timestamp:timestampToWrite
+                                                         errorReason:errorReasonToWrite]];
 
     return YES;
 }
 
 - (nullable ADJInputLogMessageData *)readAsaAttributionTokenWithWO:
-(nonnull ADJValueWO<NSString *> *)asaAttributionTokenWO {
+    (nonnull ADJValueWO<NSString *> *)asaAttributionTokenWO
+{
     // any error that happens before trying to read the Asa Attribution Token
     //  won't change during the current app execution,
     //  so it can be assumed that the token can't be read
@@ -554,21 +426,6 @@
 
     [asaAttributionTokenWO setNewValue:asaAttributionToken];
     return nil;
-}
-
-- (nullable ADJTimestampMilli *)nowTimestamp {
-    ADJClock *_Nullable clock = self.clockWeak;
-    if (clock == nil) {
-        return nil;
-    }
-
-    ADJTimestampMilli *_Nullable nowTimestamp =
-    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
-    if (nowTimestamp == nil) {
-        return nil;
-    }
-
-    return nowTimestamp;
 }
 
 - (void)retryWithAttemptsLeft:(nonnull ADJNonNegativeInt *)attemptsLeft {
@@ -670,5 +527,3 @@
 }
 
 @end
-
-

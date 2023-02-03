@@ -40,11 +40,11 @@
 @implementation ADJStorageRoot
 #pragma mark Instantiation
 #define buildAndInjectStorage(varName, classType)       \
-_ ## varName = [[classType alloc]                   \
-initWithLoggerFactory:loggerFactory             \
-storageExecutor:self.storageExecutor            \
-sqliteController:self.sqliteController];        \
-[self.sqliteController addSqlStorage:self.varName]  \
+    _ ## varName = [[classType alloc]                   \
+        initWithLoggerFactory:loggerFactory             \
+        storageExecutor:self.storageExecutor            \
+        sqliteController:self.sqliteController];        \
+    [self.sqliteController addSqlStorage:self.varName]  \
 
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory

@@ -63,7 +63,7 @@
 - (nonnull ADJAdRevenuePackageData *)buildAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
                                                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
-- (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
+- (nonnull ADJAttributionPackageData *)buildAttributionPackage;
 
 - (nonnull ADJBillingSubscriptionPackageData *)buildBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
                                                                          apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;

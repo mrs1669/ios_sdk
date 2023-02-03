@@ -36,7 +36,8 @@ static NSString *const kErrorReasonKey = @"errorReason";
 @implementation ADJAsaAttributionStateData
 // instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
+                                     logger:(nonnull ADJLogger *)logger
+{
     if (! [ioData
            isExpectedMetadataTypeValue:ADJAsaAttributionStateDataMetadataTypeValue
            logger:logger])
@@ -66,13 +67,15 @@ static NSString *const kErrorReasonKey = @"errorReason";
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable cachedToken = [ioData.propertiesMap pairValueWithKey:kCachedTokenKey];
+    ADJNonEmptyString *_Nullable cachedToken =
+        [ioData.propertiesMap pairValueWithKey:kCachedTokenKey];
 
     ADJTimestampMilli *_Nullable cacheReadTimestamp =
-    [ADJTimestampMilli instanceFromOptionalIoDataValue:
-     [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]
-                                                logger:logger];
-    ADJNonEmptyString *_Nullable errorReason = [ioData.propertiesMap pairValueWithKey:kErrorReasonKey];
+        [ADJTimestampMilli instanceFromOptionalIoDataValue:
+         [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]
+                                                    logger:logger];
+    ADJNonEmptyString *_Nullable errorReason =
+        [ioData.propertiesMap pairValueWithKey:kErrorReasonKey];
 
     return [[self alloc]
             initWithHasReceivedValidAsaClickResponse:hasReceivedValidAsaClickResponse.boolValue
@@ -91,11 +94,12 @@ static NSString *const kErrorReasonKey = @"errorReason";
 }
 
 - (nonnull instancetype)
-initWithHasReceivedValidAsaClickResponse:(BOOL)hasReceivedValidAsaClickResponse
-hasReceivedAdjustAttribution:(BOOL)hasReceivedAdjustAttribution
-cachedToken:(nullable ADJNonEmptyString *)cachedToken
-cacheReadTimestamp:(nullable ADJTimestampMilli *)cacheReadTimestamp
-errorReason:(nullable ADJNonEmptyString *)errorReason {
+    initWithHasReceivedValidAsaClickResponse:(BOOL)hasReceivedValidAsaClickResponse
+    hasReceivedAdjustAttribution:(BOOL)hasReceivedAdjustAttribution
+    cachedToken:(nullable ADJNonEmptyString *)cachedToken
+    cacheReadTimestamp:(nullable ADJTimestampMilli *)cacheReadTimestamp
+    errorReason:(nullable ADJNonEmptyString *)errorReason
+{
     self = [super init];
 
     _hasReceivedValidAsaClickResponse = hasReceivedValidAsaClickResponse;
@@ -110,6 +114,35 @@ errorReason:(nullable ADJNonEmptyString *)errorReason {
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+#pragma mark Public API
+- (nonnull ADJAsaAttributionStateData *)withHasReceivedValidAsaClickResponse {
+    return [[ADJAsaAttributionStateData alloc]
+            initWithHasReceivedValidAsaClickResponse:YES
+            hasReceivedAdjustAttribution:self.hasReceivedAdjustAttribution
+            cachedToken:self.cachedToken
+            cacheReadTimestamp:self.cacheReadTimestamp
+            errorReason:self.errorReason];
+}
+- (nonnull ADJAsaAttributionStateData *)withHasReceivedAdjustAttribution {
+    return [[ADJAsaAttributionStateData alloc]
+            initWithHasReceivedValidAsaClickResponse:self.hasReceivedValidAsaClickResponse
+            hasReceivedAdjustAttribution:YES
+            cachedToken:self.cachedToken
+            cacheReadTimestamp:self.cacheReadTimestamp
+            errorReason:self.errorReason];
+}
+- (nonnull ADJAsaAttributionStateData *)withToken:(nullable ADJNonEmptyString *)token
+                                        timestamp:(nullable ADJTimestampMilli *)timestamp
+                                      errorReason:(nullable ADJNonEmptyString *)errorReason
+{
+    return [[ADJAsaAttributionStateData alloc]
+            initWithHasReceivedValidAsaClickResponse:self.hasReceivedValidAsaClickResponse
+            hasReceivedAdjustAttribution:self.hasReceivedAdjustAttribution
+            cachedToken:token
+            cacheReadTimestamp:timestamp
+            errorReason:errorReason];
 }
 
 #pragma mark - ADJIoDataSerializable
@@ -164,7 +197,7 @@ errorReason:(nullable ADJNonEmptyString *)errorReason {
     hashCode = ADJHashCodeMultiplier * hashCode + @(self.hasReceivedAdjustAttribution).hash;
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.cachedToken];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.cacheReadTimestamp];
+        [ADJUtilObj objecNullableHash:self.cacheReadTimestamp];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.errorReason];
 
     return hashCode;
@@ -181,10 +214,10 @@ errorReason:(nullable ADJNonEmptyString *)errorReason {
 
     ADJAsaAttributionStateData *other = (ADJAsaAttributionStateData *)object;
     return self.hasReceivedValidAsaClickResponse == other.hasReceivedValidAsaClickResponse
-    && self.hasReceivedAdjustAttribution == other.hasReceivedAdjustAttribution
-    && [ADJUtilObj objectEquals:self.cachedToken other:other.cachedToken]
-    && [ADJUtilObj objectEquals:self.cacheReadTimestamp other:other.cacheReadTimestamp]
-    && [ADJUtilObj objectEquals:self.errorReason other:other.errorReason];
+        && self.hasReceivedAdjustAttribution == other.hasReceivedAdjustAttribution
+        && [ADJUtilObj objectEquals:self.cachedToken other:other.cachedToken]
+        && [ADJUtilObj objectEquals:self.cacheReadTimestamp other:other.cacheReadTimestamp]
+        && [ADJUtilObj objectEquals:self.errorReason other:other.errorReason];
 }
 
 @end

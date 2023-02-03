@@ -76,13 +76,35 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
                                        sqliteStorageAction:decoratedSqliteStorageAction];
 }
 
++ (BOOL)isFirstSessionPackageWithData:(nullable id<ADJSdkPackageData>)sdkPackageData {
+    if (sdkPackageData == nil
+        || ! [sdkPackageData isKindOfClass:[ADJSessionPackageData class]])
+    {
+        return NO;
+    }
+
+    ADJSessionPackageData *_Nonnull sessionPackageData = (ADJSessionPackageData *)sdkPackageData;
+    return [sessionPackageData isFirstSession];
+}
+
++ (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
+    if (sdkPackageData == nil
+        || ! [sdkPackageData isKindOfClass:[ADJClickPackageData class]])
+    {
+        return NO;
+    }
+
+    ADJClickPackageData *_Nonnull clickPackageData = (ADJClickPackageData *)sdkPackageData;
+    return [clickPackageData isAsaClick];
+}
+
 #pragma mark Internal Methods
 #pragma mark - First Session Count Increment
 - (nullable ADJSQLiteStorageActionBase *)
     incrementFirstSessionCountWithPackageToAdd:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
     sqliteStorageActionForAdd:(nullable ADJSQLiteStorageActionBase *)sqliteStorageActionForAdd
 {
-    if (! [self isFirstSessionPackageWithSdkPackage:sdkPackageDataToAdd]) {
+    if (! [ADJMainQueueTrackedPackages isFirstSessionPackageWithData:sdkPackageDataToAdd]) {
         return sqliteStorageActionForAdd;
     }
 
@@ -133,16 +155,6 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
             currentFirstSessionCount.uIntegerValue + 1];
 }
 
-- (BOOL)isFirstSessionPackageWithSdkPackage:(nullable id<ADJSdkPackageData>)sdkPackageData {
-    if (sdkPackageData == nil
-        || ! [sdkPackageData isKindOfClass:[ADJSessionPackageData class]])
-    {
-        return NO;
-    }
-
-    ADJSessionPackageData *_Nonnull sessionPackageData = (ADJSessionPackageData *)sdkPackageData;
-    return [sessionPackageData isFirstSession];
-}
 
 #pragma mark - First Session Count Decrement
 - (nullable ADJSQLiteStorageActionBase *)
@@ -150,7 +162,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
         (nonnull id<ADJSdkPackageData>)sourceResponsePackage
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
-    if (! [self isFirstSessionPackageWithSdkPackage:sourceResponsePackage]) {
+    if (! [ADJMainQueueTrackedPackages isFirstSessionPackageWithData:sourceResponsePackage]) {
         return sqliteStorageAction;
     }
 
@@ -220,7 +232,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
     incrementAsaClickCountWithPackageToAdd:(nonnull id<ADJSdkPackageData>)sdkPackageDataToAdd
     sqliteStorageActionForAdd:(nullable ADJSQLiteStorageActionBase *)sqliteStorageActionForAdd
 {
-    if (! [self isAsaClickPackageWithData:sdkPackageDataToAdd]) {
+    if (! [ADJMainQueueTrackedPackages isAsaClickPackageWithData:sdkPackageDataToAdd]) {
         return sqliteStorageActionForAdd;
     }
 
@@ -269,24 +281,13 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
             currentAsaClickCount.uIntegerValue + 1];
 }
 
-- (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData {
-    if (sdkPackageData == nil
-        || ! [sdkPackageData isKindOfClass:[ADJClickPackageData class]])
-    {
-        return NO;
-    }
-
-    ADJClickPackageData *_Nonnull clickPackageData = (ADJClickPackageData *)sdkPackageData;
-    return [clickPackageData isAsaClick];
-}
-
 #pragma mark - Asa Click Count Decrement
 - (nullable ADJSQLiteStorageActionBase *)
     decrementAsaClickCountWithPackageToRemove:
         (nonnull id<ADJSdkPackageData>)sourceResponsePackage
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
-    if (! [self isAsaClickPackageWithData:sourceResponsePackage]) {
+    if (! [ADJMainQueueTrackedPackages isAsaClickPackageWithData:sourceResponsePackage]) {
         return sqliteStorageAction;
     }
 

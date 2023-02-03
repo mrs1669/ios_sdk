@@ -17,28 +17,25 @@
 #pragma mark - Public constants
 NSString *const ADJAttributionStateDataMetadataTypeValue = @"AttributionStateData";
 
-NSString *const ADJAttributionStateStatusWaitingForSessionResponse = @"WaitingForSessionResponse";
-NSString *const ADJAttributionStateStatusReceivedSessionResponse = @"ReceivedSessionResponse";
-NSString *const ADJAttributionStateStatusAskingFromSdk = @"AskingFromSdk";
-NSString *const ADJAttributionStateStatusAskingFromBackend = @"AskingFromBackend";
-NSString *const ADJAttributionStateStatusAskingFromBackendAndSdk = @"AskingFromBackendAndSdk";
+NSString *const ADJAttributionStateStatusWaitingForInstallSessionTracking =
+    @"WaitingForInstallSessionTracking";
+NSString *const ADJAttributionStateStatusCanAsk = @"CanAsk";
+NSString *const ADJAttributionStateStatusIsAsking = @"IsAsking";
 NSString *const ADJAttributionStateStatusHasAttribution = @"HasAttribution";
 NSString *const ADJAttributionStateStatusUnavailable = @"Unavailable";
 
 #pragma mark - Public properties
 /* .h
- @property (readonly, assign, nonatomic) BOOL receivedSessionResponse;
+ @property (readonly, assign, nonatomic) BOOL installSessionTracked;
  @property (readonly, assign, nonatomic) BOOL unavailableAttribution;
- @property (readonly, assign, nonatomic) BOOL askingFromSdk;
- @property (readonly, assign, nonatomic) BOOL askingFromBackend;
+ @property (readonly, assign, nonatomic) BOOL isAsking;
  @property (nullable, readonly, strong, nonatomic) ADJAttributionData *attributionData;
  */
 
 #pragma mark - Private constants
-static NSString *const kReceivedSessionResponseKey = @"receivedSessionResponse";
+static NSString *const kInstallSessionTrackedKey = @"installSessionTracked";
 static NSString *const kUnavailableAttributionKey = @"unavailableAttribution";
-static NSString *const kAskingFromSdkKey = @"askingFromSdk";
-static NSString *const kAskingFromBackendKey = @"askingFromBackend";
+static NSString *const kIsAskingKey = @"isAsking";
 static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 
 @implementation ADJAttributionStateData
@@ -65,10 +62,9 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
         return nil;
     }
 
-    extractBoolean(receivedSessionResponse, kReceivedSessionResponseKey)
+    extractBoolean(installSessionTracked, kInstallSessionTrackedKey)
     extractBoolean(unavailableAttribution, kUnavailableAttributionKey)
-    extractBoolean(askingFromSdk, kAskingFromSdkKey)
-    extractBoolean(askingFromBackend, kAskingFromBackendKey)
+    extractBoolean(isAsking, kIsAskingKey)
 
     ADJAttributionData *_Nullable attributionData = nil;
 
@@ -79,32 +75,28 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
     }
 
     return [[self alloc] initWithAttributionData:attributionData
-                         receivedSessionResponse:receivedSessionResponse.boolValue
+                           installSessionTracked:installSessionTracked.boolValue
                           unavailableAttribution:unavailableAttribution.boolValue
-                                   askingFromSdk:askingFromSdk.boolValue
-                               askingFromBackend:askingFromBackend.boolValue];
+                                        isAsking:isAsking.boolValue];
 }
 
 - (nonnull instancetype)initWithIntialState {
     return [self initWithAttributionData:nil
-                 receivedSessionResponse:NO
+                   installSessionTracked:NO
                   unavailableAttribution:NO
-                           askingFromSdk:NO
-                       askingFromBackend:NO];
+                                isAsking:NO];
 }
 
 - (nonnull instancetype)initWithAttributionData:(nullable ADJAttributionData *)attributionData
-                        receivedSessionResponse:(BOOL)receivedSessionResponse
+                          installSessionTracked:(BOOL)installSessionTracked
                          unavailableAttribution:(BOOL)unavailableAttribution
-                                  askingFromSdk:(BOOL)askingFromSdk
-                              askingFromBackend:(BOOL)askingFromBackend {
+                                       isAsking:(BOOL)isAsking
+{
     self = [super init];
-
     _attributionData = attributionData;
-    _receivedSessionResponse = receivedSessionResponse;
+    _installSessionTracked = installSessionTracked;
     _unavailableAttribution = unavailableAttribution;
-    _askingFromSdk = askingFromSdk;
-    _askingFromBackend = askingFromBackend;
+    _isAsking = isAsking;
 
     return self;
 }
@@ -115,77 +107,90 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 }
 
 #pragma mark Public API
-- (nonnull NSString *)attributionStateStatus {
-    if (self.askingFromSdk && self.askingFromBackend) {
-        return ADJAttributionStateStatusAskingFromBackendAndSdk;
+- (nonnull ADJAttributionStateStatus)attributionStateStatus {
+    if (self.isAsking) {
+        return ADJAttributionStateStatusIsAsking;
     }
-    if (self.askingFromSdk) {
-        return ADJAttributionStateStatusAskingFromSdk;
-    }
-    if (self.askingFromBackend) {
-        return ADJAttributionStateStatusAskingFromBackend;
-    }
-    if (self.unavailableAttribution && self.receivedSessionResponse) {
+    if (self.unavailableAttribution && self.installSessionTracked) {
         return ADJAttributionStateStatusUnavailable;
     }
     if (self.attributionData != nil) {
         return ADJAttributionStateStatusHasAttribution;
     }
-    if (self.receivedSessionResponse) {
-        return ADJAttributionStateStatusReceivedSessionResponse;
+    if (self.installSessionTracked) {
+        return ADJAttributionStateStatusCanAsk;
     } else {
-        return ADJAttributionStateStatusWaitingForSessionResponse;
+        return ADJAttributionStateStatusWaitingForInstallSessionTracking;
     }
 }
 
-- (BOOL)askingFromBackendAndSdkStatus {
-    return [self attributionStateStatus] == ADJAttributionStateStatusAskingFromBackendAndSdk;
+- (BOOL)isAskingStatus {
+    return [self attributionStateStatus] == ADJAttributionStateStatusIsAsking;
 }
-
-- (BOOL)askingFromSdkStatus {
-    return [self attributionStateStatus] == ADJAttributionStateStatusAskingFromSdk;
-}
-
-- (BOOL)askingFromBackendStatus {
-    return [self attributionStateStatus] == ADJAttributionStateStatusAskingFromBackend;
-}
-
 - (BOOL)unavailableStatus {
     return [self attributionStateStatus] == ADJAttributionStateStatusUnavailable;
 }
-
 - (BOOL)hasAttributionStatus {
     return [self attributionStateStatus] == ADJAttributionStateStatusHasAttribution;
 }
-
-- (BOOL)receivedSessionResponseStatus {
-    return [self attributionStateStatus] == ADJAttributionStateStatusReceivedSessionResponse;
+- (BOOL)canAskStatus {
+    return [self attributionStateStatus] == ADJAttributionStateStatusCanAsk;
+}
+- (BOOL)waitingForInstallSessionTrackingStatus {
+    return [self attributionStateStatus] == ADJAttributionStateStatusWaitingForInstallSessionTracking;
 }
 
-- (BOOL)waitingForSessionResponseStatus {
-    return [self attributionStateStatus] == ADJAttributionStateStatusWaitingForSessionResponse;
+- (BOOL)hasAcceptedResponseFromBackend {
+    return self.unavailableAttribution || self.attributionData != nil;
+}
+
+- (nonnull ADJAttributionStateData *)withNewIsAsking:(BOOL)newIsAsking {
+    return [[ADJAttributionStateData alloc] initWithAttributionData:self.attributionData
+                                              installSessionTracked:self.installSessionTracked
+                                             unavailableAttribution:self.unavailableAttribution
+                                                           isAsking:newIsAsking];
+}
+- (nonnull ADJAttributionStateData *)withInstallSessionTracked {
+    return [[ADJAttributionStateData alloc] initWithAttributionData:self.attributionData
+                                              installSessionTracked:YES
+                                             unavailableAttribution:self.unavailableAttribution
+                                                           isAsking:self.isAsking];
+}
+- (nonnull ADJAttributionStateData *)withUnavailableAttribution {
+    return [[ADJAttributionStateData alloc] initWithAttributionData:nil
+                                              installSessionTracked:self.installSessionTracked
+                                             unavailableAttribution:YES
+                                                           isAsking:self.isAsking];
+}
+
+- (nonnull ADJAttributionStateData *)withAvailableAttribution:
+    (nonnull ADJAttributionData *)attributionData
+{
+    return [[ADJAttributionStateData alloc] initWithAttributionData:attributionData
+                                              installSessionTracked:self.installSessionTracked
+                                             unavailableAttribution:NO
+                                                           isAsking:self.isAsking];
 }
 
 #pragma mark - ADJIoDataSerializable
 #define injectBoolean(var, paramKey)                                                    \
-[ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder          \
-key:paramKey                                    \
-ioValueSerializable:[ADJBooleanWrapper instanceFromBool:var]]  \
+     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder          \
+                                        key:paramKey                                    \
+                         ioValueSerializable:[ADJBooleanWrapper instanceFromBool:var]]  \
 
 - (nonnull ADJIoData *)toIoData {
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
     [[ADJIoDataBuilder alloc]
      initWithMetadataTypeValue:ADJAttributionStateDataMetadataTypeValue];
 
-    injectBoolean(self.receivedSessionResponse, kReceivedSessionResponseKey);
+    injectBoolean(self.installSessionTracked, kInstallSessionTrackedKey);
     injectBoolean(self.unavailableAttribution, kUnavailableAttributionKey);
-    injectBoolean(self.askingFromSdk, kAskingFromSdkKey);
-    injectBoolean(self.askingFromBackend, kAskingFromBackendKey);
+    injectBoolean(self.isAsking, kIsAskingKey);
 
     if (self.attributionData != nil) {
         ADJStringMapBuilder *_Nonnull stringMapBuilder =
-        [ioDataBuilder addAndReturnNewMapBuilderByName:
-         kAttributionDataMapName];
+            [ioDataBuilder addAndReturnNewMapBuilderByName:kAttributionDataMapName];
+
         [self.attributionData injectIntoIoDataMapBuilder:stringMapBuilder];
     }
 
@@ -196,10 +201,9 @@ ioValueSerializable:[ADJBooleanWrapper instanceFromBool:var]]  \
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
             ADJAttributionStateDataMetadataTypeValue,
-            kReceivedSessionResponseKey, @(self.receivedSessionResponse),
+            kInstallSessionTrackedKey, @(self.installSessionTracked),
             kUnavailableAttributionKey, @(self.unavailableAttribution),
-            kAskingFromSdkKey, @(self.askingFromSdk),
-            kAskingFromBackendKey, @(self.askingFromBackend),
+            kIsAskingKey, @(self.isAsking),
             kAttributionDataMapName, self.attributionData,
             nil];
 }
@@ -207,12 +211,11 @@ ioValueSerializable:[ADJBooleanWrapper instanceFromBool:var]]  \
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
 
-    hashCode = ADJHashCodeMultiplier * hashCode + @(self.receivedSessionResponse).hash;
+    hashCode = ADJHashCodeMultiplier * hashCode + @(self.installSessionTracked).hash;
     hashCode = ADJHashCodeMultiplier * hashCode + @(self.unavailableAttribution).hash;
-    hashCode = ADJHashCodeMultiplier * hashCode + @(self.askingFromSdk).hash;
-    hashCode = ADJHashCodeMultiplier * hashCode + @(self.askingFromBackend).hash;
+    hashCode = ADJHashCodeMultiplier * hashCode + @(self.isAsking).hash;
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.attributionData];
+        [ADJUtilObj objecNullableHash:self.attributionData];
 
     return hashCode;
 }
@@ -227,13 +230,10 @@ ioValueSerializable:[ADJBooleanWrapper instanceFromBool:var]]  \
     }
 
     ADJAttributionStateData *other = (ADJAttributionStateData *)object;
-    return self.receivedSessionResponse == other.receivedSessionResponse
-    && self.unavailableAttribution == other.unavailableAttribution
-    && self.askingFromSdk == other.askingFromSdk
-    && self.askingFromBackend == other.askingFromBackend
-    && [ADJUtilObj objectEquals:self.attributionData other:other.attributionData];
+    return self.installSessionTracked == other.installSessionTracked
+        && self.unavailableAttribution == other.unavailableAttribution
+        && self.isAsking == other.isAsking
+        && [ADJUtilObj objectEquals:self.attributionData other:other.attributionData];
 }
 
 @end
-
-

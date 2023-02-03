@@ -14,15 +14,15 @@
 
 @interface ADJClientSubscriptionsController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) ADJThreadController *threadControllerWeak;
-@property (nullable, readonly, weak, nonatomic)
-    id<ADJClientReturnExecutor> clientReturnExecutorWeak;
+@property (nullable, readonly, strong, nonatomic) ADJThreadController *threadController;
+@property (nullable, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
 @property (nullable, readonly, strong, nonatomic)
     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
 
 #pragma mark - Internal variables
+@property (nullable, readwrite, strong, nonatomic) ADJAttributionData *cachedAttributionData;
 
 @end
 
@@ -38,64 +38,44 @@
     doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"ClientSubscriptionsController"];
-    _threadControllerWeak = threadController;
-    _clientReturnExecutorWeak = clientReturnExecutor;
+    _threadController = threadController;
+    _clientReturnExecutor = clientReturnExecutor;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
     _adjustLogSubscriber = adjustLogSubscriber;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;
+
+    _cachedAttributionData = nil;
 
     return self;
 }
 
 #pragma mark Public API
 #pragma mark - ADJAttributionSubscriber
-- (void)didAttributionWithData:(nullable ADJAttributionData *)attributionData
-             attributionStatus:(nonnull NSString *)attributionStatus
+- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData
+             previousAttribution:(nullable ADJAttributionData *)previousAttribution
 {
-    ADJAdjustAttribution *_Nullable adjustAttribution =
-        attributionData != nil ? [attributionData toAdjustAttribution] : nil;
-
-    if ([attributionStatus isEqualToString:ADJAttributionStatusRead]) {
-        if (adjustAttribution == nil) {
-            [self.logger debugDev:@"Unexpected nil attribution with Read attribution status"
-                        issueType:ADJIssueLogicError];
-            return;
-        }
-        [self attributionReadWithAdjustData:adjustAttribution];
+    // we're only notifying to the client with non null updates of the attribution data
+    if (attributionStateData.attributionData == nil) {
         return;
     }
 
-    if ([attributionStatus isEqualToString:ADJAttributionStatusCreated]
-        || [attributionStatus isEqualToString:ADJAttributionStatusUpdated])
-    {
-        [self attributionChangedWithAdjustData:adjustAttribution];
-
-        [self attributionChangedWithDeferredDeeplink:
-         attributionData != nil ? attributionData.deeplink : nil];
-
+    if ([attributionStateData.attributionData isEqual:self.cachedAttributionData]) {
         return;
     }
 
-    if ([attributionStatus isEqualToString:ADJAttributionStatusNotAvailableFromBackend]
-        || [attributionStatus isEqualToString:ADJAttributionStatusWaiting])
-    {
-        if (attributionData != nil) {
-            [self.logger debugDev:@"Unexpected valid attribution data"
-                              key:@"status"
-                            value:attributionStatus
-                        issueType:ADJIssueLogicError];
-        } else {
-            [self.logger debugDev:@"Cannot notify client on attribution due to its status"
-                              key:@"status"
-                            value:attributionStatus];
-        }
-        return;
-    }
+    BOOL wasCachedPreviouslyNil = self.cachedAttributionData == nil;
 
-    [self.logger debugDev:@"Cannot notify client on valid attribution with unknown status"
-                      key:@"statue"
-                    value:attributionStatus
-                issueType:ADJIssueUnexpectedInput];
+    self.cachedAttributionData = attributionStateData.attributionData;
+
+    BOOL wasAttributionFromStateEqual =
+        [attributionStateData.attributionData isEqual:previousAttribution];
+
+    [self notifyClientWithAdjustAttribution:
+        [attributionStateData.attributionData toAdjustAttribution]
+               wasAttributionFromStateEqual:wasAttributionFromStateEqual
+                     wasCachedPreviouslyNil:wasCachedPreviouslyNil];
+
+    [self openDeferredDeeplink:attributionStateData.attributionData.deeplink];
 }
 
 #pragma mark - ADJLogSubscriber
@@ -105,18 +85,7 @@
         return;
     }
 
-    id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
-    if (clientReturnExecutor == nil) {
-        /* Must not use the "normal" logging downstream of the log collector
-            to prevent becoming in a loop
-        [self.logger debugDev:
-         @"Cannot publish adjust log message without reference to client return executor"
-                    issueType:ADJIssueWeakReference];
-         */
-        return;
-    }
-
-    [clientReturnExecutor executeClientReturnWithBlock:^{
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
         [localAdjustLogSubscriber didLogWithMessage:logMessageData.inputData.message
                                            logLevel:logMessageData.inputData.level];
     }];
@@ -130,14 +99,6 @@
         return;
     }
 
-    id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
-    if (clientReturnExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot publish adjust pre init log message without reference to client return executor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
     NSMutableArray<ADJAdjustLogMessageData *> *_Nonnull adjustLogArray =
         [[NSMutableArray alloc] initWithCapacity:preInitLogMessageArray.count];
     
@@ -147,12 +108,33 @@
                                    messageLogLevel:logData.inputData.level]];
     }
 
-    [clientReturnExecutor executeClientReturnWithBlock:^{
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
         [localAdjustLogSubscriber didLogMessagesPreInitWithArray:adjustLogArray];
     }];
 }
 
 #pragma mark Internal Methods
+- (void)notifyClientWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution
+             wasAttributionFromStateEqual:(BOOL)wasAttributionFromStateEqual
+                   wasCachedPreviouslyNil:(BOOL)wasCachedPreviouslyNil
+{
+    id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
+        self.adjustAttributionSubscriber;
+    if (localAdjustAttributionSubscriber == nil) { return; }
+
+    if (wasAttributionFromStateEqual) {
+        if (wasCachedPreviouslyNil) {
+            [self.clientReturnExecutor executeClientReturnWithBlock:^{
+                [localAdjustAttributionSubscriber didReadWithAdjustAttribution:adjustAttribution];
+            }];
+        }
+    } else {
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [localAdjustAttributionSubscriber didChangeWithAdjustAttribution:adjustAttribution];
+        }];
+    }
+}
+/*
 - (void)attributionReadWithAdjustData:(nonnull ADJAdjustAttribution *)adjustAttribution {
     id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
         self.adjustAttributionSubscriber;
@@ -161,15 +143,7 @@
         return;
     }
 
-    id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
-    if (clientReturnExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot publish read adjust attribution without reference to client return executor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    [clientReturnExecutor executeClientReturnWithBlock:^{
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
         [localAdjustAttributionSubscriber didReadWithAdjustAttribution:adjustAttribution];
     }];
 }
@@ -182,20 +156,12 @@
         return;
     }
 
-    id<ADJClientReturnExecutor> clientReturnExecutor = self.clientReturnExecutorWeak;
-    if (clientReturnExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot publish changed adjust attribution without reference to client return executor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    [clientReturnExecutor executeClientReturnWithBlock:^{
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
         [localAdjustAttributionSubscriber didChangeWithAdjustAttribution:adjustAttribution];
     }];
 }
-
-- (void)attributionChangedWithDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {
+*/
+- (void)openDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {
 #if defined(ADJUST_IM)
     return;
 #else
@@ -204,14 +170,6 @@
     }
 
     if (deferredDeeplink == nil) {
-        return;
-    }
-
-    ADJThreadController *_Nullable threadController = self.threadControllerWeak;
-    if (threadController == nil) {
-        [self.logger debugDev:
-         @"Cannot open deferred deeplink on main thread without reference to thread controller"
-                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -235,7 +193,7 @@
 
     SEL openUrlSelectorWithOptions = @selector(openURL:options:completionHandler:);
     if ([sharedApplication respondsToSelector:openUrlSelectorWithOptions]) {
-        [threadController executeInMainThreadWithBlock:^{
+        [self.threadController executeInMainThreadWithBlock:^{
             ADJLogger *__strong logger = loggerWeak;
 
             [ADJClientSubscriptionsController
@@ -249,7 +207,7 @@
 
     SEL openUrlSelectorWithoutOptions = @selector(openURL:);
     if ([sharedApplication respondsToSelector:openUrlSelectorWithoutOptions]) {
-        [threadController executeInMainThreadWithBlock:^{
+        [self.threadController executeInMainThreadWithBlock:^{
             ADJLogger *__strong logger = loggerWeak;
 
             [ADJClientSubscriptionsController
