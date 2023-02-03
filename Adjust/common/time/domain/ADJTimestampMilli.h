@@ -24,11 +24,14 @@
                                                   logger:(nonnull ADJLogger *)logger;
 + (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
                                           logger:(nonnull ADJLogger *)logger;
-+ (nullable instancetype)instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970
-                                                           logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970
+    logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)instanceWithOptionalNumberDoubleSecondsSince1970:(nullable NSNumber *)numberDoubleSecondsSince1970
-                                                                   logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceWithOptionalNumberDoubleSecondsSince1970:
+        (nullable NSNumber *)numberDoubleSecondsSince1970
+    logger:(nonnull ADJLogger *)logger;
 
 + (nullable instancetype)instanceWithNSDateValue:(nullable NSDate *)nsDateValue
                                           logger:(nonnull ADJLogger *)logger;
@@ -39,9 +42,14 @@
 @property (nonnull, readonly, strong, nonatomic) ADJNonNegativeInt *millisecondsSince1970Int;
 
 // public api
-- (nullable ADJTimeLengthMilli *)timeLengthDifferenceWithLaterTimestamp:(nonnull ADJTimestampMilli *)laterTimestamp;
+- (nullable ADJTimeLengthMilli *)timeLengthDifferenceWithLaterTimestamp:
+    (nonnull ADJTimestampMilli *)laterTimestamp;
 
-- (nonnull ADJTimestampMilli *)generateTimestampWithAddedTimeLength:(nonnull ADJTimeLengthMilli *)timeLengthToAdd;
+- (nonnull ADJTimeLengthMilli *)timeLengthDifferenceWithNonMonotonicNowTimestamp:
+    (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp;
+
+- (nonnull ADJTimestampMilli *)generateTimestampWithAddedTimeLength:
+    (nonnull ADJTimeLengthMilli *)timeLengthToAdd;
 
 - (nonnull NSString *)dateFormattedDescription;
 
