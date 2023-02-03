@@ -18,7 +18,6 @@
 #import "ADJUtilObj.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
-#import "ADJMainQueueTrackedPackages.h"
 
 #pragma mark Fields
 
@@ -75,7 +74,7 @@
     _isInDelay = NO;
 
     ADJNonNegativeInt *_Nullable asaClickCount =
-        [mainQueueController.trackedPackagesProvider asaClickCount];
+        [mainQueueController.trackedPackages asaClickCount];
     _mainQueueContainsAsaClickPackage = asaClickCount != nil
         && asaClickCount.uIntegerValue > 0;
 
@@ -492,8 +491,8 @@
     }
 
     ADJClickPackageData *_Nonnull clickPackage =
-    [sdkPackageBuilder buildAsaAttributionClickWithToken:stateData.cachedToken
-                             asaAttributionReadTimestamp:stateData.cacheReadTimestamp];
+        [sdkPackageBuilder buildAsaAttributionClickWithToken:stateData.cachedToken
+                                 asaAttributionReadTimestamp:stateData.cacheReadTimestamp];
 
     [mainQueueController addClickPackageToSendWithData:clickPackage
                                    sqliteStorageAction:nil];

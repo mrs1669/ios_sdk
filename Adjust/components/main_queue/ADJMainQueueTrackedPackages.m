@@ -25,6 +25,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
 @end
 
 @implementation ADJMainQueueTrackedPackages
+
 // instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory

@@ -23,7 +23,7 @@
 #import "ADJNetworkEndpointData.h"
 #import "ADJClientConfigData.h"
 #import "ADJPublisherController.h"
-#import "ADJMainQueueTrackedPackagesProvider.h"
+#import "ADJMainQueueTrackedPackages.h"
 
 @interface ADJAttributionController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -43,8 +43,8 @@
     threadController:(nonnull ADJThreadController *)threadController
     attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
     sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-    mainQueueTrackedPackagesProvider:
-        (nonnull id<ADJMainQueueTrackedPackagesProvider>)mainQueueTrackedPackagesProvider
+    mainQueueTrackedPackages:
+        (nonnull ADJMainQueueTrackedPackages *)mainQueueTrackedPackages
     doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
     publisherController:(nonnull ADJPublisherController *)publisherController;
 

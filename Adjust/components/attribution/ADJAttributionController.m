@@ -11,7 +11,6 @@
 #import "ADJSingleThreadExecutor.h"
 #import "ADJAttributionTracker.h"
 #import "ADJAttributionState.h"
-#import "ADJMainQueueTrackedPackages.h"
 
 #pragma mark Private class
 @implementation ADJAttributionPublisher @end
@@ -45,8 +44,8 @@
     threadController:(nonnull ADJThreadController *)threadController
     attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
     sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-    mainQueueTrackedPackagesProvider:
-        (nonnull id<ADJMainQueueTrackedPackagesProvider>)mainQueueTrackedPackagesProvider
+    mainQueueTrackedPackages:
+        (nonnull ADJMainQueueTrackedPackages *)mainQueueTrackedPackages
     doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
@@ -62,7 +61,7 @@
                                             publisherController:publisherController];
 
     ADJNonNegativeInt *_Nullable firstSessionCount =
-        [mainQueueTrackedPackagesProvider firstSessionCount];
+        [mainQueueTrackedPackages firstSessionCount];
     BOOL hasTrackedInstallSession = firstSessionCount != nil
         && firstSessionCount.uIntegerValue == 0;
 

@@ -194,7 +194,7 @@
          threadController:instanceRootBag.threadController
          attributionBackoffStrategy:sdkConfig.attributionBackoffStrategy
          sdkPackageSenderFactory:_sdkPackageSenderController
-         mainQueueTrackedPackagesProvider:[_mainQueueController trackedPackagesProvider]
+         mainQueueTrackedPackages:_mainQueueController.trackedPackages
          doNotInitiateAttributionFromSdk:sdkConfig.doNotInitiateAttributionFromSdk
          publisherController:instanceRootBag.publisherController];
 

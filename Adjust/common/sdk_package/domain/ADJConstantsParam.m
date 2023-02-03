@@ -73,7 +73,6 @@ NSString *const ADJParamAdRevenueUnitKey = @"ad_revenue_unit";
 NSString *const ADJParamAdRevenuePlacementKey = @"ad_revenue_placement";
 
 // attribution
-NSString *const ADJParamAttributionInititedByKey = @"initiated_by";
 NSString *const ADJParamAttributionInititedBySdkValue = @"sdk";
 NSString *const ADJParamAttributionInititedByBackendValue = @"backend";
 NSString *const ADJParamAttributionInititedBySdkAndBackendValue = @"backend_and_sdk";

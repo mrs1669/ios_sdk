@@ -134,33 +134,7 @@
         }];
     }
 }
-/*
-- (void)attributionReadWithAdjustData:(nonnull ADJAdjustAttribution *)adjustAttribution {
-    id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
-        self.adjustAttributionSubscriber;
 
-    if (localAdjustAttributionSubscriber == nil) {
-        return;
-    }
-
-    [self.clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustAttributionSubscriber didReadWithAdjustAttribution:adjustAttribution];
-    }];
-}
-
-- (void)attributionChangedWithAdjustData:(nullable ADJAdjustAttribution *)adjustAttribution {
-    id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
-    self.adjustAttributionSubscriber;
-
-    if (localAdjustAttributionSubscriber == nil) {
-        return;
-    }
-
-    [self.clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustAttributionSubscriber didChangeWithAdjustAttribution:adjustAttribution];
-    }];
-}
-*/
 - (void)openDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {
 #if defined(ADJUST_IM)
     return;

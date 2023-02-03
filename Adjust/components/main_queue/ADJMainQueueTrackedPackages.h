@@ -9,14 +9,11 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
-#import "ADJMainQueueTrackedPackagesProvider.h"
 #import "ADJMainQueueStorage.h"
 #import "ADJSQLiteStorageActionBase.h"
 #import "ADJSdkPackageData.h"
-#import "ADJInstallSessionTrackedSubscriber.h"
-#import "ADJAsaClickTrackedSubscriber.h"
 
-@interface ADJMainQueueTrackedPackages : ADJCommonBase <ADJMainQueueTrackedPackagesProvider>
+@interface ADJMainQueueTrackedPackages : ADJCommonBase
 // instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -30,11 +27,11 @@
 - (nullable ADJSQLiteStorageActionBase *)decrementTrackedCountWithPackageToRemove:
     (nonnull id<ADJSdkPackageData>)sourceResponsePackage;
 
-// publishers
-@property (nonnull, readonly, strong, nonatomic)
-    ADJInstallSessionTrackedPublisher *installSessionTrackedPublisher;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJAsaClickTrackedPublisher *asaClickTrackedPublisher;
+- (nullable ADJNonNegativeInt *)firstSessionCount;
+- (nullable ADJNonNegativeInt *)asaClickCount;
+
++ (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData;
++ (BOOL)isFirstSessionPackageWithData:(nullable id<ADJSdkPackageData>)sdkPackageData;
 
 @end
 

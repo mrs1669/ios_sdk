@@ -17,9 +17,13 @@
 #import "ADJUtilF.h"
 #import "ADJConstantsParam.h"
 #import "ADJSQLiteStorageQueueMetadataAction.h"
-#import "ADJMainQueueTrackedPackages.h"
 
 #pragma mark Fields
+#pragma mark - Public properties
+/* .h
+ @property (nonnull, readonly, strong, nonatomic) ADJMainQueueTrackedPackages *trackedPackages;
+ */
+
 @interface ADJMainQueueController ()
 #pragma mark - Injected dependencies
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStorage *storage;
@@ -29,7 +33,6 @@
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSender *sender;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStateAndTracker *mainQueueStateAndTracker;
-@property (nonnull, readonly, strong, nonatomic) ADJMainQueueTrackedPackages *trackedPackages;
 
 @end
 
@@ -66,10 +69,6 @@
 }
 
 #pragma mark Public API
-- (nonnull id<ADJMainQueueTrackedPackagesProvider>)trackedPackagesProvider {
-    return self.trackedPackages;
-}
-
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;

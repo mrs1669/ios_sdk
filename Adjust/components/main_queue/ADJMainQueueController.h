@@ -27,7 +27,7 @@
 #import "ADJInfoResponseData.h"
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJSessionPackageData.h"
-#import "ADJMainQueueTrackedPackagesProvider.h"
+#import "ADJMainQueueTrackedPackages.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -36,7 +36,6 @@
     ADJPausingSubscriber,
     ADJOfflineSubscriber
 >
-
 // instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -46,9 +45,10 @@
     backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
     sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
-// public api
-- (nonnull id<ADJMainQueueTrackedPackagesProvider>)trackedPackagesProvider;
+// public properties
+@property (nonnull, readonly, strong, nonatomic) ADJMainQueueTrackedPackages *trackedPackages;
 
+// public api
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
