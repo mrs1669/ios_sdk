@@ -90,8 +90,8 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 }
 
 #pragma mark Public API
-#pragma mark - ADJMeasurementSessionStartSubscriber
-- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
+#pragma mark - ADJSdkStartSubscriber
+- (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeAsyncWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -100,7 +100,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         // TODO possibly use private queue
         [strongSelf startNetworkReachabilityWithDispatchQueue:
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
-    } source:@"measurement session start"];
+    } source:@"sdk start"];
 }
 
 #pragma mark Internal Methods

@@ -11,7 +11,7 @@
 #import "ADJCommonBase.h"
 #import "ADJSdkPackageSenderFactory.h"
 #import "ADJPublishingGateSubscriber.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
 #import "ADJSdkResponseSubscriber.h"
 #import "ADJPausingSubscriber.h"
 #import "ADJAttributionStateStorage.h"
@@ -22,7 +22,6 @@
 #import "ADJBackoffStrategy.h"
 #import "ADJNetworkEndpointData.h"
 #import "ADJClientConfigData.h"
-#import "ADJMainQueueController.h"
 #import "ADJPublisherController.h"
 #import "ADJMainQueueTrackedPackagesProvider.h"
 
@@ -30,7 +29,7 @@
     ADJSdkResponseCallbackSubscriber,
     // subscriptions
     ADJPublishingGateSubscriber,
-    ADJMeasurementSessionStartSubscriber,
+    ADJSdkStartSubscriber,
     ADJSdkResponseSubscriber,
     ADJPausingSubscriber
 >

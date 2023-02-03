@@ -26,20 +26,27 @@
 
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
 
-- (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;
+- (void)ccTrackBillingSubscriptionWithClientData:
+    (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;
 
-- (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
+- (void)ccTrackThirdPartySharingWithClientData:
+    (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
 
-- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
+- (void)ccTrackLaunchedDeeplinkWithClientData:
+    (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
 
-- (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData;
-- (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData;
-- (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData;
+- (void)ccAddGlobalCallbackParameterWithClientData:
+    (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData;
+- (void)ccRemoveGlobalCallbackParameterWithClientData:
+    (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData;
+- (void)ccClearGlobalCallbackParametersWithClientData:
+    (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData;
 
-- (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData;
-- (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData;
-- (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData;
-
+- (void)ccAddGlobalPartnerParameterWithClientData:
+    (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData;
+- (void)ccRemoveGlobalPartnerParameterWithClientData:
+    (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData;
+- (void)ccClearGlobalPartnerParametersWithClientData:
+    (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData;
 
 @end
-

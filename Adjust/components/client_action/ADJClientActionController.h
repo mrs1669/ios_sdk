@@ -10,27 +10,23 @@
 
 #import "ADJCommonBase.h"
 #import "ADJClientActionsAPI.h"
-#import "ADJPreFirstMeasurementSessionStartSubscriber.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
 #import "ADJClientActionStorage.h"
 #import "ADJClock.h"
 #import "ADJPostSdkStartRoot.h"
 
-@interface ADJClientActionController : ADJCommonBase<
-    ADJClientActionsAPI,
-    // subscriptions
-    ADJPreFirstMeasurementSessionStartSubscriber,
-    ADJMeasurementSessionStartSubscriber
->
-
-// subscriptions and dependencies
-- (void)ccSetDependenciesAtSdkInitWithPostSdkStartRoot:
-    (nonnull ADJPostSdkStartRoot *)postSdkStartRoot;
-
+@interface ADJClientActionController : ADJCommonBase<ADJClientActionsAPI>
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                           clientActionStorage:(nonnull ADJClientActionStorage *)clientActionStorage
                                         clock:(nonnull ADJClock *)clock;
 
-@end
+// public api
+- (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions;
 
+- (void)
+    ccPreSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot
+    isPreFirstSession:(BOOL)isPreFirstSession;
+
+- (void)ccPostSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot;
+
+@end

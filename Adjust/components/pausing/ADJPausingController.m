@@ -189,8 +189,8 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     } source:@"background"];
 }
 
-#pragma mark - ADJMeasurementSessionStartSubscriber
-- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
+#pragma mark - ADJSdkStartSubscriber
+- (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;

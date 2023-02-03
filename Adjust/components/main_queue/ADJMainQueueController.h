@@ -27,8 +27,6 @@
 #import "ADJInfoResponseData.h"
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJSessionPackageData.h"
-#import "ADJInstallSessionTrackedSubscriber.h"
-#import "ADJAsaClickTrackedSubscriber.h"
 #import "ADJMainQueueTrackedPackagesProvider.h"
 
 @interface ADJMainQueueController : ADJCommonBase<

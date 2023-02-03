@@ -27,20 +27,11 @@
 #pragma mark - Injected dependencies
 @property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
-@property (nullable, readwrite, weak, nonatomic)
-    ADJPostSdkStartRoot *postSdkStartRootWeak;
+@property (nullable, readwrite, weak, nonatomic) ADJPostSdkStartRoot *postSdkStartRootWeak;
 
 @end
 
 @implementation ADJClientActionController
-
-#pragma mark Subscriptions and Dependencies
-
-- (void)ccSetDependenciesAtSdkInitWithPostSdkStartRoot:
-    (nonnull ADJPostSdkStartRoot *)postSdkStartRoot
-{
-    self.postSdkStartRootWeak = postSdkStartRoot;
-}
 
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -57,14 +48,28 @@
 }
 
 #pragma mark Public API
-#pragma mark - ADJPreFirstMeasurementSessionStartSubscriber
-- (void)ccPreFirstMeasurementSessionStart:(BOOL)hasFirstSessionHappened {
-    [self ccProcessClientActionsWithIsPreFirstSession:! hasFirstSessionHappened];
+- (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions {
+    ADJPostSdkStartRoot* _Nullable postSdkStartRoot = self.postSdkStartRootWeak;
+
+    return postSdkStartRoot ? : self;
 }
 
-#pragma mark - ADJMeasurementSessionStartSubscriber
-- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
-    [self ccProcessClientActionsWithIsPreFirstSession:NO];
+- (void)
+    ccPreSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot
+    isPreFirstSession:(BOOL)isPreFirstSession
+{
+    self.postSdkStartRootWeak = postSdkStartRoot;
+
+    [self
+     ccProcessClientActionsWithPostSdkStartRoot:postSdkStartRoot
+     isPreFirstSession:isPreFirstSession];
+}
+
+- (void)ccPostSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot {
+    [self
+     ccProcessClientActionsWithPostSdkStartRoot:postSdkStartRoot
+     isPreFirstSession:NO];
+
 }
 
 #pragma mark - ADJClientActionsAPI
@@ -73,65 +78,95 @@
                        clientActionHandlerId:ADJAdRevenueControllerClientActionHandlerId];
 }
 
-- (void)ccTrackBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData {
-    [self  ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
+- (void)ccTrackBillingSubscriptionWithClientData:
+    (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
+{
+    [self ccSaveClientActionWithIoInjectable:clientBillingSubscriptionData
                         clientActionHandlerId:ADJBillingSubscriptionControllerClientActionHandlerId];
 }
 
-- (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData {
+- (void)ccTrackLaunchedDeeplinkWithClientData:
+    (nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData
+{
     [self ccSaveClientActionWithIoInjectable:clientLaunchedDeeplinkData
                        clientActionHandlerId:ADJLaunchedDeeplinkClientActionHandlerId];
 }
 
-- (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData {
+- (void)ccTrackEventWithClientData:
+    (nonnull ADJClientEventData *)clientEventData
+{
     [self ccSaveClientActionWithIoInjectable:clientEventData
                        clientActionHandlerId:ADJEventControllerClientActionHandlerId];
 }
 
-- (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
+- (void)ccTrackPushTokenWithClientData:
+    (nonnull ADJClientPushTokenData *)clientPushTokenData
+{
     [self ccSaveClientActionWithIoInjectable:clientPushTokenData
                        clientActionHandlerId:ADJPushTokenControllerClientActionHandlerId];
 }
 
-- (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData {
+- (void)ccTrackThirdPartySharingWithClientData:
+    (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+{
     [self ccSaveClientActionWithIoInjectable:clientThirdPartySharingData
                        clientActionHandlerId:ADJThirdPartySharingControllerClientActionHandlerId];
 }
 
-- (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
-    [self ccSaveClientActionWithIoInjectable:clientAddGlobalCallbackParameterActionData
-                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+- (void)ccAddGlobalCallbackParameterWithClientData:
+    (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData
+{
+    [self
+     ccSaveClientActionWithIoInjectable:clientAddGlobalCallbackParameterActionData
+     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
 }
 
-- (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
-    [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalCallbackParameterActionData
-                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+- (void)ccRemoveGlobalCallbackParameterWithClientData:
+    (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData
+{
+    [self
+     ccSaveClientActionWithIoInjectable:clientRemoveGlobalCallbackParameterActionData
+     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
 }
 
-- (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
-    [self ccSaveClientActionWithIoInjectable:clientClearGlobalCallbackParametersActionData
-                       clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
+- (void)ccClearGlobalCallbackParametersWithClientData:
+    (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData
+{
+    [self
+     ccSaveClientActionWithIoInjectable:clientClearGlobalCallbackParametersActionData
+     clientActionHandlerId:ADJGlobalCallbackParametersControllerClientActionHandlerId];
 }
 
-- (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData {
-    [self ccSaveClientActionWithIoInjectable:clientAddGlobalPartnerParameterActionData
-                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+- (void)ccAddGlobalPartnerParameterWithClientData:
+    (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData
+{
+    [self
+     ccSaveClientActionWithIoInjectable:clientAddGlobalPartnerParameterActionData
+     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
 
-- (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
-    [self ccSaveClientActionWithIoInjectable:clientRemoveGlobalPartnerParameterActionData
-                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+- (void)ccRemoveGlobalPartnerParameterWithClientData:
+    (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData
+{
+    [self
+     ccSaveClientActionWithIoInjectable:clientRemoveGlobalPartnerParameterActionData
+     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
 
-- (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
-    [self ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
-                       clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
+- (void)ccClearGlobalPartnerParametersWithClientData:
+    (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData
+{
+    [self
+     ccSaveClientActionWithIoInjectable:clientClearGlobalPartnerParametersActionData
+     clientActionHandlerId:ADJGlobalPartnerParametersControllerClientActionHandlerId];
 }
 
 #pragma mark Internal Methods
-
-- (void)ccSaveClientActionWithIoInjectable:(nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
-                     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId {
+- (void)
+    ccSaveClientActionWithIoInjectable:
+        (nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
+    clientActionHandlerId:(nonnull NSString *)clientActionHandlerId
+{
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
         [self.logger debugDev:@"Cannot enqueue client action without a reference to clock"
@@ -140,7 +175,7 @@
     }
 
     ADJTimestampMilli *_Nullable nowTimestamp =
-    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+        [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nowTimestamp == nil) {
         [self.logger debugDev:@"Cannot enqueue client action without a valid now timestamp"
                     issueType:ADJIssueWeakReference];
@@ -154,8 +189,9 @@
         return;
     }
 
-    ADJIoDataBuilder *_Nonnull ioDataBuilder = [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:
-                                                ADJClientActionDataMetadataTypeValue];
+    ADJIoDataBuilder *_Nonnull ioDataBuilder =
+        [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:
+         ADJClientActionDataMetadataTypeValue];
 
     [clientActionIoDataInjectable injectIntoClientActionIoDataBuilder:ioDataBuilder];
 
@@ -169,7 +205,10 @@
                           sqliteStorageAction:nil];
 }
 
-- (void)ccProcessClientActionsWithIsPreFirstSession:(BOOL)isPreFirstSession {
+- (void)
+    ccProcessClientActionsWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot
+    isPreFirstSession:(BOOL)isPreFirstSession
+{
     ADJClientActionStorage *_Nullable clientActionStorage = self.clientActionStorageWeak;
     if (clientActionStorage == nil) {
         [self.logger debugDev:@"Cannot process client actions without a reference to storage"
@@ -177,15 +216,8 @@
         return;
     }
 
-    ADJPostSdkStartRoot *_Nullable postSdkStartRoot = self.postSdkStartRootWeak;
-    if (postSdkStartRoot == nil) {
-        [self.logger debugDev:@"Cannot process client actions"
-         " without a reference to post sdk start controller"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    NSArray<ADJNonNegativeInt *> *_Nonnull elementPositionList = [clientActionStorage copySortedElementPositionList];
+    NSArray<ADJNonNegativeInt *> *_Nonnull elementPositionList =
+        [clientActionStorage copySortedElementPositionList];
 
     [self.logger debugDev:@"Trying to process client actions"
                      key1:@"count"
@@ -195,7 +227,7 @@
 
     for (ADJNonNegativeInt *_Nonnull elementPosition in elementPositionList) {
         ADJClientActionData *_Nullable clientActionData =
-        [clientActionStorage elementByPosition:elementPosition];
+            [clientActionStorage elementByPosition:elementPosition];
         if (clientActionData == nil) {
             [self.logger debugDev:@"Cannot process client action from queue with queue id"
                               key:@"elementPosition"
@@ -228,9 +260,9 @@
         }
 
         ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =
-        [[ADJClientActionRemoveStorageAction alloc]
-         initWithClientActionStorage:clientActionStorage
-         elementPosition:elementPosition];
+            [[ADJClientActionRemoveStorageAction alloc]
+             initWithClientActionStorage:clientActionStorage
+             elementPosition:elementPosition];
 
         [clientActionHandler
          ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData

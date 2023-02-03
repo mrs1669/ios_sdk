@@ -10,10 +10,9 @@
 
 #import "ADJCommonBase.h"
 #import "ADJClientActionsAPI.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
 
 #import "ADJInstanceRootBag.h"
-#import "ADJPreSdkInitRootBag.h"
+#import "ADJPreSdkInitRoot.h"
 
 #import "ADJClientSubscriptionsController.h"
 #import "ADJPausingController.h"
@@ -26,22 +25,16 @@
 #import "ADJMeasurementSessionController.h"
 #import "ADJPostSdkStartRoot.h"
 #import "ADJReachabilityController.h"
+#import "ADJMeasurementLifecycleController.h"
 
-
-@interface ADJPostSdkInitRoot : ADJCommonBase<
-    // subscriptions
-    ADJMeasurementSessionStartSubscriber
->
+@interface ADJPostSdkInitRoot : ADJCommonBase
 // instantiation
-- (nonnull instancetype)
-    initWithClientConfig:(nonnull ADJClientConfigData *)clientConfig
++ (nonnull instancetype)
+    ccInstanceWhenSdkInitWithClientConfig:(nonnull ADJClientConfigData *)clientConfig
     instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-    preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag;
+    preSdkInitRoot:(nonnull ADJPreSdkInitRoot *)preSdkInitRoot;
 
-- (void)subscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
-- (void)startSdk;
-
-- (nullable id<ADJClientActionsAPI>)sdkStartClientActionAPI;
+- (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfig;
@@ -56,9 +49,14 @@
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJAsaAttributionController *asaAttributionController;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJMeasurementSessionController *measurementSessionController;
 @property (nonnull, readonly, strong, nonatomic) ADJPostSdkStartRoot *postSdkStartRoot;
 @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJMeasurementSessionController *measurementSessionController;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJMeasurementLifecycleController *measurementLifecycleController;
+
+// public api
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end

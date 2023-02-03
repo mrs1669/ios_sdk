@@ -13,7 +13,7 @@
 #import "ADJOfflineSubscriber.h"
 #import "ADJReachabilitySubscriber.h"
 #import "ADJLifecycleSubscriber.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
 #import "ADJSdkActiveSubscriber.h"
 #import "ADJPausingSubscriber.h"
 #import "ADJThreadExecutorFactory.h"
@@ -25,7 +25,7 @@
     ADJOfflineSubscriber,
     ADJReachabilitySubscriber,
     ADJLifecycleSubscriber,
-    ADJMeasurementSessionStartSubscriber,
+    ADJSdkStartSubscriber,
     ADJSdkActiveSubscriber
 >
 

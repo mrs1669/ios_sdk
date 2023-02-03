@@ -247,14 +247,15 @@
                                                source:@"handleAllowedToPublishNotifications"];
 }
 
-#pragma mark - ADJMeasurementSessionStartSubscriber
-- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)MeasurementSessionStartStatus {
+#pragma mark - ADJSdkStartSubscriber
+- (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
-        [strongSelf handleMeasurementSessionStartWithStatus:MeasurementSessionStartStatus];
+
+        // TODO fix when refac Attribution
+        [strongSelf handleMeasurementSessionStartWithStatus:nil];
     } source:@"measurement session start"];
 }
 
@@ -265,8 +266,8 @@
         return;
     }
     
-    BOOL isFirstSession =
-    [ADJMeasurementSessionStartStatusFirstSession isEqualToString:MeasurementSessionStartStatus];
+    BOOL isFirstSession = YES; // TODO fix when refac Attribution
+    //[ADJMeasurementSessionStartStatusFirstSession isEqualToString:MeasurementSessionStartStatus];
     
     ADJValueWO<ADJAttributionStateData *> *_Nonnull changedAttributionStateDataWO =
     [[ADJValueWO alloc] init];

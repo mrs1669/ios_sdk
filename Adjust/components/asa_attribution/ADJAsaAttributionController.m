@@ -153,8 +153,8 @@
     } source:@"update asa attribution"];
 }
 
-#pragma mark - ADJKeepAliveSubscriber
-- (void)didKeepAlivePing {
+#pragma mark - ADJKeepAlivePingSubscriber
+- (void)didPingKeepAliveInActiveSession {
     if (! self.canReadToken || self.isFinishedReading) {
         return;
     }
@@ -169,8 +169,8 @@
     } source:@"keep alive ping"];
 }
 
-#pragma mark - ADJPreFirstMeasurementSessionStartSubscriber
-- (void)ccPreFirstMeasurementSessionStart:(BOOL)hasFirstSessionHappened {
+#pragma mark - ADJSdkStartSubscriber
+- (void)ccSdkStart {
     if (! self.canReadToken || self.isFinishedReading) {
         return;
     }
@@ -182,7 +182,7 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    } source:@"pre first measurement session start"];
+    } source:@"sdk start"];
 }
 
 #pragma mark - ADJSdkResponseSubscriber

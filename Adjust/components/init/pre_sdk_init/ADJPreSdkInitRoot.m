@@ -8,7 +8,15 @@
 
 #import "ADJPreSdkInitRoot.h"
 
+#import "ADJPostSdkInitRoot.h"
+
 #pragma mark Fields
+@interface ADJPreSdkInitRoot ()
+#pragma mark - Internal variables
+@property (nullable, readwrite, strong, nonatomic) ADJPostSdkInitRoot *postSdkInitRoot;
+
+@end
+
 @implementation ADJPreSdkInitRoot
 #pragma mark - Synthesize protocol properties
 @synthesize sdkActiveController = _sdkActiveController;
@@ -28,61 +36,60 @@
 {
     self = [super initWithLoggerFactory:instanceRootBag.logController source:@"PreSdkInitRoot"];
 
+    ADJSdkConfigData *_Nonnull sdkConfig = instanceRootBag.sdkConfigData;
+    id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
+
     // without local dependencies
-    _clientCallbacksController = [[ADJClientCallbacksController alloc]
-                                  initWithLoggerFactory:instanceRootBag.logController];
+    _clientCallbacksController =
+        [[ADJClientCallbacksController alloc] initWithLoggerFactory:loggerFactory];
 
     _clientReturnExecutor =
-        (instanceRootBag.sdkConfigData.clientReturnExecutorOverwrite)
-        ? : instanceRootBag.threadController;
-
-    _gdprForgetController = [[ADJGdprForgetController alloc]
-                             initWithLoggerFactory:instanceRootBag.logController
-                             gdprForgetStateStorage:_storageRoot.gdprForgetStateStorage
-                             threadExecutorFactory:instanceRootBag.threadController
-                             gdprForgetBackoffStrategy:
-                                 instanceRootBag.sdkConfigData.gdprForgetBackoffStrategy
-                             publisherController:instanceRootBag.publisherController];
+        (sdkConfig.clientReturnExecutorOverwrite) ? : instanceRootBag.threadController;
 
     _lifecycleController = [[ADJLifecycleController alloc]
-                            initWithLoggerFactory:instanceRootBag.logController
+                            initWithLoggerFactory:loggerFactory
                             threadController:instanceRootBag.threadController
                             doNotReadCurrentLifecycleStatus:
-                                instanceRootBag.sdkConfigData.doNotReadCurrentLifecycleStatus
+                                sdkConfig.doNotReadCurrentLifecycleStatus
                             clientExecutor:instanceRootBag.clientExecutor
                             publisherController:instanceRootBag.publisherController];
 
     _offlineController = [[ADJOfflineController alloc]
-                          initWithLoggerFactory:instanceRootBag.logController
+                          initWithLoggerFactory:loggerFactory
                           publisherController:instanceRootBag.publisherController];
 
 
     _pluginController = [[ADJPluginController alloc]
-                         initWithLoggerFactory:instanceRootBag.logController];
+                         initWithLoggerFactory:loggerFactory];
 
     _storageRoot = [[ADJStorageRoot alloc]
-                              initWithLoggerFactory:instanceRootBag.logController
+                              initWithLoggerFactory:loggerFactory
                               threadExecutorFactory:instanceRootBag.threadController
                               instanceId:instanceRootBag.instanceId];
 
     // local dependencies 1
     _clientActionController = [[ADJClientActionController alloc]
-                               initWithLoggerFactory:instanceRootBag.logController
+                               initWithLoggerFactory:loggerFactory
                                clientActionStorage:_storageRoot.clientActionStorage
                                clock:instanceRootBag.clock];
 
     _deviceController = [[ADJDeviceController alloc]
-                         initWithLoggerFactory:instanceRootBag.logController
+                         initWithLoggerFactory:loggerFactory
                          threadExecutorFactory:instanceRootBag.threadController
                          clock:instanceRootBag.clock
                          deviceIdsStorage:_storageRoot.deviceIdsStorage
                          keychainStorage:_storageRoot.keychainStorage
-                         deviceIdsConfigData:
-                             instanceRootBag.sdkConfigData.sessionDeviceIdsConfigData];
+                         deviceIdsConfigData:sdkConfig.sessionDeviceIdsConfigData];
 
+    _gdprForgetController = [[ADJGdprForgetController alloc]
+                             initWithLoggerFactory:loggerFactory
+                             gdprForgetStateStorage:_storageRoot.gdprForgetStateStorage
+                             threadExecutorFactory:instanceRootBag.threadController
+                             gdprForgetBackoffStrategy:sdkConfig.gdprForgetBackoffStrategy
+                             publisherController:instanceRootBag.publisherController];
 
     _sdkActiveController = [[ADJSdkActiveController alloc]
-                            initWithLoggerFactory:instanceRootBag.logController
+                            initWithLoggerFactory:loggerFactory
                             activeStateStorage:_storageRoot.sdkActiveStateStorage
                             clientExecutor:instanceRootBag.clientExecutor
                             isForgotten:[_gdprForgetController isForgotten]
@@ -90,23 +97,30 @@
     return self;
 }
 
-- (void)
-    setDependenciesWithPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    clock:(nonnull ADJClock *)clock
-    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+#pragma mark Public API
+- (void)ccSdkInitWithClientConfg:(nonnull ADJClientConfigData *)clientConfig
+                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
 {
-
-    [self.gdprForgetController
-         ccSetDependenciesAtSdkInitWithSdkPackageBuilder:sdkPackageBuilder
-         clock:clock
-         loggerFactory:loggerFactory
-         threadExecutorFactory:threadExecutorFactory
-         sdkPackageSenderFactory:sdkPackageSenderFactory];
+    self.postSdkInitRoot = [ADJPostSdkInitRoot
+                            ccInstanceWhenSdkInitWithClientConfig:clientConfig
+                            instanceRootBag:instanceRootBag
+                            preSdkInitRoot:self];
 }
 
-- (void)subscribeToPublishers:(ADJPublisherController *)publisherController {
+- (void)
+    ccSetDependenciesAtSdkInitWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder*)sdkPackageBuilder
+    sdkPackageSenderController:(nonnull ADJSdkPackageSenderController *)sdkPackageSenderController
+{
+    [self.gdprForgetController
+         ccSetDependenciesAtSdkInitWithSdkPackageBuilder:sdkPackageBuilder
+         clock:instanceRootBag.clock
+         loggerFactory:instanceRootBag.logController
+         threadExecutorFactory:instanceRootBag.threadController
+         sdkPackageSenderFactory:sdkPackageSenderController];
+}
+
+- (void)ccSubscribeToPublishers:(ADJPublisherController *)publisherController {
     [publisherController subscribeToPublisher:self.lifecycleController];
     [publisherController subscribeToPublisher:self.offlineController];
     [publisherController subscribeToPublisher:self.clientActionController];
@@ -114,6 +128,15 @@
     [publisherController subscribeToPublisher:self.gdprForgetController];
     [publisherController subscribeToPublisher:self.pluginController];
     [publisherController subscribeToPublisher:self.sdkActiveController];
+}
+
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock {
+    [self.storageRoot finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
+    [self.lifecycleController finalizeAtTeardown];
+
+    if (self.postSdkInitRoot != nil) {
+        [self.postSdkInitRoot finalizeAtTeardownWithBlock:closeStorageBlock];
+    }
 }
 
 @end

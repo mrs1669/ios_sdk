@@ -12,19 +12,24 @@
 #import "ADJPreSdkInitRootBag.h"
 #import "ADJInstanceRootBag.h"
 
+#import "ADJSdkPackageSenderController.h"
+
 @interface ADJPreSdkInitRoot : ADJCommonBase <ADJPreSdkInitRootBag>
 // instantiation
 - (nonnull instancetype)
     initWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag;
 
 // public api
-- (void)
-    setDependenciesWithPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    clock:(nonnull ADJClock *)clock
-    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+- (void)ccSdkInitWithClientConfg:(nonnull ADJClientConfigData *)clientConfig
+                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag;
 
-- (void)subscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
+- (void)
+    ccSetDependenciesAtSdkInitWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder*)sdkPackageBuilder
+    sdkPackageSenderController:(nonnull ADJSdkPackageSenderController *)sdkPackageSenderController;
+
+- (void)ccSubscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
+
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end

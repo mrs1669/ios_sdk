@@ -10,7 +10,7 @@
 
 #import "ADJCommonBase.h"
 #import "ADJTeardownFinalizer.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
 #import "ADJReachabilitySubscriber.h"
 #import "ADJThreadController.h"
 #import "ADJPublisherController.h"
@@ -20,7 +20,7 @@
 @interface ADJReachabilityController : ADJCommonBase<
    ADJTeardownFinalizer,
    // subscriptions
-   ADJMeasurementSessionStartSubscriber
+    ADJSdkStartSubscriber
 >
 
 // publishers
