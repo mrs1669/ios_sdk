@@ -256,7 +256,7 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
                       isQueryOrElseUpdate ? @"true" : @"false", @"isQueryOrElseUpdate",
                       self.sqlString, @"sql",
                       [ADJUtilF intFormat:returnCode], @"returnCode",
-                      [self lastErrorMessage], @"lastErrorMessage@", nil]
+                      [self lastErrorMessage], @"lastErrorMessage", nil]
            issueType:ADJIssueStorageIo];
 }
 

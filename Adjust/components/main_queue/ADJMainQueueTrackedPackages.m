@@ -42,16 +42,16 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
     ADJNonEmptyString *_Nullable firstSessionCountIoValue =
         [[self.storage metadataMap] pairValueWithKey:kFirstSessionCountKey];
 
-    return [ADJNonNegativeInt instanceFromIoDataValue:firstSessionCountIoValue
-                                               logger:self.logger];
+    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:firstSessionCountIoValue
+                                                       logger:self.logger];
 }
 
 - (nullable ADJNonNegativeInt *)asaClickCount {
     ADJNonEmptyString *_Nullable asaClickCountIoValue =
         [[self.storage metadataMap] pairValueWithKey:kAsaClickCountKey];
 
-    return [ADJNonNegativeInt instanceFromIoDataValue:asaClickCountIoValue
-                                               logger:self.logger];
+    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:asaClickCountIoValue
+                                                       logger:self.logger];
 }
 
 - (nullable ADJSQLiteStorageActionBase *)

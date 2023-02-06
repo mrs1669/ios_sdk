@@ -207,9 +207,9 @@
     }
 
     ADJSQLiteStatement *_Nonnull sqliteStatement =
-    [[ADJSQLiteStatement alloc] initWithSqliteStatement:statement
-                                              sqlString:sqlString
-                                sqliteDbMessageProvider:self];
+        [[ADJSQLiteStatement alloc] initWithSqliteStatement:statement
+                                                  sqlString:sqlString
+                                    sqliteDbMessageProvider:self];
 
     [self.openStatementValueSet addObject:[NSValue valueWithNonretainedObject:sqliteStatement]];
 

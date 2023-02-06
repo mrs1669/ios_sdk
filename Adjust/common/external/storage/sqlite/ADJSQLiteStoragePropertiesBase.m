@@ -116,13 +116,15 @@ static NSString *const kColumnValue = @"value";
     //[self printRowNumberWithSQLiteDb:sqliteDb];
     
     BOOL insertedSuccess =
-    [self insertValueInTransactionToDb:sqliteDb newDataValue:newDataValue];
+        [self insertValueInTransactionToDb:sqliteDb newDataValue:newDataValue];
     
     if (! insertedSuccess) {
         return NO;
     }
-    [self.logger debugDev:@"Inserted new data values in update transaction"];
-    
+    [self.logger debugDev:@"Inserted new data values in update transaction"
+                      key:@"newDataValue"
+                    value:[newDataValue description]];
+
     return YES;
 }
 

@@ -50,8 +50,8 @@
 
     if (self.decoratedSQLiteStorageAction != nil) {
         BOOL decoratedInTransactionResult =
-        [self.decoratedSQLiteStorageAction performStorageActionInDbTransaction:sqliteDb
-                                                                        logger:logger];
+            [self.decoratedSQLiteStorageAction performStorageActionInDbTransaction:sqliteDb
+                                                                            logger:logger];
 
         if (! decoratedInTransactionResult) {
             return NO;

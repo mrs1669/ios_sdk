@@ -146,7 +146,7 @@
     [sqliteDb beginTransaction];
 
     ADJSQLiteStatement *_Nullable selectStatement =
-    [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
 
     if (selectStatement == nil) {
         [self.logger debugDev:
@@ -162,10 +162,9 @@
 
     if (! wasAbleToStepToFirstRow) {
         [self.logger debugDev:
-         @"Cannot read value from Select queryCursor without a queryCursor from the select query"
+         @"Was not able to step to first row of select statement. It could be empty"
                           key:@"selectSql"
-                        value:self.selectSql.stringValue
-                    issueType:ADJIssueStorageIo];
+                        value:self.selectSql.stringValue];
         [selectStatement closeStatement];
         [sqliteDb rollback];
         return NO;

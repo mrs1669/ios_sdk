@@ -250,11 +250,17 @@ static NSString *const kColumnValue = @"value";
 - (BOOL)updateMetadataInTransactionWithMap:(nonnull ADJStringMap *)newMetadataMap
                                   sqliteDb:(nonnull ADJSQLiteDb *)sqliteDb
 {
-    return [self addElementInTransactionToSqliteDb:sqliteDb
-                                        newElement:newMetadataMap
-                                newElementPosition:[ADJNonNegativeInt instanceAtZero]];
+    return
+        [self removeElementByPositionInTransaction:[ADJNonNegativeInt instanceAtZero]
+                                          sqliteDb:sqliteDb]
+        &&
+        [self addElementInTransactionToSqliteDb:sqliteDb
+                                     newElement:newMetadataMap
+                             newElementPosition:[ADJNonNegativeInt instanceAtZero]];
 }
 - (void)updateMetadataInStorageOnlyWitMap:(nonnull ADJStringMap *)newMetadataMap {
+    [self removeElementByPositionInStorageOnly:[ADJNonNegativeInt instanceAtZero]];
+
     [self addElementToStorage:newMetadataMap
            newElementPosition:[ADJNonNegativeInt instanceAtZero]
           sqliteStorageAction:nil];
@@ -263,6 +269,10 @@ static NSString *const kColumnValue = @"value";
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageBase
 - (void)concreteWriteInStorageDefaultInitialDataSyncWithSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb {
+    [self removeElementByPosition:[ADJNonNegativeInt instanceAtZero]
+                         sqliteDb:sqliteDb
+              sqliteStorageAction:nil];
+
     [self addElementToSqliteDb:sqliteDb
                      newElement:self.metadataMap
              newElementPosition:[ADJNonNegativeInt instanceAtZero]
@@ -341,7 +351,7 @@ static NSString *const kColumnValue = @"value";
     }
 
     if (atLeastOneElementAdded) {
-        [self.logger debugDev:@"Read %@ elements to the queue"
+        [self.logger debugDev:@"Read elements to the queue"
                           key:@"count"
                         value:[self count].description];
     } else {
