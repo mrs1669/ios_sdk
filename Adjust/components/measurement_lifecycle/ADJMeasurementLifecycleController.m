@@ -56,11 +56,18 @@
     _resumedSessionTimerStart = resumedSessionTimerStart;
     _resumedSessionTimerInterval = resumedSessionTimerInterval;
 
-    _sdkStartPublisher = [[ADJSdkStartPublisher alloc] init];
+    _sdkStartPublisher = [[ADJSdkStartPublisher alloc]
+                          initWithSubscriberProtocol:@protocol(ADJSdkStartSubscriber)
+                          controller:publisherController];
 
-    _measurementLifecyclePublisher = [[ADJMeasurementLifecyclePublisher alloc] init];
+    _measurementLifecyclePublisher =
+        [[ADJMeasurementLifecyclePublisher alloc]
+         initWithSubscriberProtocol:@protocol(ADJMeasurementLifecycleSubscriber)
+         controller:publisherController];
 
-    _keepAlivePingPublisher = [[ADJKeepAlivePingPublisher alloc] init];
+    _keepAlivePingPublisher = [[ADJKeepAlivePingPublisher alloc]
+                               initWithSubscriberProtocol:@protocol(ADJKeepAlivePingSubscriber)
+                               controller:publisherController];
 
     _state = [[ADJMeasurementLifecycleState alloc] initWithLoggerFactory:loggerFactory];
 

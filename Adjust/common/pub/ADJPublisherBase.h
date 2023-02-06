@@ -18,6 +18,8 @@
 
 - (nonnull instancetype)initWithoutSubscriberProtocol;
 
+- (nullable instancetype)init NS_UNAVAILABLE;
+
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSHashTable<T> *subscriberSet;
 

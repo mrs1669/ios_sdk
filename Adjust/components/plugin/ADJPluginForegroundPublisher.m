@@ -23,7 +23,7 @@
 - (nonnull instancetype)init {
     self = [super init];
 
-    _publisher = [[ADJForegroundPublisherWrapper alloc] init];
+    _publisher = [[ADJForegroundPublisherWrapper alloc] initWithoutSubscriberProtocol];
 
     return self;
 }

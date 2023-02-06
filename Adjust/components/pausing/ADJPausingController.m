@@ -203,7 +203,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkStart];
         }
-    } source:@"measurement session start"];
+    } source:@"sdk start"];
 }
 
 #pragma mark - ADJSdkActiveSubscriber
