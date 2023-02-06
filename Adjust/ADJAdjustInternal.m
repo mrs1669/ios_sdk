@@ -149,25 +149,63 @@ static dispatch_once_t entryRootOnceToken = 0;
     }
 }
 
-// TODO: add delete of all instances
-+ (nonnull NSString *)clearStorage {
-    NSString *_Nullable adjustAppDirDbPath =
-        [ADJUtilFiles filePathInAdjustAppSupportDirWithFilename:
-         [ADJInstanceIdData toDbNameWithIdString:@""]];
 
-    if (adjustAppDirDbPath == nil) {
-        return @"Cannot obtain adjust app support dir db filename path";
++ (nonnull NSString *)clearStorage {
+    // TODO: add delete of all instances
+    NSMutableString *_Nonnull returnString = [[NSMutableString alloc]
+                                              initWithString:@"Clearing storage"];
+
+    [returnString appendFormat:@". %@",
+     [ADJAdjustInternal clearDbInAdjustAppSupportWithIdString:@""]];
+
+    [returnString appendFormat:@". %@",
+     [ADJAdjustInternal clearDbInDocumentsDirWithIdString:@""]];
+
+    //TODO: delete custom user defaults
+
+    return returnString;
+}
+
++ (nonnull NSString *)clearDbInAdjustAppSupportWithIdString:(nonnull NSString *)idString {
+    NSString *_Nullable adjustAppSupportDirPath = [ADJUtilFiles adjustAppSupportDir];
+    if (adjustAppSupportDirPath == nil) {
+        return @"Could not obtain adjust app support dir";
     }
 
+    NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
+
+    NSString *_Nonnull adjustAppSupportDirDbPath =
+        [ADJUtilFiles filePathWithDir:adjustAppSupportDirPath filename:dbFilename];
+
     NSError *error = nil;
-    BOOL removedSuccessfully = [[NSFileManager defaultManager] removeItemAtPath:adjustAppDirDbPath
-                                                                          error:&error];
+    BOOL removedSuccessfully =
+        [[NSFileManager defaultManager] removeItemAtPath:adjustAppSupportDirDbPath
+                                                   error:&error];
+
     if (error) {
         return [ADJUtilF errorFormat:error];
     }
-    return [NSString stringWithFormat:@"fileManager removedSuccessfully: %d", removedSuccessfully];
+    return [NSString stringWithFormat:@"db file removed at adjust app support dir? %d",
+            removedSuccessfully];
+}
++ (nonnull NSString *)clearDbInDocumentsDirWithIdString:(nonnull NSString *)idString {
+    NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
+
+    NSString *_Nullable documentsDbFilename = [ADJUtilFiles filePathInDocumentsDir:dbFilename];
+    if (documentsDbFilename == nil) {
+        return @"Could not obtain db filename in documents dir";
+    }
+
+    NSError *error = nil;
+    BOOL removedSuccessfully =
+        [[NSFileManager defaultManager] removeItemAtPath:documentsDbFilename
+                                                   error:&error];
+
+    if (error) {
+        return [ADJUtilF errorFormat:error];
+    }
+    return [NSString stringWithFormat:@"db file removed at documents dir? %d",
+            removedSuccessfully];
 }
 
-
 @end
-
