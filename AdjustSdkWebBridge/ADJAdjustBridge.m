@@ -104,11 +104,7 @@
 
         [ADJAdjust switchToOfflineMode];
 
-    } else if ([action isEqual:@"adjust_switchToOnlineMode"]) {
-
-        [ADJAdjust switchBackToOnlineMode];
-
-    } else if ([action isEqual:@"adjust_switchToOnlineMode"]) {
+    } else if ([action isEqual:@"adjust_switchBackToOnlineMode"]) {
 
         [ADJAdjust switchBackToOnlineMode];
 
@@ -186,11 +182,11 @@
     NSString *appToken = [data objectForKey:@"appToken"];
     NSString *environment = [data objectForKey:@"environment"];
     NSString *customEndpointUrl = [data objectForKey:@"customEndpointUrl"];
+    NSNumber *eventDeduplicationListLimit = [data objectForKey:@"eventDeduplicationListLimit"];
     NSString *customEndpointPublicKeyHash = [data objectForKey:@"customEndpointPublicKeyHash"];
     NSString *defaultTracker = [data objectForKey:@"defaultTracker"];
     NSNumber *sendInBackground = [data objectForKey:@"sendInBackground"];
     NSString *logLevel = [data objectForKey:@"logLevel"];
-    NSNumber *eventBufferingEnabled = [data objectForKey:@"eventBufferingEnabled"];
     NSNumber *coppaCompliantEnabled = [data objectForKey:@"coppaCompliantEnabled"];
     NSNumber *linkMeEnabled = [data objectForKey:@"linkMeEnabled"];
     NSNumber *allowiAdInfoReading = [data objectForKey:@"allowiAdInfoReading"];
@@ -201,43 +197,20 @@
     NSString *attributionCallback = [data objectForKey:@"attributionCallback"];
     NSString *urlStrategy = [data objectForKey:@"urlStrategy"];
 
-    ADJAdjustConfig *adjustConfig;
-    if ([self isFieldValid:appToken] && [self isFieldValid:environment]) {
-        adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken environment:environment];
-    }
+    ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken environment:environment];
 
-    if ([self isFieldValid:logLevel]) {
-        [adjustConfig setLogLevel:logLevel];
+    [adjustConfig setLogLevel:logLevel];
+    [adjustConfig setUrlStrategy:urlStrategy];
+    [adjustConfig setDefaultTracker:defaultTracker];
+    [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
+    [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
+    [adjustConfig setAdjustAttributionSubscriber:self];
+    if([self isFieldValid:eventDeduplicationListLimit]) {
+        [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
     }
-
-    if ([self isFieldValid:urlStrategy]) {
-        [adjustConfig setUrlStrategy:urlStrategy];
-    }
-
-    if ([self isFieldValid:defaultTracker]) {
-        [adjustConfig setDefaultTracker:defaultTracker];
-    }
-
-    if ([self isFieldValid:logLevel]) {
-        [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
-    }
-
-    if ([self isFieldValid:openDeferredDeeplink]) {
-        [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
-    }
-
-    if ([self isFieldValid:sendInBackground]) {
+    if (sendInBackground) {
         [adjustConfig allowSendingFromBackground];
     }
-
-    if ([self isFieldValid:attributionCallback]) {
-        [adjustConfig setAdjustAttributionSubscriber:self];
-    }
-
-    if ([self isFieldValid:attributionCallback]) {
-        [adjustConfig setAdjustAttributionSubscriber:self];
-    }
-
     [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
 }
 
@@ -252,11 +225,9 @@
 
     ADJAdjustEvent *_Nonnull adjustEvent = [[ADJAdjustEvent alloc] initWithEventId:eventToken];
 
-    if ([self isFieldValid:@"deduplicationId"]) {
-        [adjustEvent setDeduplicationId:deduplicationId];
-    }
+    [adjustEvent setDeduplicationId:deduplicationId];
 
-    if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
+    if ([self isFieldValid:revenue]) {
         [adjustEvent setRevenueWithDouble:[revenue doubleValue] currency:currency];
     }
 
@@ -284,31 +255,19 @@
     NSString *adRevenueNetwork = [data objectForKey:@"adRevenueNetwork"];
     NSString *adRevenueUnit = [data objectForKey:@"adRevenueUnit"];
     NSString *adRevenuePlacement = [data objectForKey:@"adRevenuePlacement"];
-
     id callbackParameters = [data objectForKey:@"callbackParameters"];
     id partnerParameters = [data objectForKey:@"partnerParameters"];
 
     ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
-
-    if ([self isFieldValid:revenue] && [self isFieldValid:currency]) {
-        [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
-    }
+    [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
 
     if ([self isFieldValid:adImpressionsCount]) {
-        [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCount];
+        [adjustAdRevenue setAdImpressionsCountWithInteger:[adImpressionsCount intValue]];
     }
 
-    if ([self isFieldValid:adRevenueNetwork]) {
-        [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork];
-    }
-
-    if ([self isFieldValid:adRevenueUnit]) {
-        [adjustAdRevenue setAdRevenueUnit:adRevenueUnit];
-    }
-
-    if ([self isFieldValid:adRevenuePlacement]) {
-        [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement];
-    }
+    [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork];
+    [adjustAdRevenue setAdRevenueUnit:adRevenueUnit];
+    [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement];
 
     for (int i = 0; i < [callbackParameters count]; i += 2) {
         NSString *key = [[callbackParameters objectAtIndex:i] description];
@@ -338,10 +297,12 @@
 
     ADJAdjustThirdPartySharing *adjustThirdPartySharing = [[ADJAdjustThirdPartySharing alloc] init];
 
-    if (isEnabled) {
-        [adjustThirdPartySharing enableThirdPartySharing];
-    } else {
-        [adjustThirdPartySharing disableThirdPartySharing];
+    if ([self isFieldValid:isEnabled]) {
+        if ([isEnabled boolValue]) {
+            [adjustThirdPartySharing enableThirdPartySharing];
+        } else {
+            [adjustThirdPartySharing disableThirdPartySharing];
+        }
     }
 
     for (int i = 0; i < [granularOptions count]; i += 3) {

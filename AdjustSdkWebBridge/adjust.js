@@ -47,21 +47,21 @@ switchToOfflineMode: function() {
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
-switchToOnlineMode: function() {
+switchBackToOnlineMode: function() {
     const message = {
-    action:'adjust_switchToOnlineMode',
+    action:'adjust_switchBackToOnlineMode',
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
-inactiveSDK: function() {
+inactivateSdk: function() {
     const message = {
     action:'adjust_inactivateSdk',
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
 
-reactivateSDK: function() {
+reactivateSdk: function() {
     const message = {
     action:'adjust_reactivateSdk',
     };

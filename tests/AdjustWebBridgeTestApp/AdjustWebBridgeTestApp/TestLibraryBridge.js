@@ -142,6 +142,11 @@ AdjustCommandExecutor.prototype.start = function(params) {
         }
     }
 
+    if ('configureEventDeduplication' in params) {
+        var configureEventDeduplication = getFirstParameterValue(params, 'configureEventDeduplication');
+        adjustConfig.setEventDeduplicationListLimit(configureEventDeduplication);
+    }
+
     if ('customEndpointUrl' in params || 'customEndpointPublicKeyHash' in params || 'testServerBaseUrlEndpointUrl' in params) {
         console.log("TORMV endpoint");
 
@@ -298,19 +303,19 @@ AdjustCommandExecutor.prototype.trackEvent = function(params) {
     }
 
     if ('deduplicationId' in params) {
-        var orderId = getFirstParameterValue(params, 'deduplicationId');
-        adjustEvent.setDeduplicationId(orderId);
+        var deduplicationId = getFirstParameterValue(params, 'deduplicationId');
+        adjustEvent.setDeduplicationId(deduplicationId);
     }
 
     Adjust.trackEvent(adjustEvent);
 
 };
 
-AdjustCommandExecutor.prototype.stop = function(params) {
+AdjustCommandExecutor.prototype.stop = function() {
     Adjust.inactivateSdk();
 };
 
-AdjustCommandExecutor.prototype.restart = function(params) {
+AdjustCommandExecutor.prototype.restart = function() {
     Adjust.reactivateSdk();
 };
 
@@ -360,11 +365,11 @@ AdjustCommandExecutor.prototype.removeGlobalPartnerParameter = function(params) 
 };
 
 AdjustCommandExecutor.prototype.clearGlobalCallbackParameters = function(params) {
-    Adjust.clearGlobalCallbackParameters();
+    Adjust.clearAllGlobalCallbackParameters();
 };
 
 AdjustCommandExecutor.prototype.clearGlobalPartnerParameters = function(params) {
-    Adjust.clearGlobalPartnerParameters();
+    Adjust.clearAllGlobalPartnerParameters();
 };
 
 AdjustCommandExecutor.prototype.setPushToken = function(params) {
@@ -378,7 +383,7 @@ AdjustCommandExecutor.prototype.openDeeplink = function(params) {
 };
 
 AdjustCommandExecutor.prototype.gdprForgetMe = function(params) {
-    Adjust.gdprForgetDevice();
+    Adjust.gdprForgetMe();
 };
 
 AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
@@ -467,7 +472,7 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
             var partnerName = partnerSharingSettings[i];
             var key = partnerSharingSettings[i + 1];
             var value = partnerSharingSettings[i + 2];
-            adjustThirdPartySharing.addPartnerSharingSetting(partnerName, key, value);
+            adjustThirdPartySharing.addPartnerSharingSettings(partnerName, key, value);
         }
     }
 
