@@ -9,16 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "ADJSdkConfigData.h"
 #import "ADJInstanceRoot.h"
+#import "ADJEntryRootBag.h"
 
-@interface ADJEntryRoot : NSObject
+@interface ADJEntryRoot : NSObject <ADJEntryRootBag>
 // instantiation
-- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
-                           sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
-    NS_DESIGNATED_INITIALIZER;
-- (nullable instancetype)init NS_UNAVAILABLE;
++ (nonnull ADJEntryRoot *)instanceWithClientId:(nullable NSString *)clientId
+                                 sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData;
 
-// public properties
-@property (nullable, readonly, strong, nonatomic) NSString *sdkPrefix;
+- (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
 - (nonnull ADJInstanceRoot *)instanceForClientId:(nullable NSString *)clientId;

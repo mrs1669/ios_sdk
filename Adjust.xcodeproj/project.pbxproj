@@ -3161,6 +3161,13 @@
 		6FCD54DB298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
 		6FCD54DC298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
 		6FCD54DD298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */; };
+		6FCD54E72990F83B007542FB /* ADJEntryRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */; };
+		6FCD54E82990F83B007542FB /* ADJEntryRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */; };
+		6FCD54E92990F83B007542FB /* ADJEntryRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */; };
+		6FCD54EA2990F83B007542FB /* ADJEntryRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */; };
+		6FCD54EB2990F83B007542FB /* ADJEntryRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */; };
+		6FCD54EC2990F83B007542FB /* ADJEntryRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */; };
+		6FCD54ED2990F83B007542FB /* ADJEntryRootBag.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */; };
 		6FCEAF4A290ACA9E009F1DAD /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
 		6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -3652,6 +3659,7 @@
 		6FCD54A6298ABED4007542FB /* ADJPostSdkStartRoot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJPostSdkStartRoot.m; sourceTree = "<group>"; };
 		6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInstanceRootBag.h; sourceTree = "<group>"; };
 		6FCD54D5298BABB9007542FB /* ADJPreSdkInitRootBag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJPreSdkInitRootBag.h; sourceTree = "<group>"; };
+		6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJEntryRootBag.h; sourceTree = "<group>"; };
 		6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJInputLogMessageData.h; sourceTree = "<group>"; };
 		6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInputLogMessageData.m; sourceTree = "<group>"; };
 		6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLogMessageData.h; sourceTree = "<group>"; };
@@ -3828,6 +3836,7 @@
 		0737C1B2287F3E2A004C7D59 /* entry */ = {
 			isa = PBXGroup;
 			children = (
+				6FCD54E52990F83B007542FB /* ADJEntryRootBag.h */,
 				6FCD54C5298BAA68007542FB /* ADJInstanceRootBag.h */,
 				0737C1B8287F3E2A004C7D59 /* ADJEntryRoot.h */,
 				0737C1B5287F3E2A004C7D59 /* ADJEntryRoot.m */,
@@ -4982,6 +4991,7 @@
 				07F40AF9299A7E1900BDECB6 /* ADJPushTokenStateData.h in Headers */,
 				0A7ED71A2892B11B00CC20DE /* ADJSdkPackageData.h in Headers */,
 				0A7ED71B2892B11B00CC20DE /* ADJSessionPackageData.h in Headers */,
+				6FCD54E72990F83B007542FB /* ADJEntryRootBag.h in Headers */,
 				0741CDF928D895C00041C816 /* ADJGdprForgetController.h in Headers */,
 				0A7ED71D2892B11B00CC20DE /* ADJSdkPackageBaseData.h in Headers */,
 				0A7ED71E2892B11B00CC20DE /* ADJConstantsParam.h in Headers */,
@@ -5358,6 +5368,7 @@
 				0A25F99A28E5CAC8001988A1 /* ADJMeasurementSessionStateStorage.h in Headers */,
 				0A25F99B28E5CAC8001988A1 /* ADJMeasurementSessionStateStorageAction.h in Headers */,
 				0A25F99C28E5CAC8001988A1 /* ADJMeasurementSessionController.h in Headers */,
+				6FCD54E82990F83B007542FB /* ADJEntryRootBag.h in Headers */,
 				0A25F99D28E5CAC8001988A1 /* ADJClientReturnExecutor.h in Headers */,
 				0A25F99E28E5CAC8001988A1 /* ADJClientCallbacksController.h in Headers */,
 				0A25F99F28E5CAC9001988A1 /* ADJClientSubscriptionsController.h in Headers */,
@@ -5618,6 +5629,7 @@
 				0A25FB9728F42382001988A1 /* ADJMeasurementSessionStateStorage.h in Headers */,
 				0A25FB9828F42382001988A1 /* ADJMeasurementSessionStateStorageAction.h in Headers */,
 				0A25FB9928F42382001988A1 /* ADJMeasurementSessionController.h in Headers */,
+				6FCD54E92990F83B007542FB /* ADJEntryRootBag.h in Headers */,
 				0A25FB9A28F42382001988A1 /* ADJClientReturnExecutor.h in Headers */,
 				0A25FB9B28F42382001988A1 /* ADJClientCallbacksController.h in Headers */,
 				0A25FB9C28F42382001988A1 /* ADJClientSubscriptionsController.h in Headers */,
@@ -5878,6 +5890,7 @@
 				0A25FD6628F43C2D001988A1 /* ADJMeasurementSessionStateStorage.h in Headers */,
 				0A25FD6728F43C2D001988A1 /* ADJMeasurementSessionStateStorageAction.h in Headers */,
 				0A25FD6828F43C2D001988A1 /* ADJMeasurementSessionController.h in Headers */,
+				6FCD54EA2990F83B007542FB /* ADJEntryRootBag.h in Headers */,
 				0A25FD6928F43C2D001988A1 /* ADJClientReturnExecutor.h in Headers */,
 				0A25FD6A28F43C2D001988A1 /* ADJClientCallbacksController.h in Headers */,
 				0A25FD6B28F43C2D001988A1 /* ADJClientSubscriptionsController.h in Headers */,
@@ -6138,6 +6151,7 @@
 				0A7E494728F8276D00827F0B /* ADJMeasurementSessionStateStorage.h in Headers */,
 				0A7E494828F8276D00827F0B /* ADJMeasurementSessionStateStorageAction.h in Headers */,
 				0A7E494928F8276D00827F0B /* ADJMeasurementSessionController.h in Headers */,
+				6FCD54EB2990F83B007542FB /* ADJEntryRootBag.h in Headers */,
 				0A7E494A28F8276D00827F0B /* ADJClientReturnExecutor.h in Headers */,
 				0A7E494B28F8276D00827F0B /* ADJClientCallbacksController.h in Headers */,
 				0A7E494C28F8276D00827F0B /* ADJClientSubscriptionsController.h in Headers */,
@@ -6398,6 +6412,7 @@
 				0A7E4A3728F82F6D00827F0B /* ADJMeasurementSessionStateStorage.h in Headers */,
 				0A7E4A3828F82F6D00827F0B /* ADJMeasurementSessionStateStorageAction.h in Headers */,
 				0A7E4A3928F82F6D00827F0B /* ADJMeasurementSessionController.h in Headers */,
+				6FCD54EC2990F83B007542FB /* ADJEntryRootBag.h in Headers */,
 				0A7E4A3A28F82F6D00827F0B /* ADJClientReturnExecutor.h in Headers */,
 				0A7E4A3B28F82F6D00827F0B /* ADJClientCallbacksController.h in Headers */,
 				0A7E4A3C28F82F6D00827F0B /* ADJClientSubscriptionsController.h in Headers */,
@@ -6658,6 +6673,7 @@
 				0A7E4B2228F830AF00827F0B /* ADJMeasurementSessionStateStorage.h in Headers */,
 				0A7E4B2328F830AF00827F0B /* ADJMeasurementSessionStateStorageAction.h in Headers */,
 				0A7E4B2428F830AF00827F0B /* ADJMeasurementSessionController.h in Headers */,
+				6FCD54ED2990F83B007542FB /* ADJEntryRootBag.h in Headers */,
 				0A7E4B2528F830AF00827F0B /* ADJClientReturnExecutor.h in Headers */,
 				0A7E4B2628F830AF00827F0B /* ADJClientCallbacksController.h in Headers */,
 				0A7E4B2728F830AF00827F0B /* ADJClientSubscriptionsController.h in Headers */,

@@ -16,6 +16,8 @@
 @interface ADJInstanceRoot ()
 #pragma mark - Internal variables
 @property (nullable, readwrite, strong, nonatomic) ADJPreSdkInitRoot *preSdkInitRoot;
+@property (nullable, readonly, weak, nonatomic) id<ADJEntryRootBag> entryRootBagWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
 
 @end
 
@@ -23,25 +25,24 @@
 #pragma mark - Synthesize protocol properties
 @synthesize sdkConfigData = _sdkConfigData;
 @synthesize instanceId = _instanceId;
-@synthesize sdkPrefix = _sdkPrefix;
+//@synthesize sdkPrefix = _sdkPrefix;
 
 @synthesize logController = _logController;
 @synthesize threadController = _threadController;
 @synthesize clientExecutor = _clientExecutor;
 @synthesize commonExecutor = _commonExecutor;
-@synthesize adjustApiLogger = _adjustApiLogger;
 @synthesize clock = _clock;
 @synthesize publisherController = _publisherController;
 
 #pragma mark Instantiation
 + (nonnull instancetype)instanceWithConfigData:(nonnull ADJSdkConfigData *)configData
                                     instanceId:(nonnull ADJInstanceIdData *)instanceId
-                                     sdkPrefix:(nullable NSString*)sdkPrefix
+                                  entryRootBag:(nonnull id<ADJEntryRootBag>)entryRootBag
 {
     ADJInstanceRoot *_Nonnull instanceRoot =
         [[ADJInstanceRoot alloc] initWithConfigData:configData
                                          instanceId:instanceId
-                                          sdkPrefix:sdkPrefix];
+                                       entryRootBag:entryRootBag];
 
     [instanceRoot createSdkInitRootInClientContext];
 
@@ -50,12 +51,12 @@
 
 - (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
                                 instanceId:(nonnull ADJInstanceIdData *)instanceId
-                                 sdkPrefix:(nullable NSString*)sdkPrefix
+                              entryRootBag:(nonnull id<ADJEntryRootBag>)entryRootBag
 {
     self = [super init];
     _sdkConfigData = configData;
     _instanceId = instanceId;
-    _sdkPrefix = sdkPrefix;
+    _entryRootBagWeak = entryRootBag;
 
     _clock = [[ADJClock alloc] init];
 
@@ -75,7 +76,7 @@
                        sourceDescription:@"commonExecutor"];
     [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
 
-    _adjustApiLogger = [_logController createLoggerWithSource:@"Adjust"];
+    _logger = [_logController createLoggerWithSource:@"InstanceRoot"];
 
     return self;
 }
@@ -98,6 +99,17 @@
 }
 
 #pragma mark Public API
+- (nullable NSString *)sdkPrefix {
+    id<ADJEntryRootBag> _Nullable entryRootBag = self.entryRootBagWeak;
+    if (entryRootBag == nil) {
+        [self.logger debugDev:@"Cannot return sdk prefix without entry root reference"
+                    issueType:ADJIssueWeakReference];
+        return nil;
+    }
+
+    return entryRootBag.sdkPrefix;
+}
+
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock {
     __typeof(self) __weak weakSelf = self;
     BOOL canExecuteTask = [self.clientExecutor executeInSequenceWithBlock:^{
@@ -395,9 +407,9 @@
         ADJPreSdkInitRoot *_Nullable preSdkInitRootLocal =
             strongSelf.preSdkInitRoot;
         if (preSdkInitRootLocal == nil) {
-            [strongSelf.adjustApiLogger debugDev:@"Unexpected invalid PreSdkInitRoot"
-                                            from:source
-                                       issueType:ADJIssueLogicError];
+            [strongSelf.logger debugDev:@"Unexpected invalid PreSdkInitRoot"
+                                   from:source
+                              issueType:ADJIssueLogicError];
             return;
         }
         preAndSelfBlock(preSdkInitRootLocal, strongSelf);

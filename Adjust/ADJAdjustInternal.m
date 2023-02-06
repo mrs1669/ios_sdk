@@ -30,8 +30,8 @@ static dispatch_once_t entryRootOnceToken = 0;
     @synchronized ([ADJEntryRoot class]) {
 #endif
         dispatch_once(&entryRootOnceToken, ^{
-            entryRootInstance = [[ADJEntryRoot alloc] initWithClientId:clientId
-                                                         sdkConfigData:nil];
+            entryRootInstance = [ADJEntryRoot instanceWithClientId:clientId
+                                                     sdkConfigData:nil];
         });
         return entryRootInstance;
 #ifdef DEBUG
@@ -77,8 +77,8 @@ static dispatch_once_t entryRootOnceToken = 0;
             [returnMessage appendString:@". Creating new entry root instance with injected sdk config"];
             entryRootOnceToken = 0;
             dispatch_once(&entryRootOnceToken, ^{
-                entryRootInstance = [[ADJEntryRoot alloc] initWithClientId:nil
-                                                             sdkConfigData:sdkConfigData];
+                entryRootInstance = [ADJEntryRoot instanceWithClientId:nil // TODO: add when testing for it
+                                                         sdkConfigData:sdkConfigData];
             });
         } else {
             [returnMessage appendString:@". Not creating new entry root instance without injected sdk config"];

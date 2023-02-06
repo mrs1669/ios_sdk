@@ -20,8 +20,8 @@
 
 @interface ADJEntryRoot ()
 #pragma mark - Injected dependencies
-@property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 @property (nullable, readwrite, strong, nonatomic) NSString *sdkPrefix;
+@property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 
 #pragma mark - Internal variables
 @property (nonnull, readwrite, strong, nonatomic)
@@ -31,23 +31,34 @@
 
 @implementation ADJEntryRoot
 #pragma mark Instantiation
-- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
-                           sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
++ (nonnull ADJEntryRoot *)instanceWithClientId:(nullable NSString *)clientId
+                                 sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
 {
-    self = [super init];
-
-    _sdkConfigData = sdkConfigData ?: [[ADJSdkConfigData alloc] initWithDefaultValues];
+    ADJEntryRoot *_Nonnull entryRoot = [[ADJEntryRoot alloc] initWithClientId:clientId
+                                                                sdkConfigData:sdkConfigData];
 
     ADJInstanceIdData *_Nonnull firstInstanceId =
         [[ADJInstanceIdData alloc] initFirstInstanceWithClientId:clientId];
 
-    ADJInstanceRoot *instanceRoot = [ADJInstanceRoot instanceWithConfigData:_sdkConfigData
-                                                                 instanceId:firstInstanceId
-                                                                  sdkPrefix:nil];//TODO: to inject with session refac
+    ADJInstanceRoot *instanceRoot = [ADJInstanceRoot
+                                     instanceWithConfigData:entryRoot->_sdkConfigData
+                                     instanceId:firstInstanceId
+                                     entryRootBag:entryRoot];
+
+    [entryRoot->_instanceMap setObject:instanceRoot forKey:firstInstanceId.idString];
+
+    return entryRoot;
+}
+
+- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
+                           sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
+{
+    self = [super init];
+    _sdkPrefix = nil;
+
+    _sdkConfigData = sdkConfigData ?: [[ADJSdkConfigData alloc] initWithDefaultValues];
 
     _instanceMap = [[NSMutableDictionary alloc] init];
-
-    [_instanceMap setObject:instanceRoot forKey:firstInstanceId.idString];
 
     return self;
 }
@@ -79,7 +90,7 @@
         ADJInstanceRoot *newInstanceRoot =
             [ADJInstanceRoot instanceWithConfigData:self.sdkConfigData
                                          instanceId:newInstanceId
-                                          sdkPrefix:nil];//TODO: to inject with session refac
+                                       entryRootBag:self];
 
         [self.instanceMap setObject:newInstanceRoot forKey:newInstanceId.idString];
 

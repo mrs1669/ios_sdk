@@ -25,7 +25,6 @@
 @property (nonnull, readonly, strong, nonatomic) ADJThreadController *threadController;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *commonExecutor;
-@property (nonnull, readonly, strong, nonatomic) ADJLogger *adjustApiLogger;
 @property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJPublisherController *publisherController;
 
