@@ -204,11 +204,11 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 
     ADJPackageSessionData *_Nullable packageSessionData = nil;
 
-    if (intervalSinceLastActivity.millisecondsSpan
-        >= self.minMeasurementSessionInterval.millisecondsSpan)
+    if (intervalSinceLastActivity.millisecondsSpan.uIntegerValue
+            >= self.minMeasurementSessionInterval.millisecondsSpan.uIntegerValue)
     {
         [self.logger debugDev:
-         @"Create a new session, because theas was enough interval since the last activity"
+         @"Create a new session, because there was enough interval since the last activity"
                          key1:@"intervalSinceLastActivity"
                        value1:intervalSinceLastActivity.description
                          key2:@"minMeasurementSessionInterval"
@@ -217,6 +217,13 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
         packageSessionData =
             [self processNewSessionWithBuilder:builder];
     } else {
+        [self.logger debugDev:@"Will not create a new session,"
+         " because there was not enough interval since the last activity"
+                         key1:@"intervalSinceLastActivity"
+                       value1:intervalSinceLastActivity.description
+                         key2:@"minMeasurementSessionInterval"
+                       value2:self.minMeasurementSessionInterval.description];
+
         [self increaseSessionLengthWithBuilder:builder
                      intervalSinceLastActivity:intervalSinceLastActivity];
     }
