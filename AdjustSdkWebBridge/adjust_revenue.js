@@ -18,11 +18,19 @@ AdjustAdRevenue.prototype.setAdRevenue = function(revenue, currency) {
 };
 
 AdjustAdRevenue.prototype.addCallbackParameter = function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
     this.callbackParameters.push(key);
     this.callbackParameters.push(value);
 };
 
 AdjustAdRevenue.prototype.addPartnerParameter = function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
     this.partnerParameters.push(key);
     this.partnerParameters.push(value);
 };
@@ -42,5 +50,6 @@ AdjustAdRevenue.prototype.setAdRevenueUnit= function(adRevenueUnit) {
 AdjustAdRevenue.prototype.setAdRevenuePlacement = function(adRevenuePlacement) {
     this.adRevenuePlacement = adRevenuePlacement;
 };
+
 
 
