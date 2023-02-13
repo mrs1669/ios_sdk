@@ -27,7 +27,8 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 }
 
 + (nullable NSString *)copyStringWithInput:(nullable id)inputValue {
-    if (inputValue == nil) {
+
+    if (inputValue == nil || ![inputValue isKindOfClass:[NSString class]]) {
         return nil;
     }
     
