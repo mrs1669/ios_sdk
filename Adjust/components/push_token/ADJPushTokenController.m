@@ -17,6 +17,7 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
 @interface ADJPushTokenController ()
 #pragma mark - Injected dependencies
+@property (nullable, readonly, weak, nonatomic) ADJPushTokenStateStorage *pushTokenStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
 @property (nullable, readonly, weak, nonatomic) ADJMainQueueController *mainQueueControllerWeak;
 
@@ -26,9 +27,11 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                        pushTokenStateStorage:(nonnull ADJPushTokenStateStorage *)pushTokenStateStorage
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
     self = [super initWithLoggerFactory:loggerFactory source:@"PushTokenController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
+    _pushTokenStorageWeak = pushTokenStateStorage;
     _mainQueueControllerWeak = mainQueueController;
 
     return self;
@@ -43,8 +46,8 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
 #pragma mark - ADJClientActionHandler
 - (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // can handle pre first session
-    return YES;
+    // can't handle pre first session
+    return !isPreFirstSession;
 }
 
 - (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
@@ -68,31 +71,53 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 - (void)trackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData
                         apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
      clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
         [self.logger debugDev:@"Cannot Track Push Token without a reference to sdk package builder"
                     issueType:ADJIssueWeakReference];
+        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        return;
+    }
 
+    ADJPushTokenStateStorage *_Nullable pushTokenStorage = self.pushTokenStorageWeak;
+    if (pushTokenStorage == nil) {
+        [self.logger debugDev:@"Cannot Track Push Token without a reference to storage"
+                    issueType:ADJIssueStorageIo];
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
 
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
-        [self.logger debugDev:
-         @"Cannot Track Push Token without a reference to main queue controller"
+        [self.logger debugDev:@"Cannot Track Push Token without a reference to main queue controller"
                     issueType:ADJIssueWeakReference];
-
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
 
-    ADJInfoPackageData *_Nonnull infoPackageData =
-    [sdkPackageBuilder buildInfoPackageWithClientData:clientPushTokenData
-                                         apiTimestamp:apiTimestamp];
+    ADJPushTokenStateData *_Nullable pushTokenStateData = pushTokenStorage.readOnlyStoredDataValue;
+
+    NSLog(@"Client Push Token: %@", clientPushTokenData.pushTokenString);
+    NSLog(@"Cached Push Token: %@", pushTokenStateData.cachedPushTokenString);
+
+    if (clientPushTokenData != nil && pushTokenStateData != nil) {
+        if ([clientPushTokenData.pushTokenString isEqual:pushTokenStateData.cachedPushTokenString]) {
+            [self.logger debugDev:@"Cannot Track Push Token, already tracked"];
+            [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+            return;
+        }
+    }
+
+    ADJInfoPackageData *_Nonnull infoPackageData = [sdkPackageBuilder buildInfoPackageWithClientData:clientPushTokenData
+                                                                                        apiTimestamp:apiTimestamp];
 
     [mainQueueController addInfoPackageToSendWithData:infoPackageData
                                   sqliteStorageAction:clientActionRemoveStorageAction];
+
+    [pushTokenStorage updateWithNewDataValue:[[ADJPushTokenStateData alloc]
+                                              initWithPushTokenString:clientPushTokenData.pushTokenString]];
+
 }
 
 @end

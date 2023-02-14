@@ -153,6 +153,7 @@
 
     _pushTokenController = [[ADJPushTokenController alloc] initWithLoggerFactory:loggerFactory
                                                                sdkPackageBuilder:self.sdkPackageBuilder
+                                                           pushTokenStateStorage:storageRootController.pushTokenStorage
                                                              mainQueueController:self.mainQueueController];
 
     _keepAliveController = [[ADJKeepAliveController alloc] initWithLoggerFactory:loggerFactory

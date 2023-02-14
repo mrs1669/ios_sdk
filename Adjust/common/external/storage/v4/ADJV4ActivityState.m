@@ -18,6 +18,7 @@ static NSString *const kAskingAttributionKey = @"askingAttribution";
 static NSString *const kIsThirdPartySharingDisabledKey = @"isThirdPartySharingDisabled";
 static NSString *const kUuidKey = @"uuid";
 static NSString *const kDeviceTokenKey = @"deviceToken";
+static NSString *const kPushTokenKey = @"pushToken";
 static NSString *const kUpdatePackagesKey = @"updatePackages";
 static NSString *const kAdidKey = @"adid";
 static NSString *const kAttributionDetailsKey = @"attributionDetails";
@@ -43,6 +44,8 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
  @property (nullable, readonly, strong, nonatomic) NSString *uuid;
  //@property (nonatomic, copy) NSString *deviceToken;
  @property (nullable, readonly, strong, nonatomic) NSString *deviceToken;
+ //@property (nonatomic, copy) NSString *pushToken;
+ @property (nullable, readonly, strong, nonatomic) NSString *pushToken;
  //@property (nonatomic, assign) BOOL updatePackages;
  @property (nullable, readonly, strong, nonatomic) NSNumber *updatePackagesNumberBool;
  //@property (nonatomic, copy) NSString *adid;
@@ -69,20 +72,21 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
 #pragma mark Instantiation
 - (id)init {
     self = [super init];
-    
+
     if (self == nil) {
         return nil;
     }
-    
+
     return self;
 }
+
 #pragma mark - NSCoding
 - (id)initWithCoder:(NSCoder *)decoder {
     self = [super init];
     if (self == nil) {
         return nil;
     }
-    
+
     if ([decoder containsValueForKey:kEventCountKey]) {
         _eventCountNumberInt = [NSNumber numberWithInt:[decoder decodeIntForKey:kEventCountKey]];
     }
@@ -108,6 +112,9 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
     }
     if ([decoder containsValueForKey:kUuidKey]) {
         _uuid = [decoder decodeObjectForKey:kUuidKey];
+    }
+    if ([decoder containsValueForKey:kPushTokenKey]) {
+        _pushToken = [decoder decodeObjectForKey:kPushTokenKey];
     }
     if ([decoder containsValueForKey:kTransactionIdsKey]) {
         _transactionIds = [decoder decodeObjectForKey:kTransactionIdsKey];
@@ -140,12 +147,12 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
     if ([decoder containsValueForKey:kAttributionDetailsKey]) {
         _attributionDetails = [decoder decodeObjectForKey:kAttributionDetailsKey];
     }
-    
+
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-    
+
 }
 
 #pragma mark - NSObject
@@ -159,6 +166,7 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
             kIsThirdPartySharingDisabledKey, self.isThirdPartySharingDisabledNumberBool,
             kUuidKey, self.uuid,
             kDeviceTokenKey, self.deviceToken,
+            kPushTokenKey, self.pushToken,
             kUpdatePackagesKey, self.updatePackagesNumberBool,
             kAdidKey, self.adid,
             kAttributionDetailsKey, self.attributionDetails,
@@ -173,3 +181,4 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
 }
 
 @end
+

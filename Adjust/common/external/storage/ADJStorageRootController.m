@@ -19,6 +19,7 @@
  @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionStateStorage *asaAttributionStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *clientActionStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJDeviceIdsStorage *deviceIdsStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJPushTokenStateData *pushTokenStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJEventStateStorage *eventStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJEventDeduplicationStorage *eventDeduplicationStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersStorage *globalCallbackParametersStorage;
@@ -63,6 +64,7 @@ sqliteController:self.sqliteController];        \
     buildAndInjectStorage(clientActionStorage, ADJClientActionStorage);
     buildAndInjectStorage(deviceIdsStorage, ADJDeviceIdsStorage);
     buildAndInjectStorage(eventStateStorage, ADJEventStateStorage);
+    buildAndInjectStorage(pushTokenStorage, ADJPushTokenStateStorage);
     buildAndInjectStorage(eventDeduplicationStorage, ADJEventDeduplicationStorage);
     buildAndInjectStorage(gdprForgetStateStorage, ADJGdprForgetStateStorage);
     buildAndInjectStorage(globalCallbackParametersStorage, ADJGlobalCallbackParametersStorage);
