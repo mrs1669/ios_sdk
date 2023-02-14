@@ -46,7 +46,7 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
 #pragma mark - ADJClientActionHandler
 - (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // can't handle pre first session
+    // cannot handle pre first session
     return !isPreFirstSession;
 }
 
@@ -83,7 +83,7 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
     ADJPushTokenStateStorage *_Nullable pushTokenStorage = self.pushTokenStorageWeak;
     if (pushTokenStorage == nil) {
         [self.logger debugDev:@"Cannot Track Push Token without a reference to storage"
-                    issueType:ADJIssueStorageIo];
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
@@ -97,9 +97,6 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
     }
 
     ADJPushTokenStateData *_Nullable pushTokenStateData = pushTokenStorage.readOnlyStoredDataValue;
-
-    NSLog(@"Client Push Token: %@", clientPushTokenData.pushTokenString);
-    NSLog(@"Cached Push Token: %@", pushTokenStateData.cachedPushTokenString);
 
     if (clientPushTokenData != nil && pushTokenStateData != nil) {
         if ([clientPushTokenData.pushTokenString isEqual:pushTokenStateData.cachedPushTokenString]) {
