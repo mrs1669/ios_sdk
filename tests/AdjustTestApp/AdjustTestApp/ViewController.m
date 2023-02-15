@@ -66,7 +66,6 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     [self.testLibrary addTestDirectory:@"migration"];
     [self.testLibrary addTestDirectory:@"offline-mode"];
     [self.testLibrary addTestDirectory:@"push-token"];
-    [self.testLibrary addTest:@"Test_PushToken_de_duplication"];
     [self.testLibrary addTestDirectory:@"retry-in"];
     [self.testLibrary addTestDirectory:@"session-tracking"];
     [self.testLibrary addTestDirectory:@"stop-restart"];
