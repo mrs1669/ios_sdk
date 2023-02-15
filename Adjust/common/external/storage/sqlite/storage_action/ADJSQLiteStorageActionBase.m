@@ -22,8 +22,7 @@
 
 @implementation ADJSQLiteStorageActionBase
 - (nonnull instancetype)initWithDecoratedSQLiteStorageAction:
-    (nullable ADJSQLiteStorageActionBase *)decoratedSQLiteStorageAction
-{
+    (nullable ADJSQLiteStorageActionBase *)decoratedSQLiteStorageAction {
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSQLiteStorageActionBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -42,8 +41,7 @@
 
 #pragma mark Public API
 - (BOOL)performStorageActionInDbTransaction:(nonnull ADJSQLiteDb *)sqliteDb
-                                     logger:(nonnull ADJLogger *)logger
-{
+                                     logger:(nonnull ADJLogger *)logger {
     if ([self.actionCalled testAndSetTrue]) {
         // allow the rest of the transaction to be performed
         return YES;
@@ -71,8 +69,7 @@
 #pragma mark Protected Methods
 #pragma mark - Abstract
 - (BOOL)concretePerformStorageActionInDbTransaction:(nonnull ADJSQLiteDb *)sqliteDb
-                                             logger:(nonnull ADJLogger *)logger
-{
+                                             logger:(nonnull ADJLogger *)logger {
     [self doesNotRecognizeSelector:_cmd];
     return NO;
 }

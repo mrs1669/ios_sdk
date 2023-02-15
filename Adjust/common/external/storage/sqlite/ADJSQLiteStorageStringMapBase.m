@@ -161,19 +161,22 @@ static NSString *const kColumnValue = @"value";
     self.inMemoryMapRO = [[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder];
 
     if (atLeastOneElementAdded) {
-        [self.logger debug:@"Read %@ key value pairs to the map",
-         [ADJUtilF uIntegerFormat:[self.inMemoryMapRO countPairs]]];
+        [self.logger debugDev:@"Read key value pairs to the map"
+                          key:@"pairs count"
+                        value:[ADJUtilF uIntegerFormat:[self.inMemoryMapRO countPairs]]];
     } else {
-        [self.logger debug:@"Did not read any key value pairs to the map"];
+        [self.logger debugDev:@"Did not read any key value pairs to the map"];
     }
 
     return atLeastOneElementAdded;
 }
 
 - (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:(nonnull NSString *)tableName {
-    return [[ADJNonEmptyString alloc] initWithConstStringValue:[NSString stringWithFormat:@"SELECT %@, %@ FROM %@",
-                 kColumnKey, kColumnValue, tableName]];
+    return [[ADJNonEmptyString alloc]
+            initWithConstStringValue:[NSString stringWithFormat:@"SELECT %@, %@ FROM %@",
+                                      kColumnKey, kColumnValue, tableName]];
 }
+
 static int const kSelectKeyFieldIndex = 0;
 static int const kSelectValueFieldIndex = 1;
 
@@ -184,6 +187,7 @@ static int const kSelectValueFieldIndex = 1;
              kColumnKey,
              kColumnValue]];
 }
+
 static int const kInsertKeyFieldPosition = 1;
 static int const kInsertValueFieldPosition = 2;
 
@@ -205,6 +209,7 @@ static int const kInsertValueFieldPosition = 2;
              tableName,
              kColumnKey]];
 }
+
 static int const kDeleteKeyFieldPosition = 1;
 
 - (void)addPairToStorageWithValue:(nonnull ADJNonEmptyString *)value
@@ -212,8 +217,9 @@ static int const kDeleteKeyFieldPosition = 1;
               sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
-        [self.logger error:@"Cannot put key/value in storage"
-         " without a reference to storageExecutor"];
+        [self.logger debugDev:
+         @"Cannot put key/value in storage without a reference to storageExecutor"
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
@@ -230,26 +236,18 @@ static int const kDeleteKeyFieldPosition = 1;
         strongSelf.sqliteDatabaseProviderWeak;
 
         if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger error:@"Cannot put key/value in storage"
-             " without a reference to sqliteDatabaseProvider"];
+            [strongSelf.logger debugDev:
+             @"Cannot put key/value in storage without a reference to sqliteDatabaseProvider"
+                              issueType:ADJIssueWeakReference];
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
-        ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
-
-        if (sqliteDb == nil) {
-            [strongSelf.logger error:@"Cannot put key/value in storage"
-             " without a sqliteDb"];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-
-        [strongSelf addPairToDatabase:sqliteDb
+        [strongSelf addPairToDatabase:[sqliteDatabaseProvider sqliteDb]
                                 value:value
                                   key:key
                   sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"add pair to storage"];
 }
 
 - (void)addPairToDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -262,8 +260,9 @@ static int const kDeleteKeyFieldPosition = 1;
     [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
 
     if (insertStatement == nil) {
-        [self.logger error:@"Cannot add Key/Value in storage"
-         " without a compiled insertStatement"];
+        [self.logger debugDev:
+         @"Cannot add Key/Value in storage without a compiled insertStatement"
+                    issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
@@ -279,15 +278,16 @@ static int const kDeleteKeyFieldPosition = 1;
         if (! [sqliteStorageAction performStorageActionInDbTransaction:sqliteDb
                                                                 logger:self.logger])
         {
-            [self.logger error:@"Cannot add Key/Value in storage"
-             " with failed storage action"];
+            [self.logger debugDev:
+             @"Cannot add Key/Value in storage with failed storage action"
+                        issueType:ADJIssueStorageIo];
             [sqliteDb rollback];
             return;
         }
     }
 
     [sqliteDb commit];
-    [self.logger debug:@"Key/Value added to database"];
+    [self.logger debugDev:@"Key/Value added to database"];
 }
 
 - (void)addPairInInsertStatement:(nonnull ADJSQLiteStatement *)insertStatement
@@ -306,8 +306,9 @@ static int const kDeleteKeyFieldPosition = 1;
                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
-        [self.logger error:@"Cannot remove key/value in storage"
-         " without a reference to storageExecutor"];
+        [self.logger debugDev:
+         @"Cannot remove key/value in storage without a reference to storageExecutor"
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
@@ -324,25 +325,17 @@ static int const kDeleteKeyFieldPosition = 1;
         strongSelf.sqliteDatabaseProviderWeak;
 
         if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger error:@"Cannot remove key/value in storage"
-             " without a reference to sqliteDatabaseProvider"];
+            [strongSelf.logger debugDev:
+             @"Cannot remove key/value in storage without a reference to sqliteDatabaseProvider"
+                              issueType:ADJIssueWeakReference];
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
-        ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
-
-        if (sqliteDb == nil) {
-            [strongSelf.logger error:@"Cannot remove key/value in storage"
-             " without a sqliteDb"];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-
-        [strongSelf removePairFromDatabase:sqliteDb
+        [strongSelf removePairFromDatabase:[sqliteDatabaseProvider sqliteDb]
                                        key:key
                        sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"remove pair from storage"];
 }
 
 - (void)removePairFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -354,8 +347,9 @@ static int const kDeleteKeyFieldPosition = 1;
     [sqliteDb prepareStatementWithSqlString:self.deleteWhereKeySql.stringValue];
 
     if (deleteKeyValueStatement == nil) {
-        [self.logger error:@"Cannot remove key/value in sqliteDb"
-         " without a prepared statement"];
+        [self.logger debugDev:
+         @"Cannot remove key/value in sqliteDb without a prepared statement"
+                    issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
@@ -371,8 +365,9 @@ static int const kDeleteKeyFieldPosition = 1;
         if (! [sqliteStorageAction performStorageActionInDbTransaction:sqliteDb
                                                                 logger:self.logger])
         {
-            [self.logger error:@"Cannot remove key/value in sqliteDb"
-             " with failed storage action"];
+            [self.logger debugDev:
+             @"Cannot remove key/value in sqliteDb with failed storage action"
+                        issueType:ADJIssueStorageIo];
             [sqliteDb rollback];
             return;
         }
@@ -380,15 +375,16 @@ static int const kDeleteKeyFieldPosition = 1;
 
     [sqliteDb commit];
 
-    [self.logger debug:@"Key/Value removed from database"];
+    [self.logger debugDev:@"Key/Value removed from database"];
 }
 
 - (void)replaceAllFromStorageWithStringMap:(nonnull ADJStringMap *)stringMap
                        sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
     if (storageExecutor == nil) {
-        [self.logger error:@"Cannot replace all key/values in storage"
-         " without a reference to storageExecutor"];
+        [self.logger debugDev:
+         @"Cannot replace all key/values in storage without a reference to storageExecutor"
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
     }
@@ -405,25 +401,18 @@ static int const kDeleteKeyFieldPosition = 1;
         strongSelf.sqliteDatabaseProviderWeak;
 
         if (sqliteDatabaseProvider == nil) {
-            [strongSelf.logger error:@"Cannot replace all key/values in storage"
-             " without a reference to sqliteDatabaseProvider"];
+            [strongSelf.logger debugDev:
+             @"Cannot replace all key/values in storage"
+             " without a reference to sqliteDatabaseProvider"
+                              issueType:ADJIssueWeakReference];
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
             return;
         }
 
-        ADJSQLiteDb *_Nullable sqliteDb = [sqliteDatabaseProvider sqliteDb];
-
-        if (sqliteDb == nil) {
-            [strongSelf.logger error:@"Cannot replace all key/values in storage"
-             " without a sqliteDb"];
-            [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
-            return;
-        }
-
-        [strongSelf replaceAllFromDatabase:sqliteDb
+        [strongSelf replaceAllFromDatabase:[sqliteDatabaseProvider sqliteDb]
                                  stringMap:stringMap
                        sqliteStorageAction:sqliteStorageAction];
-    }];
+    } source:@"replace all from storage"];
 }
 
 - (void)replaceAllFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -435,8 +424,9 @@ static int const kDeleteKeyFieldPosition = 1;
     [sqliteDb prepareStatementWithSqlString:self.deleteAllSql.stringValue];
 
     if (clearStatement == nil) {
-        [self.logger error:@"Cannot replace key/values in database"
-         " without a prepared clear statement"];
+        [self.logger debugDev:
+         @"Cannot replace key/values in database without a prepared clear statement"
+                    issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
@@ -450,8 +440,9 @@ static int const kDeleteKeyFieldPosition = 1;
     [sqliteDb prepareStatementWithSqlString:self.insertSql.stringValue];
 
     if (insertStatement == nil) {
-        [self.logger error:@"Cannot replace key/values in database"
-         " without a compiled insertStatement"];
+        [self.logger debugDev:
+         @"Cannot replace key/values in database without a compiled insertStatement"
+                    issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
         return;
@@ -471,8 +462,9 @@ static int const kDeleteKeyFieldPosition = 1;
         if (! [sqliteStorageAction performStorageActionInDbTransaction:sqliteDb
                                                                 logger:self.logger])
         {
-            [self.logger error:@"Cannot replace key/values in sqliteDb"
-             " with failed storage action"];
+            [self.logger debugDev:
+             @"Cannot replace key/values in sqliteDb with failed storage action"
+                        issueType:ADJIssueStorageIo];
             [sqliteDb rollback];
             return;
         }
@@ -480,7 +472,8 @@ static int const kDeleteKeyFieldPosition = 1;
 
     [sqliteDb commit];
 
-    [self.logger debug:@"Key/Values replaced from database"];
+    [self.logger debugDev:@"Key/Values replaced from database"];
 }
 
 @end
+

@@ -35,6 +35,7 @@
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJGdprForgetPackageData.h"
 #import "ADJPackageSessionData.h"
+#import "ADJPublishersRegistry.h"
 
 @interface ADJSdkPackageBuilder : ADJCommonBase
 // publishers
@@ -49,7 +50,8 @@
               globalCallbackParametersStorage:(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
                globalPartnerParametersStorage:(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
                             eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage;
+               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
@@ -72,7 +74,7 @@
                                                   apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
-                                                 logLevel:(nonnull NSString *)logLevel
+                                                 logLevel:(nonnull ADJAdjustLogLevel)logLevel
                                                 logSource:(nonnull NSString *)logSource;
 
 - (nonnull ADJSessionPackageData *)buildSessionPackageWithDataToOverwrite:(nonnull ADJPackageSessionData *)packageSessionDataToOverwrite;

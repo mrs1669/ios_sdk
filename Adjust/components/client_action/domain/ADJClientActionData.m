@@ -39,17 +39,19 @@ static NSString *const kIoDataKey = @"ioData";
     [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
     
     if (clientActionHandlerId == nil) {
-        [logger error:@"Cannot create client action data without client action handler"];
+        [logger debugDev:@"Cannot create client action data without client action handler"
+               issueType:ADJIssueStorageIo];
         return nil;
     }
     
     ADJTimestampMilli *_Nullable apiTimestamp =
-    [ADJTimestampMilli
-     instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]
-     logger:logger];
+        [ADJTimestampMilli
+            instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]
+            logger:logger];
     
     if (apiTimestamp == nil) {
-        [logger error:@"Cannot create client action data without api timestamp"];
+        [logger debugDev:@"Cannot create client action data without api timestamp"
+               issueType:ADJIssueStorageIo];
         return nil;
     }
     

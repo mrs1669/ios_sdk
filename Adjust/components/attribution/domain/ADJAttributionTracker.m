@@ -86,7 +86,10 @@ NSString *const ADJAskingAttributionStatusFromBackendAndSdk = @"FromBackendAndSd
     return [self tryToSend];
 }
 
-- (nullable ADJDelayData *)delaySendingWhenReceivedAttributionResponseWithData:(nonnull ADJAttributionResponseData *)attributionResponse {
+- (nullable ADJDelayData *)
+    delaySendingWhenReceivedAttributionResponseWithData:
+        (nonnull ADJAttributionResponseData *)attributionResponse
+{
     // received attribution response implies that is no longer sending
     self.isSending = NO;
     
@@ -95,11 +98,11 @@ NSString *const ADJAskingAttributionStatusFromBackendAndSdk = @"FromBackendAndSd
         //  since, it could be in delay from the state due to ask_in
         //  instead of just be in delay because it should retry the request
         
-        [self.logger debug:@"Retry with delay because of not accepted attribution response"];
+        [self.logger debugDev:@"Retry with delay because of not accepted attribution response"];
         return [self delayDataWithRetryIn:attributionResponse.retryIn];
     }
     
-    [self.logger debug:@"Not retrying because of accepted attribution response"];
+    [self.logger debugDev:@"Not retrying because of accepted attribution response"];
     
     self.retriesSinceLastSuccessSend = [ADJTallyCounter instanceStartingAtZero];
     
@@ -115,12 +118,12 @@ NSString *const ADJAskingAttributionStatusFromBackendAndSdk = @"FromBackendAndSd
 //  - state detected ask_in
 - (BOOL)canDelay {
     if (self.isInDelay) {
-        [self.logger debug:@"Cannot delay when it's already in delay"];
+        [self.logger debugDev:@"Cannot delay when it's already in delay"];
         return NO;
     }
     
     if (self.isSending) {
-        [self.logger debug:@"Cannot delay when it's already sending"];
+        [self.logger debugDev:@"Cannot delay when it's already sending"];
         return NO;
     }
     
@@ -166,29 +169,31 @@ NSString *const ADJAskingAttributionStatusFromBackendAndSdk = @"FromBackendAndSd
     return nil;
 }
 
-- (void)setAttributionPackageToSendWithData:(nonnull ADJAttributionPackageData *)attributionPackageToSend {
+- (void)setAttributionPackageToSendWithData:
+    (nonnull ADJAttributionPackageData *)attributionPackageToSend
+{
     self.attributionPackageToSend = attributionPackageToSend;
 }
 
 #pragma mark Internal Methods
 - (BOOL)tryToSend {
     if (self.isInDelay) {
-        [self.logger debug:@"Cannot send attribution because it's in delay"];
+        [self.logger debugDev:@"Cannot send attribution because it's in delay"];
         return NO;
     }
     
     if (self.isSending) {
-        [self.logger debug:@"Cannot send attribution because it's already sending"];
+        [self.logger debugDev:@"Cannot send attribution because it's already sending"];
         return NO;
     }
     
     if (self.askingAttribution == nil) {
-        [self.logger debug:@"Cannot send attribution because it's not asking"];
+        [self.logger debugDev:@"Cannot send attribution because it's not asking"];
         return NO;
     }
     
     if (self.isSdkPaused) {
-        [self.logger debug:@"Cannot send attribution because the sdk is paused"];
+        [self.logger debugDev:@"Cannot send attribution because the sdk is paused"];
         return NO;
     }
     

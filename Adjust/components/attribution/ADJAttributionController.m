@@ -44,30 +44,31 @@
                    attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
                       sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk {
+              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"AttributionController"];
     _attributionStateStorageWeak = attributionStateStorage;
     _clockWeak = clock;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     
     _attributionPublisher = [[ADJAttributionPublisher alloc] init];
+    [pubRegistry addPublisher:_attributionPublisher];
     
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];
     
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
                                                              sourceDescription:self.source
-                                                                    threadpool:threadController];
-
+                                                         threadExecutorFactory:threadController];
+    
     _attributionTracker = [[ADJAttributionTracker alloc]
                            initWithLoggerFactory:loggerFactory
                            attributionBackoffStrategy:attributionBackoffStrategy];
-    
-    _attributionState =
-    [[ADJAttributionState alloc]
-     initWithLoggerFactory:loggerFactory
-     doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
-     isFirstSessionInQueue:[mainQueueController containsFirstSessionPackage]];
+
+    _attributionState = [[ADJAttributionState alloc] initWithLoggerFactory:loggerFactory
+                                           doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
+                                                     isFirstSessionInQueue:[mainQueueController containsFirstSessionPackage]];
     
     return self;
 }
@@ -76,8 +77,11 @@
 #pragma mark - ADJSdkResponseCallbackSubscriber
 - (void)sdkResponseCallbackWithResponseData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     if (! [sdkResponseData isKindOfClass:[ADJAttributionResponseData class]]) {
-        [self.logger error:@"Cannot process attribution response data"
-         " with sdk response of type %@", NSStringFromClass([sdkResponseData class])];
+        [self.logger debugDev:
+         @"Cannot process response data with that is not an attribution"
+                expectedValue:NSStringFromClass([ADJAttributionResponseData class])
+                  actualValue:NSStringFromClass([sdkResponseData class])
+                    issueType:ADJIssueLogicError];
         return;
     }
     
@@ -92,12 +96,12 @@
         [strongSelf handleAttributionResponseInStateWithData:attributionResponseData];
         
         [strongSelf handleAttributionResponseInTrackerWithData:attributionResponseData];
-    }];
+    } source:@"received attribution response"];
 }
 
 - (void)handleAttributionResponseInStateWithData:(nonnull ADJAttributionResponseData *)attributionResponseData {
     if (attributionResponseData.shouldRetry) {
-        [self.logger debug:@"Cannot change state without an accepted attribution response"];
+        [self.logger debugDev:@"Cannot change state without an accepted attribution response"];
         return;
     }
     
@@ -150,7 +154,7 @@
         [strongSelf handleAcceptedSdkResponseInStateWithData:sdkResponseData];
         
         [strongSelf handleAccepteSessionResponseInStateWithData:sdkResponseData];
-    }];
+    } source:@"received sdk response"];
 }
 
 - (void)handleAcceptedSdkResponseInStateWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
@@ -218,7 +222,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf handleAllowedToPublishNotifications];
-    }];
+    } source:@"allowed to publish notifications"];
 }
 
 - (void)handleAllowedToPublishNotifications {
@@ -244,7 +248,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf handleMeasurementSessionStartWithStatus:MeasurementSessionStartStatus];
-    }];
+    } source:@"measurement session start"];
 }
 
 - (void)handleMeasurementSessionStartWithStatus:(nonnull NSString *)MeasurementSessionStartStatus {
@@ -283,7 +287,7 @@
         if (sendAttribution) {
             [strongSelf sendAttributionWithSource:@"ResumeSending"];
         }
-    }];
+    } source:@"resume sending"];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
@@ -293,26 +297,16 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf.attributionTracker pauseSending];
-    }];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                          measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-                                      sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher
-                                          pausingPublisher:(nonnull ADJPausingPublisher *)pausingPublisher;{
-    [publishingGatePublisher addSubscriber:self];
-    [measurementSessionStartPublisher addSubscriber:self];
-    [sdkResponsePublisher addSubscriber:self];
-    [pausingPublisher addSubscriber:self];
+    } source:@"pause sending"];
 }
 
 #pragma mark Internal Methods
 - (nullable ADJAttributionStateData *)currentAttributionStateDataWithSource:(nonnull NSString *)source {
-    ADJAttributionStateStorage *_Nullable attributionStateStorage =
-    self.attributionStateStorageWeak;
+    ADJAttributionStateStorage *_Nullable attributionStateStorage = self.attributionStateStorageWeak;
     if (attributionStateStorage == nil) {
-        [self.logger error:@"Cannot %@ without a reference to storage", source];
+        [self.logger debugDev:@"Cannot procces without a reference to storage"
+                         from:source
+                    issueType:ADJIssueWeakReference];
         return nil;
     }
     
@@ -415,20 +409,22 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor
-     scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf handleDelayEndWithData:delayData source:source];
     }
-     delayTimeMilli:delayData.delay];
+                                delayTimeMilli:delayData.delay
+                                        source:@"delay end"];
 }
 
 - (void)handleDelayEndWithData:(nonnull ADJDelayData *)delayData
                         source:(nonnull NSString *)source {
-    NSString *_Nonnull delayEndedLog =
-    [self.logger debug:@"Delay due to %@ from %@ ended", delayData.source, source];
+    [self.logger debugDev:@"Delay ended"
+                     from:source
+                      key:@"delayReason"
+                    value:delayData.source];
     
     ADJAttributionStateData *_Nullable currentAttributionStateData =
     [self currentAttributionStateDataWithSource:@"handleDelayEnd"];
@@ -437,9 +433,8 @@
     }
     
     BOOL sendAttribution = [self.attributionTracker sendWhenDelayEnded];
-    
     if (sendAttribution) {
-        [self sendAttributionWithSource:delayEndedLog];
+        [self sendAttributionWithSource:@"Delay ended"];
     }
 }
 
@@ -472,8 +467,10 @@
     ADJAttributionStateStorage *_Nullable attributionStateStorage =
     self.attributionStateStorageWeak;
     if (attributionStateStorage == nil) {
-        [self.logger error:@"Cannot change attribution state data from %@"
-         " without a reference to storage", source];
+        [self.logger debugDev:
+         @"Cannot change attribution state data without a reference to storage"
+                         from:source
+                    issueType:ADJIssueWeakReference];
         return;
     }
     
@@ -489,16 +486,19 @@
     ADJAttributionStateStorage *_Nullable attributionStateStorage =
     self.attributionStateStorageWeak;
     if (attributionStateStorage == nil) {
-        [self.logger error:@"Cannot publish attribution from %@"
-         " without a reference to storage", source];
+        [self.logger debugDev:@"Cannot publish attribution without a reference to storage"
+                         from:source
+                    issueType:ADJIssueWeakReference];
         return;
     }
     
     ADJAttributionStateData *_Nonnull attributionStateData =
     [attributionStateStorage readOnlyStoredDataValue];
     
-    [self.logger debug:@"Publishing onAttribution status %@ from %@",
-     attributionStatusEvent, source];
+    [self.logger debugDev:@"Publishing attribution"
+                     from:source
+                      key:@"status"
+                    value:attributionStatusEvent];
     
     [self.attributionPublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJAttributionSubscriber> _Nonnull subscriber)
@@ -515,19 +515,22 @@
     if (attributionPackage == nil) {
         ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
         if (sdkPackageBuilder == nil) {
-            [self.logger error:@"Cannot send attribution "
-             "without a reference to package builder"];
+            [self.logger debugDev:
+             @"Cannot send attribution without a reference to package builder"
+                        issueType:ADJIssueWeakReference];
             return;
         }
         
         attributionPackage = [sdkPackageBuilder
-         buildAttributionPackageWithInitiatedBy:[self.attributionTracker initiatedBy]];
+                              buildAttributionPackageWithInitiatedBy:[self.attributionTracker initiatedBy]];
         
         [self.attributionTracker setAttributionPackageToSendWithData:attributionPackage];
     }
     
-    [self.logger debug:@"To send an %@ package from %@",
-     [attributionPackage generateShortDescription], source];
+    [self.logger debugDev:@"To send sdk package"
+                     from:source
+                      key:@"package"
+                    value:[attributionPackage generateShortDescription].stringValue];
     
     ADJStringMapBuilder *_Nonnull sendingParameters = [self generateSendingParameters];
     
@@ -542,7 +545,8 @@
     
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
-        [self.logger error:@""];
+        [self.logger debugDev:@"Cannot inject send at timestamp without a reference to clock"
+                    issueType:ADJIssueWeakReference];
     } else {
         [ADJSdkPackageBuilder
          injectSentAtWithParametersBuilder:sendingParameters

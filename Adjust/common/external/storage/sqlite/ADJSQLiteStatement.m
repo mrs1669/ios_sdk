@@ -10,9 +10,9 @@
 
 #import "ADJSQLiteDb.h"
 #import "ADJUtilF.h"
+#import "ADJAdjustLogMessageData.h"
 
 #pragma mark Fields
-
 @interface ADJSQLiteStatement ()
 #pragma mark - Injected dependencies
 @property (nonnull, readonly, strong, nonatomic) NSString *sqlString;
@@ -28,6 +28,7 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 #pragma mark - Unmanaged variables
     sqlite3_stmt *_sqlite3_stmt;
 }
+
 #pragma mark Instantiation
 - (nonnull instancetype)initWithSqliteStatement:(nonnull sqlite3_stmt *)sqliteStatement
                                       sqlString:(nonnull NSString *)sqlString
@@ -73,7 +74,8 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 // adapted from https://github.com/ccgus/fmdb/blob/2.7.4/src/fmdb/FMResultSet.m#L163
 - (BOOL)nextInQueryStatementWithLogger:(nonnull ADJLogger *)logger {
     if (! _sqlite3_stmt) {
-        [logger error:@"Cannot get next in query statement from closed statement"];
+        [logger debugDev:@"Cannot get next in query statement from closed statement"
+               issueType:ADJIssueStorageIo];
         return NO;
     }
     
@@ -116,7 +118,8 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 // adapted from https://github.com/ccgus/fmdb/blob/2.7.4/src/fmdb/FMDatabase.m#L963
 - (BOOL)executeUpdatePreparedStatementWithLogger:(nonnull ADJLogger *)logger {
     if (! _sqlite3_stmt) {
-        [logger error:@"Cannot update in statement from closed statement"];
+        [logger debugDev:@"Cannot update in statement from closed statement"
+               issueType:ADJIssueStorageIo];
         return NO;
     }
     
@@ -128,7 +131,10 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
     if (SQLITE_DONE == returnCode) {
         // all is well, let's return.
     } else if (SQLITE_ROW == returnCode) {
-        [logger error:@"Query executed as an update: %@", self.sqlString];
+        [logger debugDev:@"Query executed as an update"
+                     key:@"sql"
+                   value:self.sqlString
+               issueType:ADJIssueStorageIo];
     } else {
         if (SQLITE_INTERRUPT == returnCode) {
             [self logSteppingErrorWithReturnCode:returnCode
@@ -242,14 +248,16 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 - (void)logSteppingErrorWithReturnCode:(int)returnCode
                                 logger:(nonnull ADJLogger *)logger
                      reasonDescription:(nonnull NSString *)reasonDescription
-                   isQueryOrElseUpdate:(BOOL)isQueryOrElseUpdate {
-    [logger error:
-     @"%@ stepping %@: %@, with code: %@ and message: %@",
-     reasonDescription,
-     isQueryOrElseUpdate ? @"query" : @"update",
-     self.sqlString,
-     [ADJUtilF intFormat:returnCode],
-     [self lastErrorMessage]];
+                   isQueryOrElseUpdate:(BOOL)isQueryOrElseUpdate
+{
+    [logger debugDev:@"Error stepping"
+       messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
+                      reasonDescription, @"reason",
+                      isQueryOrElseUpdate ? @"true" : @"false", @"isQueryOrElseUpdate",
+                      self.sqlString, @"sql",
+                      [ADJUtilF intFormat:returnCode], @"returnCode",
+                      [self lastErrorMessage], @"lastErrorMessage@", nil]
+           issueType:ADJIssueStorageIo];
 }
 
 - (nonnull NSString *)lastErrorMessage {

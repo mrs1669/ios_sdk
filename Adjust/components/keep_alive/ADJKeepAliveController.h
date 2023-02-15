@@ -13,14 +13,13 @@
 #import "ADJLifecycleSubscriber.h"
 #import "ADJKeepAliveSubscriber.h"
 #import "ADJThreadExecutorFactory.h"
+#import "ADJPublishersRegistry.h"
 
 @interface ADJKeepAliveController : ADJCommonBase<
     // subscriptions
     ADJMeasurementSessionStartSubscriber,
     ADJLifecycleSubscriber
 >
-- (void)ccSubscribeToPublishersWithMeasurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)sdkSessionStartPublisher
-                                         lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
 
 // publishers
 @property (nonnull, readonly, strong, nonatomic)ADJKeepAlivePublisher *keepAlivePublisher;
@@ -29,7 +28,8 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                     foregroundTimerStartMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerStartMilli
-                 foregroundTimerIntervalMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerIntervalMilli;
+                 foregroundTimerIntervalMilli:(nonnull ADJTimeLengthMilli *)foregroundTimerIntervalMilli
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
 
 @end
 

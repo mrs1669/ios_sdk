@@ -38,6 +38,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
     return [ADJDeviceIdsData instanceFromIoData:ioData
                                          logger:self.logger];
 }
+
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJDeviceIdsData *)dataValue {
     return [dataValue toIoData];
 }
@@ -53,19 +54,20 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
-        [self.logger debug:@"Activity state v4 file not found"];
+        [self.logger debugDev:@"Activity state v4 file not found"];
         return;
     }
 
-    [self.logger debug:@"Read v4 activity state: %@", v4ActivityState];
+    [self.logger debugDev:@"Read v4 activity state"
+                      key:@"activity_state"
+                    value:[v4ActivityState description]];
 
     ADJNonEmptyString *_Nullable v4Uuid =
-    [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid
-                                sourceDescription:@"v4 uuid"
-                                           logger:self.logger];
+        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid
+                                    sourceDescription:@"v4 uuid"
+                                               logger:self.logger];
 
-    ADJDeviceIdsData *_Nonnull v4DeviceIdsData =
-    [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
+    ADJDeviceIdsData *_Nonnull v4DeviceIdsData = [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
 
     [self updateWithNewDataValue:v4DeviceIdsData];
 }

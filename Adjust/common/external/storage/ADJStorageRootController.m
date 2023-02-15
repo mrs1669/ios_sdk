@@ -46,8 +46,8 @@ sqliteController:self.sqliteController];        \
 [self.sqliteController addSqlStorage:self.varName]  \
 
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory {
-
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+                                   instanceId:(nonnull NSString *)instanceId {
     self = [super init];
 
     _storageExecutor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
@@ -55,10 +55,8 @@ sqliteController:self.sqliteController];        \
 
     _keychainStorage = [[ADJKeychainStorage alloc] initWithLoggerFactory:loggerFactory];
 
-    _sqliteController = [[ADJSQLiteController alloc]
-                         initWithLoggerFactory:loggerFactory];
-    //v4FilesController:self.v4FilesController
-    //systemAppDataController:self.systemAppDataController];
+    _sqliteController = [[ADJSQLiteController alloc] initWithLoggerFactory:loggerFactory
+                                                                instanceId:instanceId];
 
     buildAndInjectStorage(attributionStateStorage, ADJAttributionStateStorage);
     buildAndInjectStorage(asaAttributionStateStorage, ADJAsaAttributionStateStorage);
@@ -100,7 +98,7 @@ sqliteController:self.sqliteController];        \
 
         // prevent any other storage task from executing
         [strongSelf.storageExecutor finalizeAtTeardown];
-    }];
+    } source:@"finalize at teardown"];
 
     if (! canExecuteTask && closeStorageBlock != nil) {
         closeStorageBlock();

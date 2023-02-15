@@ -48,7 +48,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                                        clock:(nonnull ADJClock *)clock {
+                                        clock:(nonnull ADJClock *)clock
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionController"];
     _overwriteFirstMeasurementSessionIntervalMilli = overwriteFirstMeasurementSessionIntervalMilli;
     _clientExecutorWeak = clientExecutor;
@@ -58,8 +60,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     _clockWeak = clock;
 
     _preFirstMeasurementSessionStartPublisher = [[ADJPreFirstMeasurementSessionStartPublisher alloc] init];
-
+    [pubRegistry addPublisher:_preFirstMeasurementSessionStartPublisher];
     _measurementSessionStartPublisher = [[ADJMeasurementSessionStartPublisher alloc] init];
+    [pubRegistry addPublisher:_measurementSessionStartPublisher];
 
     _measurementSessionState = [[ADJMeasurementSessionState alloc]
                                 initWithLoggerFactory:loggerFactory
@@ -81,28 +84,20 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage = self.measurementSessionStateStorageWeak;
 
     if (measurementSessionStateStorage == nil) {
-        [self.logger error:@"Cannot get current sdk session state data"
-         " without a reference to storage"];
+        [self.logger debugDev:
+         @"Cannot get current sdk session state data without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return nil;
     }
 
     return [measurementSessionStateStorage readOnlyStoredDataValue];
 }
 
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher
-                                     sdkInitPublisher:(nonnull ADJSdkInitPublisher *)sdkInitPublisher
-                                   keepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
-                                   lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher {
-    [sdkActivePublisher addSubscriber:self];
-    [sdkInitPublisher addSubscriber:self];
-    [keepAlivePublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
-}
-
 #pragma mark - ADJSdkActiveSubscriber
 - (void)ccSdkActiveWithStatus:(nonnull NSString *)status {
-    [self.logger debug:@"Handling ccSdkActiveState with status: %@", status];
+    [self.logger debugDev:@"Handling ccSdkActiveState with"
+                      key:@"status"
+                    value:status];
 
     if ([ADJSdkActiveStatusActive isEqual:status]) {
         [self sdkBecameActive];
@@ -124,8 +119,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 - (void)didKeepAlivePing {
     ADJSingleThreadExecutor *_Nullable clientExecutor = self.clientExecutorWeak;
     if (clientExecutor == nil) {
-        [self.logger error:@"Cannot process Keep Alive Ping without a reference to"
-         " client executor"];
+        [self.logger debugDev:
+         @"Cannot process Keep Alive Ping without a reference to client executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -135,7 +131,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
         if (strongSelf == nil) { return; }
 
         [strongSelf processKeepAlivePing];
-    }];
+    } source:@"keep alive ping"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -148,8 +144,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 
     ADJSingleThreadExecutor *_Nullable clientExecutor = self.clientExecutorWeak;
     if (clientExecutor == nil) {
-        [self.logger error:@"Cannot process Foreground without a reference to"
-         " client executor"];
+        [self.logger debugDev:
+         @"Cannot process Foreground without a reference to client executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -159,7 +156,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
         if (strongSelf == nil) { return; }
 
         [strongSelf processForegroundWithSource:@"onForeground"];
-    }];
+    } source:@"foreground"];
 }
 
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
@@ -171,8 +168,9 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 
     ADJSingleThreadExecutor *_Nullable clientExecutor = self.clientExecutorWeak;
     if (clientExecutor == nil) {
-        [self.logger error:@"Cannot process Background without a reference to"
-         " client executor"];
+        [self.logger debugDev:
+         @"Cannot process Background without a reference to client executor"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -182,7 +180,7 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
         if (strongSelf == nil) { return; }
 
         [strongSelf processBackground];
-    }];
+    } source:@"background"];
 }
 
 #pragma mark Internal Methods
@@ -190,23 +188,23 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage =
     self.measurementSessionStateStorageWeak;
     if (measurementSessionStateStorage == nil) {
-        [self.logger error:@"Cannot process Keep Alive Ping"
-         " without a reference to storage"];
+        [self.logger debugDev:@"Cannot process Keep Alive Ping without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
-        [self.logger error:@"Cannot process Keep Alive Ping"
-         " without a reference to clock"];
+        [self.logger debugDev:@"Cannot process Keep Alive Ping without a reference to clock"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
     [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
-        [self.logger error:@"Cannot process Keep Alive Ping"
-         " without a valid now timestamp"];
+        [self.logger debugDev:@"Cannot process Keep Alive Ping without a valid now timestamp"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -215,9 +213,10 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     ADJValueWO<ADJMeasurementSessionData *> *_Nonnull changedMeasurementSessionDataWO =
     [[ADJValueWO alloc] init];
 
-    [self.measurementSessionState keepAlivePingedWithCurrentMeasurementSessionData:currentMeasurementSessionStateData
-                                                   changedMeasurementSessionDataWO:changedMeasurementSessionDataWO
-                                                     nonMonotonicNowTimestampMilli:nonMonotonicNowTimestampMilli];
+    [self.measurementSessionState
+     keepAlivePingedWithCurrentMeasurementSessionData:currentMeasurementSessionStateData
+     changedMeasurementSessionDataWO:changedMeasurementSessionDataWO
+     nonMonotonicNowTimestampMilli:nonMonotonicNowTimestampMilli];
 
     [self
      handleJustChangedMeasurementSessionDataSideEffectWithCurrentMeasurementSessionData:
@@ -236,25 +235,26 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 }
 
 - (void)processBackground {
-    ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage = self.measurementSessionStateStorageWeak;
+    ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage =
+    self.measurementSessionStateStorageWeak;
     if (measurementSessionStateStorage == nil) {
-        [self.logger error:@"Cannot process Background"
-         " without a reference to storage"];
+        [self.logger debugDev:@"Cannot process Background without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
-        [self.logger error:@"Cannot process Background"
-         " without a reference to clock"];
+        [self.logger debugDev:@"Cannot process Background without a reference to clock"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
     [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
-        [self.logger error:@"Cannot process Background"
-         " without a valid now timestamp"];
+        [self.logger debugDev:@"Cannot process Background without a valid now timestamp"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -289,15 +289,17 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 - (void)changeToActiveSessionWithSource:(nonnull NSString *)source {
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage = self.measurementSessionStateStorageWeak;
     if (measurementSessionStateStorage == nil) {
-        [self.logger error:@"Cannot process Change To Active Session"
-         " without a reference to storage"];
+        [self.logger debugDev:
+         @"Cannot process Change To Active Session without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
-        [self.logger error:@"Cannot process Change To Active Session"
-         " without a reference to clock"];
+        [self.logger debugDev:
+         @"Cannot process Change To Active Session without a reference to clock"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -310,33 +312,39 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
     [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
-        [self.logger error:@"Cannot process Change To Active Session"
-         " without a valid now timestamp"];
+        [self.logger debugDev:
+         @"Cannot process Change To Active Session without a valid now timestamp"
+                    issueType:ADJIssueExternalApi];
         return;
     }
 
     if (self.overwriteFirstMeasurementSessionIntervalMilli != nil) {
-        [self.logger debug:@"Trying to overwrite First Sdk Session Interval by %@",
-         self.overwriteFirstMeasurementSessionIntervalMilli];
-        ADJMeasurementSessionData *_Nullable currentMeasurementSessionData = currentMeasurementSessionStateData.measurementSessionData;
+        [self.logger debugDev:@"Trying to overwrite First Sdk Session Interval"
+                          key:@"overwriteFirstMeasurementSessionInterval"
+                        value:self.overwriteFirstMeasurementSessionIntervalMilli.description];
+
+        ADJMeasurementSessionData *_Nullable currentMeasurementSessionData =
+        currentMeasurementSessionStateData.measurementSessionData;
         if (currentMeasurementSessionData != nil) {
             ADJTimestampMilli *_Nonnull overwrittenNowTimestamp =
             [currentMeasurementSessionData.lastActivityTimestampMilli
-             generateTimestampWithAddedTimeLength:self.overwriteFirstMeasurementSessionIntervalMilli];
-            [self.logger debug:@"Now timestamp overwritten from %@ to %@"
-             " from last activity timestamp %@",
-             nonMonotonicNowTimestampMilli, overwrittenNowTimestamp,
-             currentMeasurementSessionData.lastActivityTimestampMilli];
+             generateTimestampWithAddedTimeLength:
+                 self.overwriteFirstMeasurementSessionIntervalMilli];
+            [self.logger debugDev:@"Now timestamp overwritten"
+                    messageParams:
+             [NSDictionary dictionaryWithObjectsAndKeys:
+              nonMonotonicNowTimestampMilli.description, @"nowTimestamp",
+              overwrittenNowTimestamp.description, @"overwrittenNowTimestamp",
+              [currentMeasurementSessionData.lastActivityTimestampMilli description],
+              @"lastActivityTimestamp", nil]];
             nonMonotonicNowTimestampMilli = overwrittenNowTimestamp;
         } else {
-            [self.logger debug:@"Cannot overwrite First Sdk Session Interval"
-             " without last activity timestamp"];
+            [self.logger debugDev:
+             @"Cannot overwrite First Sdk Session Interval without last activity timestamp"];
         }
 
         self.overwriteFirstMeasurementSessionIntervalMilli = nil;
     }
-
-    NSLog(@"tormv nonMonotonicNowTimestampMilli %@", nonMonotonicNowTimestampMilli);
 
     ADJValueWO<NSString *> *_Nonnull sdkStartStateEventWO = [[ADJValueWO alloc] init];
     ADJValueWO<ADJMeasurementSessionData *> *_Nonnull changedMeasurementSessionDataWO =
@@ -354,19 +362,19 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
      source:source];
 
     if (! changedToActiveSession) {
-        [self.logger error:@"Unable to change to Active Session"];
+        [self.logger debugDev:@"Unable to change to Active Session"];
         return;
     }
 
-    [self handleSideEffectsWithCurrentMeasurementSessionData:currentMeasurementSessionStateData
-                                          packageSessionData:packageSessionDataWO.changedValue
-                                          sdkStartStateEvent:sdkStartStateEventWO.changedValue
-                               changedMeasurementSessionData:changedMeasurementSessionDataWO.changedValue
-                              measurementSessionStateStorage:measurementSessionStateStorage];
+    [self
+     handleSideEffectsWithCurrentMeasurementSessionData:currentMeasurementSessionStateData
+     packageSessionData:packageSessionDataWO.changedValue
+     sdkStartStateEvent:sdkStartStateEventWO.changedValue
+     changedMeasurementSessionData:changedMeasurementSessionDataWO.changedValue
+     measurementSessionStateStorage:measurementSessionStateStorage];
 }
 
-- (void)handleSideEffectsWithCurrentMeasurementSessionData:
-(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
+- (void)handleSideEffectsWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
                                         packageSessionData:(nullable ADJPackageSessionData *)packageSessionData
                                         sdkStartStateEvent:(nullable NSString *)sdkStartStateEvent
                              changedMeasurementSessionData:(nullable ADJMeasurementSessionData *)changedMeasurementSessionData
@@ -417,16 +425,18 @@ overwriteFirstMeasurementSessionIntervalMilli:(nullable ADJTimeLengthMilli *)ove
 updateMeasurementSessionStateStorageAction:(nullable ADJMeasurementSessionStateStorageAction *)updateMeasurementSessionStateStorageAction {
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
-        [self.logger error:@"Cannot Build and Send Session Package"
-         " without a reference to sdk package builder"];
+        [self.logger debugDev:
+         @"Cannot Build and Send Session Package without a reference to sdk package builder"
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:updateMeasurementSessionStateStorageAction];
         return;
     }
 
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
-        [self.logger error:@"Cannot Build and Send Session Package"
-         " without a reference to Main Queue Controller"];
+        [self.logger debugDev:
+         @"Cannot Build and Send Session Package without a reference to Main Queue Controller"
+                    issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:updateMeasurementSessionStateStorageAction];
         return;
     }
@@ -450,23 +460,24 @@ updateMeasurementSessionStateStorageAction:(nullable ADJMeasurementSessionStateS
 - (void)sdkBecameNotActive {
     ADJMeasurementSessionStateStorage *_Nullable measurementSessionStateStorage = self.measurementSessionStateStorageWeak;
     if (measurementSessionStateStorage == nil) {
-        [self.logger error:@"Cannot process Sdk Became Not Active"
-         " without a reference to storage"];
+        [self.logger debugDev:
+         @"Cannot process Sdk Became Not Active without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJClock *_Nullable clock = self.clockWeak;
     if (clock == nil) {
-        [self.logger error:@"Cannot process Sdk Became Not Active"
-         " without a reference to clock"];
+        [self.logger debugDev:@"Cannot process Sdk Became Not Active without a reference to clock"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestampMilli =
     [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
     if (nonMonotonicNowTimestampMilli == nil) {
-        [self.logger error:@"Cannot process Sdk Became Not Active"
-         " without a valid now timestamp"];
+        [self.logger debugDev:@"Cannot process Sdk Became Not Active without a valid now timestamp"
+                    issueType:ADJIssueExternalApi];
         return;
     }
 
@@ -489,5 +500,6 @@ updateMeasurementSessionStateStorageAction:(nullable ADJMeasurementSessionStateS
 }
 
 @end
+
 
 

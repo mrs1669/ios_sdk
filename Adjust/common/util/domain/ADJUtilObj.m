@@ -17,39 +17,33 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 
 @implementation ADJUtilObj
 
-+ (nonnull id)copyStringForCollectionWithInput:(nullable id)inputValue {
-    NSString *_Nullable sanitizedString = [self copyStringWithInput:inputValue];
-    if (sanitizedString == nil) {
-        return [NSNull null];
-    }
-    
-    return sanitizedString;
-}
-
 + (nullable NSString *)copyStringWithInput:(nullable id)inputValue {
 
     if (inputValue == nil || ![inputValue isKindOfClass:[NSString class]]) {
         return nil;
     }
-    
+
     if ([inputValue isKindOfClass:[NSString class]]) {
         return [inputValue copy];
     }
-    
+
     return [inputValue description];
 }
 
++ (nonnull id)copyStringOrNSNullWithInput:(nullable id)inputValue {
+    id _Nullable copyStringOrNil = [self copyObjectWithInput:inputValue
+                                                 classObject:[NSString class]];
+
+    return copyStringOrNil != nil ? copyStringOrNil : [NSNull null];
+}
+
 + (nullable id)copyObjectWithInput:(nullable id)inputValue
-                       classObject:(nullable Class)classObject {
-    if (inputValue == nil) {
-        return nil;
+                       classObject:(nonnull Class)classObject {
+    if (inputValue != nil && [inputValue isKindOfClass:classObject]) {
+        return [inputValue copy];
     }
-    
-    if (classObject != nil && ! [inputValue isKindOfClass:classObject]) {
-        return nil;
-    }
-    
-    return [inputValue copy];
+
+    return nil;
 }
 
 + (BOOL)objectEquals:(nullable id)one other:(nullable id)other {
@@ -60,7 +54,7 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     if (object == nil) {
         return 0;
     }
-    
+
     return [object hash];
 }
 
@@ -68,17 +62,18 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     NSString *result;
     va_list vaKeyValueList;
     va_start(vaKeyValueList, name);
-    
+
     result = [self formatKeyValuesWithName:name
            formatCStringKeyAndAppendEquals:NO
                              keyValueArray:nil
                        stringKeyDictionary:nil
                             vaKeyValueList:vaKeyValueList];
-    
+
     va_end(vaKeyValueList);
-    
+
     return result;
 }
+
 + (nonnull NSString *)formatInlineKeyValuesWithName:(nonnull NSString *)name
                                       keyValueArray:(nonnull NSArray<NSString *> *)keyValueArray {
     return [self formatKeyValuesWithName:name
@@ -101,17 +96,18 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     NSString *result;
     va_list vaKeyValueList;
     va_start(vaKeyValueList, name);
-    
+
     result = [self formatKeyValuesWithName:name
            formatCStringKeyAndAppendEquals:YES
                              keyValueArray:nil
                        stringKeyDictionary:nil
                             vaKeyValueList:vaKeyValueList];
-    
+
     va_end(vaKeyValueList);
-    
+
     return result;
 }
+
 + (nonnull NSString *)formatNewlineKeyValuesWithName:(nonnull NSString *)name
                                        keyValueArray:(nonnull NSArray<NSString *> *)keyValueArray {
     return [self formatKeyValuesWithName:name
@@ -136,25 +132,25 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
                                 keyValueArray:(nullable NSArray<NSString *> *)keyValueArray
                           stringKeyDictionary:(nullable NSDictionary<NSString *, id> *)stringKeyDictionary
                                vaKeyValueList:(va_list)vaKeyValueList {
-    NSMutableString *_Nonnull sb = [NSMutableString stringWithFormat:@"%@{", name];
-    
+    NSMutableString *_Nonnull sb = [NSMutableString stringWithFormat:@"%@ {", name];
+
     if (keyValueArray != nil && (keyValueArray.count % 2) != 0) {
         [sb appendFormat:@"Invalid array key value of size %@}",
          [ADJUtilF uIntegerFormat:keyValueArray.count]];
         return (NSString *_Nonnull)sb;
     }
-    
+
     NSMutableString *_Nullable emptyKeysSb = nil;
     BOOL hasAtLeastOneKeyValuePair = NO;
-    
+
     NSUInteger arrayIndex = 0;
-    
+
     NSUInteger stringKeyArrayIndex = 0;
     NSArray<NSString *> *_Nullable stringKeyArray = nil;
     if (stringKeyDictionary != nil) {
         stringKeyArray = stringKeyDictionary.allKeys;
     }
-    
+
     NSString *key = nil;
     if (keyValueArray != nil) {
         key = keyValueArray.count > arrayIndex ? [keyValueArray objectAtIndex:arrayIndex] : nil;
@@ -164,10 +160,10 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     } else {
         key = va_arg(vaKeyValueList, NSString *);
     }
-    
+
     while (key != nil) {
         id value = nil;
-        
+
         if (keyValueArray != nil) {
             value = [keyValueArray objectAtIndex:(arrayIndex + 1)];
         } else if (stringKeyArray != nil) {
@@ -175,14 +171,14 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
         } else {
             value = va_arg(vaKeyValueList, id);
         }
-        
+
         if (value == nil) {
             if (emptyKeysSb == nil) {
                 emptyKeysSb = [NSMutableString stringWithFormat:@"[%@", key];
             } else {
                 [emptyKeysSb appendFormat:@", %@", key];
             }
-            
+
             if (keyValueArray != nil) {
                 arrayIndex = arrayIndex + 2;
                 key = keyValueArray.count > arrayIndex ?
@@ -194,14 +190,14 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
             } else {
                 key = va_arg(vaKeyValueList, NSString *);
             }
-            
+
             continue;
         }
-        
+
         if (hasAtLeastOneKeyValuePair) {
             [sb appendString:@", "];
         }
-        
+
         if (formatCStringKeyAndAppendEquals) {
             [sb appendFormat:kCStringKeyValuesFormat,
              [[NSString stringWithFormat:@"%@ =", key] UTF8String],
@@ -209,9 +205,9 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
         } else {
             [sb appendFormat:kKeyValuesEqualsFormat, key, value];
         }
-        
+
         hasAtLeastOneKeyValuePair = YES;
-        
+
         if (keyValueArray != nil) {
             arrayIndex = arrayIndex + 2;
             key = keyValueArray.count > arrayIndex ?
@@ -224,12 +220,12 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
             key = va_arg(vaKeyValueList, NSString *);
         }
     }
-    
+
     [sb appendString:@"}"];
-    
+
     if (emptyKeysSb != nil) {
         [emptyKeysSb appendString:@"]"];
-        
+
         if (formatCStringKeyAndAppendEquals) {
             [sb appendFormat:kCStringKeyValuesFormat,
              [@" Without value =" UTF8String],
@@ -238,8 +234,9 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
             [sb appendFormat:kKeyValuesEqualsFormat, @" Without value", emptyKeysSb];
         }
     }
-    
+
     return (NSString *_Nonnull)sb;
 }
 
 @end
+

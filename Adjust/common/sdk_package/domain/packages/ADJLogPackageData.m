@@ -19,7 +19,8 @@ NSString *const ADJLogPackageDataPath = @"error";
 #pragma mark Instantiation
 
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
-                               parameters:(nonnull ADJStringMap *)parameters {
+                               parameters:(nonnull ADJStringMap *)parameters
+{
     self = [super initWithPath:ADJLogPackageDataPath
                      clientSdk:clientSdk
   isPostOrElseGetNetworkMethod:YES
@@ -31,7 +32,8 @@ NSString *const ADJLogPackageDataPath = @"error";
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
                                    ioData:(nonnull ADJIoData *)ioData
-                                   logger:(nonnull ADJLogger *)logger {
+                                   logger:(nonnull ADJLogger *)logger
+{
     // does not read ioData for further information
     return [self initWithClientSdk:clientSdk parameters:parameters];
 }
@@ -40,11 +42,11 @@ NSString *const ADJLogPackageDataPath = @"error";
 #pragma mark - Concrete ADJSdkPackageBaseData
 - (nonnull ADJNonEmptyString *)concreteGenerateShortDescription {
     ADJNonEmptyString *_Nullable logMessageString =
-    [self.parameters pairValueWithKey:ADJParamLogMessageKey];
+        [self.parameters pairValueWithKey:ADJParamLogMessageKey];
     ADJNonEmptyString *_Nullable logLevelString =
-    [self.parameters pairValueWithKey:ADJParamLogLevelKey];
+        [self.parameters pairValueWithKey:ADJParamLogLevelKey];
     ADJNonEmptyString *_Nullable logSourceString =
-    [self.parameters pairValueWithKey:ADJParamLogSourceKey];
+        [self.parameters pairValueWithKey:ADJParamLogSourceKey];
 
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:

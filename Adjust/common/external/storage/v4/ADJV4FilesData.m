@@ -9,6 +9,7 @@
 #import "ADJV4FilesData.h"
 
 #import "ADJUtilSys.h"
+#import "ADJAdjustLogMessageData.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -70,14 +71,13 @@
                                 class:(nonnull Class)classToRead
                                logger:(nonnull ADJLogger *)logger {
     // Try to read from Application Support directory first.
-    NSString *_Nullable appSupportFilePath = [ADJUtilSys getFilePathInAppSupportDir:fileName];
+    NSString *_Nullable appSupportFilePath = [ADJUtilSys filePathInAdjustAppSupportDir:fileName];
     
-    id _Nullable appSupportReadObject =
-    [self readObjectWithFilePath:appSupportFilePath
-                        fileName:fileName
-                      objectName:objectName
-                           class:classToRead
-                          logger:logger];
+    id _Nullable appSupportReadObject = [self readObjectWithFilePath:appSupportFilePath
+                                                            fileName:fileName
+                                                          objectName:objectName
+                                                               class:classToRead
+                                                              logger:logger];
     
     if (appSupportReadObject != nil) {
         return appSupportReadObject;
@@ -85,14 +85,13 @@
     
     // If in here, for some reason, reading of file from Application Support folder failed.
     // Let's check the Documents folder.
-    NSString *_Nullable documentsFilePath = [ADJUtilSys getFilePathInDocumentsDir:fileName];
+    NSString *_Nullable documentsFilePath = [ADJUtilSys filePathInDocumentsDir:fileName];
     
-    id _Nullable documentsReadObject =
-    [self readObjectWithFilePath:documentsFilePath
-                        fileName:fileName
-                      objectName:objectName
-                           class:classToRead
-                          logger:logger];
+    id _Nullable documentsReadObject = [self readObjectWithFilePath:documentsFilePath
+                                                           fileName:fileName
+                                                         objectName:objectName
+                                                              class:classToRead
+                                                             logger:logger];
     
     return documentsReadObject;
 }
@@ -103,25 +102,47 @@
                                 class:(nonnull Class)classToRead
                                logger:(nonnull ADJLogger *)logger {
     if (filePath == nil) {
-        [logger debug:@"Cannot decode %@ object without file path", objectName];
+        [logger debugDev:@"Cannot decode object without file path"
+                     key:@"objectName"
+                   value:objectName
+               issueType:ADJIssueStorageIo];
         return nil;
     }
     
     @try {
         id _Nullable objectRead = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
         if (objectRead == nil) {
-            [logger debug:@"Cannot decode %@ object from %@", objectName, filePath];
+            [logger debugDev:@"Cannot decode object"
+                        key1:@"objectName"
+                      value1:objectName
+                        key2:@"filePath"
+                      value2:filePath
+                   issueType:ADJIssueStorageIo];
             return nil;
         }
         
         if (! [objectRead isKindOfClass:classToRead]) {
-            [logger debug:@"Cannot cast %@ object from %@", objectName, filePath];
+            [logger debugDev:@"Cannot cast object"
+                        key1:@"objectName"
+                      value1:objectName
+                        key2:@"filePath"
+                      value2:filePath
+                   issueType:ADJIssueStorageIo];
             return nil;
         }
         
         return objectRead;
     } @catch (NSException *ex) {
-        [logger error:@"Failed to read %@ object from %@", objectName, filePath];
+        [logger logWithInput:
+             [[ADJInputLogMessageData alloc]
+              initWithMessage:@"Exception from reading object from file"
+              level:ADJAdjustLogLevelDebug
+              issueType:ADJIssueStorageIo
+              nsError:nil
+              nsException:ex
+              messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
+                             objectName, @"objectName",
+                             filePath, @"filePath", nil]]];
     }
     
     return nil;

@@ -38,8 +38,10 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
     }
 
     if (! [sdkPackageData isKindOfClass:[ADJLogPackageData class]]) {
-        [self.logger error:@"Unexpected non log package data: %@",
-         [sdkPackageData generateShortDescription]];
+        [self.logger debugDev:@"Unexpected non log package data"
+                          key:@"package read"
+                        value:[sdkPackageData generateShortDescription].stringValue
+                    issueType:ADJIssueStorageIo];
         return nil;
     }
 
@@ -63,4 +65,5 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
 }
 
 @end
+
 

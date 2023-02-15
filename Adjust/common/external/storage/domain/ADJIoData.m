@@ -71,14 +71,17 @@
         [self.metadataMap pairValueWithKey:ADJMetadataIoDataTypeKey];
 
     if (typeValue == nil) {
-        [logger error:@"Cannot create instance from Io data without type value"];
+        [logger debugDev:@"Cannot create instance from Io data without type value"
+               issueType:ADJIssueStorageIo];
         return NO;
     }
 
     if (! [typeValue.stringValue isEqualToString:expectedMetadataTypeValue]) {
-        [logger error:@"Cannot create instance from Io data"
-            " with read type value %@ different than expected %@",
-            typeValue, expectedMetadataTypeValue];
+        [logger debugDev:
+            @"Cannot create instance from Io data with with different type value"
+           expectedValue:expectedMetadataTypeValue
+             actualValue:typeValue.stringValue
+               issueType:ADJIssueStorageIo];
         return NO;
     }
 

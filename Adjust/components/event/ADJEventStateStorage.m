@@ -50,19 +50,18 @@ static NSString *const kEventStateStorageTableName = @"event_state";
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
-        [self.logger debug:@"Activity state v4 file not found"];
+        [self.logger debugDev:@"Activity state v4 file not found"];
         return;
     }
 
     if (v4ActivityState.eventCountNumberInt == nil) {
-        [self.logger debug:@"Cannot find event count in v4 activity state"];
+        [self.logger debugDev:@"Cannot find event count in v4 activity state"];
         return;
     }
 
     ADJEventStateData *_Nullable eventStateData =
     [ADJEventStateData instanceFromExternalWithEventCountNumberInt:v4ActivityState.eventCountNumberInt
-     logger:self.logger];
-
+                                                            logger:self.logger];
     if (eventStateData == nil) {
         return;
     }

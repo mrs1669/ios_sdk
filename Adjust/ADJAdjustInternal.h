@@ -8,15 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@class ADJEntryRoot;
 @class ADJSdkConfigDataBuilder;
+@protocol ADJAdjustInstance;
 
 @interface ADJAdjustInternal : NSObject
 
-+ (nonnull ADJEntryRoot *)rootInstance;
++ (nonnull id<ADJAdjustInstance>)sdkInstanceForId:(nullable NSString *)instanceId;
 
-+ (nonnull NSString *)teardownWithShouldClearStorage:(BOOL)shouldClearStorage
-                                sdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder;
++ (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigDataBuilder
+                                    shouldClearStorage:(BOOL)shouldClearStorage;
 
 + (nonnull NSString *)sdkVersion;
 

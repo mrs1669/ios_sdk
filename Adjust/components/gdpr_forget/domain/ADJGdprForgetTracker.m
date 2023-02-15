@@ -94,22 +94,22 @@
 #pragma mark Internal Methods
 - (BOOL)tryToSend {
     if (self.isInDelay) {
-        [self.logger debug:@"Cannot track GDPR forget because it's in delay"];
+        [self.logger debugDev:@"Cannot track GDPR forget because it's in delay"];
         return NO;
     }
 
     if (self.isSending) {
-        [self.logger debug:@"Cannot track GDPR forget because it's already sending"];
+        [self.logger debugDev:@"Cannot track GDPR forget because it's already sending"];
         return NO;
     }
 
     if (self.isStopped) {
-        [self.logger debug:@"Cannot track GDPR forget because it's stopped"];
+        [self.logger debugDev:@"Cannot track GDPR forget because it's stopped"];
         return NO;
     }
 
     if (self.isPaused) {
-        [self.logger debug:@"Cannot track GDPR forget because it's paused"];
+        [self.logger debugDev:@"Cannot track GDPR forget because it's paused"];
         return NO;
     }
 

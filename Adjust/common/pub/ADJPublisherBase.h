@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-// TODO: (Gena) Why do we need this import here?
-#import "ADJSingleThreadExecutor.h"
-
 @interface ADJPublisherBase<T> : NSObject
 // instantiation
 - (nonnull instancetype)init NS_DESIGNATED_INITIALIZER;

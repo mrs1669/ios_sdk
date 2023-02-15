@@ -178,9 +178,10 @@
             [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-+ (nullable NSString *)jsonFoundationValueFormat:(nonnull id)jsonFoundationValue {
-    NSError *error;
++ (nullable NSString *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
+    if (jsonFoundationValue == nil) { return nil; }
 
+    NSError *error;
     NSData *_Nullable jsonData =
     [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
                                                  errorPtr:&error];
@@ -206,8 +207,7 @@
 }
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
-                    regex:(nonnull NSRegularExpression *)regex
-{
+                    regex:(nonnull NSRegularExpression *)regex {
     return [regex matchesInString:stringValue
                           options:0
                             range:NSMakeRange(0, stringValue.length)].count > 0;
@@ -288,5 +288,3 @@
 }
 
 @end
-
-

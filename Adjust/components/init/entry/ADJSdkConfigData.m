@@ -23,6 +23,7 @@
  @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerStartMilli;
  @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *foregroundTimerIntervalMilli;
  @property (readonly, assign, nonatomic) BOOL assumeSandboxEnvironmentForLogging;
+ @property (readonly, assign, nonatomic) BOOL assumeDevLogs;
  @property (readonly, assign, nonatomic) BOOL doNotReadCurrentLifecycleStatus;
  @property (readonly, assign, nonatomic) BOOL doNotInitiateAttributionFromSdk;
  */
@@ -34,7 +35,7 @@
             [[ADJSdkConfigDataBuilder alloc] initWithDefaultValues]];
 }
 
-- (nonnull instancetype)initWithBuilderData: (nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
+- (nonnull instancetype)initWithBuilderData:(nonnull ADJSdkConfigDataBuilder *)sdkConfigDataBuilder {
     self = [super init];
     
     _networkEndpointData = sdkConfigDataBuilder.networkEndpointData;
@@ -49,6 +50,7 @@
     _foregroundTimerStartMilli = sdkConfigDataBuilder.foregroundTimerStartMilli;
     _foregroundTimerIntervalMilli = sdkConfigDataBuilder.foregroundTimerIntervalMilli;
     _assumeSandboxEnvironmentForLogging = sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging;
+    _assumeDevLogs = sdkConfigDataBuilder.assumeDevLogs;
     _doNotReadCurrentLifecycleStatus = sdkConfigDataBuilder.doNotReadCurrentLifecycleStatus;
     _doNotInitiateAttributionFromSdk = sdkConfigDataBuilder.doNotInitiateAttributionFromSdk;
     

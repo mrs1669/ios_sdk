@@ -18,6 +18,7 @@
 #import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustInstance.h"
 
 @interface ATAAdjustCommandExecutor ()
 
@@ -173,7 +174,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [adjustConfig doNotReadAppleSearchAdsAttribution];
     }
 
-    [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
+    [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
 }
 /*
  if (parameters.containsKey("defaultTracker")) {
@@ -182,11 +183,11 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
  }
  */
 - (void)resume {
-    [ADJAdjust appWentToTheForegroundManualCall];
+    [[ADJAdjust instance] appWentToTheForegroundManualCall];
 }
 
 - (void)pause {
-    [ADJAdjust appWentToTheBackgroundManualCall];
+    [[ADJAdjust instance] appWentToTheBackgroundManualCall];
 }
 
 - (void)trackEvent {
@@ -210,8 +211,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"callbackParams"]) {
         [self iterateWithKey:@"callbackParams"
                       source:@"event callback"
-               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-         {
+               keyValueBlock:^(NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
             [adjustEvent addCallbackParameterWithKey:key value:value];
         }];
     }
@@ -219,8 +220,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"partnerParams"]) {
         [self iterateWithKey:@"partnerParams"
                       source:@"event partner"
-               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
-         {
+               keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value) {
             [adjustEvent addPartnerParameterWithKey:key value:value];
         }];
     }
@@ -232,15 +232,15 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [adjustEvent setDeduplicationId:deduplicationId];
     }
 
-    [ADJAdjust trackEvent:adjustEvent];
+    [[ADJAdjust instance] trackEvent:adjustEvent];
 }
 
 - (void)stop {
-    [ADJAdjust inactivateSdk];
+    [[ADJAdjust instance] inactivateSdk];
 }
 
 - (void)restart {
-    [ADJAdjust reactivateSdk];
+    [[ADJAdjust instance] reactivateSdk];
 }
 
 - (void)setOfflineMode {
@@ -258,9 +258,9 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     }
 
     if (strictEnabledValue.boolValue) {
-        [ADJAdjust switchToOfflineMode];
+        [[ADJAdjust instance] switchToOfflineMode];
     } else {
-        [ADJAdjust switchBackToOnlineMode];
+        [[ADJAdjust instance] switchBackToOnlineMode];
     }
 }
 
@@ -269,7 +269,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                   source:@"add global callback"
            keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
      {
-        [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
+        [[ADJAdjust instance] addGlobalCallbackParameterWithKey:key value:value];
     }];
 }
 
@@ -278,7 +278,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                   source:@"add global partner"
            keyValueBlock:^(NSString * _Nonnull key, NSString * _Nonnull value)
      {
-        [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
+        [[ADJAdjust instance] addGlobalPartnerParameterWithKey:key value:value];
     }];
 
 }
@@ -288,7 +288,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                   source:@"remove global callback"
                 keyBlock:^(NSString * _Nonnull key)
      {
-        [ADJAdjust removeGlobalCallbackParameterByKey:key];
+        [[ADJAdjust instance] removeGlobalCallbackParameterByKey:key];
     }];
 }
 
@@ -297,16 +297,16 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                   source:@"remove global partner"
                 keyBlock:^(NSString * _Nonnull key)
      {
-        [ADJAdjust removeGlobalPartnerParameterByKey:key];
+        [[ADJAdjust instance] removeGlobalPartnerParameterByKey:key];
     }];
 }
 
 - (void)clearGlobalCallbackParameters {
-    [ADJAdjust clearAllGlobalCallbackParameters];
+    [[ADJAdjust instance] clearAllGlobalCallbackParameters];
 }
 
 - (void)clearGlobalPartnerParameters {
-    [ADJAdjust clearAllGlobalPartnerParameters];
+    [[ADJAdjust instance] clearAllGlobalPartnerParameters];
 }
 
 - (void)setPushToken {
@@ -315,7 +315,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     ADJAdjustPushToken *_Nonnull adjustPushToken =
     [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
 
-    [ADJAdjust trackPushToken:adjustPushToken];
+    [[ADJAdjust instance] trackPushToken:adjustPushToken];
 }
 
 - (void)openDeeplink {
@@ -323,11 +323,11 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
 
-    [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
+    [[ADJAdjust instance] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)gdprForgetMe {
-    [ADJAdjust gdprForgetDevice];
+    [[ADJAdjust instance] gdprForgetDevice];
 }
 
 - (void)trackAdRevenue {
@@ -384,7 +384,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                                               value:value];
     }];
 
-    [ADJAdjust trackAdRevenue:adjustAdRevenue];
+    [[ADJAdjust instance] trackAdRevenue:adjustAdRevenue];
 }
 
 - (void)thirdPartySharing {
@@ -417,17 +417,15 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     if ([self containsKey:@"partnerSharingSettings"]) {
         [self iterateWithKey:@"partnerSharingSettings"
                       source:@"third party partner sharing settings"
-           nameKeyValueBlock:
-         ^(NSString * _Nonnull name,
+           nameKeyValueBlock:^(NSString * _Nonnull name,
            NSString * _Nonnull key,
-           NSString * _Nonnull value)
-         {
+           NSString * _Nonnull value) {
             [adjustThirdPartySharing
              addPartnerSharingSettingWithPartnerName:name key:key value:value];
         }];
     }
 
-    [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
+    [[ADJAdjust instance] trackThirdPartySharing:adjustThirdPartySharing];
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {
@@ -514,7 +512,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)iterateWithKey:(nonnull NSString *)key
                 source:(nonnull NSString *)source
-              keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock{
+              keyBlock:(nonnull void (^)(NSString *_Nonnull key))keyBlock {
+
     NSArray<NSString *> *_Nullable array = [self.commandParameters objectForKey:key];
 
     if (array == nil) {
@@ -533,7 +532,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)iterateWithKey:(nonnull NSString *)key
                 source:(nonnull NSString *)source
-         keyValueBlock:(nonnull void (^)(NSString *_Nonnull key, NSString *_Nonnull value))keyValueBlock{
+         keyValueBlock:(nonnull void (^)(NSString *_Nonnull key,
+                                         NSString *_Nonnull value))keyValueBlock {
     NSArray<NSString *> *_Nullable array = [self.commandParameters objectForKey:key];
 
     if (array == nil) {
@@ -576,7 +576,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     [self logDebug:@"iterating %@ with %@ name-key-value", source, @(array.count / 3)];
 
-    for (NSUInteger i = 0; i < array.count - 1 ; i += 3) {
+    for (NSUInteger i = 0; i < array.count; i += 3) {
         NSString *_Nonnull name = [array objectAtIndex:i];
         NSString *_Nonnull key = [array objectAtIndex:(i + 1)];
         NSString *_Nonnull value = [array objectAtIndex:(i + 2)];
@@ -605,5 +605,6 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 @end
+
 
 

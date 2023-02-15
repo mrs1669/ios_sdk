@@ -37,6 +37,14 @@
 
     [self ccLoadPluginsWithLoggerFactory:loggerFactory];
 
+    ADJAdjustPublishers *_Nonnull adjustPublishers =
+    [[ADJAdjustPublishers alloc] initWithPackageSendingPublisher:_pluginPackageSendingPublisher
+                                             foregroundPublisher:_pluginForegroundPublisher];
+
+    for (id<ADJAdjustPlugin> _Nonnull plugin in self.loadedPluginList) {
+        [plugin subscribeWithPublishers:adjustPublishers];
+    }
+
     return self;
 }
 
@@ -47,12 +55,17 @@
         id _Nullable objectInstance = [ADJUtilR createDefaultInstanceWithClassName:pluginClassName];
 
         if (objectInstance == nil) {
-            [self.logger debug:@"Could not find plugin for %@ class name", pluginClassName];
+            [self.logger debugDev:@"Could not find plugin"
+                              key:@"plugin class name"
+                            value:pluginClassName];
             continue;
         }
 
         if (! [objectInstance conformsToProtocol:@protocol(ADJAdjustPlugin)]) {
-            [self.logger error:@"Could not cast class name %@ to plugin", pluginClassName];
+            [self.logger debugDev:@"Could not cast class name to plugin"
+                              key:@"plugin class name"
+                            value:pluginClassName
+                        issueType:ADJIssuePluginOrigin];
             continue;
         }
 
@@ -66,7 +79,11 @@
 
         [self.loadedPluginList addObject:pluginInstance];
 
-        [self.logger debug:@"Found plugin for %@ class name, %@ source", pluginClassName, [pluginInstance source]];
+        [self.logger debugDev:@"Found plugin"
+                         key1:@"plugin class name"
+                       value1:pluginClassName
+                         key2:@"plugin name"
+                       value2:[pluginInstance source]];
     }
 }
 
@@ -75,17 +92,23 @@
 - (void)willSendSdkPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData
                    parametersToAdd:(nonnull ADJStringMapBuilder *)parametersToAdd
                       headersToAdd:(nonnull ADJStringMapBuilder *)headersToAdd {
-    // no need to check if has subscribers to avoid conversion,
-    //  since it has checked when subscribing to publishers
+
+    if (! [self.pluginPackageSendingPublisher.publisher hasSubscribers]) {
+        return;
+    }
+
     NSDictionary<NSString *, NSString *> *_Nonnull parametersFoundationMap = [sdkPackageData.parameters foundationStringMap];
 
     ADJStringMap *_Nonnull parametersToAddStringMap = [[ADJStringMap alloc] initWithStringMapBuilder:parametersToAdd];
-    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap = [NSMutableDictionary dictionaryWithDictionary:[parametersToAddStringMap foundationStringMap]];
+
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap =
+    [NSMutableDictionary dictionaryWithDictionary:[parametersToAddStringMap foundationStringMap]];
 
     [self.pluginPackageSendingPublisher.publisher notifySubscribersWithSubscriberBlock:
-        ^(id<ADJAdjustPackageSendingSubscriber>  _Nonnull subscriber)
+        ^(id<ADJAdjustPackageSendingSubscriber> _Nonnull subscriber)
      {
-        NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap =
+        [[NSMutableDictionary alloc] init];
 
         [subscriber willSendSdkPackageWithClientSdk:sdkPackageData.clientSdk
                                                path:sdkPackageData.path
@@ -107,8 +130,13 @@
 
 #pragma mark - ADJLifecycleSubscriber
 - (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+
+    if (! [self.pluginForegroundPublisher.publisher hasSubscribers]) {
+        return;
+    }
+
     [self.pluginForegroundPublisher.publisher notifySubscribersWithSubscriberBlock:
-        ^(id<ADJAdjustForegroundSubscriber>  _Nonnull subscriber)
+        ^(id<ADJAdjustForegroundSubscriber> _Nonnull subscriber)
      {
         [subscriber onForeground];
     }];
@@ -118,24 +146,5 @@
     // nothing to do
 }
 
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithSdkPackageSendingPublisher:(nonnull ADJSdkPackageSendingPublisher *)sdkPackageSendingPublisher
-                                           lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-{
-    ADJAdjustPublishers *_Nonnull adjustPublishers = [[ADJAdjustPublishers alloc] initWithPackageSendingPublisher:self.pluginPackageSendingPublisher
-                                                                                              foregroundPublisher:self.pluginForegroundPublisher];
-
-    for (id<ADJAdjustPlugin> _Nonnull plugin in self.loadedPluginList) {
-        [plugin subscribeWithPublishers:adjustPublishers];
-    }
-
-    if ([self.pluginPackageSendingPublisher.publisher hasSubscribers]) {
-        [sdkPackageSendingPublisher addSubscriber:self];
-    }
-
-    if ([self.pluginForegroundPublisher.publisher hasSubscribers]) {
-        [lifecyclePublisher addSubscriber:self];
-    }
-}
-
 @end
+

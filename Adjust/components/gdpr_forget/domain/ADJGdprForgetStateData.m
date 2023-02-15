@@ -44,20 +44,21 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
      logger:logger];
 
     if (forgottenByBackend == nil) {
-        [logger error:@"Cannot create instance from Io data without valid %@",
-         kForgottenByBackendKey];
+        [logger debugDev:@"Cannot create instance from Io data without valid value"
+               valueName:kForgottenByBackendKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
     ADJBooleanWrapper *_Nullable askedToForgetBySdk =
-    [ADJBooleanWrapper
-     instanceFromIoValue:
-         [ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]
-     logger:logger];
+        [ADJBooleanWrapper
+         instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]
+         logger:logger];
 
     if (askedToForgetBySdk == nil) {
-        [logger error:@"Cannot create instance from Io data without valid %@",
-         kAskedToForgetBySdkKey];
+        [logger debugDev:@"Cannot create instance from Io data without valid value"
+               valueName:kAskedToForgetBySdkKey
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
@@ -96,8 +97,8 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
 }
 
 #pragma mark Public API
-- (BOOL)isNotForgotten {
-    return ! self.askedToForgetBySdk && ! self.forgottenByBackend;
+- (BOOL)isForgotten {
+    return self.askedToForgetBySdk || self.forgottenByBackend;
 }
 
 #pragma mark - ADJIoDataSerializable

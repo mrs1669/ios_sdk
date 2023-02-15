@@ -29,57 +29,63 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 
 @implementation ADJClientAddGlobalParameterData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd
-                                                             valueToAdd:(nullable NSString *)valueToAdd
-                                                                 logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd
+    valueToAdd:(nullable NSString *)valueToAdd
+    logger:(nonnull ADJLogger *)logger
+{
     ADJNonEmptyString *_Nullable verifiedKeyToAdd =
-    [ADJNonEmptyString instanceFromString:keyToAdd
-                        sourceDescription:@"client add global parameter key"
-                                   logger:logger];
+        [ADJNonEmptyString instanceFromString:keyToAdd
+                            sourceDescription:@"client add global parameter key"
+                                       logger:logger];
 
     if (verifiedKeyToAdd == nil) {
+        [logger errorClient:@"Invalid add parameter key"];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable verifiedValueToAdd =
-    [ADJNonEmptyString instanceFromString:valueToAdd
-                        sourceDescription:@"client add global parameter value"
-                                   logger:logger];
+        [ADJNonEmptyString instanceFromString:valueToAdd
+                            sourceDescription:@"client add global parameter value"
+                                       logger:logger];
 
     if (verifiedValueToAdd == nil) {
+        [logger errorClient:@"Invalid add parameter value"];
         return nil;
     }
 
-    return [[self alloc] initWithKeyToAdd:verifiedKeyToAdd
-                               valueToAdd:verifiedValueToAdd];
+    return [[self alloc] initWithKeyToAdd:verifiedKeyToAdd valueToAdd:verifiedValueToAdd];
 }
 
 + (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger {
+    logger:(nonnull ADJLogger *)logger {
     ADJNonEmptyString *_Nullable clientActionTypeValue = [clientActionInjectedIoData.metadataMap
                                                           pairValueWithKey:ADJClientActionTypeKey];
     if (clientActionTypeValue == nil) {
-        [logger error:@"Cannot create ClientAddGlobalParameterData"
-         " instance from client action io data without client action type value"];
+        [logger debugDev:@"Cannot create ClientAddGlobalParameterData"
+            " from client action io data without client action type"
+            issueType:ADJIssueStorageIo];
         return nil;
     }
 
-    if (! [ADJClientAddGlobalParameterDataMetadataTypeValue isEqualToString:clientActionTypeValue.stringValue]) {
-        [logger error:@"Cannot create ClientAddGlobalParameterData"
-         " instance from client action io data"
-         " with read client action type value %@"
-         " different than expected %@",
-         clientActionInjectedIoData, ADJClientAddGlobalParameterDataMetadataTypeValue];
-        return nil;
+    if (! [ADJClientAddGlobalParameterDataMetadataTypeValue
+           isEqualToString:clientActionTypeValue.stringValue])
+    {
+        [logger debugDev:
+         @"Cannot create ClientAddGlobalParameterData from client action io data"
+         " with different client action type"
+         expectedValue:ADJClientAddGlobalParameterDataMetadataTypeValue
+             actualValue:clientActionTypeValue.stringValue
+               issueType:ADJIssueStorageIo];
+         return nil;
     }
 
     ADJNonEmptyString *_Nullable keyToAdd = [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToAddKey];
 
     ADJNonEmptyString *_Nullable valueToAdd = [clientActionInjectedIoData.propertiesMap pairValueWithKey:kValueToAddKey];
 
-    return [self instanceFromClientWithAdjustConfigWithKeyToAdd:
-            keyToAdd != nil ? keyToAdd.stringValue : nil
-                                                     valueToAdd:valueToAdd != nil ? valueToAdd.stringValue : nil
+    return [self instanceFromClientWithAdjustConfigWithKeyToAdd:(keyToAdd != nil) ? keyToAdd.stringValue : nil
+                                                     valueToAdd:(valueToAdd != nil) ? valueToAdd.stringValue : nil
                                                          logger:logger];
 }
 

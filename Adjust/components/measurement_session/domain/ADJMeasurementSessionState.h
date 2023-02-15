@@ -18,9 +18,8 @@
 
 @interface ADJMeasurementSessionState : ADJCommonBase
 // instantiation
-- (nonnull instancetype)
-initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+           minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli;
 
 // public properties
 @property (readonly, assign, nonatomic) BOOL hasFirstMeasurementSessionStartHappened;

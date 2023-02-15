@@ -8,7 +8,10 @@
 #import "ViewController.h"
 
 #import "ADJAdjust.h"
+#import "ADJAdjustInstance.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustAdRevenue.h"
+#import "ADJAdjustPushToken.h"
 
 NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
@@ -125,7 +128,7 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
     ADJAdjustEvent *event = [[ADJAdjustEvent alloc] initWithEventId:@"g3mfiw"];
     [event addCallbackParameterWithKey:@"partner" value:@"partnerValue"];
     [event addCallbackParameterWithKey:@"callback" value:@"callbackValue"];
-    [ADJAdjust trackEvent:event];
+    [[ADJAdjust instance] trackEvent:event];
 }
 
 - (void)trackAdRevenue {
@@ -144,53 +147,53 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
     [adRevenue addCallbackParameterWithKey:@"callback" value:@"callbackValue"];
 
     // track ad revenue
-    [ADJAdjust trackAdRevenue:adRevenue];
+    [[ADJAdjust instance] trackAdRevenue:adRevenue];
 }
 
 - (void)goOnline {
-    [ADJAdjust switchBackToOnlineMode];
+    [[ADJAdjust instance] switchBackToOnlineMode];
 }
 
 - (void)goOffline {
-    [ADJAdjust switchToOfflineMode];
+    [[ADJAdjust instance] switchToOfflineMode];
 }
 
 - (void)reactivateAdjustSDK {
-    [ADJAdjust reactivateSdk];
+    [[ADJAdjust instance] reactivateSdk];
 }
 
 - (void)inactivateAdjustSDK {
-    [ADJAdjust inactivateSdk];
+    [[ADJAdjust instance] inactivateSdk];
 }
 
 - (void)addGlobalCallbackParameters {
-    [ADJAdjust addGlobalCallbackParameterWithKey:@"foo" value:@"bar"];
+    [[ADJAdjust instance] addGlobalCallbackParameterWithKey:@"foo" value:@"bar"];
 }
 
 - (void)removeGlobalCallbackParameters {
-    [ADJAdjust removeGlobalCallbackParameterByKey:@"foo"];
+    [[ADJAdjust instance] removeGlobalCallbackParameterByKey:@"foo"];
 }
 
 - (void)clearAllGlobalCallbackParameters {
-    [ADJAdjust clearAllGlobalCallbackParameters];
+    [[ADJAdjust instance] clearAllGlobalCallbackParameters];
 }
 
 - (void)addGlobalPartnerParameters {
-    [ADJAdjust addGlobalPartnerParameterWithKey:@"foo" value:@"bar"];
+    [[ADJAdjust instance] addGlobalPartnerParameterWithKey:@"foo" value:@"bar"];
 }
 
 - (void)removeGlobalPartnerParameters {
-    [ADJAdjust removeGlobalPartnerParameterByKey:@"foo"];
+    [[ADJAdjust instance] removeGlobalPartnerParameterByKey:@"foo"];
 }
 
 - (void)clearAllGlobalPartnerParameters {
-    [ADJAdjust clearAllGlobalPartnerParameters];
+    [[ADJAdjust instance] clearAllGlobalPartnerParameters];
 }
 
 - (void)trackPushToken {
     ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc]
                                                     initWithStringPushToken:@"965b251c6cb1926de3cb366fdfb16ddde6b9086a 8a3cac9e5f857679376eab7C"];
-    [ADJAdjust trackPushToken:adjustPushToken];
+    [[ADJAdjust instance] trackPushToken:adjustPushToken];
 }
 
 @end

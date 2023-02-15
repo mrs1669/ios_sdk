@@ -41,9 +41,13 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 }
 
 #pragma mark Public API
-- (BOOL)shouldStartTrackingWhenForgottenByClientWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
-                                        changedGdprForgetStateDataWO:(nonnull ADJValueWO<ADJGdprForgetStateData *> *)changedGdprForgetStateDataWO
-                                             gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO {
+- (BOOL)
+    shouldStartTrackingWhenForgottenByClientWithCurrentStateData:
+        (nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
+    changedGdprForgetStateDataWO:
+        (nonnull ADJValueWO<ADJGdprForgetStateData *> *)changedGdprForgetStateDataWO
+    gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO
+{
     if (! [self canChangeToAskedToForgetWithCurrentStateData:currentGdprForgetStateData]) {
         return NO;
     }
@@ -55,10 +59,13 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
     return [self shouldStartTrackingWithLatestStateData:gdprForgetStateData];
 }
 
-- (BOOL)shouldStartTrackingWhenSdkInitWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
-                                   gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO {
+- (BOOL)
+    shouldStartTrackingWhenSdkInitWithCurrentStateData:
+        (nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
+    gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO
+{
     if (self.hasSdkInit) {
-        [self.logger debug:@"Sdk init already happened"];
+        [self.logger debugDev:@"Sdk init already happened"];
         return NO;
     }
 
@@ -76,9 +83,12 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
     self.canPublish = YES;
 }
 
-- (BOOL)shouldStartTrackingWhenAppWentToTheForegroundWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData {
+- (BOOL)
+    shouldStartTrackingWhenAppWentToTheForegroundWithCurrentStateData:
+        (nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
+{
     if (self.isOnForeground) {
-        [self.logger debug:@"Already in the foreground"];
+        [self.logger debugDev:@"Already in the foreground"];
         return NO;
     }
 
@@ -91,7 +101,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 
 - (void)appWentToTheBackground {
     if (! self.isOnForeground) {
-        [self.logger debug:@"Already in the background"];
+        [self.logger debugDev:@"Already in the background"];
         return;
     }
     self.isOnForeground = NO;
@@ -139,15 +149,15 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 
 #pragma mark Internal Methods
 - (BOOL)canChangeToAskedToForgetWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData {
-    if ([currentGdprForgetStateData isNotForgotten]) {
+    if (! [currentGdprForgetStateData isForgotten]) {
         return YES;
     }
 
     if (currentGdprForgetStateData.forgottenByBackend) {
-        [self.logger info:@"Cannot change to AskedToForget,"
-         " since it was already forgotten by the backend"];
+        [self.logger debugDev:
+            @"Cannot change to AskedToForget, since it was already forgotten by the backend"];
     } else {
-        [self.logger info:@"Already in AskedToForget"];
+        [self.logger debugDev:@"Already in AskedToForget"];
     }
 
     return NO;
@@ -167,27 +177,27 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 
 - (BOOL)shouldStartTrackingWithLatestStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData {
     if (! self.hasSdkInit) {
-        [self.logger debug:@"Cannot start tracking GDPR forget before sdk init"];
+        [self.logger debugDev:@"Cannot start tracking GDPR forget before sdk init"];
         return NO;
     }
 
     if (! self.hasAppStart) {
-        [self.logger debug:@"Cannot start tracking GDPR forget before app start"];
+        [self.logger debugDev:@"Cannot start tracking GDPR forget before app start"];
         return NO;
     }
 
-    if ([currentGdprForgetStateData isNotForgotten]) {
-        [self.logger debug:@"Cannot start tracking GDPR forget when not forgotten"];
+    if (! [currentGdprForgetStateData isForgotten]) {
+        [self.logger debugDev:@"Cannot start tracking GDPR forget when not forgotten"];
         return NO;
     }
 
     if (currentGdprForgetStateData.forgottenByBackend) {
-        [self.logger debug:@"Cannot start tracking GDPR forget"
-         " when already forgotten in backend"];
+        [self.logger debugDev:
+         @"Cannot start tracking GDPR forget when already forgotten in backend"];
         return NO;
     }
 
-    [self.logger debug:@"Can start tracking GDPR forget"];
+    [self.logger debugDev:@"Can start tracking GDPR forget"];
 
     return YES;
 }
@@ -211,7 +221,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 - (void)notifyGdprForgetStateEventWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
                                gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO {
     // nothing to notify when not forgotten
-    if ([currentGdprForgetStateData isNotForgotten]) {
+    if (! [currentGdprForgetStateData isForgotten]) {
         return;
     }
 
@@ -235,21 +245,23 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 
 - (BOOL)canChangeToForgottenByBackendWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
                                                    source:(nonnull NSString *)source {
-    if ([currentGdprForgetStateData isNotForgotten]) {
-        [self.logger debug:@"Changing to ForgottenByBackend from %@"
-         " while not previously asked by sdk", source];
+    if (! [currentGdprForgetStateData isForgotten]) {
+        [self.logger debugDev:
+         @"Changing to ForgottenByBackend while not previously asked by sdk"
+                         from:source];
 
         return YES;
     }
 
     if (! currentGdprForgetStateData.forgottenByBackend) {
-        [self.logger debug:@"Changing to ForgottenByBackend from %@", source];
+        [self.logger debugDev:@"Changing to ForgottenByBackend"
+                         from:source];
 
         return YES;
     }
 
-    [self.logger debug:@"Cannot change to ForgottenByBackend,"
-     " since it was already forgotten by the backend"];
+    [self.logger debugDev:
+        @"Cannot change to ForgottenByBackend, since it was already forgotten by the backend"];
 
     return NO;
 }

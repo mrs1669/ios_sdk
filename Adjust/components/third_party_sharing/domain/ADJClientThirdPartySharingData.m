@@ -32,26 +32,49 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
 
 @implementation ADJClientThirdPartySharingData
 #pragma mark Instantiation
-+ (nullable instancetype) instanceFromClientWithAdjustThirdPartySharing:(nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
-                                                                 logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustThirdPartySharing:
+        (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustThirdPartySharing == nil) {
-        [logger error:
+        [logger errorClient:
          @"Cannot create third party sharing with nil adjust third party sharing value"];
         return nil;
     }
-    
-    ADJBooleanWrapper *_Nonnull enabledOrElseDisabledSharing = adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool != nil ?
-    [ADJBooleanWrapper instanceFromBool: adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue] : nil;
 
+    ADJBooleanWrapper *_Nonnull enabledOrElseDisabledSharing =
+        adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool != nil
+            ? [ADJBooleanWrapper instanceFromBool:
+               adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue]
+            : nil;
+
+    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
+     granularOptionsByName =
+        [ADJUtilConv
+         convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
+             adjustThirdPartySharing.granularOptionsByNameArray
+         sourceDescription:@"third party sharing granular options array parsing"
+         logger:logger];
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
-    [ADJNonEmptyString instanceFromOptionalString: adjustThirdPartySharing.granularOptionsByNameDictionary != nil ? [ADJUtilF jsonFoundationValueFormat:adjustThirdPartySharing.granularOptionsByNameDictionary]: nil
-                                sourceDescription:@"third party sharing granular options"
-                                           logger:logger];
+        [ADJNonEmptyString
+         instanceFromOptionalString:[ADJUtilF jsonFoundationValueFormat:granularOptionsByName]
+         sourceDescription:@"third party sharing granular options string parsing"
+         logger:logger];
 
+    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
+     partnerSharingSettingsByName =
+        [ADJUtilConv
+         convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
+             adjustThirdPartySharing.partnerSharingSettingsByNameArray
+         sourceDescription:@"third party sharing partner sharing settings array parsing"
+         logger:logger];
     ADJNonEmptyString *_Nullable stringPartnerSharingSettingsByName =
-    [ADJNonEmptyString instanceFromOptionalString: adjustThirdPartySharing.partnerSharingSettingsByNameDictionary != nil ? [ADJUtilF jsonFoundationValueFormat:adjustThirdPartySharing.partnerSharingSettingsByNameDictionary]: nil
-                                sourceDescription:@"third party sharing partner sharing settings"
-                                           logger:logger];
+        [ADJNonEmptyString
+         instanceFromOptionalString:
+             [ADJUtilF jsonFoundationValueFormat:partnerSharingSettingsByName]
+         sourceDescription:@"third party sharing partner sharing settings string parsing"
+         logger:logger];
 
     return [[self alloc] initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharing
                                   stringGranularOptionsByName:stringGranularOptionsByName
@@ -61,20 +84,20 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
 + (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
                                                                  logger:(nonnull ADJLogger *)logger {
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
-    
+
     ADJNonEmptyString *_Nullable enabledOrElseDisabledSharingIoValue =
     [propertiesMap pairValueWithKey:kEnabledOrElseDisabledSharingKey];
-    
+
     ADJBooleanWrapper *_Nullable enabledOrElseDisabledSharing =
     [ADJBooleanWrapper instanceFromIoValue:enabledOrElseDisabledSharingIoValue
                                     logger:logger];
-    
+
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
     [propertiesMap pairValueWithKey:kStringGranularOptionsByNameKey];
 
     ADJNonEmptyString *_Nullable stringPartnerSharingSettingsByName =
     [propertiesMap pairValueWithKey:kStringPartnerSharingSettingsByNameKey];
-    
+
     return [[self alloc] initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharing
                                   stringGranularOptionsByName:stringGranularOptionsByName
                            stringPartnerSharingSettingsByName:stringPartnerSharingSettingsByName];
@@ -90,11 +113,11 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
                                  stringGranularOptionsByName:(nullable ADJNonEmptyString *)stringGranularOptionsByName
                                  stringPartnerSharingSettingsByName:(nullable ADJNonEmptyString *)stringPartnerSharingSettingsByName {
     self = [super init];
-    
+
     _enabledOrElseDisabledSharing = enabledOrElseDisabledSharing;
     _stringGranularOptionsByName = stringGranularOptionsByName;
     _stringPartnerSharingSettingsByName = stringPartnerSharingSettingsByName;
-    
+
     return self;
 }
 
@@ -102,11 +125,11 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
 #pragma mark - ADJClientActionIoDataInjectable
 - (void)injectIntoClientActionIoDataBuilder:(nonnull ADJIoDataBuilder *)clientActionIoDataBuilder{
     ADJStringMapBuilder *_Nonnull propertiesMapBuilder = clientActionIoDataBuilder.propertiesMapBuilder;
-    
+
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
                                        key:kEnabledOrElseDisabledSharingKey
                        ioValueSerializable:self.enabledOrElseDisabledSharing];
-    
+
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
                                        key:kStringGranularOptionsByNameKey
                        ioValueSerializable:self.stringGranularOptionsByName];
@@ -128,14 +151,14 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
-    
+
     hashCode = ADJHashCodeMultiplier * hashCode +
     [ADJUtilObj objecNullableHash:self.enabledOrElseDisabledSharing];
     hashCode = ADJHashCodeMultiplier * hashCode +
     [ADJUtilObj objecNullableHash:self.stringGranularOptionsByName];
     hashCode = ADJHashCodeMultiplier * hashCode +
     [ADJUtilObj objecNullableHash:self.stringPartnerSharingSettingsByName];
-    
+
     return hashCode;
 }
 
@@ -143,11 +166,11 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
     if (self == object) {
         return YES;
     }
-    
+
     if (![object isKindOfClass:[ADJClientThirdPartySharingData class]]) {
         return NO;
     }
-    
+
     ADJClientThirdPartySharingData *other = (ADJClientThirdPartySharingData *)object;
     return [ADJUtilObj objectEquals:self.enabledOrElseDisabledSharing
                               other:other.enabledOrElseDisabledSharing]

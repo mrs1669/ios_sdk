@@ -10,6 +10,7 @@
 
 #import "ADJMoneyAmountBase.h"
 #import "ADJNonEmptyString.h"
+#import "ADJLogger.h"
 
 @interface ADJMoney : NSObject
 // instantiation

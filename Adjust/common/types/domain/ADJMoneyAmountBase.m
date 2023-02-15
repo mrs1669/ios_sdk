@@ -54,7 +54,8 @@
                                   isOptional:(BOOL)isOptional {
     if (ioValue == nil) {
         if (! isOptional) {
-            [logger error:@"Cannot create money amount with nil string value"];
+            [logger debugDev:@"Cannot create money amount with nil string value"
+                   issueType:ADJIssueStorageIo];
         }
         return nil;
     }
@@ -71,7 +72,10 @@
                 logger:logger];
     }
     
-    [logger error:@"Cannot create money amount without a valid io data value prefix in %@", ioValue];
+    [logger debugDev:@"Cannot create money amount without a valid io data value prefix in %@"
+       expectedValue:@"'dec' or 'llf' prefix"
+         actualValue:ioValue.stringValue
+           issueType:ADJIssueStorageIo];
     
     return nil;
 }

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
-#import "ADJThreadPool.h"
+#import "ADJThreadExecutorFactory.h"
 #import "ADJSessionDeviceIdsData.h"
 //#import "ADJExternalConfigData.h"
 #import "ADJTimeLengthMilli.h"
@@ -17,7 +17,7 @@
 @interface ADJSessionDeviceIdsController : ADJCommonBase
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                             timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
                                  canCacheData:(BOOL)canCacheData;
 

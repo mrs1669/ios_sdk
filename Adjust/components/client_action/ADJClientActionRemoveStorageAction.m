@@ -36,8 +36,9 @@
     ADJClientActionStorage *_Nullable clientActionStorage = self.clientActionStorageWeak;
 
     if (clientActionStorage == nil) {
-        [logger error:@"Cannot perform ClientAction Storage Disposal action"
-            " in db transaction without a reference to storage"];
+        [logger debugDev:@"Cannot perform ClientAction Storage Disposal action"
+            " in db transaction without a reference to storage"
+               issueType:ADJIssueWeakReference];
         // rollback rest of transaction
         return NO;
     }

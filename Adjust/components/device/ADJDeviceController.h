@@ -10,7 +10,7 @@
 
 #import "ADJCommonBase.h"
 #import "ADJLifecycleSubscriber.h"
-#import "ADJThreadPool.h"
+#import "ADJThreadExecutorFactory.h"
 #import "ADJClock.h"
 #import "ADJSdkInitSubscriber.h"
 #import "ADJDeviceIdsStorage.h"
@@ -24,11 +24,11 @@
     // subscriptions
     ADJLifecycleSubscriber
 >
-- (void)ccSubscribeToPublishersWithLifecylePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJDeviceInfoData *deviceInfoData;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                                         clock:(nonnull ADJClock *)clock
                              deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
                               keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
@@ -37,9 +37,6 @@
 // public api
 - (nullable ADJNonEmptyString *)keychainUuid;
 - (nullable ADJNonEmptyString *)nonKeychainUuid;
-
-@property (nonnull, readonly, strong, nonatomic) ADJDeviceInfoData *deviceInfoData;
-
 - (nonnull ADJSessionDeviceIdsData *)getSessionDeviceIdsSync;
 
 @end

@@ -10,6 +10,7 @@
 
 #import <os/log.h>
 #import "ADJAdjustLogMessageData.h"
+#import "ADJUtilObj.h"
 
 @interface ATOLogger ()
 
@@ -42,26 +43,39 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
 }
 
 // copied from ADJConsoleLogger
-- (void)collectLogMessage:(nonnull NSString *)logMessage
-                   source:(nonnull NSString *)source
-           messageLogLevel:(nonnull NSString *)messageLogLevel
-{
+- (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData {
+    NSMutableDictionary <NSString *, id> *_Nonnull foundationDictionary =
+        [logMessageData generateFoundationDictionary];
+
+    [foundationDictionary removeObjectForKey:ADJLogMessageKey];
+
+    NSString *_Nonnull devFormattedMessage =
+        [ADJUtilObj formatInlineKeyValuesWithName:logMessageData.inputData.message
+                              stringKeyDictionary:foundationDictionary];
+
     if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, macCatalyst 13.0, *)) {
-        NSString *fullLogMessage =
-            [NSString stringWithFormat:@"[%@][%@] %@",
-                messageLogLevel, source, logMessage];
-        if (messageLogLevel == ADJAdjustLogLevelDebug) {
-            os_log_debug(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
+        uint8_t osLogType;
+
+        NSString *_Nonnull messageLogLevel = logMessageData.inputData.message;
+
+        if (messageLogLevel == ADJAdjustLogLevelDebug
+            || messageLogLevel == ADJAdjustLogLevelTrace)
+        {
+            osLogType = OS_LOG_TYPE_DEBUG;
         } else if (messageLogLevel == ADJAdjustLogLevelInfo) {
-            os_log_info(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
+            osLogType = OS_LOG_TYPE_INFO;
+        } else if (messageLogLevel == ADJAdjustLogLevelNotice) {
+            osLogType = OS_LOG_TYPE_DEFAULT;
         } else if (messageLogLevel == ADJAdjustLogLevelError) {
-            os_log_error(self.osLogLogger, "%{public}s", fullLogMessage.UTF8String);
+            osLogType = OS_LOG_TYPE_ERROR;
+        } else {
+            return;
         }
+
+        os_log_with_type(self.osLogLogger, osLogType,
+                         "%{public}s", devFormattedMessage.UTF8String);
     } else {
-        NSLog(@"%@", [ADJAdjustLogMessageData
-                        generateFullLogWithMessage:logMessage
-                        source:source
-                        messageLogLevel:messageLogLevel]);
+        NSLog(@"%@", devFormattedMessage);
     }
 }
 

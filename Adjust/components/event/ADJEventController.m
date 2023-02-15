@@ -80,10 +80,15 @@ ADJMainQueueController *mainQueueControllerWeak;
 }
 
 #pragma mark Internal Methods
-- (void)trackEventWithClientData:(nonnull ADJClientEventData *)clientEventData
-                    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
- clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
-    [self.logger debug:@"Trying to track event with id: %@", clientEventData.eventId];
+- (void)
+    trackEventWithClientData:(nonnull ADJClientEventData *)clientEventData
+    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
+    [self.logger debugDev:@"Trying to track event"
+                      key:@"event token"
+                value:clientEventData.eventId.stringValue];
 
     if (! [self canTrackEventWithDeduplicationId:clientEventData.deduplicationId]) {
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
@@ -94,8 +99,9 @@ ADJMainQueueController *mainQueueControllerWeak;
 
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
-        [self.logger error:@"Cannot Track Event Package"
-         " without a reference to sdk package builder"];
+        [self.logger debugDev:
+         @"Cannot Track Event Package without a reference to sdk package builder"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
@@ -103,15 +109,17 @@ ADJMainQueueController *mainQueueControllerWeak;
 
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
-        [self.logger error:@"Cannot Track Event Package"
-         " without a reference to main queue controller"];
+        [self.logger debugDev:
+         @"Cannot Track Event Package without a reference to main queue controller"
+                    issueType:ADJIssueWeakReference];
 
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
 
-    ADJEventPackageData *_Nonnull eventPackageData = [sdkPackageBuilder buildEventPackageWithClientData:clientEventData
-                                                                                           apiTimestamp:apiTimestamp];
+    ADJEventPackageData *_Nonnull eventPackageData =
+        [sdkPackageBuilder buildEventPackageWithClientData:clientEventData
+                                              apiTimestamp:apiTimestamp];
 
     [mainQueueController addEventPackageToSendWithData:eventPackageData
                                    sqliteStorageAction:clientActionRemoveStorageAction];
@@ -123,17 +131,19 @@ ADJMainQueueController *mainQueueControllerWeak;
     }
 
     if ([self.eventDeduplicationController ccContainsWithDeduplicationId:deduplicationId]) {
-        [self.logger info:@"Event won't be tracked,"
-         " since it has a previously used deduplication id: %@", deduplicationId];
+        [self.logger infoClient:
+         @"Event won't be tracked, since it has a previously used deduplication id"
+                            key:@"deduplication id"
+                          value:deduplicationId.stringValue];
         return NO;
     }
 
-    ADJNonNegativeInt *_Nonnull newDeduplicationCount =
-    [self.eventDeduplicationController ccAddWithDeduplicationId:deduplicationId];
+    ADJNonNegativeInt *_Nonnull newDeduplicationCount = [self.eventDeduplicationController ccAddWithDeduplicationId:deduplicationId];
 
-    [self.logger info:@"Saving deduplication id %@ to avoid tracking an event"
-     " with the same value in the future. Currently storing %@ ids",
-     deduplicationId, newDeduplicationCount];
+    [self.logger debugDev:
+     @"Saving deduplication id to avoid tracking an event with the same value in the future"
+                      key:@"deduplication id"
+                    value:deduplicationId.stringValue];
 
     return YES;
 }
@@ -141,18 +151,21 @@ ADJMainQueueController *mainQueueControllerWeak;
 - (void)incrementEventCount {
     ADJEventStateStorage *_Nullable eventStateStorage = self.eventStateStorageWeak;
     if (eventStateStorage == nil) {
-        [self.logger error:@"Cannot increment event count without a reference to storage"];
+        [self.logger debugDev:@"Cannot increment event count without a reference to storage"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
     ADJEventStateData *_Nonnull eventStateData = [eventStateStorage readOnlyStoredDataValue];
 
     ADJEventStateData *_Nonnull newEventStateData =
-    [eventStateData generateIncrementedEventCountStateData];
+        [eventStateData generateIncrementedEventCountStateData];
 
     [eventStateStorage updateWithNewDataValue:newEventStateData];
 
-    [self.logger debug:@"Event count incremented to %@", newEventStateData.eventCount];
+    [self.logger debugDev:@"Event count incremented"
+                      key:@"event count"
+                    value:newEventStateData.eventCount.description];
 }
 
 @end

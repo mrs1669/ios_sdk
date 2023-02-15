@@ -41,56 +41,54 @@ static NSString *const kCallbackParametersMapName = @"CALLBACK_PARAMETER_MAP";
 static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
 @implementation ADJClientBillingSubscriptionData
-+ (nullable instancetype)instanceFromClientWithAdjustBillingSubscription:
-(nullable ADJAdjustBillingSubscription *)adjustBillingSubscription
-                                                                  logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustBillingSubscription:
+        (nullable ADJAdjustBillingSubscription *)adjustBillingSubscription
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustBillingSubscription == nil) {
-        [logger error:@"Cannot create billing subscription"
-         " with nil adjust billing subscription value"];
+        [logger errorClient:
+            @"Cannot create billing subscription with nil adjust billing subscription value"];
         return nil;
     }
 
     ADJMoney *_Nullable price =
-    [ADJMoney instanceFromAmountDecimalNumber:adjustBillingSubscription.priceDecimalNumber
-                                     currency:adjustBillingSubscription.currency
-                                       source:@"billing subscription price"
-                                       logger:logger];
+        [ADJMoney instanceFromAmountDecimalNumber:adjustBillingSubscription.priceDecimalNumber
+                                         currency:adjustBillingSubscription.currency
+                                           source:@"billing subscription price"
+                                           logger:logger];
     if (price == nil) {
-        [logger error:@"Cannot create billing subscription"
-         " without a valid price"];
+        [logger errorClient:@"Cannot create billing subscription without a valid price"];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable transactionId =
-    [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId
-                        sourceDescription:@"transaction id"
-                                   logger:logger];
+        [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId
+                            sourceDescription:@"transaction id"
+                                       logger:logger];
     if (transactionId == nil) {
-        [logger error:@"Cannot create billing subscription"
-         " without a valid transaction id"];
+        [logger errorClient:@"Cannot create billing subscription without a valid transaction id"];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable receiptDataString =
-    [ADJNonEmptyString
-     instanceFromString:
-         [ADJUtilConv convertToBase64StringWithDataValue:
-          adjustBillingSubscription.receiptData]
-     sourceDescription:@"billing subscription receipt data string"
-     logger:logger];
+        [ADJNonEmptyString
+            instanceFromString:[ADJUtilConv convertToBase64StringWithDataValue:
+                                adjustBillingSubscription.receiptData]
+            sourceDescription:@"billing subscription receipt data string"
+            logger:logger];
 
     if (receiptDataString == nil) {
-        [logger error:@"Cannot create billing subscription"
-         " without a valid receiptData"];
+        [logger errorClient:@"Cannot create billing subscription without a valid receiptData"];
         return nil;
     }
 
     ADJTimestampMilli *_Nullable transactionTimestamp =
-    [ADJTimestampMilli instanceWithNSDateValue:adjustBillingSubscription.transactionDate
-                                        logger:logger];
+        [ADJTimestampMilli instanceWithNSDateValue:adjustBillingSubscription.transactionDate
+                                            logger:logger];
     if (transactionTimestamp == nil) {
-        [logger error:@"Cannot create billing subscription"
-         " without a valid transaction timestamp"];
+        [logger errorClient:
+            @"Cannot create billing subscription without a valid transaction timestamp"];
         return nil;
     }
 
@@ -122,37 +120,40 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
                      partnerParameters:partnerParameters];
 }
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:
-(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:
+        (nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger
+{
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
 
     ADJNonEmptyString *_Nullable priceAmountIoValue =
-    [propertiesMap pairValueWithKey:kPriceAmountKey];
+        [propertiesMap pairValueWithKey:kPriceAmountKey];
     ADJMoneyAmountBase *_Nullable priceAmount =
-    [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue
-                                     logger:logger];
+        [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue
+                                         logger:logger];
 
     if (priceAmount == nil) {
-        [logger error:@"Cannot decode ClientBillingSubscriptionData"
-         " without valid price amount"];
+        [logger debugDev:@"Cannot decode ClientBillingSubscriptionData without valid price amount"
+               issueType:ADJIssueStorageIo];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable priceCurrency =
-    [propertiesMap pairValueWithKey:kPriceCurrencyKey];
+    ADJNonEmptyString *_Nullable priceCurrency = [propertiesMap pairValueWithKey:kPriceCurrencyKey];
 
     if (priceCurrency == nil) {
-        [logger error:@"Cannot decode ClientBillingSubscriptionData"
-         " without valid price currency"];
+        [logger debugDev:
+            @"Cannot decode ClientBillingSubscriptionData without valid price currency"
+            issueType:ADJIssueStorageIo];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable transactionId =
-    [propertiesMap pairValueWithKey:kTransactionIdKey];
+        [propertiesMap pairValueWithKey:kTransactionIdKey];
     if (transactionId == nil) {
-        [logger error:@"Cannot decode ClientBillingSubscriptionData"
-         " without valid transaction id"];
+        [logger debugDev:
+            @"Cannot decode ClientBillingSubscriptionData without valid transaction id"
+            issueType:ADJIssueStorageIo];
         return nil;
     }
 
@@ -160,8 +161,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     [propertiesMap pairValueWithKey:kReceiptDataStringKey];
 
     if (receiptDataString == nil) {
-        [logger error:@"Cannot decode ClientBillingSubscriptionData"
-         " without valid receipt data string"];
+        [logger debugDev:
+            @"Cannot decode ClientBillingSubscriptionData without valid receipt data string"
+            issueType:ADJIssueStorageIo];
         return nil;
     }
 

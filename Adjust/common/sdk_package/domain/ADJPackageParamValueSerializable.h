@@ -6,12 +6,10 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 @class ADJNonEmptyString;
 
 @protocol ADJPackageParamValueSerializable <NSObject>
-
 - (nullable ADJNonEmptyString *)toParamValue;
-
 @end

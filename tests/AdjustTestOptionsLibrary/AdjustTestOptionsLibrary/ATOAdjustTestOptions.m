@@ -141,16 +141,19 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
         sdkConfigDataBuilder = [[ADJSdkConfigDataBuilder alloc] initWithDefaultValues];
 
         sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging = YES;
+        sdkConfigDataBuilder.assumeDevLogs = YES;
 
         [self mergeIntoSdkConfigWithAdjustTestOptions:cachedTestOptions
                                  sdkConfigDataBuilder:sdkConfigDataBuilder];
     }
 
     NSString *_Nonnull returnMessage =
-        [ADJAdjustInternal teardownWithShouldClearStorage:cachedTestOptions.clearStorage
-                                      sdkConfigDataBuilder:sdkConfigDataBuilder];
+        [ADJAdjustInternal teardownWithSdkConfigDataBuilder:sdkConfigDataBuilder
+                                         shouldClearStorage:cachedTestOptions.clearStorage];
 
-    [[ATOLogger sharedInstance] debug:@"Message from teardownAndApplySdkConfig: %@", returnMessage];
+    [[ATOLogger sharedInstance] debugDev:returnMessage
+                                     key:@"from"
+                                   value:@"teardownAndApplySdkConfig"];
 
     NSString *_Nullable extraPath = cachedTestOptions.extraPath;
 
@@ -172,8 +175,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
 
         if ([@"extraPath" isEqualToString:key]) {
             adjustTestOptions.extraPath = value;
-            [[ATOLogger sharedInstance] debug:@"mergeIntoTestOptionsWithSet extraPath: %@",
-                adjustTestOptions.extraPath];
+            [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                             key:@"extraPath"
+                                           value:adjustTestOptions.extraPath];
         }
 
         if ([@"foregroundTimerIntervalMilli" isEqual:key]) {
@@ -181,13 +185,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                 [self convertToNSNumberIntWithStringValue:value];
 
             if (foregroundTimerIntervalMilliNumber != nil) {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet foregroundTimerIntervalMilli %@",
-                    foregroundTimerIntervalMilliNumber];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"foregroundTimerIntervalMilli"
+                                               value:foregroundTimerIntervalMilliNumber.description];
                 adjustTestOptions.foregroundTimerIntervalMilli = foregroundTimerIntervalMilliNumber;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet foregroundTimerIntervalMilli %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet foregroundTimerIntervalMilli unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -196,13 +202,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                 [self convertToNSNumberIntWithStringValue:value];
 
             if (foregroundTimerStartMilliNumber != nil) {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet foregroundTimerStartMilli %@",
-                    foregroundTimerStartMilliNumber];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"foregroundTimerStartMilli"
+                                               value:foregroundTimerStartMilliNumber.description];
                 adjustTestOptions.foregroundTimerStartMilli = foregroundTimerStartMilliNumber;
             } else {
-                [[ATOLogger sharedInstance] error
-                    :@"mergeIntoTestOptionsWithSet foregroundTimerStartMilli %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet foregroundTimerStartMilli unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -211,13 +219,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                 [self convertToNSNumberIntWithStringValue:value];
 
             if (minSdkSessionIntervalMilliNumber != nil) {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet minSdkSessionIntervalMilli %@",
-                 minSdkSessionIntervalMilliNumber];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"minSdkSessionIntervalMilli"
+                                               value:minSdkSessionIntervalMilliNumber.description];
                 adjustTestOptions.minSdkSessionIntervalMilli = minSdkSessionIntervalMilliNumber;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet minSdkSessionIntervalMilli %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet minSdkSessionIntervalMilli unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
         
@@ -226,13 +236,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                 [self convertToNSNumberIntWithStringValue:value];
 
             if (minLifecycleIntervalMilliNumber != nil) {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet minLifecycleIntervalMilli %@",
-                 minLifecycleIntervalMilliNumber];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"minLifecycleIntervalMilli"
+                                               value:minLifecycleIntervalMilliNumber.description];
                 adjustTestOptions.minLifecycleIntervalMilli = minLifecycleIntervalMilliNumber;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet minLifecycleIntervalMilli %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet minLifecycleIntervalMilli unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -241,15 +253,17 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                 [self convertToNSNumberIntWithStringValue:value];
 
             if (overwriteFirstSdkSessionIntervalMilliNumber != nil) {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet overwriteFirstSdkSessionIntervalMilli %@",
-                 overwriteFirstSdkSessionIntervalMilliNumber];
+                [[ATOLogger sharedInstance]
+                 debugDev:@"mergeIntoTestOptionsWithSet"
+                 key:@"overwriteFirstSdkSessionIntervalMilli"
+                 value:overwriteFirstSdkSessionIntervalMilliNumber.description];
                 adjustTestOptions.overwriteFirstSdkSessionIntervalMilli =
-                overwriteFirstSdkSessionIntervalMilliNumber;
+                    overwriteFirstSdkSessionIntervalMilliNumber;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet overwriteFirstMeasurementSessionIntervalMilli %@ unread",
-                    value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet overwriteFirstMeasurementSessionIntervalMilli unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -260,12 +274,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
             if (doReadCurrentLifecycleStatusBoolNumber != nil
                 && doReadCurrentLifecycleStatusBoolNumber.boolValue)
             {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet doReadCurrentLifecycleStatus"];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"doReadCurrentLifecycleStatus"
+                                               value:doReadCurrentLifecycleStatusBoolNumber.description];
                 adjustTestOptions.doNotReadCurrentLifecycleStatus = NO;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet doReadCurrentLifecycleStatus %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet doReadCurrentLifecycleStatus unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -276,12 +293,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
             if (initiateAttributionFromSdkBoolNumber != nil
                 && initiateAttributionFromSdkBoolNumber.boolValue)
             {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet initiateAttributionFromSdk"];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"initiateAttributionFromSdk"
+                                               value:initiateAttributionFromSdkBoolNumber.description];
                 adjustTestOptions.doNotInitiateAttributionFromSdk = NO;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet initiateAttributionFromSdk %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet initiateAttributionFromSdk unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -292,12 +312,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
             if (adServicesFrameworkEnabledNumber != nil
                 && adServicesFrameworkEnabledNumber.boolValue)
             {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet adServicesFrameworkEnabled"];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"adServicesFrameworkEnabled"
+                                               value:adServicesFrameworkEnabledNumber.description];
                 adjustTestOptions.doNotReadAsaAttribution = NO;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet adServicesFrameworkEnabled %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet adServicesFrameworkEnabled unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -308,12 +331,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
             if (doNotCreateEntryRootInstanceBoolNumber != nil
                 && doNotCreateEntryRootInstanceBoolNumber.boolValue)
             {
-                [[ATOLogger sharedInstance] debug:
-                    @"mergeIntoTestOptionsWithSet doNotCreateEntryRootInstance"];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"doNotCreateEntryRootInstance"
+                                               value:doNotCreateEntryRootInstanceBoolNumber.description];
                 adjustTestOptions.doCreateEntryRootInstance = NO;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet doNotCreateEntryRootInstance %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet doNotCreateEntryRootInstance unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
 
@@ -323,11 +349,15 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
             if (deleteStateBoolNumber != nil
                 && deleteStateBoolNumber.boolValue)
             {
-                [[ATOLogger sharedInstance] debug:@"mergeIntoTestOptionsWithSet deleteState"];
+                [[ATOLogger sharedInstance] debugDev:@"mergeIntoTestOptionsWithSet"
+                                                 key:@"deleteState"
+                                               value:deleteStateBoolNumber.description];
                 adjustTestOptions.clearStorage = YES;
             } else {
-                [[ATOLogger sharedInstance] error:
-                    @"mergeIntoTestOptionsWithSet deleteState %@ unread", value];
+                [[ATOLogger sharedInstance] debugDev:
+                 @"mergeIntoTestOptionsWithSet deleteState unread"
+                                                 key:@"value read"
+                                               value:value];
             }
         }
         // ...
@@ -367,51 +397,56 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
 
     // if it's the same instance, it's already merged
     if (cachedTestOptions == adjustTestOptions) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions same instance"];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions same instance"];
         return;
     }
 
     if (adjustTestOptions.extraPath != nil) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions extraPath %@",
-            adjustTestOptions.extraPath];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                         key:@"extraPath"
+                                       value:adjustTestOptions.extraPath];
         cachedTestOptions.extraPath = adjustTestOptions.extraPath;
     }
 
     if (adjustTestOptions.urlOverwrite != nil) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions urlOverwrite %@",
-            adjustTestOptions.urlOverwrite];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                         key:@"urlOverwrite"
+                                       value:adjustTestOptions.urlOverwrite];
         cachedTestOptions.urlOverwrite = adjustTestOptions.urlOverwrite;
     }
 
     if (adjustTestOptions.foregroundTimerIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoCachedWithTestOptions foregroundTimerIntervalMilli %@",
-            adjustTestOptions.foregroundTimerIntervalMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                         key:@"foregroundTimerIntervalMilli"
+                                       value:adjustTestOptions.foregroundTimerIntervalMilli.description];
         cachedTestOptions.foregroundTimerIntervalMilli = adjustTestOptions.foregroundTimerIntervalMilli;
     }
 
     if (adjustTestOptions.foregroundTimerStartMilli != nil) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoCachedWithTestOptions foregroundTimerStartMilli %@",
-            adjustTestOptions.foregroundTimerStartMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                         key:@"foregroundTimerStartMilli"
+                                       value:adjustTestOptions.foregroundTimerStartMilli.description];
         cachedTestOptions.foregroundTimerStartMilli = adjustTestOptions.foregroundTimerStartMilli;
     }
 
     if (adjustTestOptions.minSdkSessionIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions minSdkSessionIntervalMilli %@",
-            adjustTestOptions.minSdkSessionIntervalMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                         key:@"minSdkSessionIntervalMilli"
+                                       value:adjustTestOptions.minSdkSessionIntervalMilli.description];
         cachedTestOptions.minSdkSessionIntervalMilli = adjustTestOptions.minSdkSessionIntervalMilli;
     }
     
     if (adjustTestOptions.minLifecycleIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions minLifecycleIntervalMilli %@",
-            adjustTestOptions.minLifecycleIntervalMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                         key:@"minLifecycleIntervalMilli"
+                                       value:adjustTestOptions.minLifecycleIntervalMilli.description];
         cachedTestOptions.minLifecycleIntervalMilli = adjustTestOptions.minLifecycleIntervalMilli;
     }
 
     if (adjustTestOptions.overwriteFirstSdkSessionIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:@"mergeIntoCachedWithTestOptions overwriteFirstSdkSessionIntervalMilli %@",
-            adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                         key:@"overwriteFirstSdkSessionIntervalMilli"
+                                       value:adjustTestOptions.overwriteFirstSdkSessionIntervalMilli.description];
         cachedTestOptions.overwriteFirstSdkSessionIntervalMilli =
             adjustTestOptions.overwriteFirstSdkSessionIntervalMilli;
     }
@@ -421,30 +456,36 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     // non-nullable values
     cachedTestOptions.doNotReadCurrentLifecycleStatus =
         adjustTestOptions.doNotReadCurrentLifecycleStatus;
-    [[ATOLogger sharedInstance] debug:
-        @"mergeIntoCachedWithTestOptions doNotReadCurrentLifecycleStatus %@",
-        @(adjustTestOptions.doNotReadCurrentLifecycleStatus)];
+    [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                     key:@"doNotReadCurrentLifecycleStatus"
+                                   value:
+     @(adjustTestOptions.doNotReadCurrentLifecycleStatus).description];
 
     cachedTestOptions.doNotInitiateAttributionFromSdk =
         adjustTestOptions.doNotInitiateAttributionFromSdk;
-    [[ATOLogger sharedInstance] debug:
-        @"mergeIntoCachedWithTestOptions doNotInitiateAttributionFromSdk %@",
-        @(adjustTestOptions.doNotInitiateAttributionFromSdk)];
+    [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                     key:@"doNotInitiateAttributionFromSdk"
+                                   value:
+     @(adjustTestOptions.doNotInitiateAttributionFromSdk).description];
 
     cachedTestOptions.doNotReadAsaAttribution = adjustTestOptions.doNotReadAsaAttribution;
-    [[ATOLogger sharedInstance] debug:
-        @"mergeIntoCachedWithTestOptions doNotReadAsaAttribution %@",
-        @(adjustTestOptions.doNotReadAsaAttribution)];
+    [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                     key:@"doNotReadAsaAttribution"
+                                   value:
+     @(adjustTestOptions.doNotReadAsaAttribution).description];
 
     cachedTestOptions.doCreateEntryRootInstance =
         adjustTestOptions.doCreateEntryRootInstance;
-    [[ATOLogger sharedInstance] debug:
-        @"mergeIntoCachedWithTestOptions doCreateEntryRootInstance %@",
-        @(adjustTestOptions.doCreateEntryRootInstance)];
+    [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                     key:@"doCreateEntryRootInstance"
+                                   value:
+     @(adjustTestOptions.doCreateEntryRootInstance).description];
 
     cachedTestOptions.clearStorage = adjustTestOptions.clearStorage;
-    [[ATOLogger sharedInstance] debug:
-        @"mergeIntoCachedWithTestOptions clearStorage %@", @(adjustTestOptions.clearStorage)];
+    [[ATOLogger sharedInstance] debugDev:@"mergeIntoCachedWithTestOptions"
+                                     key:@"clearStorage"
+                                   value:
+     @(adjustTestOptions.clearStorage).description];
 }
 
 /*
@@ -484,9 +525,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
 
     // set direct variables
     if (adjustTestOptions.foregroundTimerIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions foregroundTimerIntervalMilli: %@",
-            adjustTestOptions.foregroundTimerIntervalMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoSdkConfigWithAdjustTestOptions"
+                                         key:@"foregroundTimerIntervalMilli"
+                                       value:adjustTestOptions.foregroundTimerIntervalMilli.description];
 
         ADJNonNegativeInt *_Nullable foregroundTimerIntervalMilliNumber =
             [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.foregroundTimerIntervalMilli
@@ -500,9 +541,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     }
 
     if (adjustTestOptions.foregroundTimerStartMilli != nil) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions foregroundTimerStartMilli: %@",
-            adjustTestOptions.foregroundTimerStartMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoSdkConfigWithAdjustTestOptions"
+                                         key:@"foregroundTimerStartMilli"
+                                       value:adjustTestOptions.foregroundTimerStartMilli.description];
 
         ADJNonNegativeInt *_Nullable foregroundTimerStartMilliNumber =
             [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.foregroundTimerStartMilli
@@ -515,9 +556,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     }
 
     if (adjustTestOptions.minSdkSessionIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions minSdkSessionIntervalMilli: %@",
-            adjustTestOptions.minSdkSessionIntervalMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoSdkConfigWithAdjustTestOptions"
+                                         key:@"minSdkSessionIntervalMilli"
+                                       value:adjustTestOptions.minSdkSessionIntervalMilli.description];
 
         ADJNonNegativeInt *_Nullable minSdkSessionIntervalMilliNumber =
             [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.minSdkSessionIntervalMilli
@@ -548,9 +589,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     */
 
     if (adjustTestOptions.overwriteFirstSdkSessionIntervalMilli != nil) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions overwriteFirstSdkSessionIntervalMilli: %@",
-            adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoSdkConfigWithAdjustTestOptions"
+                                         key:@"overwriteFirstSdkSessionIntervalMilli"
+                                       value:adjustTestOptions.overwriteFirstSdkSessionIntervalMilli.description];
 
         ADJNonNegativeInt *_Nullable overwriteFirstSdkSessionIntervalMilliNumber =
             [ADJNonNegativeInt
@@ -566,25 +607,28 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
 
     // Interpret remaining variables
     if (adjustTestOptions.doNotReadCurrentLifecycleStatus) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions doNotReadCurrentLifecycleStatus: %@",
-            @(adjustTestOptions.doNotReadCurrentLifecycleStatus)];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoSdkConfigWithAdjustTestOptions"
+                                         key:@"doNotReadCurrentLifecycleStatus"
+                                       value:
+         @(adjustTestOptions.doNotReadCurrentLifecycleStatus).description];
 
         sdkConfigDataBuilder.doNotReadCurrentLifecycleStatus = YES;
     }
 
     if (adjustTestOptions.doNotInitiateAttributionFromSdk) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions doNotInitiateAttributionFromSdk: %@",
-            @(adjustTestOptions.doNotInitiateAttributionFromSdk)];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoSdkConfigWithAdjustTestOptions"
+                                         key:@"doNotInitiateAttributionFromSdk"
+                                       value:
+         @(adjustTestOptions.doNotInitiateAttributionFromSdk).description];
 
         sdkConfigDataBuilder.doNotInitiateAttributionFromSdk = YES;
     }
 
     if (adjustTestOptions.doNotReadAsaAttribution) {
-        [[ATOLogger sharedInstance] debug:
-            @"mergeIntoSdkConfigWithAdjustTestOptions doNotReadAsaAttribution: %@",
-            @(adjustTestOptions.doNotReadAsaAttribution)];
+        [[ATOLogger sharedInstance] debugDev:@"mergeIntoSdkConfigWithAdjustTestOptions"
+                                         key:@"doNotReadAsaAttribution"
+                                       value:
+         @(adjustTestOptions.doNotReadAsaAttribution).description];
 
         sdkConfigDataBuilder.asaAttributionConfigData =
             [[ADJExternalConfigData alloc] initWithTimeoutPerAttempt:nil
@@ -645,15 +689,17 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     NSString *_Nullable extraPath = sdkConfigDataBuilder.networkEndpointData.extraPath;
     if (adjustTestOptions.extraPath != nil) {
         extraPath = adjustTestOptions.extraPath;
-        [[ATOLogger sharedInstance] debug:@"mergeNetworkOptionsWithTestOptions extraPath: %@",
-            extraPath];
+        [[ATOLogger sharedInstance] debugDev:@"mergeNetworkOptionsWithTestOptions"
+                                         key:@"extraPath"
+                                       value:extraPath];
     }
 
     NSString *_Nullable urlOverwrite = sdkConfigDataBuilder.networkEndpointData.urlOverwrite;
     if (adjustTestOptions.urlOverwrite != nil) {
         urlOverwrite = adjustTestOptions.urlOverwrite;
-        [[ATOLogger sharedInstance] debug:@"mergeNetworkOptionsWithTestOptions urlOverwrite: %@",
-            urlOverwrite];
+        [[ATOLogger sharedInstance] debugDev:@"mergeNetworkOptionsWithTestOptions"
+                                         key:@"urlOverwrite"
+                                       value:urlOverwrite];
     }
 
     ADJNetworkEndpointData *_Nonnull networkEndpointData =

@@ -16,9 +16,7 @@
 #import "ADJConstants.h"
 
 #pragma mark Private class
-@implementation ADJLifecyclePublisher
-
-@end
+@implementation ADJLifecyclePublisher @end
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -68,21 +66,22 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
-              doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus {
+              doNotReadCurrentLifecycleStatus:(BOOL)doNotReadCurrentLifecycleStatus
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"LifecycleController"];
     _threadControllerWeak = threadController;
 
     _lifecyclePublisher = [[ADJLifecyclePublisher alloc] init];
+    [pubRegistry addPublisher:_lifecyclePublisher];
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];
 
     _isInForegroundAtomic = [[ADJAtomicBoolean alloc]
-                             //initWithRelaxedValue:ADJIsSdkInForegroundWhenStarting];
                              initSeqCstMemoryOrderWithInitialBoolValue:
                                  ADJIsSdkInForegroundWhenStarting];
 
-    //_canPublishAtomic = [[ADJAtomicBoolean alloc] initWithRelaxedValue:NO];
     _canPublishAtomic = [[ADJAtomicBoolean alloc] initSeqCstMemoryOrderWithInitialBoolValue:NO];
 
     _cachedLifecycleStateChangeSource = nil;
@@ -90,7 +89,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
     if (! doNotReadCurrentLifecycleStatus) {
         [self readInitialApplicationState];
     } else {
-        [self.logger debug:@"Configured to not read current lifecycle"];
+        [self.logger debugDev:@"Configured to not read current lifecycle"];
     }
 
     [self subscribeToSystemLifecycleEvents];
@@ -165,12 +164,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
         if (strongSelf == nil) { return; }
 
         [strongSelf publishWhenGatesOpen];
-    }];
-}
-
-#pragma mark - Subscriptions
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher: (nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
-    [publishingGatePublisher addSubscriber:self];
+    } source:@"allowed to publish notifications"];
 }
 
 #pragma mark - ADJTeardownFinalizer
@@ -202,9 +196,11 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
         [self publishDidForegroundAfterSdkInitWithSource:source];
     } else {
-        [self.logger debug:
-         @"Did not change to the foreground from %@, since it did previously from %@",
-         source, self->_cachedLifecycleStateChangeSource];
+        [self.logger debugDev:
+            @"Did not change to the foreground, since it did previously"
+                         from:source
+                          key:@"previous source"
+                        value:self->_cachedLifecycleStateChangeSource];
     }
 }
 
@@ -220,9 +216,9 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
              {
                 [subscriber onForegroundWithIsFromClientContext:source == kClientForeground];
             }];
-        }];
+        } source:@"publish foreground"];
     } else {
-        [self.logger debug:@"Cannot publish foreground before sdk init"];
+        [self.logger debugDev:@"Cannot publish foreground before sdk init"];
     }
 }
 
@@ -245,9 +241,11 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
         [self publishDidBackgroundAfterSdkInitWithSource:source];
     } else {
-        [self.logger debug:
-         @"Did not change to the background from %@, since it did previously from %@",
-         source, self->_cachedLifecycleStateChangeSource];
+        [self.logger debugDev:
+            @"Did not change to the background, since it did previously"
+                         from:source
+                          key:@"previous source"
+                        value:self->_cachedLifecycleStateChangeSource];
     }
 }
 
@@ -263,9 +261,9 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
              {
                 [subscriber onBackgroundWithIsFromClientContext:source == kClientBackground];
             }];
-        }];
+        } source:@"publish background"];
     } else {
-        [self.logger debug:@"Cannot publish background before sdk init"];
+        [self.logger debugDev:@"Cannot publish background before sdk init"];
     }
 }
 
@@ -363,8 +361,9 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
     ADJThreadController *threadController = self.threadControllerWeak;
 
     if (threadController == nil) {
-        [self.logger error:@"Cannot read initial application state"
-         " without thread controller reference"];
+        [self.logger debugDev:
+         @"Cannot read initial application state without thread controller reference"
+                    issueType:ADJIssueWeakReference];
         return;
     }
 
@@ -384,8 +383,9 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 #else
         UIApplication *_Nonnull application = UIApplication.sharedApplication;
 
-        [strongSelf.logger error:@"UIApplication State: %ld", application.applicationState];
-
+        [strongSelf.logger debugDev:@"Shared UIApplication state to read"
+                                key:@"UIApplicationState"
+                              value:[ADJUtilF integerFormat:application.applicationState]];
 
         UIApplicationState applicationState = application.applicationState;
 
@@ -396,9 +396,9 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
         } else if (UIApplicationStateInactive == applicationState) {
             [strongSelf didForegroundWithSource:kApplicationStateInactive];
         } else {
-            [strongSelf.logger debug:
-             @"Could not detect applicationState from main thread with value %@",
-             [ADJUtilF integerFormat:applicationState]];
+            [strongSelf.logger debugDev:
+             @"Could not detect applicationState from main thread"
+                              issueType:ADJIssueInvalidInput];
         }
 #endif
 

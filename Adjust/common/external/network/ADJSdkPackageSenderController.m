@@ -17,10 +17,8 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /*
- @property (nonnull, readonly, strong, nonatomic)
- ADJSdkPackageSendingPublisher *sdkPackageSendingPublisher;
- @property (nonnull, readonly, strong, nonatomic)
- ADJSdkResponsePublisher *sdkResponsePublisher;
+ @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSendingPublisher *sdkPackageSendingPublisher;
+ @property (nonnull, readonly, strong, nonatomic) ADJSdkResponsePublisher *sdkResponsePublisher;
  */
 
 @interface ADJSdkPackageSenderController ()
@@ -38,16 +36,19 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                           networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
                             adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
+                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"SdkPackageSenderController"];
     _networkEndpointData = networkEndpointData;
     _adjustUrlStrategy = adjustUrlStrategy;
     _clientCustomEndpointData = clientCustomEndpointData;
-    
+
     _sdkPackageSendingPublisher = [[ADJSdkPackageSendingPublisher alloc] init];
-    
+    [pubRegistry addPublisher:_sdkPackageSendingPublisher];
     _sdkResponsePublisher = [[ADJSdkResponsePublisher alloc] init];
+    [pubRegistry addPublisher:_sdkResponsePublisher];
     
     return self;
 }
@@ -56,10 +57,10 @@
 #pragma mark - ADJSdkPackageSenderFactory
 - (nonnull ADJSdkPackageSender *)createSdkPackageSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                                        sourceDescription:(nonnull NSString *)sourceDescription
-                                                              threadpool:(nonnull id<ADJThreadPool>)threadpool {
+                                                   threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory {
     return [[ADJSdkPackageSender alloc] initWithLoggerFactory:loggerFactory
                                             sourceDescription:sourceDescription
-                                                   threadpool:threadpool
+                                        threadExecutorFactory:threadExecutorFactory
                                    sdkPackageSendingCollector:self
                                          sdkResponseCollector:self
                                           networkEndpointData:self.networkEndpointData
@@ -82,8 +83,10 @@
 
 #pragma mark - ADJSdkResponseSubscriber
 - (void)didReceiveSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
-    [self.logger debug:@"%@", [sdkResponseData generateSentShortDescription]];
-    
+    [self.logger debugDev:@"Received response"
+                      key:@"sdk response"
+                    value:sdkResponseData.description];
+
     [self.sdkResponsePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJSdkResponseSubscriber> _Nonnull subscriber)
      {
@@ -92,3 +95,4 @@
 }
 
 @end
+

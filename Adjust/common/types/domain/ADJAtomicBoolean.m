@@ -32,6 +32,11 @@
     return [self initWithInitialBoolValue:initialBoolValue memoryOrder:__ATOMIC_SEQ_CST];
 }
 
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 #pragma mark - Private Constructors
 - (nonnull instancetype)initWithInitialBoolValue:(BOOL)initialBoolValue
                                      memoryOrder:(memory_order)memoryOrder {
@@ -67,22 +72,21 @@
     bool expectedB = expected ? true : false;
     bool desiredB = desired ? true : false;
     
-    return
-    atomic_compare_exchange_strong_explicit(&_atomicB,
-                                            &expectedB,
-                                            desiredB,
-                                            _memoryOrder,
-                                            _memoryOrder)
-    ? YES : NO;
+    return atomic_compare_exchange_strong_explicit(&_atomicB,
+                                                   &expectedB,
+                                                   desiredB,
+                                                   _memoryOrder,
+                                                   _memoryOrder)
+        ? YES : NO;
     /* The behavior of atomic_compare_exchange_* family is
      as if the following was executed atomically:
      
      if (memcmp(obj, expected, sizeof *obj) == 0) {
-     memcpy(obj, &desired, sizeof *obj);
-     return true;
+        memcpy(obj, &desired, sizeof *obj);
+        return true;
      } else {
-     memcpy(expected, obj, sizeof *obj);
-     return false;
+        memcpy(expected, obj, sizeof *obj);
+        return false;
      }
      */
 }

@@ -28,10 +28,13 @@
 
 @implementation ADJOfflineController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"ADJOfflineController"];
 
     _offlinePublisher = [[ADJOfflinePublisher alloc] init];
+    [pubRegistry addPublisher:_offlinePublisher];
 
     _isOffline = ADJIsSdkOfflineWhenStarting;
 
@@ -43,32 +46,26 @@
 #pragma mark Public API
 - (void)ccPutSdkOffline {
     if (self.isOffline) {
-        [self.logger info:@"Cannot put sdk offline, since it's already offline"];
+        [self.logger infoClient:@"Cannot put sdk offline, since it's already offline"];
         return;
     }
 
     self.isOffline = YES;
-    [self.logger debug:@"Sdk was put offline"];
+    [self.logger infoClient:@"Sdk was put offline"];
 
     [self publishDidSdkBecomeOffline];
 }
 
 - (void)ccPutSdkOnline {
     if (! self.isOffline) {
-        [self.logger info:@"Cannot put sdk online, since it's already online"];
+        [self.logger infoClient:@"Cannot put sdk online, since it's already online"];
         return;
     }
 
     self.isOffline = NO;
-    [self.logger debug:@"Sdk was put back online"];
+    [self.logger infoClient:@"Sdk was put back online"];
 
     [self publishDidSdkBecomeOnline];
-}
-
-#pragma mark - NSNotificationCenter subscriptions
-- (void)ccSubscribeToPublishersWithPublishingGatePublisher:
-(nonnull ADJPublishingGatePublisher *)publishingGatePublisher {
-    [publishingGatePublisher addSubscriber:self];
 }
 
 #pragma mark - ADJPublishingGateSubscriber

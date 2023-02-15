@@ -14,6 +14,8 @@
 //- (nonnull instancetype)initWithSeqCstValue:(BOOL)value;
 - (nonnull instancetype)initSeqCstMemoryOrderWithInitialBoolValue:(BOOL)initialBoolValue;
 
+- (nullable instancetype)init NS_UNAVAILABLE;
+
 // public api
 @property (assign, atomic) BOOL boolValue;
 

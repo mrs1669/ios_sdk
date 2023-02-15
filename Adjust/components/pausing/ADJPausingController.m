@@ -44,11 +44,14 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                          canSendInBackground:(BOOL)canSendInBackground {
+                          canSendInBackground:(BOOL)canSendInBackground
+                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+
     self = [super initWithLoggerFactory:loggerFactory source:@"PausingController"];
     _canSendInBackground = canSendInBackground;
 
     _pausingPublisher = [[ADJPausingPublisher alloc] init];
+    [pubRegistry addPublisher:_pausingPublisher];
 
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -75,7 +78,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         } else {
             [strongSelf publishResumeSendingWithSource:ADJFromCanPublish];
         }
-    }];
+    } source:@"allowed to publish notifications"];
 }
 
 #pragma mark - ADJOfflineSubscriber
@@ -91,7 +94,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkOnline];
         }
-    }];
+    } source:@"sdk become online"];
 }
 
 - (void)didSdkBecomeOffline {
@@ -106,7 +109,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromSdkOffline];
         }
-    }];
+    } source:@"sdk become offline"];
 }
 
 #pragma mark - ADJReachabilitySubscriber
@@ -123,7 +126,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromNetworkReachable];
         }
-    }];
+    } source:@"become reachable"];
 }
 
 - (void)didBecomeUnreachable {
@@ -139,7 +142,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromNetworkUnreachable];
         }
-    }];
+    } source:@"become unreachable"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -160,7 +163,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromForeground];
         }
-    }];
+    } source:@"foreground"];
 }
 
 - (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
@@ -180,7 +183,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromBackground];
         }
-    }];
+    } source:@"background"];
 }
 
 #pragma mark - ADJMeasurementSessionStartSubscriber
@@ -197,7 +200,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkStart];
         }
-    }];
+    } source:@"measurement session start"];
 }
 
 #pragma mark - ADJSdkActiveSubscriber
@@ -224,22 +227,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
                 [self publishPauseSendingWithSource:ADJPauseFromSdkNotActive];
             }
         }
-    }];
-}
-
-#pragma mark - Subscriptions
-- (void) ccSubscribeToPublishersWithPublishingGate:(nonnull ADJPublishingGatePublisher *)publishingGatePublisher
-                                  offlinePublisher:(nonnull ADJOfflinePublisher *)offlinePublisher
-                             reachabilityPublisher:(nonnull ADJReachabilityPublisher *)reachabilityPublisher
-                                lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-                  measurementSessionStartPublisher:(nonnull ADJMeasurementSessionStartPublisher *)measurementSessionStartPublisher
-                                sdkActivePublisher:(nonnull ADJSdkActivePublisher *)sdkActivePublisher {
-    [publishingGatePublisher addSubscriber:self];
-    [offlinePublisher addSubscriber:self];
-    [reachabilityPublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
-    [measurementSessionStartPublisher addSubscriber:self];
-    [sdkActivePublisher addSubscriber:self];
+    } source:@"sdk active"];
 }
 
 #pragma mark Internal Methods

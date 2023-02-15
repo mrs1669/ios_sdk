@@ -94,14 +94,17 @@
                                         isOptional:(BOOL)isOptional {
     if (integerNumber == nil) {
         if (! isOptional) {
-            [logger error:@"Cannot create non negative int with nil integer number value"];
+            [logger debugDev:@"Cannot create non negative int with nil integer number value"
+                   issueType:ADJIssueInvalidInput];
         }
         return nil;
     }
     
     if (integerNumber.integerValue < 0) {
-        [logger error:@"Cannot create non negative int with negative %@ value",
-         [ADJUtilF integerFormat:integerNumber.integerValue]];
+        [logger debugDev:@"Cannot create non negative int with negative value"
+                     key:@"number"
+                   value:[ADJUtilF integerFormat:integerNumber.integerValue].description
+               issueType:ADJIssueInvalidInput];
         return nil;
     }
     
@@ -113,7 +116,8 @@
                                       isOptional:(BOOL)isOptional {
     if (ioDataValue == nil) {
         if (! isOptional) {
-            [logger error:@"Cannot create non negative int with IoData value"];
+            [logger debugDev:@"Cannot create non negative int with IoData value"
+                   issueType:ADJIssueStorageIo];
         }
         return nil;
     }

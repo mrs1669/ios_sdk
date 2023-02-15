@@ -54,11 +54,14 @@
                mainQueueSdkPackageCount:(nonnull ADJNonNegativeInt *)mainQueueSdkPackageCount
                       hasPackageAtFront:(BOOL)hasPackageAtFront
 {
-    [self.logger debug:@"Added package in %@. position", mainQueueSdkPackageCount];
-    [self.logger debug:@"%@", [sdkPackageAdded generateExtendedDescription]];
+    [self.logger debugDev:@"Added package"
+                     key1:@"queue count"
+                   value1:mainQueueSdkPackageCount.description
+                     key2:@"sdk package"
+                   value2:[sdkPackageAdded generateExtendedDescription].stringValue];
 
     if (mainQueueSdkPackageCount.uIntegerValue == 1) {
-        [self.logger debug:@"New added package is the one now at the front"];
+        [self.logger debugDev:@"New added package is the one now at the front"];
     }
 
     return [self sendPackageAtFrontWithHasPackageAtFront:hasPackageAtFront
@@ -90,10 +93,10 @@
     BOOL removePackageAtFront = ! sdkResponse.shouldRetry;
 
     if (removePackageAtFront) {
-        [self.logger debug:@"Removing package at front when processing received sdk response"];
+        [self.logger debugDev:@"Removing package at front when processing received sdk response"];
     } else {
-        [self.logger debug:@"Not removing package at front"
-            " when processing received sdk response"];
+        [self.logger debugDev:
+            @"Not removing package at front when processing received sdk response"];
     }
 
     ADJDelayData *_Nullable delayData =
@@ -102,11 +105,12 @@
     if (delayData != nil) {
         self.isInDelay = YES;
 
-        [self.logger debug:@"Delaying try to send next package, because of %@,"
-            " when processing received sdk response", delayData.source];
+        [self.logger debugDev:
+         @"Delaying try to send next package, when processing received sdk response"
+                         from:delayData.source];
     } else {
-        [self.logger debug:@"Not delaying try to send next package"
-            " when processing received sdk response"];
+        [self.logger debugDev:
+         @"Not delaying try to send next package when processing received sdk response"];
     }
 
     return [[ADJMainQueueResponseProcessingData alloc]
@@ -127,30 +131,27 @@
 - (BOOL)sendPackageAtFrontWithHasPackageAtFront:(BOOL)hasPackageAtFront
                                          source:(nonnull NSString *)source
 {
-    if (hasPackageAtFront) {
-        [self.logger debug:@"There is at least one package to send %@", source];
-    } else {
-        [self.logger debug:@"There are no more packages to send %@", source];
+    if (! hasPackageAtFront) {
+        [self.logger debugDev:@"There are no more packages to send"
+                         from: source];
+        return NO;
     }
+    
+    [self.logger debugDev:@"There is at least one package to send"
+                     from:source];
 
     if (self.isInDelay) {
-        [self.logger debug:@"Cannot send package at front because it's in delay"];
+        [self.logger debugDev:@"Cannot send package at front because it's in delay"];
         return NO;
     }
 
     if (self.isSending) {
-        [self.logger debug:@"Cannot send package at front because it's already sending"];
+        [self.logger debugDev:@"Cannot send package at front because it's already sending"];
         return NO;
     }
 
     if (self.isPaused) {
-        [self.logger debug:@"Cannot send package at front because it's paused"];
-        return NO;
-    }
-
-    // TODO: (Gena) Why cannot we add this code to 'hasPackageAtFront' check above?
-    if (! hasPackageAtFront) {
-        [self.logger debug:@"Cannot send package at front because it's empty"];
+        [self.logger debugDev:@"Cannot send package at front because it's paused"];
         return NO;
     }
 

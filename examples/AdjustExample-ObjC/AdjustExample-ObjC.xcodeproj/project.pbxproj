@@ -17,6 +17,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		073935A1293F4B84006BF6FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF8EF28F6040F00852E17;
+			remoteInfo = AdjustSdkStatic;
+		};
+		073935A3293F4B84006BF6FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF9CC28F606AC00852E17;
+			remoteInfo = AdjustSdkTvStatic;
+		};
+		073935A5293F4B84006BF6FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BFAAB28F608EE00852E17;
+			remoteInfo = AdjustSdkImStatic;
+		};
 		07DD772528B4CC04005A2245 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
@@ -44,6 +65,34 @@
 			proxyType = 2;
 			remoteGlobalIDString = 075D905228745EBB005019E3;
 			remoteInfo = AdjustSdkIm;
+		};
+		0A78647A293E1665001EDB19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF8EF28F6040F00852E17;
+			remoteInfo = AdjustSdkStatic;
+		};
+		0A78647C293E1665001EDB19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF9CC28F606AC00852E17;
+			remoteInfo = AdjustSdkTvStatic;
+		};
+		0A78647E293E1665001EDB19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BFAAB28F608EE00852E17;
+			remoteInfo = AdjustSdkImStatic;
+		};
+		0A786481293E17D7001EDB19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07DD771D28B4CC04005A2245 /* Adjust.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 075D8FC528731314005019E3;
+			remoteInfo = Adjust;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -125,6 +174,9 @@
 				07DD772828B4CC04005A2245 /* AdjustSdk.framework */,
 				07DD772A28B4CC04005A2245 /* AdjustSdkTv.framework */,
 				07DD772C28B4CC04005A2245 /* AdjustSdkIm.framework */,
+				0A78647B293E1665001EDB19 /* libAdjustSdk.a */,
+				0A78647D293E1665001EDB19 /* libAdjustSdkTv.a */,
+				0A78647F293E1665001EDB19 /* libAdjustSdkIm.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,6 +195,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0A786482293E17D7001EDB19 /* PBXTargetDependency */,
 			);
 			name = "AdjustExample-ObjC";
 			productName = "AdjustExample-ObjC";
@@ -188,6 +241,27 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		073935A2293F4B84006BF6FF /* libAdjustSdk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdk.a;
+			remoteRef = 073935A1293F4B84006BF6FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		073935A4293F4B84006BF6FF /* libAdjustSdkTv.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkTv.a;
+			remoteRef = 073935A3293F4B84006BF6FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		073935A6293F4B84006BF6FF /* libAdjustSdkIm.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkIm.a;
+			remoteRef = 073935A5293F4B84006BF6FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		07DD772628B4CC04005A2245 /* libAdjust.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -214,6 +288,27 @@
 			fileType = wrapper.framework;
 			path = AdjustSdkIm.framework;
 			remoteRef = 07DD772B28B4CC04005A2245 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A78647B293E1665001EDB19 /* libAdjustSdk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdk.a;
+			remoteRef = 0A78647A293E1665001EDB19 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A78647D293E1665001EDB19 /* libAdjustSdkTv.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkTv.a;
+			remoteRef = 0A78647C293E1665001EDB19 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A78647F293E1665001EDB19 /* libAdjustSdkIm.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkIm.a;
+			remoteRef = 0A78647E293E1665001EDB19 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -243,6 +338,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0A786482293E17D7001EDB19 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Adjust;
+			targetProxy = 0A786481293E17D7001EDB19 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		07DD76F728B4C906005A2245 /* Main.storyboard */ = {
@@ -382,6 +485,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LAMYU988BT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "AdjustExample-ObjC/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -389,7 +493,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -411,6 +515,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LAMYU988BT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "AdjustExample-ObjC/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -418,7 +523,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

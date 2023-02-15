@@ -16,6 +16,7 @@
 #import "ADJSdkPackageSendingSubscriber.h"
 
 #import "ADJThreadExecutorFactory.h"
+#import "ADJConcurrentThreadExecutor.h"
 #import "ADJLogQueueController.h"
 #import "ADJMainQueueController.h"
 #import "ADJSdkPackageBuilder.h"
@@ -23,7 +24,6 @@
 #import "ADJClock.h"
 #import "ADJClientConfigData.h"
 #import "ADJExternalConfigData.h"
-#import "ADJThreadPool.h"
 #import "ADJAttributionStateStorage.h"
 
 @interface ADJAsaAttributionController : ADJCommonBase<
@@ -34,11 +34,6 @@
     ADJAttributionSubscriber,
     ADJSdkPackageSendingSubscriber
 >
-- (void)ccSubscribeToPublishersWithKeepAlivePublisher:(nonnull ADJKeepAlivePublisher *)keepAlivePublisher
-                     preFirstMeasurementSessionStartPublisher:(nonnull ADJPreFirstMeasurementSessionStartPublisher *)preFirstMeasurementSessionStartPublisher
-                                 sdkResponsePublisher:(nonnull ADJSdkResponsePublisher *)sdkResponsePublisher
-                                 attributionPublisher:(nonnull ADJAttributionPublisher *)attributionPublisher
-                           sdkPackageSendingPublisher:(nonnull ADJSdkPackageSendingPublisher *)sdkPackageSendingPublisher;
 
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -46,7 +41,6 @@
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
                    asaAttributionStateStorage:(nonnull ADJAsaAttributionStateStorage *)asaAttributionStateStorage
                                         clock:(nonnull ADJClock *)clock
-                                   threadPool:(nonnull id<ADJThreadPool>)threadPool
                              clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
                          asaAttributionConfig:(nonnull ADJExternalConfigData *)asaAttributionConfig
                            logQueueController:(nonnull ADJLogQueueController *)logQueueController
