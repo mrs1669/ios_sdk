@@ -132,10 +132,13 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
                                 keyValueArray:(nullable NSArray<NSString *> *)keyValueArray
                           stringKeyDictionary:(nullable NSDictionary<NSString *, id> *)stringKeyDictionary
                                vaKeyValueList:(va_list)vaKeyValueList {
-    NSMutableString *_Nonnull sb = [NSMutableString stringWithFormat:@"%@ {", name];
+    NSMutableString *_Nonnull sb =
+        name == nil || [name length] == 0
+        ? [NSMutableString stringWithString:@"<"]
+        : [NSMutableString stringWithFormat:@"%@ <", name];
 
     if (keyValueArray != nil && (keyValueArray.count % 2) != 0) {
-        [sb appendFormat:@"Invalid array key value of size %@}",
+        [sb appendFormat:@"Invalid array key value of size %@>",
          [ADJUtilF uIntegerFormat:keyValueArray.count]];
         return (NSString *_Nonnull)sb;
     }
@@ -174,9 +177,9 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 
         if (value == nil) {
             if (emptyKeysSb == nil) {
-                emptyKeysSb = [NSMutableString stringWithFormat:@"[%@", key];
+                emptyKeysSb = [NSMutableString stringWithFormat:@"(%@", key];
             } else {
-                [emptyKeysSb appendFormat:@", %@", key];
+                [emptyKeysSb appendFormat:@"; %@", key];
             }
 
             if (keyValueArray != nil) {
@@ -195,7 +198,7 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
         }
 
         if (hasAtLeastOneKeyValuePair) {
-            [sb appendString:@", "];
+            [sb appendString:@"; "];
         }
 
         if (formatCStringKeyAndAppendEquals) {
@@ -221,10 +224,10 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
         }
     }
 
-    [sb appendString:@"}"];
+    [sb appendString:@">"];
 
     if (emptyKeysSb != nil) {
-        [emptyKeysSb appendString:@"]"];
+        [emptyKeysSb appendString:@")"];
 
         if (formatCStringKeyAndAppendEquals) {
             [sb appendFormat:kCStringKeyValuesFormat,

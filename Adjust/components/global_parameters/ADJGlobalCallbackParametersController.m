@@ -11,6 +11,7 @@
 #pragma mark Fields
 #pragma mark - Public constants
 NSString *const ADJGlobalCallbackParametersControllerClientActionHandlerId = @"GlobalCallbackParametersController";
+NSString *const ADJGlobalParametersTypeCallback = @"callback";
 
 @implementation ADJGlobalCallbackParametersController
 #pragma mark Instantiation
@@ -18,7 +19,7 @@ NSString *const ADJGlobalCallbackParametersControllerClientActionHandlerId = @"G
                                       storage:(nonnull ADJGlobalCallbackParametersStorage *)storage {
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"GlobalCallbackParametersController"
-                   globalParametersType:@"callback"
+                   globalParametersType:ADJGlobalParametersTypeCallback
              sqliteStorageStringMapBase:storage];
 
     return self;

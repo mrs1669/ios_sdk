@@ -7,13 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ADJResultNN.h"
 
 @interface ADJResultNL<S> : NSObject
 // instantiation
 - (nullable instancetype)init NS_UNAVAILABLE;
 
-+ (nonnull ADJResultNL *)okWithValue:(nullable S)value;
-+ (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage;
++ (nonnull ADJResultNL<S> *)okWithValue:(nonnull S)value;
++ (nonnull ADJResultNL<S> *)okWithoutValue;
++ (nonnull ADJResultNL<S> *)failWithMessage:(nonnull NSString *)failMessage;
+
++ (nonnull ADJResultNL<S> *)instanceFromNN:
+    (ADJResultNN<S> *_Nonnull (^ _Nonnull NS_NOESCAPE)(S _Nullable value))nnBlock
+                                   nlValue:(nullable S)nlValue;
 
 // public properties
 @property (nullable, readonly, strong, nonatomic) S value;

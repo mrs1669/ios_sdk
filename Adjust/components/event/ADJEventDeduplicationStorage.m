@@ -54,7 +54,7 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 
     if (v4ActivityState.transactionIds == nil) {
         [self.logger debugDev:@"Cannot find event deduplication list"
-         " in  v4 activity state file"];
+         " in v4 activity state file"];
         return;
     }
 
@@ -65,17 +65,17 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 
         NSString *_Nonnull transactionId = (NSString *)transactionIdObject;
 
-        ADJNonEmptyString *_Nullable deduplicationId =
-        [ADJNonEmptyString instanceFromString:transactionId
-                            sourceDescription:@"v4 transaction id"
-                                       logger:self.logger];
-
-        if (deduplicationId == nil) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull deduplicationIdResult =
+            [ADJNonEmptyString instanceFromString:transactionId];
+        if (deduplicationIdResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid transaction id for v4 migration of event deduplication"
+                      failMessage:deduplicationIdResult.failMessage
+                        issueType:ADJIssueStorageIo];
             continue;
         }
 
         [self enqueueElementToLast:
-         [[ADJEventDeduplicationData alloc] initWithDeduplicationId:deduplicationId]
+         [[ADJEventDeduplicationData alloc] initWithDeduplicationId:deduplicationIdResult.value]
                sqliteStorageAction:nil];
     }
 }

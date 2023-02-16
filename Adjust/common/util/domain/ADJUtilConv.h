@@ -31,19 +31,22 @@
 
 + (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
 
-+ (nullable ADJStringMap *)convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
-                                             sourceDescription:(nonnull NSString *)sourceDescription
-                                                        logger:(nonnull ADJLogger *)logger;
++ (nullable ADJStringMap *)
+    convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger;
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
-convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray<NSString *> *)nameKeyStringValueArray
-sourceDescription:(nonnull NSString *)sourceDescription
-logger:(nonnull ADJLogger *)logger;
+    convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
+        (nullable NSArray<NSString *> *)nameKeyStringValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger;
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
-convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray *)nameKeyNumberBooleanValueArray
-sourceDescription:(nonnull NSString *)sourceDescription
-logger:(nonnull ADJLogger *)logger;
+    convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
+        (nullable NSArray *)nameKeyNumberBooleanValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger;
 
 @end
 

@@ -142,30 +142,30 @@ static NSString *const kColumnValue = @"value";
 
     ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
     do {
-        NSString *_Nullable pairKeyString =
-            [selectStatement stringForColumnIndex:kSelectKeyFieldIndex];
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull pairKeyResult =
+            [ADJNonEmptyString instanceFromString:
+             [selectStatement stringForColumnIndex:kSelectKeyFieldIndex]];
 
-        ADJNonEmptyString *_Nullable pairKey =
-            [ADJNonEmptyString instanceFromString:pairKeyString
-                                sourceDescription:@"SQLite string map key"
-                                           logger:self.logger];
-        if (pairKey == nil) {
+        if (pairKeyResult.failMessage != nil) {
+            [self.logger debugDev:@"Read invalid string map key"
+                      failMessage:pairKeyResult.failMessage
+                        issueType:ADJIssueStorageIo];
             continue;
         }
 
-        NSString *_Nullable pairValueString =
-            [selectStatement stringForColumnIndex:kSelectValueFieldIndex];
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull pairValueResult =
+            [ADJNonEmptyString instanceFromString:
+             [selectStatement stringForColumnIndex:kSelectValueFieldIndex]];
 
-        ADJNonEmptyString *_Nullable pairValue =
-            [ADJNonEmptyString instanceFromString:pairValueString
-                                sourceDescription:@"SQLite string map value"
-                                           logger:self.logger];
-        if (pairValue == nil) {
+        if (pairValueResult.failMessage != nil) {
+            [self.logger debugDev:@"Read invalid string map value"
+                      failMessage:pairValueResult.failMessage
+                        issueType:ADJIssueStorageIo];
             continue;
         }
 
-        [mapBuilder addPairWithValue:pairValue
-                                 key:pairKey.stringValue];
+        [mapBuilder addPairWithValue:pairValueResult.value
+                                 key:pairKeyResult.value.stringValue];
 
         atLeastOneElementAdded = YES;
 

@@ -12,6 +12,7 @@
 #import "ADJIoValueSerializable.h"
 #import "ADJStringMapBuilder.h"
 #import "ADJNonEmptyString.h"
+#import "ADJResultNN.h"
 
 @interface ADJStringMap : NSObject<
     ADJPackageParamValueSerializable,
@@ -21,8 +22,8 @@
 - (nonnull instancetype)initWithStringMapBuilder:(nonnull ADJStringMapBuilder *)stringMapBuilder;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
-+ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
-                                       logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJStringMap *> *)
+    instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue;
 
 // public properties
 @property (nonnull, readwrite, strong, nonatomic) NSDictionary<NSString *, ADJNonEmptyString *> *map;

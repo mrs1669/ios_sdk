@@ -268,32 +268,32 @@
     ADJValueWO<NSString *> *_Nonnull readAsaAttributionTokenWO = [[ADJValueWO alloc] init];
 
     ADJInputLogMessageData *_Nullable errorLogInput =
-    [self readAsaAttributionTokenWithWO:readAsaAttributionTokenWO];
+        [self readAsaAttributionTokenWithWO:readAsaAttributionTokenWO];
 
-    ADJNonEmptyString *_Nullable readAsaAttributionToken =
-    [ADJNonEmptyString instanceFromOptionalString:readAsaAttributionTokenWO.changedValue
-                                sourceDescription:@"read Asa Attribution Token"
-                                           logger:self.logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull readAsaAttributionTokenResult =
+        [ADJNonEmptyString instanceFromOptionalString:readAsaAttributionTokenWO.changedValue];
 
-    if (readAsaAttributionToken == nil) {
+    if (readAsaAttributionTokenResult.failMessage != nil) {
+        [self.logger debugDev:@"Read invalid asa attribution token"
+                  failMessage:readAsaAttributionTokenResult.failMessage
+                    issueType:ADJIssueExternalApi];
+
         [self retryWithAttemptsLeft:attemptsLeft];
     }
-    /*
-     ADJNonEmptyString *_Nullable errorMessage =
-     [ADJNonEmptyString instanceFromOptionalString:errorMessageString
-     sourceDescription:@"read Asa Attribution error message"
-     logger:self.logger];
-     */
+
     BOOL tokenUpdated = NO;
     BOOL errorMessageUpdated = NO;
 
     ADJNonEmptyString *_Nullable tokenToWrite;
     ADJTimestampMilli *_Nullable timestampToWrite;
 
-    if (readAsaAttributionToken != nil
-        && ! [ADJUtilObj objectEquals:readAsaAttributionToken other:currentStateData.cachedToken])
-    {
-        tokenToWrite = readAsaAttributionToken;
+    BOOL hasReadTokenUpdatedCacheOne =
+        readAsaAttributionTokenResult.value != nil
+        && ! [ADJUtilObj objectEquals:readAsaAttributionTokenResult.value
+                                other:currentStateData.cachedToken];
+
+    if (hasReadTokenUpdatedCacheOne) {
+        tokenToWrite = readAsaAttributionTokenResult.value;
         timestampToWrite = [self.clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
 
         tokenUpdated = YES;

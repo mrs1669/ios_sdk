@@ -149,7 +149,6 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
     return exceptionFoundationDictionary;
 }
 
-
 + (nonnull NSString *)generateJsonFromFoundationDictionary:(nonnull NSDictionary<NSString *, id> *)foundationDictionary {
     NSError *error;
 

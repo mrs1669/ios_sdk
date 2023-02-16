@@ -24,11 +24,15 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJClientLaunchedDeeplinkData : NSObject<ADJClientActionIoDataInjectable>
 // instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustLaunchedDeeplink:(nullable ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink
-                                                               logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientWithAdjustLaunchedDeeplink:
+        (nullable ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink
+    logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:
+        (nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

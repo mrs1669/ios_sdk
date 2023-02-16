@@ -14,15 +14,13 @@
 
 @interface ADJMoney : NSObject
 // instantiation
-+ (nullable instancetype)instanceFromAmountDoubleNumber:(nullable NSNumber *)amountDoubleNumber
-                                               currency:(nullable NSString *)currency
-                                                 source:(nonnull NSString *)source
-                                                 logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMoney *> *)
+    instanceFromAmountDoubleNumber:(nullable NSNumber *)amountDoubleNumber
+    currency:(nullable NSString *)currency;
 
-+ (nullable instancetype)instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
-                                                currency:(nullable NSString *)currency
-                                                  source:(nonnull NSString *)source
-                                                  logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMoney *> *)
+    instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
+    currency:(nullable NSString *)currency;
 
 - (nonnull instancetype)initWithAmount:(nonnull ADJMoneyAmountBase *)amount
                               currency:(nonnull ADJNonEmptyString *)currency

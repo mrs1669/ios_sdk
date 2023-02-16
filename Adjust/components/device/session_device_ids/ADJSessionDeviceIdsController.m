@@ -102,21 +102,23 @@
     __typeof(self) __weak weakSelf = self;
 
     __block ADJValueWO<ADJNonEmptyString *> *_Nonnull identifierForVendorWO =
-    [[ADJValueWO alloc] init];
+        [[ADJValueWO alloc] init];
 
     BOOL readIdentifierForVendorFinishedSuccessfully =
-    [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                    blockToExecute:
-     ^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
+        [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                        blockToExecute:
+         ^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
 
-        UIDevice *_Nonnull currentDevice = UIDevice.currentDevice;
+            UIDevice *_Nonnull currentDevice = UIDevice.currentDevice;
 
-        ADJNonEmptyString *_Nullable identifierForVendor =
-        [self readIdentifierForVendorWithCurrentDevice:currentDevice];
-        [identifierForVendorWO setNewValue:identifierForVendor];
-    } source:@"read system idfv with timeout"];
+            ADJResultNL<ADJNonEmptyString *> *_Nonnull identifierForVendorResult =
+                [ADJNonEmptyString instanceFromOptionalString:
+                 [UIDevice.currentDevice.identifierForVendor UUIDString]];
+
+            [identifierForVendorWO setNewValue:identifierForVendorResult.value];
+        } source:@"read system idfv with timeout"];
 
     if (! readIdentifierForVendorFinishedSuccessfully) {
         return nil;
@@ -131,19 +133,19 @@
     __typeof(self) __weak weakSelf = self;
 
     __block ADJValueWO<ADJNonEmptyString *> *_Nonnull advertisingIdentifierWO =
-    [[ADJValueWO alloc] init];
+        [[ADJValueWO alloc] init];
 
     BOOL readAdvertisingIdentifierFinishedSuccessfully =
-    [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                    blockToExecute:
-     ^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
+        [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
+                                        blockToExecute:
+         ^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
 
-        ADJNonEmptyString *_Nullable advertisingIdentifier =
-        [strongSelf readAdvertisingIdentifier];
-        [advertisingIdentifierWO setNewValue:advertisingIdentifier];
-    } source:@"read system idfa"];
+            ADJNonEmptyString *_Nullable advertisingIdentifier =
+                [strongSelf readAdvertisingIdentifier];
+            [advertisingIdentifierWO setNewValue:advertisingIdentifier];
+        } source:@"read system idfa"];
 
     if (! readAdvertisingIdentifierFinishedSuccessfully) {
         return  nil;
@@ -195,23 +197,15 @@
 
     id _Nullable idForAdvertisersString = [identifier performSelector:selString];
 #pragma clang diagnostic pop
-    if (idForAdvertisersString == nil
-        || ! [idForAdvertisersString isKindOfClass:[NSString class]])
-    {
+
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull idForAdvertisersResult =
+        [ADJNonEmptyString instanceFromObject:idForAdvertisersString];
+
+    if (idForAdvertisersResult.failMessage != nil) {
         return nil;
     }
 
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)idForAdvertisersString
-                                       sourceDescription:@"Advertising Identifier"
-                                                  logger:self.logger];
-}
-
-- (nullable ADJNonEmptyString *)readIdentifierForVendorWithCurrentDevice:(nonnull UIDevice *)currentDevice {
-    return [ADJNonEmptyString
-            instanceFromOptionalString:[UIDevice.currentDevice.identifierForVendor UUIDString]
-            sourceDescription:@"Identifier For Vendor"
-            logger:self.logger];
+    return idForAdvertisersResult.value;
 }
 
 @end
-

@@ -22,11 +22,36 @@
     return nil;
 }
 
-+ (nonnull ADJResultNL *)okWithValue:(nullable id)value {
++ (nonnull ADJResultNL *)okWithValue:(nonnull id)value {
     return [[ADJResultNL alloc] initWithValue:value failMessage:nil];
+}
++ (nonnull ADJResultNL *)okWithoutValue {
+    static dispatch_once_t nlInstanceToken;
+    static ADJResultNL* nlInstance;
+    dispatch_once(&nlInstanceToken, ^{
+        nlInstance = [[ADJResultNL alloc] initWithValue:nil failMessage:nil];
+    });
+    return nlInstance;
 }
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage {
     return [[ADJResultNL alloc] initWithValue:nil failMessage:failMessage];
+}
+
++ (nonnull ADJResultNL *)instanceFromNN:
+    (ADJResultNN<id> *_Nonnull (^ _Nonnull NS_NOESCAPE)(id _Nullable value))nnBlock
+                                nlValue:(nullable id)nlValue
+{
+    if (nlValue == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    ADJResultNN<id> *_Nonnull resultNN = nnBlock(nlValue);
+
+    if (resultNN.failMessage != nil) {
+        return [ADJResultNL failWithMessage:resultNN.failMessage];
+    }
+
+    return [ADJResultNL okWithValue:resultNN.value];
 }
 
 #pragma mark - Private constructors

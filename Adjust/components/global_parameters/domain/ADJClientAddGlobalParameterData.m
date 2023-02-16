@@ -32,33 +32,39 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 + (nullable instancetype)
     instanceFromClientWithAdjustConfigWithKeyToAdd:(nullable NSString *)keyToAdd
     valueToAdd:(nullable NSString *)valueToAdd
-    logger:(nonnull ADJLogger *)logger
+    globalParameterType:(nonnull NSString *)globalParameterType
+    logger:(nonnull ADJLogger *)logger;
 {
-    ADJNonEmptyString *_Nullable verifiedKeyToAdd =
-        [ADJNonEmptyString instanceFromString:keyToAdd
-                            sourceDescription:@"client add global parameter key"
-                                       logger:logger];
-
-    if (verifiedKeyToAdd == nil) {
-        [logger errorClient:@"Invalid add parameter key"];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToAddResult =
+        [ADJNonEmptyString instanceFromString:keyToAdd];
+    if (keyToAddResult.failMessage != nil) {
+        [logger errorClient:@"Invalid add global parameter key"
+                        key:@"global parameter type"
+                      value:globalParameterType
+                failMessage:keyToAddResult.failMessage];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable verifiedValueToAdd =
-        [ADJNonEmptyString instanceFromString:valueToAdd
-                            sourceDescription:@"client add global parameter value"
-                                       logger:logger];
-
-    if (verifiedValueToAdd == nil) {
-        [logger errorClient:@"Invalid add parameter value"];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull valueToAddResult =
+        [ADJNonEmptyString instanceFromString:valueToAdd];
+    if (valueToAddResult.failMessage != nil) {
+        [logger errorClient:@"Invalid add global parameter value"
+                        key:@"global parameter type"
+                      value:globalParameterType
+                failMessage:valueToAddResult.failMessage];
         return nil;
     }
 
-    return [[self alloc] initWithKeyToAdd:verifiedKeyToAdd valueToAdd:verifiedValueToAdd];
+    return [[ADJClientAddGlobalParameterData alloc]
+            initWithKeyToAdd:keyToAddResult.value
+            valueToAdd:valueToAddResult.value];
 }
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-    logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    globalParameterType:(nonnull NSString *)globalParameterType
+    logger:(nonnull ADJLogger *)logger;
+{
     ADJNonEmptyString *_Nullable clientActionTypeValue = [clientActionInjectedIoData.metadataMap
                                                           pairValueWithKey:ADJClientActionTypeKey];
     if (clientActionTypeValue == nil) {
@@ -80,13 +86,18 @@ static NSString *const kValueToAddKey = @"valueToAdd";
          return nil;
     }
 
-    ADJNonEmptyString *_Nullable keyToAdd = [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToAddKey];
+    ADJNonEmptyString *_Nullable keyToAdd =
+        [clientActionInjectedIoData.propertiesMap pairValueWithKey:kKeyToAddKey];
 
-    ADJNonEmptyString *_Nullable valueToAdd = [clientActionInjectedIoData.propertiesMap pairValueWithKey:kValueToAddKey];
+    ADJNonEmptyString *_Nullable valueToAdd =
+        [clientActionInjectedIoData.propertiesMap pairValueWithKey:kValueToAddKey];
 
-    return [self instanceFromClientWithAdjustConfigWithKeyToAdd:(keyToAdd != nil) ? keyToAdd.stringValue : nil
-                                                     valueToAdd:(valueToAdd != nil) ? valueToAdd.stringValue : nil
-                                                         logger:logger];
+    return [self
+            instanceFromClientWithAdjustConfigWithKeyToAdd:
+                (keyToAdd != nil) ? keyToAdd.stringValue : nil
+            valueToAdd:(valueToAdd != nil) ? valueToAdd.stringValue : nil
+            globalParameterType:globalParameterType
+            logger:logger];
 }
 
 - (nullable instancetype)init {

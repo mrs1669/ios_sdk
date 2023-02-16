@@ -60,6 +60,9 @@
                                    issueType:(nonnull ADJIssue)issueType;
 
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                 failMessage:(nonnull NSString *)failMessage
+                                   issueType:(nonnull ADJIssue)issueType;
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                      nserror:(nullable NSError *)nserror
                                    issueType:(nonnull ADJIssue)issueType;
 
@@ -79,9 +82,17 @@
                                    issueType:(nonnull ADJIssue)issueType;
 
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                   valueName:(nonnull NSString *)valueName
+                                 failMessage:(nonnull NSString *)failMessage
+                                   issueType:(nonnull ADJIssue)issueType;
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         from:(nonnull NSString *)from
                                    issueType:(nonnull ADJIssue)issueType;
 
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                        from:(nonnull NSString *)from
+                                 failMessage:(nonnull NSString *)failMessage
+                                   issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
                                        value:(nullable NSString *)value
@@ -121,11 +132,15 @@
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message;
 
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
+                                         nserror:(nullable NSError *)nserror;
+- (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
                                              key:(nonnull NSString *)key
                                            value:(nullable NSString *)value;
 
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
                                             from:(nonnull NSString *)from;
+- (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
+                                     failMessage:(nonnull NSString *)failMessage;
 
 // error client
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message;
@@ -143,6 +158,11 @@
 
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                            from:(nonnull NSString *)from;
-
+- (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
+                                    failMessage:(nonnull NSString *)failMessage;
+- (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
+                                            key:(nonnull NSString *)key
+                                          value:(nullable NSString *)value
+                                    failMessage:(nonnull NSString *)failMessage;
 
 @end

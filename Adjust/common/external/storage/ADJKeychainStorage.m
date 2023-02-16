@@ -48,9 +48,17 @@
     NSString *_Nonnull stringValue =
         [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-    return [ADJNonEmptyString instanceFromString:stringValue
-                                sourceDescription:@"keychain value"
-                                           logger:self.logger];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull stringResult =
+        [ADJNonEmptyString instanceFromString:stringValue];
+    if (stringResult.failMessage != nil) {
+        [self.logger debugDev:@"Invalid value in generic password keychain"
+                    valueName:key
+                  failMessage:stringResult.failMessage
+                    issueType:ADJIssueExternalApi];
+        return nil;
+    }
+
+    return stringResult.value;
 }
 
 - (BOOL)setGenericPasswordKeychainWithKey:(nonnull NSString *)key

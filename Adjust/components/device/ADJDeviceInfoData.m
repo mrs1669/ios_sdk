@@ -61,7 +61,7 @@
     _countryCode = [ADJDeviceInfoData readCountryCodeWithLogger:logger
                                                   currentLocale:currentLocale];
     _machineModel = [ADJDeviceInfoData readMachineModelWithLogger:logger];
-    _cpuTypeSubtype = [ADJDeviceInfoData readCpuTypeSubtype];
+    _cpuTypeSubtype = [ADJDeviceInfoData readCpuTypeSubtypeWithLogger:logger];
     _osBuild = [ADJDeviceInfoData readOsBuildWithLogger:logger];
 
     return self;
@@ -87,39 +87,43 @@
 
     Class _Nullable class = NSClassFromString(@"FBSDKBasicUtility");
     if (class != nil && [class respondsToSelector:selGetId]) {
-        id _Nullable fbAnonymousId = (NSString *)[class performSelector:selGetId];
-        if (fbAnonymousId == nil
-            || ! [fbAnonymousId isKindOfClass:[NSString class]])
-        {
-            return nil;
+        ADJResultNL<ADJNonEmptyString *> *_Nonnull basicResult =
+            [ADJNonEmptyString instanceFromOptionalObject:[class performSelector:selGetId]];
+        if (basicResult.failMessage != nil) {
+            [logger debugDev:@"Invalid result from FBSDKBasicUtility"
+                 failMessage:basicResult.failMessage
+                   issueType:ADJIssueExternalApi];
+        } else if (basicResult.value == nil) {
+            [logger debugDev:@"No result from FBSDKBasicUtility"];
         }
-
-        return [ADJNonEmptyString instanceFromOptionalString:(NSString *)fbAnonymousId
-                                           sourceDescription:@"FBSDKBasicUtility id"
-                                                      logger:logger];
+        return basicResult.value;
     }
 
     class = NSClassFromString(@"FBSDKAppEventsUtility");
     if (class != nil && [class respondsToSelector:selGetId]) {
-        id _Nullable fbAnonymousId = (NSString *)[class performSelector:selGetId];
-        if (fbAnonymousId == nil
-            || ! [fbAnonymousId isKindOfClass:[NSString class]])
-        {
-            return nil;
+        ADJResultNL<ADJNonEmptyString *> *_Nonnull appEventsResult =
+            [ADJNonEmptyString instanceFromOptionalObject:[class performSelector:selGetId]];
+        if (appEventsResult.failMessage != nil) {
+            [logger debugDev:@"Invalid result from FBSDKAppEventsUtility"
+                 failMessage:appEventsResult.failMessage
+                   issueType:ADJIssueExternalApi];
+        } else if (appEventsResult.value == nil) {
+            [logger debugDev:@"No result from FBSDKAppEventsUtility"];
         }
-
-        return [ADJNonEmptyString instanceFromOptionalString:(NSString *)fbAnonymousId
-                                           sourceDescription:@"FBSDKAppEventsUtility id"
-                                                      logger:logger];
+        return appEventsResult.value;
     }
+
+    [logger debugDev:@"No FBSDK*Utility class + retrievePersistedAnonymousID method found"];
 
     return nil;
 #pragma clang diagnostic pop
 #endif
 }
 
-+ (nullable ADJNonEmptyString *)readBundleIdentifierWithLogger:(nonnull ADJLogger *)logger
-                                                infoDictionary:(nullable NSDictionary<NSString *, id> *)infoDictionary {
++ (nullable ADJNonEmptyString *)
+    readBundleIdentifierWithLogger:(nonnull ADJLogger *)logger
+    infoDictionary:(nullable NSDictionary<NSString *, id> *)infoDictionary
+{
     if (infoDictionary == nil) {
         return nil;
     }
@@ -130,20 +134,20 @@
     }
 
     id _Nullable bundleIdentifierValueObject = [infoDictionary objectForKey:bundleIdentifierKey];
-
-    if (bundleIdentifierValueObject == nil ||
-        ! [bundleIdentifierValueObject isKindOfClass:[NSString class]])
-    {
-        return nil;
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalObject:bundleIdentifierValueObject];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in bundle indentifier"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
     }
-
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)bundleIdentifierValueObject
-                                       sourceDescription:@"Bundle Identifier"
-                                                  logger:logger];
+    return result.value;
 }
 
-+ (nullable ADJNonEmptyString *)readBundleVersionWithLogger:(nonnull ADJLogger *)logger
-                                             infoDictionary:(nullable NSDictionary<NSString *, id> *)infoDictionary {
++ (nullable ADJNonEmptyString *)
+    readBundleVersionWithLogger:(nonnull ADJLogger *)logger
+    infoDictionary:(nullable NSDictionary<NSString *, id> *)infoDictionary
+{
     if (infoDictionary == nil) {
         return nil;
     }
@@ -154,50 +158,55 @@
     }
 
     id _Nullable bundleVersionValueObject = [infoDictionary objectForKey:bundleVersionKey];
-
-    if (bundleVersionValueObject == nil ||
-        ! [bundleVersionValueObject isKindOfClass:[NSString class]])
-    {
-        return nil;
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalObject:bundleVersionValueObject];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in bundle version"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
     }
-
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)bundleVersionValueObject
-                                       sourceDescription:@"Bundle Version"
-                                                  logger:logger];
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readBundleShortVersionWithLogger:(nonnull ADJLogger *)logger
-                                                      mainBundle:(nonnull NSBundle *)mainBundle {
+                                                      mainBundle:(nonnull NSBundle *)mainBundle
+{
     id _Nullable bundleShortVersionValueObject =
-    [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-
-    if (bundleShortVersionValueObject == nil ||
-        ! [bundleShortVersionValueObject isKindOfClass:[NSString class]])
-    {
-        return nil;
+        [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalObject:bundleShortVersionValueObject];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in bundle short version"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
     }
-
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)bundleShortVersionValueObject
-                                       sourceDescription:@"Bundle Short Version"
-                                                  logger:logger];
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readDeviceTypeWithLogger:(nonnull ADJLogger *)logger
                                            currentDevice:(nonnull UIDevice *)currentDevice {
     NSString *_Nonnull deviceType =
-    [currentDevice.model stringByReplacingOccurrencesOfString:@" " withString:@""];
-
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)deviceType
-                                       sourceDescription:@"Device Type"
-                                                  logger:logger];
+        [currentDevice.model stringByReplacingOccurrencesOfString:@" " withString:@""];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalString:deviceType];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in device type"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
+    }
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readDeviceNameWithLogger:(nonnull ADJLogger *)logger {
     NSString *_Nullable machine = [self readSysctlbByNameString:"hw.machine"];
-
-    return [ADJNonEmptyString instanceFromOptionalString:machine
-                                       sourceDescription:@"Device Name"
-                                                  logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalString:machine];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in device name"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
+    }
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readOsNameWithLogger:(nonnull ADJLogger *)logger {
@@ -220,86 +229,104 @@
     nil
 #endif
     ;
-
-    return [ADJNonEmptyString instanceFromOptionalString:osName
-                                       sourceDescription:@"os name"
-                                                  logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalString:osName];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in os name"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
+    }
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readSystemVersionWithLogger:(nonnull ADJLogger *)logger
-                                              currentDevice:(nonnull UIDevice *)currentDevice {
-    return [ADJNonEmptyString instanceFromOptionalString:currentDevice.systemName
-                                       sourceDescription:@"System name"
-                                                  logger:logger];
+                                              currentDevice:(nonnull UIDevice *)currentDevice
+{
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalString:currentDevice.systemName];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in sytem name"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
+    }
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readLanguageCodeWithLogger:(nonnull ADJLogger *)logger
                                              currentLocale:(nonnull NSLocale *)currentLocale {
     id _Nullable languageCodeObject = [currentLocale objectForKey:NSLocaleLanguageCode];
-
-    if (languageCodeObject == nil
-        || [languageCodeObject isKindOfClass:[NSString class]])
-    {
-        return nil;
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalObject:languageCodeObject];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in language code"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
     }
-
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)languageCodeObject
-                                       sourceDescription:@"Language code"
-                                                  logger:logger];
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readCountryCodeWithLogger:(nonnull ADJLogger *)logger
                                             currentLocale:(nonnull NSLocale *)currentLocale {
     id _Nullable countryCodeObject = [currentLocale objectForKey:NSLocaleCountryCode];
-
-    if (countryCodeObject == nil
-        || [countryCodeObject isKindOfClass:[NSString class]])
-    {
-        return nil;
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalObject:countryCodeObject];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in country code"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
     }
-
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)countryCodeObject
-                                       sourceDescription:@"Country code"
-                                                  logger:logger];
+    return result.value;
 }
 
 + (nullable ADJNonEmptyString *)readMachineModelWithLogger:(nonnull ADJLogger *)logger {
     NSString *_Nullable model = [self readSysctlbByNameString:"hw.model"];
-
-    return [ADJNonEmptyString instanceFromOptionalString:model
-                                       sourceDescription:@"Machine model"
-                                                  logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalString:model];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in machine model"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
+    }
+    return result.value;
 }
 
-+ (nullable ADJNonEmptyString *)readCpuTypeSubtype {
-    NSNumber *_Nullable cpuTypeInt = [self readSysctlbByNameInt:"hw.cputype"];
++ (nullable ADJNonEmptyString *)readCpuTypeSubtypeWithLogger:(nonnull ADJLogger *)logger {
+    ADJNonNegativeInt *_Nullable cpuTypeNumber =
+        [ADJNonNegativeInt instanceFromIntegerNumber:[self readSysctlbByNameInt:"hw.cputype"]
+                                              logger:logger];
 
-    NSNumber *_Nullable cpuSubtypeInt = [self readSysctlbByNameInt:"hw.cpusubtype"];
+    ADJNonNegativeInt *_Nullable cpuSubtypeNumber =
+        [ADJNonNegativeInt instanceFromIntegerNumber:[self readSysctlbByNameInt:"hw.cpusubtype"]
+                                              logger:logger];
 
-    if (cpuTypeInt == nil && cpuSubtypeInt == nil) {
+    if (cpuTypeNumber == nil && cpuSubtypeNumber == nil) {
         return nil;
     }
 
-    if (cpuTypeInt == nil) {
+    if (cpuTypeNumber == nil) {
         return [[ADJNonEmptyString alloc] initWithConstStringValue:
-                [NSString stringWithFormat:@"_%@", cpuSubtypeInt]];
+                [NSString stringWithFormat:@"_%@", cpuSubtypeNumber]];
     }
 
-    if (cpuSubtypeInt == nil) {
+    if (cpuSubtypeNumber == nil) {
         return [[ADJNonEmptyString alloc] initWithConstStringValue:
-                [NSString stringWithFormat:@"%@_", cpuTypeInt]];
+                [NSString stringWithFormat:@"%@_", cpuTypeNumber]];
     }
 
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
-            [NSString stringWithFormat:@"%@_%@", cpuTypeInt, cpuSubtypeInt]];
+            [NSString stringWithFormat:@"%@_%@", cpuTypeNumber, cpuSubtypeNumber]];
 }
 
 + (nullable ADJNonEmptyString *)readOsBuildWithLogger:(nonnull ADJLogger *)logger {
     NSString *_Nullable osversion = [self readSysctlbByNameString:"kern.osversion"];
-
-    return [ADJNonEmptyString instanceFromOptionalString:osversion
-                                       sourceDescription:@"Os build"
-                                                  logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalString:osversion];
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid value found in os build"
+             failMessage:result.failMessage
+               issueType:ADJIssueExternalApi];
+    }
+    return result.value;
 }
 
 + (nullable NSString *)readSysctlbByNameString:(const char*)name {
@@ -316,14 +343,12 @@
         return nil;
     }
 
+    NSString *value = nil;
+
     error = sysctlbyname(name, p, &length, NULL, 0);
-
-    if (error != 0) {
-        free(p);
-        return nil;
+    if (error == 0) {
+        value = [NSString stringWithUTF8String:p];
     }
-
-    NSString *value = [NSString stringWithUTF8String:p];
 
     free(p);
 
@@ -345,4 +370,3 @@
 }
 
 @end
-

@@ -74,37 +74,31 @@
     //_errorMessages = [sdkResponseDataBuilder errorMessages];
     
     _jsonDictionary = sdkResponseDataBuilder.jsonDictionary;
-    
-    _serverMessage = [ADJNonEmptyString
-                      instanceFromOptionalString:
-                          [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                                   key:ADJParamMessageKey]
-                      sourceDescription:@"response message"
-                      logger:logger];
-    
-    _adid = [ADJNonEmptyString
-             instanceFromOptionalString:
-                 [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                          key:ADJParamAdidKey]
-             sourceDescription:@"response adid"
-             logger:logger];
-    
-    _trackingState =
-        [ADJNonEmptyString
-         instanceFromOptionalString:
-             [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                      key:ADJParamTrackingStateKey]
-         sourceDescription:@"response tracking state"
-         logger:logger];
-    
-    _timestampString =
-        [ADJNonEmptyString
-         instanceFromOptionalString:
-             [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                      key:ADJParamTimeSpentKey]
-         sourceDescription:@"response timestamp"
-         logger:logger];
-    
+
+    _serverMessage = [ADJSdkResponseBaseData
+                      extractOptionalStringWithDictionary:_jsonDictionary
+                      key:ADJParamMessageKey
+                      logger:logger
+                      valueName:@"server message"];
+
+    _adid = [ADJSdkResponseBaseData
+             extractOptionalStringWithDictionary:_jsonDictionary
+             key:ADJParamAdidKey
+             logger:logger
+             valueName:@"adid"];
+
+    _trackingState = [ADJSdkResponseBaseData
+                      extractOptionalStringWithDictionary:_jsonDictionary
+                      key:ADJParamTrackingStateKey
+                      logger:logger
+                      valueName:@"tracking state"];
+
+    _timestampString = [ADJSdkResponseBaseData
+                        extractOptionalStringWithDictionary:_jsonDictionary
+                        key:ADJParamTimeSpentKey
+                        logger:logger
+                        valueName:@"server time spent"];
+
     _askInIntMilli =
         [ADJNonNegativeInt
          instanceFromOptionalIntegerNumber:
@@ -154,6 +148,25 @@
     }
     */
     return self;
+}
++ (nullable ADJNonEmptyString *)
+    extractOptionalStringWithDictionary:(nullable NSDictionary *)dictionary
+    key:(nonnull NSString *)key
+    logger:(nonnull ADJLogger *)logger
+    valueName:(nonnull NSString *)valueName
+{
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull result =
+        [ADJNonEmptyString instanceFromOptionalString:
+         [ADJUtilMap extractStringValueWithDictionary:dictionary key:key]];
+
+    if (result.failMessage != nil) {
+        [logger debugDev:@"Invalid optional field"
+               valueName:valueName
+             failMessage:result.failMessage
+               issueType:ADJIssueNetworkRequest];
+    }
+
+    return result.value;
 }
 
 - (nullable instancetype)init {

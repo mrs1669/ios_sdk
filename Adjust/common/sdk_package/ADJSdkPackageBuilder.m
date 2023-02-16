@@ -15,6 +15,7 @@
 #import "ADJConstantsParam.h"
 #import "ADJTallyCounter.h"
 #import "ADJUtilSys.h"
+#import "ADJResultNN.h"
 
 #pragma mark Private class
 @implementation ADJSdkPackageCreatingPublisher @end

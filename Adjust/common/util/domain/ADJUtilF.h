@@ -11,6 +11,7 @@
 #import "ADJTimestampMilli.h"
 //#import "ADJMoney.h"
 #import "ADJLogger.h"
+#import "ADJResultErr.h"
 
 @interface ADJUtilF : NSObject
 
@@ -29,7 +30,7 @@
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error;
 
 + (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData;
-+ (nullable NSString *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue;
++ (nonnull ADJResultErr<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue;
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber;
 
@@ -52,11 +53,4 @@
 
 + (nullable NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value;
 
-+ (void)transferExternalParametersWithFoundationMapToRead:(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
-                                        parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
-                                                   source:(nonnull NSString *)source
-                                                   logger:(nonnull ADJLogger *)logger;
-
 @end
-
-

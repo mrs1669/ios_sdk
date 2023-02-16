@@ -22,18 +22,37 @@
 
 @implementation ADJMoneyAmountBase
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
-                                      logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromIoValue:ioValue
-                              logger:logger
-                          isOptional:NO];
++ (nonnull ADJResultNN<ADJMoneyAmountBase *> *)
+    instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
+{
+    if (ioValue == nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create money amount with nil string value"];
+    }
+
+    if ([ioValue.stringValue hasPrefix:@"llf"]) {
+        return (ADJResultNN<ADJMoneyAmountBase *> *)
+            [ADJMoneyDoubleAmount instanceFromIoLlfValue:
+             [ioValue.stringValue substringFromIndex:3]];
+    }
+
+    if ([ioValue.stringValue hasPrefix:@"dec"]) {
+        return (ADJResultNN<ADJMoneyAmountBase *> *)
+            [ADJMoneyDecimalAmount instanceFromIoDecValue:
+             [ioValue.stringValue substringFromIndex:3]];
+    }
+
+    return [ADJResultNN failWithMessage:
+            [NSString stringWithFormat:
+                 @"Cannot create money amount without a valid io data value prefix: %@",
+            ioValue.stringValue]];
 }
 
-+ (nullable instancetype)instanceFromOptionalIoValue:(nullable ADJNonEmptyString *)ioValue
-                                              logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromIoValue:ioValue
-                              logger:logger
-                          isOptional:YES];
++ (nonnull ADJResultNL<ADJMoneyAmountBase *> *)instanceFromOptionalIoValue:
+    (nullable ADJNonEmptyString *)ioValue
+{
+    return [ADJResultNL instanceFromNN:^ADJResultNN *_Nonnull(ADJNonEmptyString *_Nullable value) {
+        return [ADJMoneyAmountBase instanceFromIoValue:value];
+    } nlValue:ioValue];
 }
 
 - (nonnull instancetype)init {
@@ -46,38 +65,6 @@
     self = [super init];
     
     return self;
-}
-
-#pragma mark - Private constructors
-+ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
-                                      logger:(nonnull ADJLogger *)logger
-                                  isOptional:(BOOL)isOptional {
-    if (ioValue == nil) {
-        if (! isOptional) {
-            [logger debugDev:@"Cannot create money amount with nil string value"
-                   issueType:ADJIssueStorageIo];
-        }
-        return nil;
-    }
-    
-    if ([ioValue.stringValue hasPrefix:@"llf"]) {
-        return [ADJMoneyDoubleAmount
-                instanceFromIoLlfValue:[ioValue.stringValue substringFromIndex:3]
-                logger:logger];
-    }
-    
-    if ([ioValue.stringValue hasPrefix:@"dec"]) {
-        return [ADJMoneyDecimalAmount
-                instanceFromIoDecValue:[ioValue.stringValue substringFromIndex:3]
-                logger:logger];
-    }
-    
-    [logger debugDev:@"Cannot create money amount without a valid io data value prefix in %@"
-       expectedValue:@"'dec' or 'llf' prefix"
-         actualValue:ioValue.stringValue
-           issueType:ADJIssueStorageIo];
-    
-    return nil;
 }
 
 #pragma mark Public API

@@ -62,16 +62,19 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
                       key:@"activity_state"
                     value:[v4ActivityState description]];
 
-    ADJNonEmptyString *_Nullable v4Uuid =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid
-                                    sourceDescription:@"v4 uuid"
-                                               logger:self.logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull v4UuidResult =
+        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid];
+    if (v4UuidResult.failMessage != nil) {
+        [self.logger debugDev:@"Invalid v4 uuid read"
+                  failMessage:v4UuidResult.failMessage
+                    issueType:ADJIssueStorageIo];
+        return;
+    }
 
-    ADJDeviceIdsData *_Nonnull v4DeviceIdsData = [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
+    ADJDeviceIdsData *_Nonnull v4DeviceIdsData =
+        [[ADJDeviceIdsData alloc] initWithUuid:v4UuidResult.value];
 
     [self updateWithNewDataValue:v4DeviceIdsData];
 }
 
 @end
-
-

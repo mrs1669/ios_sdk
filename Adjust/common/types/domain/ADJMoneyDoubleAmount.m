@@ -21,66 +21,53 @@
 
 @implementation ADJMoneyDoubleAmount
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoLlfValue:(nonnull NSString *)ioLlfValue
-                                         logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
+    instanceFromIoLlfValue:(nonnull NSString *)ioLlfValue
+{
     NSNumber *_Nullable doubleNumberValue =
-    [self convertToDoubleNumberWithIoLlfValue:ioLlfValue];
+        [self convertToDoubleNumberWithIoLlfValue:ioLlfValue];
     
-    return [self instanceFromDoubleNumberValue:doubleNumberValue
-                                        logger:logger];
+    return [self instanceFromDoubleNumberValue:doubleNumberValue];
 }
 
-+ (nullable instancetype)instanceFromDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
-                                                logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromDoubleNumberValue:doubleNumberValue
-                                        logger:logger
-                                    isOptional:NO];
-}
-
-+ (nullable instancetype)instanceFromOptionalDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
-                                                        logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromDoubleNumberValue:doubleNumberValue
-                                        logger:logger
-                                    isOptional:YES];
-}
-
-#pragma mark - Private constructors
-+ (nullable instancetype)instanceFromDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
-                                                logger:(nonnull ADJLogger *)logger
-                                            isOptional:(BOOL)isOptional {
++ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
+    instanceFromDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
+{
     if (doubleNumberValue == nil) {
-        if (! isOptional) {
-            [logger debugDev:@"Cannot create money amount with nil double number value"
-                   issueType:ADJIssueInvalidInput];
-        }
-        return nil;
+        return [ADJResultNN failWithMessage:
+                @"Cannot create money amount with nil double number value"];
     }
-    
+
     if ([ADJUtilF isNotANumber:doubleNumberValue]) {
-        [logger debugDev:@"Cannot create money amount with invalid double number"
-                     key:@"doubleNumberValue"
-                   value:doubleNumberValue.description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:@"Cannot create money amount with NaN double number: %@",
+                 doubleNumberValue.description]];
     }
-    
+
     if (doubleNumberValue.doubleValue != 0.0 && ! isnormal(doubleNumberValue.doubleValue)) {
-        [logger debugDev:@"Cannot create money amount with invalid double number"
-                     key:@"doubleNumberValue"
-                   value:doubleNumberValue.description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:@"Cannot create money amount with"
+                 " double number that is not normal, while not being 0.0: %@",
+                 doubleNumberValue.description]];
     }
-    
+
     if (doubleNumberValue.doubleValue < 0.0) {
-        [logger debugDev:@"Cannot create money amount with negative double number"
-                     key:@"doubleNumberValue"
-                   value:doubleNumberValue.description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Cannot create money amount with negative double number: %@",
+                 doubleNumberValue.description]];
     }
-    
-    return [[self alloc] initWithDoubleNumberValue:doubleNumberValue];
+
+    return [ADJResultNN okWithValue:
+            [[ADJMoneyDoubleAmount alloc] initWithDoubleNumberValue:doubleNumberValue]];
+}
+
++ (nonnull ADJResultNL<ADJMoneyDoubleAmount *> *)
+    instanceFromOptionalDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
+{
+    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(NSNumber *_Nullable value) {
+        return [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:value];
+    } nlValue:doubleNumberValue];
 }
 
 - (nonnull instancetype)initWithDoubleNumberValue:(nonnull NSNumber *)doubleNumberValue {

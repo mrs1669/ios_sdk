@@ -22,46 +22,40 @@
 
 @implementation ADJMoney
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromAmountDoubleNumber:(nullable NSNumber *)amountDoubleNumber
-                                               currency:(nullable NSString *)currency
-                                                 source:(nonnull NSString *)source
-                                                 logger:(nonnull ADJLogger *)logger {
-    ADJMoneyDoubleAmount *_Nullable moneyDoubleAmount =
-    [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber
-                                                 logger:logger];
++ (nonnull ADJResultNN<ADJMoney *> *)
+    instanceFromAmountDoubleNumber:(nullable NSNumber *)amountDoubleNumber
+    currency:(nullable NSString *)currency
+{
+    ADJResultNN<ADJMoneyDoubleAmount *> *_Nonnull moneyDoubleAmountResult =
+        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber];
 
-    if (moneyDoubleAmount == nil) {
-        [logger debugDev:@"Cannot create money instance without valid double amount"
-                    from:source
-               issueType:ADJIssueInvalidInput];
-        return nil;
+    if (moneyDoubleAmountResult.failMessage != nil) {
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Cannot create money instance without valid double amount: %@",
+                 moneyDoubleAmountResult.failMessage]];
     }
 
-    return [self instanceFromMoneyAmount:moneyDoubleAmount
-                                currency:currency
-                                  source:source
-                                  logger:logger];
+    return [ADJMoney instanceFromMoneyAmount:moneyDoubleAmountResult.value
+                                    currency:currency];
 }
 
-+ (nullable instancetype)instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
-                                                currency:(nullable NSString *)currency
-                                                  source:(nonnull NSString *)source
-                                                  logger:(nonnull ADJLogger *)logger {
-    ADJMoneyDecimalAmount *_Nullable moneyDecimalAmount =
-    [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber
-                                                   logger:logger];
++ (nonnull ADJResultNN<ADJMoney *> *)
+    instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
+    currency:(nullable NSString *)currency
+{
+    ADJResultNN<ADJMoneyDecimalAmount *> *_Nonnull moneyDecimalAmountResult =
+        [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber];
 
-    if (moneyDecimalAmount == nil) {
-        [logger debugDev:@"Cannot create money instance without valid decimal amount"
-                    from:source
-               issueType:ADJIssueInvalidInput];
-        return nil;
+    if (moneyDecimalAmountResult.failMessage != nil) {
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Cannot create money instance without valid decimal amount: %@",
+                 moneyDecimalAmountResult.failMessage]];
     }
 
-    return [self instanceFromMoneyAmount:moneyDecimalAmount
-                                currency:currency
-                                  source:source
-                                  logger:logger];
+    return [self instanceFromMoneyAmount:moneyDecimalAmountResult.value
+                                currency:currency];
 }
 
 - (nonnull instancetype)initWithAmount:(nonnull ADJMoneyAmountBase *)amount
@@ -80,23 +74,22 @@
 }
 
 #pragma mark - Private constructors
-+ (nullable instancetype)instanceFromMoneyAmount:(nonnull ADJMoneyAmountBase *)moneyAmount
-                                        currency:(nullable NSString *)currency
-                                          source:(nonnull NSString *)source
-                                          logger:(nonnull ADJLogger *)logger {
-    ADJNonEmptyString *_Nullable currencyNonEmptyString =
-    [ADJNonEmptyString instanceFromString:currency
-                        sourceDescription:source
-                                   logger:logger];
++ (nonnull ADJResultNN<ADJMoney *> *)
+    instanceFromMoneyAmount:(nonnull ADJMoneyAmountBase *)moneyAmount
+    currency:(nullable NSString *)currency
+{
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull currencyResult =
+        [ADJNonEmptyString instanceFromString:currency];
 
-    if (currencyNonEmptyString == nil) {
-        [logger debugDev:@"Cannot create money instance without valid decimal currency"
-                    from:source
-               issueType:ADJIssueInvalidInput];
-        return nil;
+    if (currencyResult.failMessage != nil) {
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Cannot create money instance without valid currency: %@",
+                 currencyResult.failMessage]];
     }
 
-    return [[self alloc] initWithAmount:moneyAmount currency:currencyNonEmptyString];
+    return [ADJResultNN okWithValue:
+            [[ADJMoney alloc] initWithAmount:moneyAmount currency:currencyResult.value]];
 }
 
 #pragma mark Public API
@@ -130,4 +123,3 @@
 }
 
 @end
-

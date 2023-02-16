@@ -45,34 +45,32 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
 
     ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
-    for (NSString *_Nullable key in v4SessionPartnerParameters) {
-        if (key == nil) {
+    for (NSString *_Nonnull key in v4SessionPartnerParameters) {
+        ADJResultNL<ADJNonEmptyString *> *_Nonnull keyResult =
+            [ADJNonEmptyString instanceFromOptionalString:key];
+        if (keyResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid v4 Session Partner Parameter key"
+                      failMessage:keyResult.failMessage
+                        issueType:ADJIssueStorageIo];
+        }
+        if (keyResult.value == nil) {
             continue;
         }
 
-        NSString *_Nullable value = [v4SessionPartnerParameters objectForKey:key];
-        if (value == nil) {
+        ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
+            [ADJNonEmptyString instanceFromOptionalString:
+             [v4SessionPartnerParameters objectForKey:key]];
+        if (valueResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid v4 Session Partner Parameter value"
+                      failMessage:valueResult.failMessage
+                        issueType:ADJIssueStorageIo];
+        }
+        if (valueResult.value == nil) {
             continue;
         }
 
-        ADJNonEmptyString *_Nullable verifiedKey =
-        [ADJNonEmptyString instanceFromOptionalString:key
-                                    sourceDescription:@"v4 Session Partner Parameter key"
-                                               logger:self.logger];
-        if (verifiedKey == nil) {
-            continue;
-        }
-
-        ADJNonEmptyString *_Nullable verifiedValue =
-        [ADJNonEmptyString instanceFromOptionalString:value
-                                    sourceDescription:@"v4 Session Partner Parameter value"
-                                               logger:self.logger];
-        if (verifiedValue == nil) {
-            continue;
-        }
-
-        [mapBuilder addPairWithValue:verifiedValue
-                                 key:key];
+        [mapBuilder addPairWithValue:valueResult.value
+                                 key:keyResult.value.stringValue];
     }
 
     [self replaceAllWithStringMap:[[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder]

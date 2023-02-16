@@ -175,9 +175,10 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
-        [ADJClientAddGlobalParameterData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientAddGlobalParameterData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             globalParameterType:self.globalParametersType
+             logger:self.logger];
         if (clientAddGlobalParameterData == nil) {
             return NO;
         }
@@ -191,9 +192,10 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
-        [ADJClientRemoveGlobalParameterData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             globalParameterType:self.globalParametersType
+             logger:self.logger];
         if (clientRemoveGlobalParameterData == nil) {
             return NO;
         }
@@ -207,9 +209,9 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientClearGlobalParametersData *_Nullable clientClearGlobalParametersData =
-        [ADJClientClearGlobalParametersData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientClearGlobalParametersData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             logger:self.logger];
         if (clientClearGlobalParametersData == nil) {
             return NO;
         }

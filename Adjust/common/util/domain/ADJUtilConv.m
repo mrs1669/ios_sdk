@@ -141,7 +141,7 @@
     if ([objectToConvert isKindOfClass:[NSDictionary class]]) {
         NSDictionary *_Nonnull dictionaryToConvert = (NSDictionary *)objectToConvert;
         NSMutableDictionary<NSString *, id> *_Nonnull foundationDictionary =
-        [[NSMutableDictionary alloc] initWithCapacity:dictionaryToConvert.count];
+            [[NSMutableDictionary alloc] initWithCapacity:dictionaryToConvert.count];
 
         for (id _Nonnull key in dictionaryToConvert) {
             id _Nullable value = dictionaryToConvert[key];
@@ -175,10 +175,10 @@
     if ([objectToConvert isKindOfClass:[NSArray class]]) {
         NSArray *_Nonnull arrayToConvert = (NSArray *)objectToConvert;
         NSMutableArray *_Nonnull foundationArray =
-        [[NSMutableArray alloc] initWithCapacity:arrayToConvert.count];
+            [[NSMutableArray alloc] initWithCapacity:arrayToConvert.count];
 
-        for (id _Nullable value in arrayToConvert) {
-            if (value == nil || [value isEqual:[NSNull null]]) {
+        for (id _Nonnull value in arrayToConvert) {
+            if ([value isEqual:[NSNull null]]) {
                 [foundationArray addObject:[NSNull null]];
                 continue;
             }
@@ -205,9 +205,11 @@
     return [[NSDictionary alloc] init];
 }
 
-+ (nullable ADJStringMap *)convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
-                                             sourceDescription:(nonnull NSString *)sourceDescription
-                                                        logger:(nonnull ADJLogger *)logger {
++ (nullable ADJStringMap *)
+    convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger
+{
     if (keyValueArray == nil) {
         return nil;
     }
@@ -225,28 +227,36 @@
     [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     for (NSUInteger i = 0; i < keyValueArray.count; i = i + 2) {
-        NSString *_Nullable key =
-        [self extractFieldWithStringObject:[keyValueArray objectAtIndex:i]
-                         sourceDescription:sourceDescription
-                          fieldDescription:@"key"
-                                    logger:logger];
-        if (key == nil) { continue; }
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+            [ADJUtilConv extractNsNullableStringWithObject:[keyValueArray objectAtIndex:i]];
 
-        ADJNonEmptyString *_Nullable value =
-        [self extractNonEmptyFieldWithStringObject:[keyValueArray objectAtIndex:i + 1]
-                                 sourceDescription:sourceDescription
-                                  fieldDescription:@"value"
-                                            logger:logger];
-        if (value == nil) { continue; }
+        if (keyResult.failMessage != nil) {
+            [logger debugDev:@"Cannot add to map with key"
+                        from:sourceDescription
+                 failMessage:keyResult.failMessage
+                   issueType:ADJIssueInvalidInput];
+            continue;
+        }
+
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+            [ADJUtilConv extractNsNullableStringWithObject:[keyValueArray objectAtIndex:i + 1]];
+
+        if (valueResult.failMessage != nil) {
+            [logger debugDev:@"Cannot add to map with value"
+                        from:sourceDescription
+                 failMessage:valueResult.failMessage
+                   issueType:ADJIssueInvalidInput];
+            continue;
+        }
 
         ADJNonEmptyString *_Nullable previousValue =
-        [stringMapBuilder addPairWithValue:value
-                                       key:key];
+            [stringMapBuilder addPairWithValue:valueResult.value
+                                           key:keyResult.value.stringValue];
         if (previousValue != nil) {
-            [logger debugDev:@"Value was overwritten"
+            [logger debugDev:@"Previous value was overwritten"
                         from:sourceDescription
                          key:@"key"
-                       value:key];
+                       value:keyResult.value.stringValue];
         }
     }
 
@@ -258,10 +268,11 @@
 }
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
-convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-(nullable NSArray<NSString *> *)nameKeyStringValueArray
-sourceDescription:(nonnull NSString *)sourceDescription
-logger:(nonnull ADJLogger *)logger {
+    convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
+        (nullable NSArray<NSString *> *)nameKeyStringValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger
+{
     return [self convertToMapCollectionByNameBuilderWithNameKeyValueArray:nameKeyStringValueArray
                                                         sourceDescription:sourceDescription
                                                                    logger:logger
@@ -269,9 +280,11 @@ logger:(nonnull ADJLogger *)logger {
 }
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
-convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray *)nameKeyNumberBooleanValueArray
-sourceDescription:(nonnull NSString *)sourceDescription
-logger:(nonnull ADJLogger *)logger {
+    convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
+        (nullable NSArray *)nameKeyNumberBooleanValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger
+{
     return [self
             convertToMapCollectionByNameBuilderWithNameKeyValueArray:nameKeyNumberBooleanValueArray
             sourceDescription:sourceDescription
@@ -280,10 +293,12 @@ logger:(nonnull ADJLogger *)logger {
 }
 
 + (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
-convertToMapCollectionByNameBuilderWithNameKeyValueArray:(nullable NSArray<NSString *> *)nameKeyValueArray
-sourceDescription:(nonnull NSString *)sourceDescription
-logger:(nonnull ADJLogger *)logger
-isValueString:(BOOL)isValueString {
+    convertToMapCollectionByNameBuilderWithNameKeyValueArray:
+        (nullable NSArray<NSString *> *)nameKeyValueArray
+    sourceDescription:(nonnull NSString *)sourceDescription
+    logger:(nonnull ADJLogger *)logger
+    isValueString:(BOOL)isValueString
+{
     if (nameKeyValueArray == nil) {
         return nil;
     }
@@ -299,42 +314,61 @@ isValueString:(BOOL)isValueString {
 
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nonnull
     mapCollectionByNameBuilder =
-    [[NSMutableDictionary alloc] initWithCapacity:(nameKeyValueArray.count / 3)];
+        [[NSMutableDictionary alloc] initWithCapacity:(nameKeyValueArray.count / 3)];
 
     for (NSUInteger i = 0; i < nameKeyValueArray.count; i = i + 3) {
-        NSString *_Nullable name =
-        [self extractFieldWithStringObject:[nameKeyValueArray objectAtIndex:i]
-                         sourceDescription:sourceDescription
-                          fieldDescription:@"name"
-                                    logger:logger];
-        if (name == nil) { continue; }
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull nameResult =
+            [ADJUtilConv extractNsNullableStringWithObject:[nameKeyValueArray objectAtIndex:i]];
 
-        NSString *_Nullable key =
-        [self extractFieldWithStringObject:[nameKeyValueArray objectAtIndex:i + 1]
-                         sourceDescription:sourceDescription
-                          fieldDescription:@"key"
-                                    logger:logger];
-        if (key == nil) { continue; }
+        if (nameResult.failMessage != nil) {
+            [logger debugDev:@"Cannot add to map collection with name"
+                        from:sourceDescription
+                 failMessage:nameResult.failMessage
+                   issueType:ADJIssueInvalidInput];
+            continue;
+        }
+
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+            [ADJUtilConv extractNsNullableStringWithObject:[nameKeyValueArray objectAtIndex:i + 1]];
+
+        if (keyResult.failMessage != nil) {
+            [logger debugDev:@"Cannot add to map collection with key"
+                        from:sourceDescription
+                 failMessage:keyResult.failMessage
+                   issueType:ADJIssueInvalidInput];
+            continue;
+        }
 
         id _Nullable value;
         if (isValueString) {
-            value = [self extractFieldWithStringObject:[nameKeyValueArray objectAtIndex:i + 2]
-                                     sourceDescription:sourceDescription
-                                      fieldDescription:@"value"
-                                                logger:logger];
+            ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+                [ADJUtilConv extractNsNullableStringWithObject:
+                 [nameKeyValueArray objectAtIndex:i + 2]];
+
+            if (valueResult.failMessage != nil) {
+                [logger debugDev:@"Cannot add to map collection with string value"
+                            from:sourceDescription
+                     failMessage:valueResult.failMessage
+                       issueType:ADJIssueInvalidInput];
+            } else {
+                value = valueResult.value.stringValue;
+            }
         } else {
             value = [nameKeyValueArray objectAtIndex:i + 2];
         }
         if (value == nil) { continue; }
 
+        NSString *_Nonnull name = nameResult.value.stringValue;
+
         NSMutableDictionary<NSString *, id> *_Nullable mapBuilder =
-        [mapCollectionByNameBuilder objectForKey:name];
+            [mapCollectionByNameBuilder objectForKey:name];
 
         if (mapBuilder == nil) {
             mapBuilder = [[NSMutableDictionary alloc] init];
-            [mapCollectionByNameBuilder setObject:mapBuilder
-                                           forKey:name];
+            [mapCollectionByNameBuilder setObject:mapBuilder forKey:name];
         }
+
+        NSString *_Nonnull key = keyResult.value.stringValue;
 
         NSString *_Nullable previousValue = [mapBuilder objectForKey:key];
         if (previousValue != nil) {
@@ -355,48 +389,12 @@ isValueString:(BOOL)isValueString {
 }
 
 // assumes [ADJUtilObj copyStringOrNSNullWithInput] was for the string object
-+ (nullable NSString *)extractFieldWithStringObject:(nonnull id)stringObject
-                                  sourceDescription:(nonnull NSString *)sourceDescription
-                                   fieldDescription:(nonnull NSString *)fieldDescription
-                                             logger:(nonnull ADJLogger *)logger {
-    ADJNonEmptyString *_Nullable field =
-    [self extractNonEmptyFieldWithStringObject:stringObject
-                             sourceDescription:sourceDescription
-                              fieldDescription:fieldDescription
-                                        logger:logger];
-
-    return field != nil ? field.stringValue : nil;
-}
-
-+ (nullable ADJNonEmptyString *)extractNonEmptyFieldWithStringObject:(nonnull id)stringObject
-                                                   sourceDescription:(nonnull NSString *)sourceDescription
-                                                    fieldDescription:(nonnull NSString *)fieldDescription
-                                                              logger:(nonnull ADJLogger *)logger {
-    if ([stringObject isEqual:[NSNull null]]) {
-        [logger debugDev:@"Cannot add to map with NSNull"
-                    key1:@"from"
-                  value1:sourceDescription
-                    key2:@"field in map"
-                  value2:fieldDescription
-               issueType:ADJIssueInvalidInput];
-        return nil;
++ (nonnull ADJResultNN<ADJNonEmptyString *> *)extractNsNullableStringWithObject:(nonnull id)object {
+    if ([object isEqual:[NSNull null]]) {
+        return [ADJResultNN failWithMessage:@"Cannot create string from NSNull"];
     }
 
-    ADJNonEmptyString *_Nullable stringValue =
-    [ADJNonEmptyString instanceFromString:stringObject
-                        sourceDescription:sourceDescription
-                                   logger:logger];
-    if (stringValue == nil) {
-        [logger debugDev:@"Cannot add to map with invalid string"
-                    key1:@"from"
-                  value1:sourceDescription
-                    key2:@"field in map"
-                  value2:fieldDescription
-               issueType:ADJIssueInvalidInput];
-    }
-
-    return stringValue;
+    return [ADJNonEmptyString instanceFromObject:object];
 }
 
 @end
-

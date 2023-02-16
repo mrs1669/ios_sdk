@@ -52,34 +52,30 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJMoney *_Nullable price =
+    ADJResultNN<ADJMoney *> *_Nonnull priceResult =
         [ADJMoney instanceFromAmountDecimalNumber:adjustBillingSubscription.priceDecimalNumber
-                                         currency:adjustBillingSubscription.currency
-                                           source:@"billing subscription price"
-                                           logger:logger];
-    if (price == nil) {
-        [logger errorClient:@"Cannot create billing subscription without a valid price"];
+                                         currency:adjustBillingSubscription.currency];
+    if (priceResult.failMessage != nil) {
+        [logger errorClient:@"Cannot create billing subscription with an invalid price"
+                failMessage:priceResult.failMessage];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable transactionId =
-        [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId
-                            sourceDescription:@"transaction id"
-                                       logger:logger];
-    if (transactionId == nil) {
-        [logger errorClient:@"Cannot create billing subscription without a valid transaction id"];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull transactionIdResult =
+        [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId];
+    if (transactionIdResult.failMessage != nil) {
+        [logger errorClient:@"Cannot create billing subscription with an invalid transaction id"
+                failMessage:transactionIdResult.failMessage];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable receiptDataString =
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull receiptDataStringResult =
         [ADJNonEmptyString
             instanceFromString:[ADJUtilConv convertToBase64StringWithDataValue:
-                                adjustBillingSubscription.receiptData]
-            sourceDescription:@"billing subscription receipt data string"
-            logger:logger];
-
-    if (receiptDataString == nil) {
-        [logger errorClient:@"Cannot create billing subscription without a valid receiptData"];
+                                adjustBillingSubscription.receiptData]];
+    if (receiptDataStringResult.failMessage != nil) {
+        [logger errorClient:@"Cannot create billing subscription with an invalid receipt data"
+                failMessage:receiptDataStringResult.failMessage];
         return nil;
     }
 
@@ -88,34 +84,36 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
                                             logger:logger];
     if (transactionTimestamp == nil) {
         [logger errorClient:
-            @"Cannot create billing subscription without a valid transaction timestamp"];
+            @"Cannot create billing subscription with an invalid transaction timestamp"];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable salesRegion =
-    [ADJNonEmptyString instanceFromOptionalString:adjustBillingSubscription.salesRegion
-                                sourceDescription:@"billing subscription sales region"
-                                           logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull salesRegionResult =
+        [ADJNonEmptyString instanceFromOptionalString:adjustBillingSubscription.salesRegion];
+    if (salesRegionResult.failMessage != nil) {
+        [logger noticeClient:@"Cannot use invalid sales region in billing subscription"
+                 failMessage:salesRegionResult.failMessage];
+    }
 
     ADJStringMap *_Nullable callbackParameters =
-    [ADJUtilConv
-     convertToStringMapWithKeyValueArray:
-         adjustBillingSubscription.callbackParameterKeyValueArray
-     sourceDescription:@"billing subscription callback parameters"
-     logger:logger];
+        [ADJUtilConv
+         convertToStringMapWithKeyValueArray:
+             adjustBillingSubscription.callbackParameterKeyValueArray
+         sourceDescription:@"billing subscription callback parameters"
+         logger:logger];
 
     ADJStringMap *_Nullable partnerParameters =
-    [ADJUtilConv
-     convertToStringMapWithKeyValueArray:
-         adjustBillingSubscription.partnerParameterKeyValueArray
-     sourceDescription:@"billing subscription partner parameters"
-     logger:logger];
+        [ADJUtilConv
+         convertToStringMapWithKeyValueArray:
+             adjustBillingSubscription.partnerParameterKeyValueArray
+         sourceDescription:@"billing subscription partner parameters"
+         logger:logger];
 
-    return [[self alloc] initWithPrice:price
-                         transactionId:transactionId
-                     receiptDataString:receiptDataString
+    return [[self alloc] initWithPrice:priceResult.value
+                         transactionId:transactionIdResult.value
+                     receiptDataString:receiptDataStringResult.value
                   transactionTimestamp:transactionTimestamp
-                           salesRegion:salesRegion
+                           salesRegion:salesRegionResult.value
                     callbackParameters:callbackParameters
                      partnerParameters:partnerParameters];
 }
@@ -129,18 +127,16 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJNonEmptyString *_Nullable priceAmountIoValue =
         [propertiesMap pairValueWithKey:kPriceAmountKey];
-    ADJMoneyAmountBase *_Nullable priceAmount =
-        [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue
-                                         logger:logger];
-
-    if (priceAmount == nil) {
+    ADJResultNN<ADJMoneyAmountBase *> *_Nonnull priceAmountResult =
+        [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue];
+    if (priceAmountResult.failMessage != nil) {
         [logger debugDev:@"Cannot decode ClientBillingSubscriptionData without valid price amount"
+             failMessage:priceAmountResult.failMessage
                issueType:ADJIssueStorageIo];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable priceCurrency = [propertiesMap pairValueWithKey:kPriceCurrencyKey];
-
     if (priceCurrency == nil) {
         [logger debugDev:
             @"Cannot decode ClientBillingSubscriptionData without valid price currency"
@@ -182,7 +178,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     ADJStringMap *_Nullable partnerParametersMap =
     [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
 
-    return [[self alloc] initWithPrice:[[ADJMoney alloc] initWithAmount:priceAmount
+    return [[self alloc] initWithPrice:[[ADJMoney alloc] initWithAmount:priceAmountResult.value
                                                                currency:priceCurrency]
                          transactionId:transactionId
                      receiptDataString:receiptDataString

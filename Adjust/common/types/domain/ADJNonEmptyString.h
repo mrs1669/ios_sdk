@@ -11,6 +11,8 @@
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
 #import "ADJLogger.h"
+#import "ADJResultNN.h"
+#import "ADJResultNL.h"
 
 @interface ADJNonEmptyString : NSObject<
     NSCopying,
@@ -18,13 +20,15 @@
     ADJIoValueSerializable
 >
 // instantiation
-+ (nullable instancetype)instanceFromString:(nullable NSString *)stringValue
-                          sourceDescription:(nonnull NSString *)sourceDescription
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJNonEmptyString *> *)
+    instanceFromString:(nullable NSString *)stringValue;
++ (nonnull ADJResultNN<ADJNonEmptyString *> *)
+    instanceFromObject:(nullable id)objectValue;
 
-+ (nullable instancetype)instanceFromOptionalString:(nullable NSString *)stringValue
-                                  sourceDescription:(nonnull NSString *)sourceDescription
-                                             logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)
+    instanceFromOptionalString:(nullable NSString *)stringValue;
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)
+    instanceFromOptionalObject:(nullable id)objectValue;
 
 - (nonnull instancetype)initWithConstStringValue:(nonnull NSString *)constStringValue
 NS_DESIGNATED_INITIALIZER;

@@ -160,15 +160,14 @@
     return [ADJUtilObj formatInlineKeyValuesWithName:@"NSError",
             @"domain", error.domain,
             @"code", @(error.code),
-            @"localizedDescription", error.localizedDescription,
-            @"localizedFailureReason", error.localizedFailureReason,
-            @"localizedRecoverySuggestion", error.localizedRecoverySuggestion,
+            @"userInfo", [ADJUtilObj formatInlineKeyValuesWithName:@""
+                                               stringKeyDictionary:error.userInfo],
             nil];
 }
 
 + (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData {
     NSString *_Nullable converted =
-    [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
     if (converted == nil) {
         return nil;
@@ -178,19 +177,26 @@
             [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-+ (nullable NSString *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
-    if (jsonFoundationValue == nil) { return nil; }
++ (nonnull ADJResultErr<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
+    if (jsonFoundationValue == nil) { return [ADJResultErr okWithoutValue]; }
 
     NSError *error;
     NSData *_Nullable jsonData =
-    [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
-                                                 errorPtr:&error];
+        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
+                                                     errorPtr:&error];
 
-    if (jsonData == nil) {
-        return nil;
+    if (error != nil) {
+        return [ADJResultErr failWithError:error];
     }
 
-    return [ADJUtilF jsonDataFormat:jsonData];
+    if (jsonData == nil) {
+        return [ADJResultErr okWithoutValue];
+    }
+
+    NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonData];
+
+    return jsonString == nil ?
+        [ADJResultErr okWithoutValue] : [ADJResultErr okWithValue:jsonString];
 }
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber {
@@ -275,37 +281,6 @@
     }
 
     return value.stringValue;
-}
-
-+ (void)transferExternalParametersWithFoundationMapToRead:(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
-                                        parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
-                                                   source:(nonnull NSString *)source
-                                                   logger:(nonnull ADJLogger *)logger {
-    NSDictionary<NSString *, NSString *> *_Nonnull foundationMapToReadCopy = [foundationMapToRead copy];
-
-    for (NSString *_Nonnull readKey in foundationMapToReadCopy) {
-        ADJNonEmptyString *_Nullable keyToWrite = [ADJNonEmptyString
-                                                   instanceFromString:readKey
-                                                   sourceDescription:[NSString stringWithFormat:@"Parameter %@ key to write", source]
-                                                   logger:logger];
-
-        if (keyToWrite == nil) {
-            continue;
-        }
-
-        NSString *_Nonnull readValue = [foundationMapToReadCopy objectForKey:readKey];
-
-        ADJNonEmptyString *_Nullable valueToWrite = [ADJNonEmptyString
-                                                     instanceFromString:readValue
-                                                     sourceDescription:[NSString stringWithFormat:@"Parameter %@ value to write", source]
-                                                     logger:logger];
-
-        if (valueToWrite == nil) {
-            continue;
-        }
-
-        [parametersToWrite addPairWithValue:valueToWrite key:keyToWrite.stringValue];
-    }
 }
 
 @end

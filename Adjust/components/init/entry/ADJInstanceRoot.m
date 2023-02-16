@@ -364,10 +364,11 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientAddGlobalParameterData *_Nullable clientData =
-        [ADJClientAddGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToAdd:key
-         valueToAdd:value
-         logger:logger];
+            [ADJClientAddGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToAdd:key
+             valueToAdd:value
+             globalParameterType:ADJGlobalParametersTypeCallback
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccAddGlobalCallbackParameterWithClientData:clientData];
@@ -379,9 +380,10 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientRemoveGlobalParameterData *_Nullable clientData =
-        [ADJClientRemoveGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToRemove:key
-         logger:logger];
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToRemove:key
+             globalParameterType:ADJGlobalParametersTypeCallback
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccRemoveGlobalCallbackParameterWithClientData:clientData];
@@ -404,10 +406,11 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientAddGlobalParameterData *_Nullable clientData =
-        [ADJClientAddGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToAdd:key
-         valueToAdd:value
-         logger:logger];
+            [ADJClientAddGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToAdd:key
+             valueToAdd:value
+             globalParameterType:ADJGlobalParametersTypePartner
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccAddGlobalPartnerParameterWithClientData:clientData];
@@ -419,9 +422,10 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientRemoveGlobalParameterData *_Nullable clientData =
-        [ADJClientRemoveGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToRemove:key
-         logger:logger];
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToRemove:key
+             globalParameterType:ADJGlobalParametersTypePartner
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccRemoveGlobalPartnerParameterWithClientData:clientData];

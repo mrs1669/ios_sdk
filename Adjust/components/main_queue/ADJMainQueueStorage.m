@@ -84,12 +84,14 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
         ADJV4ActivityPackage *_Nonnull v4ActivityPackage =
             (ADJV4ActivityPackage *)activityPackageObject;
 
-        ADJNonEmptyString *_Nullable v4ClientSdk =
-            [ADJNonEmptyString instanceFromString:v4ActivityPackage.clientSdk
-                                sourceDescription:@"v4 Activity Package client sdk"
-                                           logger:self.logger];
-        if (v4ClientSdk == nil) {
-            [self.logger debugDev:@"Cannot not add v4 package without client sdk"];
+
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull v4ClientSdkResult =
+            [ADJNonEmptyString instanceFromString:v4ActivityPackage.clientSdk];
+
+        if (v4ClientSdkResult.failMessage != nil) {
+            [self.logger debugDev:@"Cannot not add v4 package without client sdk"
+                      failMessage:v4ClientSdkResult.failMessage
+                        issueType:ADJIssueStorageIo];
             continue;
         }
 
@@ -102,7 +104,7 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 
         id<ADJSdkPackageData> _Nullable sdkPackageData =
             [self convertSdkPackageFromV4WithV4Path:v4ActivityPackage.path
-                                        v4ClientSdk:v4ClientSdk
+                                        v4ClientSdk:v4ClientSdkResult.value
                                          parameters:parameters];
         if (sdkPackageData == nil) {
             [self.logger debugDev:@"Cannot not add v4 package that could not be converted"];
@@ -116,33 +118,38 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 }
 
 #pragma mark Internal Methods
-- (nullable ADJStringMap *)convertV4ParametersWithV4ActivityPackage:(nonnull ADJV4ActivityPackage *)v4ActivityPackage {
-
+- (nullable ADJStringMap *)
+    convertV4ParametersWithV4ActivityPackage:(nonnull ADJV4ActivityPackage *)v4ActivityPackage
+{
     if (v4ActivityPackage.parameters == nil || v4ActivityPackage.parameters.count == 0) {
         return nil;
     }
 
-    ADJStringMapBuilder *_Nonnull parametersBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+        [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     for (NSString *key in v4ActivityPackage.parameters) {
-        ADJNonEmptyString *_Nullable verifiedKey = [ADJNonEmptyString instanceFromString:key
-                                                                       sourceDescription:@"v4 activity package key"
-                                                                                  logger:self.logger];
-        if (verifiedKey == nil) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+            [ADJNonEmptyString instanceFromString:key];
+        if (keyResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid key when converting v4 parameters of activity package"
+                      failMessage:keyResult.failMessage
+                        issueType:ADJIssueStorageIo];
             continue;
         }
 
-        NSString *_Nullable value = [v4ActivityPackage.parameters objectForKey:key];
-
-        ADJNonEmptyString *_Nullable verifiedValue = [ADJNonEmptyString instanceFromString:value
-                                                                         sourceDescription:@"v4 activity package value"
-                                                                                    logger:self.logger];
-        if (verifiedValue == nil) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+            [ADJNonEmptyString instanceFromString:
+             [v4ActivityPackage.parameters objectForKey:keyResult.value.stringValue]];
+        if (valueResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid value when converting v4 parameters of activity package"
+                      failMessage:valueResult.failMessage
+                        issueType:ADJIssueStorageIo];
             continue;
         }
 
-        [parametersBuilder addPairWithValue:verifiedValue
-                                        key:key];
+        [parametersBuilder addPairWithValue:valueResult.value
+                                        key:keyResult.value.stringValue];
     }
 
     return [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder];

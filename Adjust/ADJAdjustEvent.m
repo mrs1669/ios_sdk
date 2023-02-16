@@ -13,7 +13,7 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
- @property (nullable, readonly, strong, nonatomic) NSString *eventId;
+ @property (nullable, readonly, strong, nonatomic) NSString *eventToken;
  @property (nullable, readonly, strong, nonatomic) NSDecimalNumber *revenueAmountDecimalNumber;
  @property (nullable, readonly, strong, nonatomic) NSString *revenueCurrency;
  @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *callbackParameterKeyValueArray;
@@ -31,10 +31,10 @@
 @implementation ADJAdjustEvent
 
 #pragma mark - Instantiation
-- (nonnull instancetype)initWithEventId:(nonnull NSString *)eventId {
+- (nonnull instancetype)initWithEventToken:(nonnull NSString *)eventToken {
     self = [super init];
     
-    _eventId = [ADJUtilObj copyStringWithInput:eventId];
+    _eventToken = [ADJUtilObj copyStringWithInput:eventToken];
     _callbackParametersMut = [[NSMutableArray alloc] init];
     _partnerParametersMut = [[NSMutableArray alloc] init];
     

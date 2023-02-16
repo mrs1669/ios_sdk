@@ -53,10 +53,16 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 @implementation ADJAttributionData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
-                                        logger:(nonnull ADJLogger *)logger {
+                                        logger:(nonnull ADJLogger *)logger
+{
     ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
-    ADJMoneyAmountBase *_Nullable costAmount = [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue
-                                                                                        logger:logger];
+    ADJResultNL<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
+        [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue];
+    if (costAmountResult.failMessage != nil) {
+        [logger debugDev:@"Invalid cost amount from io data map"
+             failMessage:costAmountResult.failMessage
+               issueType:ADJIssueStorageIo];
+    }
     
     return [[self alloc] initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
                                   trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
@@ -69,15 +75,37 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                                      deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
                                         state:[ioDataMap pairValueWithKey:kStateKey]
                                      costType:[ioDataMap pairValueWithKey:kCostTypeKey]
-                                   costAmount:costAmount
+                                   costAmount:costAmountResult.value
                                  costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]];
 }
 
-#define stringConvertion(stringValue, sourceD)    \
-[ADJNonEmptyString                           \
-instanceFromOptionalString:(stringValue)  \
-sourceDescription:(sourceD)               \
-logger:logger]                            \
+#define stringConvAndLog(value, name)                            \
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull value ## Result = \
+        [ADJNonEmptyString instanceFromOptionalString:value];    \
+    if (value ## Result.failMessage != nil) {                    \
+        [logger debugDev:@"Invalid string from external data"    \
+               valueName:name                                    \
+             failMessage:value ## Result.failMessage             \
+               issueType:ADJIssueInvalidInput];                  \
+    }                                                            \
+
+- (nullable ADJNonEmptyString *)convExternalWithValue:(nullable NSString *)value
+                                            valueName:(nonnull NSString *)valueName
+                                               logger:(nonnull ADJLogger *)logger
+{
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
+        [ADJNonEmptyString instanceFromOptionalString:value];
+    if (valueResult.failMessage != nil) {
+        [logger debugDev:@"Invalid string from external data"
+               valueName:valueName
+             failMessage:valueResult.failMessage
+               issueType:ADJIssueInvalidInput];
+    }
+    return valueResult.value;
+}
+
+#define convExtCall(value, name) \
+    [self convExternalWithValue:(value) valueName:(name) logger:logger] \
 
 - (nonnull instancetype)initFromExternalDataWithLogger:(nonnull ADJLogger *)logger
                                     trackerTokenString:(nullable NSString *)trackerTokenString
@@ -90,58 +118,81 @@ logger:logger]                            \
                                             adidString:(nullable NSString *)adidString
                                         costTypeString:(nullable NSString *)costTypeString
                                 costAmountDoubleNumber:(nullable NSNumber *)costAmountDoubleNumber
-                                    costCurrencyString:(nullable NSString *)costCurrencyString {
-    ADJMoneyDoubleAmount *_Nullable costAmountDouble =
-    [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:costAmountDoubleNumber
-                                                 logger:logger];
-    
-    return [self initWithTrackerToken:stringConvertion(trackerTokenString, kTrackerTokenKey)
-                          trackerName:stringConvertion(trackerNameString, kTrackerNameKey)
-                              network:stringConvertion(networkString, kNetworkKey)
-                             campaign:stringConvertion(campaignString, kCampaignKey)
-                              adgroup:stringConvertion(adgroupString, kAdgroupKey)
-                             creative:stringConvertion(creativeString, kCreativeKey)
-                           clickLabel:stringConvertion(clickLabelString, kClickLabelKey)
-                                 adid:stringConvertion(adidString, kAdidKey)
+                                    costCurrencyString:(nullable NSString *)costCurrencyString
+{
+    ADJResultNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:costAmountDoubleNumber];
+    if (costAmountDoubleResult.failMessage != nil) {
+        [logger debugDev:@"Invalid cost amount double from external data"
+             failMessage:costAmountDoubleResult.failMessage
+               issueType:ADJIssueInvalidInput];
+    }
+
+    return [self initWithTrackerToken:convExtCall(trackerTokenString, kTrackerTokenKey)
+                          trackerName:convExtCall(trackerNameString, kTrackerNameKey)
+                              network:convExtCall(networkString, kNetworkKey)
+                             campaign:convExtCall(campaignString, kCampaignKey)
+                              adgroup:convExtCall(adgroupString, kAdgroupKey)
+                             creative:convExtCall(creativeString, kCreativeKey)
+                           clickLabel:convExtCall(clickLabelString, kClickLabelKey)
+                                 adid:convExtCall(adidString, kAdidKey)
                              deeplink:nil
                                 state:nil
-                             costType:stringConvertion(costTypeString, kCostTypeKey)
-                           costAmount:costAmountDouble
-                         costCurrency:stringConvertion(costCurrencyString, kCostCurrencyKey)];
+                             costType:convExtCall(costTypeString, kCostTypeKey)
+                           costAmount:costAmountDoubleResult.value
+                         costCurrency:convExtCall(costCurrencyString, kCostCurrencyKey)];
 }
 
-#define extractJson(paramKey, sourceD)                              \
-[ADJNonEmptyString                                             \
-instanceFromOptionalString:                                 \
-[ADJUtilMap                                            \
-extractStringValueWithDictionary:jsonDictionary     \
-key:(paramKey)]                                     \
-sourceDescription:(sourceD)                                 \
-logger:logger]                                              \
+- (nullable ADJNonEmptyString *)extractJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
+                                                      key:(nonnull NSString *)key
+                                                valueName:(nonnull NSString *)valueName
+                                                   logger:(nonnull ADJLogger *)logger
+{
+    NSString *_Nullable value = [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
+                                                                         key:key];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
+        [ADJNonEmptyString instanceFromOptionalString:value];
+    if (valueResult.failMessage != nil) {
+        [logger debugDev:@"Invalid string from json"
+               valueName:valueName
+             failMessage:valueResult.failMessage
+               issueType:ADJIssueInvalidInput];
+    }
+    return valueResult.value;
+}
+
+#define extrJsonCall(dictKey, name) \
+    [self extractJsonWithDictionary:jsonDictionary key:(dictKey) valueName:(name) logger:logger] \
 
 - (nonnull instancetype)initFromJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
                                               adid:(nonnull ADJNonEmptyString *)adid
-                                            logger:(nonnull ADJLogger *)logger {
+                                            logger:(nonnull ADJLogger *)logger
+{
     NSNumber *_Nullable costAmountDoubleNumber =
-    [ADJUtilMap extractDoubleNumberWithDictionary:jsonDictionary
-                                              key:ADJParamAttributionCostAmountKey];
-    ADJMoneyAmountBase *_Nullable costAmount =
-    [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:costAmountDoubleNumber
-                                                 logger:logger];
-    
-    return [self  initWithTrackerToken:extractJson(ADJParamAttributionTrackerTokenKey, kTrackerTokenKey)
-                           trackerName:extractJson(ADJParamAttributionTrackerNameKey, kTrackerNameKey)
-                               network:extractJson(ADJParamAttributionNetworkKey, kNetworkKey)
-                              campaign:extractJson(ADJParamAttributionCampaignKey, kCampaignKey)
-                               adgroup:extractJson(ADJParamAttributionAdGroupKey, kAdgroupKey)
-                              creative:extractJson(ADJParamAttributionCreativeKey, kCreativeKey)
-                            clickLabel:extractJson(ADJParamAttributionClickLableKey, kClickLabelKey)
-                                  adid:adid
-                              deeplink:extractJson(ADJParamAttributionDeeplinkKey, kDeeplinkKey)
-                                 state:extractJson(ADJParamAttributionStateKey, kStateKey)
-                              costType:extractJson(ADJParamAttributionCostTypeKey, kCostTypeKey)
-                            costAmount:costAmount
-                          costCurrency:extractJson(ADJParamAttributionCostCurrencyKey, kCostCurrencyKey)];
+        [ADJUtilMap extractDoubleNumberWithDictionary:jsonDictionary
+                                                  key:ADJParamAttributionCostAmountKey];
+    ADJResultNL<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:costAmountDoubleNumber];
+    if (costAmountDoubleResult.failMessage != nil) {
+        [logger debugDev:@"Invalid cost amount double from Json"
+             failMessage:costAmountDoubleResult.failMessage
+               issueType:ADJIssueInvalidInput];
+    }
+
+    return [self
+            initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey, kTrackerTokenKey)
+            trackerName:extrJsonCall(ADJParamAttributionTrackerNameKey, kTrackerNameKey)
+            network:extrJsonCall(ADJParamAttributionNetworkKey, kNetworkKey)
+            campaign:extrJsonCall(ADJParamAttributionCampaignKey, kCampaignKey)
+            adgroup:extrJsonCall(ADJParamAttributionAdGroupKey, kAdgroupKey)
+            creative:extrJsonCall(ADJParamAttributionCreativeKey, kCreativeKey)
+            clickLabel:extrJsonCall(ADJParamAttributionClickLableKey, kClickLabelKey)
+            adid:adid
+            deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey, kDeeplinkKey)
+            state:extrJsonCall(ADJParamAttributionStateKey, kStateKey)
+            costType:extrJsonCall(ADJParamAttributionCostTypeKey, kCostTypeKey)
+            costAmount:costAmountDoubleResult.value
+            costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey, kCostCurrencyKey)];
 }
 
 - (nullable instancetype)init {
@@ -162,7 +213,8 @@ logger:logger]                                              \
                                        state:(nullable ADJNonEmptyString *)state
                                     costType:(nullable ADJNonEmptyString *)costType
                                   costAmount:(nullable ADJMoneyAmountBase *)costAmount
-                                costCurrency:(nullable ADJNonEmptyString *)costCurrency {
+                                costCurrency:(nullable ADJNonEmptyString *)costCurrency
+{
     self = [super init];
     
     _trackerToken = trackerToken;

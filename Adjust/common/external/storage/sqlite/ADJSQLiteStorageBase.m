@@ -93,17 +93,19 @@
                                                 fieldName:(nonnull NSString *)fieldName {
     NSString *_Nullable fieldString = [selectStatement stringForColumnIndex:columnIndex];
 
-    ADJNonEmptyString *_Nullable fieldValue =
-    [ADJNonEmptyString instanceFromString:fieldString
-                        sourceDescription:fieldName
-                                   logger:self.logger];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull fieldValueResult =
+        [ADJNonEmptyString instanceFromString:fieldString];
 
-    if (fieldValue == nil) {
+    if (fieldValueResult.failMessage != nil) {
         [self.logger debugDev:@"Cannot get string value from select statement"
-                    valueName:fieldName issueType:ADJIssueStorageIo];
+                    valueName:fieldName
+                  failMessage:fieldValueResult.failMessage
+                    issueType:ADJIssueStorageIo];
+
+        return nil;
     }
 
-    return fieldValue;
+    return fieldValueResult.value;
 }
 
 #pragma mark - Abstract

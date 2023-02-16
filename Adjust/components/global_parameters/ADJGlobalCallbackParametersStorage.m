@@ -46,33 +46,29 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 
     ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
-    for (NSString *_Nullable key in v4SessionCallbackParameters) {
-        if (key == nil) {
+    for (NSString *_Nonnull key in v4SessionCallbackParameters) {
+        ADJResultNL<ADJNonEmptyString *> *_Nonnull keyResult =
+            [ADJNonEmptyString instanceFromOptionalString:key];
+        if (keyResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid v4 Session Callback Parameter key"
+                      failMessage:keyResult.failMessage
+                        issueType:ADJIssueStorageIo];
+        }
+        if (keyResult.value == nil) {
             continue;
         }
 
-        NSString *_Nullable value = [v4SessionCallbackParameters objectForKey:key];
-        if (value == nil) {
-            continue;
+        ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
+            [ADJNonEmptyString instanceFromOptionalString:
+             [v4SessionCallbackParameters objectForKey:key]];
+        if (valueResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid v4 Callback Partner Parameter value"
+                      failMessage:valueResult.failMessage
+                        issueType:ADJIssueStorageIo];
         }
 
-        ADJNonEmptyString *_Nullable verifiedKey =
-            [ADJNonEmptyString instanceFromOptionalString:key
-                                        sourceDescription:@"v4 Session Callback Parameter key"
-                                                   logger:self.logger];
-        if (verifiedKey == nil) {
-            continue;
-        }
-
-        ADJNonEmptyString *_Nullable verifiedValue =
-            [ADJNonEmptyString instanceFromOptionalString:value
-                                        sourceDescription:@"v4 Session Callback Parameter value"
-                                                   logger:self.logger];
-        if (verifiedValue == nil) {
-            continue;
-        }
-
-        [mapBuilder addPairWithValue:verifiedValue key:key];
+        [mapBuilder addPairWithValue:valueResult.value
+                                 key:keyResult.value.stringValue];
     }
 
     [self replaceAllWithStringMap:[[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder]

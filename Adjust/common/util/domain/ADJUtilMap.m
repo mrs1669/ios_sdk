@@ -156,7 +156,8 @@
 }
 
 + (nullable NSNumber *)extractDoubleNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                     key:(nonnull NSString *)key {
+                                                     key:(nonnull NSString *)key
+{
     if (dictionary == nil) {
         return nil;
     }

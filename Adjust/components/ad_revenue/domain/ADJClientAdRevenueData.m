@@ -55,19 +55,20 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
 @implementation ADJClientAdRevenueData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
-                                                        logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustAdRevenue == nil) {
         [logger errorClient:@"Cannot create ad revenue with nil adjust ad revenue value"];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable source =
-        [ADJNonEmptyString instanceFromString:adjustAdRevenue.source
-                            sourceDescription:@"ad revenue source"
-                                       logger:logger];
-    if (source == nil) {
-        [logger errorClient:@"Cannot create ad revenue without ad revenue source"];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull sourceResult =
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.source];
+    if (sourceResult.failMessage != nil) {
+        [logger errorClient:@"Cannot create ad revenue without ad revenue source"
+                failMessage:sourceResult.failMessage];
         return nil;
     }
 
@@ -84,17 +85,26 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
                               nil];
     });
 
-    if (![adRevenueSourceSet containsObject:source.stringValue]) {
+    if (![adRevenueSourceSet containsObject:sourceResult.value.stringValue]) {
         [logger noticeClient:@"Cannot match ad revenue source to an expected one,"
-            " but will be used as is"];
+            " but will be used as is"
+                         key:@"ad revenue source"
+                       value:sourceResult.value.stringValue];
     }
 
     ADJMoney *_Nullable revenue = nil;
-    if (adjustAdRevenue.revenueAmountDoubleNumber != nil || adjustAdRevenue.revenueCurrency != nil) {
-        revenue = [ADJMoney instanceFromAmountDoubleNumber:adjustAdRevenue.revenueAmountDoubleNumber
-                                                  currency:adjustAdRevenue.revenueCurrency
-                                                    source:@"adrevenue revenue"
-                                                    logger:logger];
+    if (adjustAdRevenue.revenueAmountDoubleNumber != nil
+        || adjustAdRevenue.revenueCurrency != nil)
+    {
+        ADJResultNN<ADJMoney *> *_Nonnull revenueResult =
+            [ADJMoney instanceFromAmountDoubleNumber:adjustAdRevenue.revenueAmountDoubleNumber
+                                            currency:adjustAdRevenue.revenueCurrency];
+        if (revenueResult.failMessage != nil) {
+            [logger noticeClient:@"Cannot use invalid revenue"
+                     failMessage:revenueResult.failMessage];
+        } else {
+            revenue = revenueResult.value;
+        }
     }
 
     ADJNonNegativeInt *_Nullable adImpressionsCount =
@@ -102,20 +112,26 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
             instanceFromOptionalIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber
             logger:logger];
 
-    ADJNonEmptyString *_Nullable adRevenueNetwork =
-        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueNetwork
-                                    sourceDescription:@"ad revenue network"
-                                           logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull adRevenueNetworkResult =
+        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueNetwork];
+    if (adRevenueNetworkResult.failMessage != nil) {
+        [logger noticeClient:@"Cannot use invalid ad revenue network"
+                 failMessage:adRevenueNetworkResult.failMessage];
+    }
 
-    ADJNonEmptyString *_Nullable adRevenueUnit =
-        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueUnit
-                                    sourceDescription:@"ad revenue unit"
-                                               logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull adRevenueUnitResult =
+        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueUnit];
+    if (adRevenueUnitResult.failMessage != nil) {
+        [logger noticeClient:@"Cannot use invalid ad revenue unit"
+                 failMessage:adRevenueUnitResult.failMessage];
+    }
 
-    ADJNonEmptyString *_Nullable adRevenuePlacement =
-        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenuePlacement
-                                    sourceDescription:@"ad revenue placement"
-                                               logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull adRevenuePlacementResult =
+        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenuePlacement];
+    if (adRevenueUnitResult.failMessage != nil) {
+        [logger noticeClient:@"Cannot use invalid ad revenue placement"
+                 failMessage:adRevenueUnitResult.failMessage];
+    }
 
     ADJStringMap *_Nullable callbackParameters =
         [ADJUtilConv
@@ -129,58 +145,76 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
             sourceDescription:@"ad revenue partner parameters"
             logger:logger];
 
-    return [[self alloc] initWithSource:source
+    return [[self alloc] initWithSource:sourceResult.value
                                 revenue:revenue
                      adImpressionsCount:adImpressionsCount
-                       adRevenueNetwork:adRevenueNetwork
-                          adRevenueUnit:adRevenueUnit
-                     adRevenuePlacement:adRevenuePlacement
+                       adRevenueNetwork:adRevenueNetworkResult.value
+                          adRevenueUnit:adRevenueUnitResult.value
+                     adRevenuePlacement:adRevenuePlacementResult.value
                      callbackParameters:callbackParameters
                       partnerParameters:partnerParameters];
 }
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger {
-
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger
+{
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
 
     ADJNonEmptyString *_Nullable source = [propertiesMap pairValueWithKey:kSourceKey];
 
-    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:source != nil ? source.stringValue : nil];
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
+        [[ADJAdjustAdRevenue alloc] initWithSource:source != nil ? source.stringValue : nil];
 
-    ADJNonEmptyString *_Nullable revenueAmountIoValue = [propertiesMap pairValueWithKey:kRevenueAmountKey];
-    ADJMoneyAmountBase *_Nullable revenueAmount = [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue
-                                                                                             logger:logger];
-    ADJNonEmptyString *_Nullable revenueCurrency = [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
+    ADJNonEmptyString *_Nullable revenueAmountIoValue =
+        [propertiesMap pairValueWithKey:kRevenueAmountKey];
+
+    ADJResultNL<ADJMoneyAmountBase *> *_Nonnull revenueAmountResult =
+        [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue];
+    if (revenueAmountResult.failMessage != nil) {
+        [logger debugDev:@"Invalid revenue amount from client action injected io data"
+             failMessage:revenueAmountResult.failMessage
+               issueType:ADJIssueInvalidInput];
+    }
+    ADJMoneyAmountBase *_Nullable revenueAmount = revenueAmountResult.value;
+
+    ADJNonEmptyString *_Nullable revenueCurrency =
+        [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
     if (revenueAmount != nil || revenueCurrency != nil) {
         [adjustAdRevenue
          setRevenueWithDoubleNumber:revenueAmount != nil? revenueAmount.numberValue : nil
          currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
     }
 
-    ADJNonEmptyString *_Nullable adImpressionsCountIoValue = [propertiesMap pairValueWithKey:kAdImpressionsCountKey];
-    ADJNonNegativeInt *_Nullable adImpressionsCount = [ADJNonNegativeInt instanceFromOptionalIoDataValue:adImpressionsCountIoValue
-                                                                                                    logger:logger];
+    ADJNonEmptyString *_Nullable adImpressionsCountIoValue =
+        [propertiesMap pairValueWithKey:kAdImpressionsCountKey];
+    ADJNonNegativeInt *_Nullable adImpressionsCount =
+        [ADJNonNegativeInt instanceFromOptionalIoDataValue:adImpressionsCountIoValue
+                                                    logger:logger];
     if (adImpressionsCount != nil) {
         [adjustAdRevenue setAdImpressionsCountWithInteger:adImpressionsCount.uIntegerValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenueNetwork = [propertiesMap pairValueWithKey:kAdRevenueNetworkKey];
+    ADJNonEmptyString *_Nullable adRevenueNetwork =
+        [propertiesMap pairValueWithKey:kAdRevenueNetworkKey];
     if (adRevenueNetwork != nil) {
         [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork.stringValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenueUnit = [propertiesMap pairValueWithKey:kAdRevenueUnitKey];
+    ADJNonEmptyString *_Nullable adRevenueUnit =
+        [propertiesMap pairValueWithKey:kAdRevenueUnitKey];
     if (adRevenueUnit != nil) {
         [adjustAdRevenue setAdRevenueUnit:adRevenueUnit.stringValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenuePlacement = [propertiesMap pairValueWithKey:kAdRevenuePlacementKey];
+    ADJNonEmptyString *_Nullable adRevenuePlacement =
+        [propertiesMap pairValueWithKey:kAdRevenuePlacementKey];
     if (adRevenuePlacement != nil) {
         [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement.stringValue];
     }
 
-    ADJStringMap *_Nullable callbackParametersMap = [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
+    ADJStringMap *_Nullable callbackParametersMap =
+        [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
 
     if (callbackParametersMap != nil) {
         for (NSString *_Nonnull callbackParameterKey in callbackParametersMap.map) {
@@ -190,7 +224,8 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         }
     }
 
-    ADJStringMap *_Nullable partnerParametersMap = [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
+    ADJStringMap *_Nullable partnerParametersMap =
+        [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
 
     if (partnerParametersMap != nil) {
         for (NSString *_Nonnull partnerParameterKey in partnerParametersMap.map) {
