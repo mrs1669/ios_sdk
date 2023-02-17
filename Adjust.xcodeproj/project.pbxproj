@@ -3626,7 +3626,6 @@
 				0741CE2128D9B0B20041C816 /* log_queue */,
 				6FE447AC288E8D4400FF06E0 /* main_queue */,
 				6F214E61288AA8C7002319D7 /* measurement_session */,
-				0AE7046E29325CDC00E3F11D /* measurement_lifecycle */,
 				6F5A9C6E288FEC0000E8265A /* offline */,
 				6F5A9C69288FEB7E00E8265A /* pausing */,
 				0A25F89728E2432B001988A1 /* plugin */,
@@ -3653,7 +3652,6 @@
 				0737C21B287F3F32004C7D59 /* ADJClientAPI.h */,
 				0737C219287F3F31004C7D59 /* ADJPreSdkInitRootController.h */,
 				0737C21D287F3F32004C7D59 /* ADJPreSdkInitRootController.m */,
-				0737C214287F3F31004C7D59 /* domain */,
 			);
 			path = pre_sdk_init;
 			sourceTree = "<group>";
@@ -3917,13 +3915,6 @@
 				6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */,
 			);
 			path = thread;
-			sourceTree = "<group>";
-		};
-		0737C214287F3F31004C7D59 /* domain */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = domain;
 			sourceTree = "<group>";
 		};
 		0741CDBE28D59CF10041C816 /* billing_subscription */ = {
@@ -4395,21 +4386,6 @@
 			children = (
 				0AB23D33289E94F2008B1835 /* ADJSessionDeviceIdsData.h */,
 				0AB23D32289E94F2008B1835 /* ADJSessionDeviceIdsData.m */,
-			);
-			path = domain;
-			sourceTree = "<group>";
-		};
-		0AE7046E29325CDC00E3F11D /* measurement_lifecycle */ = {
-			isa = PBXGroup;
-			children = (
-				0AE7046F29325CEF00E3F11D /* domain */,
-			);
-			path = measurement_lifecycle;
-			sourceTree = "<group>";
-		};
-		0AE7046F29325CEF00E3F11D /* domain */ = {
-			isa = PBXGroup;
-			children = (
 			);
 			path = domain;
 			sourceTree = "<group>";

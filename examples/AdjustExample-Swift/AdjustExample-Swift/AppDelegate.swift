@@ -18,10 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let environment = ADJEnvironmentSandbox
         let adjustConfig = ADJAdjustConfig(appToken: appToken, environment: environment)
 
-        ADJAdjust .sdkInit(with: adjustConfig)
+        ADJAdjust.instance().initSdk(withConfiguration: adjustConfig)
 
         let event = ADJAdjustEvent.init(eventId: "d8bf3k")
-        ADJAdjust.trackEvent(event)
+        ADJAdjust.instance().trackEvent(event)
         return true
     }
 
