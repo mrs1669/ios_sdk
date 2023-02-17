@@ -7,6 +7,7 @@
 //
 
 #import "ADJAdjustBridge.h"
+#import "ADJAdjustInstance.h"
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
 #import "ADJAdjustAdRevenue.h"
@@ -78,18 +79,19 @@
 
     NSString *action = [message objectForKey:@"action"];
     NSDictionary *data = [message objectForKey:@"data"];
+    NSString *instanceId = [message objectForKey:@"instanceId"];
 
     if ([action isEqual:@"adjust_initSdk"]) {
 
-        [self sdkInitWithAdjustConfig:data];
+        [self sdkInitWithAdjustConfig:data forInstanceId:instanceId];
 
     } else  if ([action isEqual:@"adjust_trackEvent"]) {
 
-        [self trackEvent:data];
+        [self trackEvent:data forInstanceId:instanceId];
 
     } else if ([action isEqual:@"adjust_trackAdRevenue"]) {
 
-        [self trackAdRevenue:data];
+        [self trackAdRevenue:data forInstanceId:instanceId];
 
     } else if ([action isEqual:@"adjust_trackPushToken"]) {
 
@@ -98,15 +100,15 @@
         }
 
         ADJAdjustPushToken *pushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:(NSString *)data];
-        [ADJAdjust trackPushToken:pushToken];
+        [[ADJAdjust instanceForId:instanceId] trackPushToken:pushToken];
 
     } else if ([action isEqual:@"adjust_switchToOfflineMode"]) {
 
-        [ADJAdjust switchToOfflineMode];
+        [[ADJAdjust instanceForId:instanceId] switchToOfflineMode];
 
     } else if ([action isEqual:@"adjust_switchBackToOnlineMode"]) {
 
-        [ADJAdjust switchBackToOnlineMode];
+        [[ADJAdjust instanceForId:instanceId] switchBackToOnlineMode];
 
     } else if ([action isEqual: @"adjust_trackDeeplink"]) {
 
@@ -115,61 +117,61 @@
         }
 
         ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:(NSString *)data];
-        [ADJAdjust trackLaunchedDeeplink:adjustLaunchedDeeplink];
+        [[ADJAdjust instanceForId:instanceId]trackLaunchedDeeplink:adjustLaunchedDeeplink];
 
     } else if ([action isEqual: @"adjust_trackThirdPartySharing"]) {
 
-        [self trackThirdPartySharing:data];
+        [self trackThirdPartySharing:data forInstanceId:instanceId];
 
     } else if ([action isEqual: @"adjust_inactivateSdk"]) {
 
-        [ADJAdjust inactivateSdk];
+        [[ADJAdjust instanceForId:instanceId] inactivateSdk];
 
     } else if ([action isEqual: @"adjust_reactivateSdk"]) {
 
-        [ADJAdjust reactivateSdk];
+        [[ADJAdjust instanceForId:instanceId] reactivateSdk];
 
     } else if ([action isEqual: @"adjust_addGlobalCallbackParameter"]) {
 
         NSString *key = [message objectForKey:@"key"];
         NSString *value = [message objectForKey:@"value"];
-        [ADJAdjust addGlobalCallbackParameterWithKey:key value:value];
+        [[ADJAdjust instanceForId:instanceId] addGlobalCallbackParameterWithKey:key value:value];
 
     } else if ([action isEqual: @"adjust_removeGlobalCallbackParameterByKey"]) {
 
         NSString *key = [message objectForKey:@"key"];
-        [ADJAdjust removeGlobalCallbackParameterByKey:key];
+        [[ADJAdjust instanceForId:instanceId] removeGlobalCallbackParameterByKey:key];
 
     } else if ([action isEqual: @"adjust_clearAllGlobalCallbackParameters"]) {
 
-        [ADJAdjust clearAllGlobalCallbackParameters];
+        [[ADJAdjust instanceForId:instanceId] clearAllGlobalCallbackParameters];
 
     } else if ([action isEqual: @"adjust_addGlobalPartnerParameter"]) {
 
         NSString *key = [message objectForKey:@"key"];
         NSString *value = [message objectForKey:@"value"];
-        [ADJAdjust addGlobalPartnerParameterWithKey:key value:value];
+        [[ADJAdjust instanceForId:instanceId] addGlobalPartnerParameterWithKey:key value:value];
 
     } else if ([action isEqual: @"adjust_removeGlobalPartnerParameterByKey"]) {
 
         NSString *key = [message objectForKey:@"key"];
-        [ADJAdjust removeGlobalPartnerParameterByKey:key];
+        [[ADJAdjust instanceForId:instanceId] removeGlobalPartnerParameterByKey:key];
 
     } else if ([action isEqual: @"adjust_clearAllGlobalPartnerParameters"]) {
 
-        [ADJAdjust clearAllGlobalPartnerParameters];
+        [[ADJAdjust instanceForId:instanceId] clearAllGlobalPartnerParameters];
 
     } else if ([action isEqual:@"adjust_gdprForgetMe"]) {
 
-        [ADJAdjust gdprForgetDevice];
+        [[ADJAdjust instanceForId:instanceId] gdprForgetDevice];
 
     } else if ([action isEqual:@"adjust_appWentToTheBackgroundManualCall"]) {
 
-        [ADJAdjust appWentToTheBackgroundManualCall];
+        [[ADJAdjust instanceForId:instanceId] appWentToTheBackgroundManualCall];
 
     } else if ([action isEqual:@"adjust_appWentToTheForegroundManualCall"]) {
 
-        [ADJAdjust appWentToTheForegroundManualCall];
+        [[ADJAdjust instanceForId:instanceId] appWentToTheForegroundManualCall];
         
     } else if ([action isEqual:@"adjust_teardown"]) {
 
@@ -177,7 +179,7 @@
     }
 }
 
-- (void)sdkInitWithAdjustConfig:(NSDictionary *)data {
+- (void)sdkInitWithAdjustConfig:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
 
     NSString *appToken = [data objectForKey:@"appToken"];
     NSString *environment = [data objectForKey:@"environment"];
@@ -199,7 +201,7 @@
 
     ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken environment:environment];
 
-    [adjustConfig setLogLevel:logLevel];
+//    [adjustConfig setLogLevel:logLevel];
     [adjustConfig setUrlStrategy:urlStrategy];
     [adjustConfig setDefaultTracker:defaultTracker];
     [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
@@ -211,10 +213,10 @@
     if (sendInBackground) {
         [adjustConfig allowSendingFromBackground];
     }
-    [ADJAdjust sdkInitWithAdjustConfig:adjustConfig];
+    [[ADJAdjust instanceForId:instanceId] initSdkWithConfiguration:adjustConfig];
 }
 
-- (void)trackEvent:(NSDictionary *)data {
+- (void)trackEvent:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
 
     NSString *eventToken = [data objectForKey:@"eventId"];
     NSString *revenue = [data objectForKey:@"revenue"];
@@ -243,10 +245,10 @@
         [adjustEvent addPartnerParameterWithKey:key value:value];
     }
 
-    [ADJAdjust trackEvent:adjustEvent];
+    [[ADJAdjust instanceForId:instanceId] trackEvent:adjustEvent];
 }
 
-- (void)trackAdRevenue:(NSDictionary *)data {
+- (void)trackAdRevenue:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
 
     NSString *adRevenueSource = [data objectForKey:@"source"];
     NSNumber *revenue = [data objectForKey:@"revenue"];
@@ -281,10 +283,10 @@
         [adjustAdRevenue addPartnerParameterWithKey:key value:value];
     }
 
-    [ADJAdjust trackAdRevenue:adjustAdRevenue];
+    [[ADJAdjust instanceForId:instanceId] trackAdRevenue:adjustAdRevenue];
 }
 
-- (void)trackThirdPartySharing:(NSDictionary *)data {
+- (void)trackThirdPartySharing:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
 
     id isEnabledO = [data objectForKey:@"isEnabled"];
     id granularOptions = [data objectForKey:@"granularOptions"];
@@ -319,7 +321,7 @@
         [adjustThirdPartySharing addPartnerSharingSettingWithPartnerName:partnerName key:key value:value];
     }
 
-    [ADJAdjust trackThirdPartySharing:adjustThirdPartySharing];
+    [[ADJAdjust instanceForId:instanceId] trackThirdPartySharing:adjustThirdPartySharing];
 }
 
 #pragma mark - Private & helper methods
