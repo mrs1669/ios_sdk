@@ -199,21 +199,27 @@
     NSString *attributionCallback = [data objectForKey:@"attributionCallback"];
     NSString *urlStrategy = [data objectForKey:@"urlStrategy"];
 
-    ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken environment:environment];
+    ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken
+                                                                  environment:environment];
 
-//    [adjustConfig setLogLevel:logLevel];
+    [adjustConfig doLogAll];
+
+    [adjustConfig doLogAll];
     [adjustConfig setUrlStrategy:urlStrategy];
     [adjustConfig setDefaultTracker:defaultTracker];
     [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
     [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
     [adjustConfig setAdjustAttributionSubscriber:self];
-    if([self isFieldValid:eventDeduplicationListLimit]) {
+    if ([self isFieldValid:eventDeduplicationListLimit]) {
         [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
     }
     if (sendInBackground) {
         [adjustConfig allowSendingFromBackground];
     }
     [[ADJAdjust instanceForId:instanceId] initSdkWithConfiguration:adjustConfig];
+
+    [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
+
 }
 
 - (void)trackEvent:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {

@@ -33,7 +33,7 @@
 
             function adjustInitSdk() {
                 var adjustConfig = new AdjustConfig('2fm9gkqubvpc', AdjustConfig.EnvironmentSandbox);
-                Adjust.initSDK(adjustConfig);
+                Adjust.instance().initSDK(adjustConfig);
             }
 
             function trackEvent() {
@@ -46,7 +46,7 @@
                 adjustEvent.addPartnerParameter('x', 'y');
                 adjustEvent.addPartnerParameter('foo', 'foot');
                 adjustEvent.addPartnerParameter('x', 'z');
-                Adjust.trackEvent(adjustEvent);
+                Adjust.instance().trackEvent(adjustEvent);
             }
 
             function trackAdRevenue() {

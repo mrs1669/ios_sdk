@@ -4,6 +4,16 @@ function AdjustConfig(appToken, environment, legacy) {
     this.sendInBackground = null;
     this.logLevel = null;
     this.defaultTracker = null;
+    this.openDeferredDeeplink = null;
+    this.eventDeduplicationListLimit = null;
+    this.externalDeviceId = null;
+    this.coppaCompliantEnabled = null;
+    this.urlStrategy = null;
+    this.dataResidency = null;
+    this.needsCost = null;
+    this.customEndpointUrl = null;
+    this.customEndpointPublicKeyHash = null;
+
     this.adjustAttributionChangedSubscriberCallbackId = null;
     this.adjustAttributionChangedSubscriberCallback = null;
     this.adjustAttributionReadSubscriberCallbackId = null;
@@ -12,16 +22,7 @@ function AdjustConfig(appToken, environment, legacy) {
     this.adjustIdentifierReadSubscriberCallback = null;
     this.adjustIdentifierChangedSubscriberCallbackId = null;
     this.adjustIdentifierChangedSubscriberCallback = null;
-    this.openDeferredDeeplink = null;
-    this.eventDeduplicationListLimit = null;
-    this.externalDeviceId = null;
-    this.coppaCompliantEnabled = null;
-    this.preinstallConfig = null;
-    this.urlStrategy = null;
-    this.dataResidency = null;
-    this.needsCost = null;
-    this.customEndpointUrl = null;
-    this.customEndpointPublicKeyHash = null;
+
 }
 
 AdjustConfig.EnvironmentSandbox = 'sandbox';
@@ -48,10 +49,6 @@ AdjustConfig.prototype.setLogLevel = function(logLevel) {
 
 AdjustConfig.prototype.setDefaultTracker = function(defaultTracker) {
     this.defaultTracker = defaultTracker;
-};
-
-AdjustConfig.prototype.setPreinstallConfig = function(preinstallConf) {
-    this.preinstallConfig = preinstallConf;
 };
 
 AdjustConfig.prototype.setAdjustAttributionSubscriber = function(attributionReadCallback, attributionChangedCallback) {
@@ -88,10 +85,6 @@ AdjustConfig.prototype.setEventDeduplicationListLimit = function(limit) {
 
 AdjustConfig.prototype.setExternalDeviceId = function(externalDevId){
     this.externalDeviceId = externalDevId;
-};
-
-AdjustConfig.prototype.setPlayStoreKidsAppEnabled = function(isEnabled) {
-    this.playStoreKidsAppEnabled = isEnabled;
 };
 
 AdjustConfig.prototype.setCoppaCompliantEnabled = function() {
