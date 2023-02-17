@@ -6,9 +6,9 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-#import "ADJAdjustCallback.h"
 
 @class ADJAdjustDeviceIds;
+@protocol ADJAdjustCallback;
 
 @protocol ADJAdjustDeviceIdsCallback <ADJAdjustCallback>
 

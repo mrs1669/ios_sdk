@@ -12,6 +12,7 @@
 #import "ADJAdjustAttributionCallback.h"
 #import "ADJAdjustDeviceIdsCallback.h"
 #import "ADJDeviceController.h"
+#import "ADJAdjustCallback.h"
 
 @interface ADJClientCallbacksController : ADJCommonBase
 // instantiation
