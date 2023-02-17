@@ -35,7 +35,7 @@ teardown: function() {
 
 function AdjustInstance(instanceId) {
     this.instanceId = instanceId;
-//    this.callbacksMap = new Map();
+    this.callbacksMap = new Map();
 };
 
 AdjustInstance.prototype.initSDK = function(adjustConfig) {

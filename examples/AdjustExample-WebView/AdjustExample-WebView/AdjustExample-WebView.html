@@ -60,66 +60,66 @@
                 adjustRevenue.addPartnerParameter('x', 'y');
                 adjustRevenue.addPartnerParameter('foo', 'foot');
                 adjustRevenue.addPartnerParameter('x', 'z');
-                Adjust.trackAdRevenue(adjustRevenue);
+                Adjust.instance().trackAdRevenue(adjustRevenue);
             }
 
             function trackPushToken() {
-                Adjust.trackPushToken("e79c2b66222a956ce04625b22e3cad3a63e91f34b1a21213a458fadb2b459385");
+                Adjust.instance().trackPushToken("e79c2b66222a956ce04625b22e3cad3a63e91f34b1a21213a458fadb2b459385");
             }
 
             function goOffline() {
-                Adjust.switchToOfflineMode();
+                Adjust.instance().switchToOfflineMode();
             }
 
             function goOnline() {
-                Adjust.switchToOnlineMode();
+                Adjust.instance().switchToOnlineMode();
             }
 
             function trackDeeplink() {
-                Adjust.trackDeeplink("https://www.wired.com/story/fancy-cat-furniture/#intcid=_wired-verso-hp-trending_4cb42ea3-2131-4763-9733-a391e19d84e6_popular4-1")
+                Adjust.instance().trackDeeplink("https://www.wired.com/story/fancy-cat-furniture/#intcid=_wired-verso-hp-trending_4cb42ea3-2131-4763-9733-a391e19d84e6_popular4-1")
             }
 
             function trackThirdPartySharing() {
                 var adjustThirdPartySharing = new AdjustThirdPartySharing(true);
                 adjustThirdPartySharing.addPartnerSharingSettings("partnerName", "key", true)
                 adjustThirdPartySharing.addGranularOption("xpto1", "key1", "value1", "xpto2", "key2", "value2")
-                Adjust.trackThirdPartySharing(adjustThirdPartySharing);
+                Adjust.instance().trackThirdPartySharing(adjustThirdPartySharing);
             }
 
             function inactiveSDK() {
-                Adjust.inactiveSDK();
+                Adjust.instance().inactiveSDK();
             }
 
             function reactivateSDK() {
-                Adjust.reactivateSDK();
+                Adjust.instance().reactivateSDK();
             }
 
             function addGlobalCallbackParameter() {
-                Adjust.addGlobalCallbackParameter('test_key', 'test_value');
+                Adjust.instance().addGlobalCallbackParameter('test_key', 'test_value');
             }
 
             function removeGlobalCallbackParameter() {
-                Adjust.removeGlobalCallbackParameter('test_key');
+                Adjust.instance().removeGlobalCallbackParameter('test_key');
             }
 
             function clearAllGlobalCallbackParameter() {
-                Adjust.clearAllGlobalCallbackParameters();
+                Adjust.instance().clearAllGlobalCallbackParameters();
             }
 
             function addGlobalPartnerParameter() {
-                Adjust.addGlobalPartnerParameter('test_key', 'test_value');
+                Adjust.instance().addGlobalPartnerParameter('test_key', 'test_value');
             }
 
             function removeGlobalPartnerParameter() {
-                Adjust.removeGlobalPartnerParameter('test_key');
+                Adjust.instance().removeGlobalPartnerParameter('test_key');
             }
 
             function clearAllGlobalPartnerParameter() {
-                Adjust.clearAllGlobalPartnerParameters();
+                Adjust.instance().clearAllGlobalPartnerParameters();
             }
 
             function gdprForgetMe() {
-                Adjust.gdprForgetMe();
+                Adjust.instance().gdprForgetMe();
             }
 
             function didChangeWithAdjustAttribution(attributionValue) {
