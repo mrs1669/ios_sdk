@@ -23,8 +23,8 @@
 {
     self = [self initWithoutSubscriberProtocol];
 
-    [controller addPairWithSubscriberPublisher:subscriberProtocol
-                                     publisher:self];
+    [controller addPairWithSubscriberProtocol:subscriberProtocol
+                                    publisher:self];
 
     return self;
 }
@@ -55,6 +55,7 @@
 - (BOOL)hasSubscribers {
     return self.subscriberSet.count != 0;
 }
+
 - (void)notifySubscribersWithSubscriberBlock:(void (^_Nonnull)(id _Nonnull subscriber))subscriberBlock {
     [ADJPublisherBase notifySubscribersWithSubscriberBlock:subscriberBlock
                                              subscriberSet:self.subscriberSet];

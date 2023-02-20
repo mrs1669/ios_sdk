@@ -12,8 +12,8 @@
 
 @interface ADJPublisherController : NSObject
 
-- (void)addPairWithSubscriberPublisher:(nonnull Protocol *)subscriberProtocol
-                             publisher:(nonnull ADJPublisherBase *)publisher;
+- (void)addPairWithSubscriberProtocol:(nonnull Protocol *)subscriberProtocol
+                            publisher:(nonnull ADJPublisherBase *)publisher;
 
 - (void)subscribeToPublisher:(nonnull id)subscriber;
 

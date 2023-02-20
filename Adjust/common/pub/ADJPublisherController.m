@@ -9,8 +9,8 @@
 #import "ADJPublisherController.h"
 
 @interface ADJPubSubPair : NSObject
-- (nonnull instancetype)initWithSubscriberPublisher:(nonnull Protocol *)subscriberProtocol
-                                          publisher:(nonnull ADJPublisherBase *)publisher;
+- (nonnull instancetype)initWithSubscriberProtocol:(nonnull Protocol *)subscriberProtocol
+                                         publisher:(nonnull ADJPublisherBase *)publisher;
 
 @property (nonnull, readonly, strong, nonatomic) Protocol *subscriberProtocol;
 @property (nonnull, readonly, strong, nonatomic) ADJPublisherBase *publisher;
@@ -33,11 +33,11 @@
     return self;
 }
 
-- (void)addPairWithSubscriberPublisher:(nonnull Protocol *)subscriberProtocol
-                             publisher:(nonnull ADJPublisherBase *)publisher
+- (void)addPairWithSubscriberProtocol:(nonnull Protocol *)subscriberProtocol
+                            publisher:(nonnull ADJPublisherBase *)publisher
 {
     [self.pubSubPairs addObject:
-     [[ADJPubSubPair alloc] initWithSubscriberPublisher:subscriberProtocol publisher:publisher]];
+     [[ADJPubSubPair alloc] initWithSubscriberProtocol:subscriberProtocol publisher:publisher]];
 }
 
 - (void)subscribeToPublisher:(nonnull id)subscriber {
@@ -51,8 +51,8 @@
 @end
 
 @implementation ADJPubSubPair
-- (nonnull instancetype)initWithSubscriberPublisher:(nonnull Protocol *)subscriberProtocol
-                                          publisher:(nonnull ADJPublisherBase *)publisher
+- (nonnull instancetype)initWithSubscriberProtocol:(nonnull Protocol *)subscriberProtocol
+                                         publisher:(nonnull ADJPublisherBase *)publisher
 {
     self = [super init];
 
