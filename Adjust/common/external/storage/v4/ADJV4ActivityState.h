@@ -22,6 +22,8 @@
 @property (nullable, readonly, strong, nonatomic) NSString *uuid;
 //@property (nonatomic, copy) NSString *deviceToken;
 @property (nullable, readonly, strong, nonatomic) NSString *deviceToken;
+//@property (nonatomic, copy) NSString *pushToken;
+@property (nullable, readonly, strong, nonatomic) NSString *pushToken;
 //@property (nonatomic, assign) BOOL updatePackages;
 @property (nullable, readonly, strong, nonatomic) NSNumber *updatePackagesNumberBool;
 //@property (nonatomic, copy) NSString *adid;

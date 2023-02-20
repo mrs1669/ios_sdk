@@ -13,6 +13,7 @@
 #import "ADJSdkPackageBuilder.h"
 #import "ADJMainQueueController.h"
 #import "ADJClientPushTokenData.h"
+#import "ADJPushTokenStateStorage.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,9 +25,11 @@ NS_ASSUME_NONNULL_END
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                        pushTokenStateStorage:(nonnull ADJPushTokenStateStorage *)pushTokenStateStorage
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 // public api
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
 
 @end
+
