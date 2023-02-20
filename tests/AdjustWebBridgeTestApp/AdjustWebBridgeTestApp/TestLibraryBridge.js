@@ -64,7 +64,7 @@ addTest: function(testName) {
 teardownReturnExtraPath: function(extraPath) {
     this.extraPath = extraPath;
     // TODO - pending implementatio
-    // Adjust.teardown;
+    // Adjust.instance().teardown;
 },
 
 didChangeWithAdjustAttribution: function(attributionValue) {
@@ -269,7 +269,7 @@ AdjustCommandExecutor.prototype.start = function(params) {
                                                  );
     }
 
-    Adjust.initSDK(adjustConfig);
+    Adjust.instance().initSDK(adjustConfig);
 };
 
 AdjustCommandExecutor.prototype.trackEvent = function(params) {
@@ -307,24 +307,24 @@ AdjustCommandExecutor.prototype.trackEvent = function(params) {
         adjustEvent.setDeduplicationId(deduplicationId);
     }
 
-    Adjust.trackEvent(adjustEvent);
+    Adjust.instance().trackEvent(adjustEvent);
 
 };
 
 AdjustCommandExecutor.prototype.stop = function() {
-    Adjust.inactivateSdk();
+    Adjust.instance().inactivateSdk();
 };
 
 AdjustCommandExecutor.prototype.restart = function() {
-    Adjust.reactivateSdk();
+    Adjust.instance().reactivateSdk();
 };
 
 AdjustCommandExecutor.prototype.setOfflineMode = function(params) {
     var enabled = getFirstParameterValue(params, "enabled") == 'true';
     if (enabled) {
-        Adjust.switchToOfflineMode();
+        Adjust.instance().switchToOfflineMode();
     } else {
-        Adjust.switchBackToOnlineMode();
+        Adjust.instance().switchBackToOnlineMode();
     }
 };
 
@@ -333,7 +333,7 @@ AdjustCommandExecutor.prototype.addGlobalCallbackParameter = function(params) {
     for (var i = 0; i < list.length; i += 2) {
         var key = list[i];
         var value = list[i + 1];
-        Adjust.addGlobalCallbackParameter(key, value);
+        Adjust.instance().addGlobalCallbackParameter(key, value);
     }
 };
 
@@ -342,7 +342,7 @@ AdjustCommandExecutor.prototype.addGlobalPartnerParameter = function(params) {
     for (var i = 0; i < list.length; i += 2) {
         var key = list[i];
         var value = list[i + 1];
-        Adjust.addGlobalPartnerParameter(key, value);
+        Adjust.instance().addGlobalPartnerParameter(key, value);
     }
 };
 
@@ -350,7 +350,7 @@ AdjustCommandExecutor.prototype.removeGlobalCallbackParameter = function(params)
     if ('key' in params) {
         var list = getValueFromKey(params, 'key');
         for (var i = 0; i < list.length; i += 1) {
-            Adjust.removeGlobalCallbackParameter(list[i]);
+            Adjust.instance().removeGlobalCallbackParameter(list[i]);
         }
     }
 };
@@ -359,31 +359,31 @@ AdjustCommandExecutor.prototype.removeGlobalPartnerParameter = function(params) 
     if ('key' in params) {
         var list = getValueFromKey(params, 'key');
         for (var i = 0; i < list.length; i += 1) {
-            Adjust.removeGlobalPartnerParameter(list[i]);
+            Adjust.instance().removeGlobalPartnerParameter(list[i]);
         }
     }
 };
 
 AdjustCommandExecutor.prototype.clearGlobalCallbackParameters = function(params) {
-    Adjust.clearAllGlobalCallbackParameters();
+    Adjust.instance().clearAllGlobalCallbackParameters();
 };
 
 AdjustCommandExecutor.prototype.clearGlobalPartnerParameters = function(params) {
-    Adjust.clearAllGlobalPartnerParameters();
+    Adjust.instance().clearAllGlobalPartnerParameters();
 };
 
 AdjustCommandExecutor.prototype.setPushToken = function(params) {
     var token = getFirstParameterValue(params, 'pushToken');
-    Adjust.trackPushToken(token);
+    Adjust.instance().trackPushToken(token);
 };
 
 AdjustCommandExecutor.prototype.openDeeplink = function(params) {
     var deeplink = getFirstParameterValue(params, "deeplink");
-    Adjust.trackLaunchedDeeplink(deeplink);
+    Adjust.instance().trackLaunchedDeeplink(deeplink);
 };
 
 AdjustCommandExecutor.prototype.gdprForgetMe = function(params) {
-    Adjust.gdprForgetMe();
+    Adjust.instance().gdprForgetMe();
 };
 
 AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
@@ -429,20 +429,20 @@ AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
         }
     }
 
-    Adjust.trackAdRevenue(adjustAdRevenue);
+    Adjust.instance().trackAdRevenue(adjustAdRevenue);
 
 };
 
 AdjustCommandExecutor.prototype.disableThirdPartySharing = function(params) {
-    Adjust.disableThirdPartySharing();
+    Adjust.instance().disableThirdPartySharing();
 };
 
 AdjustCommandExecutor.prototype.resume = function(params) {
-    Adjust.appWentToTheForegroundManualCall();
+    Adjust.instance().appWentToTheForegroundManualCall();
 };
 
 AdjustCommandExecutor.prototype.pause = function(params) {
-    Adjust.appWentToTheBackgroundManualCall();
+    Adjust.instance().appWentToTheBackgroundManualCall();
 };
 
 AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
@@ -476,12 +476,12 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
         }
     }
 
-    Adjust.trackThirdPartySharing(adjustThirdPartySharing);
+    Adjust.instance().trackThirdPartySharing(adjustThirdPartySharing);
 };
 
 AdjustCommandExecutor.prototype.measurementConsent = function(params) {
     var consentMeasurement = getFirstParameterValue(params, 'isEnabled') == 'true';
-//    Adjust.trackMeasurementConsent(consentMeasurement);
+//    Adjust.instance().trackMeasurementConsent(consentMeasurement);
 };
 
 // Util
