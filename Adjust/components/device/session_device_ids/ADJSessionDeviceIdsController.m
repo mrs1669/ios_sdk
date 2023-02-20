@@ -149,7 +149,7 @@
         return  nil;
     }
 
-    // TODO add idfa zeros check
+    // TODO: add idfa zeros check
     return [advertisingIdentifierWO changedValue];
 }
 

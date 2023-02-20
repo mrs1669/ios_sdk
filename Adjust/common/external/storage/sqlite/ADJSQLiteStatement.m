@@ -108,7 +108,8 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
     }
     
     if (SQLITE_ROW != returnCode) {
-        //[self closeStatement]; // TODO check if it can be auto closed
+        // TODO: check if it can be auto closed
+        //[self closeStatement];
         return NO;
     } else {
         return YES;

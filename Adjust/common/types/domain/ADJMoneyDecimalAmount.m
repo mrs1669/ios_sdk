@@ -90,7 +90,7 @@
 }
 
 - (double)doubleValue {
-    // TODO check if decimal -> string -> double would be better (more precise)
+    // TODO: check if decimal -> string -> double would be better (more precise)
     return self.decimalNumberValue.doubleValue;
 }
 
@@ -108,7 +108,7 @@
     unsigned int isCompact = self.decimalNumberValue.decimalValue._isCompact;
     unsigned int reserved = self.decimalNumberValue.decimalValue._reserved;
     
-    /* TODO see if memcpy version should be used instead
+    /* TODO: see if memcpy version should be used instead
      unsigned long long longBits;
      memcpy(&longBits,
      self.decimalNumberValue.decimalValue._mantissa,

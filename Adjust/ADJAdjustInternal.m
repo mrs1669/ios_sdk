@@ -24,6 +24,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 + (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId {
     return [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
 }
+
 + (nonnull ADJEntryRoot *)entryRootForClientId:(nullable NSString *)clientId {
     // add syncronization for testing teardown
 #ifdef DEBUG
@@ -188,6 +189,7 @@ static dispatch_once_t entryRootOnceToken = 0;
     return [NSString stringWithFormat:@"db file removed at adjust app support dir? %d",
             removedSuccessfully];
 }
+
 + (nonnull NSString *)clearDbInDocumentsDirWithIdString:(nonnull NSString *)idString {
     NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
 

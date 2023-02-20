@@ -384,7 +384,7 @@
     [self.executor
      executeSynchronouslyWithTimeout:self.asaAttributionConfig.timeoutPerAttempt
      blockToExecute:^{
-        // TODO cache in a dispatch_once: methodImplementation, classFromName and methodSelector
+        // TODO: cache in a dispatch_once: methodImplementation, classFromName and methodSelector
         asaAttributionToken = func(classFromName, methodSelector, &error);
     } source:@"read AAAttribution attributionTokenWithError with timeout"];
 

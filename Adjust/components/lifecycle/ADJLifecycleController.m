@@ -303,7 +303,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
      object:nil];
      */
 
-    // TODO detect if it started in viewController/AppDelegate
+    // TODO: detect if it started in viewController/AppDelegate
 }
 
 - (void)ccReadInitialApplicationState {

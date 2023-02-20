@@ -250,7 +250,7 @@
 }
 
 + (nonnull NSString *)normaliseFilename:(nonnull NSString *)filename {
-    // TODO add rules as mentioned here https://stackoverflow.com/questions/6102333/what-characters-are-allowed-in-a-ios-file-name
+    // TODO: add rules as mentioned here https://stackoverflow.com/questions/6102333/what-characters-are-allowed-in-a-ios-file-name
     return filename;
 }
 

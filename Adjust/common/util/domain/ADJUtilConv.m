@@ -116,7 +116,7 @@
     convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
     errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
 {
-    // todo check isValidJSONObject:
+    // TODO: check isValidJSONObject:
     return [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:errorPtr];
 }
 

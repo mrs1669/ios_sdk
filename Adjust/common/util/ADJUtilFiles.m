@@ -22,6 +22,7 @@
 
     return [ADJUtilFiles filePathWithDir:adjustAppSupportDir filename:filename];
 }
+
 + (nonnull NSString *)filePathWithDir:(nonnull NSString *)dirPath
                              filename:(nonnull NSString *)filename
 {
@@ -29,7 +30,7 @@
 }
 
 + (nullable NSString *)filePathInDocumentsDir:(nonnull NSString *)fileName {
-    // TODO figure out if this is the "right" way
+    // TODO: figure out if this is the "right" way
     //  like for example using NSFileManager URLsForDirectory:inDomains:
     NSArray *_Nonnull paths =
     NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -46,6 +47,7 @@
 + (nullable NSString *)adjustAppSupportDir {
     return [ADJUtilFiles appSupportDirWithPath:ADJAdjustDirPath];
 }
+
 + (nullable NSString *)appSupportDirWithPath:(nonnull NSString *)path {
     NSArray *_Nonnull paths =
         NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,

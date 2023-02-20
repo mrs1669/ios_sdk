@@ -57,6 +57,7 @@ static NSString *const kDbNameBase = @"adjust";
     return [NSString stringWithFormat:@"%@_%@.db",
             kDbNameBase, [ADJUtilF normaliseFilename:idString]];
 }
+
 - (nonnull NSString *)toDbName {
     return [ADJInstanceIdData toDbNameWithIdString:self.idString];
 }

@@ -97,7 +97,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        // TODO possibly use private queue
+        // TODO: possibly use private queue
         [strongSelf startNetworkReachabilityWithDispatchQueue:
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
     } source:@"sdk start"];

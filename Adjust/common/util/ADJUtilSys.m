@@ -54,8 +54,8 @@
         return NO;
     }
 
-    /* TODO
-     // it has to follow allowed prefixes and version format
+    
+    /* TODO: it has to follow allowed prefixes and version format
      final String sdkPrefixRegex = "("
      + Constants.ALLOWED_SDK_PREFIXES
      + ")\\d.\\d{1,2}.\\d{1,2}";
