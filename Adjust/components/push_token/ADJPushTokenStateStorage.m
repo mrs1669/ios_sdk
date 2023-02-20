@@ -14,7 +14,7 @@
 
 #pragma mark Fields
 #pragma mark - Private constants
-static NSString *const kPushTokenStorageTableName = @"push_token";
+static NSString *const kPushTokenStateTableName = @"push_token_state";
 
 @implementation ADJPushTokenStateStorage
 #pragma mark Instantiation
@@ -22,11 +22,11 @@ static NSString *const kPushTokenStorageTableName = @"push_token";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"PushTokenStorage"
+                                 source:@"PushTokenStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
-                              tableName:kPushTokenStorageTableName
-                      metadataTypeValue:ADJPushTokenMetadataTypeValue
+                              tableName:kPushTokenStateTableName
+                      metadataTypeValue:ADJPushTokenStateDataMetadataTypeValue
                 initialDefaultDataValue:[[ADJPushTokenStateData alloc] initWithInitialState]];
 
     return self;

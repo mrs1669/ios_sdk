@@ -18,7 +18,7 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *cachedPushTokenString;
  */
 #pragma mark - Public constants
-NSString *const ADJPushTokenMetadataTypeValue = @"PushTokenStringData";
+NSString *const ADJPushTokenStateDataMetadataTypeValue = @"PushTokenStateData";
 
 #pragma mark - Private constants
 static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
@@ -26,8 +26,9 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
 @implementation ADJPushTokenStateData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData isExpectedMetadataTypeValue:ADJPushTokenMetadataTypeValue
+                                     logger:(nonnull ADJLogger *)logger
+{
+    if (! [ioData isExpectedMetadataTypeValue:ADJPushTokenStateDataMetadataTypeValue
                                        logger:logger]) {
         return nil;
     }
@@ -57,8 +58,8 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
 #pragma mark Public API
 #pragma mark - ADJIoDataSerializable
 - (nonnull ADJIoData *)toIoData {
-    ADJIoDataBuilder *_Nonnull ioDataBuilder = [[ADJIoDataBuilder alloc]
-                                                initWithMetadataTypeValue:ADJPushTokenMetadataTypeValue];
+    ADJIoDataBuilder *_Nonnull ioDataBuilder =
+        [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:ADJPushTokenStateDataMetadataTypeValue];
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
                                        key:kCachedPushTokenStringKey
                        ioValueSerializable:self.cachedPushTokenString];
@@ -69,7 +70,7 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
 #pragma mark - NSObject
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
-            ADJPushTokenMetadataTypeValue,
+            ADJPushTokenStateDataMetadataTypeValue,
             kCachedPushTokenStringKey, self.cachedPushTokenString,
             nil];
 }
@@ -96,5 +97,3 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
 }
 
 @end
-
-

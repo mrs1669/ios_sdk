@@ -15,7 +15,7 @@
 // public constants
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSString *const ADJPushTokenMetadataTypeValue;
+FOUNDATION_EXPORT NSString *const ADJPushTokenStateDataMetadataTypeValue;
 
 NS_ASSUME_NONNULL_END
 
