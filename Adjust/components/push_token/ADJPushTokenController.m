@@ -68,13 +68,17 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 }
 
 #pragma mark Internal Methods
-- (void)trackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData
-                        apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
-     clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)
+    trackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData
+    apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+    clientActionRemoveStorageAction:
+        (nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
+{
 
     ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
     if (sdkPackageBuilder == nil) {
-        [self.logger debugDev:@"Cannot Track Push Token without a reference to sdk package builder"
+        [self.logger debugDev:
+         @"Cannot Track Push Token without a reference to sdk package builder"
                     issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
@@ -90,32 +94,31 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
     ADJMainQueueController *_Nullable mainQueueController = self.mainQueueControllerWeak;
     if (mainQueueController == nil) {
-        [self.logger debugDev:@"Cannot Track Push Token without a reference to main queue controller"
+        [self.logger debugDev:
+         @"Cannot Track Push Token without a reference to main queue controller"
                     issueType:ADJIssueWeakReference];
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
     }
 
-    ADJPushTokenStateData *_Nullable pushTokenStateData = pushTokenStorage.readOnlyStoredDataValue;
+    ADJPushTokenStateData *_Nonnull pushTokenStateData = pushTokenStorage.readOnlyStoredDataValue;
 
-    if (clientPushTokenData != nil && pushTokenStateData != nil) {
-        if ([clientPushTokenData.pushTokenString isEqual:pushTokenStateData.cachedPushTokenString]) {
-            [self.logger debugDev:@"Cannot Track Push Token, already tracked"];
-            [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
-            return;
-        }
+    if ([clientPushTokenData.pushTokenString isEqual:pushTokenStateData.cachedPushTokenString]) {
+        [self.logger debugDev:@"Cannot Track Push Token, already tracked"];
+        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        return;
     }
 
-    ADJInfoPackageData *_Nonnull infoPackageData = [sdkPackageBuilder buildInfoPackageWithClientData:clientPushTokenData
-                                                                                        apiTimestamp:apiTimestamp];
+    ADJInfoPackageData *_Nonnull infoPackageData =
+        [sdkPackageBuilder buildInfoPackageWithClientData:clientPushTokenData
+                                             apiTimestamp:apiTimestamp];
 
     [mainQueueController addInfoPackageToSendWithData:infoPackageData
                                   sqliteStorageAction:clientActionRemoveStorageAction];
 
-    [pushTokenStorage updateWithNewDataValue:[[ADJPushTokenStateData alloc]
-                                              initWithPushTokenString:clientPushTokenData.pushTokenString]];
-
+    [pushTokenStorage updateWithNewDataValue:
+        [[ADJPushTokenStateData alloc]
+         initWithPushTokenString:clientPushTokenData.pushTokenString]];
 }
 
 @end
-
