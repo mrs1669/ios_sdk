@@ -3684,7 +3684,6 @@
 				0737C21B287F3F32004C7D59 /* ADJClientAPI.h */,
 				0737C219287F3F31004C7D59 /* ADJPreSdkInitRootController.h */,
 				0737C21D287F3F32004C7D59 /* ADJPreSdkInitRootController.m */,
-				0737C214287F3F31004C7D59 /* domain */,
 			);
 			path = pre_sdk_init;
 			sourceTree = "<group>";
@@ -3948,13 +3947,6 @@
 				6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */,
 			);
 			path = thread;
-			sourceTree = "<group>";
-		};
-		0737C214287F3F31004C7D59 /* domain */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = domain;
 			sourceTree = "<group>";
 		};
 		0741CDBE28D59CF10041C816 /* billing_subscription */ = {
