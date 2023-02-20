@@ -61,17 +61,19 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
     [self.logger debugDev:@"Read v4 activity state"
                       key:@"activity_state"
                     value:[v4ActivityState description]];
-    ADJNonEmptyString *_Nullable v4PushTokenString =
 
-    [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken
-                                sourceDescription:@"v4 push token"
-                                           logger:self.logger];
+    ADJNonEmptyString *_Nullable v4PushToken =
+        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken
+                                    sourceDescription:@"v4 push token"
+                                               logger:self.logger];
+    if (v4PushToken == nil) {
+        return;
+    }
 
     ADJPushTokenStateData *_Nonnull v4PushTokenData =
-    [[ADJPushTokenStateData alloc] initWithPushTokenString:v4PushTokenString];
+        [[ADJPushTokenStateData alloc] initWithLastPushTokenString:v4PushToken];
 
     [self updateWithNewDataValue:v4PushTokenData];
 }
 
 @end
-

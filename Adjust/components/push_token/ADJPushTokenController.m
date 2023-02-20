@@ -103,7 +103,7 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
     ADJPushTokenStateData *_Nonnull pushTokenStateData = pushTokenStorage.readOnlyStoredDataValue;
 
-    if ([clientPushTokenData.pushTokenString isEqual:pushTokenStateData.cachedPushTokenString]) {
+    if ([clientPushTokenData.pushTokenString isEqual:pushTokenStateData.lastPushToken]) {
         [self.logger debugDev:@"Cannot Track Push Token, already tracked"];
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
         return;
@@ -118,7 +118,7 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
     [pushTokenStorage updateWithNewDataValue:
         [[ADJPushTokenStateData alloc]
-         initWithPushTokenString:clientPushTokenData.pushTokenString]];
+         initWithLastPushTokenString:clientPushTokenData.pushTokenString]];
 }
 
 @end

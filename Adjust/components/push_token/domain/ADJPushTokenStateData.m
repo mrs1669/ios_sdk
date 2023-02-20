@@ -15,13 +15,13 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
- @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *cachedPushTokenString;
+ @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *lastPushToken;
  */
 #pragma mark - Public constants
 NSString *const ADJPushTokenStateDataMetadataTypeValue = @"PushTokenStateData";
 
 #pragma mark - Private constants
-static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
+static NSString *const kLastPushTokenKey = @"lastPushToken";
 
 @implementation ADJPushTokenStateData
 #pragma mark Instantiation
@@ -33,19 +33,20 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable pushTokenString = [ioData.propertiesMap pairValueWithKey:kCachedPushTokenStringKey];
+    ADJNonEmptyString *_Nullable lastPushToken =
+        [ioData.propertiesMap pairValueWithKey:kLastPushTokenKey];
 
-    return [[self alloc] initWithPushTokenString:pushTokenString];
+    return [[self alloc] initWithLastPushTokenString:lastPushToken];
 }
 
 - (nonnull instancetype)initWithInitialState {
-    return [self initWithPushTokenString:nil];
+    return [self initWithLastPushTokenString:nil];
 }
 
-- (nonnull instancetype)initWithPushTokenString:(nullable ADJNonEmptyString *)pushTokenString {
+- (nonnull instancetype)initWithLastPushTokenString:(nullable ADJNonEmptyString *)lastPushToken {
     self = [super init];
 
-    _cachedPushTokenString = pushTokenString;
+    _lastPushToken = lastPushToken;
 
     return self;
 }
@@ -61,8 +62,8 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
         [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:ADJPushTokenStateDataMetadataTypeValue];
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
-                                       key:kCachedPushTokenStringKey
-                       ioValueSerializable:self.cachedPushTokenString];
+                                       key:kLastPushTokenKey
+                       ioValueSerializable:self.lastPushToken];
 
     return [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 }
@@ -71,14 +72,15 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
             ADJPushTokenStateDataMetadataTypeValue,
-            kCachedPushTokenStringKey, self.cachedPushTokenString,
+            kLastPushTokenKey, self.lastPushToken,
             nil];
 }
 
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
 
-    hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.cachedPushTokenString];
+    hashCode = ADJHashCodeMultiplier *
+        hashCode + [ADJUtilObj objecNullableHash:self.lastPushToken];
 
     return hashCode;
 }
@@ -93,7 +95,7 @@ static NSString *const kCachedPushTokenStringKey = @"cachedPushTokenString";
     }
 
     ADJPushTokenStateData *other = (ADJPushTokenStateData *)object;
-    return [ADJUtilObj objectEquals:self.cachedPushTokenString other:other.cachedPushTokenString];
+    return [ADJUtilObj objectEquals:self.lastPushToken other:other.lastPushToken];
 }
 
 @end

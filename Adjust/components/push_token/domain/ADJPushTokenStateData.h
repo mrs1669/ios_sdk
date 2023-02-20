@@ -26,12 +26,11 @@ NS_ASSUME_NONNULL_END
 
 - (nonnull instancetype)initWithInitialState;
 
-- (nonnull instancetype)initWithPushTokenString:(nullable ADJNonEmptyString *)pushTokenString;
+- (nonnull instancetype)initWithLastPushTokenString:(nullable ADJNonEmptyString *)lastPushToken;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *cachedPushTokenString;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *lastPushToken;
 
 @end
-
