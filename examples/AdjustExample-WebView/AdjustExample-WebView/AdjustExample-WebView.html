@@ -76,7 +76,7 @@
             }
 
             function trackDeeplink() {
-                Adjust.instance().trackDeeplink("https://www.wired.com/story/fancy-cat-furniture/#intcid=_wired-verso-hp-trending_4cb42ea3-2131-4763-9733-a391e19d84e6_popular4-1")
+                Adjust.instance().trackLaunchedDeeplink("https://www.wired.com/story/fancy-cat-furniture/#intcid=_wired-verso-hp-trending_4cb42ea3-2131-4763-9733-a391e19d84e6_popular4-1")
             }
 
             function trackThirdPartySharing() {
@@ -87,11 +87,11 @@
             }
 
             function inactiveSDK() {
-                Adjust.instance().inactiveSDK();
+                Adjust.instance().inactivateSdk();
             }
 
             function reactivateSDK() {
-                Adjust.instance().reactivateSDK();
+                Adjust.instance().reactivateSdk();
             }
 
             function addGlobalCallbackParameter() {
