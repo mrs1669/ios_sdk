@@ -80,26 +80,24 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
     func eventTracking() {
         let event = ADJAdjustEvent(eventId: "7j4kwr")
-        ADJAdjust.trackEvent(event)
+        ADJAdjust.instance().trackEvent(event)
     }
 
     func goOnline() {
-        ADJAdjust.switchBackToOnlineMode()
+        ADJAdjust.instance().switchBackToOnlineMode()
     }
 
     func goOffline() {
-        ADJAdjust.switchToOfflineMode()
+        ADJAdjust.instance().switchToOfflineMode()
     }
 
     func enableSDK() {
-        ADJAdjust.reactivateSdk()
+        ADJAdjust.instance().reactivateSdk()
     }
 
     func disableSDK() {
-        ADJAdjust.inactivateSdk()
+        ADJAdjust.instance().inactivateSdk()
     }
 
 }
-
-
 
