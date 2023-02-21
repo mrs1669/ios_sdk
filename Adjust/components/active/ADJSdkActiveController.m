@@ -118,7 +118,7 @@
 {
     if (outputData == nil) { return NO; }
 
-    [self ccHandleStateUpdateWithShangedStateData:outputData.changedStateData
+    [self ccHandleStateUpdateWithChangedStateData:outputData.changedStateData
                                            source:source];
 
     [self ccHandleEventWithSdkActiveStatus:outputData.sdkActiveStatus
@@ -127,7 +127,7 @@
     return YES;
 }
 
-- (void)ccHandleStateUpdateWithShangedStateData:(nullable ADJSdkActiveStateData *)stateData
+- (void)ccHandleStateUpdateWithChangedStateData:(nullable ADJSdkActiveStateData *)stateData
                                          source:(nonnull NSString *)source
 {
     if (stateData == nil) { return; }
