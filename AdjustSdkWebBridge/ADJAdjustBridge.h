@@ -15,6 +15,6 @@
 
 @property (nonatomic, strong) WKWebView *_Nonnull webView;
 
-- (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView;
+- (void)augmentHybridWKWebView:(WKWebView *_Nonnull)webView;
 
 @end

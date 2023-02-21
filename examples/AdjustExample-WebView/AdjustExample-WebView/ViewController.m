@@ -36,7 +36,7 @@
     [self.webView loadRequest:request];
     [self.view addSubview:self.webView];
 
-    [[ADJAdjustBridge alloc] augmentedHybridWebView:_webView];
+    [[ADJAdjustBridge alloc] augmentHybridWKWebView:self.webView];
 }
 
 @end

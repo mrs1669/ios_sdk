@@ -27,7 +27,7 @@
 
 #pragma mark - Init Web View
 
-- (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
+- (void)augmentHybridWKWebView:(WKWebView *_Nonnull)webView {
     if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;

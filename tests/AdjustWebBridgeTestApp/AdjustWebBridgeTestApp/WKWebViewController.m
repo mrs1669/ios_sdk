@@ -33,7 +33,7 @@
     [self.view addSubview:webView];
 
     self.adjustBridge = [[ADJAdjustBridge alloc] init];
-    [self.adjustBridge augmentedHybridWebView:webView];
+    [self.adjustBridge augmentHybridWKWebView:webView];
 
     self.testLibraryBridge = [[TestLibraryBridge alloc]
                               initWithAdjustBridgeRegister:self.adjustBridge];

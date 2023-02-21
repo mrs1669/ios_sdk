@@ -26,7 +26,7 @@
     self.testLibrary = [ATLTestLibrary testLibraryWithBaseUrl:baseUrl
                                                 andControlUrl:controlUrl
                                            andCommandDelegate:self];
-    [self augmentedHybridTestWebView:adjustBridge.webView];
+    [self augmentHybridTestWKWebView:adjustBridge.webView];
     return self;
 }
 
@@ -34,7 +34,7 @@
 
 #pragma mark Set up Test Webview
 
-- (void)augmentedHybridTestWebView:(WKWebView *_Nonnull)webView {
+- (void)augmentHybridTestWKWebView:(WKWebView *_Nonnull)webView {
     if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;
