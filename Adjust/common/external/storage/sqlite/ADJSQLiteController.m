@@ -98,10 +98,9 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     }
 
     NSError *dirCreateError;
-    BOOL dirCreated =
-        [ADJUtilFiles createDirWithPath:adjustAppSupportDirPath
-                               errorPtr:&dirCreateError];
-    if (dirCreateError != nil) {
+    BOOL dirCreated = [ADJUtilFiles createDirWithPath:adjustAppSupportDirPath
+                                             errorPtr:&dirCreateError];
+    if (! dirCreated) {
         [self.logger debugDev:@"Cannot create adjust app dir"
                       nserror:dirCreateError
                           key:@"adjust app dir path"
@@ -112,7 +111,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 
     [self.logger debugDev:@"Adjust app support dir loaded"
                       key:@"was dir created"
-                    value:[ADJUtilF boolFormat:dirCreated]];
+                    value:[ADJUtilF boolFormat:YES]];
 
     return adjustAppSupportDirPath;
 }
