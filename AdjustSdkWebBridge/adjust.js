@@ -222,15 +222,7 @@ function AdjustConfig(appToken, environment, legacy) {
     this.customEndpointUrl = null;
     this.customEndpointPublicKeyHash = null;
 
-    this.adjustAttributionChangedSubscriberCallbackId = null;
-    this.adjustAttributionChangedSubscriberCallback = null;
-    this.adjustAttributionReadSubscriberCallbackId = null;
-    this.adjustAttributionReadSubscriberCallback = null;
-    this.adjustIdentifierReadSubscriberCallbackId = null;
-    this.adjustIdentifierReadSubscriberCallback = null;
-    this.adjustIdentifierChangedSubscriberCallbackId = null;
-    this.adjustIdentifierChangedSubscriberCallback = null;
-
+    this.attributionCallback = null;
 }
 
 AdjustConfig.EnvironmentSandbox = 'sandbox';
@@ -258,24 +250,8 @@ AdjustConfig.prototype.setDefaultTracker = function(defaultTracker) {
     this.defaultTracker = defaultTracker;
 };
 
-AdjustConfig.prototype.setAdjustAttributionSubscriber = function(attributionReadCallback, attributionChangedCallback) {
-    this.adjustAttributionReadSubscriberCallbackId =
-        'setAdjustAttributionSubscriber_adjustAttributionRead';
-    this.adjustAttributionReadSubscriberCallback = attributionReadCallback;
-
-    this.adjustAttributionChangedSubscriberCallbackId =
-        'setAdjustAttributionSubscriber_adjustAttributionChanged';
-    this.adjustAttributionChangedSubscriberCallback = attributionChangedCallback;
-};
-
-AdjustConfig.prototype.setAdjustIdentifierSubscriber = function(adidReadCallback, adidChangeCallback) {
-    this.adjustIdentifierReadSubscriberCallbackId =
-        'setAdjustIdentifierSubscriber_adjustIdentifierRead';
-    this.adjustIdentifierReadSubscriberCallback = adidReadCallback;
-
-    this.adjustIdentifierChangedSubscriberCallbackId =
-        'setAdjustIdentifierSubscriber_adjustIdentifierChanged';
-    this.adjustIdentifierChangedSubscriberCallback = adidChangedCallback;
+AdjustConfig.prototype.setAttributionCallback = function(attributionCallback) {
+    this.attributionCallback = attributionCallback;
 };
 
 AdjustConfig.prototype.doNotOpenDeferredDeeplink = function() {

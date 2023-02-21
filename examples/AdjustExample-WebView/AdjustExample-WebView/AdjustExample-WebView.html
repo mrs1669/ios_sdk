@@ -34,6 +34,7 @@
 
             function adjustInitSdk() {
                 var adjustConfig = new AdjustConfig('2fm9gkqubvpc', AdjustConfig.EnvironmentSandbox);
+                adjustConfig.setAttributionCallback(true);
                 Adjust.instance().initSDK(adjustConfig);
             }
 
@@ -124,11 +125,11 @@
             }
 
             function didChangeWithAdjustAttribution(attributionValue) {
-                <!--                document.write(attributionValue)-->
+               document.write(attributionValue)
             }
 
             function didReadWithAdjustAttribution(attributionValue) {
-                <!--               document.write(attributionValue)-->
+                document.write(attributionValue)
             }
 
             function getSdkVersion(sdkVersion) {

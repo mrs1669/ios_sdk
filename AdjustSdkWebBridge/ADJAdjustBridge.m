@@ -54,14 +54,11 @@
 
 }
 
-- (void)didReadWithAdjustAttribution:(ADJAdjustAttribution *)adjustAttribution {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC),
-                   dispatch_get_main_queue(), ^{
-        NSString *adjustAttributionString = adjustAttribution.description;
-        NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')",
-                                adjustAttributionString];
-        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
-    });
+- (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+    NSString *adjustAttributionString = adjustAttribution.description;
+    NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')",
+                            adjustAttributionString];
+    [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 }
 
 - (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
@@ -219,6 +216,8 @@
 
     if ([logLevel isEqual:@"ALL"]) {
         [adjustConfig doLogAll];
+    } else {
+        [adjustConfig doNotLogAny];
     }
 
     [adjustConfig setUrlStrategy:urlStrategy];
@@ -230,7 +229,7 @@
         [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
     }
 
-    if (attributionCallback) {
+    if (attributionCallback != nil) {
         [adjustConfig setAdjustAttributionSubscriber:self];
     }
 
