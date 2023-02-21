@@ -116,6 +116,10 @@
 		0741CE3228D9B3E10041C816 /* ADJLogPackageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0741CE3028D9B3E10041C816 /* ADJLogPackageData.m */; };
 		0741CE3528D9B4E60041C816 /* ADJLogResponseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 0741CE3328D9B4E60041C816 /* ADJLogResponseData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0741CE3628D9B4E60041C816 /* ADJLogResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0741CE3428D9B4E60041C816 /* ADJLogResponseData.m */; };
+		074B75D029A4C62D00C9B63C /* ADJPushTokenStateData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F40AF1299A7E1800BDECB6 /* ADJPushTokenStateData.h */; };
+		074B75D129A4C63000C9B63C /* ADJPushTokenStateStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F40AE1299A7E0200BDECB6 /* ADJPushTokenStateStorage.h */; };
+		074B75D229A4C64A00C9B63C /* ADJPushTokenStateData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F40AF0299A7E1800BDECB6 /* ADJPushTokenStateData.m */; };
+		074B75D329A4C64D00C9B63C /* ADJPushTokenStateStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F40AE0299A7E0100BDECB6 /* ADJPushTokenStateStorage.m */; };
 		0755868329092F1000A3AD50 /* AdjustSdkWebBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 0755868229092F1000A3AD50 /* AdjustSdkWebBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		075586872909354E00A3AD50 /* ADJAdjustConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1AC287F3E18004C7D59 /* ADJAdjustConfig.m */; };
 		075586882909354E00A3AD50 /* ADJAdjustAdRevenue.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD774F28B4E2E0005A2245 /* ADJAdjustAdRevenue.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -5500,6 +5504,7 @@
 				075587B729096B2200A3AD50 /* ADJGlobalParametersControllerBase.h in Headers */,
 				075586EC29096A2700A3AD50 /* ADJSdkPackageBuilder.h in Headers */,
 				0755870529096A4A00A3AD50 /* ADJPublisherBase.h in Headers */,
+				074B75D029A4C62D00C9B63C /* ADJPushTokenStateData.h in Headers */,
 				0755880129096B7500A3AD50 /* ADJClientAPI.h in Headers */,
 				075586B9290969E800A3AD50 /* ADJStringMap.h in Headers */,
 				075586912909354E00A3AD50 /* ADJAdjustAttributionSubscriber.h in Headers */,
@@ -5545,6 +5550,7 @@
 				0755879E29096B0C00A3AD50 /* ADJPausingController.h in Headers */,
 				0755870A29096A5800A3AD50 /* ADJSdkPackageSenderFactory.h in Headers */,
 				075586B2290969E800A3AD50 /* ADJAtomicBoolean.h in Headers */,
+				074B75D129A4C63000C9B63C /* ADJPushTokenStateStorage.h in Headers */,
 				075587A729096B1600A3AD50 /* ADJEventDeduplicationController.h in Headers */,
 				075587E129096B5800A3AD50 /* ADJClientActionData.h in Headers */,
 				075587FE29096B7000A3AD50 /* ADJSdkConfigDataBuilder.h in Headers */,
@@ -7498,6 +7504,7 @@
 				0755878D29096AE800A3AD50 /* ADJAttributionController.m in Sources */,
 				075586972909354E00A3AD50 /* ADJAdjustLaunchedDeeplink.m in Sources */,
 				0755877C29096AD300A3AD50 /* ADJThirdPartySharingController.m in Sources */,
+				074B75D329A4C64D00C9B63C /* ADJPushTokenStateStorage.m in Sources */,
 				075586DB29096A2000A3AD50 /* ADJInfoPackageData.m in Sources */,
 				075587FD29096B7000A3AD50 /* ADJSdkConfigData.m in Sources */,
 				0755869C2909354E00A3AD50 /* ADJAdjust.m in Sources */,
@@ -7585,6 +7592,7 @@
 				0755881F29096C3600A3AD50 /* ADJLogQueueStateAndTracker.m in Sources */,
 				075586A629093BDB00A3AD50 /* ADJAdjustBridge.m in Sources */,
 				0755872B29096A6B00A3AD50 /* ADJSdkPackageSenderPinningDelegate.m in Sources */,
+				074B75D229A4C64A00C9B63C /* ADJPushTokenStateData.m in Sources */,
 				0755868C2909354E00A3AD50 /* ADJAdjustThirdPartySharing.m in Sources */,
 				0755869A2909354E00A3AD50 /* ADJAdjustLogMessageData.m in Sources */,
 				075586ED29096A2700A3AD50 /* ADJSdkPackageBuilder.m in Sources */,
