@@ -133,7 +133,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
                                 toPath:adjustAppSupportDirDbPath
                               errorPtr:&dbFileMoveError];
 
-    if (dbFileMoveError != nil) {
+    if (! fileMoved) {
         [self.logger debugDev:@"Cannot move db file from documents to app support dir"
                       nserror:dbFileMoveError
                           key:@"db filename"
@@ -144,7 +144,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
                          key1:@"db filename"
                        value1:dbFilename
                          key2:@"was file moved"
-                       value2:@(fileMoved).description];
+                       value2:[ADJUtilF boolFormat:YES]];
     }
 }
 
