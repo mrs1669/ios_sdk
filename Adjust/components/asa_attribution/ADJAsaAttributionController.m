@@ -73,10 +73,10 @@
 
     _isInDelay = NO;
 
-    ADJNonNegativeInt *_Nullable asaClickCount =
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull asaClickCountResult =
         [mainQueueController.trackedPackages asaClickCount];
-    _mainQueueContainsAsaClickPackage = asaClickCount != nil
-        && asaClickCount.uIntegerValue > 0;
+    _mainQueueContainsAsaClickPackage = asaClickCountResult.value != nil
+        && asaClickCountResult.value.uIntegerValue > 0;
 
     return self;
 }
@@ -294,7 +294,17 @@
 
     if (hasReadTokenUpdatedCacheOne) {
         tokenToWrite = readAsaAttributionTokenResult.value;
-        timestampToWrite = [self.clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
+
+        ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult =
+            [self.clock nonMonotonicNowTimestamp];
+        if (nowResult.failMessage != nil) {
+            [self.logger debugDev:@"Invalid now timestamp when refreshing token"
+                      failMessage:nowResult.failMessage
+                        issueType:ADJIssueExternalApi];
+            timestampToWrite = nil;
+        } else {
+            timestampToWrite = nowResult.value;
+        }
 
         tokenUpdated = YES;
     } else {

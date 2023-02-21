@@ -426,16 +426,6 @@
 - (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage {
     ADJStringMapBuilder *_Nonnull sendingParameters = [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
-    ADJClock *_Nullable clock = self.clockWeak;
-    if (clock != nil) {
-        [ADJSdkPackageBuilder
-         injectSentAtWithParametersBuilder:sendingParameters
-         sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
-    } else {
-        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
-                    issueType:ADJIssueWeakReference];
-    }
-
     [ADJSdkPackageBuilder
      injectAttemptsWithParametersBuilder:sendingParameters
      attempts:[self.mainQueueStateAndTracker retriesSinceLastSuccessSend]];
@@ -453,6 +443,24 @@
     } else {
         [self.logger debugDev:@"Cannot inject remaining queue size when its empty"
                     issueType:ADJIssueLogicError];
+    }
+
+    ADJClock *_Nullable clock = self.clockWeak;
+    if (clock == nil) {
+        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
+                    issueType:ADJIssueWeakReference];
+        return sendingParameters;
+    }
+
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    if (nowResult.failMessage != nil) {
+        [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
+                  failMessage:nowResult.failMessage
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJSdkPackageBuilder
+         injectSentAtWithParametersBuilder:sendingParameters
+         sentAtTimestamp:nowResult.value];
     }
 
     return sendingParameters;

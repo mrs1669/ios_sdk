@@ -51,26 +51,25 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
         return [ADJStringMap failInstanceFromIoValueWithReason:@"nil IoValue"];
     }
 
-    NSError *_Nullable error = nil;
-    id _Nullable foundationObject =
-        [ADJUtilConv convertToFoundationObjectWithJsonString:ioValue.stringValue
-                                                    errorPtr:&error];
-    if (error != nil) {
+    ADJResultErr<id> * _Nonnull foundationObjectResult =
+        [ADJUtilConv convertToFoundationObjectWithJsonString:ioValue.stringValue];
+
+    if (foundationObjectResult.error != nil) {
         return [ADJStringMap failInstanceFromIoValueWithReason:
                 [NSString stringWithFormat:
                  @"error converting json string into foundation object: %@",
-                 [ADJUtilF errorFormat:error]]];
+                 [ADJUtilF errorFormat:foundationObjectResult.error]]];
     }
-    if (foundationObject == nil) {
+    if (foundationObjectResult.value == nil) {
         return [ADJStringMap failInstanceFromIoValueWithReason:
                 @"converting json string into nil foundation object"];
     }
-    if (! [foundationObject isKindOfClass:[NSDictionary class]]) {
+    if (! [foundationObjectResult.value isKindOfClass:[NSDictionary class]]) {
         return [ADJStringMap failInstanceFromIoValueWithReason:
                 @"converting json string into non dictionary foundation object"];
     }
 
-    NSDictionary *_Nonnull foundationDictionary = (NSDictionary *)foundationObject;
+    NSDictionary *_Nonnull foundationDictionary = (NSDictionary *)foundationObjectResult.value;
 
     NSMutableDictionary <NSString *, ADJNonEmptyString *> *_Nonnull map =
         [NSMutableDictionary dictionaryWithCapacity:foundationDictionary.count];
@@ -82,7 +81,7 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
                     [NSString stringWithFormat:@"invalid key: %@", keyResult.failMessage]];
         }
 
-        id _Nullable valueObject = [foundationObject objectForKey:keyResult.value.stringValue];
+        id _Nullable valueObject = [foundationDictionary objectForKey:keyResult.value.stringValue];
         ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromObject:valueObject];
         if (valueResult.failMessage != nil) {

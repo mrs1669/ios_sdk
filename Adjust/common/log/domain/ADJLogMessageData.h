@@ -51,6 +51,7 @@ NS_DESIGNATED_INITIALIZER;
 + (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsError:(nonnull NSError *)nsError;
 + (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsException:(nonnull NSException *)nsException;
 
-+ (nonnull NSString *)generateJsonFromFoundationDictionary:(nonnull NSDictionary<NSString *, id> *)foundationDictionary;
++ (nonnull NSString *)generateJsonStringFromFoundationDictionary:
+    (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
 
 @end

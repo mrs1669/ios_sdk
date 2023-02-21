@@ -147,10 +147,13 @@ static NSString *const kDomainValidationRegexString =
         adjustConfig.canSendInBackgroundNumberBool != nil
         && adjustConfig.canSendInBackgroundNumberBool.boolValue;
 
-    ADJNonNegativeInt *_Nullable eventIdDeduplicationMaxCapacity =
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
         [ADJNonNegativeInt
-         instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt
-         logger:logger];
+         instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt];
+    if (eventIdDeduplicationMaxCapacityResult.failMessage != nil) {
+        [logger noticeClient:@"Cannot configure invalid max deduplication event capacity"
+                 failMessage:eventIdDeduplicationMaxCapacityResult.failMessage];
+    }
 /* TODO: add at later commit
      ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
          [ADJNonNegativeInt
@@ -173,7 +176,7 @@ static NSString *const kDomainValidationRegexString =
             doNotOpenDeferredDeeplink:doNotOpenDeferredDeeplink
             doNotReadAsaAttribution:doNotReadAsaAttribution
             canSendInBackground:canSendInBackground
-            eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacity
+            eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
             adjustAttributionSubscriber:adjustConfig.adjustAttributionSubscriber
             adjustLogSubscriber:adjustConfig.adjustLogSubscriber];
 }

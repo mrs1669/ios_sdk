@@ -178,22 +178,22 @@
 }
 
 + (nonnull ADJResultErr<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
-    if (jsonFoundationValue == nil) { return [ADJResultErr okWithoutValue]; }
-
-    NSError *error;
-    NSData *_Nullable jsonData =
-        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
-                                                     errorPtr:&error];
-
-    if (error != nil) {
-        return [ADJResultErr failWithError:error];
-    }
-
-    if (jsonData == nil) {
+    if (jsonFoundationValue == nil) {
         return [ADJResultErr okWithoutValue];
     }
 
-    NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonData];
+    ADJResultErr<NSData *> *_Nonnull jsonDataResult =
+        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue];
+
+    if (jsonDataResult.error != nil) {
+        return [ADJResultErr failWithError:jsonDataResult.error];
+    }
+
+    if (jsonDataResult.value == nil) {
+        return [ADJResultErr okWithoutValue];
+    }
+
+    NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonDataResult.value];
 
     return jsonString == nil ?
         [ADJResultErr okWithoutValue] : [ADJResultErr okWithValue:jsonString];
@@ -220,7 +220,7 @@
     }
 
     return [NSString stringWithFormat:@"%@ %@", inputLogMessageData.message,
-            [ADJLogMessageData generateJsonFromFoundationDictionary:
+            [ADJLogMessageData generateJsonStringFromFoundationDictionary:
              inputLogMessageData.messageParams]];
 }
 + (nonnull id)stringOrNsNull:(nullable NSString *)string {

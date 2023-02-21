@@ -507,20 +507,19 @@
         return;
     }
 
-    ADJTimestampMilli *_Nullable nowTimestamp =
-    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
-
-    if (nowTimestamp == nil) {
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    if (nowResult.failMessage == nil) {
         [self.logger debugDev:@"Cannot inject created at for package without a now timestamp"
                           key:@"path"
                         value:path
+                  failMessage:nowResult.failMessage
                     issueType:ADJIssueWeakReference];
         return;
     }
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamCreatedAtKey
-                         packageParamValueSerializable:nowTimestamp];
+                         packageParamValueSerializable:nowResult.value];
 }
 
 - (void)injectDeviceWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

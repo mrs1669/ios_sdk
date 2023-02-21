@@ -9,25 +9,27 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJStringMap.h"
+#import "ADJResultErr.h"
 
 @interface ADJUtilConv : NSObject
 
 + (NSTimeInterval)convertToSecondsWithMilliseconds:(NSUInteger)milliseconds;
 
-+ (nullable NSNumber *)convertToIntegerNumberWithStringValue:(nullable NSString *)stringValue;
-+ (nullable NSNumber *)convertToLLNumberWithStringValue:(nullable NSString *)stringValue;
-+ (nullable NSNumber *)convertToDoubleNumberWithStringValue:(nonnull NSString *)stringValue;
++ (nonnull ADJResultNN<NSNumber *> *)
+    convertToIntegerNumberWithStringValue:(nonnull NSString *)stringValue;
++ (nonnull ADJResultNN<NSNumber *> *)
+    convertToLLNumberWithStringValue:(nonnull NSString *)stringValue;
++ (nonnull ADJResultNN<NSNumber *> *)
+    convertToDoubleNumberWithStringValue:(nonnull NSString *)stringValue;
 
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue;
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
-+ (nullable NSData *)
-    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
-    errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
-+ (nullable id)convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString
-                                              errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
-+ (nullable id)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData
-                                               errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
++ (nonnull ADJResultErr<NSData *> *)
+    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue;
++ (nonnull ADJResultErr<id> *)
+    convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString;
++ (nonnull ADJResultErr<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData;
 
 + (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
 
@@ -49,4 +51,3 @@
     logger:(nonnull ADJLogger *)logger;
 
 @end
-

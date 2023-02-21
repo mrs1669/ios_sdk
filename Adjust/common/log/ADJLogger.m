@@ -294,6 +294,24 @@ static NSString *const kFailMessageKey = @"fail_message";
                                     [ADJUtilF stringOrNsNull:value], key, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                         key:(nonnull NSString *)key
+                                       value:(nullable NSString *)value
+                                 failMessage:(nonnull NSString *)failMessage
+                                   issueType:(nonnull ADJIssue)issueType
+{
+    return [self logWithInput:[[ADJInputLogMessageData alloc]
+                               initWithMessage:message
+                               level:ADJAdjustLogLevelDebug
+                               issueType:issueType
+                               nsError:nil
+                               nsException:nil
+                               messageParams:
+                                   [[NSDictionary alloc] initWithObjectsAndKeys:
+                                    failMessage, kFailMessageKey,
+                                    [ADJUtilF stringOrNsNull:value], key, nil]]];
+}
+
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         from:(nonnull NSString *)from
                                          key:(nonnull NSString *)key
                                        value:(nullable NSString *)value

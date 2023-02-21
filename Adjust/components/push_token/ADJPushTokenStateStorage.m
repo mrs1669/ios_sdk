@@ -63,16 +63,17 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
                       key:@"activity_state"
                     value:[v4ActivityState description]];
 
-    ADJNonEmptyString *_Nullable v4PushToken =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken
-                                    sourceDescription:@"v4 push token"
-                                               logger:self.logger];
-    if (v4PushToken == nil) {
+    ADJResultNL<ADJNonEmptyString *> *_Nullable v4PushTokenResult =
+        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken];
+    if (v4PushTokenResult.failMessage != nil) {
+        [self.logger debugDev:@"Cannot parse v4 push token"
+                  failMessage:v4PushTokenResult.failMessage
+                    issueType:ADJIssueStorageIo];
         return;
     }
 
     ADJPushTokenStateData *_Nonnull v4PushTokenData =
-        [[ADJPushTokenStateData alloc] initWithLastPushTokenString:v4PushToken];
+        [[ADJPushTokenStateData alloc] initWithLastPushTokenString:v4PushTokenResult.value];
 
     [self updateWithNewDataValue:v4PushTokenData];
 }

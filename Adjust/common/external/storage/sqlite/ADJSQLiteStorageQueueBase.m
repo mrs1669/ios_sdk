@@ -302,15 +302,11 @@ static NSString *const kColumnValue = @"value";
 
         // new element:
         if (! [currentElementPositionNumber isEqualToNumber:readElementPositionNumber]) {
-            ADJNonNegativeInt *_Nullable elementPositionToAdd =
-                [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber
-                                                      logger:self.logger];
-
-            BOOL elementAdded =
+            ADJNonNegativeInt *_Nullable positionOfAddedElement =
                 [self addReadDataToInMemoryQueueWithIoData:
                  [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder]
-                                      elementPositionToAdd:elementPositionToAdd];
-            if (elementAdded) {
+                              currentElementPositionNumber:currentElementPositionNumber];
+            if (positionOfAddedElement != nil) {
                 atLeastOneElementAdded = YES;
             }
 
@@ -332,21 +328,15 @@ static NSString *const kColumnValue = @"value";
     } while ([selectStatement nextInQueryStatementWithLogger:self.logger]);
 
     // last element
-    ADJNonNegativeInt *_Nullable lastElementPositionToAdd =
-        [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber
-                                              logger:self.logger];
-
-    BOOL elementAdded =
+    ADJNonNegativeInt *_Nullable positionOfLastAddedElement =
         [self addReadDataToInMemoryQueueWithIoData:
          [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder]
-                              elementPositionToAdd:lastElementPositionToAdd];
+                      currentElementPositionNumber:currentElementPositionNumber];
 
-    if (lastElementPositionToAdd != nil) {
+    if (positionOfLastAddedElement != nil) {
         self.lastElementPosition =
-            [[ADJTallyCounter alloc] initWithCountValue:lastElementPositionToAdd];
-    }
+            [[ADJTallyCounter alloc] initWithCountValue:positionOfLastAddedElement];
 
-    if (elementAdded) {
         atLeastOneElementAdded = YES;
     }
 
@@ -436,23 +426,32 @@ static int const kInsertValueFieldPosition = 4;
 }
 static int const kDeleteElementPositionFieldPosition = 1;
 
-- (BOOL)addReadDataToInMemoryQueueWithIoData:(nonnull ADJIoData *)readIoData
-                        elementPositionToAdd:(nullable ADJNonNegativeInt *)elementPositionToAdd
+- (nullable ADJNonNegativeInt *)
+    addReadDataToInMemoryQueueWithIoData:(nonnull ADJIoData *)readIoData
+    currentElementPositionNumber:(nonnull NSNumber *)currentElementPositionNumber
 {
-    if (elementPositionToAdd == nil) {
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull elementPositionToAddResult =
+        [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber];
+
+    if (elementPositionToAddResult.failMessage != nil) {
         [self.logger debugDev:
          @"Cannot add element to queue, without a valid element position"
                           key:@"metadataTypeValue"
                         value:self.metadataTypeValue
+                  failMessage:elementPositionToAddResult.failMessage
                     issueType:ADJIssueStorageIo];
-        return NO;
+        return nil;
     }
+
+    ADJNonNegativeInt *_Nonnull elementPositionToAdd = elementPositionToAddResult.value;
 
     if (elementPositionToAdd.uIntegerValue == 0) {
          self.metadataMap = readIoData.metadataMap;
-         return YES;
+         return elementPositionToAdd;
      }
 
+    // TODO: refac concreteGenerateElementFromIoData: to return Result
+    //  when result fail can support multiple params
     id _Nullable lastReadElement = [self concreteGenerateElementFromIoData:readIoData];
     if (lastReadElement == nil) {
         [self.logger debugDev:@"Cannot create element of last read"
@@ -461,13 +460,13 @@ static int const kDeleteElementPositionFieldPosition = 1;
                          key2:@"elementPositionToAdd"
                        value2:elementPositionToAdd.description
                     issueType:ADJIssueStorageIo];
-        return NO;
+        return nil;
     }
 
     [self.inMemoryQueueByPosition setObject:lastReadElement forKey:elementPositionToAdd];
     [self.inMemoryPositionIndexSet addIndex:elementPositionToAdd.uIntegerValue];
 
-    return YES;
+    return elementPositionToAdd;
 }
 
 - (void)readFromSelectStatementIntoBuildingData:(nonnull ADJSQLiteStatement *)selectStatement

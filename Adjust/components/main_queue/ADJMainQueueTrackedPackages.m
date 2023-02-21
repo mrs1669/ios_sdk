@@ -38,20 +38,18 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
 }
 
 #pragma mark Public API
-- (nullable ADJNonNegativeInt *)firstSessionCount {
+- (nonnull ADJResultNL<ADJNonNegativeInt *> *)firstSessionCount {
     ADJNonEmptyString *_Nullable firstSessionCountIoValue =
         [[self.storage metadataMap] pairValueWithKey:kFirstSessionCountKey];
 
-    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:firstSessionCountIoValue
-                                                       logger:self.logger];
+    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:firstSessionCountIoValue];
 }
 
-- (nullable ADJNonNegativeInt *)asaClickCount {
+- (nonnull ADJResultNL<ADJNonNegativeInt *> *)asaClickCount {
     ADJNonEmptyString *_Nullable asaClickCountIoValue =
         [[self.storage metadataMap] pairValueWithKey:kAsaClickCountKey];
 
-    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:asaClickCountIoValue
-                                                       logger:self.logger];
+    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:asaClickCountIoValue];
 }
 
 - (nullable ADJSQLiteStorageActionBase *)
@@ -144,16 +142,17 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
                     value:currentIoValue.stringValue
                 issueType:ADJIssueUnexpectedInput];
 
-    ADJNonNegativeInt *_Nullable currentFirstSessionCount =
-        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue
-                                            logger:self.logger];
-
-    if (currentFirstSessionCount == nil) {
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
+    if (currentFirstSessionCountResult.failMessage != nil) {
+        [self.logger debugDev:@"Invalid current first session count"
+                  failMessage:currentFirstSessionCountResult.failMessage
+                    issueType:ADJIssueStorageIo];
         return [ADJNonNegativeInt instanceAtOne];
     }
 
     return [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-            currentFirstSessionCount.uIntegerValue + 1];
+            currentFirstSessionCountResult.value.uIntegerValue + 1];
 }
 
 
@@ -202,20 +201,24 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
         return [ADJNonNegativeInt instanceAtZero];
     }
 
-    ADJNonNegativeInt *_Nullable currentFirstSessionCount =
-        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue
-                                            logger:self.logger];
-
-    if (currentFirstSessionCount == nil) {
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
+    if (currentFirstSessionCountResult.failMessage != nil) {
+        [self.logger debugDev:@"Previous first sesssion count could not be parsed to int"
+                         from:@"decrementing first session count"
+                  failMessage:currentFirstSessionCountResult.failMessage
+                    issueType:ADJIssueUnexpectedInput];
+        /* TODO inject all info with builder later
         [self.logger debugDev:@"Previous first sesssion count could not be parsed to int"
                          from:@"decrementing first session count"
                           key:@"current First Session Count IoValue"
                         value:currentIoValue.stringValue
                     issueType:ADJIssueUnexpectedInput];
+         */
         return [ADJNonNegativeInt instanceAtZero];
     }
 
-    if (currentFirstSessionCount.uIntegerValue == 0) {
+    if (currentFirstSessionCountResult.value.uIntegerValue == 0) {
         [self.logger debugDev:@"Previous first sesssion count was zero, an invalid value"
                          from:@"decrementing first session count"
                           key:@"current First Session Count IoValue"
@@ -225,7 +228,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
     }
 
     return [[ADJNonNegativeInt alloc]
-            initWithUIntegerValue:currentFirstSessionCount.uIntegerValue - 1];
+            initWithUIntegerValue:currentFirstSessionCountResult.value.uIntegerValue - 1];
 }
 
 #pragma mark - Asa Click Count Increment
@@ -270,16 +273,18 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
                     value:currentIoValue.stringValue
                 issueType:ADJIssueUnexpectedInput];
 
-    ADJNonNegativeInt *_Nullable currentAsaClickCount =
-        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue
-                                            logger:self.logger];
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
 
-    if (currentAsaClickCount == nil) {
+    if (currentAsaClickCountResult.failMessage != nil) {
+        [self.logger debugDev:@"Invalid current asa click count when incrementing"
+                  failMessage:currentAsaClickCountResult.failMessage
+                    issueType:ADJIssueStorageIo];
         return [ADJNonNegativeInt instanceAtOne];
     }
 
     return [[ADJNonNegativeInt alloc] initWithUIntegerValue:
-            currentAsaClickCount.uIntegerValue + 1];
+            currentAsaClickCountResult.value.uIntegerValue + 1];
 }
 
 #pragma mark - Asa Click Count Decrement
@@ -327,20 +332,26 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
         return [ADJNonNegativeInt instanceAtZero];
     }
 
-    ADJNonNegativeInt *_Nullable currentAsaClickCount =
-        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue
-                                            logger:self.logger];
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
 
-    if (currentAsaClickCount == nil) {
+    if (currentAsaClickCountResult.failMessage != nil) {
+        [self.logger debugDev:@"Previous asa click count could not be parsed to int"
+                         from:@"decrementing asa click count"
+                  failMessage:currentAsaClickCountResult.failMessage
+                    issueType:ADJIssueUnexpectedInput];
+
+        /* TODO
         [self.logger debugDev:@"Previous asa click count could not be parsed to int"
                          from:@"decrementing asa click count"
                           key:@"current Asa Click Count IoValue"
                         value:currentIoValue.stringValue
                     issueType:ADJIssueUnexpectedInput];
+         */
         return [ADJNonNegativeInt instanceAtZero];
     }
 
-    if (currentAsaClickCount.uIntegerValue == 0) {
+    if (currentAsaClickCountResult.value.uIntegerValue == 0) {
         [self.logger debugDev:@"Previous asa click count was zero, an invalid value"
                          from:@"decrementing asa click count"
                           key:@"current Asa Click Count IoValue"
@@ -350,7 +361,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
     }
 
     return [[ADJNonNegativeInt alloc]
-            initWithUIntegerValue:currentAsaClickCount.uIntegerValue - 1];
+            initWithUIntegerValue:currentAsaClickCountResult.value.uIntegerValue - 1];
 }
 
 @end

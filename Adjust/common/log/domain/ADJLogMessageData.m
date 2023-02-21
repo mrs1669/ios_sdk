@@ -10,6 +10,7 @@
 
 #import "ADJUtilConv.h"
 #import "ADJUtilF.h"
+#import "ADJUtilObj.h"
 
 #pragma mark Fields
 #pragma mark - Public constants
@@ -149,35 +150,36 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
     return exceptionFoundationDictionary;
 }
 
-+ (nonnull NSString *)generateJsonFromFoundationDictionary:(nonnull NSDictionary<NSString *, id> *)foundationDictionary {
-    NSError *error;
-
-    NSData *_Nullable jsonData =
-    [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationDictionary
-                                                 errorPtr:&error];
-
-    if (error != nil) {
++ (nonnull NSString *)generateJsonStringFromFoundationDictionary:
+    (nonnull NSDictionary<NSString *, id> *)foundationDictionary
+{
+    ADJResultErr<NSData *> *_Nonnull jsonDataResult =
+        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationDictionary];
+    if (jsonDataResult.error != nil) {
         return [NSString stringWithFormat:
-                @"{\"errorJsonConv\": \"%@\", \"originalDictionary\": \"%@\"}",
-                error, foundationDictionary];
+                @"{ \"message\": \"Error converting dictionary to json data\", "
+                "\"error\": \"%@\", "
+                "\"original_dictionary\": \"%@\" }",
+        [ADJUtilF errorFormat:jsonDataResult.error],
+        [ADJUtilObj formatInlineKeyValuesWithName:@"" stringKeyDictionary:foundationDictionary]];
     }
 
-    if (jsonData == nil) {
+    if (jsonDataResult.value == nil) {
         return [NSString stringWithFormat:
-                @"{\"nullJsonData\": true, \"originalDictionary\": \"%@\"}",
-                foundationDictionary];
+                @"{ \"message\": \"Nil result converting dictionary to json data\", "
+                "\"original_dictionary\": \"%@\" }",
+        [ADJUtilObj formatInlineKeyValuesWithName:@"" stringKeyDictionary:foundationDictionary]];
     }
 
-    NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonData];
-
+    NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonDataResult.value];
     if (jsonString == nil) {
         return [NSString stringWithFormat:
-                @"{\"nullJsonString\": true, \"originalDictionary\": \"%@\"}",
-                foundationDictionary];
+                @"{ \"message\": \"Nil result converting json data to string\", "
+                "\"original_dictionary\": \"%@\" }",
+        [ADJUtilObj formatInlineKeyValuesWithName:@"" stringKeyDictionary:foundationDictionary]];
     }
 
     return jsonString;
 }
 
 @end
-

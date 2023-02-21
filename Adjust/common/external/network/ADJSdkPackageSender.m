@@ -340,16 +340,17 @@
                 sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
     NSError *jsonError = nil;
 
-    id _Nullable responseJsonFoundationObject =
-    [ADJUtilConv convertToJsonFoundationValueWithJsonData:responseData
-                                                 errorPtr:&jsonError];
+    ADJResultErr<id> *_Nonnull responseJsonFoundationObjectResult =
+        [ADJUtilConv convertToJsonFoundationValueWithJsonData:responseData];
 
-    if (jsonError != nil) {
+    if (responseJsonFoundationObjectResult.error != nil) {
         [sdkResponseBuilder logErrorWithLogger:self.logger
-                                       nsError:jsonError
+                                       nsError:responseJsonFoundationObjectResult.error
                                   errorMessage:@"Parsing json response"];
         return;
     }
+
+    id _Nullable responseJsonFoundationObject = responseJsonFoundationObjectResult.value;
 
     if (responseJsonFoundationObject == nil
         || ! [responseJsonFoundationObject isKindOfClass:[NSDictionary class]])

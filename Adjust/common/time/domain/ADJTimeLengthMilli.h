@@ -12,7 +12,8 @@
 #import "ADJIoValueSerializable.h"
 #import "ADJNonEmptyString.h"
 #import "ADJNonNegativeInt.h"
-#import "ADJLogger.h"
+#import "ADJResultNL.h"
+#import "ADJResultNN.h"
 
 @interface ADJTimeLengthMilli : NSObject<
     NSCopying,
@@ -23,13 +24,16 @@
 + (nonnull instancetype)instanceWithoutTimeSpan;
 + (nonnull instancetype)instanceWithOneMilliSpan;
 
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger;
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
-+ (nullable instancetype)instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
-                                                          logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
+
++ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
+    instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds;
++ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
+    instanceWithNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds;
 
 - (nonnull instancetype)initWithMillisecondsSpan:(nonnull ADJNonNegativeInt *)millisecondsSpan
 NS_DESIGNATED_INITIALIZER;

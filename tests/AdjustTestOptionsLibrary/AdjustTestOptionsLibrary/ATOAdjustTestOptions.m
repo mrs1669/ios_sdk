@@ -539,14 +539,17 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"foregroundTimerIntervalMilli"
                                        value:adjustTestOptions.foregroundTimerIntervalMilli.description];
 
-        ADJNonNegativeInt *_Nullable foregroundTimerIntervalMilliNumber =
-            [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.foregroundTimerIntervalMilli
-                                               logger:[ATOLogger sharedInstance]];
-
-        if (foregroundTimerIntervalMilliNumber != nil) {
+        ADJResultNN<ADJNonNegativeInt *> *_Nonnull foregroundTimerIntervalMilliNumberResult =
+            [ADJNonNegativeInt instanceFromIntegerNumber:
+             adjustTestOptions.foregroundTimerIntervalMilli];
+        if (foregroundTimerIntervalMilliNumberResult.failMessage != nil) {
+            [[ATOLogger sharedInstance] debugDev:@"Invalid foregroundTimerIntervalMilliNumber"
+                                     failMessage:foregroundTimerIntervalMilliNumberResult.failMessage
+                                       issueType:ADJIssueExternalApi];
+        } else {
             sdkConfigDataBuilder.foregroundTimerIntervalMilli =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-                    foregroundTimerIntervalMilliNumber];
+                    foregroundTimerIntervalMilliNumberResult.value];
         }
     }
 
@@ -555,13 +558,17 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"foregroundTimerStartMilli"
                                        value:adjustTestOptions.foregroundTimerStartMilli.description];
 
-        ADJNonNegativeInt *_Nullable foregroundTimerStartMilliNumber =
-            [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.foregroundTimerStartMilli
-                                               logger:[ATOLogger sharedInstance]];
-
-        if (foregroundTimerStartMilliNumber != nil) {
+        ADJResultNN<ADJNonNegativeInt *> *_Nonnull foregroundTimerStartMilliNumberResult =
+            [ADJNonNegativeInt instanceFromIntegerNumber:
+             adjustTestOptions.foregroundTimerStartMilli];
+        if (foregroundTimerStartMilliNumberResult.failMessage != nil) {
+            [[ATOLogger sharedInstance] debugDev:@"Invalid foregroundTimerStartMilliNumber"
+                                     failMessage:foregroundTimerStartMilliNumberResult.failMessage
+                                       issueType:ADJIssueExternalApi];
+        } else {
             sdkConfigDataBuilder.foregroundTimerStartMilli =
-                [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:foregroundTimerStartMilliNumber];
+                [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                 foregroundTimerStartMilliNumberResult.value];
         }
     }
 
@@ -570,13 +577,17 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"minSdkSessionIntervalMilli"
                                        value:adjustTestOptions.minSdkSessionIntervalMilli.description];
 
-        ADJNonNegativeInt *_Nullable minSdkSessionIntervalMilliNumber =
-            [ADJNonNegativeInt instanceFromIntegerNumber:adjustTestOptions.minSdkSessionIntervalMilli
-                                               logger:[ATOLogger sharedInstance]];
-
-        if (minSdkSessionIntervalMilliNumber != nil) {
+        ADJResultNN<ADJNonNegativeInt *> *_Nonnull minSdkSessionIntervalMilliNumberResult =
+            [ADJNonNegativeInt instanceFromIntegerNumber:
+             adjustTestOptions.minSdkSessionIntervalMilli];
+        if (minSdkSessionIntervalMilliNumberResult.failMessage != nil) {
+            [[ATOLogger sharedInstance] debugDev:@"Invalid minSdkSessionIntervalMilliNumber"
+                                     failMessage:minSdkSessionIntervalMilliNumberResult.failMessage
+                                       issueType:ADJIssueExternalApi];
+        } else {
             sdkConfigDataBuilder.minMeasurementSessionIntervalMilli =
-                [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:minSdkSessionIntervalMilliNumber];
+                [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
+                 minSdkSessionIntervalMilliNumberResult.value];
         }
     }
     
@@ -603,15 +614,21 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"overwriteFirstSdkSessionIntervalMilli"
                                        value:adjustTestOptions.overwriteFirstSdkSessionIntervalMilli.description];
 
-        ADJNonNegativeInt *_Nullable overwriteFirstSdkSessionIntervalMilliNumber =
+        ADJResultNN<ADJNonNegativeInt *> *_Nonnull
+        overwriteFirstSdkSessionIntervalMilliNumberResult =
             [ADJNonNegativeInt
-                instanceFromIntegerNumber:adjustTestOptions.overwriteFirstSdkSessionIntervalMilli
-                logger:[ATOLogger sharedInstance]];
-
-        if (overwriteFirstSdkSessionIntervalMilliNumber != nil) {
+                instanceFromIntegerNumber:
+                 adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
+        if (overwriteFirstSdkSessionIntervalMilliNumberResult.failMessage != nil) {
+            [[ATOLogger sharedInstance] debugDev:
+             @"Invalid overwriteFirstSdkSessionIntervalMilliNumber"
+                                     failMessage:
+             overwriteFirstSdkSessionIntervalMilliNumberResult.failMessage
+                                       issueType:ADJIssueExternalApi];
+        } else {
             sdkConfigDataBuilder.overwriteFirstSdkSessionInterval =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
-                 overwriteFirstSdkSessionIntervalMilliNumber];
+                 overwriteFirstSdkSessionIntervalMilliNumberResult.value];
         }
     }
 

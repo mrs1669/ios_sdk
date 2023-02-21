@@ -17,65 +17,66 @@
     return ((double)milliseconds) / ADJSecondToMilliDouble;
 }
 
-+ (nullable NSNumber *)convertToIntegerNumberWithStringValue:(nullable NSString *)stringValue {
-    if (stringValue == nil) {
-        return nil;
-    }
++ (nonnull ADJResultNN<NSNumber *> *)
+    convertToIntegerNumberWithStringValue:(nonnull NSString *)stringValue
+{
     /* to check: integer formatter rounds possible non integer values, instead of failing
      ADJUtilF *_Nonnull sharedInstance = [self sharedInstance];
      return [sharedInstance.integerFormatter numberFromString:stringValue];
      */
     NSScanner *_Nonnull scanner = [NSScanner scannerWithString:stringValue];
     [scanner setLocale:[ADJUtilF usLocale]];
+
     NSInteger scannedInteger;
     if (! [scanner scanInteger:&scannedInteger]) {
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Could not find valid integer representation from string: %@", stringValue]];
     }
 
     // Contains INT_MAX or INT_MIN on overflow
     if (scannedInteger == INT_MAX || scannedInteger == INT_MIN) {
-        return nil;
+        return [ADJResultNN failWithMessage:@"Found overflow integer value"];
     }
 
-    return @(scannedInteger);
+    return [ADJResultNN okWithValue:@(scannedInteger)];
 }
 
-+ (nullable NSNumber *)convertToLLNumberWithStringValue:(nullable NSString *)stringValue {
-    if (stringValue == nil) {
-        return nil;
-    }
-
++ (nonnull ADJResultNN<NSNumber *> *)
+    convertToLLNumberWithStringValue:(nonnull NSString *)stringValue
+{
     NSScanner *_Nonnull scanner = [NSScanner scannerWithString:stringValue];
     [scanner setLocale:[ADJUtilF usLocale]];
+
     long long scannedLL;
     if (! [scanner scanLongLong:&scannedLL]) {
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Could not find valid long long representation from string: %@", stringValue]];
     }
 
     // Contains LLONG_MAX or LLONG_MIN on overflow
     if (scannedLL == LLONG_MAX || scannedLL == LLONG_MIN) {
-        return nil;
+        return [ADJResultNN failWithMessage:@"Found overflow long long value"];
     }
 
-    return @(scannedLL);
+    return [ADJResultNN okWithValue:@(scannedLL)];
 }
 
-+ (nullable NSNumber *)convertToDoubleNumberWithStringValue:(nonnull NSString *)stringValue {
-    if (stringValue == nil) {
-        return nil;
-    }
-
++ (nonnull ADJResultNN<NSNumber *> *)
+    convertToDoubleNumberWithStringValue:(nonnull NSString *)stringValue
+{
     // use number formatter before scanner to smoke out if the value is zero
     //  so that it can't be interpreted as underflow in scan double
     NSNumber *_Nullable formatterDouble =
     [[ADJUtilF decimalStyleFormatter] numberFromString:stringValue];
 
     if (formatterDouble == nil) {
-        return nil;
+        return [ADJResultNN failWithMessage:@"Could not parse double number with formatter"];
     }
 
     if (formatterDouble.doubleValue == 0.0) {
-        return formatterDouble;
+        return [ADJResultNN okWithValue:formatterDouble];
     }
 
     NSScanner *_Nonnull scanner = [NSScanner scannerWithString:stringValue];
@@ -84,15 +85,17 @@
     double scannedDBL;
 
     if (! [scanner scanDouble:&scannedDBL]) {
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Could not find valid double representation from string: %@", stringValue]];
     }
 
     // Contains HUGE_VAL or –HUGE_VAL on overflow, or 0.0 on underflow
     if (scannedDBL == HUGE_VAL || scannedDBL == -( HUGE_VAL ) || scannedDBL == 0.0) {
-        return nil;
+        return [ADJResultNN failWithMessage:@"Found overflow double value"];
     }
 
-    return @(scannedDBL);
+    return [ADJResultNN okWithValue:@(scannedDBL)];
 }
 
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue {
@@ -112,25 +115,44 @@
                                                options:0];
 }
 
-+ (nullable NSData *)
++ (nonnull ADJResultErr<NSData *> *)
     convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
-    errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
 {
-    // TODO: check isValidJSONObject:
-    return [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:errorPtr];
+    NSError *_Nullable errorPtr = nil;
+
+    // todo check isValidJSONObject:
+    NSData *_Nullable data =
+        [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:&errorPtr];
+
+    if (errorPtr != nil) {
+        return [ADJResultErr failWithError:errorPtr];
+    } else if (data == nil) {
+        return [ADJResultErr okWithoutValue];
+    } else {
+        return [ADJResultErr okWithValue:data];
+    }
 }
 
-+ (nullable id)convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString
-                                              errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
++ (nonnull ADJResultErr<id> *)
+    convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString
 {
     return [ADJUtilConv convertToJsonFoundationValueWithJsonData:
-             [jsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                                         errorPtr:errorPtr];
+             [jsonString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
-+ (nullable id)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData
-                                               errorPtr:(NSError * _Nullable * _Nonnull)errorPtr {
-    return [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:errorPtr];
++ (nonnull ADJResultErr<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData {
+    NSError *_Nullable errorPtr = nil;
+
+    id _Nullable jsonObject =
+        [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&errorPtr];
+
+    if (errorPtr != nil) {
+        return [ADJResultErr failWithError:errorPtr];
+    } else if (jsonObject == nil) {
+        return [ADJResultErr okWithoutValue];
+    } else {
+        return [ADJResultErr okWithValue:jsonObject];
+    }
 }
 
 + (nonnull id)convertToFoundationObject:(nonnull id)objectToConvert {

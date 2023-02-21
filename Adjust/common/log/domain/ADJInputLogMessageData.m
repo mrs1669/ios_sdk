@@ -107,7 +107,8 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                         runningThreadId:(nullable NSString *)runningThreadId
                                 nsError:(nullable NSError *)nsError
                             nsException:(nullable NSException *)nsException
-                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams {
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+{
     self = [super init];
 
     _message = message;

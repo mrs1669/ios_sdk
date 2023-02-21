@@ -20,10 +20,9 @@
 }
 
 #pragma mark Public API
-- (nullable ADJTimestampMilli *)nonMonotonicNowTimestampMilliWithLogger:(nonnull ADJLogger *)logger {
+- (nonnull ADJResultNN<ADJTimestampMilli *> *)nonMonotonicNowTimestamp {
     return [ADJTimestampMilli
-            instanceWithTimeIntervalSecondsSince1970:[NSDate.date timeIntervalSince1970]
-            logger:logger];
+            instanceWithTimeIntervalSecondsSince1970:[NSDate.date timeIntervalSince1970]];
 }
 
 - (nullable ADJRelativeTimestamp *)monotonicRelativeTimestamp {

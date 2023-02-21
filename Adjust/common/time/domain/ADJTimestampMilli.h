@@ -11,31 +11,34 @@
 #import "ADJIoValueSerializable.h"
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJTimeLengthMilli.h"
-#import "ADJLogger.h"
 #import "ADJIoData.h"
 #import "ADJNonEmptyString.h"
+#import "ADJResultNL.h"
+#import "ADJResultNN.h"
 
 @interface ADJTimestampMilli : NSObject<NSCopying,
     ADJIoValueSerializable,
     ADJPackageParamValueSerializable
 >
 // instantiation
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger;
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger;
-+ (nullable instancetype)
-    instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970
-    logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJTimestampMilli *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
-+ (nullable instancetype)
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
+
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
+    instanceWithNumberDoubleSecondsSince1970:(nullable NSNumber *)numberDoubleSecondsSince1970;
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
+    instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970;
+
++ (nonnull ADJResultNL<ADJTimestampMilli *> *)
     instanceWithOptionalNumberDoubleSecondsSince1970:
-        (nullable NSNumber *)numberDoubleSecondsSince1970
-    logger:(nonnull ADJLogger *)logger;
-
-+ (nullable instancetype)instanceWithNSDateValue:(nullable NSDate *)nsDateValue
-                                          logger:(nonnull ADJLogger *)logger;
-
+        (nullable NSNumber *)numberDoubleSecondsSince1970;
+/*
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
+    instanceWithNSDateValue:(nullable NSDate *)nsDateValue;
+*/
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties

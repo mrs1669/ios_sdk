@@ -32,11 +32,12 @@ static NSString *const kIoDataKey = @"ioData";
 @implementation ADJClientActionData
 #pragma mark Instantiation
 + (nullable instancetype)instanceWithIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
+                                     logger:(nonnull ADJLogger *)logger
+{
     ADJStringMap *_Nonnull metadataMap = ioData.metadataMap;
     
     ADJNonEmptyString *_Nullable clientActionHandlerId =
-    [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
+        [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
     
     if (clientActionHandlerId == nil) {
         [logger debugDev:@"Cannot create client action data without client action handler"
@@ -44,19 +45,18 @@ static NSString *const kIoDataKey = @"ioData";
         return nil;
     }
     
-    ADJTimestampMilli *_Nullable apiTimestamp =
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull apiTimestampResult =
         [ADJTimestampMilli
-            instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]
-            logger:logger];
-    
-    if (apiTimestamp == nil) {
-        [logger debugDev:@"Cannot create client action data without api timestamp"
+            instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]];
+    if (apiTimestampResult.failMessage != nil) {
+        [logger debugDev:@"Cannot create client action data with invalid api timestamp"
+             failMessage:apiTimestampResult.failMessage
                issueType:ADJIssueStorageIo];
         return nil;
     }
     
     return [[self alloc] initWithClientActionHandlerId:clientActionHandlerId
-                                          apiTimestamp:apiTimestamp
+                                          apiTimestamp:apiTimestampResult.value
                                                 ioData:ioData];
 }
 

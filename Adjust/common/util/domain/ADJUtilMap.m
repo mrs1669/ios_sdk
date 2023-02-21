@@ -77,102 +77,120 @@
     return [[ADJStringMap alloc] initWithStringMapBuilder:mergedMap];
 }
 
-+ (nullable NSString *)extractStringValueWithDictionary:(nullable NSDictionary *)dictionary
-                                                    key:(nonnull NSString *)key {
++ (nonnull ADJResultNL<NSString *> *)
+    extractStringValueWithDictionary:(nullable NSDictionary *)dictionary
+    key:(nonnull NSString *)key
+{
     if (dictionary == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     id _Nullable value = [dictionary objectForKey:key];
-
     if (value == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     if (! [value isKindOfClass:[NSString class]]) {
-        return nil;
+        return [ADJResultNL failWithMessage:
+                [NSString stringWithFormat:@"Expected value of type String, instead found: %@",
+                 NSStringFromClass([value class])]];
     }
 
-    return (NSString *)value;
+    return [ADJResultNL okWithValue:(NSString *)value];
 }
 
-+ (nullable NSNumber *)extractIntegerNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                      key:(nonnull NSString *)key {
++ (nonnull ADJResultNL<NSNumber *> *)
+    extractIntegerNumberWithDictionary:(nullable NSDictionary *)dictionary
+    key:(nonnull NSString *)key
+{
     if (dictionary == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     id _Nullable value = [dictionary objectForKey:key];
-
     if (value == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     if ([value isKindOfClass:[NSNumber class]]) {
         NSNumber *_Nonnull number = (NSNumber *)value;
         // remainder of an integer that was cast to double when divided by one should be zero
         if (fmod(number.doubleValue, 1.0) == 0.0) {
-            return number;
+            return [ADJResultNL okWithValue:number];
         }
         // otherwise, the original number was not an integer, but a double
-        return nil;
+        return [ADJResultNL failWithMessage:
+                [NSString stringWithFormat:@"Number found to be non-integer: %@", number]];
     }
 
-    return [ADJUtilConv convertToIntegerNumberWithStringValue:[value description]];
+    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(NSString *_Nullable stringValue) {
+        return [ADJUtilConv convertToIntegerNumberWithStringValue:stringValue];
+    } nlValue:[value description]];
 }
 
-+ (nullable NSNumber *)extractBooleanNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                      key:(nonnull NSString *)key {
++ (nonnull ADJResultNL<NSNumber *> *)
+    extractBooleanNumberWithDictionary:(nullable NSDictionary *)dictionary
+    key:(nonnull NSString *)key
+{
     if (dictionary == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     id _Nullable value = [dictionary objectForKey:key];
-
     if (value == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
+
     if ([value isKindOfClass:[NSString class]]) {
         if ([[@(YES) description] isEqualToString:(NSString *)value]) {
-            return @(YES);
+            return [ADJResultNL okWithValue:@(YES)];
         }
         if ([[@(NO) description] isEqualToString:(NSString *)value]) {
-            return @(NO);
+            return [ADJResultNL okWithValue:@(NO)];
         }
-        return nil;
+        return [ADJResultNL failWithMessage:
+                [NSString stringWithFormat:
+                 @"Found String that does not mach either Bool: %@", value]];
     }
 
     if ([value isKindOfClass:[NSNumber class]]) {
         if ([@(YES) isEqualToNumber:(NSNumber *)value]) {
-            return @(YES);
+            return [ADJResultNL okWithValue:@(YES)];
         }
         if ([@(NO) isEqualToNumber:(NSNumber *)value]) {
-            return @(NO);
+            return [ADJResultNL okWithValue:@(NO)];
         }
-        return (NSNumber *)value;
+        return [ADJResultNL failWithMessage:
+                [NSString stringWithFormat:
+                 @"Found Number that does not mach either Bool: %@", value]];
     }
 
-    return nil;
+    return [ADJResultNL failWithMessage:
+            [NSString stringWithFormat:@"Expected Bool of type String or Number, instead found: %@",
+             NSStringFromClass([value class])]];
 }
 
-+ (nullable NSNumber *)extractDoubleNumberWithDictionary:(nullable NSDictionary *)dictionary
-                                                     key:(nonnull NSString *)key
++ (nonnull ADJResultNL<NSNumber *> *)
+    extractDoubleNumberWithDictionary:(nullable NSDictionary *)dictionary
+    key:(nonnull NSString *)key
 {
     if (dictionary == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     id _Nullable value = [dictionary objectForKey:key];
 
     if (value == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     if ([value isKindOfClass:[NSNumber class]]) {
-        return (NSNumber *)value;
+        return [ADJResultNL okWithValue:(NSNumber *)value];
     }
 
-    return [ADJUtilConv convertToDoubleNumberWithStringValue:[value description]];
+    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(NSString *_Nullable stringValue) {
+        return [ADJUtilConv convertToDoubleNumberWithStringValue:stringValue];
+    } nlValue:[value description]];
 }
 
 + (nullable NSDictionary *)

@@ -176,10 +176,10 @@
         return;
     }
 
-    ADJTimestampMilli *_Nullable nowTimestamp =
-        [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
-    if (nowTimestamp == nil) {
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    if (nowResult.failMessage != nil) {
         [self.logger debugDev:@"Cannot enqueue client action without a valid now timestamp"
+                  failMessage:nowResult.failMessage
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -200,7 +200,7 @@
     ADJClientActionData *_Nonnull clientActionData =
         [[ADJClientActionData alloc] initWithClientActionHandlerId:
          [[ADJNonEmptyString alloc] initWithConstStringValue:clientActionHandlerId]
-                                                      nowTimestamp:nowTimestamp
+                                                      nowTimestamp:nowResult.value
                                                      ioDataBuilder:ioDataBuilder];
 
     [clientActionStorage enqueueElementToLast:clientActionData

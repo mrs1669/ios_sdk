@@ -22,80 +22,97 @@
 
 @implementation ADJTimestampMilli
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger
++ (nonnull ADJResultNL<ADJTimestampMilli *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
 {
-    return [self instanceWithOptionalMillisecondsSince1970NonNegativeInt:
-            [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
-                                                        logger:logger]];
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
+
+    if (nnIntResult.failMessage != nil) {
+        return [ADJResultNL failWithMessage:nnIntResult.failMessage];
+    }
+    if (nnIntResult.value == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    return [ADJResultNL okWithValue:
+            [[ADJTimestampMilli alloc] initWithMillisecondsSince1970Int:nnIntResult.value]];
 }
 
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
 {
-    return [self instanceWithOptionalMillisecondsSince1970NonNegativeInt:
-            [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
-                                                logger:logger]];
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
+
+    if (nnIntResult.failMessage != nil) {
+        return [ADJResultNN failWithMessage:nnIntResult.failMessage];
+    }
+
+    return [ADJResultNN okWithValue:
+            [[ADJTimestampMilli alloc] initWithMillisecondsSince1970Int:nnIntResult.value]];
 }
 
-+ (nullable instancetype)
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
+    instanceWithNumberDoubleSecondsSince1970:(nullable NSNumber *)numberDoubleSecondsSince1970
+{
+    if (numberDoubleSecondsSince1970 == nil) {
+        return [ADJResultNN failWithMessage:
+                @"Cannot create timestamp with nil number double seconds since 1970"];
+    }
+
+    return [ADJTimestampMilli instanceWithTimeIntervalSecondsSince1970:
+            numberDoubleSecondsSince1970.doubleValue];
+}
+
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
     instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970
-    logger:(nonnull ADJLogger *)logger
 {
     NSNumber *_Nonnull milliSince1970Number =
         [NSNumber numberWithDouble:timeIntervalSecondsSince1970 * ADJSecondToMilliDouble];
     
-    ADJNonNegativeInt *_Nullable milliSince1970Int =
-        [ADJNonNegativeInt instanceFromIntegerNumber:milliSince1970Number
-                                              logger:logger];
-    
-    if (milliSince1970Int == nil) {
-        return nil;
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull milliSince1970IntResult =
+        [ADJNonNegativeInt instanceFromIntegerNumber:milliSince1970Number];
+
+    if (milliSince1970IntResult.failMessage != nil) {
+        return [ADJResultNN failWithMessage:milliSince1970IntResult.failMessage];
     }
-    
-    return [[self alloc] initWithMillisecondsSince1970Int:milliSince1970Int];
+
+    return [ADJResultNN okWithValue:
+            [[ADJTimestampMilli alloc] initWithMillisecondsSince1970Int:
+             milliSince1970IntResult.value]];
 }
 
-+ (nullable instancetype)
++ (nonnull ADJResultNL<ADJTimestampMilli *> *)
     instanceWithOptionalNumberDoubleSecondsSince1970:
         (nullable NSNumber *)numberDoubleSecondsSince1970
-    logger:(nonnull ADJLogger *)logger
 {
     if (numberDoubleSecondsSince1970 == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
-    
-    return [self instanceWithTimeIntervalSecondsSince1970:numberDoubleSecondsSince1970.doubleValue
-                                                   logger:logger];
-}
 
-+ (nullable instancetype)instanceWithNSDateValue:(nullable NSDate *)nsDateValue
-                                          logger:(nonnull ADJLogger *)logger
+    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(NSNumber *_Nullable value) {
+        return [ADJTimestampMilli instanceWithTimeIntervalSecondsSince1970:value.doubleValue];
+    } nlValue:numberDoubleSecondsSince1970];
+}
+/*
++ (nonnull ADJResultNN<ADJTimestampMilli *> *)
+    instanceWithNSDateValue:(nullable NSDate *)nsDateValue
 {
     if (nsDateValue == nil) {
-        return nil;
+        return [ADJResultNN failWithMessage:@"Cannot create timestamp with nil NSDate"];
     }
-    
-    return [self instanceWithTimeIntervalSecondsSince1970:nsDateValue.timeIntervalSince1970
-                                                   logger:logger];
-}
 
+    return [ADJTimestampMilli
+            instanceWithTimeIntervalSecondsSince1970:nsDateValue.timeIntervalSince1970];
+}
+*/
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
 #pragma mark - Private constructors
-+ (nullable instancetype)instanceWithOptionalMillisecondsSince1970NonNegativeInt:
-    (nullable ADJNonNegativeInt *)millisecondsSince1970NonNegativeInt
-{
-    if (millisecondsSince1970NonNegativeInt == nil) {
-        return nil;
-    }
-    
-    return [[self alloc] initWithMillisecondsSince1970Int:millisecondsSince1970NonNegativeInt];
-}
-
 - (nonnull instancetype)initWithMillisecondsSince1970Int:
     (nonnull ADJNonNegativeInt *)millisecondsSince1970Int
 {

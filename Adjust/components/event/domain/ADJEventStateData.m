@@ -35,35 +35,36 @@ static NSString *const kEventCountKey = @"eventCount";
         return nil;
     }
 
-    ADJTallyCounter *_Nullable eventCount =
-    [ADJTallyCounter instanceFromIoDataValue:
-     [ioData.propertiesMap pairValueWithKey:kEventCountKey]
-                                      logger:logger];
-
-    if (eventCount == nil) {
+    ADJResultNN<ADJTallyCounter *> *_Nonnull eventCountResult =
+        [ADJTallyCounter instanceFromIoDataValue:
+         [ioData.propertiesMap pairValueWithKey:kEventCountKey]];
+    if (eventCountResult.failMessage != nil) {
         [logger debugDev:@"Cannot create instance from Io data invalid io value"
                valueName:kEventCountKey
+             failMessage:eventCountResult.failMessage
                issueType:ADJIssueStorageIo];
         return nil;
     }
 
-    return [[self alloc] initWithEventCount:eventCount];
+    return [[self alloc] initWithEventCount:eventCountResult.value];
 }
 
 + (nullable instancetype)
     instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt    
     logger:(nonnull ADJLogger *)logger
 {
-    ADJNonNegativeInt *_Nullable eventCountInt =
-    [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt
-                                                  logger:logger];
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
+        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt];
 
-    if (eventCountInt == nil) {
+    if (eventCountIntResult.failMessage != nil) {
+        [logger debugDev:@"Invalid event count from external"
+             failMessage:eventCountIntResult.failMessage
+               issueType:ADJIssueExternalApi];
         return nil;
     }
 
     return [[self alloc] initWithEventCount:
-            [[ADJTallyCounter alloc] initWithCountValue:eventCountInt]];
+            [[ADJTallyCounter alloc] initWithCountValue:eventCountIntResult.value]];
 }
 
 - (nonnull instancetype)initWithIntialState {

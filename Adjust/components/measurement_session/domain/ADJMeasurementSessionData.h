@@ -28,14 +28,17 @@ NS_ASSUME_NONNULL_END
 + (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
                                         logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
-                                      logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
+    logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)instanceFromExternalWithSessionCountNumberInt:(nullable NSNumber *)sessionCountNumberInt
-                              lastActivityTimestampNumberDoubleSeconds:(nullable NSNumber *)lastActivityTimestampNumberDoubleSeconds
-                                      sessionLengthNumberDoubleSeconds:(nullable NSNumber *)sessionLengthNumberDoubleSeconds
-                                          timeSpentNumberDoubleSeconds:(nullable NSNumber *)timeSpentNumberDoubleSeconds
-                                                                logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromExternalWithSessionCountNumberInt:(nullable NSNumber *)sessionCountNumberInt
+    lastActivityTimestampNumberDoubleSeconds:
+        (nullable NSNumber *)lastActivityTimestampNumberDoubleSeconds
+    sessionLengthNumberDoubleSeconds:(nullable NSNumber *)sessionLengthNumberDoubleSeconds
+    timeSpentNumberDoubleSeconds:(nullable NSNumber *)timeSpentNumberDoubleSeconds
+    logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

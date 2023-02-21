@@ -70,10 +70,15 @@ static NSString *const kErrorReasonKey = @"errorReason";
     ADJNonEmptyString *_Nullable cachedToken =
         [ioData.propertiesMap pairValueWithKey:kCachedTokenKey];
 
-    ADJTimestampMilli *_Nullable cacheReadTimestamp =
+    ADJResultNL<ADJTimestampMilli *> *_Nonnull cacheReadTimestampResult =
         [ADJTimestampMilli instanceFromOptionalIoDataValue:
-         [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]
-                                                    logger:logger];
+         [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]];
+    if (cacheReadTimestampResult.failMessage != nil) {
+        [logger debugDev:@"Cannot use invalid cache read timestamp"
+             failMessage:cacheReadTimestampResult.failMessage
+               issueType:ADJIssueStorageIo];
+    }
+
     ADJNonEmptyString *_Nullable errorReason =
         [ioData.propertiesMap pairValueWithKey:kErrorReasonKey];
 
@@ -81,7 +86,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
             initWithHasReceivedValidAsaClickResponse:hasReceivedValidAsaClickResponse.boolValue
             hasReceivedAdjustAttribution:hasReceivedAdjustAttribution.boolValue
             cachedToken:cachedToken
-            cacheReadTimestamp:cacheReadTimestamp
+            cacheReadTimestamp:cacheReadTimestampResult.value
             errorReason:errorReason];
 }
 

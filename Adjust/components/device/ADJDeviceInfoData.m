@@ -291,13 +291,26 @@
 }
 
 + (nullable ADJNonEmptyString *)readCpuTypeSubtypeWithLogger:(nonnull ADJLogger *)logger {
-    ADJNonNegativeInt *_Nullable cpuTypeNumber =
-        [ADJNonNegativeInt instanceFromIntegerNumber:[self readSysctlbByNameInt:"hw.cputype"]
-                                              logger:logger];
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull cpuTypeNumberResult =
+        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:
+         [self readSysctlbByNameInt:"hw.cputype"]];
+    if (cpuTypeNumberResult.failMessage != nil) {
+        [logger debugDev:@"Invalid cpu type read"
+             failMessage:cpuTypeNumberResult.failMessage
+               issueType:ADJIssueExternalApi];
+    }
 
-    ADJNonNegativeInt *_Nullable cpuSubtypeNumber =
-        [ADJNonNegativeInt instanceFromIntegerNumber:[self readSysctlbByNameInt:"hw.cpusubtype"]
-                                              logger:logger];
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull cpuSubtypeNumberResult =
+        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:
+         [self readSysctlbByNameInt:"hw.cpusubtype"]];
+    if (cpuSubtypeNumberResult.failMessage != nil) {
+        [logger debugDev:@"Invalid cpu subtype read "
+             failMessage:cpuSubtypeNumberResult.failMessage
+               issueType:ADJIssueExternalApi];
+    }
+
+    ADJNonNegativeInt *_Nullable cpuTypeNumber = cpuTypeNumberResult.value;
+    ADJNonNegativeInt *_Nullable cpuSubtypeNumber = cpuSubtypeNumberResult.value;
 
     if (cpuTypeNumber == nil && cpuSubtypeNumber == nil) {
         return nil;

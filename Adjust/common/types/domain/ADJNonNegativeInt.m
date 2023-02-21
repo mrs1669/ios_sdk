@@ -21,57 +21,6 @@
 @implementation ADJNonNegativeInt
 #pragma mark Instantiation
 + (nonnull instancetype)instanceAtZero {
-    return [self zeroInstance];
-}
-
-+ (nonnull instancetype)instanceAtOne {
-    return [self oneInstance];
-}
-
-+ (nullable instancetype)instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
-                                            logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromIntegerNumber:integerNumber
-                                    logger:logger
-                                isOptional:NO];
-}
-
-+ (nullable instancetype)instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber
-                                                    logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromIntegerNumber:integerNumber
-                                    logger:logger
-                                isOptional:YES];
-    
-}
-
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromIoDataValue:ioDataValue
-                                  logger:logger
-                              isOptional:NO];
-}
-
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromIoDataValue:ioDataValue
-                                  logger:logger
-                              isOptional:YES];
-}
-
-- (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue {
-    self = [super init];
-    
-    _uIntegerValue = uIntegerValue;
-    
-    return self;
-}
-
-- (nullable instancetype)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-#pragma mark - Private constructors
-+ (nonnull instancetype)zeroInstance {
     static dispatch_once_t zeroInstanceToken;
     static id zeroInstance;
     dispatch_once(&zeroInstanceToken, ^{
@@ -80,7 +29,7 @@
     return zeroInstance;
 }
 
-+ (nonnull instancetype)oneInstance {
++ (nonnull instancetype)instanceAtOne {
     static dispatch_once_t oneInstanceToken;
     static id oneInstance;
     dispatch_once(&oneInstanceToken, ^{
@@ -89,43 +38,97 @@
     return oneInstance;
 }
 
-+ (nullable instancetype)instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
-                                            logger:(nonnull ADJLogger *)logger
-                                        isOptional:(BOOL)isOptional {
++ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
+    instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
+{
     if (integerNumber == nil) {
-        if (! isOptional) {
-            [logger debugDev:@"Cannot create non negative int with nil integer number value"
-                   issueType:ADJIssueInvalidInput];
-        }
-        return nil;
+        return [ADJResultNN failWithMessage:
+                @"Cannot create non negative int with nil integer number"];
     }
-    
+
     if (integerNumber.integerValue < 0) {
-        [logger debugDev:@"Cannot create non negative int with negative value"
-                     key:@"number"
-                   value:[ADJUtilF integerFormat:integerNumber.integerValue].description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [self failMessageWithNegativeIntegerNumber:integerNumber]];
     }
-    
-    return [[self alloc] initWithUIntegerValue:integerNumber.unsignedIntegerValue];
+
+    return [ADJResultNN okWithValue:
+            [[ADJNonNegativeInt alloc] initWithUIntegerValue:integerNumber.unsignedIntegerValue]];
 }
 
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger
-                                      isOptional:(BOOL)isOptional {
-    if (ioDataValue == nil) {
-        if (! isOptional) {
-            [logger debugDev:@"Cannot create non negative int with IoData value"
-                   issueType:ADJIssueStorageIo];
-        }
-        return nil;
++ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
+    instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber
+{
+    if (integerNumber == nil) {
+        return [ADJResultNL okWithoutValue];
     }
-    
-    return [self instanceFromIntegerNumber:
-            [ADJUtilConv convertToIntegerNumberWithStringValue:ioDataValue.stringValue]
-                                    logger:logger
-                                isOptional:isOptional];
+
+    if (integerNumber.integerValue < 0) {
+        return [ADJResultNL failWithMessage:
+                [self failMessageWithNegativeIntegerNumber:integerNumber]];
+    }
+
+    return [ADJResultNL okWithValue:
+            [[ADJNonNegativeInt alloc] initWithUIntegerValue:integerNumber.unsignedIntegerValue]];
+
+}
++ (nonnull NSString *)
+    failMessageWithNegativeIntegerNumber:(nonnull NSNumber *)negativeIntegerNumber
+{
+    return [NSString stringWithFormat:
+            @"Cannot create non negative int with negative value: %@",
+            [ADJUtilF integerFormat:negativeIntegerNumber.integerValue]];
+}
+
++ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    if (ioDataValue == nil) {
+        return [ADJResultNN failWithMessage:
+                @"Cannot create non negative int with nil IoData"];
+    }
+
+    ADJResultNN<NSNumber *> *_Nonnull integerNumberResult =
+        [ADJUtilConv convertToIntegerNumberWithStringValue:ioDataValue.stringValue];
+    if (integerNumberResult.failMessage != nil) {
+        return [ADJResultNN failWithMessage:
+                [self failMessageFromConversionWithFailMessage:integerNumberResult.failMessage]];
+    }
+
+    return [self instanceFromIntegerNumber:integerNumberResult.value];
+}
++ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    if (ioDataValue == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    ADJResultNN<NSNumber *> *_Nonnull integerNumberResult =
+        [ADJUtilConv convertToIntegerNumberWithStringValue:ioDataValue.stringValue];
+    if (integerNumberResult.failMessage != nil) {
+        return [ADJResultNL failWithMessage:
+                [self failMessageFromConversionWithFailMessage:integerNumberResult.failMessage]];
+    }
+
+    return [self instanceFromOptionalIntegerNumber:integerNumberResult.value];
+}
++ (nonnull NSString *)
+    failMessageFromConversionWithFailMessage:(nonnull NSString *)failMessage
+{
+    return [NSString stringWithFormat:@"Could not convert from string to integer: %@", failMessage];
+}
+
+- (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue {
+    self = [super init];
+
+    _uIntegerValue = uIntegerValue;
+
+    return self;
+}
+
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 #pragma mark Public API
@@ -191,4 +194,3 @@
 }
 
 @end
-

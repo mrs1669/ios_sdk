@@ -27,7 +27,9 @@
     return [self oneInstance];
 }
 
-+ (nullable instancetype)instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt {
++ (nullable instancetype)
+    instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt
+{
     if (nonNegativeInt == nil) {
         return nil;
     }
@@ -35,18 +37,33 @@
     return [[self alloc] initWithCountValue:nonNegativeInt];
 }
 
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromOptionalNonNegativeInt:
-            [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
-                                                logger:logger]];
++ (nonnull ADJResultNN<ADJTallyCounter *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
+    if (nnIntResult.failMessage != nil) {
+        return [ADJResultNN failWithMessage:nnIntResult.failMessage];
+    }
+
+    return [ADJResultNN okWithValue:
+            [[ADJTallyCounter alloc] initWithCountValue:nnIntResult.value]];
 }
 
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromOptionalNonNegativeInt:
-            [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
-                                                        logger:logger]];
++ (nonnull ADJResultNL<ADJTallyCounter *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
+    if (nnIntResult.failMessage != nil) {
+        return [ADJResultNL failWithMessage:nnIntResult.failMessage];
+    }
+    if (nnIntResult.value == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    return [ADJResultNL okWithValue:
+            [[ADJTallyCounter alloc] initWithCountValue:nnIntResult.value]];
 }
 
 - (nonnull instancetype)initWithCountValue:(nonnull ADJNonNegativeInt *)countValue {

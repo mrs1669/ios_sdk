@@ -157,20 +157,20 @@
 
     if (inputLogMessageData.messageParams != nil) {
         [stringBuilder appendFormat:@" %@",
-         [ADJLogMessageData generateJsonFromFoundationDictionary:
+         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
           inputLogMessageData.messageParams]];
     }
 
     if (inputLogMessageData.nsError != nil) {
         [stringBuilder appendFormat:@" %@",
-         [ADJLogMessageData generateJsonFromFoundationDictionary:
+         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
           [ADJLogMessageData generateFoundationDictionaryFromNsError:
            inputLogMessageData.nsError]]];
     }
 
     if (inputLogMessageData.nsException != nil) {
         [stringBuilder appendFormat:@" %@",
-         [ADJLogMessageData generateJsonFromFoundationDictionary:
+         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
           [ADJLogMessageData generateFoundationDictionaryFromNsException:
            inputLogMessageData.nsException]]];
     }
@@ -216,7 +216,7 @@
             issueFormat,
             logMessageData.inputData.message,
             [ADJLogMessageData
-             generateJsonFromFoundationDictionary:foundationDictionary]];
+             generateJsonStringFromFoundationDictionary:foundationDictionary]];
 }
 
 + (nonnull NSString *)logLevelFormat:(nonnull ADJAdjustLogLevel)logLevel {

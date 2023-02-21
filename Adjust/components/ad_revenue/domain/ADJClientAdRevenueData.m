@@ -107,10 +107,13 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         }
     }
 
-    ADJNonNegativeInt *_Nullable adImpressionsCount =
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
         [ADJNonNegativeInt
-            instanceFromOptionalIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber
-            logger:logger];
+            instanceFromOptionalIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber];
+    if (adImpressionsCountResult.failMessage != nil) {
+        [logger noticeClient:@"Cannot use invalid ad impressions count"
+                 failMessage:adImpressionsCountResult.failMessage];
+    }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull adRevenueNetworkResult =
         [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueNetwork];
@@ -147,7 +150,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
     return [[self alloc] initWithSource:sourceResult.value
                                 revenue:revenue
-                     adImpressionsCount:adImpressionsCount
+                     adImpressionsCount:adImpressionsCountResult.value
                        adRevenueNetwork:adRevenueNetworkResult.value
                           adRevenueUnit:adRevenueUnitResult.value
                      adRevenuePlacement:adRevenuePlacementResult.value
@@ -186,13 +189,17 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
          currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
     }
 
-    ADJNonEmptyString *_Nullable adImpressionsCountIoValue =
-        [propertiesMap pairValueWithKey:kAdImpressionsCountKey];
-    ADJNonNegativeInt *_Nullable adImpressionsCount =
-        [ADJNonNegativeInt instanceFromOptionalIoDataValue:adImpressionsCountIoValue
-                                                    logger:logger];
-    if (adImpressionsCount != nil) {
-        [adjustAdRevenue setAdImpressionsCountWithInteger:adImpressionsCount.uIntegerValue];
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
+        [ADJNonNegativeInt instanceFromOptionalIoDataValue:
+         [propertiesMap pairValueWithKey:kAdImpressionsCountKey]];
+    if (adImpressionsCountResult.failMessage != nil) {
+        [logger debugDev:@"Invalid ad impressions count from client action injected io data"
+             failMessage:adImpressionsCountResult.failMessage
+               issueType:ADJIssueInvalidInput];
+    }
+    if (adImpressionsCountResult.value != nil) {
+        [adjustAdRevenue setAdImpressionsCountWithInteger:
+         adImpressionsCountResult.value.uIntegerValue];
     }
 
     ADJNonEmptyString *_Nullable adRevenueNetwork =
@@ -379,6 +386,3 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 }
 
 @end
-
-
-
