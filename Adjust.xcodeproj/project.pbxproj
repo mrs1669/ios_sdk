@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		07066DF429473DF800ABF24D /* adjust_config.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DEF29473DF700ABF24D /* adjust_config.js */; };
-		07066DF529473DF800ABF24D /* adjust_revenue.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF029473DF700ABF24D /* adjust_revenue.js */; };
-		07066DF629473DF800ABF24D /* adjust_event.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF129473DF700ABF24D /* adjust_event.js */; };
-		07066DF729473DF800ABF24D /* adjust_third_party_sharing.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF229473DF800ABF24D /* adjust_third_party_sharing.js */; };
 		07066DF829473DF800ABF24D /* adjust.js in Resources */ = {isa = PBXBuildFile; fileRef = 07066DF329473DF800ABF24D /* adjust.js */; };
 		070DA83628882B3A008486CB /* ADJClock.m in Sources */ = {isa = PBXBuildFile; fileRef = 070DA83428882B3A008486CB /* ADJClock.m */; };
 		071594042886E3B400E7F2F8 /* ADJV4RestMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = 071594022886E3B400E7F2F8 /* ADJV4RestMigration.m */; };
@@ -619,21 +615,6 @@
 		07DD776E28B50BDE005A2245 /* ADJAdRevenueResponseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DD776C28B50BDE005A2245 /* ADJAdRevenueResponseData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		07DD776F28B50BDE005A2245 /* ADJAdRevenueResponseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DD776D28B50BDE005A2245 /* ADJAdRevenueResponseData.m */; };
 		07F3A7DA2888314600A572C6 /* ADJRelativeTimestamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F3A7D82888314600A572C6 /* ADJRelativeTimestamp.m */; };
-		07F40B09299CEC9000BDECB6 /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; };
-		07F40B0A299CEC9400BDECB6 /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
-		07F40B0B299CEC9700BDECB6 /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; };
-		07F40B0C299CEC9A00BDECB6 /* ADJLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */; };
-		07F40B0D299CECB800BDECB6 /* ADJAdjustInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A80006D2911426700CEDC05 /* ADJAdjustInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		07F40B0E299CECCF00BDECB6 /* ADJInstanceRoot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A67F1AB29151AFB00AC684A /* ADJInstanceRoot.h */; };
-		07F40B0F299CECD200BDECB6 /* ADJInstanceRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A67F1AC29151AFB00AC684A /* ADJInstanceRoot.m */; };
-		07F40B10299CECF200BDECB6 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
-		07F40B11299CECF500BDECB6 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
-		07F40B12299CED0700BDECB6 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
-		07F40B13299CED0900BDECB6 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
-		07F40B14299CED1900BDECB6 /* ADJPublishersRegistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A67F216292E2ECB00AC684A /* ADJPublishersRegistry.h */; };
-		07F40B15299CED1D00BDECB6 /* ADJPublishersRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A67F217292E2ECB00AC684A /* ADJPublishersRegistry.m */; };
-		07F40B16299CED3200BDECB6 /* ADJSdkActiveController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A67F202291E6B4700AC684A /* ADJSdkActiveController.h */; };
-		07F40B17299CED3500BDECB6 /* ADJSdkActiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A67F203291E6B4700AC684A /* ADJSdkActiveController.m */; };
 		07F40AE2299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F40AE0299A7E0100BDECB6 /* ADJPushTokenStateStorage.m */; };
 		07F40AE3299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F40AE0299A7E0100BDECB6 /* ADJPushTokenStateStorage.m */; };
 		07F40AE4299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F40AE0299A7E0100BDECB6 /* ADJPushTokenStateStorage.m */; };
@@ -662,6 +643,21 @@
 		07F40AFD299A7E1900BDECB6 /* ADJPushTokenStateData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F40AF1299A7E1800BDECB6 /* ADJPushTokenStateData.h */; };
 		07F40AFE299A7E1900BDECB6 /* ADJPushTokenStateData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F40AF1299A7E1800BDECB6 /* ADJPushTokenStateData.h */; };
 		07F40AFF299A7E1900BDECB6 /* ADJPushTokenStateData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F40AF1299A7E1800BDECB6 /* ADJPushTokenStateData.h */; };
+		07F40B09299CEC9000BDECB6 /* ADJInputLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF48290ACA9E009F1DAD /* ADJInputLogMessageData.h */; };
+		07F40B0A299CEC9400BDECB6 /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
+		07F40B0B299CEC9700BDECB6 /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; };
+		07F40B0C299CEC9A00BDECB6 /* ADJLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */; };
+		07F40B0D299CECB800BDECB6 /* ADJAdjustInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A80006D2911426700CEDC05 /* ADJAdjustInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		07F40B0E299CECCF00BDECB6 /* ADJInstanceRoot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A67F1AB29151AFB00AC684A /* ADJInstanceRoot.h */; };
+		07F40B0F299CECD200BDECB6 /* ADJInstanceRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A67F1AC29151AFB00AC684A /* ADJInstanceRoot.m */; };
+		07F40B10299CECF200BDECB6 /* ADJLocalThreadController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F85479229185EBA008F6F42 /* ADJLocalThreadController.h */; };
+		07F40B11299CECF500BDECB6 /* ADJLocalThreadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F85479329185EBA008F6F42 /* ADJLocalThreadController.m */; };
+		07F40B12299CED0700BDECB6 /* ADJAtomicTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F854772291851EB008F6F42 /* ADJAtomicTallyCounter.h */; };
+		07F40B13299CED0900BDECB6 /* ADJAtomicTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F854773291851EB008F6F42 /* ADJAtomicTallyCounter.m */; };
+		07F40B14299CED1900BDECB6 /* ADJPublishersRegistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A67F216292E2ECB00AC684A /* ADJPublishersRegistry.h */; };
+		07F40B15299CED1D00BDECB6 /* ADJPublishersRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A67F217292E2ECB00AC684A /* ADJPublishersRegistry.m */; };
+		07F40B16299CED3200BDECB6 /* ADJSdkActiveController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A67F202291E6B4700AC684A /* ADJSdkActiveController.h */; };
+		07F40B17299CED3500BDECB6 /* ADJSdkActiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A67F203291E6B4700AC684A /* ADJSdkActiveController.m */; };
 		07F8025A2892867A0068902F /* ADJAdjustEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F802582892867A0068902F /* ADJAdjustEvent.m */; };
 		07F8025F289287B30068902F /* ADJClientEventData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8025D289287B30068902F /* ADJClientEventData.m */; };
 		07F80279289288FF0068902F /* ADJMoney.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F80277289288FF0068902F /* ADJMoney.m */; };
@@ -3522,10 +3518,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		07066DEF29473DF700ABF24D /* adjust_config.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_config.js; sourceTree = "<group>"; };
-		07066DF029473DF700ABF24D /* adjust_revenue.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_revenue.js; sourceTree = "<group>"; };
-		07066DF129473DF700ABF24D /* adjust_event.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_event.js; sourceTree = "<group>"; };
-		07066DF229473DF800ABF24D /* adjust_third_party_sharing.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust_third_party_sharing.js; sourceTree = "<group>"; };
 		07066DF329473DF800ABF24D /* adjust.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = adjust.js; sourceTree = "<group>"; };
 		070DA83328882B3A008486CB /* ADJClock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClock.h; sourceTree = "<group>"; };
 		070DA83428882B3A008486CB /* ADJClock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJClock.m; sourceTree = "<group>"; };
@@ -4496,10 +4488,6 @@
 				0755868229092F1000A3AD50 /* AdjustSdkWebBridge.h */,
 				075586A329093BDB00A3AD50 /* ADJAdjustBridge.h */,
 				075586A429093BDB00A3AD50 /* ADJAdjustBridge.m */,
-				07066DEF29473DF700ABF24D /* adjust_config.js */,
-				07066DF129473DF700ABF24D /* adjust_event.js */,
-				07066DF029473DF700ABF24D /* adjust_revenue.js */,
-				07066DF229473DF800ABF24D /* adjust_third_party_sharing.js */,
 				07066DF329473DF800ABF24D /* adjust.js */,
 			);
 			path = AdjustSdkWebBridge;
@@ -7390,11 +7378,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07066DF529473DF800ABF24D /* adjust_revenue.js in Resources */,
-				07066DF429473DF800ABF24D /* adjust_config.js in Resources */,
 				07066DF829473DF800ABF24D /* adjust.js in Resources */,
-				07066DF629473DF800ABF24D /* adjust_event.js in Resources */,
-				07066DF729473DF800ABF24D /* adjust_third_party_sharing.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

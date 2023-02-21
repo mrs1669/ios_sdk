@@ -24,17 +24,9 @@
 - (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
 
     if ([webView isKindOfClass:WKWebView.class]) {
-
         self.webView = webView;
-
         WKUserContentController *controller = webView.configuration.userContentController;
-
         [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_config"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_event"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_revenue"]];
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust_third_party_sharing"]];
-
         [controller addScriptMessageHandler:self name:@"adjust"];
     }
 }
@@ -172,7 +164,7 @@
     } else if ([action isEqual:@"adjust_appWentToTheForegroundManualCall"]) {
 
         [[ADJAdjust instanceForId:instanceId] appWentToTheForegroundManualCall];
-        
+
     } else if ([action isEqual:@"adjust_teardown"]) {
 
         //        [ADJAdjustInternal teardownWithShouldClearStorage:YES sdkConfigDataBuilder:d];
@@ -346,4 +338,5 @@
 }
 
 @end
+
 

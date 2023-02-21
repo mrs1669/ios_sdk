@@ -207,4 +207,223 @@ AdjustInstance.prototype.appWentToTheForegroundManualCall = function() {
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
 
+function AdjustConfig(appToken, environment, legacy) {
+    this.appToken = appToken;
+    this.environment = environment;
+    this.sendInBackground = null;
+    this.logLevel = null;
+    this.defaultTracker = null;
+    this.openDeferredDeeplink = null;
+    this.eventDeduplicationListLimit = null;
+    this.externalDeviceId = null;
+    this.coppaCompliantEnabled = null;
+    this.urlStrategy = null;
+    this.dataResidency = null;
+    this.needsCost = null;
+    this.customEndpointUrl = null;
+    this.customEndpointPublicKeyHash = null;
 
+    this.adjustAttributionChangedSubscriberCallbackId = null;
+    this.adjustAttributionChangedSubscriberCallback = null;
+    this.adjustAttributionReadSubscriberCallbackId = null;
+    this.adjustAttributionReadSubscriberCallback = null;
+    this.adjustIdentifierReadSubscriberCallbackId = null;
+    this.adjustIdentifierReadSubscriberCallback = null;
+    this.adjustIdentifierChangedSubscriberCallbackId = null;
+    this.adjustIdentifierChangedSubscriberCallback = null;
+
+}
+
+AdjustConfig.EnvironmentSandbox = 'sandbox';
+AdjustConfig.EnvironmentProduction = 'production';
+
+AdjustConfig.UrlStrategyIndia = "INDIA";
+AdjustConfig.UrlStrategyChina = "CHINA";
+
+AdjustConfig.DataResidencyEU = "EU";
+AdjustConfig.DataResidencyTR = "TR";
+AdjustConfig.DataResidencyUS = "US";
+
+AdjustConfig.LogLevelDebug = 'DEBUG',
+AdjustConfig.LogLevelInfo = 'INFO',
+AdjustConfig.LogLevelError = 'ERROR',
+
+AdjustConfig.prototype.setSendInBackground = function(isEnabled) {
+    this.sendInBackground = isEnabled;
+};
+
+AdjustConfig.prototype.setLogLevel = function(logLevel) {
+    this.logLevel = logLevel;
+};
+
+AdjustConfig.prototype.setDefaultTracker = function(defaultTracker) {
+    this.defaultTracker = defaultTracker;
+};
+
+AdjustConfig.prototype.setAdjustAttributionSubscriber = function(attributionReadCallback, attributionChangedCallback) {
+    this.adjustAttributionReadSubscriberCallbackId =
+        'setAdjustAttributionSubscriber_adjustAttributionRead';
+    this.adjustAttributionReadSubscriberCallback = attributionReadCallback;
+
+    this.adjustAttributionChangedSubscriberCallbackId =
+        'setAdjustAttributionSubscriber_adjustAttributionChanged';
+    this.adjustAttributionChangedSubscriberCallback = attributionChangedCallback;
+};
+
+AdjustConfig.prototype.setAdjustIdentifierSubscriber = function(adidReadCallback, adidChangeCallback) {
+    this.adjustIdentifierReadSubscriberCallbackId =
+        'setAdjustIdentifierSubscriber_adjustIdentifierRead';
+    this.adjustIdentifierReadSubscriberCallback = adidReadCallback;
+
+    this.adjustIdentifierChangedSubscriberCallbackId =
+        'setAdjustIdentifierSubscriber_adjustIdentifierChanged';
+    this.adjustIdentifierChangedSubscriberCallback = adidChangedCallback;
+};
+
+AdjustConfig.prototype.setOpenDeferredDeeplink = function(shouldOpen) {
+    this.openDeferredDeeplink = shouldOpen;
+};
+
+AdjustConfig.prototype.allowSendingFromBackground = function() {
+    this.sendInBackground = true;
+};
+
+AdjustConfig.prototype.setEventDeduplicationListLimit = function(limit) {
+    this.eventDeduplicationListLimit = limit;
+};
+
+AdjustConfig.prototype.setExternalDeviceId = function(externalDevId){
+    this.externalDeviceId = externalDevId;
+};
+
+AdjustConfig.prototype.setCoppaCompliantEnabled = function() {
+    this.coppaCompliantEnabled = true;
+};
+
+AdjustConfig.prototype.setUrlStrategy = function(urlStrategy) {
+    this.urlStrategy = urlStrategy;
+};
+
+AdjustConfig.prototype.setDataResidency = function(dataResidency) {
+    this.dataResidency = dataResidency;
+};
+
+AdjustConfig.prototype.setNeedsCostEnabled = function(){
+    this.needsCost = true;
+};
+
+AdjustConfig.prototype.setCustomEndpoint = function(customEndpointUrl, optionalPublicKeyKeyHash) {
+    this.customEndpointUrl = customEndpointUrl;
+    this.customEndpointPublicKeyHash = optionalPublicKeyKeyHash
+};
+
+function AdjustEvent(eventId) {
+    this.eventId = eventId;
+    this.revenue = null;
+    this.currency = null;
+    this.deduplicationId = null;
+    this.callbackParameters = [];
+    this.partnerParameters = [];
+}
+
+AdjustEvent.prototype.setRevenue = function(revenue, currency) {
+    this.revenue = revenue;
+    this.currency = currency;
+};
+
+AdjustEvent.prototype.addCallbackParameter = function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
+    this.callbackParameters.push(key);
+    this.callbackParameters.push(value);
+};
+
+AdjustEvent.prototype.addPartnerParameter = function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
+    this.partnerParameters.push(key);
+    this.partnerParameters.push(value);
+};
+
+AdjustEvent.prototype.setDeduplicationId = function(deduplicationId) {
+    this.deduplicationId = deduplicationId;
+};
+
+function AdjustAdRevenue(source) {
+    this.source = source;
+    this.revenue = null;
+    this.currency = null;
+
+    this.adRevenueUnit = null;
+    this.adRevenueNetwork = null;
+    this.adRevenuePlacement = null;
+
+    this.adImpressionsCount = null;
+    this.callbackParameters = [];
+    this.partnerParameters = [];
+}
+
+AdjustAdRevenue.prototype.setAdRevenue = function(revenue, currency) {
+    this.revenue = revenue;
+    this.currency = currency;
+};
+
+AdjustAdRevenue.prototype.addCallbackParameter = function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
+    this.callbackParameters.push(key);
+    this.callbackParameters.push(value);
+};
+
+AdjustAdRevenue.prototype.addPartnerParameter = function(key, value) {
+    if (typeof key !== 'string' || typeof value !== 'string') {
+        console.log('Passed key or value is not of string type');
+        return;
+    }
+    this.partnerParameters.push(key);
+    this.partnerParameters.push(value);
+};
+
+AdjustAdRevenue.prototype.setAdImpressionsCount = function(adImpressionsCount) {
+    this.adImpressionsCount = adImpressionsCount;
+};
+
+AdjustAdRevenue.prototype.setAdRevenueNetwork = function(adRevenueNetwork) {
+    this.adRevenueNetwork = adRevenueNetwork;
+};
+
+AdjustAdRevenue.prototype.setAdRevenueUnit= function(adRevenueUnit) {
+    this.adRevenueUnit = adRevenueUnit;
+};
+
+AdjustAdRevenue.prototype.setAdRevenuePlacement = function(adRevenuePlacement) {
+    this.adRevenuePlacement = adRevenuePlacement;
+};
+
+
+
+
+
+function AdjustThirdPartySharing(isEnabled) {
+    this.isEnabled = isEnabled;
+    this.granularOptions = [];
+    this.partnerSharingSettings = [];
+}
+
+AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key, value) {
+    this.granularOptions.push(partnerName);
+    this.granularOptions.push(key);
+    this.granularOptions.push(value);
+};
+
+AdjustThirdPartySharing.prototype.addPartnerSharingSettings = function(partnerName, key, value) {
+    this.partnerSharingSettings.push(partnerName);
+    this.partnerSharingSettings.push(key);
+    this.partnerSharingSettings.push(value);
+};
