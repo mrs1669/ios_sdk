@@ -41,7 +41,7 @@ AdjustInstance.prototype.initSDK = function(adjustConfig) {
     const message = {
     action:'adjust_initSdk',
     instanceId: this.instanceId,
-    data: adjustConfig,
+    data: adjustConfig
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 };
@@ -201,11 +201,10 @@ AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartyShari
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
 
-AdjustInstance.prototype.teardown = function(adjustConfig) {
+AdjustInstance.prototype.teardown = function() {
     const message = {
     action:'adjust_teardown',
-    instanceId: this.instanceId,
-    data: adjustConfig
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -302,8 +301,8 @@ AdjustConfig.prototype.setNeedsCostEnabled = function(){
     this.needsCost = true;
 };
 
-AdjustConfig.prototype.setExternalDeviceId = function(externalDevId){
-    this.externalDeviceId = externalDevId;
+AdjustConfig.prototype.setExternalDeviceId = function(externalDeviceId){
+    this.externalDeviceId = externalDeviceId;
 };
 
 AdjustConfig.prototype.setCustomEndpoint = function(customEndpointUrl, optionalPublicKeyKeyHash) {

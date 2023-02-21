@@ -185,7 +185,7 @@
 
     } else if ([action isEqual:@"adjust_teardown"]) {
 
-        //        [ADJAdjustInternal teardownWithShouldClearStorage:YES sdkConfigDataBuilder:d];
+      // TODO: Do we need this?
     }
 }
 

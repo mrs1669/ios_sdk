@@ -35,6 +35,7 @@
             function adjustInitSdk() {
                 var adjustConfig = new AdjustConfig('2fm9gkqubvpc', AdjustConfig.EnvironmentSandbox);
                 adjustConfig.setAttributionCallback(true);
+                adjustConfig.setLogLevel(AdjustConfig.LogLevelAll);
                 Adjust.instance().initSDK(adjustConfig);
             }
 
