@@ -80,8 +80,8 @@
 - (void)handleMessageFromWebview:(NSDictionary<NSString *,id> *)message {
 
     NSString *action = [message objectForKey:@"action"];
-    NSDictionary *data = [message objectForKey:@"data"];
     NSString *instanceId = [message objectForKey:@"instanceId"];
+    NSDictionary *data = [message objectForKey:@"data"];
 
     if ([action isEqual:@"adjust_initSdk"]) {
 

@@ -40,6 +40,7 @@ function AdjustInstance(instanceId) {
 AdjustInstance.prototype.initSDK = function(adjustConfig) {
     const message = {
     action:'adjust_initSdk',
+    instanceId: this.instanceId,
     data: adjustConfig,
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -48,6 +49,7 @@ AdjustInstance.prototype.initSDK = function(adjustConfig) {
 AdjustInstance.prototype.trackEvent = function(adjustEvent) {
     const message = {
     action:'adjust_trackEvent',
+    instanceId: this.instanceId,
     data: adjustEvent
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -56,6 +58,7 @@ AdjustInstance.prototype.trackEvent = function(adjustEvent) {
 AdjustInstance.prototype.trackAdRevenue = function(adjustRevenue) {
     const message = {
     action:'adjust_trackAdRevenue',
+    instanceId: this.instanceId,
     data: adjustRevenue
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -64,6 +67,7 @@ AdjustInstance.prototype.trackAdRevenue = function(adjustRevenue) {
 AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
     const message = {
     action:'adjust_trackDeeplink',
+    instanceId: this.instanceId,
     data: url
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -72,6 +76,7 @@ AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
 AdjustInstance.prototype.trackPushToken = function(token) {
     const message = {
     action:'adjust_trackPushToken',
+    instanceId: this.instanceId,
     data: token
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -80,6 +85,7 @@ AdjustInstance.prototype.trackPushToken = function(token) {
 AdjustInstance.prototype.switchToOfflineMode = function() {
     const message = {
     action:'adjust_switchToOfflineMode',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -87,6 +93,7 @@ AdjustInstance.prototype.switchToOfflineMode = function() {
 AdjustInstance.prototype.switchBackToOnlineMode = function() {
     const message = {
     action:'adjust_switchBackToOnlineMode',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -94,6 +101,7 @@ AdjustInstance.prototype.switchBackToOnlineMode = function() {
 AdjustInstance.prototype.inactivateSdk = function() {
     const message = {
     action:'adjust_inactivateSdk',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -101,6 +109,7 @@ AdjustInstance.prototype.inactivateSdk = function() {
 AdjustInstance.prototype.reactivateSdk = function() {
     const message = {
     action:'adjust_reactivateSdk',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -112,6 +121,7 @@ AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
     }
     const message = {
     action:'adjust_addGlobalCallbackParameter',
+    instanceId: this.instanceId,
     key: key,
     value: value
     };
@@ -125,6 +135,7 @@ AdjustInstance.prototype.removeGlobalCallbackParameter = function(key) {
     }
     const message = {
     action:'adjust_removeGlobalCallbackParameterByKey',
+    instanceId: this.instanceId,
     key: key,
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -133,6 +144,7 @@ AdjustInstance.prototype.removeGlobalCallbackParameter = function(key) {
 AdjustInstance.prototype.clearAllGlobalCallbackParameters = function() {
     const message = {
     action:'adjust_clearAllGlobalCallbackParameters',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 },
@@ -144,6 +156,7 @@ AdjustInstance.prototype.addGlobalPartnerParameter = function(key, value) {
     }
     const message = {
     action:'adjust_addGlobalPartnerParameter',
+    instanceId: this.instanceId,
     key: key,
     value: value
     };
@@ -157,6 +170,7 @@ AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
     }
     const message = {
     action:'adjust_removeGlobalPartnerParameterByKey',
+    instanceId: this.instanceId,
     key: key,
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -165,6 +179,7 @@ AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
 AdjustInstance.prototype.clearAllGlobalPartnerParameters = function() {
     const message = {
     action:'adjust_clearAllGlobalPartnerParameters',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -172,6 +187,7 @@ AdjustInstance.prototype.clearAllGlobalPartnerParameters = function() {
 AdjustInstance.prototype.gdprForgetMe = function() {
     const message = {
     action:'adjust_gdprForgetMe',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -179,6 +195,7 @@ AdjustInstance.prototype.gdprForgetMe = function() {
 AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartySharing) {
     const message = {
     action:'adjust_trackThirdPartySharing',
+    instanceId: this.instanceId,
     data: adjustThirdPartySharing
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -187,6 +204,7 @@ AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartyShari
 AdjustInstance.prototype.teardown = function(adjustConfig) {
     const message = {
     action:'adjust_teardown',
+    instanceId: this.instanceId,
     data: adjustConfig
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
@@ -195,6 +213,7 @@ AdjustInstance.prototype.teardown = function(adjustConfig) {
 AdjustInstance.prototype.appWentToTheBackgroundManualCall = function() {
     const message = {
     action:'adjust_appWentToTheBackgroundManualCall',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
@@ -202,6 +221,7 @@ AdjustInstance.prototype.appWentToTheBackgroundManualCall = function() {
 AdjustInstance.prototype.appWentToTheForegroundManualCall = function() {
     const message = {
     action:'adjust_appWentToTheForegroundManualCall',
+    instanceId: this.instanceId
     };
     window.webkit.messageHandlers.adjust.postMessage(message);
 }
