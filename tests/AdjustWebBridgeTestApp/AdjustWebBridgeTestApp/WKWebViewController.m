@@ -35,10 +35,13 @@
     self.adjustBridge = [[ADJAdjustBridge alloc] init];
     [self.adjustBridge augmentedHybridWebView:webView];
 
-    self.testLibraryBridge = [[TestLibraryBridge alloc] initWithAdjustBridgeRegister:self.adjustBridge];
+    self.testLibraryBridge = [[TestLibraryBridge alloc]
+                              initWithAdjustBridgeRegister:self.adjustBridge];
 
-    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"AdjustTestApp-WebView" ofType:@"html"];
-    NSString *appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
+    NSString *htmlPath = [[NSBundle mainBundle]
+                          pathForResource:@"AdjustTestApp-WebView" ofType:@"html"];
+    NSString *appHtml = [NSString stringWithContentsOfFile:htmlPath
+                                                  encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
     [webView loadHTMLString:appHtml baseURL:baseURL];
 }

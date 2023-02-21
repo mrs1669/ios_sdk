@@ -44,7 +44,8 @@
 
 #pragma mark Handle Message from Test Webview
 
-- (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
+- (void)userContentController:(nonnull WKUserContentController *)userContentController
+      didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
 
     if ([message.body isKindOfClass:[NSDictionary class]]) {
 
@@ -112,8 +113,11 @@
 
 - (void)teardownAndApplyAddedTestOptionsSet {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *extraPath = [ATOAdjustTestOptions teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:baseUrl];
-        NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')", extraPath];
+        NSString *extraPath = [ATOAdjustTestOptions
+                               teardownAndApplyAddedTestOptionsSetWithUrlOverwrite:baseUrl];
+        NSString *javaScript = [NSString
+                                stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')",
+                                extraPath];
             [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
 
@@ -123,7 +127,9 @@
 
 - (void)executeCommandRawJson:(NSString *)json {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')", json];
+        NSString *javaScript = [NSString
+                                stringWithFormat:@"TestLibraryBridge.adjustCommandExecutor('%@')",
+                                json];
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
 }
