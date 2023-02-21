@@ -212,7 +212,7 @@ function AdjustConfig(appToken, environment, legacy) {
     this.sendInBackground = null;
     this.logLevel = null;
     this.defaultTracker = null;
-    this.openDeferredDeeplink = null;
+    this.openDeferredDeeplinkDeactivated = null;
     this.eventDeduplicationListLimit = null;
     this.externalDeviceId = null;
     this.coppaCompliantEnabled = null;
@@ -243,9 +243,8 @@ AdjustConfig.DataResidencyEU = "EU";
 AdjustConfig.DataResidencyTR = "TR";
 AdjustConfig.DataResidencyUS = "US";
 
-AdjustConfig.LogLevelDebug = 'DEBUG',
-AdjustConfig.LogLevelInfo = 'INFO',
-AdjustConfig.LogLevelError = 'ERROR',
+AdjustConfig.LogLevelAll = 'ALL',
+AdjustConfig.LogLevelDoNot = 'NO',
 
 AdjustConfig.prototype.setSendInBackground = function(isEnabled) {
     this.sendInBackground = isEnabled;
@@ -279,8 +278,8 @@ AdjustConfig.prototype.setAdjustIdentifierSubscriber = function(adidReadCallback
     this.adjustIdentifierChangedSubscriberCallback = adidChangedCallback;
 };
 
-AdjustConfig.prototype.setOpenDeferredDeeplink = function(shouldOpen) {
-    this.openDeferredDeeplink = shouldOpen;
+AdjustConfig.prototype.doNotOpenDeferredDeeplink = function() {
+    this.openDeferredDeeplinkDeactivated = true;
 };
 
 AdjustConfig.prototype.allowSendingFromBackground = function() {
@@ -289,10 +288,6 @@ AdjustConfig.prototype.allowSendingFromBackground = function() {
 
 AdjustConfig.prototype.setEventDeduplicationListLimit = function(limit) {
     this.eventDeduplicationListLimit = limit;
-};
-
-AdjustConfig.prototype.setExternalDeviceId = function(externalDevId){
-    this.externalDeviceId = externalDevId;
 };
 
 AdjustConfig.prototype.setCoppaCompliantEnabled = function() {
@@ -309,6 +304,10 @@ AdjustConfig.prototype.setDataResidency = function(dataResidency) {
 
 AdjustConfig.prototype.setNeedsCostEnabled = function(){
     this.needsCost = true;
+};
+
+AdjustConfig.prototype.setExternalDeviceId = function(externalDevId){
+    this.externalDeviceId = externalDevId;
 };
 
 AdjustConfig.prototype.setCustomEndpoint = function(customEndpointUrl, optionalPublicKeyKeyHash) {

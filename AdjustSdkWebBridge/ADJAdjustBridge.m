@@ -55,7 +55,8 @@
 }
 
 - (void)didReadWithAdjustAttribution:(ADJAdjustAttribution *)adjustAttribution {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC),
+                   dispatch_get_main_queue(), ^{
         NSString *adjustAttributionString = adjustAttribution.description;
         NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')",
                                 adjustAttributionString];
@@ -201,38 +202,49 @@
     NSString *defaultTracker = [data objectForKey:@"defaultTracker"];
     NSNumber *sendInBackground = [data objectForKey:@"sendInBackground"];
     NSString *logLevel = [data objectForKey:@"logLevel"];
-    NSNumber *coppaCompliantEnabled = [data objectForKey:@"coppaCompliantEnabled"];
-    NSNumber *linkMeEnabled = [data objectForKey:@"linkMeEnabled"];
-    NSNumber *allowiAdInfoReading = [data objectForKey:@"allowiAdInfoReading"];
-    NSNumber *allowAdServicesInfoReading = [data objectForKey:@"allowAdServicesInfoReading"];
-    NSNumber *allowIdfaReading = [data objectForKey:@"allowIdfaReading"];
-    NSNumber *allowSkAdNetworkHandling = [data objectForKey:@"allowSkAdNetworkHandling"];
-    NSNumber *openDeferredDeeplink = [data objectForKey:@"openDeferredDeeplink"];
+    NSNumber *openDeferredDeeplinkDeactivated = [data objectForKey:@"openDeferredDeeplinkDeactivated"];
     NSString *attributionCallback = [data objectForKey:@"attributionCallback"];
+    NSNumber *allowAdServicesInfoReading = [data objectForKey:@"allowAdServicesInfoReading"];
     NSString *urlStrategy = [data objectForKey:@"urlStrategy"];
+    //TODO: Features to be implemented.
+    //    NSNumber *coppaCompliantEnabled = [data objectForKey:@"coppaCompliantEnabled"];
+    //    NSNumber *linkMeEnabled = [data objectForKey:@"linkMeEnabled"];
+    //    NSNumber *allowiAdInfoReading = [data objectForKey:@"allowiAdInfoReading"];
+    //    NSNumber *allowIdfaReading = [data objectForKey:@"allowIdfaReading"];
+    //    NSNumber *allowSkAdNetworkHandling = [data objectForKey:@"allowSkAdNetworkHandling"];
 
     ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken
                                                                   environment:environment];
 
-    [adjustConfig doLogAll];
+
+    if ([logLevel isEqual:@"ALL"]) {
+        [adjustConfig doLogAll];
+    }
 
     [adjustConfig setUrlStrategy:urlStrategy];
     [adjustConfig setDefaultTracker:defaultTracker];
     [adjustConfig setCustomEndpointWithUrl:customEndpointUrl
                   optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
 
-    [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
-    [adjustConfig setAdjustAttributionSubscriber:self];
+    if (openDeferredDeeplinkDeactivated) {
+        [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
+    }
 
-    if ([self isFieldValid:eventDeduplicationListLimit]) {
-        [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
+    if (attributionCallback) {
+        [adjustConfig setAdjustAttributionSubscriber:self];
+    }
+
+    if (!allowAdServicesInfoReading) {
+        [adjustConfig doNotReadAppleSearchAdsAttributionNumberBool];
     }
 
     if (sendInBackground) {
         [adjustConfig allowSendingFromBackground];
     }
-
-    [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
+    
+    if ([self isFieldValid:eventDeduplicationListLimit]) {
+        [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
+    }
 
     [[ADJAdjust instanceForId:instanceId] initSdkWithConfiguration:adjustConfig];
 }
@@ -363,6 +375,4 @@
 }
 
 @end
-
-
 
