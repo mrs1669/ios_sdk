@@ -12,8 +12,6 @@
 #import "ADJUtilF.h"
 #import "ADJConstants.h"
 #import "ADJLocalThreadController.h"
-
-#import "ADJInstanceIdData.h"
 //#import <os/log.h>
 
 @interface ADJLogger ()
