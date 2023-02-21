@@ -10,9 +10,8 @@
 #import <WebKit/WebKit.h>
 
 #import "ADJAdjust.h"
-#import "ADJAdjustAttributionSubscriber.h"
 
-@interface ADJAdjustBridge : NSObject <WKScriptMessageHandler, ADJAdjustAttributionSubscriber>
+@interface ADJAdjustBridge : NSObject <WKScriptMessageHandler>
 
 @property (nonatomic, strong) WKWebView *_Nonnull webView;
 

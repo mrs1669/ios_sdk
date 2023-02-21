@@ -17,6 +17,11 @@
 #import "ADJAdjustAttribution.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustAttributionSubscriber.h"
+
+@interface ADJAdjustBridge() <ADJAdjustAttributionSubscriber>
+
+@end
 
 @implementation ADJAdjustBridge
 
@@ -26,7 +31,8 @@
     if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;
-        [self userContentController:controller didAddUserScript:[self getWebBridgeScriptFor:@"adjust"]];
+        [self userContentController:controller didAddUserScript:[self
+                                                                 getWebBridgeScriptFor:@"adjust"]];
         [controller addScriptMessageHandler:self name:@"adjust"];
     }
 }
@@ -34,34 +40,40 @@
 - (NSString *)getWebBridgeScriptFor:(NSString *)resource {
     NSBundle *sourceBundle = [NSBundle bundleForClass:self.class];
     NSString *adjustScriptPath = [sourceBundle pathForResource:resource ofType:@"js"];
-    NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath encoding:NSUTF8StringEncoding error:nil];
+    NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath
+                                                       encoding:NSUTF8StringEncoding error:nil];
     return adjustScript;
 }
 
-- (void)userContentController:(WKUserContentController *)controller didAddUserScript:(NSString *)javascript {
-    [controller addUserScript:[[WKUserScript.class alloc] initWithSource:javascript
-                                                           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                                        forMainFrameOnly:NO]];
+- (void)userContentController:(WKUserContentController *)controller
+             didAddUserScript:(NSString *)javascript {
+    [controller addUserScript:[[WKUserScript.class alloc]
+                               initWithSource:javascript
+                               injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                               forMainFrameOnly:NO]];
 
 }
 
 - (void)didReadWithAdjustAttribution:(ADJAdjustAttribution *)adjustAttribution {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         NSString *adjustAttributionString = adjustAttribution.description;
-        NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')", adjustAttributionString];
+        NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')",
+                                adjustAttributionString];
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
 }
 
 - (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     NSString *adjustAttributionString = adjustAttribution.description;
-    NSString *javaScript = [NSString stringWithFormat:@"didChangeWithAdjustAttribution('%@')", adjustAttributionString];
+    NSString *javaScript = [NSString stringWithFormat:@"didChangeWithAdjustAttribution('%@')",
+                            adjustAttributionString];
     [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 }
 
 #pragma mark - Handle Message from Web View
 
-- (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
+- (void)userContentController:(nonnull WKUserContentController *)userContentController
+      didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
     if ([message.body isKindOfClass:[NSDictionary class]]) {
         [self handleMessageFromWebview:message.body];
     }
@@ -79,7 +91,8 @@
 
     }else if ([action isEqual:@"adjust_getSdkVersion"]) {
 
-        NSString *javaScript = [NSString stringWithFormat:@"getSdkVersion('%@')", [ADJAdjustInternal sdkVersion]];
+        NSString *javaScript = [NSString stringWithFormat:@"getSdkVersion('%@')",
+                                [ADJAdjustInternal sdkVersion]];
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 
     } else  if ([action isEqual:@"adjust_trackEvent"]) {
@@ -96,7 +109,8 @@
             return;
         }
 
-        ADJAdjustPushToken *pushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:(NSString *)data];
+        ADJAdjustPushToken *pushToken = [[ADJAdjustPushToken alloc]
+                                         initWithStringPushToken:(NSString *)data];
         [[ADJAdjust instanceForId:instanceId] trackPushToken:pushToken];
 
     } else if ([action isEqual:@"adjust_switchToOfflineMode"]) {
@@ -113,7 +127,8 @@
             return;
         }
 
-        ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:(NSString *)data];
+        ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
+        [[ADJAdjustLaunchedDeeplink alloc] initWithString:(NSString *)data];
         [[ADJAdjust instanceForId:instanceId] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 
     } else if ([action isEqual: @"adjust_trackThirdPartySharing"]) {
@@ -201,22 +216,25 @@
 
     [adjustConfig doLogAll];
 
-    [adjustConfig doLogAll];
     [adjustConfig setUrlStrategy:urlStrategy];
     [adjustConfig setDefaultTracker:defaultTracker];
-    [adjustConfig setCustomEndpointWithUrl:customEndpointUrl optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
+    [adjustConfig setCustomEndpointWithUrl:customEndpointUrl
+                  optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
+
     [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
     [adjustConfig setAdjustAttributionSubscriber:self];
+
     if ([self isFieldValid:eventDeduplicationListLimit]) {
         [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
     }
+
     if (sendInBackground) {
         [adjustConfig allowSendingFromBackground];
     }
-    [[ADJAdjust instanceForId:instanceId] initSdkWithConfiguration:adjustConfig];
 
     [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
 
+    [[ADJAdjust instanceForId:instanceId] initSdkWithConfiguration:adjustConfig];
 }
 
 - (void)trackEvent:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
@@ -263,7 +281,8 @@
     id callbackParameters = [data objectForKey:@"callbackParameters"];
     id partnerParameters = [data objectForKey:@"partnerParameters"];
 
-    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc]
+                                                    initWithSource:adRevenueSource];
     [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
 
     if ([self isFieldValid:adImpressionsCount]) {
@@ -321,7 +340,8 @@
         NSString *partnerName = [[partnerSharingSettings objectAtIndex:i] description];
         NSString *key = [[partnerSharingSettings objectAtIndex:(i + 1)] description];
         BOOL value = [[partnerSharingSettings objectAtIndex:(i + 2)] boolValue];
-        [adjustThirdPartySharing addPartnerSharingSettingWithPartnerName:partnerName key:key value:value];
+        [adjustThirdPartySharing addPartnerSharingSettingWithPartnerName:partnerName
+                                                                     key:key value:value];
     }
 
     [[ADJAdjust instanceForId:instanceId] trackThirdPartySharing:adjustThirdPartySharing];
@@ -343,5 +363,6 @@
 }
 
 @end
+
 
 
