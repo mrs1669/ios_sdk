@@ -11,7 +11,7 @@
 
 #import "ADJAdjust.h"
 
-@interface ADJAdjustBridge : NSObject <WKScriptMessageHandler>
+@interface ADJAdjustBridge : NSObject
 
 @property (nonatomic, strong) WKWebView *_Nonnull webView;
 

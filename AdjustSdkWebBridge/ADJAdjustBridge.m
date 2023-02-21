@@ -19,7 +19,7 @@
 #import "ADJAdjustThirdPartySharing.h"
 #import "ADJAdjustAttributionSubscriber.h"
 
-@interface ADJAdjustBridge() <ADJAdjustAttributionSubscriber>
+@interface ADJAdjustBridge() <ADJAdjustAttributionSubscriber, WKScriptMessageHandler>
 
 @end
 
@@ -31,8 +31,10 @@
     if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;
-        [self userContentController:controller didAddUserScript:[self
-                                                                 getWebBridgeScriptFor:@"adjust"]];
+        [controller addUserScript:[[WKUserScript.class alloc]
+                                   initWithSource:[self getWebBridgeScriptFor:@"adjust"]
+                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                   forMainFrameOnly:NO]];
         [controller addScriptMessageHandler:self name:@"adjust"];
     }
 }
@@ -45,14 +47,7 @@
     return adjustScript;
 }
 
-- (void)userContentController:(WKUserContentController *)controller
-             didAddUserScript:(NSString *)javascript {
-    [controller addUserScript:[[WKUserScript.class alloc]
-                               initWithSource:javascript
-                               injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                               forMainFrameOnly:NO]];
-
-}
+#pragma mark - Attribution callbacks
 
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     NSString *adjustAttributionString = adjustAttribution.description;
@@ -212,7 +207,6 @@
 
     ADJAdjustConfig *adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:appToken
                                                                   environment:environment];
-
 
     if ([logLevel isEqual:@"ALL"]) {
         [adjustConfig doLogAll];
