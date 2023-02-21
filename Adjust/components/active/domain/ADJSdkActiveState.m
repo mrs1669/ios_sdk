@@ -12,9 +12,9 @@
 
 #pragma mark Fields
 #pragma mark - Public constants
-NSString *const ADJSdkActiveStatusActive = @"ACTIVE";
-NSString *const ADJSdkActiveStatusInactive = @"INACTIVE";
-NSString *const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
+ADJSdkActiveStatus const ADJSdkActiveStatusActive = @"ACTIVE";
+ADJSdkActiveStatus const ADJSdkActiveStatusInactive = @"INACTIVE";
+ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
 
 @interface ADJSdkActiveState ()
 #pragma mark - Internal variables

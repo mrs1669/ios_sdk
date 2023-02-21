@@ -16,9 +16,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString *ADJSdkActiveStatus NS_TYPED_ENUM;
-FOUNDATION_EXPORT NSString *const ADJSdkActiveStatusActive;
-FOUNDATION_EXPORT NSString *const ADJSdkActiveStatusInactive;
-FOUNDATION_EXPORT NSString *const ADJSdkActiveStatusForgotten;
+FOUNDATION_EXPORT ADJSdkActiveStatus const ADJSdkActiveStatusActive;
+FOUNDATION_EXPORT ADJSdkActiveStatus const ADJSdkActiveStatusInactive;
+FOUNDATION_EXPORT ADJSdkActiveStatus const ADJSdkActiveStatusForgotten;
 
 NS_ASSUME_NONNULL_END
 
