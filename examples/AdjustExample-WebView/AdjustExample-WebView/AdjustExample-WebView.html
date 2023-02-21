@@ -29,6 +29,7 @@
 
             window.onload = event => {
                 adjustInitSdk();
+                Adjust.getSdkVersion();
             };
 
             function adjustInitSdk() {
@@ -128,6 +129,10 @@
 
             function didReadWithAdjustAttribution(attributionValue) {
                 <!--               document.write(attributionValue)-->
+            }
+
+            function getSdkVersion(sdkVersion) {
+                console.log(sdkVersion);
             }
 
         </script></body>

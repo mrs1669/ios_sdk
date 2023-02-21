@@ -22,7 +22,6 @@ instance: function(instanceId = null) {
 getSdkVersion: function() {
         const message = {
         action:'adjust_getSdkVersion',
-        data: adjustEvent
         };
         window.webkit.messageHandlers.adjust.postMessage(message);
     },
@@ -405,10 +404,6 @@ AdjustAdRevenue.prototype.setAdRevenueUnit= function(adRevenueUnit) {
 AdjustAdRevenue.prototype.setAdRevenuePlacement = function(adRevenuePlacement) {
     this.adRevenuePlacement = adRevenuePlacement;
 };
-
-
-
-
 
 function AdjustThirdPartySharing(isEnabled) {
     this.isEnabled = isEnabled;

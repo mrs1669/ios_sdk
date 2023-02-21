@@ -7,22 +7,22 @@
 //
 
 #import "ADJAdjustBridge.h"
-#import "ADJAdjustInstance.h"
-#import "ADJAdjustConfig.h"
+
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustConfig.h"
+#import "ADJAdjustInternal.h"
+#import "ADJAdjustInstance.h"
 #import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustPushToken.h"
 #import "ADJAdjustAttribution.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
-#import "ADJAdjustInternal.h"
 
 @implementation ADJAdjustBridge
 
 #pragma mark - Init Web View
 
 - (void)augmentedHybridWebView:(WKWebView *_Nonnull)webView {
-
     if ([webView isKindOfClass:WKWebView.class]) {
         self.webView = webView;
         WKUserContentController *controller = webView.configuration.userContentController;
@@ -77,6 +77,11 @@
 
         [self sdkInitWithAdjustConfig:data forInstanceId:instanceId];
 
+    }else if ([action isEqual:@"adjust_getSdkVersion"]) {
+
+        NSString *javaScript = [NSString stringWithFormat:@"getSdkVersion('%@')", [ADJAdjustInternal sdkVersion]];
+        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
+
     } else  if ([action isEqual:@"adjust_trackEvent"]) {
 
         [self trackEvent:data forInstanceId:instanceId];
@@ -109,7 +114,7 @@
         }
 
         ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:(NSString *)data];
-        [[ADJAdjust instanceForId:instanceId]trackLaunchedDeeplink:adjustLaunchedDeeplink];
+        [[ADJAdjust instanceForId:instanceId] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 
     } else if ([action isEqual: @"adjust_trackThirdPartySharing"]) {
 
