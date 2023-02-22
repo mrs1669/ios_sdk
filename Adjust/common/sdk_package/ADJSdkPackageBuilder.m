@@ -30,7 +30,7 @@
 #pragma mark Fields
 @interface ADJSdkPackageBuilder ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) NSString *clientSdk;
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfigData;
 @property (nullable, readonly, weak, nonatomic) ADJDeviceController *deviceControllerWeak;
@@ -59,7 +59,7 @@
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
-    _clockWeak = clock;
+    _clock = clock;
     _clientSdk = [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
     _clientConfigData = clientConfigData;
     _deviceControllerWeak = deviceController;
@@ -464,7 +464,6 @@
     ADJStringMapBuilder *_Nonnull parametersBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     [self injectTimestampsWithParametersBuilder:parametersBuilder
-                                           path:path
                                    apiTimestamp:apiTimestamp];
 
     [self injectDeviceWithParametersBuilder:parametersBuilder
@@ -492,34 +491,27 @@
 }
 
 - (void)injectTimestampsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
-                                         path:(nullable NSString *)path
-                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+{
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamCalledAtKey
                          packageParamValueSerializable:apiTimestamp];
 
-    ADJClock *_Nullable clock = self.clockWeak;
-    if (clock == nil) {
-        [self.logger debugDev:@"Cannot inject created at for package without a reference to clock"
-                          key:@"path"
-                        value:path
-                    issueType:ADJIssueWeakReference];
-        return;
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    if (nowResult.failMessage != nil) {
+        [self.logger debugWithMessage:@"Cannot inject created at sending parameter in package"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
+         {
+            [logBuilder withSubject:@"now timestamp"
+                                why:@"failed to read from clock"];
+            [logBuilder withFailMessage:nowResult.failMessage
+                                  issue:ADJIssueExternalApi];
+        }];
+    } else {
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamCreatedAtKey
+                             packageParamValueSerializable:nowResult.value];
     }
-
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
-    if (nowResult.failMessage == nil) {
-        [self.logger debugDev:@"Cannot inject created at for package without a now timestamp"
-                          key:@"path"
-                        value:path
-                  failMessage:nowResult.failMessage
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamCreatedAtKey
-                         packageParamValueSerializable:nowResult.value];
 }
 
 - (void)injectDeviceWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

@@ -84,25 +84,30 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
     if (SQLITE_DONE == returnCode || SQLITE_ROW == returnCode) {
         // no error
     } else {
-        if (SQLITE_BUSY == returnCode || SQLITE_LOCKED == returnCode) {
+        if (SQLITE_BUSY == returnCode) {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Database busy"
+                                   errorCodeName:@"Busy"
+                             isQueryOrElseUpdate:YES];
+        } else if (SQLITE_LOCKED == returnCode) {
+            [self logSteppingErrorWithReturnCode:returnCode
+                                          logger:logger
+                                   errorCodeName:@"Locked"
                              isQueryOrElseUpdate:YES];
         } else if (SQLITE_ERROR == returnCode) {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Error"
+                                   errorCodeName:@"Error"
                              isQueryOrElseUpdate:YES];
         } else if (SQLITE_MISUSE == returnCode) {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Misuse"
+                                   errorCodeName:@"Misuse"
                              isQueryOrElseUpdate:YES];
         } else {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Unknown"
+                                   errorCodeName:@"Unknown"
                              isQueryOrElseUpdate:YES];
         }
     }
@@ -140,23 +145,23 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
         if (SQLITE_INTERRUPT == returnCode) {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Interrupted"
+                                   errorCodeName:@"Interrupt"
                              isQueryOrElseUpdate:NO];
         } else if (SQLITE_ERROR == returnCode) {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Error"
+                                   errorCodeName:@"Error"
                              isQueryOrElseUpdate:NO];
         }
         else if (SQLITE_MISUSE == returnCode) {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Misuse"
+                                   errorCodeName:@"Misuse"
                              isQueryOrElseUpdate:NO];
         } else {
             [self logSteppingErrorWithReturnCode:returnCode
                                           logger:logger
-                               reasonDescription:@"Unknown"
+                                   errorCodeName:@"Unknown"
                              isQueryOrElseUpdate:NO];
         }
     }
@@ -248,17 +253,19 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 #pragma mark Internal Methods
 - (void)logSteppingErrorWithReturnCode:(int)returnCode
                                 logger:(nonnull ADJLogger *)logger
-                     reasonDescription:(nonnull NSString *)reasonDescription
+                         errorCodeName:(nonnull NSString *)errorCodeName
                    isQueryOrElseUpdate:(BOOL)isQueryOrElseUpdate
 {
-    [logger debugDev:@"Error stepping"
-       messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
-                      reasonDescription, @"reason",
-                      isQueryOrElseUpdate ? @"true" : @"false", @"isQueryOrElseUpdate",
-                      self.sqlString, @"sql",
-                      [ADJUtilF intFormat:returnCode], @"returnCode",
-                      [self lastErrorMessage], @"lastErrorMessage", nil]
-           issueType:ADJIssueStorageIo];
+    [logger debugWithMessage:@"Error stepping"
+                builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+        [logBuilder withKey:@"sqlite error code name" value:errorCodeName];
+        [logBuilder withKey:@"is query or else update"
+                      value:[ADJUtilF boolFormat:isQueryOrElseUpdate]];
+        [logBuilder withKey:@"sql string" value:self.sqlString];
+        [logBuilder withKey:@"return code" value:[ADJUtilF intFormat:returnCode]];
+        [logBuilder withKey:@"last error message" value:[self lastErrorMessage]];
+        [logBuilder issue:ADJIssueStorageIo];
+    }];
 }
 
 - (nonnull NSString *)lastErrorMessage {

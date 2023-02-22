@@ -8,6 +8,9 @@
 
 #import "ADJInputLogMessageData.h"
 
+#import "ADJUtilF.h"
+#import "ADJConstants.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -131,3 +134,145 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 
 @end
 
+#pragma mark Fields
+#pragma mark - Public constants
+/*
+NSString *const ADJLogFromKey = @"from";
+NSString *const ADJLogInvalidValueKey = @"invalid_value";
+NSString *const ADJLogValueNameKey = @"value_name";
+NSString *const ADJLogExpectedKey = @"expected";
+NSString *const ADJLogActualKey = @"actual";
+NSString *const ADJLogFailMessageKey = @"fail_message";
+*/
+
+
+@interface ADJLogBuilder ()
+@property (nonnull, readonly, strong, nonatomic) NSString *message;
+@property (nonnull, readonly, strong, nonatomic) NSString *level;
+@property (nullable, readwrite, strong, nonatomic) NSString *callerThreadId;
+@property (nullable, readwrite, strong, nonatomic) NSString *callerDescription;
+@property (nullable, readwrite, strong, nonatomic) NSString *runningThreadId;
+@property (nullable, readwrite, strong, nonatomic) ADJIssue issueType;
+@property (nullable, readwrite, strong, nonatomic) NSError *nsError;
+@property (nullable, readwrite, strong, nonatomic) NSException* nsException;
+@property (nullable, readwrite, strong, nonatomic)
+    NSMutableDictionary<NSString *, id> *messageParams;
+
+@end
+
+@implementation ADJLogBuilder
+
++ (nonnull ADJLogBuilder *)debugBuilder:(nonnull NSString *)message {
+    return [[ADJLogBuilder alloc] initWithMessage:message
+                                            level:ADJAdjustLogLevelDebug];
+}
+
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level
+{
+    self = [super init];
+    _message = message;
+    _level = level;
+
+    _callerThreadId = nil;
+    _callerDescription = nil;
+    _runningThreadId = nil;
+    _issueType = nil;
+    _nsError = nil;
+    _nsException = nil;
+    _messageParams = nil;
+
+    return self;
+}
+
+- (nonnull ADJInputLogMessageData *)build {
+    return [[ADJInputLogMessageData alloc]
+            initWithMessage:self.message
+            level:self.level
+            issueType:self.issueType
+            callerThreadId:self.callerThreadId
+            callerDescription:self.callerDescription
+            runningThreadId:self.runningThreadId
+            nsError:self.nsError
+            nsException:self.nsException
+            messageParams:self.messageParams];
+}
+
+- (void)where:(nonnull NSString *)where {
+    [self withKey:ADJLogWhereKey constValue:where];
+}
+- (void)issue:(nonnull ADJIssue)issueType {
+    self.issueType = issueType;
+}
+- (void)subject:(nonnull NSString *)subject {
+    [self withKey:ADJLogSubjectKey constValue:subject];
+}
+- (void)why:(nonnull NSString *)why {
+    [self withKey:ADJLogWhyKey constValue:why];
+}
+
+- (void)error:(nullable NSError *)nserror {
+    self.nsError = nserror;
+}
+- (void)failMessage:(nonnull NSString *)failMessage {
+    [self withKey:ADJLogFailMessageKey constValue:failMessage];
+}
+- (void)value:(nonnull NSString *)value {
+    [self withKey:ADJLogValueKey value:value];
+}
+
+- (void)withExpected:(nonnull NSString *)expectedValue
+              actual:(nullable NSString *)actualValue
+{
+    [self withKey:ADJLogExpectedKey constValue:expectedValue];
+    [self withKey:ADJLogActualKey value:actualValue];
+}
+
+- (void)withFailMessage:(nonnull NSString *)failMessage
+                  issue:(nonnull ADJIssue)issueType
+{
+    [self failMessage:failMessage];
+    [self issue:issueType];
+}
+
+- (void)withError:(nullable NSError *)nserror
+            issue:(nonnull ADJIssue)issueType
+{
+    [self error:nserror];
+    [self issue:issueType];
+}
+- (void)withSubject:(nonnull NSString *)subject
+              value:(nonnull NSString *)value
+{
+    [self subject:subject];
+    [self value:value];
+}
+
+- (void)withSubject:(nonnull NSString *)subject
+                why:(nonnull NSString *)why
+{
+    [self subject:subject];
+    [self why:why];
+}
+
+- (void)withKey:(nonnull NSString *)key
+          value:(nullable NSString *)value
+{
+    if (self.messageParams == nil) {
+        self.messageParams = [[NSMutableDictionary alloc] init];
+    }
+
+    [self.messageParams setObject:[ADJUtilF stringOrNsNull:value] forKey:key];
+}
+
+- (void)withKey:(nonnull NSString *)key
+     constValue:(nullable NSString *)constValue
+{
+    if (self.messageParams == nil) {
+        self.messageParams = [[NSMutableDictionary alloc] init];
+    }
+
+    [self.messageParams setObject:constValue forKey:key];
+}
+
+@end

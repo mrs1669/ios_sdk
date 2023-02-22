@@ -71,12 +71,16 @@
 
 - (void)logErrorWithLogger:(nullable ADJLogger *)logger
                    nsError:(nullable NSError *)nsError
-              errorMessage:(nonnull NSString *)errorMessage {
+              errorMessage:(nonnull NSString *)errorMessage
+{
     if (nsError != nil) {
         if (logger != nil) {
-            [logger debugDev:errorMessage
-                     nserror:nsError
-                   issueType:ADJIssueNetworkRequest];
+            [logger debugWithMessage:errorMessage
+                        builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
+             {
+                [logBuilder withError:nsError
+                                issue:ADJIssueNetworkRequest];
+            }];
         }
     } else {
         if (logger != nil) {

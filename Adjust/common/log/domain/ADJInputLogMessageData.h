@@ -86,8 +86,38 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
 @property (nullable, readonly, strong, nonatomic) NSError *nsError;
 @property (nullable, readonly, strong, nonatomic) NSException* nsException;
-@property (nullable, readonly, strong, nonatomic)
-NSDictionary<NSString *, id> *messageParams;
+@property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *messageParams;
 
 @end
 
+@interface ADJLogBuilder : NSObject
+
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level;
+
+- (nonnull ADJInputLogMessageData *)build;
+
+- (void)where:(nonnull NSString *)where;
+- (void)issue:(nonnull ADJIssue)issueType;
+- (void)subject:(nonnull NSString *)subject;
+- (void)why:(nonnull NSString *)why;
+
+- (void)withExpected:(nonnull NSString *)expectedValue
+              actual:(nullable NSString *)actualValue;
+
+- (void)withFailMessage:(nonnull NSString *)failMessage
+                  issue:(nonnull ADJIssue)issueType;
+
+- (void)withError:(nullable NSError *)nserror
+            issue:(nonnull ADJIssue)issueType;
+
+- (void)withSubject:(nonnull NSString *)subject
+              value:(nonnull NSString *)value;
+
+- (void)withSubject:(nonnull NSString *)subject
+                why:(nonnull NSString *)why;
+
+- (void)withKey:(nonnull NSString *)key
+          value:(nullable NSString *)value;
+
+@end

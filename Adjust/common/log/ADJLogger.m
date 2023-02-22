@@ -15,13 +15,6 @@
 //#import <os/log.h>
 
 #pragma mark Fields
-#pragma mark - Private constants
-static NSString *const kFromKey = @"from";
-static NSString *const kValueNameKey = @"value_name";
-static NSString *const kExpectedKey = @"expected";
-static NSString *const kActualKey = @"actual";
-static NSString *const kFailMessageKey = @"fail_message";
-
 @interface ADJLogger ()
 // Injected variables
 @property (nullable, readonly, weak, nonatomic) id<ADJLogCollector> logCollectorWeak;
@@ -87,6 +80,16 @@ static NSString *const kFailMessageKey = @"fail_message";
                                 runningThreadId:runningThreadId]];
 }
 
+- (void)
+    debugWithMessage:(nonnull NSString *)message
+    builderBlock:(void (^ _Nonnull NS_NOESCAPE)(ADJLogBuilder *_Nonnull logBuilder))builderBlock
+{
+    ADJLogBuilder *_Nonnull builder =
+        [[ADJLogBuilder alloc] initWithMessage:message level:ADJAdjustLogLevelDebug];
+    builderBlock(builder);
+    [self logWithInput:[builder build]];
+}
+
 #pragma mark - debug dev without issue
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message {
     return [self logWithMessage:message logLevel:ADJAdjustLogLevelDebug];
@@ -96,7 +99,7 @@ static NSString *const kFailMessageKey = @"fail_message";
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
-                            key:kFromKey
+                            key:ADJLogFromKey
                           value:from];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
@@ -115,7 +118,7 @@ static NSString *const kFailMessageKey = @"fail_message";
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
-                           key1:kFromKey
+                           key1:ADJLogFromKey
                          value1:from
                            key2:key
                          value2:[ADJUtilF stringOrNsNull:value]];
@@ -132,17 +135,6 @@ static NSString *const kFailMessageKey = @"fail_message";
                          value1:[ADJUtilF stringOrNsNull:value1]
                            key2:key2
                          value2:[ADJUtilF stringOrNsNull:value2]];
-}
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                               messageParams:(nonnull NSDictionary<NSString *, id> *)messageParams
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:nil
-                               nsError:nil
-                               nsException:nil
-                               messageParams:messageParams]];
 }
 
 #pragma mark - debug dev with issue
@@ -169,36 +161,7 @@ static NSString *const kFailMessageKey = @"fail_message";
                                nsException:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    failMessage, kFailMessageKey, nil]]];
-}
-
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                     nserror:(nullable NSError *)nserror
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               nsError:nserror
-                               nsException:nil
-                               messageParams:nil]];
-}
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                     nserror:(nullable NSError *)nserror
-                                         key:(nonnull NSString *)key
-                                       value:(nullable NSString *)value
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               nsError:nserror
-                               nsException:nil
-                               messageParams:
-                                   [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    [ADJUtilF stringOrNsNull:value], key, nil]]];
+                                    failMessage, ADJLogFailMessageKey, nil]]];
 }
 
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
@@ -213,7 +176,7 @@ static NSString *const kFailMessageKey = @"fail_message";
                                nsException:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    valueName, kValueNameKey, nil]]];
+                                    valueName, ADJLogValueNameKey, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                    valueName:(nonnull NSString *)valueName
@@ -228,8 +191,8 @@ static NSString *const kFailMessageKey = @"fail_message";
                                nsException:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    valueName, kValueNameKey,
-                                    failMessage, kFailMessageKey, nil]]];
+                                    valueName, ADJLogValueNameKey,
+                                    failMessage, ADJLogFailMessageKey, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         from:(nonnull NSString *)from
@@ -243,8 +206,9 @@ static NSString *const kFailMessageKey = @"fail_message";
                                nsException:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    from, kFromKey, nil]]];
+                                    from, ADJLogFromKey, nil]]];
 }
+
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         from:(nonnull NSString *)from
                                  failMessage:(nonnull NSString *)failMessage
@@ -258,8 +222,8 @@ static NSString *const kFailMessageKey = @"fail_message";
                                nsException:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    from, kFromKey,
-                                    failMessage, kFailMessageKey, nil]]];
+                                    from, ADJLogFromKey,
+                                    failMessage, ADJLogFailMessageKey, nil]]];
 }
 
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
@@ -275,8 +239,8 @@ static NSString *const kFailMessageKey = @"fail_message";
                                nsException:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    expectedValue, kExpectedKey,
-                                    [ADJUtilF stringOrNsNull:actualValue], kActualKey, nil]]];
+                                    expectedValue, ADJLogExpectedKey,
+                                    [ADJUtilF stringOrNsNull:actualValue], ADJLogActualKey, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
@@ -307,25 +271,7 @@ static NSString *const kFailMessageKey = @"fail_message";
                                nsException:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    failMessage, kFailMessageKey,
-                                    [ADJUtilF stringOrNsNull:value], key, nil]]];
-}
-
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                        from:(nonnull NSString *)from
-                                         key:(nonnull NSString *)key
-                                       value:(nullable NSString *)value
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               nsError:nil
-                               nsException:nil
-                               messageParams:
-                                   [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    from, kFromKey,
+                                    failMessage, ADJLogFailMessageKey,
                                     [ADJUtilF stringOrNsNull:value], key, nil]]];
 }
 
@@ -346,18 +292,6 @@ static NSString *const kFailMessageKey = @"fail_message";
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
                                     [ADJUtilF stringOrNsNull:value1], key1,
                                     [ADJUtilF stringOrNsNull:value2], key2, nil]]];
-}
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                               messageParams:(nonnull NSDictionary<NSString *, id> *)messageParams
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               nsError:nil
-                               nsException:nil
-                               messageParams:messageParams]];
 }
 
 #pragma mark - info client
@@ -412,19 +346,11 @@ static NSString *const kFailMessageKey = @"fail_message";
                           value:[ADJUtilF stringOrNsNull:value]];
 }
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
-                                            from:(nonnull NSString *)from
-{
-    return [self logWithMessage:message
-                       logLevel:ADJAdjustLogLevelNotice
-                            key:kFromKey
-                          value:from];
-}
-- (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
                                      failMessage:(nonnull NSString *)failMessage
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelNotice
-                            key:kFailMessageKey
+                            key:ADJLogFailMessageKey
                           value:failMessage];
 }
 
@@ -458,9 +384,9 @@ static NSString *const kFailMessageKey = @"fail_message";
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelError
-                           key1:kExpectedKey
+                           key1:ADJLogExpectedKey
                          value1:expectedValue
-                           key2:kActualKey
+                           key2:ADJLogActualKey
                          value2:[ADJUtilF stringOrNsNull:actualValue]];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
@@ -468,7 +394,7 @@ static NSString *const kFailMessageKey = @"fail_message";
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelError
-                            key:kFromKey
+                            key:ADJLogFromKey
                           value:from];
 }
 
@@ -477,7 +403,7 @@ static NSString *const kFailMessageKey = @"fail_message";
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelError
-                            key:kFailMessageKey
+                            key:ADJLogFailMessageKey
                           value:failMessage];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
@@ -487,7 +413,7 @@ static NSString *const kFailMessageKey = @"fail_message";
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelError
-                           key1:kFailMessageKey
+                           key1:ADJLogFailMessageKey
                          value1:failMessage
                            key2:key
                          value2:[ADJUtilF stringOrNsNull:value]];

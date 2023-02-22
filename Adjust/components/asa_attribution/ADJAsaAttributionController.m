@@ -103,11 +103,13 @@
         hasMininumOsVersion = NO;
     }
 
-    [logger debugDev:@"Initial canReadToken values"
-       messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
-                      @(canReadTokenFromClient).description, @"canReadTokenFromClient",
-                      @(canReadTokenFromConfig).description, @"canReadTokenFromConfig",
-                      @(hasMininumOsVersion).description, @"hasMininumOsVersion", nil]];
+    [logger debugWithMessage:@"Initial canReadToken values"
+                builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
+     {
+        [logBuilder withKey:@"canReadTokenFromClient" value:@(canReadTokenFromClient).description];
+        [logBuilder withKey:@"canReadTokenFromConfig" value:@(canReadTokenFromConfig).description];
+        [logBuilder withKey:@"hasMininumOsVersion" value:@(hasMininumOsVersion).description];
+    }];
 
     return canReadTokenFromClient && canReadTokenFromConfig && hasMininumOsVersion;
 }

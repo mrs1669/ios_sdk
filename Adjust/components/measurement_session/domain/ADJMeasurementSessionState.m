@@ -279,14 +279,16 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
         [self.stateData.measurementSessionData.lastActivityTimestampMilli
          generateTimestampWithAddedTimeLength:firstSdkSessionInterval];
 
-    [self.logger debugDev:@"Now timestamp overwritten"
-            messageParams:
-     [[NSDictionary alloc] initWithObjectsAndKeys:
-      externalNonMonotonicNowTimestamp.description, @"externalNonMonotonicNowTimestamp",
-      overwrittenNowTimestamp.description, @"overwrittenNowTimestamp",
-      self.stateData.measurementSessionData.lastActivityTimestampMilli.description,
-        @"lastActivityTimestamp",
-      nil]];
+    [self.logger debugWithMessage:@"Now timestamp overwritten"
+                     builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
+     {
+        [logBuilder withKey:@"externalNonMonotonicNowTimestamp"
+                      value:externalNonMonotonicNowTimestamp.description];
+        [logBuilder withKey:@"overwrittenNowTimestamp" value:overwrittenNowTimestamp.description];
+        [logBuilder withKey:@"lastActivityTimestamp"
+                      value:
+         self.stateData.measurementSessionData.lastActivityTimestampMilli.description];
+    }];
 
     return overwrittenNowTimestamp;
 }

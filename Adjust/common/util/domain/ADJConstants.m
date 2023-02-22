@@ -44,3 +44,14 @@ const BOOL ADJIsSdkActiveWhenStarting = YES;
 const BOOL ADJIsSdkForgottenWhenStarting = NO;
 const BOOL ADJIsSdkOfflineWhenStarting = NO;
 const BOOL ADJIsNetworkReachableWhenStarting = YES;
+
+// logging
+NSString *const ADJLogWhereKey = @"where";
+NSString *const ADJLogSubjectKey = @"subject";
+NSString *const ADJLogWhyKey = @"why";
+NSString *const ADJLogExpectedKey = @"expected";
+NSString *const ADJLogActualKey = @"actual";
+NSString *const ADJLogFailMessageKey = @"fail_message";
+NSString *const ADJLogValueKey = @"value";
+NSString *const ADJLogFromKey = @"from";
+NSString *const ADJLogValueNameKey = @"value_name";

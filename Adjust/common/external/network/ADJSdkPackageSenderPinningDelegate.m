@@ -358,11 +358,13 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
                                            nsError:nsError
                                       errorMessage:errorMessage];
     } else {
-        [self.logger debugDev:errorMessage
-                      nserror:nsError
-                    issueType:ADJIssueNetworkRequest];
+        [self.logger debugWithMessage:errorMessage
+                    builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
+         {
+            [logBuilder withError:nsError
+                            issue:ADJIssueNetworkRequest];
+        }];
     }
 }
 
 @end
-

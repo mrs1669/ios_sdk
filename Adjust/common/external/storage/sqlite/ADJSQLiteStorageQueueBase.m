@@ -434,12 +434,16 @@ static int const kDeleteElementPositionFieldPosition = 1;
         [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber];
 
     if (elementPositionToAddResult.failMessage != nil) {
-        [self.logger debugDev:
-         @"Cannot add element to queue, without a valid element position"
-                          key:@"metadataTypeValue"
-                        value:self.metadataTypeValue
-                  failMessage:elementPositionToAddResult.failMessage
-                    issueType:ADJIssueStorageIo];
+        [self.logger debugWithMessage:@"Cannot add element to memory queue"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
+         {
+            [logBuilder withSubject:@"element position"
+                                why:@"failed to parse from number"];
+            [logBuilder withFailMessage:elementPositionToAddResult.failMessage
+                                  issue:ADJIssueStorageIo];
+            [logBuilder withKey:@"metadata type" value:self.metadataTypeValue];
+        }];
+
         return nil;
     }
 
@@ -454,12 +458,17 @@ static int const kDeleteElementPositionFieldPosition = 1;
     //  when result fail can support multiple params
     id _Nullable lastReadElement = [self concreteGenerateElementFromIoData:readIoData];
     if (lastReadElement == nil) {
-        [self.logger debugDev:@"Cannot create element of last read"
-                         key1:@"metadataTypeValue"
-                       value1:self.metadataTypeValue
-                         key2:@"elementPositionToAdd"
-                       value2:elementPositionToAdd.description
-                    issueType:ADJIssueStorageIo];
+        [self.logger debugWithMessage:@"Cannot add element to memory queue"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
+         {
+            [logBuilder withSubject:@"element instance"
+                                why:@"failed to parse from io data"];
+            [logBuilder issue:ADJIssueStorageIo];
+            [logBuilder withKey:@"element position"
+                          value:elementPositionToAddResult.value.description];
+            [logBuilder withKey:@"metadata type" value:self.metadataTypeValue];
+        }];
+
         return nil;
     }
 

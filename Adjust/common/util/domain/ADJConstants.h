@@ -47,4 +47,15 @@ FOUNDATION_EXPORT const BOOL ADJIsSdkForgottenWhenStarting;
 FOUNDATION_EXPORT const BOOL ADJIsSdkOfflineWhenStarting;
 FOUNDATION_EXPORT const BOOL ADJIsNetworkReachableWhenStarting;
 
+// logging
+FOUNDATION_EXPORT NSString *const ADJLogWhereKey;
+FOUNDATION_EXPORT NSString *const ADJLogSubjectKey;
+FOUNDATION_EXPORT NSString *const ADJLogWhyKey;
+FOUNDATION_EXPORT NSString *const ADJLogExpectedKey;
+FOUNDATION_EXPORT NSString *const ADJLogActualKey;
+FOUNDATION_EXPORT NSString *const ADJLogFailMessageKey;
+FOUNDATION_EXPORT NSString *const ADJLogValueKey;
+FOUNDATION_EXPORT NSString *const ADJLogFromKey;
+FOUNDATION_EXPORT NSString *const ADJLogValueNameKey;
+
 NS_ASSUME_NONNULL_END
