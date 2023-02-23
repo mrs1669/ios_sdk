@@ -15,14 +15,13 @@
 
 #pragma mark Fields
 #pragma mark - Public constants
-NSString *const ADJAttributionStateDataMetadataTypeValue = @"AttributionStateData";
-
-NSString *const ADJAttributionStateStatusWaitingForInstallSessionTracking =
+ADJAttributionStateStatus const ADJAttributionStateDataMetadataTypeValue = @"AttributionStateData";
+ADJAttributionStateStatus const ADJAttributionStateStatusWaitingForInstallSessionTracking =
     @"WaitingForInstallSessionTracking";
-NSString *const ADJAttributionStateStatusCanAsk = @"CanAsk";
-NSString *const ADJAttributionStateStatusIsAsking = @"IsAsking";
-NSString *const ADJAttributionStateStatusHasAttribution = @"HasAttribution";
-NSString *const ADJAttributionStateStatusUnavailable = @"Unavailable";
+ADJAttributionStateStatus const ADJAttributionStateStatusCanAsk = @"CanAsk";
+ADJAttributionStateStatus const ADJAttributionStateStatusIsAsking = @"IsAsking";
+ADJAttributionStateStatus const ADJAttributionStateStatusHasAttribution = @"HasAttribution";
+ADJAttributionStateStatus const ADJAttributionStateStatusUnavailable = @"Unavailable";
 
 #pragma mark - Public properties
 /* .h
