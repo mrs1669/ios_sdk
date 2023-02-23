@@ -118,12 +118,13 @@
 
     return [self tryToResumeMeasurement];
 }
+
 - (nullable ADJMeasurementLifecycleStateOutputData *)sdkNotActive {
     if (! self.isSdkActive) {
         [self.logger debugDev:@"Cannot change since the sdk was already not active"];
         return nil;
     }
-    self.isSdkActive = YES;
+    self.isSdkActive = NO;
 
     return [self tryToPauseMeasurement];
 }
