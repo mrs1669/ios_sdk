@@ -219,20 +219,26 @@
     [adjustConfig setCustomEndpointWithUrl:customEndpointUrl
                   optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
 
-    if (openDeferredDeeplinkDeactivated) {
-        [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
-    }
-
     if (attributionCallback != nil) {
         [adjustConfig setAdjustAttributionSubscriber:self];
     }
-
-    if (!allowAdServicesInfoReading) {
-        [adjustConfig doNotReadAppleSearchAdsAttributionNumberBool];
+    
+    if ([self isFieldValid:allowAdServicesInfoReading]) {
+        if ([allowAdServicesInfoReading boolValue] == NO) {
+            [adjustConfig doNotReadAppleSearchAdsAttributionNumberBool];
+        }
     }
 
-    if (sendInBackground) {
-        [adjustConfig allowSendingFromBackground];
+    if ([self isFieldValid:openDeferredDeeplinkDeactivated]) {
+        if ([openDeferredDeeplinkDeactivated boolValue] == NO) {
+            [adjustConfig doNotOpenDeferredDeeplinkNumberBool];
+        }
+    }
+
+    if ([self isFieldValid:sendInBackground]) {
+        if ([sendInBackground boolValue]) {
+            [adjustConfig allowSendingFromBackground];
+        }
     }
     
     if ([self isFieldValid:eventDeduplicationListLimit]) {
@@ -245,29 +251,25 @@
 - (void)trackEvent:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
 
     NSString *eventToken = [data objectForKey:@"eventId"];
-    NSString *revenue = [data objectForKey:@"revenue"];
+    NSNumber *revenue = [data objectForKey:@"revenue"];
     NSString *currency = [data objectForKey:@"currency"];
     NSString *deduplicationId = [data objectForKey:@"deduplicationId"];
-    id callbackParameters = [data objectForKey:@"callbackParameters"];
-    id partnerParameters = [data objectForKey:@"partnerParameters"];
+    NSArray *callbackParameters = [data objectForKey:@"callbackParameters"];
+    NSArray *partnerParameters = [data objectForKey:@"partnerParameters"];
 
     ADJAdjustEvent *_Nonnull adjustEvent = [[ADJAdjustEvent alloc] initWithEventId:eventToken];
-
+    [adjustEvent setRevenueWithDoubleNumber:revenue currency:currency];
     [adjustEvent setDeduplicationId:deduplicationId];
 
-    if ([self isFieldValid:revenue]) {
-        [adjustEvent setRevenueWithDouble:[revenue doubleValue] currency:currency];
-    }
-
     for (int i = 0; i < [callbackParameters count]; i += 2) {
-        NSString *key = [[callbackParameters objectAtIndex:i] description];
-        NSString *value = [[callbackParameters objectAtIndex:(i + 1)] description];
+        NSString *key = [callbackParameters objectAtIndex:i];
+        NSString *value = [callbackParameters objectAtIndex:(i + 1)];
         [adjustEvent addCallbackParameterWithKey:key value:value];
     }
 
     for (int i = 0; i < [partnerParameters count]; i += 2) {
-        NSString *key = [[partnerParameters objectAtIndex:i] description];
-        NSString *value = [[partnerParameters objectAtIndex:(i + 1)] description];
+        NSString *key = [partnerParameters objectAtIndex:i];
+        NSString *value = [partnerParameters objectAtIndex:(i + 1)];
         [adjustEvent addPartnerParameterWithKey:key value:value];
     }
 
@@ -283,30 +285,26 @@
     NSString *adRevenueNetwork = [data objectForKey:@"adRevenueNetwork"];
     NSString *adRevenueUnit = [data objectForKey:@"adRevenueUnit"];
     NSString *adRevenuePlacement = [data objectForKey:@"adRevenuePlacement"];
-    id callbackParameters = [data objectForKey:@"callbackParameters"];
-    id partnerParameters = [data objectForKey:@"partnerParameters"];
+    NSArray *callbackParameters = [data objectForKey:@"callbackParameters"];
+    NSArray *partnerParameters = [data objectForKey:@"partnerParameters"];
 
     ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc]
                                                     initWithSource:adRevenueSource];
     [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
-
-    if ([self isFieldValid:adImpressionsCount]) {
-        [adjustAdRevenue setAdImpressionsCountWithInteger:[adImpressionsCount intValue]];
-    }
-
+    [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCount];
     [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork];
     [adjustAdRevenue setAdRevenueUnit:adRevenueUnit];
     [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement];
 
     for (int i = 0; i < [callbackParameters count]; i += 2) {
-        NSString *key = [[callbackParameters objectAtIndex:i] description];
-        NSString *value = [[callbackParameters objectAtIndex:(i + 1)] description];
+        NSString *key = [callbackParameters objectAtIndex:i];
+        NSString *value = [callbackParameters objectAtIndex:(i + 1)];
         [adjustAdRevenue addCallbackParameterWithKey:key value:value];
     }
 
     for (int i = 0; i < [partnerParameters count]; i += 2) {
-        NSString *key = [[partnerParameters objectAtIndex:i] description];
-        NSString *value = [[partnerParameters objectAtIndex:(i + 1)] description];
+        NSString *key = [partnerParameters objectAtIndex:i];
+        NSString *value = [partnerParameters objectAtIndex:(i + 1)];
         [adjustAdRevenue addPartnerParameterWithKey:key value:value];
     }
 
@@ -316,8 +314,8 @@
 - (void)trackThirdPartySharing:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
 
     id isEnabledO = [data objectForKey:@"isEnabled"];
-    id granularOptions = [data objectForKey:@"granularOptions"];
-    id partnerSharingSettings = [data objectForKey:@"partnerSharingSettings"];
+    NSArray *granularOptions = [data objectForKey:@"granularOptions"];
+    NSArray *partnerSharingSettings = [data objectForKey:@"partnerSharingSettings"];
 
     NSNumber *isEnabled = nil;
     if ([isEnabledO isKindOfClass:[NSNumber class]]) {
@@ -335,15 +333,15 @@
     }
 
     for (int i = 0; i < [granularOptions count]; i += 3) {
-        NSString *partnerName = [[granularOptions objectAtIndex:i] description];
-        NSString *key = [[granularOptions objectAtIndex:(i + 1)] description];
-        NSString *value = [[granularOptions objectAtIndex:(i + 2)] description];
+        NSString *partnerName = [granularOptions objectAtIndex:i];
+        NSString *key = [granularOptions objectAtIndex:(i + 1)];
+        NSString *value = [granularOptions objectAtIndex:(i + 2)];
         [adjustThirdPartySharing addGranularOptionWithPartnerName:partnerName key:key value:value];
     }
 
     for (int i = 0; i < [partnerSharingSettings count]; i += 3) {
-        NSString *partnerName = [[partnerSharingSettings objectAtIndex:i] description];
-        NSString *key = [[partnerSharingSettings objectAtIndex:(i + 1)] description];
+        NSString *partnerName = [partnerSharingSettings objectAtIndex:i];
+        NSString *key = [partnerSharingSettings objectAtIndex:(i + 1)];
         BOOL value = [[partnerSharingSettings objectAtIndex:(i + 2)] boolValue];
         [adjustThirdPartySharing addPartnerSharingSettingWithPartnerName:partnerName
                                                                      key:key value:value];
@@ -364,7 +362,7 @@
     if ([[field description] length] == 0) {
         return NO;
     }
-    return !!field;
+    return YES;
 }
 
 @end
