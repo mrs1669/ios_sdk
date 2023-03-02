@@ -13,7 +13,6 @@
 @interface ADJMeasurementLifecycleStateOutputData : NSObject
 
 @property (readonly, assign, nonatomic) BOOL sdkStarted;
-@property (readonly, assign, nonatomic) BOOL measurementResumed;
 @property (readonly, assign, nonatomic) BOOL measurementPaused;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

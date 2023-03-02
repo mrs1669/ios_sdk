@@ -117,12 +117,10 @@
         [self ccHandleSdkStart];
     }
 
-    if (output.measurementResumed) {
-        [self ccResumeMeasurementWithDidSdkStart:output.sdkStarted];
-    }
-
     if (output.measurementPaused) {
         [self ccPauseMeasurement];
+    } else {
+        [self ccResumeMeasurementWithDidSdkStart:output.sdkStarted];
     }
 }
 

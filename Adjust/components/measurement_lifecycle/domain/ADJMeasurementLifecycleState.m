@@ -13,7 +13,6 @@
 #pragma mark Fields
 /* .h
  @property (readonly, assign, nonatomic) BOOL sdkStarted;
- @property (readonly, assign, nonatomic) BOOL measurementResumed;
  @property (readonly, assign, nonatomic) BOOL measurementPaused;
  */
 
@@ -26,28 +25,26 @@
 #pragma mark - Private constructors
 - (nonnull instancetype)
     initWithSdkStarted:(BOOL)sdkStarted
-    measurementResumed:(BOOL)measurementResumed
     measurementPaused:(BOOL)measurementPaused
 {
     self = [super init];
 
     _sdkStarted = sdkStarted;
-    _measurementResumed = measurementResumed;
     _measurementPaused = measurementPaused;
 
     return self;
 }
 
 - (nonnull instancetype)initWhenStartinSdk {
-    return [self initWithSdkStarted:YES measurementResumed:YES measurementPaused:NO];
+    return [self initWithSdkStarted:YES measurementPaused:NO];
 }
 
 - (nonnull instancetype)initWhenResumingMeasurement {
-    return [self initWithSdkStarted:NO measurementResumed:YES measurementPaused:NO];
+    return [self initWithSdkStarted:NO measurementPaused:NO];
 }
 
 - (nonnull instancetype)initWhenPausingMeasurement {
-    return [self initWithSdkStarted:NO measurementResumed:NO measurementPaused:YES];
+    return [self initWithSdkStarted:NO measurementPaused:YES];
 }
 
 @end
