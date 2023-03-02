@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_END
 // public api
 - (BOOL)trySdkInit;
 
-- (nullable NSString *)canPerformActionOrElseMessageWithClientSource:
+- (nullable ADJInputLogMessageData *)canPerformActionOrElseErrorLogWithClientSource:
     (nonnull NSString *)clientSource;
 
 - (nullable ADJActivityStateOutputData *)inactivateSdk;

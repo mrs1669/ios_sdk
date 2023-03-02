@@ -144,9 +144,9 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
 
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
-    if (currentFirstSessionCountResult.failMessage != nil) {
+    if (currentFirstSessionCountResult.fail != nil) {
         [self.logger debugDev:@"Invalid current first session count"
-                  failMessage:currentFirstSessionCountResult.failMessage
+                   resultFail:currentFirstSessionCountResult.fail
                     issueType:ADJIssueStorageIo];
         return [ADJNonNegativeInt instanceAtOne];
     }
@@ -205,7 +205,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
 
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
-    if (currentFirstSessionCountResult.failMessage != nil) {
+    if (currentFirstSessionCountResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot decrement first session count"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
          {
@@ -214,8 +214,8 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
             [logBuilder where:@"decremented first session count"];
             [logBuilder withKey:@"io value"
                           value:currentIoValue.stringValue];
-            [logBuilder withFailMessage:currentFirstSessionCountResult.failMessage
-                                  issue:ADJIssueStorageIo];
+            [logBuilder withFail:currentFirstSessionCountResult.fail
+                           issue:ADJIssueStorageIo];
         }];
         return [ADJNonNegativeInt instanceAtZero];
     }
@@ -281,9 +281,9 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
 
-    if (currentAsaClickCountResult.failMessage != nil) {
+    if (currentAsaClickCountResult.fail != nil) {
         [self.logger debugDev:@"Invalid current asa click count when incrementing"
-                  failMessage:currentAsaClickCountResult.failMessage
+                   resultFail:currentAsaClickCountResult.fail
                     issueType:ADJIssueStorageIo];
         return [ADJNonNegativeInt instanceAtOne];
     }
@@ -344,7 +344,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
 
-    if (currentAsaClickCountResult.failMessage != nil) {
+    if (currentAsaClickCountResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot decrement asa click count"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
          {
@@ -353,8 +353,8 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
             [logBuilder where:@"decremented asa click count"];
             [logBuilder withKey:@"io value"
                           value:currentIoValue.stringValue];
-            [logBuilder withFailMessage:currentAsaClickCountResult.failMessage
-                                  issue:ADJIssueStorageIo];
+            [logBuilder withFail:currentAsaClickCountResult.fail
+                           issue:ADJIssueStorageIo];
         }];
 
         return [ADJNonNegativeInt instanceAtZero];

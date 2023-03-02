@@ -19,6 +19,8 @@
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 
 @interface ADJAsaAttributionController ()
@@ -267,17 +269,12 @@
 
     ADJAsaAttributionStateData *_Nonnull currentStateData = [self.storage readOnlyStoredDataValue];
 
-    ADJValueWO<NSString *> *_Nonnull readAsaAttributionTokenWO = [[ADJValueWO alloc] init];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
+        [self readAsaAttributionToken];
 
-    ADJInputLogMessageData *_Nullable errorLogInput =
-        [self readAsaAttributionTokenWithWO:readAsaAttributionTokenWO];
-
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull readAsaAttributionTokenResult =
-        [ADJNonEmptyString instanceFromOptionalString:readAsaAttributionTokenWO.changedValue];
-
-    if (readAsaAttributionTokenResult.failMessage != nil) {
-        [self.logger debugDev:@"Read invalid asa attribution token"
-                  failMessage:readAsaAttributionTokenResult.failMessage
+    if (asaAttributionTokenResult.fail != nil) {
+        [self.logger debugDev:@"Failed to read asa attribution token"
+                  resultFail:asaAttributionTokenResult.fail
                     issueType:ADJIssueExternalApi];
 
         [self retryWithAttemptsLeft:attemptsLeft];
@@ -290,18 +287,18 @@
     ADJTimestampMilli *_Nullable timestampToWrite;
 
     BOOL hasReadTokenUpdatedCacheOne =
-        readAsaAttributionTokenResult.value != nil
-        && ! [ADJUtilObj objectEquals:readAsaAttributionTokenResult.value
+        asaAttributionTokenResult.fail == nil
+        && ! [ADJUtilObj objectEquals:asaAttributionTokenResult.value
                                 other:currentStateData.cachedToken];
 
     if (hasReadTokenUpdatedCacheOne) {
-        tokenToWrite = readAsaAttributionTokenResult.value;
+        tokenToWrite = asaAttributionTokenResult.value;
 
         ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult =
             [self.clock nonMonotonicNowTimestamp];
-        if (nowResult.failMessage != nil) {
-            [self.logger debugDev:@"Invalid now timestamp when refreshing token"
-                      failMessage:nowResult.failMessage
+        if (nowResult.fail != nil) {
+            [self.logger debugDev:@"Failed now timestamp when refreshing token"
+                       resultFail:nowResult.fail
                         issueType:ADJIssueExternalApi];
             timestampToWrite = nil;
         } else {
@@ -316,13 +313,11 @@
 
     ADJNonEmptyString *_Nullable errorReasonToWrite;
 
-    if (errorLogInput != nil) {
-        [self.logger logWithInput:errorLogInput];
-
+    if (asaAttributionTokenResult.fail != nil) {
         ADJNonEmptyString *_Nonnull errorMessage =
-        [[ADJNonEmptyString alloc] initWithConstStringValue:
-         [ADJConsoleLogger clientFormatMessage:errorLogInput
-                                  isPreSdkInit:NO]];
+            [[ADJNonEmptyString alloc] initWithConstStringValue:
+             [ADJLogMessageData generateJsonStringFromFoundationDictionary:
+              [asaAttributionTokenResult.fail foundationDictionary]]];
 
         if (! [ADJUtilObj objectEquals:errorMessage
                                  other:currentStateData.errorReason])
@@ -348,66 +343,57 @@
     return YES;
 }
 
-- (nullable ADJInputLogMessageData *)readAsaAttributionTokenWithWO:
-    (nonnull ADJValueWO<NSString *> *)asaAttributionTokenWO
-{
+// TODO return Result
+//- (nullable ADJInputLogMessageData *)readAsaAttributionTokenWithWO:
+- (nonnull ADJResultNN<ADJNonEmptyString *> *)readAsaAttributionToken {
     // any error that happens before trying to read the Asa Attribution Token
     //  won't change during the current app execution,
     //  so it can be assumed that the token can't be read
     if (self.asaAttributionConfig.timeoutPerAttempt == nil) {
         self.canReadToken = NO;
-        return [[ADJInputLogMessageData alloc]
-                initWithMessage:@"Cannot attempt to read token without a timeout"
-                level:ADJAdjustLogLevelDebug];
+        return [ADJResultNN failWithMessage:@"Cannot attempt to read token without a timeout"];
     }
 
     Class _Nullable classFromName = NSClassFromString(@"AAAttribution");
     if (classFromName == nil) {
         self.canReadToken = NO;
-        return [[ADJInputLogMessageData alloc]
-                initWithMessage:@"Could not detect AAAttribution class"
-                level:ADJAdjustLogLevelDebug];
+        return [ADJResultNN failWithMessage:@"Could not detect AAAttribution class"];
     }
 
     SEL _Nullable methodSelector = NSSelectorFromString(@"attributionTokenWithError:");
     if (! [classFromName respondsToSelector:methodSelector]) {
         self.canReadToken = NO;
-        return [[ADJInputLogMessageData alloc]
-                initWithMessage:@"Could not detect attributionTokenWithError: method"
-                level:ADJAdjustLogLevelDebug];
+        return [ADJResultNN failWithMessage:@"Could not detect attributionTokenWithError: method"];
     }
 
     IMP _Nullable methodImplementation = [classFromName methodForSelector:methodSelector];
 
     if (! methodImplementation) {
         self.canReadToken = NO;
-        return [[ADJInputLogMessageData alloc]
-                initWithMessage:@"Could not detect attributionTokenWithError: method implementation"
-                level:ADJAdjustLogLevelDebug];
+        return [ADJResultNN failWithMessage:
+                @"Could not detect attributionTokenWithError: method implementation"];
     }
 
     __block NSString* (*func)(id, SEL, NSError **) = (void *)methodImplementation;
 
     __block NSError *error = nil;
 
-    __block NSString *_Nullable asaAttributionToken;
+    __block NSString *_Nullable asaAttributionTokenString;
 
     BOOL readAsaAttributionTokenFinishedSuccessfully =
     [self.executor
      executeSynchronouslyWithTimeout:self.asaAttributionConfig.timeoutPerAttempt
      blockToExecute:^{
         // TODO: cache in a dispatch_once: methodImplementation, classFromName and methodSelector
-        asaAttributionToken = func(classFromName, methodSelector, &error);
+        asaAttributionTokenString = func(classFromName, methodSelector, &error);
     } source:@"read AAAttribution attributionTokenWithError with timeout"];
 
     if (! readAsaAttributionTokenFinishedSuccessfully) {
-        return [[ADJInputLogMessageData alloc]
-                initWithMessage:
-                    @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"
-                level:ADJAdjustLogLevelDebug];
+        return [ADJResultNN failWithMessage:
+                @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"];
     }
 
-    if (error) {
+    if (error != nil) {
         /** typedef NS_ERROR_ENUM(AAAttributionErrorDomain, AAAttributionErrorCode)
          {
          AAAttributionErrorCodeNetworkError = 1,
@@ -420,23 +406,11 @@
             self.canReadToken = NO;
         }
 
-        return [[ADJInputLogMessageData alloc]
-                initWithMessage:@"[AAAttribution attributionTokenWithError:] call"
-                level:ADJAdjustLogLevelDebug
-                issueType:nil
-                nsError:error
-                nsException:nil
-                messageParams:nil];
+        return [ADJResultNN failWithError:error
+                                  message:@"[AAAttribution attributionTokenWithError:] call"];
     }
 
-    if (asaAttributionToken == nil) {
-        return [[ADJInputLogMessageData alloc]
-                initWithMessage:@"Returned asa attribution token is nil"
-                level:ADJAdjustLogLevelDebug];
-    }
-
-    [asaAttributionTokenWO setNewValue:asaAttributionToken];
-    return nil;
+    return [ADJNonEmptyString instanceFromString:asaAttributionTokenString];
 }
 
 - (void)retryWithAttemptsLeft:(nonnull ADJNonNegativeInt *)attemptsLeft {

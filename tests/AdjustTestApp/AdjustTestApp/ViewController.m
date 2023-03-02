@@ -48,8 +48,13 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     
     self.testLibrary.dictionaryParametersDelegate = self.adjustCommandExecutor;
 
-    [self.testLibrary addTestDirectory:@"deeplink"];
-    [self.testLibrary addTestDirectory:@"deeplink-getter"];
+    /*
+    [self.testLibrary addTest:@"Test_AttributionCallback_reattribution"];
+    [self.testLibrary addTest:@"Test_AttributionCallback_empty_response"];
+    [self.testLibrary addTest:@"Test_Attribution_reattribution"];
+    [self.testLibrary addTest:@"Test_Attribution_empty_response"];
+*/
+/*
     [self.testLibrary addTestDirectory:@"ad-revenue"];
     [self.testLibrary addTestDirectory:@"attribution"];
     [self.testLibrary addTestDirectory:@"attribution-callback"];

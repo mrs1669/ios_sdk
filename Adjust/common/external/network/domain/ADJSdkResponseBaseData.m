@@ -149,19 +149,19 @@
 {
     ADJResultNL<NSString *> *_Nonnull valueResult =
         [ADJUtilMap extractStringValueWithDictionary:responseJson key:key];
-    if (valueResult.failMessage != nil) {
+    if (valueResult.fail != nil) {
         [logger debugDev:@"Invalid native string found in response Json"
-               valueName:key
-             failMessage:valueResult.value
+                 subject:key
+              resultFail:valueResult.fail
                issueType:ADJIssueNetworkRequest];
     }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
         [ADJNonEmptyString instanceFromOptionalString:valueResult.value];
-    if (stringResult.failMessage != nil) {
+    if (stringResult.fail != nil) {
         [logger debugDev:@"Invalid string found in response Json"
-               valueName:key
-             failMessage:stringResult.failMessage
+               subject:key
+              resultFail:stringResult.fail
                issueType:ADJIssueNetworkRequest];
     }
 
@@ -175,19 +175,19 @@
     ADJResultNL<NSNumber *> *_Nonnull valueResult =
         [ADJUtilMap extractIntegerNumberWithDictionary:responseJson
                                                    key:key];
-    if (valueResult.failMessage != nil) {
+    if (valueResult.fail != nil) {
         [logger debugDev:@"Invalid native int number found in response Json"
-               valueName:key
-             failMessage:valueResult.failMessage
+                 subject:key
+              resultFail:valueResult.fail
                issueType:ADJIssueNetworkRequest];
     }
 
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull intResult =
         [ADJNonNegativeInt instanceFromOptionalIntegerNumber:valueResult.value];
-    if (intResult.failMessage != nil) {
+    if (intResult.fail != nil) {
         [logger debugDev:@"Invalid non negative int number found in response Json"
-               valueName:key
-             failMessage:intResult.failMessage
+                 subject:key
+              resultFail:intResult.fail
                issueType:ADJIssueNetworkRequest];
     }
 

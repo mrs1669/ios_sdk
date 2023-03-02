@@ -13,6 +13,8 @@
 #import "ADJUtilObj.h"
 #import "ADJUtilConv.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -51,22 +53,23 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
         return [ADJStringMap failInstanceFromIoValueWithReason:@"nil IoValue"];
     }
 
-    ADJResultErr<id> * _Nonnull foundationObjectResult =
+    ADJResultNL<id> * _Nonnull foundationObjectResult =
         [ADJUtilConv convertToFoundationObjectWithJsonString:ioValue.stringValue];
 
-    if (foundationObjectResult.error != nil) {
-        return [ADJStringMap failInstanceFromIoValueWithReason:
-                [NSString stringWithFormat:
-                 @"error converting json string into foundation object: %@",
-                 [ADJUtilF errorFormat:foundationObjectResult.error]]];
+    if (foundationObjectResult.fail != nil) {
+        [ADJStringMap
+                failInstanceFromIoValueWithReason:
+                    @"failed to convert json string into foundation object"
+                error:foundationObjectResult.fail.error];
     }
     if (foundationObjectResult.value == nil) {
-        return [ADJStringMap failInstanceFromIoValueWithReason:
-                @"converting json string into nil foundation object"];
+        return [ADJStringMap
+                failInstanceFromIoValueWithReason:
+                    @"converting json string into nil foundation object"];
     }
     if (! [foundationObjectResult.value isKindOfClass:[NSDictionary class]]) {
         return [ADJStringMap failInstanceFromIoValueWithReason:
-                @"converting json string into non dictionary foundation object"];
+                @"converted object from json string is not a dictionary"];
     }
 
     NSDictionary *_Nonnull foundationDictionary = (NSDictionary *)foundationObjectResult.value;
@@ -76,17 +79,33 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
     for (id _Nonnull keyObject in foundationDictionary) {
         ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJNonEmptyString instanceFromObject:keyObject];
-        if (keyResult.failMessage != nil) {
-            return [ADJStringMap failInstanceFromIoValueWithReason:
-                    [NSString stringWithFormat:@"invalid key: %@", keyResult.failMessage]];
+        if (keyResult.fail != nil) {
+            return [ADJResultNN
+                    failWithMessage:@"Cannot create string map instance from IoValue"
+                    failParams:
+                        [[NSDictionary alloc] initWithObjectsAndKeys:
+                         @"invalid key when iterating foundation dictionary",
+                            ADJLogWhyKey,
+                         [keyResult.fail foundationDictionary],
+                            @"key convertion fail", nil]
+                    failError:nil
+                    failException:nil];
         }
 
         id _Nullable valueObject = [foundationDictionary objectForKey:keyResult.value.stringValue];
         ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromObject:valueObject];
-        if (valueResult.failMessage != nil) {
-            return [ADJStringMap failInstanceFromIoValueWithReason:
-                [NSString stringWithFormat:@"invalid value: %@", valueResult.failMessage]];
+        if (valueResult.fail != nil) {
+            return [ADJResultNN
+                    failWithMessage:@"Cannot create string map instance from IoValue"
+                    failParams:
+                        [[NSDictionary alloc] initWithObjectsAndKeys:
+                         @"invalid value when iterating foundation dictionary",
+                            ADJLogWhyKey,
+                         [valueResult.fail foundationDictionary],
+                            @"value convertion fail", nil]
+                    failError:nil
+                    failException:nil];
         }
 
         [map setObject:valueResult.value forKey:keyResult.value.stringValue];
@@ -103,11 +122,21 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
     return [ADJResultNN okWithValue:instance];
 }
 + (nonnull ADJResultNN<ADJStringMap *> *)
-    failInstanceFromIoValueWithReason:(nonnull NSString *)failReason
+    failInstanceFromIoValueWithReason:(nonnull NSString *)why
 {
-    return [ADJResultNN failWithMessage:
-            [NSString stringWithFormat:
-             @"Cannot create string map instance from IoValue with %@", failReason]];
+    return  [self failInstanceFromIoValueWithReason:why error:nil];
+}
++ (nonnull ADJResultNN<ADJStringMap *> *)
+    failInstanceFromIoValueWithReason:(nonnull NSString *)why
+    error:(nullable NSError *)error
+{
+    return [ADJResultNN
+            failWithMessage:@"Cannot create string map instance from IoValue"
+            failParams:
+                [[NSDictionary alloc] initWithObjectsAndKeys:
+                 why, ADJLogWhyKey, nil]
+            failError:error
+            failException:nil];
 }
 
 #pragma mark - Private constructors
@@ -187,7 +216,7 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
     dispatch_once(&(self->_cachedJsonStringToken), ^{
         self.cachedFoundationStringMap = [self convertToFoundationStringMap];
         
-        ADJResultErr<NSString *> *_Nonnull stringValueResult =
+        ADJResultNL<NSString *> *_Nonnull stringValueResult =
             [ADJUtilF jsonFoundationValueFormat:self.cachedFoundationStringMap];
         
         if (stringValueResult.value != nil) {

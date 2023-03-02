@@ -146,9 +146,9 @@ static NSString *const kColumnValue = @"value";
             [ADJNonEmptyString instanceFromString:
              [selectStatement stringForColumnIndex:kSelectKeyFieldIndex]];
 
-        if (pairKeyResult.failMessage != nil) {
+        if (pairKeyResult.fail != nil) {
             [self.logger debugDev:@"Read invalid string map key"
-                      failMessage:pairKeyResult.failMessage
+                      resultFail:pairKeyResult.fail
                         issueType:ADJIssueStorageIo];
             continue;
         }
@@ -157,9 +157,9 @@ static NSString *const kColumnValue = @"value";
             [ADJNonEmptyString instanceFromString:
              [selectStatement stringForColumnIndex:kSelectValueFieldIndex]];
 
-        if (pairValueResult.failMessage != nil) {
+        if (pairValueResult.fail != nil) {
             [self.logger debugDev:@"Read invalid string map value"
-                      failMessage:pairValueResult.failMessage
+                       resultFail:pairValueResult.fail
                         issueType:ADJIssueStorageIo];
             continue;
         }

@@ -11,6 +11,8 @@
 #import "ADJUtilObj.h"
 #import "ADJConstants.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* ADJNonNegativeInt.h
@@ -42,8 +44,10 @@
 {
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
         [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
-    if (nnIntResult.failMessage != nil) {
-        return [ADJResultNN failWithMessage:nnIntResult.failMessage];
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create tally counter instance"
+                                        key:@"nnInt io value fail"
+                                      value:[nnIntResult.fail foundationDictionary]];
     }
 
     return [ADJResultNN okWithValue:
@@ -55,8 +59,11 @@
 {
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
         [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
-    if (nnIntResult.failMessage != nil) {
-        return [ADJResultNL failWithMessage:nnIntResult.failMessage];
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNL failWithMessage:nnIntResult.fail.message
+                                 failParams:nnIntResult.fail.params
+                                  failError:nnIntResult.fail.error
+                              failException:nnIntResult.fail.exception];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];

@@ -88,9 +88,9 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
         ADJResultNN<ADJNonEmptyString *> *_Nonnull v4ClientSdkResult =
             [ADJNonEmptyString instanceFromString:v4ActivityPackage.clientSdk];
 
-        if (v4ClientSdkResult.failMessage != nil) {
+        if (v4ClientSdkResult.fail != nil) {
             [self.logger debugDev:@"Cannot not add v4 package without client sdk"
-                      failMessage:v4ClientSdkResult.failMessage
+                       resultFail:v4ClientSdkResult.fail
                         issueType:ADJIssueStorageIo];
             continue;
         }
@@ -131,9 +131,9 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
     for (NSString *key in v4ActivityPackage.parameters) {
         ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJNonEmptyString instanceFromString:key];
-        if (keyResult.failMessage != nil) {
+        if (keyResult.fail != nil) {
             [self.logger debugDev:@"Invalid key when converting v4 parameters of activity package"
-                      failMessage:keyResult.failMessage
+                       resultFail:keyResult.fail
                         issueType:ADJIssueStorageIo];
             continue;
         }
@@ -141,9 +141,9 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
         ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromString:
              [v4ActivityPackage.parameters objectForKey:keyResult.value.stringValue]];
-        if (valueResult.failMessage != nil) {
+        if (valueResult.fail != nil) {
             [self.logger debugDev:@"Invalid value when converting v4 parameters of activity package"
-                      failMessage:valueResult.failMessage
+                       resultFail:valueResult.fail
                         issueType:ADJIssueStorageIo];
             continue;
         }

@@ -10,6 +10,7 @@
 
 #import "ADJLogQueueStateAndTracker.h"
 #import "ADJSdkPackageBuilder.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 @interface ADJLogQueueController ()
@@ -259,7 +260,8 @@
                      source:(nonnull NSString *)source {
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package when it is nil"
-                         from:source
+                          key:ADJLogFromKey
+                        value:source
                     issueType:ADJIssueInvalidInput];
         return;
     }
@@ -309,9 +311,9 @@
     }
 
     ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
-    if (nowResult.failMessage != nil) {
+    if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
-                  failMessage:nowResult.failMessage
+                  resultFail:nowResult.fail
                     issueType:ADJIssueExternalApi];
     } else {
         [ADJSdkPackageBuilder

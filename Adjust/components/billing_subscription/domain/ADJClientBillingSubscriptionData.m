@@ -55,17 +55,17 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     ADJResultNN<ADJMoney *> *_Nonnull priceResult =
         [ADJMoney instanceFromAmountDecimalNumber:adjustBillingSubscription.priceDecimalNumber
                                          currency:adjustBillingSubscription.currency];
-    if (priceResult.failMessage != nil) {
+    if (priceResult.fail != nil) {
         [logger errorClient:@"Cannot create billing subscription with an invalid price"
-                failMessage:priceResult.failMessage];
+                 resultFail:priceResult.fail];
         return nil;
     }
 
     ADJResultNN<ADJNonEmptyString *> *_Nonnull transactionIdResult =
         [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId];
-    if (transactionIdResult.failMessage != nil) {
+    if (transactionIdResult.fail != nil) {
         [logger errorClient:@"Cannot create billing subscription with an invalid transaction id"
-                failMessage:transactionIdResult.failMessage];
+                 resultFail:transactionIdResult.fail];
         return nil;
     }
 
@@ -73,9 +73,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         [ADJNonEmptyString
             instanceFromString:[ADJUtilConv convertToBase64StringWithDataValue:
                                 adjustBillingSubscription.receiptData]];
-    if (receiptDataStringResult.failMessage != nil) {
+    if (receiptDataStringResult.fail != nil) {
         [logger errorClient:@"Cannot create billing subscription with an invalid receipt data"
-                failMessage:receiptDataStringResult.failMessage];
+                 resultFail:receiptDataStringResult.fail];
         return nil;
     }
 
@@ -83,16 +83,16 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         [ADJTimestampMilli instanceWithOptionalNumberDoubleSecondsSince1970:
          adjustBillingSubscription.transactionDate != nil
          ? @(adjustBillingSubscription.transactionDate.timeIntervalSince1970) : nil];
-    if (transactionTimestampResult.failMessage != nil) {
+    if (transactionTimestampResult.fail != nil) {
         [logger noticeClient:@"Cannot use invalid transaction date"
-                 failMessage:transactionTimestampResult.failMessage];
+                  resultFail:transactionTimestampResult.fail];
     }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull salesRegionResult =
         [ADJNonEmptyString instanceFromOptionalString:adjustBillingSubscription.salesRegion];
-    if (salesRegionResult.failMessage != nil) {
+    if (salesRegionResult.fail != nil) {
         [logger noticeClient:@"Cannot use invalid sales region in billing subscription"
-                 failMessage:salesRegionResult.failMessage];
+                  resultFail:salesRegionResult.fail];
     }
 
     ADJStringMap *_Nullable callbackParameters =
@@ -129,9 +129,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         [propertiesMap pairValueWithKey:kPriceAmountKey];
     ADJResultNN<ADJMoneyAmountBase *> *_Nonnull priceAmountResult =
         [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue];
-    if (priceAmountResult.failMessage != nil) {
+    if (priceAmountResult.fail != nil) {
         [logger debugDev:@"Cannot decode ClientBillingSubscriptionData without valid price amount"
-             failMessage:priceAmountResult.failMessage
+              resultFail:priceAmountResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }

@@ -47,23 +47,23 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     
     ADJResultNN<ADJNonEmptyString *> *_Nonnull eventTokenResult =
         [ADJNonEmptyString instanceFromString:adjustEvent.eventToken];
-    if (eventTokenResult.failMessage != nil) {
+    if (eventTokenResult.fail != nil) {
         [logger errorClient:@"Cannot create event with invalid event token"
-                failMessage:eventTokenResult.failMessage];
+                 resultFail:eventTokenResult.fail];
         return nil;
     }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull deduplicationIdResult =
         [ADJNonEmptyString instanceFromOptionalString:adjustEvent.deduplicationId];
-    if (deduplicationIdResult.failMessage != nil) {
+    if (deduplicationIdResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid deduplication id"
-                 failMessage:deduplicationIdResult.failMessage];
+                  resultFail:deduplicationIdResult.fail];
     }
 
     ADJResultNL<ADJMoney *> *_Nonnull revenueResult = [self revenueWithAdjustEvent:adjustEvent];
-    if (revenueResult.failMessage != nil) {
+    if (revenueResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid revenue"
-                 failMessage:revenueResult.failMessage];
+                  resultFail:revenueResult.fail];
     }
     
     ADJStringMap *_Nullable callbackParameters =
@@ -282,9 +282,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         [propertiesMap pairValueWithKey:kRevenueAmountKey];
     ADJResultNL<ADJMoneyAmountBase *> *_Nonnull revenueAmountResult =
         [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue];
-    if (revenueAmountResult.failMessage != nil) {
+    if (revenueAmountResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid revenue amount from adjust event"
-                failMessage:revenueAmountResult.failMessage];
+                  resultFail:revenueAmountResult.fail];
     }
 
     ADJNonEmptyString *_Nullable revenueCurrency =
@@ -312,4 +312,3 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 }
 
 @end
-

@@ -37,21 +37,21 @@ static NSString *const kValueToAddKey = @"valueToAdd";
 {
     ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToAddResult =
         [ADJNonEmptyString instanceFromString:keyToAdd];
-    if (keyToAddResult.failMessage != nil) {
+    if (keyToAddResult.fail != nil) {
         [logger errorClient:@"Invalid add global parameter key"
                         key:@"global parameter type"
                       value:globalParameterType
-                failMessage:keyToAddResult.failMessage];
+                 resultFail:keyToAddResult.fail];
         return nil;
     }
 
     ADJResultNN<ADJNonEmptyString *> *_Nonnull valueToAddResult =
         [ADJNonEmptyString instanceFromString:valueToAdd];
-    if (valueToAddResult.failMessage != nil) {
+    if (valueToAddResult.fail != nil) {
         [logger errorClient:@"Invalid add global parameter value"
                         key:@"global parameter type"
                       value:globalParameterType
-                failMessage:valueToAddResult.failMessage];
+                 resultFail:valueToAddResult.fail];
         return nil;
     }
 

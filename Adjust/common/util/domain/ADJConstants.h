@@ -32,6 +32,8 @@ FOUNDATION_EXPORT NSUInteger const ADJHashCodeMultiplier;
 
 FOUNDATION_EXPORT NSUInteger const ADJDefaultMaxCapacityEventDeduplication;
 
+FOUNDATION_EXPORT NSString *const ADJIdForAdvertisersZeros;
+
 // IoData metadata
 FOUNDATION_EXPORT NSString *const ADJMetadataVersionKey;
 FOUNDATION_EXPORT NSString *const ADJMetadataVersionValue;
@@ -48,14 +50,28 @@ FOUNDATION_EXPORT const BOOL ADJIsSdkOfflineWhenStarting;
 FOUNDATION_EXPORT const BOOL ADJIsNetworkReachableWhenStarting;
 
 // logging
+FOUNDATION_EXPORT NSString *const ADJLogMessageKey;
+FOUNDATION_EXPORT NSString *const ADJLogLevelKey;
+FOUNDATION_EXPORT NSString *const ADJLogIssueKey;
+FOUNDATION_EXPORT NSString *const ADJLogParamsKey;
+FOUNDATION_EXPORT NSString *const ADJLogSourceKey;
+FOUNDATION_EXPORT NSString *const ADJLogCallerThreadIdKey;
+FOUNDATION_EXPORT NSString *const ADJLogRunningThreadIdKey;
+FOUNDATION_EXPORT NSString *const ADJLogCallerDescriptionKey;
+FOUNDATION_EXPORT NSString *const ADJLogInstanceIdKey;
+FOUNDATION_EXPORT NSString *const ADJLogIsPreSdkInitKey;
+FOUNDATION_EXPORT NSString *const ADJLogFailKey;
+
 FOUNDATION_EXPORT NSString *const ADJLogWhereKey;
 FOUNDATION_EXPORT NSString *const ADJLogSubjectKey;
 FOUNDATION_EXPORT NSString *const ADJLogWhyKey;
 FOUNDATION_EXPORT NSString *const ADJLogExpectedKey;
 FOUNDATION_EXPORT NSString *const ADJLogActualKey;
-FOUNDATION_EXPORT NSString *const ADJLogFailMessageKey;
 FOUNDATION_EXPORT NSString *const ADJLogValueKey;
 FOUNDATION_EXPORT NSString *const ADJLogFromKey;
 FOUNDATION_EXPORT NSString *const ADJLogValueNameKey;
+
+FOUNDATION_EXPORT NSString *const ADJLogErrorKey;
+FOUNDATION_EXPORT NSString *const ADJLogExceptionKey;
 
 NS_ASSUME_NONNULL_END

@@ -194,8 +194,9 @@
 }
 
 + (nullable NSDictionary *)
-extractDictionaryValueWithDictionary:(nullable NSDictionary *)dictionary
-key:(nonnull NSString *)key {
+    extractDictionaryValueWithDictionary:(nullable NSDictionary *)dictionary
+    key:(nonnull NSString *)key
+{
     if (dictionary == nil) {
         return nil;
     }
@@ -214,4 +215,3 @@ key:(nonnull NSString *)key {
 }
 
 @end
-

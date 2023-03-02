@@ -38,10 +38,10 @@ static NSString *const kEventCountKey = @"eventCount";
     ADJResultNN<ADJTallyCounter *> *_Nonnull eventCountResult =
         [ADJTallyCounter instanceFromIoDataValue:
          [ioData.propertiesMap pairValueWithKey:kEventCountKey]];
-    if (eventCountResult.failMessage != nil) {
+    if (eventCountResult.fail != nil) {
         [logger debugDev:@"Cannot create instance from Io data invalid io value"
-               valueName:kEventCountKey
-             failMessage:eventCountResult.failMessage
+                 subject:kEventCountKey
+              resultFail:eventCountResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }
@@ -56,9 +56,9 @@ static NSString *const kEventCountKey = @"eventCount";
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
         [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt];
 
-    if (eventCountIntResult.failMessage != nil) {
+    if (eventCountIntResult.fail != nil) {
         [logger debugDev:@"Invalid event count from external"
-             failMessage:eventCountIntResult.failMessage
+              resultFail:eventCountIntResult.fail
                issueType:ADJIssueExternalApi];
         return nil;
     }

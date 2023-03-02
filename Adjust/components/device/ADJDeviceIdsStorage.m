@@ -64,9 +64,9 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull v4UuidResult =
         [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid];
-    if (v4UuidResult.failMessage != nil) {
+    if (v4UuidResult.fail != nil) {
         [self.logger debugDev:@"Invalid v4 uuid read"
-                  failMessage:v4UuidResult.failMessage
+                   resultFail:v4UuidResult.fail
                     issueType:ADJIssueStorageIo];
         return;
     }

@@ -17,9 +17,4 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                 publicKeyHash:(nonnull ADJNonEmptyString *)publicKeyHash;
 
-// public api
-- (void)setRequestDataWeakRefWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder;
-
-- (void)clearRequestDataWeakRef;
-
 @end

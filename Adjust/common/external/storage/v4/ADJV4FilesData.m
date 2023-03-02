@@ -10,6 +10,7 @@
 
 #import "ADJUtilFiles.h"
 #import "ADJAdjustLogMessageData.h"
+#import "ADJResultNL.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -29,31 +30,26 @@
     [NSKeyedUnarchiver setClass:[ADJV4ActivityState class] forClassName:@"AIActivityState"];
     [NSKeyedUnarchiver setClass:[ADJV4ActivityState class] forClassName:@"ADJActivityState"];
     _v4ActivityState = [ADJV4FilesData readObjectWithFileName:@"AdjustIoActivityState"
-                                                   objectName:@"Activity state"
                                                         class:[ADJV4ActivityState class]
                                                        logger:logger];
     
     [NSKeyedUnarchiver setClass:[ADJV4Attribution class] forClassName:@"ADJAttribution"];
     _v4Attribution = [ADJV4FilesData readObjectWithFileName:@"AdjustIoAttribution"
-                                                 objectName:@"Attribution"
                                                       class:[ADJV4Attribution class]
                                                      logger:logger];
     
     [NSKeyedUnarchiver setClass:[ADJV4ActivityPackage class] forClassName:@"ADJActivityPackage"];
     _v4ActivityPackageArray = [ADJV4FilesData readObjectWithFileName:@"AdjustIoPackageQueue"
-                                                          objectName:@"Package queue"
                                                                class:[NSArray class]
                                                               logger:logger];
     
     _v4SessionCallbackParameters =
     [ADJV4FilesData readObjectWithFileName:@"AdjustSessionCallbackParameters"
-                                objectName:@"Session Callback parameters"
                                      class:[NSDictionary class]
                                     logger:logger];
     
     _v4SessionPartnerParameters =
     [ADJV4FilesData readObjectWithFileName:@"AdjustSessionPartnerParameters"
-                                objectName:@"Session Partner parameters"
                                      class:[NSDictionary class]
                                     logger:logger];
     
@@ -67,86 +63,103 @@
 
 #pragma mark Internal Methods
 + (nullable id)readObjectWithFileName:(nonnull NSString *)fileName
-                           objectName:(nonnull NSString *)objectName
                                 class:(nonnull Class)classToRead
-                               logger:(nonnull ADJLogger *)logger {
+                               logger:(nonnull ADJLogger *)logger
+{
     // Try to read from Application Support directory first.
     NSString *_Nullable appSupportFilePath =
         [ADJUtilFiles filePathInAdjustAppSupportDir:fileName];
-    
-    id _Nullable appSupportReadObject = [self readObjectWithFilePath:appSupportFilePath
-                                                            fileName:fileName
-                                                          objectName:objectName
-                                                               class:classToRead
-                                                              logger:logger];
-    
-    if (appSupportReadObject != nil) {
-        return appSupportReadObject;
+    if (appSupportFilePath == nil) {
+        [logger debugDev:@"Could not obtain the file path in the adjust app support dir"
+                    key:@"file name"
+                  value:fileName
+               issueType:ADJIssueStorageIo];
+    } else {
+        ADJResultNL<id> *_Nonnull appSupportReadObjectResult =
+            [self readObjectWithFilePath:appSupportFilePath class:classToRead];
+        if (appSupportReadObjectResult.fail != nil) {
+            [logger debugDev:@"Failed to read object in the adjust app support dir"
+                         key:@"file name"
+                       value:fileName
+                  resultFail:appSupportReadObjectResult.fail
+                   issueType:ADJIssueStorageIo];
+        } else {
+            return appSupportReadObjectResult.value;
+        }
     }
     
+
     // If in here, for some reason, reading of file from Application Support folder failed.
     // Let's check the Documents folder.
     NSString *_Nullable documentsFilePath = [ADJUtilFiles filePathInDocumentsDir:fileName];
-    
-    id _Nullable documentsReadObject = [self readObjectWithFilePath:documentsFilePath
-                                                           fileName:fileName
-                                                         objectName:objectName
-                                                              class:classToRead
-                                                             logger:logger];
-    
-    return documentsReadObject;
-}
+    if (documentsFilePath == nil) {
 
-+ (nullable id)readObjectWithFilePath:(nullable NSString *)filePath
-                             fileName:(nonnull NSString *)fileName
-                           objectName:(nonnull NSString *)objectName
-                                class:(nonnull Class)classToRead
-                               logger:(nonnull ADJLogger *)logger {
-    if (filePath == nil) {
-        [logger debugDev:@"Cannot decode object without file path"
-                     key:@"objectName"
-                   value:objectName
-               issueType:ADJIssueStorageIo];
         return nil;
     }
-    
-    @try {
-        id _Nullable objectRead = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
-        if (objectRead == nil) {
-            [logger debugDev:@"Cannot decode object"
-                        key1:@"objectName"
-                      value1:objectName
-                        key2:@"filePath"
-                      value2:filePath
-                   issueType:ADJIssueStorageIo];
-            return nil;
-        }
-        
-        if (! [objectRead isKindOfClass:classToRead]) {
-            [logger debugDev:@"Cannot cast object"
-                        key1:@"objectName"
-                      value1:objectName
-                        key2:@"filePath"
-                      value2:filePath
-                   issueType:ADJIssueStorageIo];
-            return nil;
-        }
-        
-        return objectRead;
-    } @catch (NSException *ex) {
-        [logger logWithInput:
-             [[ADJInputLogMessageData alloc]
-              initWithMessage:@"Exception from reading object from file"
-              level:ADJAdjustLogLevelDebug
-              issueType:ADJIssueStorageIo
-              nsError:nil
-              nsException:ex
-              messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
-                             objectName, @"objectName",
-                             filePath, @"filePath", nil]]];
+
+    ADJResultNL<id> *_Nonnull documentsReadObjectResult =
+        [self readObjectWithFilePath:documentsFilePath class:classToRead];
+    if (documentsReadObjectResult.fail != nil) {
+        [logger debugWithMessage:@"Failed to read object in the documents dir"
+                    builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+            [logBuilder withFail:documentsReadObjectResult.fail
+                           issue:ADJIssueStorageIo];
+            [logBuilder withKey:@"file name" value:fileName];
+        }];
+        return nil;
     }
-    
-    return nil;
+
+    return documentsReadObjectResult.value;
+}
+
++ (nonnull ADJResultNL<id> *)
+    readObjectWithFilePath:(nonnull NSString *)filePath
+    class:(nonnull Class)classToRead
+{
+    if (@available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *)) {
+        NSError *_Nullable error = nil;
+        NSData *_Nullable readData = [NSData dataWithContentsOfFile:filePath
+                                                            options:0
+                                                              error:&error];
+        if (error != nil) {
+            return [ADJResultNL failWithError:error
+                                      message:@"Trying to read data with contents of file in path"];
+        }
+        if (readData == nil) {
+            return [ADJResultNL okWithoutValue];
+        }
+
+        // TODO: check if it works with v4 written data.
+        //  If not, we still need to use the deprecated version
+        id _Nullable objectRead =
+            [NSKeyedUnarchiver unarchivedObjectOfClass:classToRead fromData:readData error:&error];
+        if (error != nil) {
+            return [ADJResultNL failWithError:error
+                                      message:@"Trying to unarchive object"];
+        }
+
+        if (objectRead == nil) {
+            return [ADJResultNL failWithMessage:@"Unarchived object returned nil without error"];
+        }
+
+        return [ADJResultNL okWithValue:objectRead];
+    } else {
+        @try {
+            id _Nullable objectRead = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+            if (objectRead == nil) {
+                return [ADJResultNL okWithoutValue];
+            }
+
+            if (! [objectRead isKindOfClass:classToRead]) {
+                return [ADJResultNL failWithMessage:@"Cannot cast read object to class"];
+            }
+
+            return [ADJResultNL okWithValue:objectRead];
+
+        } @catch (NSException *exception) {
+            return [ADJResultNL failWithException:exception];
+        }
+    }
 }
 
 @end

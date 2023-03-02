@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJStringMap.h"
-#import "ADJResultErr.h"
 
 @interface ADJUtilConv : NSObject
 
@@ -25,11 +24,11 @@
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue;
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
-+ (nonnull ADJResultErr<NSData *> *)
++ (nonnull ADJResultNL<NSData *> *)
     convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue;
-+ (nonnull ADJResultErr<id> *)
++ (nonnull ADJResultNL<id> *)
     convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString;
-+ (nonnull ADJResultErr<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData;
++ (nonnull ADJResultNL<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData;
 
 + (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
 

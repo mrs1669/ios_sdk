@@ -457,9 +457,9 @@
     }
 
     ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
-    if (nowResult.failMessage != nil) {
+    if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
-                  failMessage:nowResult.failMessage
+                  resultFail:nowResult.fail
                     issueType:ADJIssueExternalApi];
     } else {
         [ADJSdkPackageBuilder

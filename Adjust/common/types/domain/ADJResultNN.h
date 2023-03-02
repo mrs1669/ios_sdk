@@ -8,19 +8,44 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ADJResultNN<S> : NSObject
+#import "ADJResultFail.h"
+//@protocol ADJResultFail;
+
+@interface ADJResultNN<S> : NSObject<ADJResultFail>
 // instantiation
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 + (nonnull ADJResultNN<S> *)okWithValue:(nonnull S)value;
+
 + (nonnull ADJResultNN<S> *)failWithMessage:(nonnull NSString *)failMessage;
++ (nonnull ADJResultNN<S> *)failWithMessage:(nonnull NSString *)failMessage
+                                        key:(nonnull NSString *)key
+                                      value:(nullable id)value;
++ (nonnull ADJResultNN<S> *)failWithException:(nonnull NSException *)exception;
++ (nonnull ADJResultNN<S> *)failWithError:(nonnull NSError *)error
+                                  message:(nullable NSString *)failMessage;
+
++ (nonnull ADJResultNN<S> *)
+    failWithMessage:(nullable NSString *)failMessage
+    failParams:(nullable NSDictionary<NSString *, id> *)failParams
+    failError:(nullable NSError *)failError
+    failException:(nullable NSException *)failException;
+
++ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromResultFail:
+    (nonnull id<ADJResultFail>)resultFail;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) S value;
-@property (nullable, readonly, strong, nonatomic) NSString *failMessage;
-
-// public api
-- (void)okBlock:(void (^ _Nonnull NS_NOESCAPE)(S _Nonnull value))okBlock
-      failBlock:(void (^ _Nonnull NS_NOESCAPE)(NSString *_Nonnull failMessage))failBlock;
+@property (nullable, readonly, strong, nonatomic) id<ADJResultFail> fail;
 
 @end
+
+/*
+ @property (nullable, readonly, strong, nonatomic) NSString *message;
+ @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *params;
+ @property (nullable, readonly, strong, nonatomic) NSError *error;
+ @property (nullable, readonly, strong, nonatomic) NSException *exception;
+
+ - (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
+
+ */

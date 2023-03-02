@@ -46,7 +46,7 @@
     convertToLLNumberWithStringValue:(nonnull NSString *)stringValue
 {
     NSScanner *_Nonnull scanner = [NSScanner scannerWithString:stringValue];
-    [scanner setLocale:[ADJUtilF usLocale]];
+        [scanner setLocale:[ADJUtilF usLocale]];
 
     long long scannedLL;
     if (! [scanner scanLongLong:&scannedLL]) {
@@ -115,7 +115,7 @@
                                                options:0];
 }
 
-+ (nonnull ADJResultErr<NSData *> *)
++ (nonnull ADJResultNL<NSData *> *)
     convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
 {
     NSError *_Nullable errorPtr = nil;
@@ -125,33 +125,35 @@
         [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:&errorPtr];
 
     if (errorPtr != nil) {
-        return [ADJResultErr failWithError:errorPtr];
+        return [ADJResultNL failWithError:errorPtr
+                                  message:@"NSJSONSerialization dataWithJSONObject"];
     } else if (data == nil) {
-        return [ADJResultErr okWithoutValue];
+        return [ADJResultNL okWithoutValue];
     } else {
-        return [ADJResultErr okWithValue:data];
+        return [ADJResultNL okWithValue:data];
     }
 }
 
-+ (nonnull ADJResultErr<id> *)
++ (nonnull ADJResultNL<id> *)
     convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString
 {
     return [ADJUtilConv convertToJsonFoundationValueWithJsonData:
              [jsonString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
-+ (nonnull ADJResultErr<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData {
++ (nonnull ADJResultNL<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData {
     NSError *_Nullable errorPtr = nil;
 
     id _Nullable jsonObject =
         [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&errorPtr];
 
     if (errorPtr != nil) {
-        return [ADJResultErr failWithError:errorPtr];
+        return [ADJResultNL failWithError:errorPtr
+                                  message:@"NSJSONSerialization JSONObjectWithData"];
     } else if (jsonObject == nil) {
-        return [ADJResultErr okWithoutValue];
+        return [ADJResultNL okWithoutValue];
     } else {
-        return [ADJResultErr okWithValue:jsonObject];
+        return [ADJResultNL okWithValue:jsonObject];
     }
 }
 
@@ -252,10 +254,11 @@
         ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJUtilConv extractNsNullableStringWithObject:[keyValueArray objectAtIndex:i]];
 
-        if (keyResult.failMessage != nil) {
+        if (keyResult.fail != nil) {
             [logger debugDev:@"Cannot add to map with key"
-                        from:sourceDescription
-                 failMessage:keyResult.failMessage
+                         key:ADJLogFromKey
+                       value:sourceDescription
+                  resultFail:keyResult.fail
                    issueType:ADJIssueInvalidInput];
             continue;
         }
@@ -263,10 +266,11 @@
         ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJUtilConv extractNsNullableStringWithObject:[keyValueArray objectAtIndex:i + 1]];
 
-        if (valueResult.failMessage != nil) {
+        if (valueResult.fail != nil) {
             [logger debugDev:@"Cannot add to map with value"
-                        from:sourceDescription
-                 failMessage:valueResult.failMessage
+                         key:ADJLogFromKey
+                       value:sourceDescription
+                  resultFail:valueResult.fail
                    issueType:ADJIssueInvalidInput];
             continue;
         }
@@ -342,10 +346,11 @@
         ADJResultNN<ADJNonEmptyString *> *_Nonnull nameResult =
             [ADJUtilConv extractNsNullableStringWithObject:[nameKeyValueArray objectAtIndex:i]];
 
-        if (nameResult.failMessage != nil) {
+        if (nameResult.fail != nil) {
             [logger debugDev:@"Cannot add to map collection with name"
-                        from:sourceDescription
-                 failMessage:nameResult.failMessage
+                         key:ADJLogFromKey
+                       value:sourceDescription
+                  resultFail:nameResult.fail
                    issueType:ADJIssueInvalidInput];
             continue;
         }
@@ -353,10 +358,11 @@
         ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJUtilConv extractNsNullableStringWithObject:[nameKeyValueArray objectAtIndex:i + 1]];
 
-        if (keyResult.failMessage != nil) {
+        if (keyResult.fail != nil) {
             [logger debugDev:@"Cannot add to map collection with key"
-                        from:sourceDescription
-                 failMessage:keyResult.failMessage
+                         key:ADJLogFromKey
+                       value:sourceDescription
+                  resultFail:keyResult.fail
                    issueType:ADJIssueInvalidInput];
             continue;
         }
@@ -367,10 +373,11 @@
                 [ADJUtilConv extractNsNullableStringWithObject:
                  [nameKeyValueArray objectAtIndex:i + 2]];
 
-            if (valueResult.failMessage != nil) {
+            if (valueResult.fail != nil) {
                 [logger debugDev:@"Cannot add to map collection with string value"
-                            from:sourceDescription
-                     failMessage:valueResult.failMessage
+                             key:ADJLogFromKey
+                           value:sourceDescription
+                      resultFail:valueResult.fail
                        issueType:ADJIssueInvalidInput];
             } else {
                 value = valueResult.value.stringValue;

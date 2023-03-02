@@ -46,11 +46,11 @@ static NSString *const kIoDataKey = @"ioData";
     }
     
     ADJResultNN<ADJTimestampMilli *> *_Nonnull apiTimestampResult =
-        [ADJTimestampMilli
-            instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]];
-    if (apiTimestampResult.failMessage != nil) {
+        [ADJTimestampMilli instanceFromIoDataValue:
+         [metadataMap pairValueWithKey:kApiTimestampKey]];
+    if (apiTimestampResult.fail != nil) {
         [logger debugDev:@"Cannot create client action data with invalid api timestamp"
-             failMessage:apiTimestampResult.failMessage
+             resultFail:apiTimestampResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }

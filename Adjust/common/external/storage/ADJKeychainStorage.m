@@ -50,10 +50,10 @@
 
     ADJResultNN<ADJNonEmptyString *> *_Nonnull stringResult =
         [ADJNonEmptyString instanceFromString:stringValue];
-    if (stringResult.failMessage != nil) {
+    if (stringResult.fail != nil) {
         [self.logger debugDev:@"Invalid value in generic password keychain"
-                    valueName:key
-                  failMessage:stringResult.failMessage
+                      subject:key
+                   resultFail:stringResult.fail
                     issueType:ADJIssueExternalApi];
         return nil;
     }

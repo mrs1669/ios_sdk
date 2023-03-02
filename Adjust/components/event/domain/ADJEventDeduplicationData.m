@@ -36,11 +36,11 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
     }
     
     ADJNonEmptyString *_Nullable deduplicationId =
-    [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
+        [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
     
     if (deduplicationId == nil) {
         [logger debugDev:@"Cannot create instance from io data with invalid io value"
-               valueName:kDeduplicationIdKey
+                 subject:kDeduplicationIdKey
                issueType:ADJIssueStorageIo];
         return nil;
     }

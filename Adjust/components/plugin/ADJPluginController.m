@@ -16,6 +16,7 @@
 #import "ADJPluginLogger.h"
 #import "ADJAdjustPublishers.h"
 #import "ADJUtilF.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 @interface ADJPluginController ()
@@ -165,11 +166,12 @@
         ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToWriteResult =
             [ADJNonEmptyString instanceFromString:readKey];
 
-        if (keyToWriteResult.failMessage != nil) {
+        if (keyToWriteResult.fail != nil) {
             [self.logger debugDev:@"Invalid key for parameter"
-                             from:source
-                      failMessage:keyToWriteResult.failMessage
-                        issueType:ADJIssueInvalidInput];
+                              key:ADJLogFromKey
+                            value:source
+                       resultFail:keyToWriteResult.fail
+                        issueType:ADJIssueInvalidInput];;
 
             continue;
         }
@@ -179,10 +181,11 @@
         ADJResultNN<ADJNonEmptyString *> *_Nonnull valueToWriteResult =
             [ADJNonEmptyString instanceFromString:readValue];
 
-        if (valueToWriteResult.failMessage != nil) {
+        if (valueToWriteResult.fail != nil) {
             [self.logger debugDev:@"Invalid value for parameter"
-                             from:source
-                      failMessage:valueToWriteResult.failMessage
+                              key:ADJLogFromKey
+                            value:source
+                       resultFail:valueToWriteResult.fail
                         issueType:ADJIssueInvalidInput];
 
             continue;

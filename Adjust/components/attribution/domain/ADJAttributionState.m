@@ -8,6 +8,7 @@
 #import "ADJAttributionState.h"
 
 #import "ADJAttributionTracker.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 /* .h
@@ -209,32 +210,32 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 - (BOOL)canStartAskingFromSdkWithSource:(nonnull NSString *)source {
     if (self.doNotInitiateAttributionFromSdk) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"it has been configured to not do so"];
+                                             why:@"it has been configured to not do so"];
     }
 
     if (! self.hasSdkStart) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"the sdk has not started yet"];
+                                             why:@"the sdk has not started yet"];
     }
 
     if ([self.stateData isAskingStatus]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"is already asking attribution"];
+                                                why:@"is already asking attribution"];
     }
 
     if ([self.stateData waitingForInstallSessionTrackingStatus]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"is waiting for install tracking"];
+                                                why:@"is waiting for install tracking"];
     }
 
     if ([self.stateData unavailableAttribution]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"the attribution is unavailable"];
+                                                why:@"the attribution is unavailable"];
     }
 
     if ([self.stateData hasAttributionStatus]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"it already has the attribution"];
+                                                why:@"it already has the attribution"];
     }
 
     if (! [self.stateData canAskStatus]) {
@@ -251,12 +252,12 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 }
 
 - (BOOL)logCannotStartAskingWithSource:(nonnull NSString *)source
-                                                        reason:(nonnull NSString *)reason
+                                   why:(nonnull NSString *)why
 {
     [self.logger debugDev:@"Cannot start asking"
                      from:source
-                      key:@"reason"
-                    value:reason];
+                      key:ADJLogWhyKey
+                    value:why];
     return NO;
 }
 

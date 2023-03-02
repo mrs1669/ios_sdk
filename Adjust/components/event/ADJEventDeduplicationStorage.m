@@ -67,9 +67,9 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 
         ADJResultNN<ADJNonEmptyString *> *_Nonnull deduplicationIdResult =
             [ADJNonEmptyString instanceFromString:transactionId];
-        if (deduplicationIdResult.failMessage != nil) {
+        if (deduplicationIdResult.fail != nil) {
             [self.logger debugDev:@"Invalid transaction id for v4 migration of event deduplication"
-                      failMessage:deduplicationIdResult.failMessage
+                       resultFail:deduplicationIdResult.fail
                         issueType:ADJIssueStorageIo];
             continue;
         }
@@ -81,5 +81,3 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 }
 
 @end
-
-

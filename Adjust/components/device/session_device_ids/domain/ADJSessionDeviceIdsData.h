@@ -13,15 +13,16 @@
 
 @interface ADJSessionDeviceIdsData : NSObject
 // instantiation
-- (nonnull instancetype)initWithAdvertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
-                                  identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor;
+- (nonnull instancetype)
+    initWithAdvertisingIdentifier:(nullable ADJNonEmptyString *)advertisingIdentifier
+    identifierForVendor:(nullable ADJNonEmptyString *)identifierForVendor;
 
-- (nonnull instancetype)initWithFailMessage:(nullable NSString *)failMessage;
+//- (nonnull instancetype)initWithFailMessage:(nullable NSString *)failMessage;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nullable, readonly, strong, nonatomic) NSString *failMessage;
+//@property (nullable, readonly, strong, nonatomic) NSString *failMessage;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *advertisingIdentifier;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *identifierForVendor;
 

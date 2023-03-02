@@ -11,6 +11,7 @@
 #import "ADJMeasurementSessionState.h"
 #import "ADJMeasurementSessionStateStorageAction.h"
 #import "ADJUtilSys.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 @interface ADJMeasurementSessionController ()
@@ -154,10 +155,11 @@
 #pragma mark Internal Methods
 - (nullable ADJTimestampMilli *)ccNonMonotonicNowTimestampWithSource:(nonnull NSString *)source {
     ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
-    if (nowResult.failMessage != nil) {
+    if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot obtain a valid now timestamp"
-                         from:source
-                  failMessage:nowResult.failMessage
+                         key:ADJLogFromKey
+                        value:source
+                   resultFail:nowResult.fail
                     issueType:ADJIssueExternalApi];
         return nil;
     }

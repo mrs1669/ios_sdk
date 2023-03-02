@@ -46,17 +46,17 @@ static NSString *const kDomainValidationRegexString =
 
     ADJResultNN<ADJNonEmptyString *> *_Nonnull appTokenResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.appToken];
-    if (appTokenResult.failMessage != nil) {
+    if (appTokenResult.fail != nil) {
         [logger errorClient:@"Cannot create config with invalid app token"
-                failMessage:appTokenResult.failMessage];
+                 resultFail:appTokenResult.fail];
         return nil;
     }
 
     ADJResultNN<ADJNonEmptyString *> *_Nonnull environmentResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.environment];
-    if (environmentResult.failMessage != nil) {
+    if (environmentResult.fail != nil) {
         [logger errorClient:@"Cannot create config with invalid environment"
-                failMessage:environmentResult.failMessage];
+                 resultFail:environmentResult.fail];
         return nil;
     }
 
@@ -75,9 +75,9 @@ static NSString *const kDomainValidationRegexString =
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull defaultTrackerResult =
         [ADJNonEmptyString instanceFromOptionalString:adjustConfig.defaultTracker];
-    if (defaultTrackerResult.failMessage != nil) {
+    if (defaultTrackerResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid default tracker"
-                 failMessage:defaultTrackerResult.failMessage];
+                  resultFail:defaultTrackerResult.fail];
     }
 
     BOOL doNotLogAny =
@@ -110,16 +110,16 @@ static NSString *const kDomainValidationRegexString =
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
         [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointUrl];
-    if (customEndpointUrlResult.failMessage != nil) {
+    if (customEndpointUrlResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid custom endpoint url"
-                 failMessage:customEndpointUrlResult.failMessage];
+                  resultFail:customEndpointUrlResult.fail];
     }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull customEndpointPublicKeyHashResult =
         [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointPublicKeyHash];
-    if (customEndpointPublicKeyHashResult.failMessage != nil) {
+    if (customEndpointPublicKeyHashResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid custom endpoint public key hash"
-                 failMessage:customEndpointPublicKeyHashResult.failMessage];
+                  resultFail:customEndpointPublicKeyHashResult.fail];
     }
 
     ADJClientCustomEndpointData *_Nullable clientCustomEndpointData = nil;
@@ -150,9 +150,9 @@ static NSString *const kDomainValidationRegexString =
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
         [ADJNonNegativeInt
          instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt];
-    if (eventIdDeduplicationMaxCapacityResult.failMessage != nil) {
+    if (eventIdDeduplicationMaxCapacityResult.fail != nil) {
         [logger noticeClient:@"Cannot configure invalid max deduplication event capacity"
-                 failMessage:eventIdDeduplicationMaxCapacityResult.failMessage];
+                  resultFail:eventIdDeduplicationMaxCapacityResult.fail];
     }
 /* TODO: add at later commit
      ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =

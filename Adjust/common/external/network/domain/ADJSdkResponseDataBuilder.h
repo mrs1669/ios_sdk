@@ -28,11 +28,12 @@
 
 // public api
 - (BOOL)didReceiveJsonResponse;
-
-- (void)logErrorWithLogger:(nullable ADJLogger *)logger
-                   nsError:(nullable NSError *)nsError
-              errorMessage:(nonnull NSString *)errorMessage;
-
+/*
+- (void)logErrorWithLogger:(nonnull ADJLogger *)logger
+                resultFail:(nonnull id<ADJResultFail>)resultFail;
+                   //nsError:(nullable NSError *)nsError
+              //errorMessage:(nonnull NSString *)errorMessage;
+*/
 - (void)incrementRetries;
 
 - (NSUInteger)retries;

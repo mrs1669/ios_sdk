@@ -95,16 +95,14 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
         return nil;
     }
 
-    NSError *dirCreateError;
-    BOOL dirCreated =
-        [ADJUtilFiles createDirWithPath:adjustAppSupportDirPath
-                               errorPtr:&dirCreateError];
-    if (dirCreateError != nil) {
+    ADJResultNN<NSNumber *> *_Nonnull dirCreatedResult =
+        [ADJUtilFiles createDirWithPath:adjustAppSupportDirPath];
+    if (dirCreatedResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot create dir"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
          {
-            [logBuilder withError:dirCreateError
-                            issue:ADJIssueStorageIo];
+            [logBuilder withFail:dirCreatedResult
+                           issue:ADJIssueStorageIo];
             [logBuilder withSubject:@"adjust app support dir"
                               value:adjustAppSupportDirPath];
             [logBuilder where:@"load adjust app support dir"];
@@ -115,7 +113,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 
     [self.logger debugDev:@"Adjust app support dir loaded"
                       key:@"was dir created"
-                    value:[ADJUtilF boolFormat:YES]];
+                    value:[ADJUtilF boolFormat:dirCreatedResult.value.boolValue]];
 
     return adjustAppSupportDirPath;
 }

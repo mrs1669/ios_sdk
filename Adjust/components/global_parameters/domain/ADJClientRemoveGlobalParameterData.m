@@ -20,7 +20,8 @@
  */
 
 #pragma mark - Public constants
-NSString *const ADJClientRemoveGlobalParameterDataMetadataTypeValue = @"ClientRemoveGlobalParameterData";
+NSString *const ADJClientRemoveGlobalParameterDataMetadataTypeValue =
+    @"ClientRemoveGlobalParameterData";
 
 #pragma mark - Private constants
 static NSString *const kKeyToRemoveKey = @"keyToRemove";
@@ -34,11 +35,11 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
 {
     ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToRemoveResult =
         [ADJNonEmptyString instanceFromString:keyToRemove];
-    if (keyToRemoveResult.failMessage != nil) {
+    if (keyToRemoveResult.fail != nil) {
         [logger errorClient:@"Invalid key to remove parameter"
                         key:@"gloabal parameter type"
                       value:globalParameterType
-                failMessage:keyToRemoveResult.failMessage];
+                 resultFail:keyToRemoveResult.fail];
         return nil;
     }
 

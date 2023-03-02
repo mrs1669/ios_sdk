@@ -14,6 +14,8 @@
 #import "ADJConstants.h"
 #import "ADJUtilObj.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 @interface ADJConsoleLogger ()
 #pragma mark - Internal variables
@@ -112,6 +114,16 @@
     [self.preSdkInitLogArray removeAllObjects];
 }
 
++ (nonnull NSString *)clientCallbackFormatMessageWithLog:
+    (nonnull ADJInputLogMessageData *)inputLogMessageData
+{
+    NSMutableString *_Nonnull stringBuilder =
+        [[NSMutableString alloc] initWithString:inputLogMessageData.message];
+
+    return [ADJConsoleLogger buildClientLogParamsWithStringBuilder:stringBuilder
+                                               inputLogMessageData:inputLogMessageData];
+}
+
 #pragma mark Internal Methods
 - (void)printToConsoleWithData:(nonnull ADJLogMessageData *)logMessageData
                   isPreSdkInit:(BOOL)isPreSdkInit {
@@ -151,16 +163,31 @@
     : inputLogMessageData.message;
 
     NSMutableString *_Nonnull stringBuilder =
-    [[NSMutableString alloc] initWithFormat:@"%@%@",
-     [ADJConsoleLogger logLevelFormat:inputLogMessageData.level],
-     message];
+        [[NSMutableString alloc] initWithFormat:@"%@%@",
+         [ADJConsoleLogger logLevelFormat:inputLogMessageData.level],
+         message];
 
+    return [ADJConsoleLogger buildClientLogParamsWithStringBuilder:stringBuilder
+                                               inputLogMessageData:inputLogMessageData];
+}
+
++ (nonnull NSString *)
+    buildClientLogParamsWithStringBuilder:(nonnull NSMutableString *)stringBuilder
+    inputLogMessageData:(nonnull ADJInputLogMessageData *)inputLogMessageData
+{
     if (inputLogMessageData.messageParams != nil) {
         [stringBuilder appendFormat:@" %@",
          [ADJLogMessageData generateJsonStringFromFoundationDictionary:
           inputLogMessageData.messageParams]];
     }
 
+    if (inputLogMessageData.resultFail != nil) {
+        [stringBuilder appendFormat:@" %@:%@",
+         ADJLogFailKey,
+         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
+          [inputLogMessageData.resultFail foundationDictionary]]];
+    }
+    /*
     if (inputLogMessageData.nsError != nil) {
         [stringBuilder appendFormat:@" %@",
          [ADJLogMessageData generateJsonStringFromFoundationDictionary:
@@ -174,7 +201,7 @@
           [ADJLogMessageData generateFoundationDictionaryFromNsException:
            inputLogMessageData.nsException]]];
     }
-
+*/
     return [stringBuilder description];
 }
 
@@ -206,9 +233,21 @@
     ADJAdjustLogLevel _Nonnull logLevelFormat =
         [ADJConsoleLogger logLevelFormat:logMessageData.inputData.level];
 
+    id _Nullable failResultFoundationDictionary =
+        [foundationDictionary objectForKey:ADJLogFailKey];
+    [foundationDictionary removeObjectForKey:ADJLogFailKey];
+    NSString *_Nonnull failResultFormat =
+        failResultFoundationDictionary == nil ?
+        @"" : [NSString stringWithFormat:@" %@:%@",
+               ADJLogFailKey, [ADJLogMessageData generateJsonStringFromFoundationDictionary:
+                               failResultFoundationDictionary]];
+
+    // TODO:
+    // Seperate package details
+
     [foundationDictionary removeObjectForKey:ADJLogSourceKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];
-    return [NSString stringWithFormat:@"%@%@%@[%@]%@ %@ %@",
+    return [NSString stringWithFormat:@"%@%@%@[%@]%@ %@ %@%@",
             logLevelFormat,
             instanceIdFormat,
             threadIdFormat,
@@ -216,7 +255,8 @@
             issueFormat,
             logMessageData.inputData.message,
             [ADJLogMessageData
-             generateJsonStringFromFoundationDictionary:foundationDictionary]];
+             generateJsonStringFromFoundationDictionary:foundationDictionary],
+            failResultFormat];
 }
 
 + (nonnull NSString *)logLevelFormat:(nonnull ADJAdjustLogLevel)logLevel {
@@ -240,10 +280,10 @@
 
 + (nonnull NSString *)threadIdFormat:(nonnull ADJLogMessageData *)logMessageData {
     NSString *_Nullable runningThreadId =
-    logMessageData.inputData.runningThreadId != nil ?
-    logMessageData.inputData.runningThreadId
-    : logMessageData.runningThreadId != nil ?
-    logMessageData.runningThreadId : nil;
+        logMessageData.inputData.runningThreadId != nil ?
+        logMessageData.inputData.runningThreadId
+        : logMessageData.runningThreadId != nil ?
+        logMessageData.runningThreadId : nil;
     NSString *_Nullable callingThreadId = logMessageData.inputData.callerThreadId;
 
     if (callingThreadId == nil) {

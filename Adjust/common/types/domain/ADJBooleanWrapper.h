@@ -11,7 +11,6 @@
 #import "ADJIoValueSerializable.h"
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJNonEmptyString.h"
-#import "ADJLogger.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -30,8 +29,10 @@ NS_ASSUME_NONNULL_END
 
 + (nullable instancetype)instanceFromNumberBoolean:(nullable NSNumber *)numberBooleanValue;
 
-+ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
-                                      logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJBooleanWrapper *> *)instanceFromIoValue:
+    (nullable ADJNonEmptyString *)ioValue;
++ (nonnull ADJResultNL<ADJBooleanWrapper *> *)instanceFromOptionalIoValue:
+    (nullable ADJNonEmptyString *)ioValue;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

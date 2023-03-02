@@ -68,8 +68,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
 
     ADJNonEmptyString *_Nullable path = [propertiesMap pairValueWithKey:kPathKey];
     if (path == nil) {
-        [logger debugDev:@"Cannot create instance from io data without valid value"
-               valueName:kPathKey
+        [logger debugDev:@"Cannot create instance from io data without valid path"
                issueType:ADJIssueStorageIo];
         return nil;
     }
@@ -78,7 +77,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
         [propertiesMap pairValueWithKey:kClientSdkKey];
     if (clientSdk == nil) {
         [logger debugDev:@"Cannot create instance from io data without valid value"
-               valueName:kClientSdkKey
+               subject:kClientSdkKey
                issueType:ADJIssueStorageIo];
         return nil;
     }
@@ -86,7 +85,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     ADJStringMap *_Nullable parameters = [ioData mapWithName:kParametersMapName];
     if (parameters == nil) {
         [logger debugDev:@"Cannot create instance from io data without valid value"
-               valueName:kParametersMapName
+                 subject:kParametersMapName
                issueType:ADJIssueStorageIo];
         return nil;
     }

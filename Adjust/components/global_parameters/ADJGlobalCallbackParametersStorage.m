@@ -49,9 +49,9 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
     for (NSString *_Nonnull key in v4SessionCallbackParameters) {
         ADJResultNL<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJNonEmptyString instanceFromOptionalString:key];
-        if (keyResult.failMessage != nil) {
+        if (keyResult.fail != nil) {
             [self.logger debugDev:@"Invalid v4 Session Callback Parameter key"
-                      failMessage:keyResult.failMessage
+                       resultFail:keyResult.fail
                         issueType:ADJIssueStorageIo];
         }
         if (keyResult.value == nil) {
@@ -61,9 +61,9 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
         ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromOptionalString:
              [v4SessionCallbackParameters objectForKey:key]];
-        if (valueResult.failMessage != nil) {
+        if (valueResult.fail != nil) {
             [self.logger debugDev:@"Invalid v4 Callback Partner Parameter value"
-                      failMessage:valueResult.failMessage
+                       resultFail:valueResult.fail
                         issueType:ADJIssueStorageIo];
         }
 

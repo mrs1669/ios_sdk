@@ -14,6 +14,8 @@
 #import "ADJConstants.h"
 #import <math.h>
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -28,8 +30,11 @@
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
         [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
 
-    if (nnIntResult.failMessage != nil) {
-        return [ADJResultNL failWithMessage:nnIntResult.failMessage];
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNL failWithMessage:nnIntResult.fail.message
+                                 failParams:nnIntResult.fail.params
+                                  failError:nnIntResult.fail.error
+                              failException:nnIntResult.fail.exception];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];
@@ -45,8 +50,11 @@
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
         [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
 
-    if (nnIntResult.failMessage != nil) {
-        return [ADJResultNN failWithMessage:nnIntResult.failMessage];
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNN failWithMessage:nnIntResult.fail.message
+                                 failParams:nnIntResult.fail.params
+                                  failError:nnIntResult.fail.error
+                              failException:nnIntResult.fail.exception];
     }
 
     return [ADJResultNN okWithValue:
@@ -74,8 +82,11 @@
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull milliSince1970IntResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:milliSince1970Number];
 
-    if (milliSince1970IntResult.failMessage != nil) {
-        return [ADJResultNN failWithMessage:milliSince1970IntResult.failMessage];
+    if (milliSince1970IntResult.fail != nil) {
+        return [ADJResultNN failWithMessage:milliSince1970IntResult.fail.message
+                                 failParams:milliSince1970IntResult.fail.params
+                                  failError:milliSince1970IntResult.fail.error
+                              failException:milliSince1970IntResult.fail.exception];
     }
 
     return [ADJResultNN okWithValue:

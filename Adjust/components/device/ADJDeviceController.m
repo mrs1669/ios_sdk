@@ -84,7 +84,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     return [deviceIdsStorage readOnlyStoredDataValue].uuid;
 }
 
-- (nonnull ADJSessionDeviceIdsData *)getSessionDeviceIdsSync {
+- (nonnull ADJResultNN<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync {
     return [self.sessionDeviceIdsController getSessionDeviceIdsSync];
 }
 

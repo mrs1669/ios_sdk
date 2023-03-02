@@ -11,22 +11,11 @@
 #import "ADJUtilConv.h"
 #import "ADJUtilF.h"
 #import "ADJUtilObj.h"
+#import "ADJConstants.h"
+
+//#import "ADJResultFail.h"
 
 #pragma mark Fields
-#pragma mark - Public constants
-NSString *const ADJLogMessageKey = @"message";
-NSString *const ADJLogLevelKey = @"level";
-NSString *const ADJLogIssueKey = @"issue";
-NSString *const ADJLogErrorKey = @"error";
-NSString *const ADJLogExceptionKey = @"exception";
-NSString *const ADJLogParamsKey = @"params";
-NSString *const ADJLogSourceKey = @"source";
-NSString *const ADJLogCallerThreadIdKey = @"callerId";
-NSString *const ADJLogRunningThreadIdKey = @"runningId";
-NSString *const ADJLogCallerDescriptionKey = @"callerDescription";
-NSString *const ADJLogInstanceIdKey = @"instanceId";
-NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
-
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
@@ -59,10 +48,10 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 
 - (nonnull NSMutableDictionary <NSString *, id>*)generateFoundationDictionary {
     NSMutableDictionary *_Nonnull foundationDictionary =
-    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-     self.inputData.message, ADJLogMessageKey,
-     self.inputData.level, ADJLogLevelKey,
-     self.sourceDescription, ADJLogSourceKey, nil];
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+         self.inputData.message, ADJLogMessageKey,
+         self.inputData.level, ADJLogLevelKey,
+         self.sourceDescription, ADJLogSourceKey, nil];
 
     if (self.inputData.callerThreadId != nil) {
         [foundationDictionary setObject:self.inputData.callerThreadId
@@ -86,6 +75,11 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
                                  forKey:ADJLogIssueKey];
     }
 
+    if (self.inputData.resultFail != nil) {
+        [foundationDictionary setObject:[self.inputData.resultFail foundationDictionary]
+                                 forKey:ADJLogFailKey];
+    }
+    /*
     if (self.inputData.nsError != nil) {
         NSDictionary<NSString *, id> *_Nonnull errorFoundationDictionary =
         [ADJLogMessageData generateFoundationDictionaryFromNsError:self.inputData.nsError];
@@ -101,6 +95,7 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
         [foundationDictionary setObject:exceptionFoundationDictionary forKey:ADJLogExceptionKey];
     }
 
+    */
     if (self.inputData.messageParams != nil) {
         [foundationDictionary setObject:[ADJUtilConv convertToFoundationObject:
                                          self.inputData.messageParams]
@@ -115,12 +110,37 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 
     return foundationDictionary;
 }
+/*
++ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromResultFail:
+    (nonnull id<ADJResultFail>)resultFail
+{
+    NSMutableDictionary *_Nonnull resultFailDictionary =
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+         resultFail.message, ADJLogMessageKey,  nil];
+
+    if (resultFail.error != nil) {
+        [resultFailDictionary setObject:
+         [self generateFoundationDictionaryFromNsError:resultFail.error]
+                                 forKey:ADJLogErrorKey];
+    }
+    if (resultFail.exception != nil) {
+        [resultFailDictionary setObject:
+         [self generateFoundationDictionaryFromNsException:resultFail.exception]
+                                 forKey:ADJLogExceptionKey];
+    }
+    if (resultFail.params != nil) {
+        [resultFailDictionary setObject:resultFail.params
+                                 forKey:ADJLogParamsKey];
+    }
+
+    return resultFailDictionary;
+}
 
 + (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsError:(nonnull NSError *)nsError {
     NSMutableDictionary *_Nonnull errorFoundationDictionary =
-    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-     nsError.domain, @"domain",
-     @(nsError.code), @"code",  nil];
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+         nsError.domain, @"domain",
+         @(nsError.code), @"code",  nil];
 
     if (nsError.userInfo != nil) {
         [errorFoundationDictionary
@@ -131,7 +151,9 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
     return errorFoundationDictionary;
 }
 
-+ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsException:(nonnull NSException *)nsException {
++ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsException:
+    (nonnull NSException *)nsException
+{
     NSMutableDictionary *_Nonnull exceptionFoundationDictionary =
     [[NSMutableDictionary alloc] initWithObjectsAndKeys:
      nsException.name, @"name", nil];
@@ -149,11 +171,11 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 
     return exceptionFoundationDictionary;
 }
-
+*/
 + (nonnull NSString *)generateJsonStringFromFoundationDictionary:
     (nonnull NSDictionary<NSString *, id> *)foundationDictionary
 {
-    ADJResultErr<NSData *> *_Nonnull jsonDataResult =
+    ADJResultNL<NSData *> *_Nonnull jsonDataResult =
         [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationDictionary];
     if (jsonDataResult.error != nil) {
         return [NSString stringWithFormat:

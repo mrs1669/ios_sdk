@@ -45,24 +45,24 @@ static NSString *const kErrorReasonKey = @"errorReason";
         return nil;
     }
 
-    ADJBooleanWrapper *_Nullable hasReceivedValidAsaClickResponse =
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedValidAsaClickResponseResult =
         [ADJBooleanWrapper instanceFromIoValue:
-         [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]
-                                        logger:logger];
-    if (hasReceivedValidAsaClickResponse == nil) {
-        [logger debugDev:@"Cannot create instance from Io data with invalid io value"
-               valueName:kHasReceivedValidAsaClickResponseKey
+         [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]];
+    if (hasReceivedValidAsaClickResponseResult.fail != nil) {
+        [logger debugDev:@"Cannot create instance from io data"
+                 subject:kHasReceivedValidAsaClickResponseKey
+              resultFail:hasReceivedValidAsaClickResponseResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }
 
-    ADJBooleanWrapper *_Nullable hasReceivedAdjustAttribution =
-    [ADJBooleanWrapper instanceFromIoValue:
-     [ioData.propertiesMap pairValueWithKey:kHasReceivedAdjustAttributionKey]
-                                    logger:logger];
-    if (hasReceivedAdjustAttribution == nil) {
-        [logger debugDev:@"Cannot create instance from Io data with invalid io value"
-               valueName:kHasReceivedAdjustAttributionKey
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedAdjustAttributionResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kHasReceivedAdjustAttributionKey]];
+    if (hasReceivedAdjustAttributionResult.fail != nil) {
+        [logger debugDev:@"Cannot create instance from io data"
+                 subject:kHasReceivedAdjustAttributionKey
+              resultFail:hasReceivedAdjustAttributionResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }
@@ -73,18 +73,19 @@ static NSString *const kErrorReasonKey = @"errorReason";
     ADJResultNL<ADJTimestampMilli *> *_Nonnull cacheReadTimestampResult =
         [ADJTimestampMilli instanceFromOptionalIoDataValue:
          [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]];
-    if (cacheReadTimestampResult.failMessage != nil) {
+    if (cacheReadTimestampResult.fail != nil) {
         [logger debugDev:@"Cannot use invalid cache read timestamp"
-             failMessage:cacheReadTimestampResult.failMessage
+              resultFail:cacheReadTimestampResult.fail
                issueType:ADJIssueStorageIo];
     }
 
     ADJNonEmptyString *_Nullable errorReason =
         [ioData.propertiesMap pairValueWithKey:kErrorReasonKey];
 
-    return [[self alloc]
-            initWithHasReceivedValidAsaClickResponse:hasReceivedValidAsaClickResponse.boolValue
-            hasReceivedAdjustAttribution:hasReceivedAdjustAttribution.boolValue
+    return [[ADJAsaAttributionStateData alloc]
+            initWithHasReceivedValidAsaClickResponse:
+                hasReceivedValidAsaClickResponseResult.value.boolValue
+            hasReceivedAdjustAttribution:hasReceivedAdjustAttributionResult.value.boolValue
             cachedToken:cachedToken
             cacheReadTimestamp:cacheReadTimestampResult.value
             errorReason:errorReason];

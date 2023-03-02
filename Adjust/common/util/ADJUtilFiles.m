@@ -33,7 +33,7 @@
     // TODO: figure out if this is the "right" way
     //  like for example using NSFileManager URLsForDirectory:inDomains:
     NSArray *_Nonnull paths =
-    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     if (paths.count == 0) {
         return nil;
     }
@@ -60,12 +60,33 @@
     return [appSupportDirPathBase stringByAppendingPathComponent:path];
 }
 
-+ (BOOL)createDirWithPath:(nonnull NSString *)path
-                 errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
-{
-    return [[NSFileManager defaultManager] createDirectoryAtPath:path
-                                     withIntermediateDirectories:YES
-                                                      attributes:nil
-                                                           error:errorPtr];
++ (nonnull ADJResultNN<NSNumber *> *)createDirWithPath:(nonnull NSString *)path {
+    NSError *_Nullable errorPtr = nil;
+    BOOL dirCreated = [[NSFileManager defaultManager] createDirectoryAtPath:path
+                                                withIntermediateDirectories:YES
+                                                                 attributes:nil
+                                                                      error:&errorPtr];
+    if (errorPtr != nil) {
+        return [ADJResultNN failWithError:errorPtr
+                                  message:@"NSFileManager createDirectory"];
+    }
+    return [ADJResultNN okWithValue:@(dirCreated)];
 }
+
++ (nonnull ADJResultNN<NSNumber *> *)moveFileFromPath:(nonnull NSString *)fromPath
+                                               toPath:(nonnull NSString *)toPath
+
+{
+    NSError *_Nullable errorPtr = nil;
+    BOOL itemMoved = [[NSFileManager defaultManager] moveItemAtPath:fromPath
+                                                             toPath:toPath
+                                                              error:&errorPtr];
+
+    if (errorPtr != nil) {
+        return [ADJResultNN failWithError:errorPtr
+                                  message:@"NSFileManager moveItem"];
+    }
+    return [ADJResultNN okWithValue:@(itemMoved)];
+}
+
 @end

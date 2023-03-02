@@ -78,7 +78,7 @@
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
-            [self.decimalNumberValue descriptionWithLocale:[ADJUtilF usLocale]]];
+            [ADJUtilF usLocaleNumberFormat:self.decimalNumberValue]];
 }
 
 #pragma mark - ADJIoValueSerializable

@@ -37,33 +37,31 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
         return nil;
     }
 
-    ADJBooleanWrapper *_Nullable forgottenByBackend =
-    [ADJBooleanWrapper
-     instanceFromIoValue:
-         [ioData.propertiesMap pairValueWithKey:kForgottenByBackendKey]
-     logger:logger];
-
-    if (forgottenByBackend == nil) {
-        [logger debugDev:@"Cannot create instance from Io data without valid value"
-               valueName:kForgottenByBackendKey
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull forgottenByBackendResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kForgottenByBackendKey]];
+    if (forgottenByBackendResult.fail != nil) {
+        [logger debugDev:@"Cannot create instance from Io data"
+                 subject:kForgottenByBackendKey
+              resultFail:forgottenByBackendResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }
 
-    ADJBooleanWrapper *_Nullable askedToForgetBySdk =
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull askedToForgetBySdkResult =
         [ADJBooleanWrapper
-         instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]
-         logger:logger];
+         instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]];
 
-    if (askedToForgetBySdk == nil) {
-        [logger debugDev:@"Cannot create instance from Io data without valid value"
-               valueName:kAskedToForgetBySdkKey
+    if (askedToForgetBySdkResult.fail != nil) {
+        [logger debugDev:@"Cannot create instance from Io data"
+                 subject:kAskedToForgetBySdkKey
+              resultFail:askedToForgetBySdkResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }
 
-    return [[self alloc] initWithForgottenByBackend:forgottenByBackend.boolValue
-                                 askedToForgetBySdk:askedToForgetBySdk.boolValue];
+    return [[self alloc] initWithForgottenByBackend:forgottenByBackendResult.value.boolValue
+                                 askedToForgetBySdk:askedToForgetBySdkResult.value.boolValue];
 }
 
 - (nonnull instancetype)initWithInitialState {

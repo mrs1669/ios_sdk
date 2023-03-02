@@ -13,6 +13,8 @@
 #import "ADJMoneyDoubleAmount.h"
 #import "ADJMoneyDecimalAmount.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -29,11 +31,11 @@
     ADJResultNN<ADJMoneyDoubleAmount *> *_Nonnull moneyDoubleAmountResult =
         [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber];
 
-    if (moneyDoubleAmountResult.failMessage != nil) {
+    if (moneyDoubleAmountResult.fail != nil) {
         return [ADJResultNN failWithMessage:
-                [NSString stringWithFormat:
-                 @"Cannot create money instance without valid double amount: %@",
-                 moneyDoubleAmountResult.failMessage]];
+                @"Cannot create money instance without valid double amount"
+                                        key:@"double amount fail"
+                                      value:[moneyDoubleAmountResult.fail foundationDictionary]];
     }
 
     return [ADJMoney instanceFromMoneyAmount:moneyDoubleAmountResult.value
@@ -47,11 +49,11 @@
     ADJResultNN<ADJMoneyDecimalAmount *> *_Nonnull moneyDecimalAmountResult =
         [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber];
 
-    if (moneyDecimalAmountResult.failMessage != nil) {
+    if (moneyDecimalAmountResult.fail != nil) {
         return [ADJResultNN failWithMessage:
-                [NSString stringWithFormat:
-                 @"Cannot create money instance without valid decimal amount: %@",
-                 moneyDecimalAmountResult.failMessage]];
+                @"Cannot create money instance without valid decimal amount"
+                                        key:@"decimal amount fail"
+                                      value:[moneyDecimalAmountResult.fail foundationDictionary]];
     }
 
     return [self instanceFromMoneyAmount:moneyDecimalAmountResult.value
@@ -81,11 +83,10 @@
     ADJResultNN<ADJNonEmptyString *> *_Nonnull currencyResult =
         [ADJNonEmptyString instanceFromString:currency];
 
-    if (currencyResult.failMessage != nil) {
-        return [ADJResultNN failWithMessage:
-                [NSString stringWithFormat:
-                 @"Cannot create money instance without valid currency: %@",
-                 currencyResult.failMessage]];
+    if (currencyResult.fail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create money instance with invalid currency"
+                                        key:@"currency fail"
+                                      value:[currencyResult.fail foundationDictionary]];
     }
 
     return [ADJResultNN okWithValue:

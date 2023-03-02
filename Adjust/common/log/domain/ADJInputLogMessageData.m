@@ -11,6 +11,8 @@
 #import "ADJUtilF.h"
 #import "ADJConstants.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -43,46 +45,53 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 @implementation ADJInputLogMessageData
 #pragma mark Instantiation
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
-                                  level:(nonnull ADJAdjustLogLevel)level {
+                                  level:(nonnull ADJAdjustLogLevel)level
+{
     return [self initWithMessage:message
                            level:level
                        issueType:nil
                   callerThreadId:nil
                callerDescription:nil
                  runningThreadId:nil
-                         nsError:nil
-                     nsException:nil
+                      resultFail:nil
+                         //nsError:nil
+                     //nsException:nil
                    messageParams:nil];
 }
 
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level
-                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams {
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+{
     return [self initWithMessage:message
                            level:level
                        issueType:nil
                   callerThreadId:nil
                callerDescription:nil
                  runningThreadId:nil
-                         nsError:nil
-                     nsException:nil
+                      resultFail:nil
+                         //nsError:nil
+                     //nsException:nil
                    messageParams:messageParams];
 }
 
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level
                               issueType:(nullable ADJIssue)issueType
-                                nsError:(nullable NSError *)nsError
-                            nsException:(nullable NSException *)nsException
-                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams {
+                             resultFail:(nullable id<ADJResultFail>)resultFail
+                                //nsError:(nullable NSError *)nsError
+                            //nsException:(nullable NSException *)nsException
+                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+{
     return [self initWithMessage:message
                            level:level
                        issueType:issueType
                   callerThreadId:nil
                callerDescription:nil
                  runningThreadId:nil
-                         nsError:nsError
-                     nsException:nsException
+                      resultFail:resultFail
+                         //nsError:nsError
+                     //nsException:nsException
                    messageParams:messageParams];
 }
 
@@ -90,15 +99,17 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                                   level:(nonnull ADJAdjustLogLevel)level
                          callerThreadId:(nullable NSString *)callerThreadId
                       callerDescription:(nullable NSString *)callerDescription
-                        runningThreadId:(nullable NSString *)runningThreadId {
+                        runningThreadId:(nullable NSString *)runningThreadId
+{
     return [self initWithMessage:message
                            level:level
                        issueType:nil
                   callerThreadId:callerThreadId
                callerDescription:callerDescription
                  runningThreadId:runningThreadId
-                         nsError:nil
-                     nsException:nil
+                      resultFail:nil
+                         //nsError:nil
+                     //nsException:nil
                    messageParams:nil];
 }
 
@@ -108,8 +119,9 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                          callerThreadId:(nullable NSString *)callerThreadId
                       callerDescription:(nullable NSString *)callerDescription
                         runningThreadId:(nullable NSString *)runningThreadId
-                                nsError:(nullable NSError *)nsError
-                            nsException:(nullable NSException *)nsException
+                             resultFail:(nullable id<ADJResultFail>)resultFail
+                                //nsError:(nullable NSError *)nsError
+                            //nsException:(nullable NSException *)nsException
                           messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
 {
     self = [super init];
@@ -120,8 +132,9 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     _callerThreadId = callerThreadId;
     _callerDescription = callerDescription;
     _runningThreadId = runningThreadId;
-    _nsError = nsError;
-    _nsException = nsException;
+    _resultFail = resultFail;
+    //_nsError = nsError;
+    //_nsException = nsException;
     _messageParams = messageParams;
 
     return self;
@@ -135,16 +148,6 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 @end
 
 #pragma mark Fields
-#pragma mark - Public constants
-/*
-NSString *const ADJLogFromKey = @"from";
-NSString *const ADJLogInvalidValueKey = @"invalid_value";
-NSString *const ADJLogValueNameKey = @"value_name";
-NSString *const ADJLogExpectedKey = @"expected";
-NSString *const ADJLogActualKey = @"actual";
-NSString *const ADJLogFailMessageKey = @"fail_message";
-*/
-
 
 @interface ADJLogBuilder ()
 @property (nonnull, readonly, strong, nonatomic) NSString *message;
@@ -153,8 +156,9 @@ NSString *const ADJLogFailMessageKey = @"fail_message";
 @property (nullable, readwrite, strong, nonatomic) NSString *callerDescription;
 @property (nullable, readwrite, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readwrite, strong, nonatomic) ADJIssue issueType;
-@property (nullable, readwrite, strong, nonatomic) NSError *nsError;
-@property (nullable, readwrite, strong, nonatomic) NSException* nsException;
+@property (nullable, readwrite, strong, nonatomic) id<ADJResultFail> resultFail;
+//@property (nullable, readwrite, strong, nonatomic) NSError *nsError;
+//@property (nullable, readwrite, strong, nonatomic) NSException* nsException;
 @property (nullable, readwrite, strong, nonatomic)
     NSMutableDictionary<NSString *, id> *messageParams;
 
@@ -178,8 +182,9 @@ NSString *const ADJLogFailMessageKey = @"fail_message";
     _callerDescription = nil;
     _runningThreadId = nil;
     _issueType = nil;
-    _nsError = nil;
-    _nsException = nil;
+    _resultFail = nil;
+    //_nsError = nil;
+    //_nsException = nil;
     _messageParams = nil;
 
     return self;
@@ -193,8 +198,9 @@ NSString *const ADJLogFailMessageKey = @"fail_message";
             callerThreadId:self.callerThreadId
             callerDescription:self.callerDescription
             runningThreadId:self.runningThreadId
-            nsError:self.nsError
-            nsException:self.nsException
+            resultFail:self.resultFail
+            //nsError:self.nsError
+            //nsException:self.nsException
             messageParams:self.messageParams];
 }
 
@@ -210,13 +216,17 @@ NSString *const ADJLogFailMessageKey = @"fail_message";
 - (void)why:(nonnull NSString *)why {
     [self withKey:ADJLogWhyKey constValue:why];
 }
-
+- (void)fail:(nonnull id<ADJResultFail>)resultFail {
+    self.resultFail = resultFail;
+}
+/*
 - (void)error:(nullable NSError *)nserror {
     self.nsError = nserror;
 }
 - (void)failMessage:(nonnull NSString *)failMessage {
     [self withKey:ADJLogFailMessageKey constValue:failMessage];
 }
+*/
 - (void)value:(nonnull NSString *)value {
     [self withKey:ADJLogValueKey value:value];
 }
@@ -227,7 +237,13 @@ NSString *const ADJLogFailMessageKey = @"fail_message";
     [self withKey:ADJLogExpectedKey constValue:expectedValue];
     [self withKey:ADJLogActualKey value:actualValue];
 }
-
+- (void)withFail:(nonnull id<ADJResultFail>)resultFail
+           issue:(nonnull ADJIssue)issueType
+{
+    [self fail:resultFail];
+    [self issue:issueType];
+}
+/*
 - (void)withFailMessage:(nonnull NSString *)failMessage
                   issue:(nonnull ADJIssue)issueType
 {
@@ -241,6 +257,7 @@ NSString *const ADJLogFailMessageKey = @"fail_message";
     [self error:nserror];
     [self issue:issueType];
 }
+ */
 - (void)withSubject:(nonnull NSString *)subject
               value:(nonnull NSString *)value
 {

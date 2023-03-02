@@ -88,18 +88,20 @@
 }
 
 #pragma mark Protected Methods
-- (nullable ADJNonEmptyString *)stringFromSelectStatement:(nonnull ADJSQLiteStatement *)selectStatement
-                                              columnIndex:(int)columnIndex
-                                                fieldName:(nonnull NSString *)fieldName {
+- (nullable ADJNonEmptyString *)
+    stringFromSelectStatement:(nonnull ADJSQLiteStatement *)selectStatement
+    columnIndex:(int)columnIndex
+    fieldName:(nonnull NSString *)fieldName
+{
     NSString *_Nullable fieldString = [selectStatement stringForColumnIndex:columnIndex];
 
     ADJResultNN<ADJNonEmptyString *> *_Nonnull fieldValueResult =
         [ADJNonEmptyString instanceFromString:fieldString];
 
-    if (fieldValueResult.failMessage != nil) {
+    if (fieldValueResult.fail != nil) {
         [self.logger debugDev:@"Cannot get string value from select statement"
-                    valueName:fieldName
-                  failMessage:fieldValueResult.failMessage
+                      subject:fieldName
+                   resultFail:fieldValueResult.fail
                     issueType:ADJIssueStorageIo];
 
         return nil;

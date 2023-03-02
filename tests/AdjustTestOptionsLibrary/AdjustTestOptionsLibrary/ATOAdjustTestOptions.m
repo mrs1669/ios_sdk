@@ -542,9 +542,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
         ADJResultNN<ADJNonNegativeInt *> *_Nonnull foregroundTimerIntervalMilliNumberResult =
             [ADJNonNegativeInt instanceFromIntegerNumber:
              adjustTestOptions.foregroundTimerIntervalMilli];
-        if (foregroundTimerIntervalMilliNumberResult.failMessage != nil) {
+        if (foregroundTimerIntervalMilliNumberResult.fail != nil) {
             [[ATOLogger sharedInstance] debugDev:@"Invalid foregroundTimerIntervalMilliNumber"
-                                     failMessage:foregroundTimerIntervalMilliNumberResult.failMessage
+                                      resultFail:foregroundTimerIntervalMilliNumberResult.fail
                                        issueType:ADJIssueExternalApi];
         } else {
             sdkConfigDataBuilder.foregroundTimerIntervalMilli =
@@ -561,9 +561,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
         ADJResultNN<ADJNonNegativeInt *> *_Nonnull foregroundTimerStartMilliNumberResult =
             [ADJNonNegativeInt instanceFromIntegerNumber:
              adjustTestOptions.foregroundTimerStartMilli];
-        if (foregroundTimerStartMilliNumberResult.failMessage != nil) {
+        if (foregroundTimerStartMilliNumberResult.fail != nil) {
             [[ATOLogger sharedInstance] debugDev:@"Invalid foregroundTimerStartMilliNumber"
-                                     failMessage:foregroundTimerStartMilliNumberResult.failMessage
+                                      resultFail:foregroundTimerStartMilliNumberResult.fail
                                        issueType:ADJIssueExternalApi];
         } else {
             sdkConfigDataBuilder.foregroundTimerStartMilli =
@@ -580,9 +580,9 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
         ADJResultNN<ADJNonNegativeInt *> *_Nonnull minSdkSessionIntervalMilliNumberResult =
             [ADJNonNegativeInt instanceFromIntegerNumber:
              adjustTestOptions.minSdkSessionIntervalMilli];
-        if (minSdkSessionIntervalMilliNumberResult.failMessage != nil) {
+        if (minSdkSessionIntervalMilliNumberResult.fail != nil) {
             [[ATOLogger sharedInstance] debugDev:@"Invalid minSdkSessionIntervalMilliNumber"
-                                     failMessage:minSdkSessionIntervalMilliNumberResult.failMessage
+                                      resultFail:minSdkSessionIntervalMilliNumberResult.fail
                                        issueType:ADJIssueExternalApi];
         } else {
             sdkConfigDataBuilder.minMeasurementSessionIntervalMilli =
@@ -619,11 +619,11 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
             [ADJNonNegativeInt
                 instanceFromIntegerNumber:
                  adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
-        if (overwriteFirstSdkSessionIntervalMilliNumberResult.failMessage != nil) {
+        if (overwriteFirstSdkSessionIntervalMilliNumberResult.fail != nil) {
             [[ATOLogger sharedInstance] debugDev:
              @"Invalid overwriteFirstSdkSessionIntervalMilliNumber"
-                                     failMessage:
-             overwriteFirstSdkSessionIntervalMilliNumberResult.failMessage
+                                      resultFail:
+             overwriteFirstSdkSessionIntervalMilliNumberResult.fail
                                        issueType:ADJIssueExternalApi];
         } else {
             sdkConfigDataBuilder.overwriteFirstSdkSessionInterval =

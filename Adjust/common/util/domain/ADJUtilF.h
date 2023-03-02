@@ -11,7 +11,6 @@
 #import "ADJTimestampMilli.h"
 //#import "ADJMoney.h"
 #import "ADJLogger.h"
-#import "ADJResultErr.h"
 
 @interface ADJUtilF : NSObject
 
@@ -26,19 +25,19 @@
 + (nonnull NSString *)integerFormat:(NSInteger)integerValue;
 + (nonnull NSString *)uIntegerFormat:(NSUInteger)uIntegerFormat;
 + (nonnull NSString *)longLongFormat:(long long)longLongValue;
++ (nonnull NSString *)usLocaleNumberFormat:(nonnull NSNumber *)number;
 
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error;
 
 + (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData;
-+ (nonnull ADJResultErr<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue;
++ (nonnull ADJResultNL<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue;
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber;
 
 + (nonnull NSString *)dateTimestampFormat:(nonnull ADJTimestampMilli *)timestamp;
 
-+ (nonnull NSString *)logMessageAndParamsFormat:
-    (nonnull ADJInputLogMessageData *)inputLogMessageData;
 + (nonnull id)stringOrNsNull:(nullable NSString *)string;
++ (nonnull id)idOrNsNull:(nullable id)idObject;
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex;

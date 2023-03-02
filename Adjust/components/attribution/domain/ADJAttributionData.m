@@ -58,9 +58,9 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
     ADJResultNL<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
         [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue];
-    if (costAmountResult.failMessage != nil) {
+    if (costAmountResult.fail != nil) {
         [logger debugDev:@"Invalid cost amount from io data map"
-             failMessage:costAmountResult.failMessage
+             resultFail:costAmountResult.fail
                issueType:ADJIssueStorageIo];
     }
     
@@ -79,33 +79,23 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                                  costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]];
 }
 
-#define stringConvAndLog(value, name)                            \
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull value ## Result = \
-        [ADJNonEmptyString instanceFromOptionalString:value];    \
-    if (value ## Result.failMessage != nil) {                    \
-        [logger debugDev:@"Invalid string from external data"    \
-               valueName:name                                    \
-             failMessage:value ## Result.failMessage             \
-               issueType:ADJIssueInvalidInput];                  \
-    }                                                            \
-
 - (nullable ADJNonEmptyString *)convExternalWithValue:(nullable NSString *)value
-                                            valueName:(nonnull NSString *)valueName
+                                              subject:(nonnull NSString *)subject
                                                logger:(nonnull ADJLogger *)logger
 {
     ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
         [ADJNonEmptyString instanceFromOptionalString:value];
-    if (valueResult.failMessage != nil) {
+    if (valueResult.fail != nil) {
         [logger debugDev:@"Invalid string from external data"
-               valueName:valueName
-             failMessage:valueResult.failMessage
+               subject:subject
+              resultFail:valueResult.fail
                issueType:ADJIssueInvalidInput];
     }
     return valueResult.value;
 }
 
 #define convExtCall(value, name) \
-    [self convExternalWithValue:(value) valueName:(name) logger:logger] \
+    [self convExternalWithValue:(value) subject:(name) logger:logger] \
 
 - (nonnull instancetype)initFromExternalDataWithLogger:(nonnull ADJLogger *)logger
                                     trackerTokenString:(nullable NSString *)trackerTokenString
@@ -122,9 +112,9 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 {
     ADJResultNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
         [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:costAmountDoubleNumber];
-    if (costAmountDoubleResult.failMessage != nil) {
+    if (costAmountDoubleResult.fail != nil) {
         [logger debugDev:@"Invalid cost amount double from external data"
-             failMessage:costAmountDoubleResult.failMessage
+              resultFail:costAmountDoubleResult.fail
                issueType:ADJIssueInvalidInput];
     }
 
@@ -145,54 +135,72 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
 - (nullable ADJNonEmptyString *)extractJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
                                                       key:(nonnull NSString *)key
-                                                valueName:(nonnull NSString *)valueName
                                                    logger:(nonnull ADJLogger *)logger
 {
-    NSString *_Nullable value = [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
-                                                                         key:key];
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
-        [ADJNonEmptyString instanceFromOptionalString:value];
-    if (valueResult.failMessage != nil) {
-        [logger debugDev:@"Invalid string from json"
-               valueName:valueName
-             failMessage:valueResult.failMessage
+    ADJResultNL<NSString *> *_Nonnull valueResult =
+        [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
+                                                 key:key];
+    if (valueResult.fail != nil) {
+        [logger debugDev:@"Invalid string value in json dictionary"
+                     key:@"key"
+                   value:key
+              resultFail:valueResult.fail
                issueType:ADJIssueInvalidInput];
+        return nil;
     }
-    return valueResult.value;
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull parsedResult =
+        [ADJNonEmptyString instanceFromOptionalString:valueResult.value];
+    if (parsedResult.fail != nil) {
+        [logger debugDev:@"Failed parsing string value in json dictionary"
+                     key:@"key"
+                   value:key
+              resultFail:parsedResult.fail
+               issueType:ADJIssueInvalidInput];
+        return nil;
+    }
+
+    return parsedResult.value;
 }
 
-#define extrJsonCall(dictKey, name) \
-    [self extractJsonWithDictionary:jsonDictionary key:(dictKey) valueName:(name) logger:logger] \
+#define extrJsonCall(dictKey) \
+    [self extractJsonWithDictionary:jsonDictionary key:(dictKey) logger:logger] \
 
 - (nonnull instancetype)initFromJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
                                               adid:(nonnull ADJNonEmptyString *)adid
                                             logger:(nonnull ADJLogger *)logger
 {
-    NSNumber *_Nullable costAmountDoubleNumber =
+    ADJResultNL<NSNumber *> *_Nonnull costAmountDoubleNumberResult =
         [ADJUtilMap extractDoubleNumberWithDictionary:jsonDictionary
                                                   key:ADJParamAttributionCostAmountKey];
+    if (costAmountDoubleNumberResult.fail != nil) {
+        [logger debugDev:@"Invalid cost amount double number in json dictionary"
+              resultFail:costAmountDoubleNumberResult.fail
+               issueType:ADJIssueInvalidInput];
+    }
     ADJResultNL<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
-        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:costAmountDoubleNumber];
-    if (costAmountDoubleResult.failMessage != nil) {
-        [logger debugDev:@"Invalid cost amount double from Json"
-             failMessage:costAmountDoubleResult.failMessage
+        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:
+         costAmountDoubleNumberResult.value];
+    if (costAmountDoubleResult.fail != nil) {
+        [logger debugDev:@"Failed parsing cost amount double"
+              resultFail:costAmountDoubleResult.fail
                issueType:ADJIssueInvalidInput];
     }
 
     return [self
-            initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey, kTrackerTokenKey)
-            trackerName:extrJsonCall(ADJParamAttributionTrackerNameKey, kTrackerNameKey)
-            network:extrJsonCall(ADJParamAttributionNetworkKey, kNetworkKey)
-            campaign:extrJsonCall(ADJParamAttributionCampaignKey, kCampaignKey)
-            adgroup:extrJsonCall(ADJParamAttributionAdGroupKey, kAdgroupKey)
-            creative:extrJsonCall(ADJParamAttributionCreativeKey, kCreativeKey)
-            clickLabel:extrJsonCall(ADJParamAttributionClickLableKey, kClickLabelKey)
+            initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey)
+            trackerName:extrJsonCall(ADJParamAttributionTrackerNameKey)
+            network:extrJsonCall(ADJParamAttributionNetworkKey)
+            campaign:extrJsonCall(ADJParamAttributionCampaignKey)
+            adgroup:extrJsonCall(ADJParamAttributionAdGroupKey)
+            creative:extrJsonCall(ADJParamAttributionCreativeKey)
+            clickLabel:extrJsonCall(ADJParamAttributionClickLableKey)
             adid:adid
-            deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey, kDeeplinkKey)
-            state:extrJsonCall(ADJParamAttributionStateKey, kStateKey)
-            costType:extrJsonCall(ADJParamAttributionCostTypeKey, kCostTypeKey)
+            deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey)
+            state:extrJsonCall(ADJParamAttributionStateKey)
+            costType:extrJsonCall(ADJParamAttributionCostTypeKey)
             costAmount:costAmountDoubleResult.value
-            costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey, kCostCurrencyKey)];
+            costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey)];
 }
 
 - (nullable instancetype)init {

@@ -26,8 +26,10 @@ NSString *const ADJClientPushTokenDataMetadataTypeValue = @"ClientPushTokenData"
 static NSString *const kPushTokenStringKey = @"pushTokenString";
 
 @implementation ADJClientPushTokenData
-+ (nullable instancetype)instanceFromClientWithAdjustPushToken:(nullable ADJAdjustPushToken *)adjustPushToken
-                                                        logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustPushToken:(nullable ADJAdjustPushToken *)adjustPushToken
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustPushToken == nil) {
         [logger errorClient:@"Cannot create push token with nil adjust push token"];
         return nil;
@@ -48,12 +50,12 @@ static NSString *const kPushTokenStringKey = @"pushTokenString";
         return [[ADJClientPushTokenData alloc] initWithPushTokenString:pushTokenStringResult.value];
     }
 
-    if (pushTokenDataResult.failMessage != nil) {
+    if (pushTokenDataResult.fail != nil) {
         [logger errorClient:@"Cannot create push token with invalid data"
-                failMessage:pushTokenDataResult.failMessage];
-    } else if (pushTokenStringResult.failMessage != nil) {
+                 resultFail:pushTokenDataResult.fail];
+    } else if (pushTokenStringResult.fail != nil) {
         [logger errorClient:@"Cannot create push token with invalid string"
-                failMessage:pushTokenDataResult.failMessage];
+                 resultFail:pushTokenDataResult.fail];
     } else {
         [logger errorClient:@"Cannot create push token with invalid data or string"];
     }

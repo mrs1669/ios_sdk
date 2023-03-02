@@ -498,15 +498,10 @@
                          packageParamValueSerializable:apiTimestamp];
 
     ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
-    if (nowResult.failMessage != nil) {
-        [self.logger debugWithMessage:@"Cannot inject created at sending parameter in package"
-                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
-         {
-            [logBuilder withSubject:@"now timestamp"
-                                why:@"failed to read from clock"];
-            [logBuilder withFailMessage:nowResult.failMessage
-                                  issue:ADJIssueExternalApi];
-        }];
+    if (nowResult.fail != nil) {
+        [self.logger debugDev:@"Cannot inject created at sending parameter in package"
+                   resultFail:nowResult.fail
+                    issueType:ADJIssueExternalApi];
     } else {
         [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                        key:ADJParamCreatedAtKey
@@ -536,16 +531,23 @@
                              packageParamValueSerializable:[deviceController nonKeychainUuid]];
     }
 
-    ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
-    [deviceController getSessionDeviceIdsSync];
+    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+        [deviceController getSessionDeviceIdsSync];
+    if (sessionDeviceIdsDataResult.fail != nil) {
+        [self.logger debugDev:@"Could not obtain session device ids"
+                   resultFail:sessionDeviceIdsDataResult.fail
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJUtilMap
+         injectIntoPackageParametersWithBuilder:parametersBuilder
+         key:ADJParamIdfaKey
+         packageParamValueSerializable:sessionDeviceIdsDataResult.value.advertisingIdentifier];
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamIdfaKey
-                         packageParamValueSerializable:sessionDeviceIdsData.advertisingIdentifier];
-
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamIdfvKey
-                         packageParamValueSerializable:sessionDeviceIdsData.identifierForVendor];
+        [ADJUtilMap
+         injectIntoPackageParametersWithBuilder:parametersBuilder
+         key:ADJParamIdfvKey
+         packageParamValueSerializable:sessionDeviceIdsDataResult.value.identifierForVendor];
+    }
 
     ADJDeviceInfoData *_Nonnull deviceInfoData = deviceController.deviceInfoData;
 

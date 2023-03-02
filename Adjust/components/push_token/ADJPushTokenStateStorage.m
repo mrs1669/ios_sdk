@@ -65,9 +65,9 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
 
     ADJResultNL<ADJNonEmptyString *> *_Nullable v4PushTokenResult =
         [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken];
-    if (v4PushTokenResult.failMessage != nil) {
+    if (v4PushTokenResult.fail != nil) {
         [self.logger debugDev:@"Cannot parse v4 push token"
-                  failMessage:v4PushTokenResult.failMessage
+                   resultFail:v4PushTokenResult.fail
                     issueType:ADJIssueStorageIo];
         return;
     }

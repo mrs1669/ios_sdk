@@ -14,6 +14,8 @@
 #import "ADJUtilConv.h"
 #import "ADJUtilObj.h"
 
+//#import "ADJResultFail.h"
+
 @interface ADJUtilF ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) NSLocale *usLocale;
@@ -156,10 +158,14 @@
     return [NSString stringWithFormat:@"%lld", longLongValue];
 }
 
++ (nonnull NSString *)usLocaleNumberFormat:(nonnull NSNumber *)number {
+    return [number descriptionWithLocale:[ADJUtilF usLocale]];
+}
+
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error {
     return [ADJUtilObj formatInlineKeyValuesWithName:@"NSError",
             @"domain", error.domain,
-            @"code", @(error.code),
+            @"code", [ADJUtilF integerFormat:error.code],
             @"userInfo", [ADJUtilObj formatInlineKeyValuesWithName:@""
                                                stringKeyDictionary:error.userInfo],
             nil];
@@ -177,26 +183,29 @@
             [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-+ (nonnull ADJResultErr<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
++ (nonnull ADJResultNL<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
     if (jsonFoundationValue == nil) {
-        return [ADJResultErr okWithoutValue];
+        return [ADJResultNL okWithoutValue];
     }
 
-    ADJResultErr<NSData *> *_Nonnull jsonDataResult =
+    ADJResultNL<NSData *> *_Nonnull jsonDataResult =
         [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue];
 
-    if (jsonDataResult.error != nil) {
-        return [ADJResultErr failWithError:jsonDataResult.error];
+    if (jsonDataResult.fail != nil) {
+        return [ADJResultNL failWithMessage:jsonDataResult.fail.message
+                                 failParams:jsonDataResult.fail.params
+                                  failError:jsonDataResult.fail.error
+                              failException:jsonDataResult.fail.exception];
     }
 
     if (jsonDataResult.value == nil) {
-        return [ADJResultErr okWithoutValue];
+        return [ADJResultNL okWithoutValue];
     }
 
     NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonDataResult.value];
 
     return jsonString == nil ?
-        [ADJResultErr okWithoutValue] : [ADJResultErr okWithValue:jsonString];
+        [ADJResultNL okWithoutValue] : [ADJResultNL okWithValue:jsonString];
 }
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber {
@@ -212,21 +221,12 @@
               timestamp.millisecondsSince1970Int.uIntegerValue]]];
 }
 
-+ (nonnull NSString *)logMessageAndParamsFormat:
-    (nonnull ADJInputLogMessageData *)inputLogMessageData
-{
-    if (inputLogMessageData.messageParams == nil) {
-        return inputLogMessageData.message;
-    }
-
-    return [NSString stringWithFormat:@"%@ %@", inputLogMessageData.message,
-            [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-             inputLogMessageData.messageParams]];
-}
 + (nonnull id)stringOrNsNull:(nullable NSString *)string {
     return string == nil ? [NSNull null] : string;
 }
-
++ (nonnull id)idOrNsNull:(nullable id)idObject {
+    return idObject == nil ? [NSNull null] : idObject;
+}
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex {

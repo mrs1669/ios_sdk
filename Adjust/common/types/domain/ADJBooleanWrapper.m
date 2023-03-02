@@ -35,26 +35,35 @@ NSString *const ADJBooleanFalseString = @"false";
     return [self instanceFromBool:[numberBooleanValue boolValue]];
 }
 
-+ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
-                                      logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJResultNN<ADJBooleanWrapper *> *)
+instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
+{
     if (ioValue == nil) {
-        [logger debugDev:@"Cannot create boolean from Io value when it is null"
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNN failWithMessage:@"Cannot create boolean wrapper with nil io value"];
     }
 
     if ([ioValue.stringValue isEqualToString:ADJBooleanTrueString]) {
-        return [self trueInstance];
+        return [ADJResultNN okWithValue:[self trueInstance]];
     }
 
     if ([ioValue.stringValue isEqualToString:ADJBooleanFalseString]) {
-        return [self falseInstance];
+        return [ADJResultNN okWithValue:[self falseInstance]];
     }
 
-    [logger debugDev:@"Cannot create boolean from Io value"
-           issueType:ADJIssueInvalidInput];
+    return [ADJResultNN failWithMessage:@"Could not match io value to valid boolean value"
+                                    key:@"io value"
+                                  value:ioValue.stringValue];
+}
++ (nonnull ADJResultNL<ADJBooleanWrapper *> *)instanceFromOptionalIoValue:
+    (nullable ADJNonEmptyString *)ioValue
+{
+    if (ioValue == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
 
-    return nil;
+    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(ADJNonEmptyString *_Nullable value) {
+        return [ADJBooleanWrapper instanceFromIoValue:value];
+    } nlValue:ioValue];
 }
 
 - (nullable instancetype)init {

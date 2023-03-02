@@ -26,9 +26,10 @@
 
 @interface ADJClientActionController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
-@property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *storage;
+@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nullable, readwrite, weak, nonatomic) id<ADJClientActionsAPIPostSdkStart> clientActionsPostSdkStartWeak;
+
 @end
 
 @implementation ADJClientActionController
@@ -40,8 +41,8 @@
 
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"ClientActionController"];
-    _clientActionStorageWeak = clientActionStorage;
-    _clockWeak = clock;
+    _storage = clientActionStorage;
+    _clock = clock;
     _clientActionsPostSdkStartWeak = nil;
 
     return self;
@@ -169,24 +170,10 @@
         (nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId
 {
-    ADJClock *_Nullable clock = self.clockWeak;
-    if (clock == nil) {
-        [self.logger debugDev:@"Cannot enqueue client action without a reference to clock"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
-    if (nowResult.failMessage != nil) {
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot enqueue client action without a valid now timestamp"
-                  failMessage:nowResult.failMessage
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    ADJClientActionStorage *_Nullable clientActionStorage = self.clientActionStorageWeak;
-    if (clientActionStorage == nil) {
-        [self.logger debugDev:@"Cannot enqueue client action without a reference to storage"
+                   resultFail:nowResult.fail
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -203,23 +190,16 @@
                                                       nowTimestamp:nowResult.value
                                                      ioDataBuilder:ioDataBuilder];
 
-    [clientActionStorage enqueueElementToLast:clientActionData
-                          sqliteStorageAction:nil];
+    [self.storage enqueueElementToLast:clientActionData
+                   sqliteStorageAction:nil];
 }
 
 - (void)
     ccProcessClientActionsWithPreFirstSession:(BOOL)isPreFirstSession
     postSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)postSdkStart
 {
-    ADJClientActionStorage *_Nullable clientActionStorage = self.clientActionStorageWeak;
-    if (clientActionStorage == nil) {
-        [self.logger debugDev:@"Cannot process client actions without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
     NSArray<ADJNonNegativeInt *> *_Nonnull elementPositionList =
-        [clientActionStorage copySortedElementPositionList];
+        [self.storage copySortedElementPositionList];
 
     [self.logger debugDev:@"Trying to process client actions"
                      key1:@"count"
@@ -229,7 +209,7 @@
 
     for (ADJNonNegativeInt *_Nonnull elementPosition in elementPositionList) {
         ADJClientActionData *_Nullable clientActionData =
-            [clientActionStorage elementByPosition:elementPosition];
+            [self.storage elementByPosition:elementPosition];
         if (clientActionData == nil) {
             [self.logger debugDev:@"Cannot process client action from queue with queue id"
                               key:@"elementPosition"
@@ -263,7 +243,7 @@
 
         ADJClientActionRemoveStorageAction *_Nonnull clientActionRemoveStorageAction =
             [[ADJClientActionRemoveStorageAction alloc]
-             initWithClientActionStorage:clientActionStorage
+             initWithClientActionStorage:self.storage
              elementPosition:elementPosition];
 
         [clientActionHandler ccHandleClientActionWithIoInjectedData:clientActionData.ioData
@@ -273,5 +253,3 @@
 }
 
 @end
-
-

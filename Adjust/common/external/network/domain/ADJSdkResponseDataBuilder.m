@@ -68,10 +68,11 @@
 - (BOOL)didReceiveJsonResponse {
     return self.jsonDictionary != nil;
 }
-
+/*
 - (void)logErrorWithLogger:(nullable ADJLogger *)logger
-                   nsError:(nullable NSError *)nsError
-              errorMessage:(nonnull NSString *)errorMessage
+                resultFail:(nonnull id<ADJResultFail>)resultFail
+                   //nsError:(nullable NSError *)nsError
+              //errorMessage:(nonnull NSString *)errorMessage
 {
     if (nsError != nil) {
         if (logger != nil) {
@@ -88,7 +89,7 @@
         }
     }
 }
-
+*/
 - (void)incrementRetries {
     self.retries = self.retries + 1;
 }

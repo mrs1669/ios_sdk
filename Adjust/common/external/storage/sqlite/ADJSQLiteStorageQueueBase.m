@@ -433,14 +433,14 @@ static int const kDeleteElementPositionFieldPosition = 1;
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull elementPositionToAddResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber];
 
-    if (elementPositionToAddResult.failMessage != nil) {
+    if (elementPositionToAddResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot add element to memory queue"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
          {
             [logBuilder withSubject:@"element position"
                                 why:@"failed to parse from number"];
-            [logBuilder withFailMessage:elementPositionToAddResult.failMessage
-                                  issue:ADJIssueStorageIo];
+            [logBuilder withFail:elementPositionToAddResult.fail
+                           issue:ADJIssueStorageIo];
             [logBuilder withKey:@"metadata type" value:self.metadataTypeValue];
         }];
 

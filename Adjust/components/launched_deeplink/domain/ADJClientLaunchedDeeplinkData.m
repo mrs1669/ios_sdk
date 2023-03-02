@@ -12,8 +12,6 @@
 #import "ADJUtilObj.h"
 #import "ADJConstants.h"
 #import "ADJUtilMap.h"
-#import "ADJResultErr.h"
-
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -49,22 +47,18 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 
     ADJResultNN<ADJNonEmptyString *> *_Nullable launchedDeeplinkResult =
         [ADJNonEmptyString instanceFromString:stringLaunchedDeeplink];
-    if (launchedDeeplinkResult.failMessage != nil) {
+    if (launchedDeeplinkResult.fail != nil) {
         [logger errorClient:@"Cannot create launched deeplink with invalid value"
-                failMessage:launchedDeeplinkResult.failMessage];
+                 resultFail:launchedDeeplinkResult.fail];
         return nil;
     }
 
-    ADJResultErr<NSRegularExpression *> *_Nonnull excludedRegexResult =
+    ADJResultNN<NSRegularExpression *> *_Nonnull excludedRegexResult =
         [ADJClientLaunchedDeeplinkData excludedRegex];
 
-    if (excludedRegexResult.error != nil) {
+    if (excludedRegexResult.fail != nil) {
         [logger errorClient:@"Cannot create launched deeplink without excludedRegex"
-                    nserror:excludedRegexResult.error];
-        return nil;
-    }
-    if (excludedRegexResult.value == nil) {
-        [logger errorClient:@"Cannot create launched deeplink without excludedRegex"];
+                    resultFail:excludedRegexResult.fail];
         return nil;
     }
 
@@ -146,33 +140,40 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 }
 
 #pragma mark Internal Methods
-+ (nonnull ADJResultErr<NSRegularExpression *> *)excludedRegex {
++ (nonnull ADJResultNN<NSRegularExpression *> *)excludedRegex {
     static dispatch_once_t onceExcludedRegexInstanceToken;
-    static ADJResultErr<NSRegularExpression *> *result;
+    static ADJResultNN<NSRegularExpression *> *result;
 
     dispatch_once(&onceExcludedRegexInstanceToken, ^{
         NSError *error = nil;
 
         NSRegularExpression *regex =
-        [NSRegularExpression regularExpressionWithPattern:kExcludedDeeplinksPattern
-                                                  options:NSRegularExpressionCaseInsensitive
-                                                    error:&error];
+            [NSRegularExpression regularExpressionWithPattern:kExcludedDeeplinksPattern
+                                                      options:NSRegularExpressionCaseInsensitive
+                                                        error:&error];
 
         if (error != nil) {
-            result = [ADJResultErr failWithError:error];
+            result = [ADJResultNN failWithError:error
+                                        message:
+                      @"NSRegularExpression regularExpression with excluded deeplinks pattern"];
         } else if (regex != nil) {
-            result = [ADJResultErr okWithValue:regex];
+            result = [ADJResultNN okWithValue:regex];
         } else {
-            result = [ADJResultErr okWithoutValue];
+            result = [ADJResultNN failWithMessage:
+                      @"NSRegularExpression regularExpression with excluded deeplinks pattern"
+                                              key:ADJLogWhyKey
+                                            value:@"returned nil without error"];
         }
     });
     
     if (result == nil) {
-        return [ADJResultErr okWithoutValue];
+        return [ADJResultNN failWithMessage:
+                @"NSRegularExpression regularExpression with excluded deeplinks pattern"
+                                        key:ADJLogWhyKey
+                                      value:@"static result is nil"];
     }
 
     return result;
 }
 
 @end
-

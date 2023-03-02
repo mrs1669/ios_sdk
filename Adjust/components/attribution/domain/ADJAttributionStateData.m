@@ -39,19 +39,6 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 
 @implementation ADJAttributionStateData
 #pragma mark Instantiation
-#define extractBoolean(varName, paramKey)                                                   \
-     ADJBooleanWrapper *_Nullable varName =                                                 \
-         [ADJBooleanWrapper                                                                 \
-            instanceFromIoValue:                                                            \
-                [ioData.propertiesMap pairValueWithKey:paramKey]                            \
-            logger:logger];                                                                 \
-    if (varName == nil) {                                                                   \
-        [logger debugDev:@"Cannot create instance from Io data with invalid valid io value" \
-               valueName:paramKey                                                           \
-               issueType:ADJIssueStorageIo];                                                \
-        return nil;                                                                         \
-    }                                                                                       \
-
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
                                      logger:(nonnull ADJLogger *)logger {
     if (! [ioData
@@ -61,9 +48,38 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
         return nil;
     }
 
-    extractBoolean(installSessionTracked, kInstallSessionTrackedKey)
-    extractBoolean(unavailableAttribution, kUnavailableAttributionKey)
-    extractBoolean(isAsking, kIsAskingKey)
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull installSessionTrackedResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kInstallSessionTrackedKey]];
+    if (installSessionTrackedResult.fail != nil) {
+        [logger debugDev:@"Cannot create instance from Io data"
+                 subject:kInstallSessionTrackedKey
+              resultFail:installSessionTrackedResult.fail
+               issueType:ADJIssueStorageIo];
+        return nil;
+    }
+
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull unavailableAttributionResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kUnavailableAttributionKey]];
+    if (unavailableAttributionResult.fail != nil) {
+        [logger debugDev:@"Cannot create instance from Io data"
+                 subject:kUnavailableAttributionKey
+              resultFail:unavailableAttributionResult.fail
+               issueType:ADJIssueStorageIo];
+        return nil;
+    }
+
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull isAskingResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kIsAskingKey]];
+    if (isAskingResult.fail != nil) {
+        [logger debugDev:@"Cannot create instance from Io data"
+                 subject:kIsAskingKey
+              resultFail:isAskingResult.fail
+               issueType:ADJIssueStorageIo];
+        return nil;
+    }
 
     ADJAttributionData *_Nullable attributionData = nil;
 
@@ -74,9 +90,9 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
     }
 
     return [[self alloc] initWithAttributionData:attributionData
-                           installSessionTracked:installSessionTracked.boolValue
-                          unavailableAttribution:unavailableAttribution.boolValue
-                                        isAsking:isAsking.boolValue];
+                           installSessionTracked:installSessionTrackedResult.value.boolValue
+                          unavailableAttribution:unavailableAttributionResult.value.boolValue
+                                        isAsking:isAskingResult.value.boolValue];
 }
 
 - (nonnull instancetype)initWithIntialState {

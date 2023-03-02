@@ -64,13 +64,13 @@
 }
 
 - (BOOL)ccCanPerformActionWithClientSource:(nonnull NSString *)clientSource {
-    return [self ccCanPerformActionOrElseMessageWithClientSource:clientSource] == nil;
+    return [self ccCanPerformActionOrElseErrorLogWithClientSource:clientSource] == nil;
 }
 
-- (nullable NSString *)ccCanPerformActionOrElseMessageWithClientSource:
+- (nullable ADJInputLogMessageData *)ccCanPerformActionOrElseErrorLogWithClientSource:
     (nonnull NSString *)clientSource
 {
-    return [self.sdkActiveState canPerformActionOrElseMessageWithClientSource:clientSource];
+    return [self.sdkActiveState canPerformActionOrElseErrorLogWithClientSource:clientSource];
 }
 
 - (void)ccInactivateSdk {

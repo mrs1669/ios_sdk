@@ -13,6 +13,8 @@
 #import "ADJConstants.h"
 #import "ADJUtilConv.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -24,10 +26,16 @@
 + (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
     instanceFromIoLlfValue:(nonnull NSString *)ioLlfValue
 {
-    NSNumber *_Nullable doubleNumberValue =
+    ADJResultNN<NSNumber *> *_Nonnull doubleNumberValueResult =
         [self convertToDoubleNumberWithIoLlfValue:ioLlfValue];
-    
-    return [self instanceFromDoubleNumberValue:doubleNumberValue];
+
+    if (doubleNumberValueResult.fail != nil) {
+        return [ADJResultNN failWithMessage:
+                @"Could not obtain double number from llf string value"
+                                        key:@"convert to double from llf string value fail"
+                                      value:[doubleNumberValueResult.fail foundationDictionary]];
+    }
+    return [self instanceFromDoubleNumberValue:doubleNumberValueResult.value];
 }
 
 + (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
@@ -91,7 +99,7 @@
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
-            [self.doubleNumberValue descriptionWithLocale:[ADJUtilF usLocale]]];
+            [ADJUtilF usLocaleNumberFormat:self.doubleNumberValue]];
 }
 
 #pragma mark - ADJIoValueSerializable
@@ -138,19 +146,25 @@
 }
 
 #pragma mark Internal Methods
-+ (nullable NSNumber *)convertToDoubleNumberWithIoLlfValue:(nonnull NSString *)ioLlfValue {
-    NSNumber *_Nullable llNumber = [ADJUtilConv convertToLLNumberWithStringValue:ioLlfValue];
-    if (llNumber == nil) {
-        return nil;
++ (nonnull ADJResultNN<NSNumber *> *)convertToDoubleNumberWithIoLlfValue:
+    (nonnull NSString *)ioLlfValue
+{
+    ADJResultNN<NSNumber *> *_Nonnull llNumberResult =
+        [ADJUtilConv convertToLLNumberWithStringValue:ioLlfValue];
+    if (llNumberResult.fail != nil) {
+        return [ADJResultNN failWithMessage:
+                    @"Could not convert first to ll number, before converting to double"
+                                        key:@"string to ll number fail"
+                                      value:[llNumberResult.fail foundationDictionary]];
     }
     
-    long long llValue = llNumber.longLongValue;
+    long long llValue = llNumberResult.value.longLongValue;
     
     double * doublePtr = (double *)&llValue;
     
     double doubleValue = *(doublePtr);
     
-    return @(doubleValue);
+    return [ADJResultNN okWithValue:@(doubleValue)];
 }
 
 + (BOOL)isDoubleValidWithValue:(double)doubleValue {

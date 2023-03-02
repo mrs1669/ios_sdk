@@ -38,9 +38,9 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
     ADJResultNN<ADJTallyCounter *> *_Nonnull sessionCountResult =
         [ADJTallyCounter
          instanceFromIoDataValue:[ioDataMap pairValueWithKey:kSessionCountKey]];
-    if (sessionCountResult.failMessage != nil) {
+    if (sessionCountResult.fail != nil) {
         [self logInvalidExternalValue:@"session count"
-                          failMessage:sessionCountResult.failMessage
+                           resultFail:sessionCountResult.fail
                                logger:logger];
         return nil;
     }
@@ -48,9 +48,9 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
     ADJResultNN<ADJTimestampMilli *> *_Nonnull lastActivityTimestampResult =
         [ADJTimestampMilli instanceFromIoDataValue:
              [ioDataMap pairValueWithKey:kLastActivityTimestampMilliKey]];
-    if (lastActivityTimestampResult.failMessage != nil) {
+    if (lastActivityTimestampResult.fail != nil) {
         [self logInvalidExternalValue:@"last activity timestamp"
-                          failMessage:lastActivityTimestampResult.failMessage
+                           resultFail:lastActivityTimestampResult.fail
                                logger:logger];
         return nil;
     }
@@ -58,9 +58,9 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
     ADJResultNN<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
         [ADJTimeLengthMilli instanceFromIoDataValue:
          [ioDataMap pairValueWithKey:kSessionLengthMilliKey]];
-    if (sessionLengthResult.failMessage != nil) {
+    if (sessionLengthResult.fail != nil) {
         [self logInvalidExternalValue:@"session length"
-                          failMessage:sessionLengthResult.failMessage
+                           resultFail:sessionLengthResult.fail
                                logger:logger];
         return nil;
     }
@@ -68,9 +68,9 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
     ADJResultNN<ADJTimeLengthMilli *> *_Nonnull timeSpentResult =
         [ADJTimeLengthMilli instanceFromIoDataValue:
          [ioDataMap pairValueWithKey:kTimeSpentMilliKey]];
-    if (timeSpentResult.failMessage != nil) {
+    if (timeSpentResult.fail != nil) {
         [self logInvalidExternalValue:@"time spent"
-                          failMessage:timeSpentResult.failMessage
+                           resultFail:timeSpentResult.fail
                                logger:logger];
         return nil;
     }
@@ -81,7 +81,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
                                timeSpentMilli:timeSpentResult.value];
 }
 + (void)logInvalidIoDataMapValue:(nonnull NSString *)invalidValue
-                     failMessage:(nonnull NSString *)failMessage
+                      resultFail:(nonnull id<ADJResultFail>)resultFail
                           logger:(nonnull ADJLogger *)logger
  {
      [logger debugWithMessage:@"Cannot create instance"
@@ -90,8 +90,8 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
          [logBuilder where:@"from io data map"];
          [logBuilder withSubject:invalidValue
                              why:@"not present in io data map or failed to parse"];
-         [logBuilder withFailMessage:failMessage
-                               issue:ADJIssueInvalidInput];
+         [logBuilder withFail:resultFail
+                        issue:ADJIssueInvalidInput];
      }];
  }
 
@@ -152,9 +152,9 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 {
     ADJResultNN<ADJNonNegativeInt *> *_Nonnull sessionCountIntResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:sessionCountNumberInt];
-    if (sessionCountIntResult.failMessage != nil) {
+    if (sessionCountIntResult.fail != nil) {
         [self logInvalidExternalValue:@"session count"
-                          failMessage:sessionCountIntResult.failMessage
+                           resultFail:sessionCountIntResult.fail
                                logger:logger];
         return nil;
     }
@@ -164,27 +164,27 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
     ADJResultNN<ADJTimestampMilli *> *_Nonnull lastActivityTimestampResult =
         [ADJTimestampMilli instanceWithNumberDoubleSecondsSince1970:
          lastActivityTimestampNumberDoubleSeconds];
-    if (lastActivityTimestampResult.failMessage != nil) {
+    if (lastActivityTimestampResult.fail != nil) {
         [self logInvalidExternalValue:@"last activity timestamp"
-                          failMessage:sessionCountIntResult.failMessage
+                           resultFail:sessionCountIntResult.fail
                                logger:logger];
         return nil;
     }
 
     ADJResultNN<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
         [ADJTimeLengthMilli instanceWithNumberDoubleSeconds:sessionLengthNumberDoubleSeconds];
-    if (sessionLengthResult.failMessage != nil) {
+    if (sessionLengthResult.fail != nil) {
         [self logInvalidExternalValue:@"session length"
-                          failMessage:sessionCountIntResult.failMessage
+                           resultFail:sessionCountIntResult.fail
                                logger:logger];
         return nil;
     }
 
     ADJResultNN<ADJTimeLengthMilli *> *_Nonnull timeSpentResult =
         [ADJTimeLengthMilli instanceWithNumberDoubleSeconds:timeSpentNumberDoubleSeconds];
-    if (timeSpentResult.failMessage != nil) {
+    if (timeSpentResult.fail != nil) {
         [self logInvalidExternalValue:@"time spent"
-                          failMessage:sessionCountIntResult.failMessage
+                           resultFail:sessionCountIntResult.fail
                                logger:logger];
         return nil;
     }
@@ -195,7 +195,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
                                timeSpentMilli:timeSpentResult.value];
 }
 + (void)logInvalidExternalValue:(nonnull NSString *)invalidValue
-                    failMessage:(nonnull NSString *)failMessage
+                     resultFail:(nonnull id<ADJResultFail>)resultFail
                          logger:(nonnull ADJLogger *)logger
 {
     [logger debugWithMessage:@"Cannot create instance"
@@ -204,7 +204,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         [logBuilder where:@"from external"];
         [logBuilder withSubject:invalidValue
                             why:@"failed to parse"];
-        [logBuilder withFailMessage:failMessage
+        [logBuilder withFail:resultFail
                               issue:ADJIssueInvalidInput];
     }];
 }
