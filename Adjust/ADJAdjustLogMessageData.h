@@ -11,11 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NSString *ADJAdjustLogLevel NS_TYPED_ENUM;
-FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelTrace;
-FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelDebug;
-FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelInfo;
-FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelNotice;
-FOUNDATION_EXPORT NSString *const ADJAdjustLogLevelError;
+FOUNDATION_EXPORT ADJAdjustLogLevel const ADJAdjustLogLevelTrace;
+FOUNDATION_EXPORT ADJAdjustLogLevel const ADJAdjustLogLevelDebug;
+FOUNDATION_EXPORT ADJAdjustLogLevel const ADJAdjustLogLevelInfo;
+FOUNDATION_EXPORT ADJAdjustLogLevel const ADJAdjustLogLevelNotice;
+FOUNDATION_EXPORT ADJAdjustLogLevel const ADJAdjustLogLevelError;
 
 NS_ASSUME_NONNULL_END
 

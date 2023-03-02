@@ -18,11 +18,11 @@
  */
 
 #pragma mark - Public constants
-NSString *const ADJAdjustLogLevelTrace = @"trace";
-NSString *const ADJAdjustLogLevelDebug = @"debug";
-NSString *const ADJAdjustLogLevelInfo = @"info";
-NSString *const ADJAdjustLogLevelNotice = @"notice";
-NSString *const ADJAdjustLogLevelError = @"error";
+ADJAdjustLogLevel const ADJAdjustLogLevelTrace = @"trace";
+ADJAdjustLogLevel const ADJAdjustLogLevelDebug = @"debug";
+ADJAdjustLogLevel const ADJAdjustLogLevelInfo = @"info";
+ADJAdjustLogLevel const ADJAdjustLogLevelNotice = @"notice";
+ADJAdjustLogLevel const ADJAdjustLogLevelError = @"error";
 
 @implementation ADJAdjustLogMessageData
 
