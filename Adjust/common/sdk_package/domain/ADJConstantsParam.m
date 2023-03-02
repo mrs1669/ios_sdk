@@ -73,9 +73,6 @@ NSString *const ADJParamAdRevenueUnitKey = @"ad_revenue_unit";
 NSString *const ADJParamAdRevenuePlacementKey = @"ad_revenue_placement";
 
 // attribution
-NSString *const ADJParamAttributionInititedBySdkValue = @"sdk";
-NSString *const ADJParamAttributionInititedByBackendValue = @"backend";
-NSString *const ADJParamAttributionInititedBySdkAndBackendValue = @"backend_and_sdk";
 NSString *const ADJParamAttributionTrackerTokenKey = @"tracker_token";
 NSString *const ADJParamAttributionTrackerNameKey = @"tracker_name";
 NSString *const ADJParamAttributionNetworkKey = @"network";

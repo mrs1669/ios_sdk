@@ -75,9 +75,6 @@ FOUNDATION_EXPORT NSString *const ADJParamAdRevenueUnitKey;
 FOUNDATION_EXPORT NSString *const ADJParamAdRevenuePlacementKey;
 
 // attribution
-FOUNDATION_EXPORT NSString *const ADJParamAttributionInititedBySdkValue;
-FOUNDATION_EXPORT NSString *const ADJParamAttributionInititedByBackendValue;
-FOUNDATION_EXPORT NSString *const ADJParamAttributionInititedBySdkAndBackendValue;
 FOUNDATION_EXPORT NSString *const ADJParamAttributionTrackerTokenKey;
 FOUNDATION_EXPORT NSString *const ADJParamAttributionTrackerNameKey;
 FOUNDATION_EXPORT NSString *const ADJParamAttributionNetworkKey;
