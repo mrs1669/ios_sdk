@@ -41,11 +41,11 @@
         [[ADJInstanceIdData alloc] initFirstInstanceWithClientId:clientId];
 
     ADJInstanceRoot *instanceRoot = [ADJInstanceRoot
-                                     instanceWithConfigData:entryRoot->_sdkConfigData
+                                     instanceWithConfigData:entryRoot.sdkConfigData
                                      instanceId:firstInstanceId
                                      entryRootBag:entryRoot];
 
-    [entryRoot->_instanceMap setObject:instanceRoot forKey:firstInstanceId.idString];
+    [entryRoot.instanceMap setObject:instanceRoot forKey:firstInstanceId.idString];
 
     return entryRoot;
 }
