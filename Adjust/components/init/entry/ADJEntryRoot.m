@@ -34,8 +34,7 @@
 + (nonnull ADJEntryRoot *)instanceWithClientId:(nullable NSString *)clientId
                                  sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
 {
-    ADJEntryRoot *_Nonnull entryRoot = [[ADJEntryRoot alloc] initWithClientId:clientId
-                                                                sdkConfigData:sdkConfigData];
+    ADJEntryRoot *_Nonnull entryRoot = [[ADJEntryRoot alloc] initWithSdkConfigData:sdkConfigData];
 
     ADJInstanceIdData *_Nonnull firstInstanceId =
         [[ADJInstanceIdData alloc] initFirstInstanceWithClientId:clientId];
@@ -50,8 +49,7 @@
     return entryRoot;
 }
 
-- (nonnull instancetype)initWithClientId:(nullable NSString *)clientId
-                           sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
+- (nonnull instancetype)initWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
 {
     self = [super init];
     _sdkPrefix = nil;
