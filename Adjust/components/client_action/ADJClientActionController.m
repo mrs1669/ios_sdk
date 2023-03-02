@@ -27,8 +27,7 @@
 #pragma mark - Injected dependencies
 @property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
-@property (nullable, readwrite, weak, nonatomic) ADJPostSdkStartRoot *postSdkStartRootWeak;
-
+@property (nullable, readwrite, weak, nonatomic) id<ADJClientActionsAPI> postSdkStartClientActionsWeak;
 @end
 
 @implementation ADJClientActionController
@@ -42,34 +41,28 @@
                                  source:@"ClientActionController"];
     _clientActionStorageWeak = clientActionStorage;
     _clockWeak = clock;
-    _postSdkStartRootWeak = nil;
+    _postSdkStartClientActionsWeak = nil;
 
     return self;
 }
 
 #pragma mark Public API
+
+- (void)ccSetDependencyPostSdkStartClientActions:(id<ADJClientActionsAPI>)postSdkStartClientActions {
+    self.postSdkStartClientActionsWeak = postSdkStartClientActions;
+}
+
 - (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions {
-    ADJPostSdkStartRoot* _Nullable postSdkStartRoot = self.postSdkStartRootWeak;
-
-    return postSdkStartRoot ? : self;
+    id<ADJClientActionsAPI> _Nullable postSdkStartClientActions = self.postSdkStartClientActionsWeak;
+    return postSdkStartClientActions ? : self;
 }
 
-- (void)
-    ccPreSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot
-    isPreFirstSession:(BOOL)isPreFirstSession
-{
-    self.postSdkStartRootWeak = postSdkStartRoot;
-
-    [self
-     ccProcessClientActionsWithPostSdkStartRoot:postSdkStartRoot
-     isPreFirstSession:isPreFirstSession];
+- (void)ccPreSdkStartWithPreFirstSession:(BOOL)isPreFirstSession {
+    [self ccProcessClientActionsWithPreFirstSession:isPreFirstSession];
 }
 
-- (void)ccPostSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot {
-    [self
-     ccProcessClientActionsWithPostSdkStartRoot:postSdkStartRoot
-     isPreFirstSession:NO];
-
+- (void)ccPostSdkStart {
+    [self ccProcessClientActionsWithPreFirstSession:NO];
 }
 
 #pragma mark - ADJClientActionsAPI
@@ -205,10 +198,7 @@
                           sqliteStorageAction:nil];
 }
 
-- (void)
-    ccProcessClientActionsWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot
-    isPreFirstSession:(BOOL)isPreFirstSession
-{
+- (void)ccProcessClientActionsWithPreFirstSession:(BOOL)isPreFirstSession {
     ADJClientActionStorage *_Nullable clientActionStorage = self.clientActionStorageWeak;
     if (clientActionStorage == nil) {
         [self.logger debugDev:@"Cannot process client actions without a reference to storage"
@@ -225,6 +215,15 @@
                      key2:@"is pre first session"
                    value2:[ADJUtilF boolFormat:isPreFirstSession]];
 
+    id<ADJClientActionsAPI> postSdkStartClientActions = self.postSdkStartClientActionsWeak;
+    if (postSdkStartClientActions == nil) {
+        [self.logger debugDev:
+         @"Cannot try to start sdk without a reference to postSdkStartClientActions"
+                    issueType:ADJIssueWeakReference];
+        return;
+    }
+
+
     for (ADJNonNegativeInt *_Nonnull elementPosition in elementPositionList) {
         ADJClientActionData *_Nullable clientActionData =
             [clientActionStorage elementByPosition:elementPosition];
@@ -237,7 +236,7 @@
         }
 
         id<ADJClientActionHandler> _Nullable clientActionHandler =
-            [postSdkStartRoot handlerById:clientActionData.clientActionHandlerId];
+            [postSdkStartClientActions ccHandlerById:clientActionData.clientActionHandlerId];
 
         if (clientActionHandler == nil) {
             [self.logger debugDev:@"Cannot process client action with handler id"

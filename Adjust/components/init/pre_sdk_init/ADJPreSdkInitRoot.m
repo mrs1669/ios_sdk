@@ -8,15 +8,6 @@
 
 #import "ADJPreSdkInitRoot.h"
 
-#import "ADJPostSdkInitRoot.h"
-
-#pragma mark Fields
-@interface ADJPreSdkInitRoot ()
-#pragma mark - Internal variables
-@property (nullable, readwrite, strong, nonatomic) ADJPostSdkInitRoot *postSdkInitRoot;
-
-@end
-
 @implementation ADJPreSdkInitRoot
 #pragma mark - Synthesize protocol properties
 @synthesize sdkActiveController = _sdkActiveController;
@@ -31,9 +22,8 @@
 @synthesize clientReturnExecutor = _clientReturnExecutor;
 
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-{
+- (nonnull instancetype)initWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag {
+    
     self = [super initWithLoggerFactory:instanceRootBag.logController source:@"PreSdkInitRoot"];
 
     ADJSdkConfigData *_Nonnull sdkConfig = instanceRootBag.sdkConfigData;
@@ -98,26 +88,17 @@
 }
 
 #pragma mark Public API
-- (void)ccSdkInitWithClientConfg:(nonnull ADJClientConfigData *)clientConfig
-                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-{
-    self.postSdkInitRoot = [ADJPostSdkInitRoot
-                            ccInstanceWhenSdkInitWithClientConfig:clientConfig
-                            instanceRootBag:instanceRootBag
-                            preSdkInitRoot:self];
-}
-
-- (void)
-    ccSetDependenciesAtSdkInitWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder*)sdkPackageBuilder
-    sdkPackageSenderController:(nonnull ADJSdkPackageSenderController *)sdkPackageSenderController
-{
+- (void)ccSetDependenciesAtSdkInitWithInstanceRootBag:(id<ADJInstanceRootBag>)instanceRootBag
+                                   postSdkInitRootBag:(id<ADJPostSdkInitRootBag>)postSdkInitRootBag
+                            postSdkStartClientActions:(nonnull id<ADJClientActionsAPI>)postSdkStartClientActions {
     [self.gdprForgetController
-         ccSetDependenciesAtSdkInitWithSdkPackageBuilder:sdkPackageBuilder
+         ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootBag.sdkPackageBuilder
          clock:instanceRootBag.clock
          loggerFactory:instanceRootBag.logController
          threadExecutorFactory:instanceRootBag.threadController
-         sdkPackageSenderFactory:sdkPackageSenderController];
+         sdkPackageSenderFactory:postSdkInitRootBag.sdkPackageSenderController];
+    
+    [self.clientActionController ccSetDependencyPostSdkStartClientActions:postSdkStartClientActions];
 }
 
 - (void)ccSubscribeToPublishers:(ADJPublisherController *)publisherController {
@@ -133,10 +114,6 @@
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock {
     [self.storageRoot finalizeAtTeardownWithCloseStorageBlock:closeStorageBlock];
     [self.lifecycleController finalizeAtTeardown];
-
-    if (self.postSdkInitRoot != nil) {
-        [self.postSdkInitRoot finalizeAtTeardownWithBlock:closeStorageBlock];
-    }
 }
 
 @end

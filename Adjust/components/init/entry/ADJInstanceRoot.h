@@ -26,6 +26,5 @@
 
 // public api
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
-
 @end
 

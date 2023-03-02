@@ -17,6 +17,7 @@
 #import "ADJClientLaunchedDeeplinkData.h"
 #import "ADJClientBillingSubscriptionData.h"
 #import "ADJClientThirdPartySharingData.h"
+#import "ADJClientActionHandler.h"
 
 @protocol ADJClientActionsAPI <NSObject>
 
@@ -48,5 +49,8 @@
     (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData;
 - (void)ccClearGlobalPartnerParametersWithClientData:
     (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData;
+
+@optional
+- (nullable id<ADJClientActionHandler>)ccHandlerById:(nonnull ADJNonEmptyString *)clientHandlerId;
 
 @end

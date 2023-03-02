@@ -7,6 +7,10 @@
 //
 
 #import "ADJPostSdkStartRoot.h"
+#import "ADJLoggerFactory.h"
+#import "ADJStorageRoot.h"
+#import "ADJSdkPackageBuilder.h"
+#import "ADJMainQueueController.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -31,22 +35,25 @@
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
     NSDictionary<NSString *, id<ADJClientActionHandler>> *clientHandlerMapById;
-
 @end
 
 @implementation ADJPostSdkStartRoot
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageRoot:(nonnull ADJStorageRoot *)storageRoot
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-{
+
+- (nonnull instancetype)initWithClientConfigData:(ADJClientConfigData *)clientConfigData
+                                 instanceRootBag:(id<ADJInstanceRootBag>)instanceRootBag
+                               preSdkInitRootBag:(id<ADJPreSdkInitRootBag>)preSdkInitRootBag
+                              postSdkInitRootBag:(id<ADJPostSdkInitRootBag>)postSdkInitRootBag {
+
     self = [super init];
 
+    id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
+    ADJStorageRoot *_Nonnull storageRoot = preSdkInitRootBag.storageRoot;
+    ADJSdkPackageBuilder *sdkPackageBuilder = postSdkInitRootBag.sdkPackageBuilder;
+    ADJMainQueueController *mainQueueController = postSdkInitRootBag.mainQueueController;
+
     _adRevenueController = [[ADJAdRevenueController alloc]
-                            initWithLoggerFactory:loggerFactory
+                            initWithLoggerFactory:instanceRootBag.logController
                             sdkPackageBuilder:sdkPackageBuilder
                             mainQueueController:mainQueueController];
 
@@ -111,11 +118,6 @@
     return nil;
 }
 
-#pragma mark Public API
-- (nullable id<ADJClientActionHandler>)handlerById:(nonnull ADJNonEmptyString *)clientHandlerId {
-    return [self.clientHandlerMapById objectForKey:clientHandlerId.stringValue];
-}
-
 #pragma mark - ADJClientActionsAPI
 - (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData {
     [self.adRevenueController ccTrackAdRevenueWithClientData:clientAdRevenueData];
@@ -150,35 +152,52 @@
      ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
 }
 
-- (void)ccAddGlobalCallbackParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
+- (void)ccAddGlobalCallbackParameterWithClientData:
+(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
+
     [self.globalCallbackParametersController
      ccAddGlobalCallbackParameterWithClientData:clientAddGlobalCallbackParameterActionData];
 }
 
-- (void)ccRemoveGlobalCallbackParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
+- (void)ccRemoveGlobalCallbackParameterWithClientData:
+(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
+
     [self.globalCallbackParametersController
      ccRemoveGlobalCallbackParameterWithClientData:
          clientRemoveGlobalCallbackParameterActionData];
 }
 
-- (void)ccClearGlobalCallbackParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
+- (void)ccClearGlobalCallbackParametersWithClientData:
+(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
+
     [self.globalCallbackParametersController
      ccClearGlobalCallbackParameterWithClientData:
          clientClearGlobalCallbackParametersActionData];
 }
 
-- (void)ccAddGlobalPartnerParameterWithClientData:(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData{
+- (void)ccAddGlobalPartnerParameterWithClientData:
+(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData {
+
     [self.globalPartnerParametersController
      ccAddGlobalPartnerParameterWithClientData:clientAddGlobalPartnerParameterActionData];
 }
 
-- (void)ccRemoveGlobalPartnerParameterWithClientData:(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
+- (void)ccRemoveGlobalPartnerParameterWithClientData:
+(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
+
     [self.globalPartnerParametersController
      ccRemoveGlobalPartnerParameterWithClientData:clientRemoveGlobalPartnerParameterActionData];
 }
 
-- (void)ccClearGlobalPartnerParametersWithClientData:(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
+- (void)ccClearGlobalPartnerParametersWithClientData:
+(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
+
     [self.globalPartnerParametersController
      ccClearGlobalPartnerParameterWithClientData:clientClearGlobalPartnerParametersActionData];
 }
+
+- (nullable id<ADJClientActionHandler>)ccHandlerById:(nonnull ADJNonEmptyString *)clientHandlerId {
+    return [self.clientHandlerMapById objectForKey:clientHandlerId.stringValue];
+}
+
 @end

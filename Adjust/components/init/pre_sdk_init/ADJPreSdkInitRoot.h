@@ -9,10 +9,9 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
-#import "ADJPreSdkInitRootBag.h"
 #import "ADJInstanceRootBag.h"
-
-#import "ADJSdkPackageSenderController.h"
+#import "ADJPreSdkInitRootBag.h"
+#import "ADJPostSdkInitRootBag.h"
 
 @interface ADJPreSdkInitRoot : ADJCommonBase <ADJPreSdkInitRootBag>
 // instantiation
@@ -20,13 +19,9 @@
     initWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag;
 
 // public api
-- (void)ccSdkInitWithClientConfg:(nonnull ADJClientConfigData *)clientConfig
-                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag;
-
-- (void)
-    ccSetDependenciesAtSdkInitWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder*)sdkPackageBuilder
-    sdkPackageSenderController:(nonnull ADJSdkPackageSenderController *)sdkPackageSenderController;
+- (void)ccSetDependenciesAtSdkInitWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+                                   postSdkInitRootBag:(nonnull id<ADJPostSdkInitRootBag>)postSdkInitRootBag
+                            postSdkStartClientActions:(nonnull id<ADJClientActionsAPI>)postSdkStartClientActions;
 
 - (void)ccSubscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
 

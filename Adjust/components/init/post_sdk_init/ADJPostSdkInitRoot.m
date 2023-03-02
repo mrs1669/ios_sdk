@@ -29,15 +29,10 @@
  @property (nonnull, readonly, strong, nonatomic)
      ADJClientSubscriptionsController *clientSubscriptionsController;
  @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
- @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilder;
- @property (nonnull, readonly, strong, nonatomic)
-     ADJSdkPackageSenderController *sdkPackageSenderController;
  @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
- @property (nonnull, readonly, strong, nonatomic) ADJMainQueueController *mainQueueController;
  @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
  @property (nonnull, readonly, strong, nonatomic)
      ADJAsaAttributionController *asaAttributionController;
- @property (nonnull, readonly, strong, nonatomic) ADJPostSdkStartRoot *postSdkStartRoot;
  @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
  @property (nonnull, readonly, strong, nonatomic)
      ADJMeasurementSessionController *measurementSessionController;
@@ -46,65 +41,19 @@
  */
 
 @interface ADJPostSdkInitRoot ()
-
 #pragma mark - Internal variables
-@property (nonnull, readonly, strong, nonatomic)
-    ADJSubscribingGatePublisher *subscribingGatePublisher;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJPublishingGatePublisher *publishingGatePublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJSubscribingGatePublisher *subscribingGatePublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJPublishingGatePublisher *publishingGatePublisher;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkInitPublisher *sdkInitPublisher;
-
 @end
 
 @implementation ADJPostSdkInitRoot
+#pragma mark - Synthesize protocol properties
+@synthesize sdkPackageBuilder = _sdkPackageBuilder;
+@synthesize sdkPackageSenderController = _sdkPackageSenderController;
+@synthesize mainQueueController = _mainQueueController;
+
 #pragma mark Instantiation
-+ (nonnull instancetype)
-    ccInstanceWhenSdkInitWithClientConfig:(nonnull ADJClientConfigData *)clientConfig
-    instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-    preSdkInitRoot:(nonnull ADJPreSdkInitRoot *)preSdkInitRoot
-{
-    ADJPostSdkInitRoot *_Nonnull postSdkInitRoot =
-        [[ADJPostSdkInitRoot alloc]
-         initWithClientConfig:clientConfig
-         instanceRootBag:instanceRootBag
-         preSdkInitRootBag:preSdkInitRoot];
-
-    // inject remaining dependencies before subscriptions
-    [preSdkInitRoot
-     ccSetDependenciesAtSdkInitWithInstanceRootBag:instanceRootBag
-     sdkPackageBuilder:postSdkInitRoot.sdkPackageBuilder
-     sdkPackageSenderController:postSdkInitRoot.sdkPackageSenderController];
-
-    // connect all subscribers to publishers
-    [preSdkInitRoot ccSubscribeToPublishers:instanceRootBag.publisherController];
-    [postSdkInitRoot ccSubscribeToPublishers:instanceRootBag.publisherController];
-
-    // announce that all can receive events
-    [postSdkInitRoot.subscribingGatePublisher notifySubscribersWithSubscriberBlock:
-     ^(id<ADJSubscribingGateSubscriber> _Nonnull subscriber) {
-        [subscriber ccAllowedToReceiveNotifications];
-    }];
-
-    // announce that all can publish events
-    [postSdkInitRoot.publishingGatePublisher notifySubscribersWithSubscriberBlock:
-     ^(id<ADJPublishingGateSubscriber> _Nonnull subscriber) {
-        [subscriber ccAllowedToPublishNotifications];
-    }];
-
-    // announce sdk init
-    [postSdkInitRoot.sdkInitPublisher notifySubscribersWithSubscriberBlock:
-     ^(id<ADJSdkInitSubscriber> _Nonnull subscriber) {
-        [subscriber ccOnSdkInitWithClientConfigData:clientConfig];
-    }];
-
-    // call post sdk init
-    //  to ensure that if the sdk were to start from that
-    //  it would happen only *after* all sdk init subscribers received their notification
-    [postSdkInitRoot.measurementLifecycleController ccPostSdkInit];
-
-    return postSdkInitRoot;
-}
-
 - (nonnull instancetype)
     initWithClientConfig:(nonnull ADJClientConfigData *)clientConfig
     instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
@@ -211,36 +160,26 @@
             mainQueueController:_mainQueueController
             adjustAttributionStateStorage:storageRoot.attributionStateStorage];
 
-
-    _postSdkStartRoot = [[ADJPostSdkStartRoot alloc]
-                         initWithClientConfigData:clientConfig
-                         loggerFactory:loggerFactory
-                         storageRoot:storageRoot
-                         sdkPackageBuilder:_sdkPackageBuilder
-                         mainQueueController:_mainQueueController];
-
     _reachabilityController = [[ADJReachabilityController alloc]
                                initWithLoggerFactory:loggerFactory
                                threadController:instanceRootBag.threadController
                                targetEndpoint:[_mainQueueController defaultTargetUrl]
                                publisherController:instanceRootBag.publisherController];
 
-    // local dependencies 2
-    _measurementSessionController =
-        [[ADJMeasurementSessionController alloc]
-         initWithLoggerFactory:loggerFactory
-         minMeasurementSessionInterval:sdkConfig.minMeasurementSessionIntervalMilli
-         overwriteFirstMeasurementSessionInterval:
-             sdkConfig.overwriteFirstMeasurementSessionIntervalMilli
-         clientExecutor:instanceRootBag.clientExecutor
-         sdkPackageBuilder:_sdkPackageBuilder
-         measurementSessionStateStorage:storageRoot.measurementSessionStateStorage
-         mainQueueController:_mainQueueController
-         clock:instanceRootBag.clock
-         clientActionController:preSdkInitRootBag.clientActionController
-         postSdkStartRoot:_postSdkStartRoot];
-
     // local dependencies 3
+    _measurementSessionController =
+    [[ADJMeasurementSessionController alloc]
+     initWithLoggerFactory:loggerFactory
+     minMeasurementSessionInterval:sdkConfig.minMeasurementSessionIntervalMilli
+     overwriteFirstMeasurementSessionInterval:sdkConfig.overwriteFirstMeasurementSessionIntervalMilli
+     clientExecutor:instanceRootBag.clientExecutor
+     sdkPackageBuilder:_sdkPackageBuilder
+     measurementSessionStateStorage:storageRoot.measurementSessionStateStorage
+     mainQueueController:_mainQueueController
+     clock:instanceRootBag.clock
+     clientActionController:preSdkInitRootBag.clientActionController];
+
+    // local dependencies 4
     _measurementLifecycleController =
         [[ADJMeasurementLifecycleController alloc]
          initWithLoggerFactory:loggerFactory
@@ -260,11 +199,36 @@
 }
 
 #pragma mark Public API
+
+- (void)ccCompletePostSdkInit {
+    // announce that all can receive events
+    [self.subscribingGatePublisher notifySubscribersWithSubscriberBlock:
+     ^(id<ADJSubscribingGateSubscriber> _Nonnull subscriber) {
+        [subscriber ccAllowedToReceiveNotifications];
+    }];
+
+    // announce that all can publish events
+    [self.publishingGatePublisher notifySubscribersWithSubscriberBlock:
+     ^(id<ADJPublishingGateSubscriber> _Nonnull subscriber) {
+        [subscriber ccAllowedToPublishNotifications];
+    }];
+
+    // announce sdk init
+    [self.sdkInitPublisher notifySubscribersWithSubscriberBlock:
+     ^(id<ADJSdkInitSubscriber> _Nonnull subscriber) {
+        [subscriber ccOnSdkInitWithClientConfigData:self.clientConfig];
+    }];
+
+    // call post sdk init
+    //  to ensure that if the sdk were to start from that
+    //  it would happen only *after* all sdk init subscribers received their notification
+    [self.measurementLifecycleController ccPostSdkInit];
+}
+
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock {
     [self.reachabilityController finalizeAtTeardown];
 }
 
-#pragma mark Internal Methods
 - (void)ccSubscribeToPublishers:(nonnull ADJPublisherController *)publisherController {
     // subscribe controllers to publishers
     [publisherController subscribeToPublisher:self.attributionController];

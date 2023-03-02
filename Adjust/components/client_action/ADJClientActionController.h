@@ -12,7 +12,6 @@
 #import "ADJClientActionsAPI.h"
 #import "ADJClientActionStorage.h"
 #import "ADJClock.h"
-#import "ADJPostSdkStartRoot.h"
 
 @interface ADJClientActionController : ADJCommonBase<ADJClientActionsAPI>
 // instantiation
@@ -21,12 +20,11 @@
                                         clock:(nonnull ADJClock *)clock;
 
 // public api
+- (void)ccSetDependencyPostSdkStartClientActions:(nonnull id<ADJClientActionsAPI>)postSdkStartClientActions;
+
 - (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions;
 
-- (void)
-    ccPreSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot
-    isPreFirstSession:(BOOL)isPreFirstSession;
+- (void)ccPreSdkStartWithPreFirstSession:(BOOL)isPreFirstSession;
 
-- (void)ccPostSdkStartWithPostSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot;
-
+- (void)ccPostSdkStart;
 @end

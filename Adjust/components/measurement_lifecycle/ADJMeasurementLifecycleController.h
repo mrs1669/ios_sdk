@@ -14,7 +14,6 @@
 #import "ADJMeasurementLifecycleSubscriber.h"
 #import "ADJSdkStartSubscriber.h"
 #import "ADJSingleThreadExecutor.h"
-#import "ADJPostSdkStartRoot.h"
 #import "ADJMeasurementSessionController.h"
 #import "ADJThreadExecutorFactory.h"
 #import "ADJKeepAlivePingSubscriber.h"

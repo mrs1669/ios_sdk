@@ -21,7 +21,6 @@
 #import "ADJMeasurementSessionStateData.h"
 #import "ADJLogger.h"
 #import "ADJPublisherController.h"
-#import "ADJPostSdkStartRoot.h"
 #import "ADJClientActionController.h"
 
 @interface ADJMeasurementSessionController : ADJCommonBase<
@@ -31,20 +30,15 @@
 >
 
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    minMeasurementSessionInterval:
-        (nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
-    overwriteFirstMeasurementSessionInterval:
-        (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionInterval
-    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    measurementSessionStateStorage:
-        (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-    clock:(nonnull ADJClock *)clock
-    clientActionController:(nonnull ADJClientActionController *)clientActionController
-    postSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot;
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                minMeasurementSessionInterval:(nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
+     overwriteFirstMeasurementSessionInterval:(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionInterval
+                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+                                        clock:(nonnull ADJClock *)clock
+                       clientActionController:(nonnull ADJClientActionController *)clientActionController;
 
 // public api
 - (BOOL)ccTryStartSdk;

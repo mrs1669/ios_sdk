@@ -17,28 +17,14 @@
 #import "ADJThirdPartySharingController.h"
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
-
 #import "ADJClientConfigData.h"
-#import "ADJLoggerFactory.h"
-#import "ADJStorageRoot.h"
-#import "ADJSdkPackageBuilder.h"
-#import "ADJMainQueueController.h"
+#import "ADJInstanceRootBag.h"
+#import "ADJPreSdkInitRootBag.h"
+#import "ADJPostSdkInitRootBag.h"
 
 @interface ADJPostSdkStartRoot : NSObject <
     ADJClientActionsAPI
 >
-// instantiation
-- (nonnull instancetype)
-    initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    storageRoot:(nonnull ADJStorageRoot *)storageRoot
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
-
-- (nullable instancetype)init NS_UNAVAILABLE;
-
-// public api
-- (nullable id<ADJClientActionHandler>)handlerById:(nonnull ADJNonEmptyString *)clientHandlerId;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
@@ -54,5 +40,13 @@
     ADJGlobalCallbackParametersController *globalCallbackParametersController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJGlobalPartnerParametersController *globalPartnerParametersController;
+
+// instantiation
+- (nonnull instancetype)initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
+                                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+                               preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
+                              postSdkInitRootBag:(nonnull id<ADJPostSdkInitRootBag>)postSdkInitRootBag;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
 
 @end

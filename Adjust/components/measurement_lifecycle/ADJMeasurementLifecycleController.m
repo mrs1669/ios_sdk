@@ -82,16 +82,6 @@
     [self ccHandleSideEffects:output];
 }
 
-#pragma mark - Subscriptions
-- (void)
-    ccSubscribeToPublishersWithSdkActivePublisher:
-        (nonnull ADJSdkActivePublisher *)sdkActivePublisher
-    lifecyclePublisher:(nonnull ADJLifecyclePublisher *)lifecyclePublisher
-{
-    [sdkActivePublisher addSubscriber:self];
-    [lifecyclePublisher addSubscriber:self];
-}
-
 #pragma mark - ADJSdkActiveSubscriber
 - (void)ccSdkActiveWithStatus:(nonnull NSString *)status {
     [self.logger debugDev:@"Handling ccSdkActiveWithStatus"
@@ -128,7 +118,7 @@
     }
 
     if (output.measurementResumed) {
-        [self ccResumeMeasurmentWithDidSdkStart:output.sdkStarted];
+        [self ccResumeMeasurementWithDidSdkStart:output.sdkStarted];
     }
 
     if (output.measurementPaused) {
@@ -155,7 +145,7 @@
     }];
 }
 
-- (void)ccResumeMeasurmentWithDidSdkStart:(BOOL)sdkStarted {
+- (void)ccResumeMeasurementWithDidSdkStart:(BOOL)sdkStarted {
     [self.measurementLifecyclePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJMeasurementLifecycleSubscriber> _Nonnull subscriber) {
         [subscriber ccDidResumeMeasurementWithIsFirst:sdkStarted];

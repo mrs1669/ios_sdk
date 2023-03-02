@@ -21,7 +21,6 @@
 @property (nullable, readonly, weak, nonatomic) ADJMainQueueController *mainQueueControllerWeak;
 @property (nullable, readonly, weak, nonatomic)
     ADJClientActionController *clientActionControllerWeak;
-@property (nullable, readonly, weak, nonatomic) ADJPostSdkStartRoot *postSdkStartRootWeak;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
 @property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *storage;
@@ -48,14 +47,12 @@
     mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
     clock:(nonnull ADJClock *)clock
     clientActionController:(nonnull ADJClientActionController *)clientActionController
-    postSdkStartRoot:(nonnull ADJPostSdkStartRoot *)postSdkStartRoot
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionController"];
     _overwriteFirstMeasurementSessionInterval = overwriteFirstMeasurementSessionInterval;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
     _clientActionControllerWeak = clientActionController;
-    _postSdkStartRootWeak = postSdkStartRoot;
     _clientExecutor = clientExecutor;
     _storage = measurementSessionStateStorage;
     _clock = clock;
@@ -85,13 +82,6 @@
         return NO;
     }
 
-    ADJPostSdkStartRoot *_Nullable postSdkStartRoot = self.postSdkStartRootWeak;
-    if (postSdkStartRoot == nil) {
-        [self.logger debugDev:
-         @"Cannot try to start sdk without a reference to postSdkStartRoot"
-                    issueType:ADJIssueWeakReference];
-    }
-
     ADJMeasurementSessionStateOutputData *_Nullable measurementSessionOutput =
         [self.measurementSessionState
          sdkStartWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp];
@@ -103,14 +93,13 @@
 
     BOOL isPreFirstSession = preSdkStartStateData.measurementSessionData == nil;
 
-    [clientActionController ccPreSdkStartWithPostSdkStartRoot:postSdkStartRoot
-                                            isPreFirstSession:isPreFirstSession];
+    [clientActionController ccPreSdkStartWithPreFirstSession:isPreFirstSession];
 
     // sdk start
     [self ccHandleMeasurementSessionOutput:measurementSessionOutput];
 
     // post sdk start
-    [clientActionController ccPostSdkStartWithPostSdkStartRoot:postSdkStartRoot];
+    [clientActionController ccPostSdkStart];
 
     return YES;
 }
