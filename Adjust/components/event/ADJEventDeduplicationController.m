@@ -55,11 +55,11 @@
 }
 
 #pragma mark Public API
-- (BOOL)ccContainsWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {
+- (BOOL)ccContainsDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {
     return [self.deduplicationIdSet containsObject:deduplicationId.stringValue];
 }
 
-- (nonnull ADJNonNegativeInt *)ccAddWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {
+- (nonnull ADJNonNegativeInt *)ccAddDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {
     ADJEventDeduplicationStorage *_Nullable storage =
     self.eventDeduplicationStorageWeak;
     if (storage == nil) {
@@ -74,7 +74,7 @@
         return [storage count];
     }
     
-    if ([self ccContainsWithDeduplicationId:deduplicationId]) {
+    if ([self ccContainsDeduplicationId:deduplicationId]) {
         [self.logger infoClient:@"Cannot add deduplication id to the duplication list,"
          " because it already contains the same deduplication id"];
         return [storage count];

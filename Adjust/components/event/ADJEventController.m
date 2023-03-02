@@ -133,7 +133,7 @@ ADJMainQueueController *mainQueueControllerWeak;
         return YES;
     }
 
-    if ([self.eventDeduplicationController ccContainsWithDeduplicationId:deduplicationId]) {
+    if ([self.eventDeduplicationController ccContainsDeduplicationId:deduplicationId]) {
         [self.logger infoClient:
          @"Event won't be tracked, since it has a previously used deduplication id"
                             key:@"deduplication id"
@@ -141,7 +141,7 @@ ADJMainQueueController *mainQueueControllerWeak;
         return NO;
     }
 
-    ADJNonNegativeInt *_Nonnull newDeduplicationCount = [self.eventDeduplicationController ccAddWithDeduplicationId:deduplicationId];
+    ADJNonNegativeInt *_Nonnull newDeduplicationCount = [self.eventDeduplicationController ccAddDeduplicationId:deduplicationId];
 
     [self.logger debugDev:
      @"Saving deduplication id to avoid tracking an event with the same value in the future"
