@@ -291,7 +291,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
         [infoDictionary objectForKey:ADJUserDefaultsPrimaryInstanceIdKey];
     if (primaryInstanceId == nil) { return nil;}
 
-    if ([primaryInstanceId isKindOfClass:[NSString class]]) { return nil; }
+    if (! [primaryInstanceId isKindOfClass:[NSString class]]) { return nil; }
 
     return (NSString *)primaryInstanceId;
 }
