@@ -16,7 +16,7 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:path];
 }
 
-+ (nullable NSString *)filePathInAdjustAppSupportDirWithFilename:(nonnull NSString *)filename {
++ (nullable NSString *)filePathInAdjustAppSupportDir:(nonnull NSString *)filename {
     NSString *_Nullable adjustAppSupportDir = [ADJUtilFiles adjustAppSupportDir];
     if (adjustAppSupportDir == nil) { return nil; }
 
@@ -49,10 +49,9 @@
 }
 
 + (nullable NSString *)appSupportDirWithPath:(nonnull NSString *)path {
-    NSArray *_Nonnull paths =
-        NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
-                                            NSUserDomainMask,
-                                            YES);
+    NSArray *_Nonnull paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
+                                                                  NSUserDomainMask,
+                                                                  YES);
     if (paths.count == 0) {
         return nil;
     }

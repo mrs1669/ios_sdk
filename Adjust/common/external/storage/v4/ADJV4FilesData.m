@@ -72,7 +72,7 @@
                                logger:(nonnull ADJLogger *)logger {
     // Try to read from Application Support directory first.
     NSString *_Nullable appSupportFilePath =
-        [ADJUtilFiles filePathInAdjustAppSupportDirWithFilename:fileName];
+        [ADJUtilFiles filePathInAdjustAppSupportDir:fileName];
     
     id _Nullable appSupportReadObject = [self readObjectWithFilePath:appSupportFilePath
                                                             fileName:fileName

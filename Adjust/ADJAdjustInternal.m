@@ -168,46 +168,36 @@ static dispatch_once_t entryRootOnceToken = 0;
 }
 
 + (nonnull NSString *)clearDbInAdjustAppSupportWithIdString:(nonnull NSString *)idString {
-    NSString *_Nullable adjustAppSupportDirPath = [ADJUtilFiles adjustAppSupportDir];
-    if (adjustAppSupportDirPath == nil) {
-        return @"Could not obtain adjust app support dir";
-    }
 
     NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
+    NSString *_Nullable appSupportDbFilename = [ADJUtilFiles filePathInAdjustAppSupportDir:dbFilename];
 
-    NSString *_Nonnull adjustAppSupportDirDbPath =
-        [ADJUtilFiles filePathWithDir:adjustAppSupportDirPath filename:dbFilename];
-
-    NSError *error = nil;
-    BOOL removedSuccessfully =
-        [[NSFileManager defaultManager] removeItemAtPath:adjustAppSupportDirDbPath
-                                                   error:&error];
-
-    if (error) {
-        return [ADJUtilF errorFormat:error];
+    if (appSupportDbFilename == nil) {
+        return @"Could not obtain db filename in Application Support dir";
     }
-    return [NSString stringWithFormat:@"db file removed at adjust app support dir? %d",
-            removedSuccessfully];
+    return [self clearDbAtPath:appSupportDbFilename];
 }
 
 + (nonnull NSString *)clearDbInDocumentsDirWithIdString:(nonnull NSString *)idString {
-    NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
 
+    NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
     NSString *_Nullable documentsDbFilename = [ADJUtilFiles filePathInDocumentsDir:dbFilename];
     if (documentsDbFilename == nil) {
         return @"Could not obtain db filename in documents dir";
     }
+    return [self clearDbAtPath:documentsDbFilename];
+}
+
++ (nonnull NSString *)clearDbAtPath:(nonnull NSString *)dbPath {
 
     NSError *error = nil;
-    BOOL removedSuccessfully =
-        [[NSFileManager defaultManager] removeItemAtPath:documentsDbFilename
-                                                   error:&error];
-
+    BOOL success = [[NSFileManager defaultManager] removeItemAtPath:dbPath
+                                                              error:&error];
     if (error) {
         return [ADJUtilF errorFormat:error];
     }
-    return [NSString stringWithFormat:@"db file removed at documents dir? %d",
-            removedSuccessfully];
+    return [NSString stringWithFormat:@"%@ to remove [%@]",
+            success ? @"Succeeded" : @"Failed",
+            dbPath];
 }
-
 @end
