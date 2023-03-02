@@ -138,7 +138,7 @@
 }
 
 #pragma mark - ADJAdjustInstance
-- (void)sdkInitWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig {
+- (void)initSdkWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig {
     [self ccExecuteWithSelfBlock:^(ADJInstanceRoot *_Nonnull instanceRoot)
      {
         ADJClientConfigData *_Nullable clientConfig = [ADJClientConfigData

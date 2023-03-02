@@ -21,7 +21,7 @@
 
 @protocol ADJAdjustInstance <NSObject>
 
-- (void)sdkInitWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig;
+- (void)initSdkWithConfiguration:(nonnull ADJAdjustConfig *)adjustConfig;
 
 - (void)inactivateSdk;
 - (void)reactivateSdk;
