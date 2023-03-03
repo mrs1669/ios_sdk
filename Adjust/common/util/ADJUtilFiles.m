@@ -68,15 +68,4 @@
                                                       attributes:nil
                                                            error:errorPtr];
 }
-
-+ (BOOL)moveFileFromPath:(nonnull NSString *)fromPath
-                  toPath:(nonnull NSString *)toPath
-                errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
-
-{
-    return [[NSFileManager defaultManager] moveItemAtPath:fromPath
-                                                   toPath:toPath
-                                                    error:errorPtr];
-}
-
 @end

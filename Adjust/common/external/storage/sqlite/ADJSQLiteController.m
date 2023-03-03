@@ -84,11 +84,9 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     NSString *_Nonnull adjustAppSupportDirDbPath =
         [ADJUtilFiles filePathWithDir:adjustAppSupportDirPath filename:dbFilename];
 
-    [self moveDbFileFromDocumentsDirWithDbFilename:dbFilename
-                         adjustAppSupportDirDbPath:adjustAppSupportDirDbPath];
-
     return adjustAppSupportDirDbPath;
 }
+
 - (nullable NSString *)loadAdjustAppSupportDir {
     NSString *_Nullable adjustAppSupportDirPath = [ADJUtilFiles adjustAppSupportDir];
     if (adjustAppSupportDirPath == nil) {
@@ -114,38 +112,6 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
                     value:[ADJUtilF boolFormat:YES]];
 
     return adjustAppSupportDirPath;
-}
-
-- (void)moveDbFileFromDocumentsDirWithDbFilename:(nonnull NSString *)dbFilename
-                       adjustAppSupportDirDbPath:(nonnull NSString *)adjustAppSupportDirDbPath
-{
-    NSString *_Nullable documentsDbFilename = [ADJUtilFiles filePathInDocumentsDir:dbFilename];
-    if (documentsDbFilename == nil) {
-        [self.logger debugDev:@"Cannot obtain documents dir path"
-                          key:@"db filename"
-                        value:dbFilename];
-        return;
-    }
-
-    NSError *dbFileMoveError;
-    BOOL fileMoved =
-        [ADJUtilFiles moveFileFromPath:documentsDbFilename
-                                toPath:adjustAppSupportDirDbPath
-                              errorPtr:&dbFileMoveError];
-
-    if (! fileMoved) {
-        [self.logger debugDev:@"Cannot move db file from documents to app support dir"
-                      nserror:dbFileMoveError
-                          key:@"db filename"
-                        value:dbFilename
-                    issueType:ADJIssueStorageIo];
-    } else {
-        [self.logger debugDev:@"Db file tried to be moved from documents to app support dir"
-                         key1:@"db filename"
-                       value1:dbFilename
-                         key2:@"was file moved"
-                       value2:[ADJUtilF boolFormat:YES]];
-    }
 }
 
 #pragma mark - loadDb
