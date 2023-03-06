@@ -136,17 +136,55 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
                  resultFail:adRevenueUnitResult.fail];
     }
 
-    ADJStringMap *_Nullable callbackParameters =
-        [ADJUtilConv
-            convertToStringMapWithKeyValueArray:adjustAdRevenue.callbackParameterKeyValueArray
-            sourceDescription:@"ad revenue callback parameters"
-            logger:logger];
+    ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *_Nonnull
+    callbackParametersResult =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustAdRevenue.callbackParameterKeyValueArray];
 
-    ADJStringMap *_Nullable partnerParameters =
-        [ADJUtilConv
-            convertToStringMapWithKeyValueArray:adjustAdRevenue.partnerParameterKeyValueArray
-            sourceDescription:@"ad revenue partner parameters"
-            logger:logger];
+    ADJStringMap *_Nullable callbackParameters = nil;
+    if (callbackParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use ad revenue callback parameters"
+                  resultFail:callbackParametersResult.fail];
+    } else if (callbackParametersResult.value != nil) {
+        ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *_Nonnull
+        callbackParametersAndFails = callbackParametersResult.value;
+
+        for (ADJResultFail *_Nonnull resultFail in callbackParametersAndFails.collection) {
+            [logger noticeClient:@"Issue while adding to ad revenue callback parameters"
+                      resultFail:resultFail];
+        }
+
+        if ([callbackParametersAndFails.value isEmpty]) {
+            [logger noticeClient:@"Could not use any valid ad revenue callback parameter"];
+        } else {
+            callbackParameters = callbackParametersAndFails.value;
+        }
+    }
+
+    ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *_Nonnull
+    partnerParametersResult =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustAdRevenue.partnerParameterKeyValueArray];
+
+    ADJStringMap *_Nullable partnerParameters = nil;
+    if (partnerParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use ad revenue partner parameters"
+                  resultFail:partnerParametersResult.fail];
+    } else if (partnerParametersResult.value != nil) {
+        ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *_Nonnull
+        partnerParametersAndFails = partnerParametersResult.value;
+
+        for (ADJResultFail *_Nonnull resultFail in partnerParametersAndFails.collection) {
+            [logger noticeClient:@"Issue while adding to ad revenue partner parameters"
+                      resultFail:resultFail];
+        }
+
+        if ([partnerParametersAndFails.value isEmpty]) {
+            [logger noticeClient:@"Could not use any valid ad revenue partner parameter"];
+        } else {
+            partnerParameters = partnerParametersAndFails.value;
+        }
+    }
 
     return [[self alloc] initWithSource:sourceResult.value
                                 revenue:revenue

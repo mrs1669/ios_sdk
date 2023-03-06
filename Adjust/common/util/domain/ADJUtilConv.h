@@ -10,6 +10,7 @@
 
 #import "ADJStringMap.h"
 #import "ADJResultNN.h"
+#import "ADJCollectionAndValue.h"
 #import "ADJInputLogMessageData.h"
 #import "ADJUtilMap.h"
 
@@ -35,21 +36,17 @@
 
 + (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
 
-+ (nullable ADJStringMap *)
-    convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *)
+    convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
++ (nonnull ADJResultNL<ADJCollectionAndValue<
+   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray<NSString *> *)nameKeyStringValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger;
+    (nullable NSArray<NSString *> *)nameKeyStringValueArray;
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
++ (nonnull ADJResultNL<ADJCollectionAndValue<
+   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray *)nameKeyNumberBooleanValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger;
+        (nullable NSArray *)nameKeyNumberBooleanValueArray;
 
 @end

@@ -229,37 +229,36 @@
     return [[NSDictionary alloc] init];
 }
 
-+ (nullable ADJStringMap *)
-    convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger
++ (nonnull ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *)
+    convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
 {
     if (keyValueArray == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     if (keyValueArray.count % 2 != 0) {
-        [logger debugDev:
-         @"Cannot convert key value array with non-multiple of 2 elements"
-                     key:@"keyValueArray count"
-                   value:[ADJUtilF uIntegerFormat:keyValueArray.count].description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNL
+                failWithMessage:@"Cannot convert key value array with non-multiple of 2 elements"
+                key:@"keyValueArray count"
+                value:[ADJUtilF uIntegerFormat:keyValueArray.count]];
     }
 
-    ADJStringMapBuilder *_Nonnull stringMapBuilder =
-    [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    ADJStringMapBuilder *_Nonnull stringMapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    NSMutableArray<ADJResultFail *> *_Nonnull resultFailArrayBuilder =
+        [[NSMutableArray alloc] init];
 
     for (NSUInteger i = 0; i < keyValueArray.count; i = i + 2) {
         ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJUtilConv extractNsNullableStringWithObject:[keyValueArray objectAtIndex:i]];
 
         if (keyResult.fail != nil) {
-            [logger debugDev:@"Cannot add to map with key"
-                         key:ADJLogFromKey
-                       value:sourceDescription
-                  resultFail:keyResult.fail
-                   issueType:ADJIssueInvalidInput];
+            ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                [[ADJResultFailBuilder alloc] initWithMessage:@"Cannot add to map with key"];
+            [resultFailBuilder withKey:@"key parsing fail"
+                                 value:[keyResult.fail foundationDictionary]];
+            [resultFailBuilder withKey:@"keyValueArray index"
+                                 value:[ADJUtilF uIntegerFormat:i]];
+            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
 
@@ -267,11 +266,13 @@
             [ADJUtilConv extractNsNullableStringWithObject:[keyValueArray objectAtIndex:i + 1]];
 
         if (valueResult.fail != nil) {
-            [logger debugDev:@"Cannot add to map with value"
-                         key:ADJLogFromKey
-                       value:sourceDescription
-                  resultFail:valueResult.fail
-                   issueType:ADJIssueInvalidInput];
+            ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                [[ADJResultFailBuilder alloc] initWithMessage:@"Cannot add to map with value"];
+            [resultFailBuilder withKey:@"value parsing fail"
+                                 value:[valueResult.fail foundationDictionary]];
+            [resultFailBuilder withKey:@"keyValueArray index"
+                                 value:[ADJUtilF uIntegerFormat:i + 1]];
+            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
 
@@ -279,91 +280,92 @@
             [stringMapBuilder addPairWithValue:valueResult.value
                                            key:keyResult.value.stringValue];
         if (previousValue != nil) {
-            [logger debugDev:@"Previous value was overwritten"
-                        from:sourceDescription
-                         key:@"key"
-                       value:keyResult.value.stringValue];
+            ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                [[ADJResultFailBuilder alloc] initWithMessage:
+                 @"Previous value of map was overwritten"];
+            [resultFailBuilder withKey:@"key"
+                                 value:keyResult.value.stringValue];
+            [resultFailBuilder withKey:@"keyValueArray index"
+                                 value:[ADJUtilF uIntegerFormat:i]];
+            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
         }
     }
 
-    if (stringMapBuilder.countPairs == 0) {
-        return nil;
-    }
-
-    return [[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder];
+    return [ADJResultNL okWithValue:[[ADJCollectionAndValue alloc]
+                                     initWithCollection:resultFailArrayBuilder
+                                     value:[[ADJStringMap alloc]
+                                            initWithStringMapBuilder:stringMapBuilder]]];
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
++ (nonnull ADJResultNL<ADJCollectionAndValue<
+   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray<NSString *> *)nameKeyStringValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger
+    (nullable NSArray<NSString *> *)nameKeyStringValueArray
 {
     return [self convertToMapCollectionByNameBuilderWithNameKeyValueArray:nameKeyStringValueArray
-                                                        sourceDescription:sourceDescription
-                                                                   logger:logger
                                                             isValueString:YES];
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
++ (nonnull ADJResultNL<ADJCollectionAndValue<
+   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
         (nullable NSArray *)nameKeyNumberBooleanValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger
 {
     return [self
             convertToMapCollectionByNameBuilderWithNameKeyValueArray:nameKeyNumberBooleanValueArray
-            sourceDescription:sourceDescription
-            logger:logger
             isValueString:NO];
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)
++ (nonnull ADJResultNL<ADJCollectionAndValue<
+   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToMapCollectionByNameBuilderWithNameKeyValueArray:
         (nullable NSArray<NSString *> *)nameKeyValueArray
-    sourceDescription:(nonnull NSString *)sourceDescription
-    logger:(nonnull ADJLogger *)logger
     isValueString:(BOOL)isValueString
 {
     if (nameKeyValueArray == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
     }
 
     if (nameKeyValueArray.count % 3 != 0) {
-        [logger debugDev:
-         @"Cannot convert name key value array with non-multiple of 3 elements"
-                     key:@"nameKeyStringValueArray count"
-                   value:[ADJUtilF uIntegerFormat:nameKeyValueArray.count].description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNL
+                failWithMessage:
+                    @"Cannot convert name key value array with non-multiple of 3 elements"
+                key:@"nameKeyStringValueArray count"
+                value:[ADJUtilF uIntegerFormat:nameKeyValueArray.count]];
     }
 
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nonnull
-    mapCollectionByNameBuilder =
-        [[NSMutableDictionary alloc] initWithCapacity:(nameKeyValueArray.count / 3)];
+        mapCollectionByNameBuilder =
+            [[NSMutableDictionary alloc] initWithCapacity:(nameKeyValueArray.count / 3)];
+    NSMutableArray<ADJResultFail *> *_Nonnull resultFailArrayBuilder =
+        [[NSMutableArray alloc] init];
 
     for (NSUInteger i = 0; i < nameKeyValueArray.count; i = i + 3) {
         ADJResultNN<ADJNonEmptyString *> *_Nonnull nameResult =
             [ADJUtilConv extractNsNullableStringWithObject:[nameKeyValueArray objectAtIndex:i]];
-
         if (nameResult.fail != nil) {
-            [logger debugDev:@"Cannot add to map collection with name"
-                         key:ADJLogFromKey
-                       value:sourceDescription
-                  resultFail:nameResult.fail
-                   issueType:ADJIssueInvalidInput];
+            ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                [[ADJResultFailBuilder alloc] initWithMessage:
+                 @"Cannot add to map collection with name"];
+            [resultFailBuilder withKey:@"name parsing fail"
+                                 value:[nameResult.fail foundationDictionary]];
+            [resultFailBuilder withKey:@"nameKeyValueArray index"
+                                 value:[ADJUtilF uIntegerFormat:i]];
+            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
 
         ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJUtilConv extractNsNullableStringWithObject:[nameKeyValueArray objectAtIndex:i + 1]];
-
         if (keyResult.fail != nil) {
-            [logger debugDev:@"Cannot add to map collection with key"
-                         key:ADJLogFromKey
-                       value:sourceDescription
-                  resultFail:keyResult.fail
-                   issueType:ADJIssueInvalidInput];
+            ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                [[ADJResultFailBuilder alloc] initWithMessage:
+                 @"Cannot add to map collection with key"];
+            [resultFailBuilder withKey:@"key parsing fail"
+                                 value:[keyResult.fail foundationDictionary]];
+            [resultFailBuilder withKey:@"nameKeyValueArray index"
+                                 value:[ADJUtilF uIntegerFormat:i + 1]];
+            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
 
@@ -374,11 +376,14 @@
                  [nameKeyValueArray objectAtIndex:i + 2]];
 
             if (valueResult.fail != nil) {
-                [logger debugDev:@"Cannot add to map collection with string value"
-                             key:ADJLogFromKey
-                           value:sourceDescription
-                      resultFail:valueResult.fail
-                       issueType:ADJIssueInvalidInput];
+                ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                    [[ADJResultFailBuilder alloc] initWithMessage:
+                     @"Cannot add to map collection with value"];
+                [resultFailBuilder withKey:@"value parsing fail"
+                                     value:[valueResult.fail foundationDictionary]];
+                [resultFailBuilder withKey:@"nameKeyValueArray index"
+                                     value:[ADJUtilF uIntegerFormat:i + 2]];
+                [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             } else {
                 value = valueResult.value.stringValue;
             }
@@ -401,20 +406,24 @@
 
         NSString *_Nullable previousValue = [mapBuilder objectForKey:key];
         if (previousValue != nil) {
-            [logger debugDev:@"Value was overwritten"
-                        from:sourceDescription
-                         key:@"key"
-                       value:key];
+            ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                [[ADJResultFailBuilder alloc] initWithMessage:
+                 @"Previous value of map collection was overwritten"];
+            [resultFailBuilder withKey:@"key"
+                                 value:keyResult.value.stringValue];
+            [resultFailBuilder withKey:@"name"
+                                 value:nameResult.value.stringValue];
+            [resultFailBuilder withKey:@"nameKeyValueArray index"
+                                 value:[ADJUtilF uIntegerFormat:i]];
+            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
         }
 
         [mapBuilder setObject:value forKey:key];
     }
 
-    if (mapCollectionByNameBuilder.count == 0) {
-        return nil;
-    }
-
-    return mapCollectionByNameBuilder;
+    return [ADJResultNL okWithValue:[[ADJCollectionAndValue alloc]
+                                     initWithCollection:resultFailArrayBuilder
+                                     value:mapCollectionByNameBuilder]];
 }
 
 // assumes [ADJUtilObj copyStringOrNSNullWithInput] was for the string object

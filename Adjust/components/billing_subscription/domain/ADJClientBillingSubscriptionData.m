@@ -95,19 +95,57 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
                   resultFail:salesRegionResult.fail];
     }
 
-    ADJStringMap *_Nullable callbackParameters =
-        [ADJUtilConv
-         convertToStringMapWithKeyValueArray:
-             adjustBillingSubscription.callbackParameterKeyValueArray
-         sourceDescription:@"billing subscription callback parameters"
-         logger:logger];
+    ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *_Nonnull
+    callbackParametersResult =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustBillingSubscription.callbackParameterKeyValueArray];
 
-    ADJStringMap *_Nullable partnerParameters =
-        [ADJUtilConv
-         convertToStringMapWithKeyValueArray:
-             adjustBillingSubscription.partnerParameterKeyValueArray
-         sourceDescription:@"billing subscription partner parameters"
-         logger:logger];
+    ADJStringMap *_Nullable callbackParameters = nil;
+    if (callbackParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use billing subscription callback parameters"
+                  resultFail:callbackParametersResult.fail];
+    } else if (callbackParametersResult.value != nil) {
+        ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *_Nonnull
+        callbackParametersAndFails = callbackParametersResult.value;
+
+        for (ADJResultFail *_Nonnull resultFail in callbackParametersAndFails.collection) {
+            [logger noticeClient:@"Issue while adding to billing subscription callback parameters"
+                      resultFail:resultFail];
+        }
+
+        if ([callbackParametersAndFails.value isEmpty]) {
+            [logger noticeClient:
+                @"Could not use any valid billing subscription callback parameter"];
+        } else {
+            callbackParameters = callbackParametersAndFails.value;
+        }
+    }
+
+    ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *_Nonnull
+    partnerParametersResult =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustBillingSubscription.partnerParameterKeyValueArray];
+
+    ADJStringMap *_Nullable partnerParameters = nil;
+    if (partnerParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use billing subscription partner parameters"
+                  resultFail:partnerParametersResult.fail];
+    } else if (partnerParametersResult.value != nil) {
+        ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *_Nonnull
+        partnerParametersAndFails = partnerParametersResult.value;
+
+        for (ADJResultFail *_Nonnull resultFail in partnerParametersAndFails.collection) {
+            [logger noticeClient:@"Issue while adding to billing subscription partner parameters"
+                      resultFail:resultFail];
+        }
+
+        if ([partnerParametersAndFails.value isEmpty]) {
+            [logger noticeClient:
+             @"Could not use any valid billing subscription partner parameter"];
+        } else {
+            partnerParameters = partnerParametersAndFails.value;
+        }
+    }
 
     return [[self alloc] initWithPrice:priceResult.value
                          transactionId:transactionIdResult.value

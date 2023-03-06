@@ -65,17 +65,58 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         [logger noticeClient:@"Cannot set invalid revenue"
                   resultFail:revenueResult.fail];
     }
-    
-    ADJStringMap *_Nullable callbackParameters =
-        [ADJUtilConv convertToStringMapWithKeyValueArray:adjustEvent.callbackParameterKeyValueArray
-                                       sourceDescription:@"event callback parameters"
-                                                  logger:logger];
-    
-    ADJStringMap *_Nullable partnerParameters =
-        [ADJUtilConv convertToStringMapWithKeyValueArray:adjustEvent.partnerParameterKeyValueArray
-                                       sourceDescription:@"event partner parameters"
-                                                  logger:logger];
-    
+
+    ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *_Nonnull
+    callbackParametersResult =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustEvent.callbackParameterKeyValueArray];
+
+    ADJStringMap *_Nullable callbackParameters = nil;
+    if (callbackParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use event callback parameters"
+                  resultFail:callbackParametersResult.fail];
+    } else if (callbackParametersResult.value != nil) {
+        ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *_Nonnull
+        callbackParametersAndFails = callbackParametersResult.value;
+
+        for (ADJResultFail *_Nonnull resultFail in callbackParametersAndFails.collection) {
+            [logger noticeClient:@"Issue while adding to event callback parameters"
+                      resultFail:resultFail];
+        }
+
+        if ([callbackParametersAndFails.value isEmpty]) {
+            [logger noticeClient:@"Could not use any valid event callback parameter"];
+        } else {
+            callbackParameters = callbackParametersAndFails.value;
+        }
+    }
+
+
+    ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *_Nonnull
+    partnerParametersResult =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustEvent.partnerParameterKeyValueArray];
+
+    ADJStringMap *_Nullable partnerParameters = nil;
+    if (partnerParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use event partner parameters"
+                  resultFail:partnerParametersResult.fail];
+    } else if (partnerParametersResult.value != nil) {
+        ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *_Nonnull
+        partnerParametersAndFails = partnerParametersResult.value;
+
+        for (ADJResultFail *_Nonnull resultFail in partnerParametersAndFails.collection) {
+            [logger noticeClient:@"Issue while adding to event partner parameters"
+                      resultFail:resultFail];
+        }
+
+        if ([partnerParametersAndFails.value isEmpty]) {
+            [logger noticeClient:@"Could not use any valid event partner parameter"];
+        } else {
+            partnerParameters = partnerParametersAndFails.value;
+        }
+    }
+
     return [[self alloc] initWithEventId:eventTokenResult.value
                          deduplicationId:deduplicationIdResult.value
                                  revenue:revenueResult.value

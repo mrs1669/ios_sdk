@@ -50,77 +50,109 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
             : nil;
 
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
-        [self granularOptionsWithAdjustThirdPartySharing:adjustThirdPartySharing
-                                                  logger:logger];
+        [self
+         stringWithGranularOptionsByNameArray:adjustThirdPartySharing.granularOptionsByNameArray
+         logger:logger];
 
     ADJNonEmptyString *_Nullable stringPartnerSharingSettingsByName =
-        [self partnerSharingSettingsWithAdjustThirdPartySharing:adjustThirdPartySharing
-                                                         logger:logger];
+        [self
+         stringWithPartnerSharingSettingsByNameArray:
+             adjustThirdPartySharing.partnerSharingSettingsByNameArray
+         logger:logger];
 
     return [[self alloc] initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharing
                                   stringGranularOptionsByName:stringGranularOptionsByName
                            stringPartnerSharingSettingsByName:stringPartnerSharingSettingsByName];
 }
 + (nullable ADJNonEmptyString *)
-    granularOptionsWithAdjustThirdPartySharing:
-        (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    stringWithGranularOptionsByNameArray:(nullable NSArray<NSString *> *)granularOptionsByNameArray
     logger:(nonnull ADJLogger *)logger
 {
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
-     granularOptionsByName =
+    ADJResultNL<ADJCollectionAndValue<
+    ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *_Nonnull
+    granularOptionsByNameResult =
         [ADJUtilConv
-         convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-             adjustThirdPartySharing.granularOptionsByNameArray
-         sourceDescription:@"third party sharing granular options array parsing"
-         logger:logger];
+         convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:granularOptionsByNameArray];
 
-    ADJResultNL<NSString *> *_Nonnull jsonGranularOptionsByNameResult =
-        [ADJUtilF jsonFoundationValueFormat:granularOptionsByName];
-    if (jsonGranularOptionsByNameResult.fail != nil) {
-        [logger noticeClient:@"Could not parse granular options"
-                  resultFail:jsonGranularOptionsByNameResult.fail];
+    if (granularOptionsByNameResult.fail != nil) {
+        [logger noticeClient:
+         @"Could not parse granular options from map collection in third party sharing"
+                  resultFail:granularOptionsByNameResult.fail];
         return nil;
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull granularOptionsByNameResult =
-        [ADJNonEmptyString instanceFromOptionalString:jsonGranularOptionsByNameResult.value];
-    if (granularOptionsByNameResult.fail != nil) {
-        [logger noticeClient:@"Cannot use invalid granular options"
-                  resultFail:granularOptionsByNameResult.fail];
+    ADJCollectionAndValue<ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *_Nullable
+    resultWithFails = granularOptionsByNameResult.value;
+
+    if (resultWithFails == nil) {
+        return nil;
     }
 
-    return granularOptionsByNameResult.value;
+    for (ADJResultFail *_Nonnull resultFail in resultWithFails.collection) {
+        [logger noticeClient:@"Issue while adding granular option by name to third party sharing"
+                  resultFail:resultFail];
+    }
+
+    if ([resultWithFails.value count] == 0) {
+        [logger noticeClient:
+         @"Could not use any valid granular option by name to third party sharing"];
+        return nil;
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull granularOptionsByNameStringResult =
+        [ADJUtilF jsonFoundationValueFormat:resultWithFails.value];
+    if (granularOptionsByNameStringResult.fail != nil) {
+        [logger noticeClient:@"Cannot use invalid granular options in third party sharing"
+                  resultFail:granularOptionsByNameStringResult.fail];
+    }
+
+    return granularOptionsByNameStringResult.value;
 }
 + (nullable ADJNonEmptyString *)
-    partnerSharingSettingsWithAdjustThirdPartySharing:
-        (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    stringWithPartnerSharingSettingsByNameArray:
+        (nullable NSArray *)partnerSharingSettingsByNameArray
     logger:(nonnull ADJLogger *)logger
 {
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
-     partnerSharingSettingsByName =
+    ADJResultNL<ADJCollectionAndValue<
+    ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *_Nonnull
+    partnerSharingSettingsByNameResult =
         [ADJUtilConv
          convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
-             adjustThirdPartySharing.partnerSharingSettingsByNameArray
-         sourceDescription:@"third party sharing partner sharing settings array parsing"
-         logger:logger];
+             partnerSharingSettingsByNameArray];
 
-
-    ADJResultNL<NSString *> *_Nonnull jsonPartnerSharingSettingsByNameResult =
-        [ADJUtilF jsonFoundationValueFormat:partnerSharingSettingsByName];
-    if (jsonPartnerSharingSettingsByNameResult.fail != nil) {
-        [logger noticeClient:@"Could not parse partner sharing settings"
-                     resultFail:jsonPartnerSharingSettingsByNameResult.fail];
+    if (partnerSharingSettingsByNameResult.fail != nil) {
+        [logger noticeClient:
+         @"Could not parse partner sharing setting from map collection in third party sharing"
+                  resultFail:partnerSharingSettingsByNameResult.fail];
         return nil;
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull partnerSharingSettingsByNameResult =
-        [ADJNonEmptyString instanceFromOptionalString:jsonPartnerSharingSettingsByNameResult.value];
-    if (partnerSharingSettingsByNameResult.fail != nil) {
-        [logger noticeClient:@"Cannot use invalid partner sharing settings"
-                     resultFail:partnerSharingSettingsByNameResult.fail];
+    ADJCollectionAndValue<ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *_Nullable
+    resultWithFails = partnerSharingSettingsByNameResult.value;
+
+    if (resultWithFails == nil) {
+        return nil;
     }
 
-    return partnerSharingSettingsByNameResult.value;
+    for (ADJResultFail *_Nonnull resultFail in resultWithFails.collection) {
+        [logger noticeClient:@"Issue while partner sharing setting by name to third party sharing"
+                  resultFail:resultFail];
+    }
+
+    if ([resultWithFails.value count] == 0) {
+        [logger noticeClient:
+         @"Could not use any valid partner sharing setting by name to third party sharing"];
+        return nil;
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull partnerSharingSettingsStringResult =
+        [ADJUtilF jsonFoundationValueFormat:resultWithFails.value];
+    if (partnerSharingSettingsStringResult.fail != nil) {
+        [logger noticeClient:@"Cannot use invalid partner sharing setting in third party sharing"
+                  resultFail:partnerSharingSettingsStringResult.fail];
+    }
+
+    return partnerSharingSettingsStringResult.value;
 }
 
 + (nullable instancetype)
