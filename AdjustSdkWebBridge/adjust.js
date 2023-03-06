@@ -20,16 +20,17 @@ instance: function(instanceId = null) {
 },
 
 getSdkVersion: function() {
-        const message = {
-        action:'adjust_getSdkVersion',
-        };
-        window.webkit.messageHandlers.adjust.postMessage(message);
-    },
+    const message = {
+    action:'adjust_getSdkVersion',
+    };
+    window.webkit.messageHandlers.adjust.postMessage(message);
+},
 
 teardown: function() {
     this._instanceMap = undefined;
     // TODO reset js interface?
 },
+    
 };
 
 function AdjustInstance(instanceId) {

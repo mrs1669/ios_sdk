@@ -37,12 +37,22 @@ startTestSession: function () {
     console.log('TestLibraryBridge startTestSession');
     console.log('TestLibraryBridge startTestSession callHandler');
     localAdjustCommandExecutor = new AdjustCommandExecutor(localBaseUrl, localGdprUrl);
-    // pass the sdk version to native side
+    Adjust.getSdkVersion();
+},
+
+getSdkVersion: function(sdkVersion) {
     const message = {
     action:'adjustTLB_startTestSession',
     data: 'web-bridge5.0.0@ios5.0.0'
     };
     window.webkit.messageHandlers.adjustTest.postMessage(message);
+
+//TODO: uncomment below once getSDKVersion API is configured at the native SDK side.
+//    const message = {
+//    action:'adjustTLB_startTestSession',
+//    data: sdkVersion
+//    };
+//    window.webkit.messageHandlers.adjustTest.postMessage(message);
 },
 
 addTestDirectory: function(directoryName) {
@@ -504,8 +514,4 @@ function getFirstParameterValue(params, key) {
 
     return null;
 };
-
-module.exports = TestLibraryBridge;
-
-
 

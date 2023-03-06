@@ -84,7 +84,7 @@
 
     }else if ([action isEqual:@"adjust_getSdkVersion"]) {
 
-        NSString *javaScript = [NSString stringWithFormat:@"getSdkVersion('%@')",
+        NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.getSdkVersion('%@')",
                                 [ADJAdjustInternal sdkVersion]];
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 

@@ -118,7 +118,7 @@
         NSString *javaScript = [NSString
                                 stringWithFormat:@"TestLibraryBridge.teardownReturnExtraPath('%@')",
                                 extraPath];
-            [self.webView evaluateJavaScript:javaScript completionHandler:nil];
+        [self.webView evaluateJavaScript:javaScript completionHandler:nil];
     });
 
 }
