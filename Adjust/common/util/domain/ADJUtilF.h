@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJTimestampMilli.h"
-//#import "ADJMoney.h"
-#import "ADJLogger.h"
+#import "ADJNonEmptyString.h"
 
 @interface ADJUtilF : NSObject
 
@@ -29,8 +28,9 @@
 
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error;
 
-+ (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData;
-+ (nonnull ADJResultNL<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue;
++ (nonnull ADJResultNN<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData;
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)jsonFoundationValueFormat:
+    (nullable id)jsonFoundationValue;
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber;
 

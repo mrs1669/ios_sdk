@@ -60,10 +60,9 @@
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
         [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
     if (nnIntResult.fail != nil) {
-        return [ADJResultNL failWithMessage:nnIntResult.fail.message
-                                 failParams:nnIntResult.fail.params
-                                  failError:nnIntResult.fail.error
-                              failException:nnIntResult.fail.exception];
+        return [ADJResultNL failWithMessage:@"Cannot convert io value to tally counter"
+                                        key:@"io value to nnInt fail"
+                                      value:[nnIntResult.fail foundationDictionary]];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];

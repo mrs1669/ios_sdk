@@ -17,22 +17,10 @@
 #pragma mark - Public properties
 /* .h
  @property (nullable, readonly, strong, nonatomic) S value;
- @property (nullable, readonly, strong, nonatomic) NSString *failMessage;
+ @property (nullable, readonly, strong, nonatomic) ADJResultFail *fail;
  */
 
-@interface ADJResultNL ()
-
-@property (readonly, assign, nonatomic) BOOL hasFailed;
-
-@end
-
 @implementation ADJResultNL
-#pragma mark - Synthesize protocol properties
-@synthesize message = _message;
-@synthesize params = _params;
-@synthesize error = _error;
-@synthesize exception = _exception;
-
 #pragma mark Instantiation
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
@@ -46,81 +34,66 @@
     static dispatch_once_t nlInstanceToken;
     static ADJResultNL* nlInstance;
     dispatch_once(&nlInstanceToken, ^{
-        nlInstance = [[ADJResultNL alloc] initWithValue:nil];
+        nlInstance = [[ADJResultNL alloc] initWithValue:nil fail:nil];
     });
     return nlInstance;
 }
 
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage {
-    return [[ADJResultNL alloc] initWithFailMessage:failMessage
-                                         failParams:nil
-                                          failError:nil
-                                      failException:nil];
+    return [[ADJResultNL alloc] initWithFail:
+            [[ADJResultFail alloc] initWithMessage:failMessage
+                                            params:nil
+                                             error:nil
+                                         exception:nil]];
 }
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
                                      key:(nonnull NSString *)key
                                    value:(nullable id)value
 {
-    return [[ADJResultNL alloc]
-            initWithFailMessage:failMessage
-            failParams:
-                [[NSDictionary alloc] initWithObjectsAndKeys:
-                 [ADJUtilF idOrNsNull:value], key, nil]
-            failError:nil
-            failException:nil];
+    return [[ADJResultNL alloc] initWithFail:
+            [[ADJResultFail alloc] initWithMessage:failMessage
+                                            params:
+             [[NSDictionary alloc] initWithObjectsAndKeys:
+              [ADJUtilF idOrNsNull:value], key, nil]
+                                             error:nil
+                                         exception:nil]];
 }
-+ (nonnull ADJResultNL *)failWithException:(nonnull NSException *)exception {
-    return [[ADJResultNL alloc] initWithFailMessage:nil
-                                         failParams:nil
-                                          failError:nil
-                                      failException:exception];
-}
-+ (nonnull ADJResultNL *)failWithError:(nonnull NSError *)error {
-    return [[ADJResultNL alloc] initWithFailMessage:nil
-                                         failParams:nil
-                                          failError:error
-                                      failException:nil];
-}
-+ (nonnull ADJResultNL *)failWithError:(nonnull NSError *)error
-                               message:(nullable NSString *)failMessage
++ (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
+                                   error:(nullable NSError *)error
 {
-    return [[ADJResultNL alloc] initWithFailMessage:failMessage
-                                         failParams:nil
-                                          failError:error
-                                      failException:nil];
+    return [[ADJResultNL alloc] initWithFail:
+            [[ADJResultFail alloc] initWithMessage:failMessage
+                                            params:nil
+                                             error:error
+                                         exception:nil]];
+}
++ (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
+                               exception:(nullable NSException *)exception
+{
+    return [[ADJResultNL alloc] initWithFail:
+            [[ADJResultFail alloc] initWithMessage:failMessage
+                                            params:nil
+                                             error:nil
+                                         exception:exception]];
 }
 
 + (nonnull ADJResultNL *)
-    failWithMessage:(nullable NSString *)failMessage
-    failParams:(nullable NSDictionary<NSString *, id> *)failParams
-    failError:(nullable NSError *)failError
-    failException:(nullable NSException *)failException
+    failWithMessage:(nonnull NSString *)failMessage
+    builderBlock:(void (^ _Nonnull NS_NOESCAPE)(ADJResultFailBuilder *_Nonnull resultFailBuilder))
+        builderBlock
 {
-    return [[ADJResultNL alloc] initWithFailMessage:failMessage
-                                         failParams:failParams
-                                          failError:failError
-                                      failException:failException];
+    ADJResultFailBuilder *_Nonnull resultFailBuilder =
+        [[ADJResultFailBuilder alloc] initWithMessage:failMessage];
+
+    builderBlock(resultFailBuilder);
+
+    return [[ADJResultNL alloc] initWithFail:[resultFailBuilder build]];
 }
 
-+ (nonnull id<ADJResultFail>)resultFailWithError:(nonnull NSError *)error
-                                         message:(nullable NSString *)failMessage
-{
-    return [[ADJResultNL alloc] initWithFailMessage:failMessage
-                                         failParams:nil
-                                          failError:error
-                                      failException:nil];
-}
-
-+ (nonnull ADJResultNL *)failWitAnotherFail:(nonnull id<ADJResultFail>)anotherFail {
-    return [[ADJResultNL alloc] initWithFailMessage:anotherFail.message
-                                         failParams:anotherFail.params
-                                          failError:anotherFail.error
-                                      failException:anotherFail.exception];
-}
-
-+ (nonnull ADJResultNL *)instanceFromNN:
-    (ADJResultNN<id> *_Nonnull (^ _Nonnull NS_NOESCAPE)(id _Nullable value))nnBlock
-                                nlValue:(nullable id)nlValue
++ (nonnull ADJResultNL *)
+    instanceFromNN:
+        (ADJResultNN<id> *_Nonnull (^ _Nonnull NS_NOESCAPE)(id _Nullable value))nnBlock
+    nlValue:(nullable id)nlValue
 {
     if (nlValue == nil) {
         return [ADJResultNL okWithoutValue];
@@ -129,77 +102,30 @@
     ADJResultNN<id> *_Nonnull resultNN = nnBlock(nlValue);
 
     if (resultNN.fail != nil) {
-        return [[ADJResultNL alloc] initWithFailMessage:resultNN.fail.message
-                                             failParams:resultNN.fail.params
-                                              failError:resultNN.fail.error
-                                          failException:resultNN.fail.exception];
+        return [[ADJResultNL alloc] initWithFail:resultNN.fail];
     }
 
     return [ADJResultNL okWithValue:resultNN.value];
 }
 
-- (nullable id<ADJResultFail>)fail {
-    return self.hasFailed ? self : nil;
-}
-
 #pragma mark - Private constructors
-- (nonnull instancetype)initWithValue:(nullable id)value {
-    return [self initWithHasFailed:NO
-                             value:value
-                       failMessage:nil
-                        failParams:nil
-                         failError:nil
-                     failException:nil];
+- (nonnull instancetype)initWithValue:(nonnull id)value {
+    return [self initWithValue:value fail:nil];
+}
+
+- (nonnull instancetype)initWithFail:(nonnull ADJResultFail *)fail {
+    return [self initWithValue:nil fail:fail];
 }
 
 - (nonnull instancetype)
-    initWithFailMessage:(nullable NSString *)failMessage
-    failParams:(nullable NSDictionary<NSString *, id> *)failParams
-    failError:(nullable NSError *)failError
-    failException:(nullable NSException *)failException
-{
-    return [self initWithHasFailed:YES
-                             value:nil
-                       failMessage:failMessage
-                        failParams:failParams
-                         failError:failError
-                     failException:failException];
-}
-
-- (nonnull instancetype)
-    initWithHasFailed:(BOOL)hasFailed
-    value:(nullable id)value
-    failMessage:(nullable NSString *)failMessage
-    failParams:(nullable NSDictionary<NSString *, id> *)failParams
-    failError:(nullable NSError *)failError
-    failException:(nullable NSException *)failException
-
+    initWithValue:(nullable id)value
+    fail:(nullable ADJResultFail *)fail
 {
     self = [super init];
-    _hasFailed = hasFailed;
     _value = value;
-    _message = failMessage;
-    _params = failParams;
-    _error = failError;
-    _exception = failException;
+    _fail = fail;
 
     return self;
 }
 
-#pragma mark Public API
-- (nonnull NSDictionary<NSString *, id> *)foundationDictionary {
-    return [ADJResultNN generateFoundationDictionaryFromResultFail:self];
-}
-
-/*
-- (void)okBlock:(void (^ _Nonnull NS_NOESCAPE)(id _Nullable value))okBlock
-      failBlock:(void (^ _Nonnull NS_NOESCAPE)(NSString *_Nonnull failMessage))failBlock
-{
-    if (self.failMessage == nil) {
-        okBlock(self.value);
-    } else {
-        failBlock(self.failMessage);
-    }
-}
-*/
 @end

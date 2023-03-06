@@ -8,26 +8,38 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol ADJResultFail <NSObject>
-
-@property (nullable, readonly, strong, nonatomic) NSString *message;
-@property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *params;
-@property (nullable, readonly, strong, nonatomic) NSError *error;
-@property (nullable, readonly, strong, nonatomic) NSException *exception;
-
-- (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
-
-@end
-
-/*
 @interface ADJResultFail : NSObject
-
+// public properties
 @property (nonnull, readonly, strong, nonatomic) NSString *message;
 @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *params;
 @property (nullable, readonly, strong, nonatomic) NSError *error;
 @property (nullable, readonly, strong, nonatomic) NSException *exception;
 
+// instantiation
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                 params:(nullable NSDictionary<NSString *, id> *)params
+                                  error:(nullable NSError *)error
+                              exception:(nullable NSException *)exception;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+// public api
 - (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
 
 @end
-*/
+
+@interface ADJResultFailBuilder : NSObject
+// instantiation
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+// public api
+- (void)withError:(nonnull NSError *)error;
+- (void)withException:(nonnull NSException *)exception;
+- (void)withKey:(nonnull NSString *)key
+          value:(nullable id)value;
+
+- (nonnull ADJResultFail *)build;
+
+@end

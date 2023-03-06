@@ -134,33 +134,33 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     CFDataRef _Nullable serverPublicKeyData =
         SecKeyCopyExternalRepresentation(serverPublicKey, &errorRef);
 
+    if (serverPublicKeyData) {
+        BOOL useCredential =
+            [self useCredentialWithServerPublicKeyData:(__bridge NSData *)serverPublicKeyData
+                                       serverPublicKey:serverPublicKey];
+
+        CFRelease(serverPublicKeyData);
+
+        return useCredential;
+    }
+
+    NSError *_Nonnull error = nil;
+
     if (errorRef) {
         // according to https://stackoverflow.com/a/40885964
         //  __bridge_transfer should mean that ARC now "owns" the reference/object and that
         //  we can retain it and not worry about freeing CFErrorRef errorRef
-        NSError *_Nonnull error = (__bridge_transfer NSError *)errorRef;
-
-        [self.logger debugDev:@"Error converting public key into data"
-                   resultFail:[ADJResultNL
-                               resultFailWithError:error
-                               message:@"from SecKeyCopyExternalRepresentation"]
-                    issueType:ADJIssueNetworkRequest];
-        return NO;
+        error = (__bridge_transfer NSError *)errorRef;
     }
 
-    if (! serverPublicKeyData) {
-        [self.logger debugDev:@"Could not convert public key into data"
-                    issueType:ADJIssueNetworkRequest];
-        return NO;
-    }
-
-    BOOL useCredential =
-        [self useCredentialWithServerPublicKeyData:(__bridge NSData *)serverPublicKeyData
-                                   serverPublicKey:serverPublicKey];
-
-    CFRelease(serverPublicKeyData);
-
-    return useCredential;
+    [self.logger debugDev:@"Could not convert public key into data"
+               resultFail:[[ADJResultFail alloc]
+                           initWithMessage:@"from SecKeyCopyExternalRepresentation"
+                           params:nil
+                           error:error
+                           exception:nil]
+                issueType:ADJIssueNetworkRequest];
+    return NO;
 }
 
 - (BOOL)useCredentialWithServerPublicKeyData:(nonnull NSData *)serverPublicKeyNSData
@@ -292,57 +292,42 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
 }
 
 - (BOOL)canEvaluateWithTrust:(nonnull SecTrustRef)trust {
-    SecTrustResultType result = kSecTrustResultInvalid;
-
     if (@available(iOS 12.0, macOS 10.14, tvOS 12.0, watchOS 5.0, macCatalyst 13.0, *)) {
         CFErrorRef errorRef;
         if (SecTrustEvaluateWithError(trust, &errorRef)) {
-            if (errorRef) {
-                NSError *_Nonnull error = (__bridge_transfer NSError *)errorRef;
-                [self.logger debugDev:
-                 @"Evaluated trust from SecTrustEvaluateWithError but had NSError"
-                           resultFail:[ADJResultNL
-                                       resultFailWithError:error
-                                       message:@"from SecTrustEvaluateWithError"]
-                            issueType:ADJIssueNetworkRequest];
-                return NO;
-            }
-        } else {
-            if (errorRef) {
-                NSError *_Nonnull error = (__bridge_transfer NSError *)errorRef;
-                [self.logger debugDev:
-                 @"Cannot evaluate trust from SecTrustEvaluateWithError with NSError"
-                           resultFail:[ADJResultNL
-                                       resultFailWithError:error
-                                       message:@"from SecTrustEvaluateWithError"]
-                            issueType:ADJIssueNetworkRequest];
-            } else {
-                [self.logger debugDev:
-                 @"Cannot evaluate trust from SecTrustEvaluateWithError without NSError"
-                            issueType:ADJIssueNetworkRequest];
-            }
-            return NO;
+            return YES;
         }
+
+        NSError *_Nonnull error = nil;
+        if (errorRef) {
+            error = (__bridge_transfer NSError *)errorRef;
+        }
+
+        [self.logger debugDev:@"Could not trust"
+                   resultFail:[[ADJResultFail alloc]
+                               initWithMessage:@"from SecTrustEvaluateWithError"
+                               params:nil
+                               error:error
+                               exception:nil]
+                    issueType:ADJIssueNetworkRequest];
+
+        return NO;
     } else {
-        OSStatus evaluateReturn = SecTrustEvaluate(trust, &result);
-        if (evaluateReturn != errSecSuccess) {
-            [self.logger debugDev:@"Cannot evaluate trust from SecTrustEvaluate"
-                              key:@"OSStatus"
-                            value:[ADJUtilF intFormat:(int)evaluateReturn]
-                        issueType:ADJIssueNetworkRequest];
-            return NO;
+        SecTrustResultType resultType = kSecTrustResultInvalid;
+        OSStatus evaluateReturn = SecTrustEvaluate(trust, &resultType);
+        if (evaluateReturn == errSecSuccess) {
+            return YES;
         }
-    }
 
-    if (result == kSecTrustResultUnspecified || result == kSecTrustResultProceed) {
-        return YES;
+        [self.logger debugDev:@"Cannot evaluate trust from SecTrustEvaluate"
+                         key1:@"OSStatus"
+                       value1:[ADJUtilF intFormat:(int)evaluateReturn]
+                         key2:@"SecTrustResultType"
+                       value2:[ADJUtilF uIntFormat:(unsigned int)resultType]
+                    issueType:ADJIssueNetworkRequest];
+        return NO;
     }
-
-    [self.logger debugDev:@"Cannot validate trust"
-                      key:@"found result"
-                    value:[ADJUtilF intFormat:(int)result]
-                issueType:ADJIssueNetworkRequest];
-    return NO;
 }
 
 @end
+

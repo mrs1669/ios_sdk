@@ -115,46 +115,46 @@
                                                options:0];
 }
 
-+ (nonnull ADJResultNL<NSData *> *)
++ (nonnull ADJResultNN<NSData *> *)
     convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
 {
-    NSError *_Nullable errorPtr = nil;
-
     // todo check isValidJSONObject:
-    NSData *_Nullable data =
-        [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:&errorPtr];
+    @try {
+        NSError *_Nullable errorPtr = nil;
+        // If the object will not produce valid JSON then an exception will be thrown
+        NSData *_Nullable data =
+            [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:&errorPtr];
 
-    if (errorPtr != nil) {
-        return [ADJResultNL failWithError:errorPtr
-                                  message:@"NSJSONSerialization dataWithJSONObject"];
-    } else if (data == nil) {
-        return [ADJResultNL okWithoutValue];
-    } else {
-        return [ADJResultNL okWithValue:data];
+        if (data != nil) {
+            return [ADJResultNN okWithValue:data];
+        }
+        return [ADJResultNN failWithMessage:@"NSJSONSerialization dataWithJSONObject without value"
+                                      error:errorPtr];
+    } @catch (NSException *exception) {
+        return [ADJResultNN failWithMessage:@"NSJSONSerialization dataWithJSONObject exception"
+                                  exception:exception];
     }
 }
 
-+ (nonnull ADJResultNL<id> *)
++ (nonnull ADJResultNN<id> *)
     convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString
 {
     return [ADJUtilConv convertToJsonFoundationValueWithJsonData:
              [jsonString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
-+ (nonnull ADJResultNL<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData {
++ (nonnull ADJResultNN<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData {
     NSError *_Nullable errorPtr = nil;
 
     id _Nullable jsonObject =
         [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&errorPtr];
 
-    if (errorPtr != nil) {
-        return [ADJResultNL failWithError:errorPtr
-                                  message:@"NSJSONSerialization JSONObjectWithData"];
-    } else if (jsonObject == nil) {
-        return [ADJResultNL okWithoutValue];
-    } else {
-        return [ADJResultNL okWithValue:jsonObject];
+    if (jsonObject != nil) {
+        return [ADJResultNN okWithValue:jsonObject];
     }
+
+    return [ADJResultNN failWithMessage:@"NSJSONSerialization JSONObjectWithData returned nil"
+                                  error:errorPtr];
 }
 
 + (nonnull id)convertToFoundationObject:(nonnull id)objectToConvert {

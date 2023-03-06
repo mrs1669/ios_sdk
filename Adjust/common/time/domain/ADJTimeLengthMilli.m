@@ -48,10 +48,9 @@
         [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
 
     if (nnIntResult.fail != nil) {
-        return [ADJResultNL failWithMessage:nnIntResult.fail.message
-                                 failParams:nnIntResult.fail.params
-                                  failError:nnIntResult.fail.error
-                              failException:nnIntResult.fail.exception];
+        return [ADJResultNL failWithMessage:@"Cannot convert from io value to time length"
+                                      key:@"io value to nnInt fail"
+                                      value:[nnIntResult.fail foundationDictionary]];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];
@@ -103,21 +102,13 @@
          instanceFromIntegerNumber:
              @(numberDoubleSeconds.doubleValue * ADJSecondToMilliDouble)];
     if (millisecondsSpanResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
-                @"Cannot create time length instance"
-                                 failParams:
-                [[NSDictionary alloc] initWithObjectsAndKeys:
-                 [ADJUtilF usLocaleNumberFormat:numberDoubleSeconds],
-                 @"number double seconds",
-                 [millisecondsSpanResult.fail foundationDictionary],
-                 @"key convertion fail", nil]
-                                  failError:nil
-                              failException:nil];
-
-        return [ADJResultNN failWithMessage:millisecondsSpanResult.fail.message
-                                 failParams:millisecondsSpanResult.fail.params
-                                  failError:millisecondsSpanResult.fail.error
-                              failException:millisecondsSpanResult.fail.exception];
+        return [ADJResultNN failWithMessage:@"Cannot create time length instance"
+                               builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:@"key convertion fail"
+                                 value:[millisecondsSpanResult.fail foundationDictionary]];
+            [resultFailBuilder withKey:@"number double seconds"
+                                 value:[ADJUtilF usLocaleNumberFormat:numberDoubleSeconds]];
+        }];
     }
     
     return [ADJResultNN okWithValue:

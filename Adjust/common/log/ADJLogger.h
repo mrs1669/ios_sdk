@@ -58,7 +58,7 @@
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                  resultFail:(nonnull id<ADJResultFail>)resultFail
+                                  resultFail:(nonnull ADJResultFail *)resultFail
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                expectedValue:(nonnull NSString *)expectedValue
@@ -69,7 +69,7 @@
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                      subject:(nonnull NSString *)subject
-                                  resultFail:(nonnull id<ADJResultFail>)resultFail
+                                  resultFail:(nonnull ADJResultFail *)resultFail
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
@@ -79,7 +79,7 @@
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
                                        value:(nullable NSString *)value
-                                  resultFail:(nonnull id<ADJResultFail>)resultFail
+                                  resultFail:(nonnull ADJResultFail *)resultFail
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         key1:(nonnull NSString *)key1
@@ -110,7 +110,7 @@
                                            value:(nullable NSString *)value;
 
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
-                                      resultFail:(nonnull id<ADJResultFail>)resultFail;
+                                      resultFail:(nonnull ADJResultFail *)resultFail;
 
 // error client
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message;
@@ -124,10 +124,10 @@
                                     actualValue:(nullable NSString *)actualValue;
 
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
-                                     resultFail:(nonnull id<ADJResultFail>)resultFail;
+                                     resultFail:(nonnull ADJResultFail *)resultFail;
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                             key:(nonnull NSString *)key
                                           value:(nullable NSString *)value
-                                     resultFail:(nonnull id<ADJResultFail>)resultFail;
+                                     resultFail:(nonnull ADJResultFail *)resultFail;
 
 @end

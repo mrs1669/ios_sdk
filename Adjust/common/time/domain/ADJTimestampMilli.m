@@ -31,10 +31,9 @@
         [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
 
     if (nnIntResult.fail != nil) {
-        return [ADJResultNL failWithMessage:nnIntResult.fail.message
-                                 failParams:nnIntResult.fail.params
-                                  failError:nnIntResult.fail.error
-                              failException:nnIntResult.fail.exception];
+        return [ADJResultNL failWithMessage:@"Cannot create timestamp instance from io value"
+                                        key:@"nnInt from optional io value fail"
+                                      value:[nnIntResult.fail foundationDictionary]];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];
@@ -51,10 +50,9 @@
         [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
 
     if (nnIntResult.fail != nil) {
-        return [ADJResultNN failWithMessage:nnIntResult.fail.message
-                                 failParams:nnIntResult.fail.params
-                                  failError:nnIntResult.fail.error
-                              failException:nnIntResult.fail.exception];
+        return [ADJResultNN failWithMessage:@"Cannot create timestamp instance from io value"
+                                        key:@"nnInt from io value fail"
+                                      value:[nnIntResult.fail foundationDictionary]];
     }
 
     return [ADJResultNN okWithValue:
@@ -83,10 +81,10 @@
         [ADJNonNegativeInt instanceFromIntegerNumber:milliSince1970Number];
 
     if (milliSince1970IntResult.fail != nil) {
-        return [ADJResultNN failWithMessage:milliSince1970IntResult.fail.message
-                                 failParams:milliSince1970IntResult.fail.params
-                                  failError:milliSince1970IntResult.fail.error
-                              failException:milliSince1970IntResult.fail.exception];
+        return [ADJResultNN failWithMessage:
+                @"Cannot create timestamp from timeIntervalSecondsSince1970"
+                                        key:@"nnInt from integer number fail"
+                                      value:[milliSince1970IntResult.fail foundationDictionary]];
     }
 
     return [ADJResultNN okWithValue:

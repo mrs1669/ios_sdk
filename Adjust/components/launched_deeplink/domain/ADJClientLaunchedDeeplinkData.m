@@ -147,30 +147,25 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
     dispatch_once(&onceExcludedRegexInstanceToken, ^{
         NSError *error = nil;
 
-        NSRegularExpression *regex =
+        NSRegularExpression *_Nullable regex =
             [NSRegularExpression regularExpressionWithPattern:kExcludedDeeplinksPattern
                                                       options:NSRegularExpressionCaseInsensitive
                                                         error:&error];
 
-        if (error != nil) {
-            result = [ADJResultNN failWithError:error
-                                        message:
-                      @"NSRegularExpression regularExpression with excluded deeplinks pattern"];
-        } else if (regex != nil) {
+        if (regex != nil) {
             result = [ADJResultNN okWithValue:regex];
         } else {
             result = [ADJResultNN failWithMessage:
                       @"NSRegularExpression regularExpression with excluded deeplinks pattern"
-                                              key:ADJLogWhyKey
-                                            value:@"returned nil without error"];
+                      " returned nil"
+                                            error:error];
         }
     });
     
     if (result == nil) {
         return [ADJResultNN failWithMessage:
                 @"NSRegularExpression regularExpression with excluded deeplinks pattern"
-                                        key:ADJLogWhyKey
-                                      value:@"static result is nil"];
+                " result was not set in dispatch_once"];
     }
 
     return result;

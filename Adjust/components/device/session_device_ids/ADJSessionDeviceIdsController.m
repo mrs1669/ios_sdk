@@ -62,45 +62,6 @@
     _canUseCacheData = NO;
 }
 
-//+ (nullable NSDictionary<NSString *, id> *)
-+ (nonnull ADJResultNN<ADJSessionDeviceIdsData *> *)
-    invalidSessionDataWithIdentifierForVendorResult:
-        (nonnull ADJResultNL<ADJNonEmptyString *> *)identifierForVendorResult
-    advertisingIdentifierResult:
-        (nonnull ADJResultNL<ADJNonEmptyString *> *)advertisingIdentifierResult
-    failMessage:(nonnull NSString *)failMessage
-{
-    if (identifierForVendorResult.fail == nil && advertisingIdentifierResult.fail == nil) {
-        return [ADJResultNN failWithMessage:failMessage];
-    }
-
-    if (identifierForVendorResult.fail == nil) {
-        return [ADJResultNN
-                failWithMessage:failMessage
-                key:@"advertising identifier fail"
-                value:[advertisingIdentifierResult.fail foundationDictionary]];
-    }
-
-    if (advertisingIdentifierResult.fail == nil) {
-        return [ADJResultNN
-                failWithMessage:failMessage
-                key:@"identifier for vendor fail"
-                value:[identifierForVendorResult.fail foundationDictionary]];
-    }
-
-    NSDictionary *_Nonnull failParams =
-        [[NSDictionary alloc]
-         initWithObjectsAndKeys:
-            [advertisingIdentifierResult.fail foundationDictionary], @"advertising identifier fail",
-            [identifierForVendorResult.fail foundationDictionary], @"identifier for vendor fail",
-            nil];
-
-    return [ADJResultNN failWithMessage:failMessage
-                              failParams:failParams
-                               failError:nil
-                           failException:nil];
-}
-
 - (nonnull ADJResultNN<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync {
     if (_canUseCacheData) {
         return self.sessionDeviceIdsDataResultCached;
@@ -111,18 +72,27 @@
                 @"Cannot attempt to read session device ids without timeout per attempt"];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull identifierForVendorResult =
+    __block ADJResultNL<ADJNonEmptyString *> *_Nonnull identifierForVendorResult =
         [self getIdentifierForVendorWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull advertisingIdentifierResult =
+    __block ADJResultNL<ADJNonEmptyString *> *_Nonnull advertisingIdentifierResult =
         [self getAdvertisingIdentifierWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
     if (identifierForVendorResult.value == nil && advertisingIdentifierResult.value == nil) {
-        return [ADJSessionDeviceIdsController
-                invalidSessionDataWithIdentifierForVendorResult:identifierForVendorResult
-                advertisingIdentifierResult:advertisingIdentifierResult
-                failMessage:
-                    @"Could not obtain either identifier for vendor or advertising identifier"];
+        return [ADJResultNN failWithMessage:
+                @"Could not obtain either identifier for vendor or advertising identifier"
+                               builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
+            if (identifierForVendorResult.fail != nil) {
+                [resultFailBuilder withKey:@"advertising identifier fail"
+                                     value:[identifierForVendorResult.fail
+                                            foundationDictionary]];
+            }
+            if (advertisingIdentifierResult.fail != nil) {
+                [resultFailBuilder withKey:@"identifier for vendor fail"
+                                     value:[advertisingIdentifierResult.fail
+                                            foundationDictionary]];
+            }
+        }];
     }
 
     ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =

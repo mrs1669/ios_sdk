@@ -66,27 +66,28 @@
                                                 withIntermediateDirectories:YES
                                                                  attributes:nil
                                                                       error:&errorPtr];
-    if (errorPtr != nil) {
-        return [ADJResultNN failWithError:errorPtr
-                                  message:@"NSFileManager createDirectory"];
+    if (dirCreated) {
+        [ADJResultNN okWithValue:@(dirCreated)];
     }
-    return [ADJResultNN okWithValue:@(dirCreated)];
+
+    return [ADJResultNN failWithMessage:@"NSFileManager createDirectory returned false"
+                                  error:errorPtr];
 }
 
 + (nonnull ADJResultNN<NSNumber *> *)moveFileFromPath:(nonnull NSString *)fromPath
                                                toPath:(nonnull NSString *)toPath
-
 {
     NSError *_Nullable errorPtr = nil;
     BOOL itemMoved = [[NSFileManager defaultManager] moveItemAtPath:fromPath
                                                              toPath:toPath
                                                               error:&errorPtr];
 
-    if (errorPtr != nil) {
-        return [ADJResultNN failWithError:errorPtr
-                                  message:@"NSFileManager moveItem"];
+    if (itemMoved) {
+        return [ADJResultNN okWithValue:@(itemMoved)];
     }
-    return [ADJResultNN okWithValue:@(itemMoved)];
+
+    return [ADJResultNN failWithMessage:@"NSFileManager moveItem returned false"
+                                  error:errorPtr];
 }
 
 @end

@@ -12,8 +12,6 @@
 #import "ADJUtilConv.h"
 #import "ADJConstants.h"
 
-//#import "ADJResultFail.h"
-
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -95,7 +93,7 @@
         return [ADJResultNN failWithMessage:
                     @"Cannot create non negative int from io data value"
                                         key:@"integer from io value fail"
-                                      value:[integerNumberResult foundationDictionary]];
+                                      value:[integerNumberResult.fail foundationDictionary]];
     }
 
     return [self instanceFromIntegerNumber:integerNumberResult.value];
@@ -110,10 +108,9 @@
     ADJResultNN<NSNumber *> *_Nonnull integerNumberResult =
         [ADJUtilConv convertToIntegerNumberWithStringValue:ioDataValue.stringValue];
     if (integerNumberResult.fail != nil) {
-        return [ADJResultNL failWithMessage:integerNumberResult.fail.message
-                                 failParams:integerNumberResult.fail.params
-                                  failError:integerNumberResult.fail.error
-                              failException:integerNumberResult.fail.exception];
+        return [ADJResultNL failWithMessage:@"Cannot convert io value to nnInt"
+                                        key:@"convert io value to integer fail"
+                                      value:[integerNumberResult.fail foundationDictionary]];
     }
 
     return [self instanceFromOptionalIntegerNumber:integerNumberResult.value];

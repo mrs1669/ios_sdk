@@ -101,7 +101,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
         [self.logger debugWithMessage:@"Cannot create dir"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
          {
-            [logBuilder withFail:dirCreatedResult
+            [logBuilder withFail:dirCreatedResult.fail
                            issue:ADJIssueStorageIo];
             [logBuilder withSubject:@"adjust app support dir"
                               value:adjustAppSupportDirPath];

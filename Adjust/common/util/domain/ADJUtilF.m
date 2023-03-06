@@ -171,41 +171,45 @@
             nil];
 }
 
-+ (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData {
++ (nonnull ADJResultNN<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData {
     NSString *_Nullable converted =
         [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
     if (converted == nil) {
-        return nil;
+        return [ADJResultNN failWithMessage:@"Could not convert init NSString with NSData"];
     }
 
-    return [converted stringByTrimmingCharactersInSet:
-            [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return [ADJResultNN okWithValue:converted];
+    // TODO: figure out if trimming is needed here
+    //return [converted stringByTrimmingCharactersInSet:
+    //        [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-+ (nonnull ADJResultNL<NSString *> *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)jsonFoundationValueFormat:
+    (nullable id)jsonFoundationValue
+{
     if (jsonFoundationValue == nil) {
         return [ADJResultNL okWithoutValue];
     }
 
-    ADJResultNL<NSData *> *_Nonnull jsonDataResult =
+    ADJResultNN<NSData *> *_Nonnull jsonDataResult =
         [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue];
 
     if (jsonDataResult.fail != nil) {
-        return [ADJResultNL failWithMessage:jsonDataResult.fail.message
-                                 failParams:jsonDataResult.fail.params
-                                  failError:jsonDataResult.fail.error
-                              failException:jsonDataResult.fail.exception];
+        return [ADJResultNL failWithMessage:@"Cannot convert json foundation value to string"
+                                        key:@"json foundation value to data fail"
+                                      value:[jsonDataResult.fail foundationDictionary]];
     }
 
-    if (jsonDataResult.value == nil) {
-        return [ADJResultNL okWithoutValue];
+    ADJResultNN<NSString *> *_Nonnull jsonStringResult =
+        [ADJUtilF jsonDataFormat:jsonDataResult.value];
+    if (jsonStringResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Cannot convert json foundation value to string"
+                                        key:@"json data to string fail"
+                                      value:[jsonStringResult.fail foundationDictionary]];
     }
 
-    NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonDataResult.value];
-
-    return jsonString == nil ?
-        [ADJResultNL okWithoutValue] : [ADJResultNL okWithValue:jsonString];
+    return [ADJNonEmptyString instanceFromOptionalString:jsonStringResult.value];
 }
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber {

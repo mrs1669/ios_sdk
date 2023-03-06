@@ -81,7 +81,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
                                timeSpentMilli:timeSpentResult.value];
 }
 + (void)logInvalidIoDataMapValue:(nonnull NSString *)invalidValue
-                      resultFail:(nonnull id<ADJResultFail>)resultFail
+                      resultFail:(nonnull ADJResultFail *)resultFail
                           logger:(nonnull ADJLogger *)logger
  {
      [logger debugWithMessage:@"Cannot create instance"
@@ -195,7 +195,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
                                timeSpentMilli:timeSpentResult.value];
 }
 + (void)logInvalidExternalValue:(nonnull NSString *)invalidValue
-                     resultFail:(nonnull id<ADJResultFail>)resultFail
+                     resultFail:(nonnull ADJResultFail *)resultFail
                          logger:(nonnull ADJLogger *)logger
 {
     [logger debugWithMessage:@"Cannot create instance"

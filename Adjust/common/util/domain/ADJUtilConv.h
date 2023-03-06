@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJStringMap.h"
+#import "ADJResultNN.h"
+#import "ADJInputLogMessageData.h"
+#import "ADJUtilMap.h"
 
 @interface ADJUtilConv : NSObject
 
@@ -24,11 +27,11 @@
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue;
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
-+ (nonnull ADJResultNL<NSData *> *)
++ (nonnull ADJResultNN<NSData *> *)
     convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue;
-+ (nonnull ADJResultNL<id> *)
++ (nonnull ADJResultNN<id> *)
     convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString;
-+ (nonnull ADJResultNL<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData;
++ (nonnull ADJResultNN<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData;
 
 + (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
 

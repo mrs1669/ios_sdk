@@ -121,28 +121,28 @@
         NSData *_Nullable readData = [NSData dataWithContentsOfFile:filePath
                                                             options:0
                                                               error:&error];
-        if (error != nil) {
-            return [ADJResultNL failWithError:error
-                                      message:@"Trying to read data with contents of file in path"];
-        }
+
         if (readData == nil) {
-            return [ADJResultNL okWithoutValue];
+            if ([ADJUtilFiles fileExistsWithPath:filePath]) {
+                return [ADJResultNL failWithMessage:
+                            @"nil return on dataWithContentsOfFile when fileExistsWithPath"
+                        error:error];
+            } else {
+                return [ADJResultNL okWithoutValue];
+            }
         }
 
         // TODO: check if it works with v4 written data.
         //  If not, we still need to use the deprecated version
         id _Nullable objectRead =
             [NSKeyedUnarchiver unarchivedObjectOfClass:classToRead fromData:readData error:&error];
-        if (error != nil) {
-            return [ADJResultNL failWithError:error
-                                      message:@"Trying to unarchive object"];
+
+        if (objectRead != nil) {
+            return [ADJResultNL okWithValue:objectRead];
         }
 
-        if (objectRead == nil) {
-            return [ADJResultNL failWithMessage:@"Unarchived object returned nil without error"];
-        }
-
-        return [ADJResultNL okWithValue:objectRead];
+        return [ADJResultNL failWithMessage:@"Cannot unarchive object"
+                                      error:error];
     } else {
         @try {
             id _Nullable objectRead = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
@@ -157,7 +157,9 @@
             return [ADJResultNL okWithValue:objectRead];
 
         } @catch (NSException *exception) {
-            return [ADJResultNL failWithException:exception];
+            return [ADJResultNL failWithMessage:
+                    @"NSKeyedUnarchiver unarchiveObjectWithFile exception"
+                                      exception:exception];
         }
     }
 }

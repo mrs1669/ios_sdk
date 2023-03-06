@@ -393,6 +393,19 @@
                 @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"];
     }
 
+    if (asaAttributionTokenString != nil) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
+            [ADJNonEmptyString instanceFromString:asaAttributionTokenString];
+        if (asaAttributionTokenResult.fail != nil) {
+            return [ADJResultNN
+                    failWithMessage:@"Cannot parse asaAttributionToken"
+                    key:@"neString fail"
+                    value:[asaAttributionTokenResult.fail foundationDictionary]];
+        } else {
+            return asaAttributionTokenResult;
+        }
+    }
+
     if (error != nil) {
         /** typedef NS_ERROR_ENUM(AAAttributionErrorDomain, AAAttributionErrorCode)
          {
@@ -405,12 +418,10 @@
         if (error.code == 3) {
             self.canReadToken = NO;
         }
-
-        return [ADJResultNN failWithError:error
-                                  message:@"[AAAttribution attributionTokenWithError:] call"];
     }
 
-    return [ADJNonEmptyString instanceFromString:asaAttributionTokenString];
+    return [ADJResultNN failWithMessage:@"from [AAAttribution attributionTokenWithError:]"
+                                  error:error];
 }
 
 - (void)retryWithAttemptsLeft:(nonnull ADJNonNegativeInt *)attemptsLeft {

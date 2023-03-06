@@ -305,13 +305,12 @@
 + (nonnull ADJResultNN<NSData *> *)requestResultWithData:(nullable NSData *)data
                                                    error:(nullable NSError *)error
 {
-    if (error != nil) {
-        return [ADJResultNN failWithError:error message:@"dataTaskWithRequest error"];
+    if (data != nil) {
+        return [ADJResultNN okWithValue:data];
     }
-    if (data == nil) {
-        return [ADJResultNN failWithMessage:@"No data from request callback"];
-    }
-    return [ADJResultNN okWithValue:data];
+
+    return [ADJResultNN failWithMessage:@"dataTaskWithRequest error"
+                                  error:error];
 }
 
 - (void)handleRequestCallbackWithData:(nullable NSData *)data
@@ -328,14 +327,16 @@
         return;
     }
 
-    NSString *_Nullable responseString = [ADJUtilF jsonDataFormat:data];
+    ADJResultNN<NSString *> *_Nonnull responseStringResult = [ADJUtilF jsonDataFormat:data];
 
-    if (responseString != nil) {
+    if (responseStringResult.fail != nil) {
+        [self.logger debugDev:@"Server with response"
+                   resultFail:responseStringResult.fail
+                    issueType:ADJIssueNetworkRequest];
+    } else {
         [self.logger debugDev:@"Server with response"
                           key:@"raw response"
-                        value:responseString];
-    } else {
-        [self.logger debugDev:@"Without server response"];
+                        value:responseStringResult.value];
     }
 
     [self injectJsonWithResponseData:callbackDataResult.value
@@ -345,7 +346,7 @@
 - (void)injectJsonWithResponseData:(nonnull NSData *)responseData
                 sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
 {
-    ADJResultNL<id> *_Nonnull responseJsonFoundationObjectResult =
+    ADJResultNN<id> *_Nonnull responseJsonFoundationObjectResult =
         [ADJUtilConv convertToJsonFoundationValueWithJsonData:responseData];
 
     if (responseJsonFoundationObjectResult.fail != nil) {
@@ -355,13 +356,7 @@
         return;
     }
 
-    id _Nullable responseJsonFoundationObject = responseJsonFoundationObjectResult.value;
-
-    if (responseJsonFoundationObject == nil) {
-        [self.logger debugDev:@"Could not obtain valid json response"
-                    issueType:ADJIssueNetworkRequest];
-        return;
-    }
+    id _Nonnull responseJsonFoundationObject = responseJsonFoundationObjectResult.value;
 
     if (! [responseJsonFoundationObject isKindOfClass:[NSDictionary class]]) {
         [self.logger debugDev:@"Parsed json response is not of expected type dictionary"

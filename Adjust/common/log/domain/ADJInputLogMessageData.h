@@ -10,7 +10,6 @@
 
 #import "ADJAdjustLogMessageData.h"
 #import "ADJResultFail.h"
-//@protocol ADJResultFail;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -56,9 +55,7 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level
                               issueType:(nullable ADJIssue)issueType
-                             resultFail:(nullable id<ADJResultFail>)resultFail
-                                //nsError:(nullable NSError *)nsError
-                            //nsException:(nullable NSException *)nsException
+                             resultFail:(nullable ADJResultFail *)resultFail
                           messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
 
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
@@ -73,9 +70,7 @@ NS_ASSUME_NONNULL_END
                          callerThreadId:(nullable NSString *)callerThreadId
                       callerDescription:(nullable NSString *)callerDescription
                         runningThreadId:(nullable NSString *)runningThreadId
-                             resultFail:(nullable id<ADJResultFail>)resultFail
-                                //nsError:(nullable NSError *)nsError
-                            //nsException:(nullable NSException *)nsException
+                             resultFail:(nullable ADJResultFail *)resultFail
                           messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
 NS_DESIGNATED_INITIALIZER;
 
@@ -88,37 +83,30 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSString *callerDescription;
 @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
-//@property (nullable, readonly, strong, nonatomic) NSError *nsError;
-//@property (nullable, readonly, strong, nonatomic) NSException* nsException;
-@property (nullable, readonly, strong, nonatomic) id<ADJResultFail> resultFail;
+@property (nullable, readonly, strong, nonatomic) ADJResultFail * resultFail;
 @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *messageParams;
 
 @end
 
 @interface ADJLogBuilder : NSObject
-
+// instantiation
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level;
 
+// public api
 - (nonnull ADJInputLogMessageData *)build;
 
 - (void)where:(nonnull NSString *)where;
 - (void)issue:(nonnull ADJIssue)issueType;
 - (void)subject:(nonnull NSString *)subject;
 - (void)why:(nonnull NSString *)why;
-- (void)fail:(nonnull id<ADJResultFail>)resultFail;
+- (void)fail:(nonnull ADJResultFail *)resultFail;
 
 - (void)withExpected:(nonnull NSString *)expectedValue
               actual:(nullable NSString *)actualValue;
 
-//- (void)withFailMessage:(nonnull NSString *)failMessage
-//                  issue:(nonnull ADJIssue)issueType;
-
-- (void)withFail:(nonnull id<ADJResultFail>)resultFail
+- (void)withFail:(nonnull ADJResultFail *)resultFail
            issue:(nonnull ADJIssue)issueType;
-
-//- (void)withError:(nullable NSError *)nserror
-//            issue:(nonnull ADJIssue)issueType;
 
 - (void)withSubject:(nonnull NSString *)subject
               value:(nonnull NSString *)value;
@@ -127,6 +115,6 @@ NS_DESIGNATED_INITIALIZER;
                 why:(nonnull NSString *)why;
 
 - (void)withKey:(nonnull NSString *)key
-          value:(nullable NSString *)value;
+          value:(nullable id)value;
 
 @end
