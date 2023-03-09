@@ -28,6 +28,7 @@
 @property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
 @property (nullable, readwrite, weak, nonatomic) id<ADJClientActionsAPI> postSdkStartClientActionsWeak;
+@property (readwrite, assign, nonatomic) BOOL canHandleActionsByPostSdkStartHandler;
 @end
 
 @implementation ADJClientActionController
@@ -42,6 +43,7 @@
     _clientActionStorageWeak = clientActionStorage;
     _clockWeak = clock;
     _postSdkStartClientActionsWeak = nil;
+    _canHandleActionsByPostSdkStartHandler = NO;
 
     return self;
 }
@@ -54,10 +56,12 @@
 
 - (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions {
     id<ADJClientActionsAPI> _Nullable postSdkStartClientActions = self.postSdkStartClientActionsWeak;
-    return postSdkStartClientActions ? : self;
+    return (self.canHandleActionsByPostSdkStartHandler &&
+            postSdkStartClientActions != nil) ? postSdkStartClientActions : self;
 }
 
 - (void)ccPreSdkStartWithPreFirstSession:(BOOL)isPreFirstSession {
+    self.canHandleActionsByPostSdkStartHandler = YES;
     [self ccProcessClientActionsWithPreFirstSession:isPreFirstSession];
 }
 
