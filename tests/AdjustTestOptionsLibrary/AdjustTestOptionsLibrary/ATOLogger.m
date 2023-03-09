@@ -9,8 +9,6 @@
 #import "ATOLogger.h"
 
 #import <os/log.h>
-#import "ADJAdjustLogMessageData.h"
-#import "ADJUtilObj.h"
 
 @interface ATOLogger ()
 
@@ -33,50 +31,82 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
 }
 
 - (nonnull instancetype)initTestLogger {
-    // TODO: fix logging bootstrapping with ADJNonNegativeInt
-    self = [super initWithSource:@"ATOLogger" logCollector:self instanceId:nil];
+    self = [super init];
 
-    if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-        _osLogLogger = os_log_create("com.adjust.sdk", "Adjust");
-    }
+    _osLogLogger = os_log_create("com.adjust.sdk", "AdjustTestOptions");
 
     return self;
 }
 
-// copied from ADJConsoleLogger
-- (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData {
-    NSMutableDictionary <NSString *, id> *_Nonnull foundationDictionary =
-        [logMessageData generateFoundationDictionary];
++ (void)log:(nonnull NSString *)message {
+    [[self sharedInstance] osLogWithFullMessage:message];
+}
 
-    [foundationDictionary removeObjectForKey:ADJLogMessageKey];
++ (void)log:(nonnull NSString *)message
+        key:(nonnull NSString *)key
+      value:(nonnull NSString *)value
+{
+    [[self sharedInstance] osLogWithFullMessage:
+     [NSString stringWithFormat:@"%@ { %@: %@ }", message, key, value]];
+}
 
-    NSString *_Nonnull devFormattedMessage =
-        [ADJUtilObj formatInlineKeyValuesWithName:logMessageData.inputData.message
-                              stringKeyDictionary:foundationDictionary];
++ (void)log:(nonnull NSString *)message
+   failDict:(nonnull NSDictionary<NSString *, id> *)failDict
+{
+    [[self sharedInstance] osLogWithFullMessage:
+     [NSString stringWithFormat:@"%@ fail { %@ }", message,
+      [self generateJsonStringFromFoundationDictionary:failDict]]];
+}
 
-    if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, macCatalyst 13.0, *)) {
-        uint8_t osLogType;
+// adapted from core sdk
+- (void)osLogWithFullMessage:(nonnull NSString *)fullLogMessage {
+    os_log_with_type(self.osLogLogger, OS_LOG_TYPE_DEBUG,
+                     "%{public}s", fullLogMessage.UTF8String);
+}
 
-        NSString *_Nonnull messageLogLevel = logMessageData.inputData.message;
++ (nonnull NSString *)generateJsonStringFromFoundationDictionary:
+    (nonnull NSDictionary<NSString *, id> *)foundationDictionary
+{
+    id _Nonnull jsonDataOrStringError =
+        [self convertToJsonDataWithJsonFoundationValue:foundationDictionary];
 
-        if (messageLogLevel == ADJAdjustLogLevelDebug
-            || messageLogLevel == ADJAdjustLogLevelTrace)
-        {
-            osLogType = OS_LOG_TYPE_DEBUG;
-        } else if (messageLogLevel == ADJAdjustLogLevelInfo) {
-            osLogType = OS_LOG_TYPE_INFO;
-        } else if (messageLogLevel == ADJAdjustLogLevelNotice) {
-            osLogType = OS_LOG_TYPE_DEFAULT;
-        } else if (messageLogLevel == ADJAdjustLogLevelError) {
-            osLogType = OS_LOG_TYPE_ERROR;
-        } else {
-            return;
+    if ([jsonDataOrStringError isKindOfClass:[NSString class]]) {
+        return (NSString *)jsonDataOrStringError;
+    }
+
+    NSString *_Nullable converted =
+        [[NSString alloc] initWithData:(NSData *)jsonDataOrStringError
+                              encoding:NSUTF8StringEncoding];
+
+    if (converted == nil) {
+        return [NSString stringWithFormat:
+                @"Nil string converting data from foundation dictionary: %@",
+                [foundationDictionary description]];
+    }
+
+    return converted;
+}
+
++ (nonnull id)convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
+{
+    // todo check isValidJSONObject:
+    @try {
+        NSError *_Nullable errorPtr = nil;
+        // If the object will not produce valid JSON then an exception will be thrown
+        NSData *_Nullable data =
+            [NSJSONSerialization dataWithJSONObject:jsonFoundationValue options:0 error:&errorPtr];
+
+        if (data != nil) {
+            return data;
         }
 
-        os_log_with_type(self.osLogLogger, osLogType,
-                         "%{public}s", devFormattedMessage.UTF8String);
-    } else {
-        NSLog(@"%@", devFormattedMessage);
+        return [NSString stringWithFormat:
+                @"Nil data converting from foundation value with error: %@, original: %@",
+                [errorPtr localizedDescription], [jsonFoundationValue description]];
+    } @catch (NSException *exception) {
+        return [NSString stringWithFormat:
+                @"Exception converting from foundation value to data: %@, original: %@",
+                [exception description], [jsonFoundationValue description]];
     }
 }
 
