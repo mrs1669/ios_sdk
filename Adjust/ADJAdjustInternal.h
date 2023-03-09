@@ -22,4 +22,8 @@
 
 + (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix;
 
++ (void)
+    setSdkPrefix:(nullable NSString *)sdkPrefix
+    fromInstanceWithClientId:(nullable NSString *)clientId;
+
 @end

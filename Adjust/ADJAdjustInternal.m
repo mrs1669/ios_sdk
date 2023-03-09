@@ -46,7 +46,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 
 + (void)
     setSdkPrefix:(nullable NSString *)sdkPrefix
-    fromInstanceWithClientId:(nullable NSString *)clientId;
+    fromInstanceWithClientId:(nullable NSString *)clientId
 {
     [[ADJAdjustInternal entryRootForClientId:clientId] setSdkPrefix:sdkPrefix];
 }
