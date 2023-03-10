@@ -45,7 +45,7 @@
                      clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
 
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:[NSString stringWithFormat:@"%@-SdkPackageSender",
+                                 source:[NSString stringWithFormat:@"%@-Sender",
                                          sourceDescription]];
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];

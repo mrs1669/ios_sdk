@@ -20,23 +20,23 @@
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
  @property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
+ @property (nonnull, readonly, strong, nonatomic) NSString *idString;
  @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
- @property (nullable, readonly, strong, nonatomic) NSString *idString;
  */
 
 @implementation ADJLogMessageData
 // instantiation
 - (nonnull instancetype)initWithInputData:(nonnull ADJInputLogMessageData *)inputData
                         sourceDescription:(nonnull NSString *)sourceDescription
+                                 idString:(nonnull NSString *)idString
                           runningThreadId:(nullable NSString *)runningThreadId
-                                 idString:(nullable NSString *)idString
 {
     self = [super init];
 
     _inputData = inputData;
     _sourceDescription = sourceDescription;
-    _runningThreadId = runningThreadId;
     _idString = idString;
+    _runningThreadId = runningThreadId;
 
     return self;
 }
@@ -51,7 +51,9 @@
         [[NSMutableDictionary alloc] initWithObjectsAndKeys:
          self.inputData.message, ADJLogMessageKey,
          self.inputData.level, ADJLogLevelKey,
-         self.sourceDescription, ADJLogSourceKey, nil];
+         self.sourceDescription, ADJLogSourceKey,
+         self.idString, ADJLogInstanceIdKey,
+         nil];
 
     if (self.inputData.callerThreadId != nil) {
         [foundationDictionary setObject:self.inputData.callerThreadId
@@ -79,33 +81,11 @@
         [foundationDictionary setObject:[self.inputData.resultFail foundationDictionary]
                                  forKey:ADJLogFailKey];
     }
-    /*
-    if (self.inputData.nsError != nil) {
-        NSDictionary<NSString *, id> *_Nonnull errorFoundationDictionary =
-        [ADJLogMessageData generateFoundationDictionaryFromNsError:self.inputData.nsError];
 
-        [foundationDictionary setObject:errorFoundationDictionary forKey:ADJLogErrorKey];
-    }
-
-    if (self.inputData.nsException != nil) {
-        NSDictionary<NSString *, id> *_Nonnull exceptionFoundationDictionary =
-        [ADJLogMessageData generateFoundationDictionaryFromNsException:
-         self.inputData.nsException];
-
-        [foundationDictionary setObject:exceptionFoundationDictionary forKey:ADJLogExceptionKey];
-    }
-
-    */
     if (self.inputData.messageParams != nil) {
         [foundationDictionary setObject:[ADJUtilConv convertToFoundationObject:
                                          self.inputData.messageParams]
                                  forKey:ADJLogParamsKey];
-    }
-
-    if (self.idString != nil) {
-        [foundationDictionary setObject:self.idString forKey:ADJLogInstanceIdKey];
-    } else {
-        [foundationDictionary setObject:[NSNull null] forKey:ADJLogInstanceIdKey];
     }
 
     return foundationDictionary;

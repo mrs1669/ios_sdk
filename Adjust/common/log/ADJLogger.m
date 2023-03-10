@@ -401,8 +401,8 @@
     ADJLogMessageData *_Nonnull logMessageData = [[ADJLogMessageData alloc]
                                                   initWithInputData:inputLogMessageData
                                                   sourceDescription:self.source
-                                                  runningThreadId:runningThreadId
-                                                  idString:self.instanceId.idString];
+                                                  idString:self.instanceId.idString
+                                                  runningThreadId:runningThreadId];
 
     [logCollector collectLogMessage:logMessageData];
 
