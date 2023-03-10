@@ -282,6 +282,25 @@
             preInitFormat];
 }
 
++ (nonnull NSString *)logLevelFormat:(nonnull ADJAdjustLogLevel)logLevel {
+    if (logLevel == ADJAdjustLogLevelTrace) {
+        return @"t/";
+    }
+    if (logLevel == ADJAdjustLogLevelDebug) {
+        return @"d/";
+    }
+    if (logLevel == ADJAdjustLogLevelInfo) {
+        return @"i/";
+    }
+    if (logLevel == ADJAdjustLogLevelNotice) {
+        return @"n/";
+    }
+    if (logLevel == ADJAdjustLogLevelError) {
+        return @"err/";
+    }
+    return @"u/";
+}
+
 + (nonnull NSString *)clientLogLevelFormat:(nonnull ADJAdjustLogLevel)logLevel {
     if (logLevel == ADJAdjustLogLevelInfo) {
         return @"Info/";
