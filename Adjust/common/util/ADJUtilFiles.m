@@ -67,7 +67,7 @@
                                                                  attributes:nil
                                                                       error:&errorPtr];
     if (dirCreated) {
-        [ADJResultNN okWithValue:@(dirCreated)];
+        return [ADJResultNN okWithValue:@(dirCreated)];
     }
 
     return [ADJResultNN failWithMessage:@"NSFileManager createDirectory returned false"
