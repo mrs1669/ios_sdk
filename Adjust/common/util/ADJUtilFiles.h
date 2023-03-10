@@ -24,7 +24,4 @@
 
 + (nonnull ADJResultNN<NSNumber *> *)createDirWithPath:(nonnull NSString *)path;
 
-+ (nonnull ADJResultNN<NSNumber *> *)moveFileFromPath:(nonnull NSString *)fromPath
-                                               toPath:(nonnull NSString *)toPath;
-
 @end

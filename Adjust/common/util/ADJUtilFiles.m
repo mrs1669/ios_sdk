@@ -74,20 +74,4 @@
                                   error:errorPtr];
 }
 
-+ (nonnull ADJResultNN<NSNumber *> *)moveFileFromPath:(nonnull NSString *)fromPath
-                                               toPath:(nonnull NSString *)toPath
-{
-    NSError *_Nullable errorPtr = nil;
-    BOOL itemMoved = [[NSFileManager defaultManager] moveItemAtPath:fromPath
-                                                             toPath:toPath
-                                                              error:&errorPtr];
-
-    if (itemMoved) {
-        return [ADJResultNN okWithValue:@(itemMoved)];
-    }
-
-    return [ADJResultNN failWithMessage:@"NSFileManager moveItem returned false"
-                                  error:errorPtr];
-}
-
 @end
