@@ -61,6 +61,7 @@ FOUNDATION_EXPORT NSString *const ADJLogCallerDescriptionKey;
 FOUNDATION_EXPORT NSString *const ADJLogInstanceIdKey;
 FOUNDATION_EXPORT NSString *const ADJLogIsPreSdkInitKey;
 FOUNDATION_EXPORT NSString *const ADJLogFailKey;
+FOUNDATION_EXPORT NSString *const ADJLogSdkPackageParamsKey;
 
 FOUNDATION_EXPORT NSString *const ADJLogWhereKey;
 FOUNDATION_EXPORT NSString *const ADJLogSubjectKey;

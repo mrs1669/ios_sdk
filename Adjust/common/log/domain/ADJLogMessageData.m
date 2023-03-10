@@ -88,6 +88,12 @@
                                  forKey:ADJLogParamsKey];
     }
 
+    if (self.inputData.sdkPackageParams != nil) {
+        [foundationDictionary setObject:[ADJUtilConv convertToFoundationObject:
+                                         self.inputData.sdkPackageParams]
+                                 forKey:ADJLogSdkPackageParamsKey];
+    }
+
     return foundationDictionary;
 }
 /*

@@ -54,11 +54,11 @@
                mainQueueSdkPackageCount:(nonnull ADJNonNegativeInt *)mainQueueSdkPackageCount
                       hasPackageAtFront:(BOOL)hasPackageAtFront
 {
-    [self.logger debugDev:@"Added package"
-                     key1:@"queue count"
-                   value1:mainQueueSdkPackageCount.description
-                     key2:@"sdk package"
-                   value2:[sdkPackageAdded generateExtendedDescription].stringValue];
+    [self.logger debugWithMessage:@"Added package"
+                     builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+        [logBuilder withKey:@"queue count" value:mainQueueSdkPackageCount.description];
+        [logBuilder sdkPackageParams:[sdkPackageAdded foundationStringMap]];
+    }];
 
     if (mainQueueSdkPackageCount.uIntegerValue == 1) {
         [self.logger debugDev:@"New added package is the one now at the front"];

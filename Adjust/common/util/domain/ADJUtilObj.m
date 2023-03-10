@@ -133,9 +133,9 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
                           stringKeyDictionary:(nullable NSDictionary<NSString *, id> *)stringKeyDictionary
                                vaKeyValueList:(va_list)vaKeyValueList {
     NSMutableString *_Nonnull sb =
-        name == nil || [name length] == 0
-        ? [NSMutableString stringWithString:@"<"]
-        : [NSMutableString stringWithFormat:@"%@ <", name];
+        [name length] == 0
+        ? [NSMutableString stringWithString:@"/"]
+        : [NSMutableString stringWithFormat:@"%@ /", name];
 
     if (keyValueArray != nil && (keyValueArray.count % 2) != 0) {
         [sb appendFormat:@"Invalid array key value of size %@>",
@@ -224,7 +224,15 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
         }
     }
 
-    [sb appendString:@">"];
+    if (hasAtLeastOneKeyValuePair) {
+        [sb appendString:@";"];
+    }
+
+    if (formatCStringKeyAndAppendEquals) {
+        [sb appendString:@"\n\\"];
+    } else {
+        [sb appendString:@"\\"];
+    }
 
     if (emptyKeysSb != nil) {
         [emptyKeysSb appendString:@")"];

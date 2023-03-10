@@ -52,7 +52,8 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                callerDescription:nil
                  runningThreadId:nil
                       resultFail:nil
-                   messageParams:nil];
+                   messageParams:nil
+                sdkPackageParams:nil];
 }
 
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
@@ -66,7 +67,8 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                callerDescription:nil
                  runningThreadId:nil
                       resultFail:nil
-                   messageParams:messageParams];
+                   messageParams:messageParams
+                sdkPackageParams:nil];
 }
 
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
@@ -82,7 +84,8 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                callerDescription:nil
                  runningThreadId:nil
                       resultFail:resultFail
-                   messageParams:messageParams];
+                   messageParams:messageParams
+                sdkPackageParams:nil];
 }
 
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
@@ -98,17 +101,20 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                callerDescription:callerDescription
                  runningThreadId:runningThreadId
                       resultFail:nil
-                   messageParams:nil];
+                   messageParams:nil
+                sdkPackageParams:nil];
 }
 
-- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
-                                  level:(nonnull ADJAdjustLogLevel)level
-                              issueType:(nullable ADJIssue)issueType
-                         callerThreadId:(nullable NSString *)callerThreadId
-                      callerDescription:(nullable NSString *)callerDescription
-                        runningThreadId:(nullable NSString *)runningThreadId
-                             resultFail:(nullable ADJResultFail *)resultFail
-                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull ADJAdjustLogLevel)level
+    issueType:(nullable ADJIssue)issueType
+    callerThreadId:(nullable NSString *)callerThreadId
+    callerDescription:(nullable NSString *)callerDescription
+    runningThreadId:(nullable NSString *)runningThreadId
+    resultFail:(nullable ADJResultFail *)resultFail
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+    sdkPackageParams:(nullable NSDictionary<NSString *, NSString *> *)sdkPackageParams
 {
     self = [super init];
 
@@ -120,6 +126,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     _runningThreadId = runningThreadId;
     _resultFail = resultFail;
     _messageParams = messageParams;
+    _sdkPackageParams = sdkPackageParams;
 
     return self;
 }
@@ -142,6 +149,8 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 @property (nullable, readwrite, strong, nonatomic) ADJResultFail * resultFail;
 @property (nullable, readwrite, strong, nonatomic)
     NSMutableDictionary<NSString *, id> *messageParams;
+@property (nullable, readwrite, strong, nonatomic)
+    NSDictionary<NSString *, NSString *> *sdkPackageParams;
 
 @end
 
@@ -174,7 +183,8 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
             callerDescription:self.callerDescription
             runningThreadId:self.runningThreadId
             resultFail:self.resultFail
-            messageParams:self.messageParams];
+            messageParams:self.messageParams
+            sdkPackageParams:self.sdkPackageParams];
 }
 
 - (void)where:(nonnull NSString *)where {
@@ -191,6 +201,9 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 }
 - (void)fail:(nonnull ADJResultFail *)resultFail {
     self.resultFail = resultFail;
+}
+- (void)sdkPackageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams {
+    self.sdkPackageParams = sdkPackageParams;
 }
 
 - (void)withExpected:(nonnull NSString *)expectedValue

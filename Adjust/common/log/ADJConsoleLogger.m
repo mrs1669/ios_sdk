@@ -187,21 +187,7 @@
          [ADJLogMessageData generateJsonStringFromFoundationDictionary:
           [inputLogMessageData.resultFail foundationDictionary]]];
     }
-    /*
-    if (inputLogMessageData.nsError != nil) {
-        [stringBuilder appendFormat:@" %@",
-         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-          [ADJLogMessageData generateFoundationDictionaryFromNsError:
-           inputLogMessageData.nsError]]];
-    }
 
-    if (inputLogMessageData.nsException != nil) {
-        [stringBuilder appendFormat:@" %@",
-         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-          [ADJLogMessageData generateFoundationDictionaryFromNsException:
-           inputLogMessageData.nsException]]];
-    }
-*/
     return [stringBuilder description];
 }
 
@@ -236,6 +222,14 @@
          [ADJLogMessageData generateJsonStringFromFoundationDictionary:
           failResultFoundationDictionary]];
 
+    NSDictionary<NSString *, NSString *> *_Nullable sdkPackageParamsFoundationDictionary =
+        logMessageData.inputData.sdkPackageParams;
+    [foundationDictionary removeObjectForKey:ADJLogSdkPackageParamsKey];
+
+    NSString *_Nonnull sdkPackageParamsFormat = sdkPackageParamsFoundationDictionary == nil ? @"" :
+        [NSString stringWithFormat:@"sdkPkg:%@",
+         [ADJConsoleLogger formatSdkPackageParams:sdkPackageParamsFoundationDictionary]];
+
 
     [foundationDictionary removeObjectForKey:ADJLogLevelKey];
     ADJAdjustLogLevel _Nonnull clientLogLevelFormat =
@@ -258,11 +252,13 @@
         [NSString stringWithFormat:@"rest:%@",
          [ADJLogMessageData generateJsonStringFromFoundationDictionary:foundationDictionary]];
 
-    // TODO:
-    // Seperate package details
     NSString *_Nonnull collectionsFormat =
-        paramsFormat.length + failResultFormat.length + restFormat.length == 0 ? @"" :
-        [NSString stringWithFormat:@" %@%@%@", paramsFormat, failResultFormat, restFormat];
+        paramsFormat.length
+            + failResultFormat.length
+            + restFormat.length
+            + sdkPackageParamsFormat.length == 0 ? @"" :
+        [NSString stringWithFormat:@" %@%@%@%@",
+         paramsFormat, failResultFormat, restFormat, sdkPackageParamsFormat];
 
     /**
      [source]{issue} message callerDescription {params}fail:{fail}rest:{rest} clientLevel_instanceId<threadId>PreInit
@@ -336,6 +332,13 @@
 
     return [NSString stringWithFormat:@"<%@-%@>",
             callingThreadId, runningThreadId];
+}
+
++ (nonnull NSString *)formatSdkPackageParams:
+    (nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams
+{
+    return [ADJUtilObj formatNewlineKeyValuesWithName:@""
+                                  stringKeyDictionary:sdkPackageParams];
 }
 
 - (void)osLogWithFullMessage:(nonnull NSString *)fullLogMessage

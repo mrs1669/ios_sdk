@@ -166,36 +166,14 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     return [self concreteGenerateShortDescription];
 }
 
-- (nonnull ADJNonEmptyString *)generateExtendedDescription {
-    /*
-     return [[ADJNonEmptyString alloc] initWithValidatedStringValue:
-     [ADJUtilF formatNewlineKeyValuesWithName:
-     [self generateShortDescription].stringValue,
-     kPathKey, self.path,
-     kClientSdkKey, self.clientSdk,
-     @"Parameters", [ADJUtilF
-     formatNewlineKeyValuesWithName:@""
-     stringKeyDictionary:self.parameters.map],
-     nil]];
-     */
-    NSMutableString *_Nonnull sb = [NSMutableString stringWithFormat:@"\n"];
+- (nonnull NSDictionary<NSString *, NSString *> *)foundationStringMap {
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull builder =
+        [[NSMutableDictionary alloc] initWithDictionary:[self.parameters foundationStringMap]];
 
-    [sb appendString:[self generateExtendDescriptionLineWithKey:kPathKey
-                                                          value:self.path]];
+    [builder setObject:self.path forKey:kPathKey];
+    [builder setObject:self.clientSdk forKey:kClientSdkKey];
 
-    [sb appendString:[self generateExtendDescriptionLineWithKey:kClientSdkKey
-                                                          value:self.clientSdk]];
-
-    [sb appendString:@"Parameters"];
-
-    for (NSString *_Nonnull key in self.parameters.map) {
-        ADJNonEmptyString *_Nonnull value =
-        [self.parameters.map objectForKey:key];
-
-        [sb appendString:[self generateExtendMapLineWithKey:key value:value.stringValue]];
-    }
-
-    return [[ADJNonEmptyString alloc] initWithConstStringValue:(NSString *_Nonnull)sb];
+    return builder;
 }
 
 #pragma mark Protected Methods

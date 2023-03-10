@@ -59,6 +59,7 @@ NSString *const ADJLogCallerDescriptionKey = @"callerDescription";
 NSString *const ADJLogInstanceIdKey = @"instanceId";
 NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 NSString *const ADJLogFailKey = @"fail";
+NSString *const ADJLogSdkPackageParamsKey = @"sdkPackage_params";
 
 NSString *const ADJLogWhereKey = @"where";
 NSString *const ADJLogSubjectKey = @"subject";
