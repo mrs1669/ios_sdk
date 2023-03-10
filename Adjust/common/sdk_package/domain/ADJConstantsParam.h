@@ -105,6 +105,7 @@ FOUNDATION_EXPORT NSString *const ADJParamEventCountKey;
 FOUNDATION_EXPORT NSString *const ADJParamEventTokenKey;
 FOUNDATION_EXPORT NSString *const ADJParamEventRevenueKey;
 FOUNDATION_EXPORT NSString *const ADJParamEventCurrencyKey;
+FOUNDATION_EXPORT NSString *const ADJParamEventDeduplicationKey;
 
 // info
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenKey;
