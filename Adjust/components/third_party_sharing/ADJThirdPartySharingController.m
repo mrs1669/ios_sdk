@@ -46,26 +46,22 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
     return YES;
 }
 
-- (void)
-    ccHandleClientActionWithClientActionIoInjectedData:
-        (nonnull ADJIoData *)clientActionIoInjectedData
-    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     ADJClientThirdPartySharingData *_Nullable clientThirdPartySharingData =
     [ADJClientThirdPartySharingData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
      logger:self.logger];
 
     if (clientThirdPartySharingData == nil) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
         return;
     }
 
     [self trackThirdPartySharingWithClientData:clientThirdPartySharingData
                                   apiTimestamp:apiTimestamp
-               clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+               clientActionRemoveStorageAction:removeStorageAction];
 }
 
 #pragma mark Internal Methods

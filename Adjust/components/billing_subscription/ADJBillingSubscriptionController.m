@@ -45,26 +45,22 @@ NSString *const ADJBillingSubscriptionControllerClientActionHandlerId = @"Billin
     return NO;
 }
 
-- (void)
-    ccHandleClientActionWithClientActionIoInjectedData:
-        (nonnull ADJIoData *)clientActionIoInjectedData
-    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     ADJClientBillingSubscriptionData *_Nullable clientBillingSubscriptionData =
     [ADJClientBillingSubscriptionData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
      logger:self.logger];
 
     if (clientBillingSubscriptionData == nil) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
         return;
     }
 
     [self trackBillingSubscriptionWithClientData:clientBillingSubscriptionData
                                     apiTimestamp:apiTimestamp
-                 clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+                 clientActionRemoveStorageAction:removeStorageAction];
 }
 
 #pragma mark Internal Methods

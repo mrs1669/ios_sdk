@@ -60,26 +60,22 @@ ADJMainQueueController *mainQueueControllerWeak;
     return NO;
 }
 
-- (void)
-    ccHandleClientActionWithClientActionIoInjectedData:
-        (nonnull ADJIoData *)clientActionIoInjectedData
-    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     ADJClientEventData *_Nullable clientEventData =
     [ADJClientEventData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
      logger:self.logger];
 
     if (clientEventData == nil) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
         return;
     }
 
     [self trackEventWithClientData:clientEventData
                       apiTimestamp:apiTimestamp
-   clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+   clientActionRemoveStorageAction:removeStorageAction];
 }
 
 #pragma mark Internal Methods

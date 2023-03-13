@@ -49,25 +49,21 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
     return YES;
 }
 
-- (void)
-    ccHandleClientActionWithClientActionIoInjectedData:
-        (nonnull ADJIoData *)clientActionIoInjectedData
-    apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-    clientActionRemoveStorageAction:
-        (nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction
-{
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     ADJClientPushTokenData *_Nullable clientPushTokenData = [ADJClientPushTokenData
                                                              instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
                                                              logger:self.logger];
 
     if (clientPushTokenData == nil) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
         return;
     }
 
     [self trackPushTokenWithClientData:clientPushTokenData
                           apiTimestamp:apiTimestamp
-       clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+       clientActionRemoveStorageAction:removeStorageAction];
 }
 
 #pragma mark Internal Methods

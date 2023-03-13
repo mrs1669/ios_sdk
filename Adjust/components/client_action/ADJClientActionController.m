@@ -267,10 +267,9 @@
              initWithClientActionStorage:clientActionStorage
              elementPosition:elementPosition];
 
-        [clientActionHandler
-         ccHandleClientActionWithClientActionIoInjectedData:clientActionData.ioData
-         apiTimestamp:clientActionData.apiTimestamp
-         clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+        [clientActionHandler ccHandleClientActionWithIoInjectedData:clientActionData.ioData
+                                                       apiTimestamp:clientActionData.apiTimestamp
+                                                removeStorageAction:clientActionRemoveStorageAction];
     }
 }
 
