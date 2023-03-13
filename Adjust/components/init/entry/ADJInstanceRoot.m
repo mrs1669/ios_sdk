@@ -168,6 +168,7 @@
                                                          clientActionsPostSdkStart:instanceRoot.postSdkStartRoot];
 
         // Subscribe to publishers
+        [instanceRoot ccSubscribeToPublishers:instanceRoot.publisherController];
         [instanceRoot.preSdkInitRoot ccSubscribeToPublishers:instanceRoot.publisherController];
         [instanceRoot.postSdkInitRoot ccSubscribeToPublishers:instanceRoot.publisherController];
 
@@ -472,6 +473,10 @@
         clientActionsBlock([preSdkInitRoot.clientActionController ccClientMeasurementActions],
                            preSdkInitRoot.logger);
     } clientSource:clientSource];
+}
+
+- (void)ccSubscribeToPublishers:(ADJPublisherController *)publisherController {
+    [publisherController subscribeToPublisher:self.logController];
 }
 
 @end
