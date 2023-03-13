@@ -138,13 +138,14 @@
 
 #pragma mark - ADJAdjustInstance
 - (void)initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig {
-    [self ccExecuteWithSelfBlock:^(ADJInstanceRoot *_Nonnull instanceRoot)
+    [self ccExecuteWithPreAndSelfBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot,
+                                          ADJInstanceRoot *_Nonnull instanceRoot)
      {
         ADJClientConfigData *_Nullable clientConfig = [ADJClientConfigData
                                                        instanceFromClientWithAdjustConfig:adjustConfig
-                                                       logger:instanceRoot.preSdkInitRoot.logger];
+                                                       logger:preSdkInitRoot.logger];
 
-        if (! [instanceRoot.preSdkInitRoot.sdkActiveController ccTrySdkInit]) {
+        if (! [preSdkInitRoot.sdkActiveController ccTrySdkInit]) {
             return;
         }
 
@@ -152,17 +153,17 @@
         instanceRoot.postSdkInitRoot =
         [[ADJPostSdkInitRoot alloc] initWithClientConfig:clientConfig
                                          instanceRootBag:instanceRoot
-                                       preSdkInitRootBag:instanceRoot.preSdkInitRoot];
+                                       preSdkInitRootBag:preSdkInitRoot];
 
         // Inject remaining dependencies before subscriptions
-        [instanceRoot.preSdkInitRoot
+        [preSdkInitRoot
          ccSetDependenciesAtSdkInitWithInstanceRootBag:instanceRoot
          postSdkInitRootBag:instanceRoot.postSdkInitRoot
          clientActionsPostSdkStart:instanceRoot.postSdkInitRoot.postSdkStartRoot];
 
         // Subscribe to publishers
         [instanceRoot ccSubscribeToPublishers:instanceRoot.publisherController];
-        [instanceRoot.preSdkInitRoot ccSubscribeToPublishers:instanceRoot.publisherController];
+        [preSdkInitRoot ccSubscribeToPublishers:instanceRoot.publisherController];
         [instanceRoot.postSdkInitRoot ccSubscribeToPublishers:instanceRoot.publisherController];
 
         // Finalize Initialization process
@@ -402,20 +403,37 @@
 }
 
 #pragma mark Internal methods
-- (void)ccExecuteWithPreBlock: (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
-                       source:(nonnull NSString *)source {
-    [self ccExecuteWithSelfBlock: ^(ADJInstanceRoot *_Nonnull instanceRoot) {
-        // We don't check the preSdkInitRoot for nil, because it must be initialized by this point.
-        preBlock(instanceRoot.preSdkInitRoot);
-    } source:source];
+- (void)
+     ccExecuteWithPreBlock:
+         (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
+     source:(nonnull NSString *)source
+ {
+     [self ccExecuteWithPreAndSelfBlock:
+      ^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot, ADJInstanceRoot *_Nonnull instanceRoot) {
+         preBlock(preSdkInitRoot);
+     } source:source];
 }
-- (void)ccExecuteWithSelfBlock:(void (^_Nonnull)(ADJInstanceRoot *_Nonnull instanceRoot))selfBlock
-                        source:(nonnull NSString *)source {
+- (void)
+     ccExecuteWithPreAndSelfBlock:
+     (void (^_Nonnull)
+      (ADJPreSdkInitRoot *_Nonnull preSdkInitRoot,
+       ADJInstanceRoot *_Nonnull instanceRoot))preAndSelfBlock
+     source:(nonnull NSString *)source
+ {
     __typeof(self) __weak weakSelf = self;
     [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        selfBlock(strongSelf);
+
+        ADJPreSdkInitRoot *_Nullable preSdkInitRootLocal = strongSelf.preSdkInitRoot;
+        if (preSdkInitRootLocal == nil) {
+            [strongSelf.logger debugDev:@"Unexpected invalid PreSdkInitRoot with self block"
+                                   from:source
+                              issueType:ADJIssueLogicError];
+            return;
+        }
+
+        preAndSelfBlock(preSdkInitRootLocal, strongSelf);
     } source:source];
 }
 
