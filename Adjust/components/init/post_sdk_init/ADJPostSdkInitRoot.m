@@ -78,7 +78,7 @@
     ADJSdkConfigData *_Nonnull sdkConfig = instanceRootBag.sdkConfigData;
     id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
 
-    // without local dependencies
+    // [INDEPENDENT] Independent objects initialization section.
     _clientSubscriptionsController =
         [[ADJClientSubscriptionsController alloc]
          initWithLoggerFactory:loggerFactory
@@ -115,7 +115,8 @@
          clientCustomEndpointData:clientConfig.clientCustomEndpointData
          publisherController:instanceRootBag.publisherController];
 
-    // local dependencies 1
+    // [DEPENDENT-1] The following objects initialization is dependent on [INDEPENDENT] section objects.
+    // IMPORTANT: DON'T CHANGE THE INITIALIZATION ORDER.
     _logQueueController = [[ADJLogQueueController alloc]
                            initWithLoggerFactory:loggerFactory
                            storage:storageRoot.logQueueStorage
@@ -133,7 +134,8 @@
          backoffStrategy:sdkConfig.mainQueueBackoffStrategy
          sdkPackageSenderFactory:_sdkPackageSenderController];
 
-    // local dependencies 2
+    // [DEPENDENT-2] The following objects initialization is dependent on [DEPENDENT-1] section objects.
+    // IMPORTANT: DON'T CHANGE THE INITIALIZATION ORDER.
     _attributionController =
         [ADJAttributionController
          instanceWithLoggerFactory:loggerFactory
@@ -166,7 +168,6 @@
                                targetEndpoint:[_mainQueueController defaultTargetUrl]
                                publisherController:instanceRootBag.publisherController];
 
-    // local dependencies 3
     _measurementSessionController =
     [[ADJMeasurementSessionController alloc]
      initWithLoggerFactory:loggerFactory
@@ -179,7 +180,8 @@
      clock:instanceRootBag.clock
      clientActionController:preSdkInitRootBag.clientActionController];
 
-    // local dependencies 4
+    // [DEPENDENT-3] The following objects initialization is dependent on [DEPENDENT-2] section objects.
+    // IMPORTANT: DON'T CHANGE THE INITIALIZATION ORDER.
     _measurementLifecycleController =
         [[ADJMeasurementLifecycleController alloc]
          initWithLoggerFactory:loggerFactory

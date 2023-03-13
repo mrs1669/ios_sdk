@@ -29,7 +29,7 @@
     ADJSdkConfigData *_Nonnull sdkConfig = instanceRootBag.sdkConfigData;
     id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
 
-    // without local dependencies
+    // [INDEPENDENT] Independent objects initialization section.
     _clientCallbacksController =
         [[ADJClientCallbacksController alloc] initWithLoggerFactory:loggerFactory];
 
@@ -57,7 +57,8 @@
                               threadExecutorFactory:instanceRootBag.threadController
                               instanceId:instanceRootBag.instanceId];
 
-    // local dependencies 1
+    // [DEPENDENT] The following objects initialization is dependent on [INDEPENDENT] section objects.
+    // IMPORTANT: DON'T CHANGE THE INITIALIZATION ORDER.
     _clientActionController = [[ADJClientActionController alloc]
                                initWithLoggerFactory:loggerFactory
                                clientActionStorage:_storageRoot.clientActionStorage
