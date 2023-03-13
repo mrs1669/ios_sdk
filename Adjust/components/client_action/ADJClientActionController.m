@@ -27,7 +27,7 @@
 #pragma mark - Injected dependencies
 @property (nullable, readonly, weak, nonatomic) ADJClientActionStorage *clientActionStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
-@property (nullable, readwrite, weak, nonatomic) id<ADJClientActionsAPI> postSdkStartClientActionsWeak;
+@property (nullable, readwrite, weak, nonatomic) id<ADJClientActionsAPIPostSdkStart> clientActionsPostSdkStartWeak;
 @property (readwrite, assign, nonatomic) BOOL canHandleActionsByPostSdkStartHandler;
 @end
 
@@ -42,7 +42,7 @@
                                  source:@"ClientActionController"];
     _clientActionStorageWeak = clientActionStorage;
     _clockWeak = clock;
-    _postSdkStartClientActionsWeak = nil;
+    _clientActionsPostSdkStartWeak = nil;
     _canHandleActionsByPostSdkStartHandler = NO;
 
     return self;
@@ -50,12 +50,12 @@
 
 #pragma mark Public API
 
-- (void)ccSetDependencyPostSdkStartClientActions:(id<ADJClientActionsAPI>)postSdkStartClientActions {
-    self.postSdkStartClientActionsWeak = postSdkStartClientActions;
+- (void)ccSetDependencyClientActionsPostSdkStart:(id<ADJClientActionsAPIPostSdkStart>)clientActionsPostSdkStart {
+    self.clientActionsPostSdkStartWeak = clientActionsPostSdkStart;
 }
 
 - (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions {
-    id<ADJClientActionsAPI> _Nullable postSdkStartClientActions = self.postSdkStartClientActionsWeak;
+    id<ADJClientActionsAPI> _Nullable postSdkStartClientActions = self.clientActionsPostSdkStartWeak;
     return (self.canHandleActionsByPostSdkStartHandler &&
             postSdkStartClientActions != nil) ? postSdkStartClientActions : self;
 }
@@ -219,7 +219,7 @@
                      key2:@"is pre first session"
                    value2:[ADJUtilF boolFormat:isPreFirstSession]];
 
-    id<ADJClientActionsAPI> postSdkStartClientActions = self.postSdkStartClientActionsWeak;
+    id<ADJClientActionsAPIPostSdkStart> postSdkStartClientActions = self.clientActionsPostSdkStartWeak;
     if (postSdkStartClientActions == nil) {
         [self.logger debugDev:
          @"Cannot try to start sdk without a reference to postSdkStartClientActions"

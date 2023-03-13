@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJClientActionsAPI.h"
+#import "ADJClientActionsAPIPostSdkStart.h"
 #import "ADJAdRevenueController.h"
 #import "ADJBillingSubscriptionController.h"
 #import "ADJLaunchedDeeplinkController.h"
@@ -23,7 +23,7 @@
 #import "ADJPostSdkInitRootBag.h"
 
 @interface ADJPostSdkStartRoot : NSObject <
-    ADJClientActionsAPI
+    ADJClientActionsAPIPostSdkStart
 >
 
 // public properties

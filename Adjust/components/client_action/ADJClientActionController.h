@@ -10,6 +10,7 @@
 
 #import "ADJCommonBase.h"
 #import "ADJClientActionsAPI.h"
+#import "ADJClientActionsAPIPostSdkStart.h"
 #import "ADJClientActionStorage.h"
 #import "ADJClock.h"
 
@@ -20,7 +21,7 @@
                                         clock:(nonnull ADJClock *)clock;
 
 // public api
-- (void)ccSetDependencyPostSdkStartClientActions:(nonnull id<ADJClientActionsAPI>)postSdkStartClientActions;
+- (void)ccSetDependencyClientActionsPostSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)clientActionsPostSdkStart;
 
 - (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions;
 

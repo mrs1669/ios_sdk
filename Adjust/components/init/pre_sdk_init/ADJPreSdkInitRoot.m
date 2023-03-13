@@ -90,7 +90,7 @@
 #pragma mark Public API
 - (void)ccSetDependenciesAtSdkInitWithInstanceRootBag:(id<ADJInstanceRootBag>)instanceRootBag
                                    postSdkInitRootBag:(id<ADJPostSdkInitRootBag>)postSdkInitRootBag
-                            postSdkStartClientActions:(nonnull id<ADJClientActionsAPI>)postSdkStartClientActions {
+                            clientActionsPostSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)clientActionsPostSdkStart {
     [self.gdprForgetController
          ccSetDependenciesAtSdkInitWithSdkPackageBuilder:postSdkInitRootBag.sdkPackageBuilder
          clock:instanceRootBag.clock
@@ -98,7 +98,7 @@
          threadExecutorFactory:instanceRootBag.threadController
          sdkPackageSenderFactory:postSdkInitRootBag.sdkPackageSenderController];
     
-    [self.clientActionController ccSetDependencyPostSdkStartClientActions:postSdkStartClientActions];
+    [self.clientActionController ccSetDependencyClientActionsPostSdkStart:clientActionsPostSdkStart];
 }
 
 - (void)ccSubscribeToPublishers:(ADJPublisherController *)publisherController {

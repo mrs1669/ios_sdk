@@ -49,8 +49,4 @@
     (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData;
 - (void)ccClearGlobalPartnerParametersWithClientData:
     (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData;
-
-@optional
-- (nullable id<ADJClientActionHandler>)ccHandlerById:(nonnull ADJNonEmptyString *)clientHandlerId;
-
 @end

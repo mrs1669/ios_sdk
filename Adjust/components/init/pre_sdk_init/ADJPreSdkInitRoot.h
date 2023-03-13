@@ -21,7 +21,7 @@
 // public api
 - (void)ccSetDependenciesAtSdkInitWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
                                    postSdkInitRootBag:(nonnull id<ADJPostSdkInitRootBag>)postSdkInitRootBag
-                            postSdkStartClientActions:(nonnull id<ADJClientActionsAPI>)postSdkStartClientActions;
+                            clientActionsPostSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)clientActionsPostSdkStart;
 
 - (void)ccSubscribeToPublishers:(nonnull ADJPublisherController *)publisherController;
 

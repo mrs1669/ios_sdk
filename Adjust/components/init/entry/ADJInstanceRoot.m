@@ -165,7 +165,7 @@
         // Inject remaining dependencies before subscriptions
         [instanceRoot.preSdkInitRoot ccSetDependenciesAtSdkInitWithInstanceRootBag:instanceRoot
                                                                 postSdkInitRootBag:instanceRoot.postSdkInitRoot
-                                                         postSdkStartClientActions:instanceRoot.postSdkStartRoot];
+                                                         clientActionsPostSdkStart:instanceRoot.postSdkStartRoot];
 
         // Subscribe to publishers
         [instanceRoot.preSdkInitRoot ccSubscribeToPublishers:instanceRoot.publisherController];
