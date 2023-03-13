@@ -40,17 +40,17 @@
 @implementation ADJPostSdkStartRoot
 #pragma mark Instantiation
 
-- (nonnull instancetype)initWithClientConfigData:(ADJClientConfigData *)clientConfigData
-                                 instanceRootBag:(id<ADJInstanceRootBag>)instanceRootBag
-                               preSdkInitRootBag:(id<ADJPreSdkInitRootBag>)preSdkInitRootBag
-                              postSdkInitRootBag:(id<ADJPostSdkInitRootBag>)postSdkInitRootBag {
-
+- (nonnull instancetype)
+    initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
+    instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+    preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+{
     self = [super init];
 
     id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
     ADJStorageRoot *_Nonnull storageRoot = preSdkInitRootBag.storageRoot;
-    ADJSdkPackageBuilder *sdkPackageBuilder = postSdkInitRootBag.sdkPackageBuilder;
-    ADJMainQueueController *mainQueueController = postSdkInitRootBag.mainQueueController;
 
     _adRevenueController = [[ADJAdRevenueController alloc]
                             initWithLoggerFactory:instanceRootBag.logController
@@ -73,8 +73,7 @@
                         eventStateStorage:storageRoot.eventStateStorage
                         eventDeduplicationStorage:storageRoot.eventDeduplicationStorage
                         mainQueueController:mainQueueController
-                        maxCapacityEventDeduplication:
-                            clientConfigData.eventIdDeduplicationMaxCapacity];
+                        maxCapacityEventDeduplication:clientConfig.eventIdDeduplicationMaxCapacity];
 
     _pushTokenController = [[ADJPushTokenController alloc]
                             initWithLoggerFactory:loggerFactory

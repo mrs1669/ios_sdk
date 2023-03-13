@@ -20,7 +20,6 @@
 #import "ADJClientConfigData.h"
 #import "ADJInstanceRootBag.h"
 #import "ADJPreSdkInitRootBag.h"
-#import "ADJPostSdkInitRootBag.h"
 
 @interface ADJPostSdkStartRoot : NSObject <
     ADJClientActionsAPIPostSdkStart
@@ -42,10 +41,12 @@
     ADJGlobalPartnerParametersController *globalPartnerParametersController;
 
 // instantiation
-- (nonnull instancetype)initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
-                                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-                               preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
-                              postSdkInitRootBag:(nonnull id<ADJPostSdkInitRootBag>)postSdkInitRootBag;
+- (nonnull instancetype)
+    initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
+    instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+    preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

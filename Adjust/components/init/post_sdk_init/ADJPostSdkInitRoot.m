@@ -33,6 +33,7 @@
  @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
  @property (nonnull, readonly, strong, nonatomic)
      ADJAsaAttributionController *asaAttributionController;
+ @property (nonnull, readonly, strong, nonatomic) ADJPostSdkStartRoot *postSdkStartRoot;
  @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
  @property (nonnull, readonly, strong, nonatomic)
      ADJMeasurementSessionController *measurementSessionController;
@@ -162,25 +163,36 @@
             mainQueueController:_mainQueueController
             adjustAttributionStateStorage:storageRoot.attributionStateStorage];
 
+    _postSdkStartRoot =
+        [[ADJPostSdkStartRoot alloc] initWithClientConfigData:clientConfig
+                                              instanceRootBag:instanceRootBag
+                                            preSdkInitRootBag:preSdkInitRootBag
+                                            sdkPackageBuilder:_sdkPackageBuilder
+                                          mainQueueController:_mainQueueController];
+
     _reachabilityController = [[ADJReachabilityController alloc]
                                initWithLoggerFactory:loggerFactory
                                threadController:instanceRootBag.threadController
                                targetEndpoint:[_mainQueueController defaultTargetUrl]
                                publisherController:instanceRootBag.publisherController];
 
+    // [DEPENDENT-3] The following objects initialization is dependent on [DEPENDENT-3] section objects.
+    // IMPORTANT: DON'T CHANGE THE INITIALIZATION ORDER.
     _measurementSessionController =
-    [[ADJMeasurementSessionController alloc]
-     initWithLoggerFactory:loggerFactory
-     minMeasurementSessionInterval:sdkConfig.minMeasurementSessionIntervalMilli
-     overwriteFirstMeasurementSessionInterval:sdkConfig.overwriteFirstMeasurementSessionIntervalMilli
-     clientExecutor:instanceRootBag.clientExecutor
-     sdkPackageBuilder:_sdkPackageBuilder
-     measurementSessionStateStorage:storageRoot.measurementSessionStateStorage
-     mainQueueController:_mainQueueController
-     clock:instanceRootBag.clock
-     clientActionController:preSdkInitRootBag.clientActionController];
+        [[ADJMeasurementSessionController alloc]
+         initWithLoggerFactory:loggerFactory
+         minMeasurementSessionInterval:sdkConfig.minMeasurementSessionIntervalMilli
+         overwriteFirstMeasurementSessionInterval:
+             sdkConfig.overwriteFirstMeasurementSessionIntervalMilli
+         clientExecutor:instanceRootBag.clientExecutor
+         sdkPackageBuilder:_sdkPackageBuilder
+         measurementSessionStateStorage:storageRoot.measurementSessionStateStorage
+         mainQueueController:_mainQueueController
+         clock:instanceRootBag.clock
+         clientActionController:preSdkInitRootBag.clientActionController
+         postSdkStart:_postSdkStartRoot];
 
-    // [DEPENDENT-3] The following objects initialization is dependent on [DEPENDENT-2] section objects.
+    // [DEPENDENT-4] The following objects initialization is dependent on [DEPENDENT-3] section objects.
     // IMPORTANT: DON'T CHANGE THE INITIALIZATION ORDER.
     _measurementLifecycleController =
         [[ADJMeasurementLifecycleController alloc]

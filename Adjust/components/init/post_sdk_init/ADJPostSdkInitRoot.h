@@ -20,24 +20,25 @@
 #import "ADJMeasurementSessionController.h"
 #import "ADJReachabilityController.h"
 #import "ADJMeasurementLifecycleController.h"
+#import "ADJPostSdkStartRoot.h"
 
 @interface ADJPostSdkInitRoot : ADJCommonBase <ADJPostSdkInitRootBag>
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfig;
 @property (nonnull, readonly, strong, nonatomic)
-ADJClientSubscriptionsController *clientSubscriptionsController;
+    ADJClientSubscriptionsController *clientSubscriptionsController;
 @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
 @property (nonnull, readonly, strong, nonatomic) ADJLogQueueController *logQueueController;
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionController *attributionController;
 @property (nonnull, readonly, strong, nonatomic)
-ADJAsaAttributionController *asaAttributionController;
+    ADJAsaAttributionController *asaAttributionController;
+@property (nonnull, readonly, strong, nonatomic) ADJPostSdkStartRoot *postSdkStartRoot;
 @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
 @property (nonnull, readonly, strong, nonatomic)
-ADJMeasurementSessionController *measurementSessionController;
+    ADJMeasurementSessionController *measurementSessionController;
 @property (nonnull, readonly, strong, nonatomic)
-ADJMeasurementLifecycleController *measurementLifecycleController;
-
+    ADJMeasurementLifecycleController *measurementLifecycleController;
 
 // instantiation
 - (nonnull instancetype)initWithClientConfig:(nonnull ADJClientConfigData *)clientConfig

@@ -21,6 +21,8 @@
 @property (nullable, readonly, weak, nonatomic) ADJMainQueueController *mainQueueControllerWeak;
 @property (nullable, readonly, weak, nonatomic)
     ADJClientActionController *clientActionControllerWeak;
+@property (nullable, readonly, weak, nonatomic)
+    id<ADJClientActionsAPIPostSdkStart> postSdkStartWeak;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
 @property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *storage;
@@ -36,8 +38,7 @@
 #pragma mark Instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    minMeasurementSessionInterval:
-        (nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
+    minMeasurementSessionInterval:(nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
     overwriteFirstMeasurementSessionInterval:
         (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionInterval
     clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
@@ -47,12 +48,14 @@
     mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
     clock:(nonnull ADJClock *)clock
     clientActionController:(nonnull ADJClientActionController *)clientActionController
+    postSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)postSdkStart
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionController"];
     _overwriteFirstMeasurementSessionInterval = overwriteFirstMeasurementSessionInterval;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
     _clientActionControllerWeak = clientActionController;
+    _postSdkStartWeak = postSdkStart;
     _clientExecutor = clientExecutor;
     _storage = measurementSessionStateStorage;
     _clock = clock;
@@ -82,6 +85,13 @@
         return NO;
     }
 
+    id<ADJClientActionsAPIPostSdkStart> _Nullable postSdkStart = self.postSdkStartWeak;
+    if (postSdkStart == nil) {
+        [self.logger debugDev:@"Cannot try to start sdk without a reference to postSdkStart"
+                    issueType:ADJIssueWeakReference];
+        return NO;
+    }
+
     ADJMeasurementSessionStateOutputData *_Nullable measurementSessionOutput =
         [self.measurementSessionState
          sdkStartWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp];
@@ -93,13 +103,14 @@
 
     BOOL isPreFirstSession = preSdkStartStateData.measurementSessionData == nil;
 
-    [clientActionController ccPreSdkStartWithPreFirstSession:isPreFirstSession];
+    [clientActionController ccPreSdkStartWithPreFirstSession:isPreFirstSession
+                                                postSdkStart:postSdkStart];
 
     // sdk start
     [self ccHandleMeasurementSessionOutput:measurementSessionOutput];
 
     // post sdk start
-    [clientActionController ccPostSdkStart];
+    [clientActionController ccPostSdkStart:postSdkStart];
 
     return YES;
 }

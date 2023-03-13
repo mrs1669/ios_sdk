@@ -25,7 +25,9 @@
 
 - (nonnull id<ADJClientActionsAPI>)ccClientMeasurementActions;
 
-- (void)ccPreSdkStartWithPreFirstSession:(BOOL)isPreFirstSession;
+- (void)ccPreSdkStartWithPreFirstSession:(BOOL)isPreFirstSession
+                            postSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)postSdkStart;
 
-- (void)ccPostSdkStart;
+- (void)ccPostSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)postSdkStart;
+
 @end

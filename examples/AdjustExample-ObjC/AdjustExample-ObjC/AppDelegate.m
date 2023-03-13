@@ -24,7 +24,7 @@
                                                                            environment:ADJEnvironmentSandbox];
     [adjustConfig doLogAll];
     [adjustConfig setAdjustAttributionSubscriber:self];
-    [[ADJAdjust instance] sdkInitWithConfiguration:adjustConfig];
+    [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
 
     return YES;
 }

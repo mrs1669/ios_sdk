@@ -30,15 +30,19 @@
 >
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                minMeasurementSessionInterval:(nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
-     overwriteFirstMeasurementSessionInterval:(nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionInterval
-                               clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                                        clock:(nonnull ADJClock *)clock
-                       clientActionController:(nonnull ADJClientActionController *)clientActionController;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    minMeasurementSessionInterval:(nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
+    overwriteFirstMeasurementSessionInterval:
+        (nullable ADJTimeLengthMilli *)overwriteFirstMeasurementSessionInterval
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    measurementSessionStateStorage:
+        (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    clock:(nonnull ADJClock *)clock
+    clientActionController:(nonnull ADJClientActionController *)clientActionController
+    postSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)postSdkStart;
 
 // public api
 - (BOOL)ccTryStartSdk;

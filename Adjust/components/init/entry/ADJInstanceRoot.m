@@ -20,7 +20,6 @@
 @property (nullable, readonly, weak, nonatomic) id<ADJEntryRootBag> entryRootBagWeak;
 @property (nullable, readwrite, strong, nonatomic) ADJPreSdkInitRoot *preSdkInitRoot;
 @property (nullable, readwrite, strong, nonatomic) ADJPostSdkInitRoot *postSdkInitRoot;
-@property (nullable, readwrite, strong, nonatomic) ADJPostSdkStartRoot *postSdkStartRoot;
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
 
 @end
@@ -155,17 +154,11 @@
                                          instanceRootBag:instanceRoot
                                        preSdkInitRootBag:instanceRoot.preSdkInitRoot];
 
-        instanceRoot.postSdkStartRoot =
-        [[ADJPostSdkStartRoot alloc] initWithClientConfigData:clientConfig
-                                              instanceRootBag:instanceRoot
-                                            preSdkInitRootBag:instanceRoot.preSdkInitRoot
-                                           postSdkInitRootBag:instanceRoot.postSdkInitRoot];
-
-
         // Inject remaining dependencies before subscriptions
-        [instanceRoot.preSdkInitRoot ccSetDependenciesAtSdkInitWithInstanceRootBag:instanceRoot
-                                                                postSdkInitRootBag:instanceRoot.postSdkInitRoot
-                                                         clientActionsPostSdkStart:instanceRoot.postSdkStartRoot];
+        [instanceRoot.preSdkInitRoot
+         ccSetDependenciesAtSdkInitWithInstanceRootBag:instanceRoot
+         postSdkInitRootBag:instanceRoot.postSdkInitRoot
+         clientActionsPostSdkStart:instanceRoot.postSdkInitRoot.postSdkStartRoot];
 
         // Subscribe to publishers
         [instanceRoot ccSubscribeToPublishers:instanceRoot.publisherController];
