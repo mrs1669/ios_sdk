@@ -158,17 +158,17 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
                                             nonMonotonicNowTimestamp:nonMonotonicNowTimestamp];
     }
 
-    ADJMeasurementSessionData *_Nullable newMeasurementSessionData =
-        [ADJMeasurementSessionData instanceFromBuilder:sessionDataBuilder
-                                                logger:self.logger];
-    if (newMeasurementSessionData == nil) {
+    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
+        [ADJMeasurementSessionData instanceFromBuilder:sessionDataBuilder];
+    if (newMeasurementSessionDataResult.fail != nil) {
         [self.logger debugDev:@"Cannot change to Active Session with invalid measurement session"
+                   resultFail:newMeasurementSessionDataResult.fail
                     issueType:ADJIssueLogicError];
         return nil;
     }
 
     self.stateData = [[ADJMeasurementSessionStateData alloc]
-                      initWithMeasurementSessionData:newMeasurementSessionData];
+                      initWithMeasurementSessionData:newMeasurementSessionDataResult.value];
 
     // changing at the end of the method to support NOT_NEW_SESSION_EVENT check
     //  ^- not needed anymore, but still fine to keep it here
@@ -353,19 +353,19 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     [self increaseTimeSpentWithBuilder:measurementSessionDataBuilder
              intervalSinceLastActivity:intervalSinceLastActivity];
 
-    ADJMeasurementSessionData *_Nullable newMeasurementSessionData =
-        [ADJMeasurementSessionData instanceFromBuilder:measurementSessionDataBuilder
-                                                logger:self.logger];
+    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
+        [ADJMeasurementSessionData instanceFromBuilder:measurementSessionDataBuilder];
 
-    if (newMeasurementSessionData == nil) {
+    if (newMeasurementSessionDataResult.fail != nil) {
         [self.logger debugDev:
         @"Cannot update intervals in active session with invalid sdk session"
+                   resultFail:newMeasurementSessionDataResult.fail
                     issueType:ADJIssueLogicError];
         return nil;
     }
 
     self.stateData = [[ADJMeasurementSessionStateData alloc]
-                      initWithMeasurementSessionData:newMeasurementSessionData];
+                      initWithMeasurementSessionData:newMeasurementSessionDataResult.value];
 
     return [[ADJMeasurementSessionStateOutputData alloc]
             initWithChangedStateData:self.stateData

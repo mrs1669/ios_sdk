@@ -20,8 +20,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJGdprForgetStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJGdprForgetStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithInitialState;
 

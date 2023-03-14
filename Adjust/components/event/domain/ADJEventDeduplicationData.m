@@ -26,26 +26,27 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
 
 @implementation ADJEventDeduplicationData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData isExpectedMetadataTypeValue:
-           ADJEventDeduplicationDataMetadataTypeValue
-                                       logger:logger])
-    {
-        return nil;
++ (nonnull ADJResultNN<ADJEventDeduplicationData *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJEventDeduplicationDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create event deduplication data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
     }
-    
+
     ADJNonEmptyString *_Nullable deduplicationId =
         [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
     
     if (deduplicationId == nil) {
-        [logger debugDev:@"Cannot create instance from io data with invalid io value"
-                 subject:kDeduplicationIdKey
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                @"Cannot create event deduplication data from io data without its id"];
     }
-    
-    return [[self alloc] initWithDeduplicationId:deduplicationId];
+
+    return [ADJResultNN okWithValue:[[ADJEventDeduplicationData alloc]
+                                     initWithDeduplicationId:deduplicationId]];
 }
 
 - (nonnull instancetype)initWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {

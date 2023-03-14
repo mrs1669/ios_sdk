@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJEventDeduplicationData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJEventDeduplicationData *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId;
 

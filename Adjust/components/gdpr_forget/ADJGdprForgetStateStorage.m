@@ -30,9 +30,10 @@ static NSString *const kGdprForgetStateStorageTableName = @"gdpr_forget_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJGdprForgetStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJGdprForgetStateData instanceFromIoData:ioData
-                                               logger:self.logger];
+- (nonnull ADJResultNN<ADJGdprForgetStateData *> *)
+    concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
+{
+    return [ADJGdprForgetStateData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJGdprForgetStateData *)dataValue {

@@ -29,23 +29,26 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nullable ADJLogPackageData *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
-    id<ADJSdkPackageData> _Nullable sdkPackageData =
-    [ADJSdkPackageBaseData instanceFromIoData:ioData logger:self.logger];
-
-    if (sdkPackageData == nil) {
-        return nil;
+- (nonnull ADJResultNN<ADJLogPackageData *> *)concreteGenerateElementFromIoData:
+    (nonnull ADJIoData *)ioData
+{
+    ADJResultNN<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
+        [ADJSdkPackageBaseData instanceFromIoData:ioData];
+    if (sdkPackageDataResult.fail != nil) {
+        return [ADJResultNN failWithMessage:
+                @"Could not parse sdk package data from io data for an expected log package"
+                                        key:@"sdkPackageData fail"
+                                      value:[sdkPackageDataResult.fail foundationDictionary]];
     }
 
-    if (! [sdkPackageData isKindOfClass:[ADJLogPackageData class]]) {
-        [self.logger debugDev:@"Unexpected non log package data"
-                          key:@"package read"
-                        value:[sdkPackageData generateShortDescription].stringValue
-                    issueType:ADJIssueStorageIo];
-        return nil;
+    if (! [sdkPackageDataResult.value isKindOfClass:[ADJLogPackageData class]]) {
+        return [ADJResultNN
+                failWithMessage:@"Unexpected non log package"
+                key:@"package read short description"
+                value:[sdkPackageDataResult.value generateShortDescription].stringValue];
     }
 
-    return (ADJLogPackageData *)sdkPackageData;
+    return [ADJResultNN okWithValue:(ADJLogPackageData *)sdkPackageDataResult.value];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull ADJLogPackageData *)element {

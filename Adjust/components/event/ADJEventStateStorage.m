@@ -30,9 +30,10 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJEventStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJEventStateData instanceFromIoData:ioData
-                                          logger:self.logger];
+- (nonnull ADJResultNN<ADJEventStateData *> *)
+    concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
+{
+    return [ADJEventStateData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJEventStateData *)dataValue {

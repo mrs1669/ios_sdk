@@ -16,7 +16,9 @@
 // instantiation
 - (nullable instancetype)init NS_UNAVAILABLE;
 
-- (nonnull instancetype)initWithCollection:(nonnull NSArray<C> *)collection
+- (nonnull instancetype)initWithCollection:(nullable NSArray<C> *)collection
                                      value:(nonnull V)value;
+
+- (nonnull instancetype)initWithValue:(nonnull V)value;
 
 @end

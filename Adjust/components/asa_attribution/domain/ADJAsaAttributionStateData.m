@@ -35,60 +35,70 @@ static NSString *const kErrorReasonKey = @"errorReason";
 
 @implementation ADJAsaAttributionStateData
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJAsaAttributionStateData *> *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData
 {
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJAsaAttributionStateDataMetadataTypeValue
-           logger:logger])
-    {
-        return nil;
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJAsaAttributionStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [[ADJCollectionAndValue alloc] initWithValue:
+                [ADJResultNN
+                 failWithMessage:@"Cannot create asa attribution state data from io data"
+                 key:@"unexpected metadata type value fail"
+                 value:[unexpectedMetadataTypeValueFail foundationDictionary]]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedValidAsaClickResponseResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]];
     if (hasReceivedValidAsaClickResponseResult.fail != nil) {
-        [logger debugDev:@"Cannot create instance from io data"
-                 subject:kHasReceivedValidAsaClickResponseKey
-              resultFail:hasReceivedValidAsaClickResponseResult.fail
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [[ADJCollectionAndValue alloc] initWithValue:
+                [ADJResultNN
+                failWithMessage:@"Cannot create asa attribution state data from io data"
+                key:@"hasReceivedValidAsaClickResponse fail"
+                value:[hasReceivedValidAsaClickResponseResult.fail foundationDictionary]]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedAdjustAttributionResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedAdjustAttributionKey]];
     if (hasReceivedAdjustAttributionResult.fail != nil) {
-        [logger debugDev:@"Cannot create instance from io data"
-                 subject:kHasReceivedAdjustAttributionKey
-              resultFail:hasReceivedAdjustAttributionResult.fail
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [[ADJCollectionAndValue alloc] initWithValue:
+                [ADJResultNN
+                failWithMessage:@"Cannot create asa attribution state data from io data"
+                key:@"hasReceivedAdjustAttributionResult fail"
+                value:[hasReceivedAdjustAttributionResult.fail foundationDictionary]]];
     }
 
     ADJNonEmptyString *_Nullable cachedToken =
         [ioData.propertiesMap pairValueWithKey:kCachedTokenKey];
 
+    NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
+
     ADJResultNL<ADJTimestampMilli *> *_Nonnull cacheReadTimestampResult =
         [ADJTimestampMilli instanceFromOptionalIoDataValue:
          [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]];
     if (cacheReadTimestampResult.fail != nil) {
-        [logger debugDev:@"Cannot use invalid cache read timestamp"
-              resultFail:cacheReadTimestampResult.fail
-               issueType:ADJIssueStorageIo];
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot use invalid cache read timestamp in asa attribution state data from io data"];
+        [resultFailBuilder withKey:@"cacheReadTimestamp fail"
+                             value:[cacheReadTimestampResult.fail foundationDictionary]];
+        optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
     }
 
     ADJNonEmptyString *_Nullable errorReason =
         [ioData.propertiesMap pairValueWithKey:kErrorReasonKey];
 
-    return [[ADJAsaAttributionStateData alloc]
-            initWithHasReceivedValidAsaClickResponse:
-                hasReceivedValidAsaClickResponseResult.value.boolValue
-            hasReceivedAdjustAttribution:hasReceivedAdjustAttributionResult.value.boolValue
-            cachedToken:cachedToken
-            cacheReadTimestamp:cacheReadTimestampResult.value
-            errorReason:errorReason];
+    return [[ADJCollectionAndValue alloc]
+            initWithCollection:optionalFails
+            value:[[ADJAsaAttributionStateData alloc]
+                   initWithHasReceivedValidAsaClickResponse:
+                       hasReceivedValidAsaClickResponseResult.value.boolValue
+                   hasReceivedAdjustAttribution:hasReceivedAdjustAttributionResult.value.boolValue
+                   cachedToken:cachedToken
+                   cacheReadTimestamp:cacheReadTimestampResult.value
+                   errorReason:errorReason]];
 }
 
 - (nonnull instancetype)initWithIntialState {

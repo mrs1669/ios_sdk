@@ -27,12 +27,13 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 
 @implementation ADJSdkActiveStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
-    if (! [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
-                                       logger:logger]) {
-        return nil;
++ (nonnull ADJResultNN<ADJSdkActiveStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull isSdkActiveResult =
@@ -40,14 +41,13 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
             instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]];
 
     if (isSdkActiveResult.fail != nil) {
-        [logger debugDev:@"Cannot create instance from io data without valid value"
-                 subject:kIsSdkActiveKey
-              resultFail:isSdkActiveResult.fail
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
+                                        key:@"isSdkActive fail"
+                                      value:[isSdkActiveResult.fail foundationDictionary]];
     }
 
-    return [[self alloc] initWithIsActiveSdk:isSdkActiveResult.value.boolValue];
+    return [ADJResultNN okWithValue:
+            [[ADJSdkActiveStateData alloc] initWithIsActiveSdk:isSdkActiveResult.value.boolValue]];
 }
 
 - (nonnull instancetype)initWithInitialState {

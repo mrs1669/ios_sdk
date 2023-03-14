@@ -25,19 +25,18 @@ static NSString *const kUuidKey = @"uuid";
 
 @implementation ADJDeviceIdsData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJDeviceIdsDataMetadataTypeValue
-           logger:logger])
-    {
-        return nil;
++ (nonnull ADJResultNN<ADJDeviceIdsData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJDeviceIdsDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create device ids data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
     }
 
-    ADJNonEmptyString *_Nullable uuid =
-    [ioData.propertiesMap pairValueWithKey:kUuidKey];
+    ADJNonEmptyString *_Nullable uuid = [ioData.propertiesMap pairValueWithKey:kUuidKey];
 
-    return [[self alloc] initWithUuid:uuid];
+    return [ADJResultNN okWithValue:[[ADJDeviceIdsData alloc] initWithUuid:uuid]];
 }
 
 - (nonnull instancetype)initWithInitialState {

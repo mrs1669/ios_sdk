@@ -25,8 +25,7 @@ NS_ASSUME_NONNULL_END
 
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
-                                   ioData:(nonnull ADJIoData *)ioData
-                                   logger:(nonnull ADJLogger *)logger;
+                                   ioData:(nonnull ADJIoData *)ioData;
 
 @end
 

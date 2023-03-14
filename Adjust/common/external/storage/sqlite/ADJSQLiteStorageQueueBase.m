@@ -406,7 +406,7 @@ static int const kInsertValueFieldPosition = 4;
 }
 
 #pragma mark - Abstract
-- (nullable id)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResultNN<id> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -454,25 +454,24 @@ static int const kDeleteElementPositionFieldPosition = 1;
          return elementPositionToAdd;
      }
 
-    // TODO: refac concreteGenerateElementFromIoData: to return Result
-    //  when result fail can support multiple params
-    id _Nullable lastReadElement = [self concreteGenerateElementFromIoData:readIoData];
-    if (lastReadElement == nil) {
+    ADJResultNN<id> *lastReadElementResult = [self concreteGenerateElementFromIoData:readIoData];
+    if (lastReadElementResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot add element to memory queue"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
          {
-            [logBuilder withSubject:@"element instance"
-                                why:@"failed to parse from io data"];
-            [logBuilder issue:ADJIssueStorageIo];
+            [logBuilder withFail:lastReadElementResult.fail
+                           issue:ADJIssueStorageIo];
             [logBuilder withKey:@"element position"
                           value:elementPositionToAddResult.value.description];
-            [logBuilder withKey:@"metadata type" value:self.metadataTypeValue];
+            [logBuilder withKey:@"metadata type"
+                          value:self.metadataTypeValue];
         }];
 
         return nil;
     }
 
-    [self.inMemoryQueueByPosition setObject:lastReadElement forKey:elementPositionToAdd];
+    [self.inMemoryQueueByPosition setObject:lastReadElementResult.value
+                                     forKey:elementPositionToAdd];
     [self.inMemoryPositionIndexSet addIndex:elementPositionToAdd.uIntegerValue];
 
     return elementPositionToAdd;

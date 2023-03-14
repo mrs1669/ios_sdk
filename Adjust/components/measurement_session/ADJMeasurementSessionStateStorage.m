@@ -36,9 +36,22 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJMeasurementSessionStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJMeasurementSessionStateData instanceFromIoData:ioData
-                                                       logger:self.logger];
+- (nonnull ADJResultNN<ADJMeasurementSessionStateData *> *)
+    concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJMeasurementSessionStateData *> *> *_Nonnull
+    resultWithOptionals = [ADJMeasurementSessionStateData instanceFromIoData:ioData];
+
+    for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
+        [self.logger debugWithMessage:
+         @"Failed setting measurement session state data optional field"
+         " when generating value from io data"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+            [logBuilder fail:optionalFail];
+        }];
+    }
+
+    return resultWithOptionals.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue: (nonnull ADJMeasurementSessionStateData *)dataValue {
@@ -64,24 +77,24 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
                       key:@"activity_state"
                     value:[v4ActivityState description]];
 
-    ADJMeasurementSessionData *_Nullable v4MeasurementSessionData =
-    [ADJMeasurementSessionData instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
-                                    lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
-                                            sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
-                                                timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble
-                                                                      logger:self.logger];
-
-    ADJMeasurementSessionStateData *_Nullable v4MeasurementSessionStateData =
-    [ADJMeasurementSessionStateData instanceFromExternalWithMeasurementSessionData:v4MeasurementSessionData
-                                                                            logger:self.logger];
-
-    if (v4MeasurementSessionStateData == nil) {
+    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull v4MeasurementSessionDataResult =
+        [ADJMeasurementSessionData
+         instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
+         lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
+         sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
+         timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble];
+    if (v4MeasurementSessionDataResult.fail != nil) {
+        [self.logger debugDev:@"Cannot convert v4 session data"
+                   resultFail:v4MeasurementSessionDataResult.fail
+                    issueType:ADJIssueStorageIo];
         return;
     }
+
+    ADJMeasurementSessionStateData *_Nullable v4MeasurementSessionStateData =
+        [[ADJMeasurementSessionStateData alloc] initWithMeasurementSessionData:
+         v4MeasurementSessionDataResult.value];
 
     [self updateWithNewDataValue:v4MeasurementSessionStateData];
 }
 
 @end
-
-

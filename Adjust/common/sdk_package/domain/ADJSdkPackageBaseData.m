@@ -48,46 +48,45 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
 @synthesize isPostOrElseGetNetworkMethod = _isPostOrElseGetNetworkMethod;
 @synthesize parameters = _parameters;
 
-#define pathToPackage(packageClass)                                             \
-    if ([packageClass ## Path isEqualToString:path.stringValue]) {              \
-        return [[packageClass alloc] initWithClientSdk:clientSdk.stringValue    \
-                                            parameters:parameters               \
-                                                ioData:ioData                   \
-                                                logger:logger];                 \
-    }                                                                           \
+#define pathToPackage(packageClass)                                         \
+    if ([packageClass ## Path isEqualToString:path.stringValue]) {          \
+        return [ADJResultNN okWithValue:                                    \
+            [[packageClass alloc] initWithClientSdk:clientSdk.stringValue   \
+                                         parameters:parameters              \
+                                             ioData:ioData]];               \
+    }                                                                       \
 
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData isExpectedMetadataTypeValue:ADJSdkPackageDataMetadataTypeValue
-           logger:logger]) {
-        return nil;
++ (nonnull ADJResultNN<ADJSdkPackageBaseData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJSdkPackageDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create sdk package data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
     }
 
     ADJStringMap *_Nonnull propertiesMap = ioData.propertiesMap;
 
     ADJNonEmptyString *_Nullable path = [propertiesMap pairValueWithKey:kPathKey];
     if (path == nil) {
-        [logger debugDev:@"Cannot create instance from io data without valid path"
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN
+                failWithMessage:@"Cannot create sdk package data from io data without path"];
     }
 
     ADJNonEmptyString *_Nullable clientSdk =
         [propertiesMap pairValueWithKey:kClientSdkKey];
     if (clientSdk == nil) {
-        [logger debugDev:@"Cannot create instance from io data without valid value"
-               subject:kClientSdkKey
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN
+                failWithMessage:@"Cannot create sdk package data from io data without client sdk"];
     }
 
     ADJStringMap *_Nullable parameters = [ioData mapWithName:kParametersMapName];
     if (parameters == nil) {
-        [logger debugDev:@"Cannot create instance from io data without valid value"
-                 subject:kParametersMapName
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN
+                failWithMessage:@"Cannot create sdk package data from io data without parameters"
+                key:@"parametersMapName"
+                value:kParametersMapName];
     }
 
     pathToPackage(ADJLogPackageData)
@@ -102,12 +101,11 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     pathToPackage(ADJThirdPartySharingPackageData)
     pathToPackage(ADJMeasurementConsentPackageData)
 
-    [logger debugDev:@"Cannot create instance from io data without matching path to valid package type"
-                 key:@"path"
-               value:path.stringValue
-           issueType:ADJIssueStorageIo];
-
-    return nil;
+    return [ADJResultNN
+            failWithMessage:@"Cannot create sdk package data from io data"
+            " without matching path to valid package type"
+            key:@""
+            value:path.stringValue];
 }
 
 - (nonnull instancetype)initWithPath:(nonnull NSString *)path

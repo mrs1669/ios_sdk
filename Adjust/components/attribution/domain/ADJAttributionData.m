@@ -52,31 +52,40 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
 @implementation ADJAttributionData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
-                                        logger:(nonnull ADJLogger *)logger
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJAttributionData *> *)
+    instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
     ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
     ADJResultNL<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
         [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue];
+
+    NSArray<ADJResultFail *> *optionalFails = nil;
+
     if (costAmountResult.fail != nil) {
-        [logger debugDev:@"Invalid cost amount from io data map"
-             resultFail:costAmountResult.fail
-               issueType:ADJIssueStorageIo];
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot use invalid cost amount in attribution data from io data map"];
+        [resultFailBuilder withKey:@"costAmount fail"
+                             value:[costAmountResult.fail foundationDictionary]];
+        optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
     }
-    
-    return [[self alloc] initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
-                                  trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
-                                      network:[ioDataMap pairValueWithKey:kNetworkKey]
-                                     campaign:[ioDataMap pairValueWithKey:kCampaignKey]
-                                      adgroup:[ioDataMap pairValueWithKey:kAdgroupKey]
-                                     creative:[ioDataMap pairValueWithKey:kCreativeKey]
-                                   clickLabel:[ioDataMap pairValueWithKey:kClickLabelKey]
-                                         adid:[ioDataMap pairValueWithKey:kAdidKey]
-                                     deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
-                                        state:[ioDataMap pairValueWithKey:kStateKey]
-                                     costType:[ioDataMap pairValueWithKey:kCostTypeKey]
-                                   costAmount:costAmountResult.value
-                                 costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]];
+
+    return [[ADJCollectionAndValue alloc]
+            initWithCollection:optionalFails
+            value:[[ADJAttributionData alloc]
+                   initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
+                   trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
+                   network:[ioDataMap pairValueWithKey:kNetworkKey]
+                   campaign:[ioDataMap pairValueWithKey:kCampaignKey]
+                   adgroup:[ioDataMap pairValueWithKey:kAdgroupKey]
+                   creative:[ioDataMap pairValueWithKey:kCreativeKey]
+                   clickLabel:[ioDataMap pairValueWithKey:kClickLabelKey]
+                   adid:[ioDataMap pairValueWithKey:kAdidKey]
+                   deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
+                   state:[ioDataMap pairValueWithKey:kStateKey]
+                   costType:[ioDataMap pairValueWithKey:kCostTypeKey]
+                   costAmount:costAmountResult.value
+                   costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]]];
 }
 
 - (nullable ADJNonEmptyString *)convExternalWithValue:(nullable NSString *)value

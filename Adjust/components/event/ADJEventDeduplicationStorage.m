@@ -29,8 +29,8 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nullable ADJEventDeduplicationData *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJEventDeduplicationData instanceFromIoData:ioData logger:self.logger];
+- (nonnull ADJResultNN<ADJEventDeduplicationData *> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+    return [ADJEventDeduplicationData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull ADJEventDeduplicationData *)element {

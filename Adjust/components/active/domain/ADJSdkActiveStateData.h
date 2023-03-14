@@ -10,7 +10,6 @@
 
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
-#import "ADJLogger.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -21,8 +20,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJSdkActiveStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJSdkActiveStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithInitialState;
 

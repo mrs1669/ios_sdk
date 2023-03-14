@@ -20,8 +20,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJSdkPackageBaseData : NSObject<ADJSdkPackageData, ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJSdkPackageBaseData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithPath:(nonnull NSString *)path
                            clientSdk:(nonnull NSString *)clientSdk

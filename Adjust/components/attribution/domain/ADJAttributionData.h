@@ -12,6 +12,7 @@
 #import "ADJNonEmptyString.h"
 #import "ADJMoneyAmountBase.h"
 #import "ADJAdjustAttribution.h"
+#import "ADJCollectionAndValue.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -22,8 +23,8 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAttributionData : NSObject<ADJIoDataMapBuilderInjectable>
 // instantiation
-+ (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
-                                        logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJAttributionData *> *)
+    instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap;
 
 - (nonnull instancetype)initFromExternalDataWithLogger:(nonnull ADJLogger *)logger
                                     trackerTokenString:(nullable NSString *)trackerTokenString

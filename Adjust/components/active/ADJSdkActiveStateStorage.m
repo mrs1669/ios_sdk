@@ -32,9 +32,10 @@ static NSString *const kSdkActiveStateStorageTableName = @"sdk_active_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJSdkActiveStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJSdkActiveStateData instanceFromIoData:ioData
-                                              logger:self.logger];
+- (nonnull ADJResultNN<ADJSdkActiveStateData *> *)
+    concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
+{
+    return [ADJSdkActiveStateData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJSdkActiveStateData *)dataValue {

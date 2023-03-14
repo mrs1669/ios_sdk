@@ -11,7 +11,7 @@
 #import "ADJIoDataSerializable.h"
 #import "ADJNonEmptyString.h"
 #import "ADJTimestampMilli.h"
-#import "ADJLogger.h"
+#import "ADJCollectionAndValue.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAsaAttributionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJAsaAttributionStateData *> *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithIntialState;
 

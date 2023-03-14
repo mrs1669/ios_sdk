@@ -26,28 +26,44 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
 
 @implementation ADJMeasurementSessionStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-            isExpectedMetadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
-            logger:logger]) {
-        return nil;
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJMeasurementSessionStateData *> *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [[ADJCollectionAndValue alloc] initWithValue:
+                [ADJResultNN
+                 failWithMessage:@"Cannot create measurement session state data from io data"
+                 key:@"unexpected metadata type value fail"
+                 value:[unexpectedMetadataTypeValueFail foundationDictionary]]];
     }
 
+    NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
     ADJMeasurementSessionData *_Nullable measurementSessionData = nil;
+    ADJStringMap *_Nullable measurementSessionDataMap =
+        [ioData mapWithName:kMeasurementSessionDataMapName];
 
-    ADJStringMap *_Nullable measurementSessionDataMap = [ioData mapWithName:kMeasurementSessionDataMapName];
     if (measurementSessionDataMap != nil) {
-        measurementSessionData = [ADJMeasurementSessionData instanceFromIoDataMap:measurementSessionDataMap
-                                                            logger:logger];
+        ADJResultNN<ADJMeasurementSessionData *> *_Nonnull measurementSessionDataResult =
+            [ADJMeasurementSessionData instanceFromIoDataMap:measurementSessionDataMap];
+        if (measurementSessionDataResult.fail != nil) {
+            ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                [[ADJResultFailBuilder alloc] initWithMessage:
+                 @"Cannot use invalid measurement session data in"
+                 " measurement session state data from io data"];
+            [resultFailBuilder withKey:@"measurementSessionData fail"
+                                 value:[measurementSessionDataResult.fail foundationDictionary]];
+            optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
+        } else {
+            measurementSessionData = measurementSessionDataResult.value;
+        }
     }
 
-    return [[self alloc] initWithMeasurementSessionData:measurementSessionData];
-}
-
-+ (nullable instancetype)instanceFromExternalWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
-    logger:(nonnull ADJLogger *)logger {
-    return [[self alloc] initWithMeasurementSessionData:measurementSessionData];
+    return [[ADJCollectionAndValue alloc]
+            initWithCollection:optionalFails
+            value:[[ADJMeasurementSessionStateData alloc]
+                   initWithMeasurementSessionData:measurementSessionData]];
 }
 
 - (nonnull instancetype)initWithIntialState {

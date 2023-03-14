@@ -28,40 +28,39 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
 
 @implementation ADJGdprForgetStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJGdprForgetStateDataMetadataTypeValue
-           logger:logger])
-    {
-        return nil;
++ (nonnull ADJResultNN<ADJGdprForgetStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJGdprForgetStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create gdpr forget state data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull forgottenByBackendResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kForgottenByBackendKey]];
     if (forgottenByBackendResult.fail != nil) {
-        [logger debugDev:@"Cannot create instance from Io data"
-                 subject:kForgottenByBackendKey
-              resultFail:forgottenByBackendResult.fail
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN
+                failWithMessage:@"Cannot create gdpr forget state data from io data"
+                key:@"forgottenByBackend fail"
+                value:[forgottenByBackendResult.fail foundationDictionary]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull askedToForgetBySdkResult =
         [ADJBooleanWrapper
          instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]];
-
     if (askedToForgetBySdkResult.fail != nil) {
-        [logger debugDev:@"Cannot create instance from Io data"
-                 subject:kAskedToForgetBySdkKey
-              resultFail:askedToForgetBySdkResult.fail
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN
+                failWithMessage:@"Cannot create gdpr forget state data from io data"
+                key:@"askedToForgetBySdk fail"
+                value:[askedToForgetBySdkResult.fail foundationDictionary]];
     }
 
-    return [[self alloc] initWithForgottenByBackend:forgottenByBackendResult.value.boolValue
-                                 askedToForgetBySdk:askedToForgetBySdkResult.value.boolValue];
+    return [ADJResultNN okWithValue:
+            [[ADJGdprForgetStateData alloc]
+             initWithForgottenByBackend:forgottenByBackendResult.value.boolValue
+             askedToForgetBySdk:askedToForgetBySdkResult.value.boolValue]];
 }
 
 - (nonnull instancetype)initWithInitialState {

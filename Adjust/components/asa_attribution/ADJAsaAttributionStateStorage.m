@@ -30,8 +30,22 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJAsaAttributionStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJAsaAttributionStateData instanceFromIoData:ioData logger:self.logger];
+- (nonnull ADJResultNN<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
+    (nonnull ADJIoData *)ioData
+{
+    ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJAsaAttributionStateData *> *> *_Nonnull
+    resultWithOptionals = [ADJAsaAttributionStateData instanceFromIoData:ioData];
+
+    for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
+        [self.logger debugWithMessage:
+         @"Failed setting asa attribution state data optional field"
+         " when generating value from io data"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+            [logBuilder fail:optionalFail];
+        }];
+    }
+
+    return resultWithOptionals.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJAsaAttributionStateData *)dataValue {

@@ -34,9 +34,10 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJDeviceIdsData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJDeviceIdsData instanceFromIoData:ioData
-                                         logger:self.logger];
+- (nonnull ADJResultNN<ADJDeviceIdsData *> *)concreteGenerateValueFromIoData:
+    (nonnull ADJIoData *)ioData
+{
+    return [ADJDeviceIdsData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJDeviceIdsData *)dataValue {

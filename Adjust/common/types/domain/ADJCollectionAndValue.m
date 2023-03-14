@@ -8,6 +8,13 @@
 
 #import "ADJCollectionAndValue.h"
 
+#pragma mark Fields
+#pragma mark - Public properties
+/* .h
+ @property (nonnull, readonly, strong, nonatomic) NSArray<C> *collection;
+ @property (nonnull, readonly, strong, nonatomic) V value;
+ */
+
 @implementation ADJCollectionAndValue
 #pragma mark Instantiation
 - (nullable instancetype)init {
@@ -15,11 +22,22 @@
     return nil;
 }
 
-- (nonnull instancetype)initWithCollection:(nonnull NSArray<id> *)collection
+- (nonnull instancetype)initWithValue:(nonnull id)value {
+    return [self initWithCollection:nil value:value];
+}
+
+- (nonnull instancetype)initWithCollection:(nullable NSArray<id> *)collection
                                      value:(nonnull id)value
 {
+
     self = [super init];
-    _collection = collection;
+    static dispatch_once_t emptyArrayToken;
+    static NSArray<id> *emptyArray;
+    dispatch_once(&emptyArrayToken, ^{
+        emptyArray = [NSArray array];
+    });
+
+    _collection = collection ?: emptyArray;
     _value = value;
 
     return self;

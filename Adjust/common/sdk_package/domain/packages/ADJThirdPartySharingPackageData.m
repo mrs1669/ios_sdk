@@ -30,7 +30,7 @@ NSString *const ADJThirdPartySharingPackageDataPath = @"third_party_sharing";
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
                                    ioData:(nonnull ADJIoData *)ioData
-                                   logger:(nonnull ADJLogger *)logger {
+{
     // does not read ioData for further information
     return [self initWithClientSdk:clientSdk parameters:parameters];
 }

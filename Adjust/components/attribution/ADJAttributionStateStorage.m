@@ -32,9 +32,22 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJAttributionStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJAttributionStateData instanceFromIoData:ioData
-                                                logger:self.logger];
+- (nonnull ADJResultNN<ADJAttributionStateData *> *)concreteGenerateValueFromIoData:
+    (nonnull ADJIoData *)ioData
+{
+    ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJAttributionStateData *> *> *_Nonnull
+    resultWithOptionals = [ADJAttributionStateData instanceFromIoData:ioData];
+
+    for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
+        [self.logger debugWithMessage:
+         @"Failed setting attribution state data optional field"
+         " when generating value from io data"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+            [logBuilder fail:optionalFail];
+        }];
+    }
+
+    return resultWithOptionals.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJAttributionStateData *)dataValue {

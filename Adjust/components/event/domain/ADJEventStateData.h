@@ -21,8 +21,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJEventStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJEventStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 + (nullable instancetype)instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt
                                                               logger:(nonnull ADJLogger *)logger;
