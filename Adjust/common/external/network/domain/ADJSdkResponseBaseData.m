@@ -58,9 +58,11 @@
 @synthesize attributionJson = _attributionJson;
 
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                         sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-                                 logger:(nonnull ADJLogger *)logger {
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSdkResponseBaseData class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -78,28 +80,28 @@
     _serverMessage = [ADJSdkResponseBaseData
                       extractOptionalStringWithResponseJson:_jsonDictionary
                       key:ADJParamMessageKey
-                      logger:logger];
+                      optionalFailsBuilder:optionalFailsBuilder];
 
     _adid = [ADJSdkResponseBaseData
              extractOptionalStringWithResponseJson:_jsonDictionary
              key:ADJParamAdidKey
-             logger:logger];
+             optionalFailsBuilder:optionalFailsBuilder];
 
     _trackingState = [ADJSdkResponseBaseData
                       extractOptionalStringWithResponseJson:_jsonDictionary
                       key:ADJParamTrackingStateKey
-                      logger:logger];
+                      optionalFailsBuilder:optionalFailsBuilder];
 
     _timestampString = [ADJSdkResponseBaseData
                         extractOptionalStringWithResponseJson:_jsonDictionary
                         key:ADJParamTimeSpentKey
-                        logger:logger];
+                        optionalFailsBuilder:optionalFailsBuilder];
 
     _askInIntMilli =
         [ADJSdkResponseBaseData
          extractOptionalIntWithResponseJson:_jsonDictionary
          key:ADJParamAskInKey
-         logger:logger];
+         optionalFailsBuilder:optionalFailsBuilder];
     
     _askIn = _askInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_askInIntMilli] : nil;
@@ -108,7 +110,7 @@
         [ADJSdkResponseBaseData
          extractOptionalIntWithResponseJson:_jsonDictionary
          key:ADJParamContinueInKey
-         logger:logger];
+         optionalFailsBuilder:optionalFailsBuilder];
     
     _continueIn = _continueInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_continueInIntMilli] : nil;
@@ -117,7 +119,7 @@
         [ADJSdkResponseBaseData
          extractOptionalIntWithResponseJson:_jsonDictionary
          key:ADJParamRetryInKey
-         logger:logger];
+         optionalFailsBuilder:optionalFailsBuilder];
     
     _retryIn = _retryInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_retryInIntMilli] : nil;
@@ -145,24 +147,32 @@
 + (nullable ADJNonEmptyString *)
     extractOptionalStringWithResponseJson:(nullable NSDictionary *)responseJson
     key:(nonnull NSString *)key
-    logger:(nonnull ADJLogger *)logger
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
 {
     ADJResultNL<NSString *> *_Nonnull valueResult =
         [ADJUtilMap extractStringValueWithDictionary:responseJson key:key];
     if (valueResult.fail != nil) {
-        [logger debugDev:@"Invalid native string found in response Json"
-                 subject:key
-              resultFail:valueResult.fail
-               issueType:ADJIssueNetworkRequest];
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot extract optional string field in response json"];
+        [resultFailBuilder withKey:@"value fail"
+                         otherFail:valueResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsBuilder addObject:[resultFailBuilder build]];
     }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
         [ADJNonEmptyString instanceFromOptionalString:valueResult.value];
     if (stringResult.fail != nil) {
-        [logger debugDev:@"Invalid string found in response Json"
-               subject:key
-              resultFail:stringResult.fail
-               issueType:ADJIssueNetworkRequest];
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot parse optional string field in response json"];
+        [resultFailBuilder withKey:@"string parse fail"
+                         otherFail:stringResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsBuilder addObject:[resultFailBuilder build]];
     }
 
     return stringResult.value;
@@ -170,25 +180,33 @@
 + (nullable ADJNonNegativeInt *)
     extractOptionalIntWithResponseJson:(nullable NSDictionary *)responseJson
     key:(nonnull NSString *)key
-    logger:(nonnull ADJLogger *)logger
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
 {
     ADJResultNL<NSNumber *> *_Nonnull valueResult =
         [ADJUtilMap extractIntegerNumberWithDictionary:responseJson
                                                    key:key];
     if (valueResult.fail != nil) {
-        [logger debugDev:@"Invalid native int number found in response Json"
-                 subject:key
-              resultFail:valueResult.fail
-               issueType:ADJIssueNetworkRequest];
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot extract optional int field in response json"];
+        [resultFailBuilder withKey:@"value fail"
+                         otherFail:valueResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsBuilder addObject:[resultFailBuilder build]];
     }
 
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull intResult =
         [ADJNonNegativeInt instanceFromOptionalIntegerNumber:valueResult.value];
     if (intResult.fail != nil) {
-        [logger debugDev:@"Invalid non negative int number found in response Json"
-                 subject:key
-              resultFail:intResult.fail
-               issueType:ADJIssueNetworkRequest];
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot parse optional non negative int field in response json"];
+        [resultFailBuilder withKey:@"non negative int fail"
+                         otherFail:intResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsBuilder addObject:[resultFailBuilder build]];
     }
 
     return intResult.value;

@@ -13,9 +13,15 @@
 
 @interface ADJSessionResponseData : ADJSdkResponseBaseData
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                     sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
-                                 logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJSessionResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData;
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+ NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJSessionPackageData *sourceSessionPackage;

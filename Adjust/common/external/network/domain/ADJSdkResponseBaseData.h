@@ -11,13 +11,13 @@
 #import "ADJSdkResponseData.h"
 #import "ADJSdkResponseDataBuilder.h"
 #import "ADJSdkPackageData.h"
-#import "ADJLogger.h"
 
 @interface ADJSdkResponseBaseData : NSObject<ADJSdkResponseData>
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                         sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-                                 logger:(nonnull ADJLogger *)logger
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

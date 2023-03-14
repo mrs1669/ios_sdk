@@ -13,11 +13,18 @@
 
 @interface ADJAttributionResponseData : ADJSdkResponseBaseData
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                 attributionPackageData:(nonnull ADJAttributionPackageData *)attributionPackageData
-                                 logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJAttributionResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    attributionPackageData:(nonnull ADJAttributionPackageData *)attributionPackageData;
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+ NS_UNAVAILABLE;
 
 // public properties
-@property (nonnull, readonly, strong, nonatomic) ADJAttributionPackageData *sourceAttributionPackageData;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJAttributionPackageData *sourceAttributionPackageData;
 
 @end

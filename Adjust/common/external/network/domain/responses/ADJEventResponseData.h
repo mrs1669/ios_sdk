@@ -15,9 +15,15 @@
 
 @interface ADJEventResponseData : ADJSdkResponseBaseData
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                       eventPackageData:(nonnull ADJEventPackageData *)eventPackageData
-                                 logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJEventResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    eventPackageData:(nonnull ADJEventPackageData *)eventPackageData;
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+ NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJEventPackageData *sourceEventPackage;

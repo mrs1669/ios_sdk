@@ -68,41 +68,25 @@
 - (BOOL)didReceiveJsonResponse {
     return self.jsonDictionary != nil;
 }
-/*
-- (void)logErrorWithLogger:(nullable ADJLogger *)logger
-                resultFail:(nonnull id<ADJResultFail>)resultFail
-                   //nsError:(nullable NSError *)nsError
-              //errorMessage:(nonnull NSString *)errorMessage
-{
-    if (nsError != nil) {
-        if (logger != nil) {
-            [logger debugWithMessage:errorMessage
-                        builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
-             {
-                [logBuilder withError:nsError
-                                issue:ADJIssueNetworkRequest];
-            }];
-        }
-    } else {
-        if (logger != nil) {
-            [logger debugDev:errorMessage issueType:ADJIssueNetworkRequest];
-        }
-    }
-}
-*/
+
 - (void)incrementRetries {
     self.retries = self.retries + 1;
 }
 
-#define tryBuildResponse(packageClassType, responseClassType, packageDataName)  \
-if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {          \
-return [[responseClassType alloc]                                       \
-initWithBuilder:self                                        \
-packageDataName:(packageClassType *)self.sourcePackage      \
-logger:logger];                                             \
-}                                                                           \
+#define tryBuildResponse(packageClassType, responseClassType, packageDataName)              \
+    if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {                      \
+        return (ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)           \
+            [responseClassType instanceWithBuilder:self                                     \
+                                   packageDataName:(packageClassType *)self.sourcePackage]; \
+    }                                                                                       \
 
-- (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger {
+- (nonnull ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)buildSdkResponseData {
+    if ([self.sourcePackage isKindOfClass:[ADJGdprForgetPackageData class]]) {
+        return (ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)
+            [ADJGdprForgetResponseData
+             instanceWithBuilder:self
+             gdprForgetPackageData:(ADJGdprForgetPackageData *)self.sourcePackage];
+    }
 
     tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
     tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
@@ -116,18 +100,21 @@ logger:logger];                                             \
     tryBuildResponse(ADJThirdPartySharingPackageData, ADJThirdPartySharingResponseData, thirdPartySharingPackageData)
     tryBuildResponse(ADJMeasurementConsentPackageData, ADJMeasurementConsentResponseData, measurementConsentPackageData)
 
-    if (logger != nil) {
-        [logger debugDev:
-         @"Could not match source sdk package, to one of the know types."
-         " Will still be created with unknown type"
-                     key:@"sourcePackage class"
-                   value:NSStringFromClass([self.sourcePackage class])];
-    }
+    ADJResultFailBuilder *_Nonnull resultFailBuilder =
+        [[ADJResultFailBuilder alloc] initWithMessage:
+         @"Cannot not map source package into known type"];
+    [resultFailBuilder withKey:@"source package short description"
+                     stringValue:[self.sourcePackage generateShortDescription].stringValue];
+    [resultFailBuilder withKey:@"source package class"
+                   stringValue:NSStringFromClass([self.sourcePackage class])];
 
-    return [[ADJUnknownResponseData alloc] initWithBuilder:self
-                                            sdkPackageData:self.sourcePackage
-                                                    logger:logger];
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder =
+        [[NSMutableArray alloc] initWithObjects:[resultFailBuilder build], nil];
+
+    return (ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)
+        [ADJUnknownResponseData instanceWithBuilder:self
+                                 unknownPackageData:self.sourcePackage
+                               optionalFailsBuilder:optionalFailsBuilder];
 }
 
 @end
-

@@ -37,12 +37,10 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
     resultWithOptionals = [ADJAsaAttributionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
-        [self.logger debugWithMessage:
-         @"Failed setting asa attribution state data optional field"
+        [self.logger debugDev:@"Failed setting asa attribution state data optional field"
          " when generating value from io data"
-                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
-            [logBuilder fail:optionalFail];
-        }];
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
     }
 
     return resultWithOptionals.value;

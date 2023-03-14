@@ -15,12 +15,26 @@
 
 @implementation ADJLogResponseData
 #pragma mark Instantiation
-- (nonnull instancetype) initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                          logPackageData:(nonnull ADJLogPackageData *)logPackageData
-                                  logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJLogResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    logPackageData:(nonnull ADJLogPackageData *)logPackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder = [[NSMutableArray alloc] init];
+    return [[ADJCollectionAndValue alloc]
+            initWithCollection:optionalFailsBuilder
+            value:[[ADJLogResponseData alloc] initWithBuilder:sdkResponseDataBuilder
+                                               logPackageData:logPackageData
+                                         optionalFailsBuilder:optionalFailsBuilder]];
+}
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    logPackageData:(nonnull ADJLogPackageData *)logPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:logPackageData
-                           logger:logger];
+             optionalFailsBuilder:optionalFailsBuilder];
 
     return self;
 }

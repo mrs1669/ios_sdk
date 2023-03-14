@@ -43,12 +43,10 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
     resultWithOptionals = [ADJMeasurementSessionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
-        [self.logger debugWithMessage:
-         @"Failed setting measurement session state data optional field"
+        [self.logger debugDev:@"Failed setting measurement session state data optional field"
          " when generating value from io data"
-                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
-            [logBuilder fail:optionalFail];
-        }];
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
     }
 
     return resultWithOptionals.value;

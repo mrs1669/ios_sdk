@@ -10,13 +10,26 @@
 
 @implementation ADJClickResponseData
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                       clickPackageData:(nonnull ADJClickPackageData *)clickPackageData
-                                 logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJClickResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    clickPackageData:(nonnull ADJClickPackageData *)clickPackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder = [[NSMutableArray alloc] init];
+    return [[ADJCollectionAndValue alloc]
+            initWithCollection:optionalFailsBuilder
+            value:[[ADJClickResponseData alloc] initWithBuilder:sdkResponseDataBuilder
+                                               clickPackageData:clickPackageData
+                                           optionalFailsBuilder:optionalFailsBuilder]];
+}
 
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    clickPackageData:(nonnull ADJClickPackageData *)clickPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:clickPackageData
-                           logger:logger];
+             optionalFailsBuilder:optionalFailsBuilder];
 
     return self;
 }

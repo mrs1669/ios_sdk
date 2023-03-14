@@ -9,14 +9,27 @@
 #import "ADJAdRevenueResponseData.h"
 
 @implementation ADJAdRevenueResponseData
-
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                   adRevenuePackageData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
-                                 logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJAdRevenueResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    adRevenuePackageData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder = [[NSMutableArray alloc] init];
+    return [[ADJCollectionAndValue alloc]
+            initWithCollection:optionalFailsBuilder
+            value:[[ADJAdRevenueResponseData alloc] initWithBuilder:sdkResponseDataBuilder
+                                               adRevenuePackageData:adRevenuePackageData
+                                               optionalFailsBuilder:optionalFailsBuilder]];
+}
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    adRevenuePackageData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:adRevenuePackageData
-                           logger:logger];
+             optionalFailsBuilder:optionalFailsBuilder];
 
     return self;
 }

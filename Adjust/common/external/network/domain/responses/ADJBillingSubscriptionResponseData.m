@@ -10,13 +10,29 @@
 
 @implementation ADJBillingSubscriptionResponseData
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-         billingSubscriptionPackageData:(nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
-                                 logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJBillingSubscriptionResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    billingSubscriptionPackageData:
+        (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder = [[NSMutableArray alloc] init];
+    return [[ADJCollectionAndValue alloc]
+            initWithCollection:optionalFailsBuilder
+            value:[[ADJBillingSubscriptionResponseData alloc]
+                   initWithBuilder:sdkResponseDataBuilder
+                   billingSubscriptionPackageData:billingSubscriptionPackageData
+                   optionalFailsBuilder:optionalFailsBuilder]];
+}
 
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    billingSubscriptionPackageData:
+        (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:billingSubscriptionPackageData
-                           logger:logger];
+             optionalFailsBuilder:optionalFailsBuilder];
 
     return self;
 }
