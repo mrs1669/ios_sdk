@@ -82,7 +82,7 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
         if (keyResult.fail != nil) {
             return [ADJResultNN failWithMessage:@"Cannot create string map instance from IoValue"
                                             key:@"key convertion fail"
-                                          value:[keyResult.fail foundationDictionary]];
+                                      otherFail:keyResult.fail];
         }
 
         id _Nullable valueObject = [foundationDictionary objectForKey:keyResult.value.stringValue];
@@ -91,7 +91,7 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
         if (valueResult.fail != nil) {
             return [ADJResultNN failWithMessage:@"Cannot create string map instance from IoValue"
                                             key:@"value convertion fail"
-                                          value:[valueResult.fail foundationDictionary]];
+                                      otherFail:valueResult.fail];
         }
 
         [map setObject:valueResult.value forKey:keyResult.value.stringValue];
@@ -118,10 +118,10 @@ NSDictionary<NSString *, NSString *> *cachedFoundationStringMap;
 {
     return [ADJResultNN failWithMessage:@"Cannot create string map instance from IoValue"
                            builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
-        [resultFailBuilder withKey:ADJLogWhyKey value:why];
+        [resultFailBuilder withKey:ADJLogWhyKey stringValue:why];
         if (foundationObjectResultFail != nil) {
             [resultFailBuilder withKey:@"convert json string to foundation object fail"
-                                 value:[foundationObjectResultFail foundationDictionary]];
+                             otherFail:foundationObjectResultFail];
         }
     }];
 }

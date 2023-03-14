@@ -38,7 +38,9 @@
 - (void)withError:(nonnull NSError *)error;
 - (void)withException:(nonnull NSException *)exception;
 - (void)withKey:(nonnull NSString *)key
-          value:(nullable id)value;
+      otherFail:(nonnull ADJResultFail *)otherFail;
+- (void)withKey:(nonnull NSString *)key
+    stringValue:(nonnull NSString *)stringValue;
 
 - (nonnull ADJResultFail *)build;
 

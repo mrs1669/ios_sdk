@@ -93,7 +93,7 @@
         return [ADJResultNN failWithMessage:
                     @"Cannot create non negative int from io data value"
                                         key:@"integer from io value fail"
-                                      value:[integerNumberResult.fail foundationDictionary]];
+                                  otherFail:integerNumberResult.fail];
     }
 
     return [self instanceFromIntegerNumber:integerNumberResult.value];
@@ -110,7 +110,7 @@
     if (integerNumberResult.fail != nil) {
         return [ADJResultNL failWithMessage:@"Cannot convert io value to nnInt"
                                         key:@"convert io value to integer fail"
-                                      value:[integerNumberResult.fail foundationDictionary]];
+                                  otherFail:integerNumberResult.fail];
     }
 
     return [self instanceFromOptionalIntegerNumber:integerNumberResult.value];

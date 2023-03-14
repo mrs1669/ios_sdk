@@ -33,22 +33,22 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
     (nonnull ADJIoData *)ioData
 {
     ADJResultNN<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
-        [ADJSdkPackageBaseData instanceFromIoData:ioData];
+    [ADJSdkPackageBaseData instanceFromIoData:ioData];
     if (sdkPackageDataResult.fail != nil) {
         return [ADJResultNN failWithMessage:
                 @"Could not parse sdk package data from io data for an expected log package"
                                         key:@"sdkPackageData fail"
-                                      value:[sdkPackageDataResult.fail foundationDictionary]];
+                                  otherFail:sdkPackageDataResult.fail];
     }
 
     if (! [sdkPackageDataResult.value isKindOfClass:[ADJLogPackageData class]]) {
         return [ADJResultNN
                 failWithMessage:@"Unexpected non log package"
                 key:@"package read short description"
-                value:[sdkPackageDataResult.value generateShortDescription].stringValue];
+                stringValue:[sdkPackageDataResult.value generateShortDescription].stringValue];
     }
 
-    return [ADJResultNN okWithValue:(ADJLogPackageData *)sdkPackageDataResult.value];
+    return (ADJResultNN<ADJLogPackageData *> *)sdkPackageDataResult;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull ADJLogPackageData *)element {

@@ -66,7 +66,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot use invalid cost amount in attribution data from io data map"];
         [resultFailBuilder withKey:@"costAmount fail"
-                             value:[costAmountResult.fail foundationDictionary]];
+                         otherFail:costAmountResult.fail];
         optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
     }
 

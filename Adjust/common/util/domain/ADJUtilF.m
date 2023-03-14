@@ -198,7 +198,7 @@
     if (jsonDataResult.fail != nil) {
         return [ADJResultNL failWithMessage:@"Cannot convert json foundation value to string"
                                         key:@"json foundation value to data fail"
-                                      value:[jsonDataResult.fail foundationDictionary]];
+                                  otherFail:jsonDataResult.fail];
     }
 
     ADJResultNN<NSString *> *_Nonnull jsonStringResult =
@@ -206,7 +206,7 @@
     if (jsonStringResult.fail != nil) {
         return [ADJResultNL failWithMessage:@"Cannot convert json foundation value to string"
                                         key:@"json data to string fail"
-                                      value:[jsonStringResult.fail foundationDictionary]];
+                                  otherFail:jsonStringResult.fail];
     }
 
     return [ADJNonEmptyString instanceFromOptionalString:jsonStringResult.value];

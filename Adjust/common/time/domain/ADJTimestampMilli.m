@@ -33,7 +33,7 @@
     if (nnIntResult.fail != nil) {
         return [ADJResultNL failWithMessage:@"Cannot create timestamp instance from io value"
                                         key:@"nnInt from optional io value fail"
-                                      value:[nnIntResult.fail foundationDictionary]];
+                                      otherFail:nnIntResult.fail];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];
@@ -52,7 +52,7 @@
     if (nnIntResult.fail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create timestamp instance from io value"
                                         key:@"nnInt from io value fail"
-                                      value:[nnIntResult.fail foundationDictionary]];
+                                  otherFail:nnIntResult.fail];
     }
 
     return [ADJResultNN okWithValue:
@@ -84,7 +84,7 @@
         return [ADJResultNN failWithMessage:
                 @"Cannot create timestamp from timeIntervalSecondsSince1970"
                                         key:@"nnInt from integer number fail"
-                                      value:[milliSince1970IntResult.fail foundationDictionary]];
+                                  otherFail:milliSince1970IntResult.fail];
     }
 
     return [ADJResultNN okWithValue:

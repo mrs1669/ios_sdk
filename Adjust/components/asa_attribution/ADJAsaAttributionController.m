@@ -400,7 +400,7 @@
             return [ADJResultNN
                     failWithMessage:@"Cannot parse asaAttributionToken"
                     key:@"neString fail"
-                    value:[asaAttributionTokenResult.fail foundationDictionary]];
+                    otherFail:asaAttributionTokenResult.fail];
         } else {
             return asaAttributionTokenResult;
         }

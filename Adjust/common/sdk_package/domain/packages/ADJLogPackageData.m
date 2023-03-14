@@ -17,7 +17,6 @@ NSString *const ADJLogPackageDataPath = @"error";
 
 @implementation ADJLogPackageData
 #pragma mark Instantiation
-
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
 {

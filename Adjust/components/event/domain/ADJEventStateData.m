@@ -32,7 +32,7 @@ static NSString *const kEventCountKey = @"eventCount";
     if (unexpectedMetadataTypeValueFail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create event state data from io data"
                                         key:@"unexpected metadata type value fail"
-                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJResultNN<ADJTallyCounter *> *_Nonnull eventCountResult =
@@ -41,7 +41,7 @@ static NSString *const kEventCountKey = @"eventCount";
     if (eventCountResult.fail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create event state data from io data"
                                         key:@"eventCount fail"
-                                      value:[eventCountResult.fail foundationDictionary]];
+                                  otherFail:eventCountResult.fail];
     }
 
     return [ADJResultNN okWithValue:

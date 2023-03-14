@@ -21,7 +21,10 @@
 + (nonnull ADJResultNL<V> *)failWithMessage:(nonnull NSString *)failMessage;
 + (nonnull ADJResultNL<V> *)failWithMessage:(nonnull NSString *)failMessage
                                         key:(nonnull NSString *)key
-                                      value:(nullable id)value;
+                                stringValue:(nonnull NSString *)stringValue;
++ (nonnull ADJResultNL<V> *)failWithMessage:(nonnull NSString *)failMessage
+                                        key:(nonnull NSString *)key
+                                  otherFail:(nonnull ADJResultFail *)otherFail;
 + (nonnull ADJResultNL<V> *)failWithMessage:(nonnull NSString *)failMessage
                                       error:(nullable NSError *)error;
 + (nonnull ADJResultNL<V> *)failWithMessage:(nonnull NSString *)failMessage

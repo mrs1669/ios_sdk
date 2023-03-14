@@ -34,7 +34,7 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
     if (unexpectedMetadataTypeValueFail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create gdpr forget state data from io data"
                                         key:@"unexpected metadata type value fail"
-                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull forgottenByBackendResult =
@@ -44,7 +44,7 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
         return [ADJResultNN
                 failWithMessage:@"Cannot create gdpr forget state data from io data"
                 key:@"forgottenByBackend fail"
-                value:[forgottenByBackendResult.fail foundationDictionary]];
+                otherFail:forgottenByBackendResult.fail];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull askedToForgetBySdkResult =
@@ -54,7 +54,7 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
         return [ADJResultNN
                 failWithMessage:@"Cannot create gdpr forget state data from io data"
                 key:@"askedToForgetBySdk fail"
-                value:[askedToForgetBySdkResult.fail foundationDictionary]];
+                otherFail:askedToForgetBySdkResult.fail];
     }
 
     return [ADJResultNN okWithValue:

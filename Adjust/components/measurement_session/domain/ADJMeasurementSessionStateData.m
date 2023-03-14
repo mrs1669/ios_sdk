@@ -36,7 +36,7 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
                 [ADJResultNN
                  failWithMessage:@"Cannot create measurement session state data from io data"
                  key:@"unexpected metadata type value fail"
-                 value:[unexpectedMetadataTypeValueFail foundationDictionary]]];
+                 otherFail:unexpectedMetadataTypeValueFail]];
     }
 
     NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
@@ -53,7 +53,7 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
                  @"Cannot use invalid measurement session data in"
                  " measurement session state data from io data"];
             [resultFailBuilder withKey:@"measurementSessionData fail"
-                                 value:[measurementSessionDataResult.fail foundationDictionary]];
+                             otherFail:measurementSessionDataResult.fail];
             optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
         } else {
             measurementSessionData = measurementSessionDataResult.value;

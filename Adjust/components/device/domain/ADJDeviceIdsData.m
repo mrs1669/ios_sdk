@@ -31,7 +31,7 @@ static NSString *const kUuidKey = @"uuid";
     if (unexpectedMetadataTypeValueFail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create device ids data from io data"
                                         key:@"unexpected metadata type value fail"
-                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJNonEmptyString *_Nullable uuid = [ioData.propertiesMap pairValueWithKey:kUuidKey];

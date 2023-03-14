@@ -33,7 +33,7 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
     if (unexpectedMetadataTypeValueFail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
                                         key:@"unexpected metadata type value fail"
-                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull isSdkActiveResult =
@@ -43,7 +43,7 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
     if (isSdkActiveResult.fail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
                                         key:@"isSdkActive fail"
-                                      value:[isSdkActiveResult.fail foundationDictionary]];
+                                  otherFail:isSdkActiveResult.fail];
     }
 
     return [ADJResultNN okWithValue:

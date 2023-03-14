@@ -77,8 +77,8 @@
     if (! [typeValue.stringValue isEqualToString:expectedMetadataTypeValue]) {
         return [ADJResultNL failWithMessage:@"Actual type value different than expected"
                                builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
-            [resultFailBuilder withKey:ADJLogExpectedKey value:expectedMetadataTypeValue];
-            [resultFailBuilder withKey:ADJLogActualKey value:typeValue.stringValue];
+            [resultFailBuilder withKey:ADJLogExpectedKey stringValue:expectedMetadataTypeValue];
+            [resultFailBuilder withKey:ADJLogActualKey stringValue:typeValue.stringValue];
         }];
     }
 

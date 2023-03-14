@@ -141,13 +141,23 @@
     self.exception = exception;
 }
 - (void)withKey:(nonnull NSString *)key
-          value:(nullable id)value
+      otherFail:(nonnull ADJResultFail *)otherFail
 {
     if (self.paramsMut == nil) {
         self.paramsMut = [[NSMutableDictionary alloc] init];
     }
 
-    [self.paramsMut setObject:[ADJUtilF idOrNsNull:value]
+    [self.paramsMut setObject:[otherFail foundationDictionary]
+                       forKey:key];
+}
+- (void)withKey:(nonnull NSString *)key
+    stringValue:(nonnull NSString *)stringValue
+{
+    if (self.paramsMut == nil) {
+        self.paramsMut = [[NSMutableDictionary alloc] init];
+    }
+
+    [self.paramsMut setObject:stringValue
                        forKey:key];
 }
 

@@ -45,7 +45,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
                 [ADJResultNN
                  failWithMessage:@"Cannot create asa attribution state data from io data"
                  key:@"unexpected metadata type value fail"
-                 value:[unexpectedMetadataTypeValueFail foundationDictionary]]];
+                 otherFail:unexpectedMetadataTypeValueFail]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedValidAsaClickResponseResult =
@@ -56,7 +56,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
                 [ADJResultNN
                 failWithMessage:@"Cannot create asa attribution state data from io data"
                 key:@"hasReceivedValidAsaClickResponse fail"
-                value:[hasReceivedValidAsaClickResponseResult.fail foundationDictionary]]];
+                otherFail:hasReceivedValidAsaClickResponseResult.fail]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedAdjustAttributionResult =
@@ -67,7 +67,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
                 [ADJResultNN
                 failWithMessage:@"Cannot create asa attribution state data from io data"
                 key:@"hasReceivedAdjustAttributionResult fail"
-                value:[hasReceivedAdjustAttributionResult.fail foundationDictionary]]];
+                otherFail:hasReceivedAdjustAttributionResult.fail]];
     }
 
     ADJNonEmptyString *_Nullable cachedToken =
@@ -83,7 +83,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot use invalid cache read timestamp in asa attribution state data from io data"];
         [resultFailBuilder withKey:@"cacheReadTimestamp fail"
-                             value:[cacheReadTimestampResult.fail foundationDictionary]];
+                         otherFail:cacheReadTimestampResult.fail];
         optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
     }
 

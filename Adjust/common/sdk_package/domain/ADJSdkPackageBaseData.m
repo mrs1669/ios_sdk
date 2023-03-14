@@ -63,7 +63,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     if (unexpectedMetadataTypeValueFail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create sdk package data from io data"
                                         key:@"unexpected metadata type value fail"
-                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
+                                      otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJStringMap *_Nonnull propertiesMap = ioData.propertiesMap;
@@ -86,7 +86,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
         return [ADJResultNN
                 failWithMessage:@"Cannot create sdk package data from io data without parameters"
                 key:@"parametersMapName"
-                value:kParametersMapName];
+                stringValue:kParametersMapName];
     }
 
     pathToPackage(ADJLogPackageData)
@@ -105,13 +105,14 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
             failWithMessage:@"Cannot create sdk package data from io data"
             " without matching path to valid package type"
             key:@""
-            value:path.stringValue];
+            stringValue:path.stringValue];
 }
 
 - (nonnull instancetype)initWithPath:(nonnull NSString *)path
                            clientSdk:(nonnull NSString *)clientSdk
         isPostOrElseGetNetworkMethod:(BOOL)isPostOrElseGetNetworkMethod
-                          parameters:(nonnull ADJStringMap *)parameters {
+                          parameters:(nonnull ADJStringMap *)parameters
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSdkPackageBaseData class]]) {
         [self doesNotRecognizeSelector:_cmd];

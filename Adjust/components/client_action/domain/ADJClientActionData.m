@@ -49,7 +49,7 @@ static NSString *const kIoDataKey = @"ioData";
         return [ADJResultNN failWithMessage:
                 @"Cannot create client action data with invalid api timestamp"
                                         key:@"apiTimestamp fail"
-                                      value:[apiTimestampResult.fail foundationDictionary]];
+                                  otherFail:apiTimestampResult.fail];
     }
 
     return [ADJResultNN okWithValue:[[ADJClientActionData alloc]

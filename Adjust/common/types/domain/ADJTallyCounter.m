@@ -47,7 +47,7 @@
     if (nnIntResult.fail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create tally counter instance"
                                         key:@"nnInt io value fail"
-                                      value:[nnIntResult.fail foundationDictionary]];
+                                  otherFail:nnIntResult.fail];
     }
 
     return [ADJResultNN okWithValue:
@@ -62,7 +62,7 @@
     if (nnIntResult.fail != nil) {
         return [ADJResultNL failWithMessage:@"Cannot convert io value to tally counter"
                                         key:@"io value to nnInt fail"
-                                      value:[nnIntResult.fail foundationDictionary]];
+                                  otherFail:nnIntResult.fail];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];

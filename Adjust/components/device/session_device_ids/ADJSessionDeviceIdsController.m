@@ -84,13 +84,11 @@
                                builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
             if (identifierForVendorResult.fail != nil) {
                 [resultFailBuilder withKey:@"advertising identifier fail"
-                                     value:[identifierForVendorResult.fail
-                                            foundationDictionary]];
+                                 otherFail:identifierForVendorResult.fail];
             }
             if (advertisingIdentifierResult.fail != nil) {
                 [resultFailBuilder withKey:@"identifier for vendor fail"
-                                     value:[advertisingIdentifierResult.fail
-                                            foundationDictionary]];
+                                     otherFail:advertisingIdentifierResult.fail];
             }
         }];
     }
@@ -224,7 +222,7 @@
     if (! [identifier isKindOfClass:[NSUUID class]]) {
         return [ADJResultNL failWithMessage:@"Invalid type of advertising identifier"
                                         key:@"advertising identifier class"
-                                      value:NSStringFromClass([identifier class])];
+                                stringValue:NSStringFromClass([identifier class])];
     }
 
     NSUUID *_Nonnull identifierUuid = (NSUUID *)identifier;

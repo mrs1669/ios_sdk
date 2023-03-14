@@ -49,8 +49,8 @@
 
     if (nnIntResult.fail != nil) {
         return [ADJResultNL failWithMessage:@"Cannot convert from io value to time length"
-                                      key:@"io value to nnInt fail"
-                                      value:[nnIntResult.fail foundationDictionary]];
+                                        key:@"io value to nnInt fail"
+                                  otherFail:nnIntResult.fail];
     }
     if (nnIntResult.value == nil) {
         return [ADJResultNL okWithoutValue];
@@ -68,8 +68,8 @@
 
     if (nnIntResult.fail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create time length instance"
-                                       key:@"nnInt io value fail"
-                                      value:[nnIntResult.fail foundationDictionary]];
+                                        key:@"nnInt io value fail"
+                                  otherFail:nnIntResult.fail];
     }
 
     return [ADJResultNN okWithValue:
@@ -105,9 +105,9 @@
         return [ADJResultNN failWithMessage:@"Cannot create time length instance"
                                builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
             [resultFailBuilder withKey:@"key convertion fail"
-                                 value:[millisecondsSpanResult.fail foundationDictionary]];
+                             otherFail:millisecondsSpanResult.fail];
             [resultFailBuilder withKey:@"number double seconds"
-                                 value:[ADJUtilF usLocaleNumberFormat:numberDoubleSeconds]];
+                           stringValue:[ADJUtilF usLocaleNumberFormat:numberDoubleSeconds]];
         }];
     }
     

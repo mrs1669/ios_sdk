@@ -48,13 +48,24 @@
 }
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
                                      key:(nonnull NSString *)key
-                                   value:(nullable id)value
+                             stringValue:(nonnull NSString *)stringValue
+{
+    return [[ADJResultNL alloc] initWithFail:
+            [[ADJResultFail alloc] initWithMessage:failMessage
+                                            params:
+             [[NSDictionary alloc] initWithObjectsAndKeys:stringValue, key, nil]
+                                             error:nil
+                                         exception:nil]];
+}
++ (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
+                                        key:(nonnull NSString *)key
+                                  otherFail:(nonnull ADJResultFail *)otherFail
 {
     return [[ADJResultNL alloc] initWithFail:
             [[ADJResultFail alloc] initWithMessage:failMessage
                                             params:
              [[NSDictionary alloc] initWithObjectsAndKeys:
-              [ADJUtilF idOrNsNull:value], key, nil]
+              [otherFail foundationDictionary], key, nil]
                                              error:nil
                                          exception:nil]];
 }

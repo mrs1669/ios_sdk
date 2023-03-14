@@ -33,7 +33,7 @@
         return [ADJResultNN failWithMessage:
                 @"Could not obtain double number from llf string value"
                                         key:@"convert to double from llf string value fail"
-                                      value:[doubleNumberValueResult.fail foundationDictionary]];
+                                  otherFail:doubleNumberValueResult.fail];
     }
     return [self instanceFromDoubleNumberValue:doubleNumberValueResult.value];
 }
@@ -155,7 +155,7 @@
         return [ADJResultNN failWithMessage:
                     @"Could not convert first to ll number, before converting to double"
                                         key:@"string to ll number fail"
-                                      value:[llNumberResult.fail foundationDictionary]];
+                                  otherFail:llNumberResult.fail];
     }
     
     long long llValue = llNumberResult.value.longLongValue;

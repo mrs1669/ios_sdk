@@ -50,10 +50,10 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
         return [ADJResultNN failWithMessage:
                 @"Could not parse sdk package data from io data for the main queue"
                                         key:@"sdkPackageData fail"
-                                      value:[sdkPackageDataResult.fail foundationDictionary]];
+                                  otherFail:sdkPackageDataResult.fail];
     }
 
-    return [ADJResultNN okWithValue:sdkPackageDataResult.value];
+    return (ADJResultNN<id<ADJSdkPackageData>> *)sdkPackageDataResult;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull id<ADJSdkPackageData>)element {

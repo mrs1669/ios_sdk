@@ -52,7 +52,7 @@ instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
 
     return [ADJResultNN failWithMessage:@"Could not match io value to valid boolean value"
                                     key:@"io value"
-                                  value:ioValue.stringValue];
+                            stringValue:ioValue.stringValue];
 }
 + (nonnull ADJResultNL<ADJBooleanWrapper *> *)instanceFromOptionalIoValue:
     (nullable ADJNonEmptyString *)ioValue

@@ -49,7 +49,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                 [ADJResultNN
                  failWithMessage:@"Cannot create attribution state data from io data"
                  key:@"unexpected metadata type value fail"
-                 value:[unexpectedMetadataTypeValueFail foundationDictionary]]];
+                 otherFail:unexpectedMetadataTypeValueFail]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull installSessionTrackedResult =
@@ -60,7 +60,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                 [ADJResultNN
                 failWithMessage:@"Cannot create attribution state data from io data"
                 key:@"installSessionTracked fail"
-                value:[installSessionTrackedResult.fail foundationDictionary]]];
+                otherFail:installSessionTrackedResult.fail]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull unavailableAttributionResult =
@@ -71,7 +71,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                 [ADJResultNN
                 failWithMessage:@"Cannot create attribution state data from io data"
                 key:@"unavailableAttribution fail"
-                value:[unavailableAttributionResult.fail foundationDictionary]]];
+                otherFail:unavailableAttributionResult.fail]];
     }
 
     ADJResultNN<ADJBooleanWrapper *> *_Nonnull isAskingResult =
@@ -82,7 +82,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                 [ADJResultNN
                 failWithMessage:@"Cannot create attribution state data from io data"
                 key:@"isAsking fail"
-                value:[isAskingResult.fail foundationDictionary]]];
+                otherFail:isAskingResult.fail]];
     }
 
     ADJAttributionData *_Nullable attributionData = nil;

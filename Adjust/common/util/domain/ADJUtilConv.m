@@ -240,7 +240,7 @@
         return [ADJResultNL
                 failWithMessage:@"Cannot convert key value array with non-multiple of 2 elements"
                 key:@"keyValueArray count"
-                value:[ADJUtilF uIntegerFormat:keyValueArray.count]];
+                stringValue:[ADJUtilF uIntegerFormat:keyValueArray.count]];
     }
 
     ADJStringMapBuilder *_Nonnull stringMapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
@@ -255,9 +255,9 @@
             ADJResultFailBuilder *_Nonnull resultFailBuilder =
                 [[ADJResultFailBuilder alloc] initWithMessage:@"Cannot add to map with key"];
             [resultFailBuilder withKey:@"key parsing fail"
-                                 value:[keyResult.fail foundationDictionary]];
+                             otherFail:keyResult.fail];
             [resultFailBuilder withKey:@"keyValueArray index"
-                                 value:[ADJUtilF uIntegerFormat:i]];
+                           stringValue:[ADJUtilF uIntegerFormat:i]];
             [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
@@ -269,9 +269,9 @@
             ADJResultFailBuilder *_Nonnull resultFailBuilder =
                 [[ADJResultFailBuilder alloc] initWithMessage:@"Cannot add to map with value"];
             [resultFailBuilder withKey:@"value parsing fail"
-                                 value:[valueResult.fail foundationDictionary]];
+                             otherFail:valueResult.fail];
             [resultFailBuilder withKey:@"keyValueArray index"
-                                 value:[ADJUtilF uIntegerFormat:i + 1]];
+                           stringValue:[ADJUtilF uIntegerFormat:i + 1]];
             [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
@@ -284,9 +284,9 @@
                 [[ADJResultFailBuilder alloc] initWithMessage:
                  @"Previous value of map was overwritten"];
             [resultFailBuilder withKey:@"key"
-                                 value:keyResult.value.stringValue];
+                           stringValue:keyResult.value.stringValue];
             [resultFailBuilder withKey:@"keyValueArray index"
-                                 value:[ADJUtilF uIntegerFormat:i]];
+                           stringValue:[ADJUtilF uIntegerFormat:i]];
             [resultFailArrayBuilder addObject:[resultFailBuilder build]];
         }
     }
@@ -331,7 +331,7 @@
                 failWithMessage:
                     @"Cannot convert name key value array with non-multiple of 3 elements"
                 key:@"nameKeyStringValueArray count"
-                value:[ADJUtilF uIntegerFormat:nameKeyValueArray.count]];
+                stringValue:[ADJUtilF uIntegerFormat:nameKeyValueArray.count]];
     }
 
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nonnull
@@ -348,9 +348,9 @@
                 [[ADJResultFailBuilder alloc] initWithMessage:
                  @"Cannot add to map collection with name"];
             [resultFailBuilder withKey:@"name parsing fail"
-                                 value:[nameResult.fail foundationDictionary]];
+                             otherFail:nameResult.fail];
             [resultFailBuilder withKey:@"nameKeyValueArray index"
-                                 value:[ADJUtilF uIntegerFormat:i]];
+                           stringValue:[ADJUtilF uIntegerFormat:i]];
             [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
@@ -362,9 +362,9 @@
                 [[ADJResultFailBuilder alloc] initWithMessage:
                  @"Cannot add to map collection with key"];
             [resultFailBuilder withKey:@"key parsing fail"
-                                 value:[keyResult.fail foundationDictionary]];
+                             otherFail:keyResult.fail];
             [resultFailBuilder withKey:@"nameKeyValueArray index"
-                                 value:[ADJUtilF uIntegerFormat:i + 1]];
+                           stringValue:[ADJUtilF uIntegerFormat:i + 1]];
             [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             continue;
         }
@@ -380,9 +380,9 @@
                     [[ADJResultFailBuilder alloc] initWithMessage:
                      @"Cannot add to map collection with value"];
                 [resultFailBuilder withKey:@"value parsing fail"
-                                     value:[valueResult.fail foundationDictionary]];
+                                 otherFail:valueResult.fail];
                 [resultFailBuilder withKey:@"nameKeyValueArray index"
-                                     value:[ADJUtilF uIntegerFormat:i + 2]];
+                               stringValue:[ADJUtilF uIntegerFormat:i + 2]];
                 [resultFailArrayBuilder addObject:[resultFailBuilder build]];
             } else {
                 value = valueResult.value.stringValue;
@@ -410,11 +410,11 @@
                 [[ADJResultFailBuilder alloc] initWithMessage:
                  @"Previous value of map collection was overwritten"];
             [resultFailBuilder withKey:@"key"
-                                 value:keyResult.value.stringValue];
+                           stringValue:keyResult.value.stringValue];
             [resultFailBuilder withKey:@"name"
-                                 value:nameResult.value.stringValue];
+                           stringValue:nameResult.value.stringValue];
             [resultFailBuilder withKey:@"nameKeyValueArray index"
-                                 value:[ADJUtilF uIntegerFormat:i]];
+                           stringValue:[ADJUtilF uIntegerFormat:i]];
             [resultFailArrayBuilder addObject:[resultFailBuilder build]];
         }
 

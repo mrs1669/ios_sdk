@@ -35,7 +35,7 @@
         return [ADJResultNN failWithMessage:
                 @"Cannot create money instance without valid double amount"
                                         key:@"double amount fail"
-                                      value:[moneyDoubleAmountResult.fail foundationDictionary]];
+                                  otherFail:moneyDoubleAmountResult.fail];
     }
 
     return [ADJMoney instanceFromMoneyAmount:moneyDoubleAmountResult.value
@@ -53,7 +53,7 @@
         return [ADJResultNN failWithMessage:
                 @"Cannot create money instance without valid decimal amount"
                                         key:@"decimal amount fail"
-                                      value:[moneyDecimalAmountResult.fail foundationDictionary]];
+                                  otherFail:moneyDecimalAmountResult.fail];
     }
 
     return [self instanceFromMoneyAmount:moneyDecimalAmountResult.value
@@ -86,7 +86,7 @@
     if (currencyResult.fail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create money instance with invalid currency"
                                         key:@"currency fail"
-                                      value:[currencyResult.fail foundationDictionary]];
+                                  otherFail:currencyResult.fail];
     }
 
     return [ADJResultNN okWithValue:

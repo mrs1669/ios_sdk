@@ -22,9 +22,13 @@
 + (nonnull ADJResultNN<V> *)okWithValue:(nonnull V)value;
 
 + (nonnull ADJResultNN<V> *)failWithMessage:(nonnull NSString *)failMessage;
+
 + (nonnull ADJResultNN<V> *)failWithMessage:(nonnull NSString *)failMessage
                                         key:(nonnull NSString *)key
-                                      value:(nullable id)value;
+                                stringValue:(nonnull NSString *)stringValue;
++ (nonnull ADJResultNN<V> *)failWithMessage:(nonnull NSString *)failMessage
+                                        key:(nonnull NSString *)key
+                                  otherFail:(nonnull ADJResultFail *)otherFail;
 + (nonnull ADJResultNN<V> *)failWithMessage:(nonnull NSString *)failMessage
                                       error:(nullable NSError *)error;
 + (nonnull ADJResultNN<V> *)failWithMessage:(nonnull NSString *)failMessage

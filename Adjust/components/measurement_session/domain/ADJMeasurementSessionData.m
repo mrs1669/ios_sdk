@@ -42,7 +42,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from io data map with invalid session count"
                                         key:@"session count fail"
-                                      value:[sessionCountResult.fail foundationDictionary]];
+                                  otherFail:sessionCountResult.fail];
     }
 
     ADJResultNN<ADJTimestampMilli *> *_Nonnull lastActivityTimestampResult =
@@ -52,8 +52,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from io data map with invalid last activity timestamp"
                                         key:@"last activity timestamp fail"
-                                      value:[lastActivityTimestampResult.fail
-                                             foundationDictionary]];
+                                  otherFail:lastActivityTimestampResult.fail];
     }
 
     ADJResultNN<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
@@ -63,7 +62,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from io data map with invalid session length"
                                         key:@"session length fail"
-                                      value:[sessionLengthResult.fail foundationDictionary]];
+                                  otherFail:sessionLengthResult.fail];
     }
 
     ADJResultNN<ADJTimeLengthMilli *> *_Nonnull timeSpentResult =
@@ -73,7 +72,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from io data map with invalid time spent"
                                         key:@"time spent fail"
-                                      value:[timeSpentResult.fail foundationDictionary]];
+                                  otherFail:timeSpentResult.fail];
     }
 
     return [ADJResultNN okWithValue:[[ADJMeasurementSessionData alloc]
@@ -132,7 +131,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from external with invalid session count"
                                         key:@"session count fail"
-                                      value:[sessionCountIntResult.fail foundationDictionary]];
+                                  otherFail:sessionCountIntResult.fail];
     }
     ADJTallyCounter *_Nonnull sessionCount =
         [[ADJTallyCounter alloc] initWithCountValue:sessionCountIntResult.value];
@@ -144,8 +143,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from external with invalid last activity timestamp"
                                         key:@"last activity timestamp fail"
-                                      value:[lastActivityTimestampResult.fail
-                                             foundationDictionary]];
+                                  otherFail:lastActivityTimestampResult.fail];
     }
 
     ADJResultNN<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
@@ -154,7 +152,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from external with invalid session length"
                                         key:@"session length fail"
-                                      value:[sessionLengthResult.fail foundationDictionary]];
+                                  otherFail:sessionLengthResult.fail];
         return nil;
     }
 
@@ -164,7 +162,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from external with invalid time spent"
                                         key:@"time spent fail"
-                                      value:[timeSpentResult.fail foundationDictionary]];
+                                  otherFail:timeSpentResult.fail];
         return nil;
     }
 

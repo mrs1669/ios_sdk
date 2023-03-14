@@ -34,7 +34,7 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
     if (unexpectedMetadataTypeValueFail != nil) {
         return [ADJResultNN failWithMessage:@"Cannot create event deduplication data from io data"
                                         key:@"unexpected metadata type value fail"
-                                      value:[unexpectedMetadataTypeValueFail foundationDictionary]];
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJNonEmptyString *_Nullable deduplicationId =
