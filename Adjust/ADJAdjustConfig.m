@@ -48,7 +48,7 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
     self = [super init];
     _appToken = [ADJUtilObj copyStringWithInput:appToken];
     _environment = [ADJUtilObj copyStringWithInput:environment];
-    
+
     return self;
 }
 
@@ -78,10 +78,13 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
 }
 
 - (void)setCustomEndpointWithUrl:(nonnull NSString *)customEndpointUrl
-        optionalPublicKeyKeyHash:(nullable NSString *)optionalPublicKeyKeyHash
-{
+        optionalPublicKeyKeyHash:(nullable NSString *)optionalPublicKeyKeyHash {
     _customEndpointUrl = [ADJUtilObj copyStringWithInput:customEndpointUrl];
     _customEndpointPublicKeyHash = [ADJUtilObj copyStringWithInput:optionalPublicKeyKeyHash];
+}
+
+- (void)setExternalDeviceId:(NSString * _Nullable)externalDeviceId {
+    _externalDeviceId = [ADJUtilObj copyStringWithInput:externalDeviceId];
 }
 
 - (void)preventOpenDeferredDeeplink {

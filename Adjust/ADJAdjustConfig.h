@@ -39,6 +39,7 @@ NS_DESIGNATED_INITIALIZER;
 - (void)setDataResidency:(nonnull AdjustDataResidency)dataResidency;
 - (void)setCustomEndpointWithUrl:(nonnull NSString *)customEndpointUrl
         optionalPublicKeyKeyHash:(nullable NSString *)optionalPublicKeyKeyHash;
+- (void)setExternalDeviceId:(nullable NSString *)externalDeviceId;
 - (void)preventOpenDeferredDeeplink;
 - (void)doNotReadAppleSearchAdsAttribution;
 - (void)allowSendingFromBackground;
@@ -54,6 +55,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
+@property (nullable, readonly, strong, nonatomic) NSString *externalDeviceId;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doNotLogAnyNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
