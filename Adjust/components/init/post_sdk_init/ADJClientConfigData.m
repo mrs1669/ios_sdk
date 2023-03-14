@@ -21,6 +21,7 @@
  @property (readonly, assign, nonatomic) BOOL doNotLogAny;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
  @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
+ @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *externalDeviceId;
  @property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
  @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
@@ -32,6 +33,7 @@
 
 @implementation ADJClientConfigData
 #pragma mark Instantiation
+
 + (nullable instancetype)instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
                                                      logger:(nonnull ADJLogger *)logger {
     if (adjustConfig == nil) {
@@ -124,16 +126,6 @@
         }
     }
 
-    ADJNonEmptyString *_Nullable externalDeviceId = nil;
-    if (adjustConfig.externalDeviceId != nil) {
-        externalDeviceId = [[ADJNonEmptyString alloc]
-                            initWithConstStringValue:adjustConfig.externalDeviceId];
-    } else {
-        [logger noticeClient:@"Cannot set external device id"
-         " without a valid value assigned"];
-    }
-
-
     ADJNonEmptyString *_Nullable customEndpointUrl =
     [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointUrl
                                 sourceDescription:@"custom endpoint url"
@@ -151,6 +143,15 @@
     } else if (customEndpointUrl != nil) {
         clientCustomEndpointData = [[ADJClientCustomEndpointData alloc] initWithUrl:customEndpointUrl
                                                                       publicKeyHash:customEndpointPublicKeyHash];
+    }
+
+    ADJNonEmptyString *_Nullable externalDeviceId = nil;
+    if (adjustConfig.externalDeviceId != nil) {
+        externalDeviceId = [[ADJNonEmptyString alloc]
+                            initWithConstStringValue:adjustConfig.externalDeviceId];
+    } else {
+        [logger noticeClient:@"Cannot set external device id"
+         " without a valid value assigned"];
     }
 
     BOOL doNotOpenDeferredDeeplink =
@@ -199,7 +200,7 @@
                              doNotLogAny:(BOOL)doNotLogAny
                    urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
                            dataResidency:(nullable AdjustDataResidency)dataResidency
-                        externalDeviceId:externalDeviceId
+                        externalDeviceId:(nullable ADJNonEmptyString *)externalDeviceId
                 clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
                doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
                  doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
@@ -240,7 +241,8 @@
     static dispatch_once_t sandboxEnvironmentToken;
     static id sandboxEnvironment;
     dispatch_once(&sandboxEnvironmentToken, ^{
-        sandboxEnvironment = [[ADJNonEmptyString alloc] initWithConstStringValue:ADJEnvironmentSandbox];
+        sandboxEnvironment = [[ADJNonEmptyString alloc]
+                              initWithConstStringValue:ADJEnvironmentSandbox];
     });
     return sandboxEnvironment;
 }
@@ -249,7 +251,8 @@
     static dispatch_once_t productionEnvironmentToken;
     static id productionEnvironment;
     dispatch_once(&productionEnvironmentToken, ^{
-        productionEnvironment = [[ADJNonEmptyString alloc] initWithConstStringValue:ADJEnvironmentProduction];
+        productionEnvironment = [[ADJNonEmptyString alloc]
+                                 initWithConstStringValue:ADJEnvironmentProduction];
     });
     return productionEnvironment;
 }
@@ -280,5 +283,6 @@
 }
 
 @end
+
 
 
