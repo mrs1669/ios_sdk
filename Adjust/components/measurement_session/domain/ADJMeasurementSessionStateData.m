@@ -48,13 +48,13 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
         ADJResultNN<ADJMeasurementSessionData *> *_Nonnull measurementSessionDataResult =
             [ADJMeasurementSessionData instanceFromIoDataMap:measurementSessionDataMap];
         if (measurementSessionDataResult.fail != nil) {
-            ADJResultFailBuilder *_Nonnull resultFailBuilder =
-                [[ADJResultFailBuilder alloc] initWithMessage:
-                 @"Cannot use invalid measurement session data in"
-                 " measurement session state data from io data"];
-            [resultFailBuilder withKey:@"measurementSessionData fail"
-                             otherFail:measurementSessionDataResult.fail];
-            optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
+            optionalFails = [NSArray arrayWithObject:
+                             [[ADJResultFail alloc]
+                              initWithMessage:@"Cannot use invalid measurement session data in"
+                                " measurement session state data from io data"
+                              key:@"measurementSessionData fail"
+                              otherFail:measurementSessionDataResult.fail]];
+
         } else {
             measurementSessionData = measurementSessionDataResult.value;
         }

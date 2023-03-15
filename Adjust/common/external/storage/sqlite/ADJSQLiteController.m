@@ -213,7 +213,14 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     BOOL isPrimaryInstance = [self isPrimaryInstance];
     if (! isPrimaryInstance) { return; }
 
-    ADJV4FilesData *_Nonnull v4FilesData = [[ADJV4FilesData alloc] initWithLogger:self.logger];
+    ADJOptionalFailsNN<ADJV4FilesData *> *_Nonnull v4FilesDataWithOptFails =
+        [ADJV4FilesData readV4Files];
+    for (ADJResultFail *_Nonnull optionalFail in v4FilesDataWithOptFails.optionalFails) {
+        [self.logger debugDev:@"Failed with an optional value when reading v4 files"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
     ADJV4UserDefaultsData *_Nonnull v4UserDefaultsData =
         [[ADJV4UserDefaultsData alloc] initByReadingAll];
 
@@ -221,11 +228,11 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
-        [sqliteStorage migrateFromV4WithV4FilesData:v4FilesData
+        [sqliteStorage migrateFromV4WithV4FilesData:v4FilesDataWithOptFails.value
                                  v4UserDefaultsData:v4UserDefaultsData];
     }];
 
-    [self.v4RestMigration migrateFromV4WithV4FilesData:v4FilesData
+    [self.v4RestMigration migrateFromV4WithV4FilesData:v4FilesDataWithOptFails.value
                                     v4UserDefaultsData:v4UserDefaultsData];
 
     [self markUserDefaultsPrimaryInstanceId];

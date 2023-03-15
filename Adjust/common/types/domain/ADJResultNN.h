@@ -22,7 +22,6 @@
 + (nonnull ADJResultNN<V> *)okWithValue:(nonnull V)value;
 
 + (nonnull ADJResultNN<V> *)failWithMessage:(nonnull NSString *)failMessage;
-
 + (nonnull ADJResultNN<V> *)failWithMessage:(nonnull NSString *)failMessage
                                         key:(nonnull NSString *)key
                                 stringValue:(nonnull NSString *)stringValue;

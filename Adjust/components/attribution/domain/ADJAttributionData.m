@@ -62,12 +62,12 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     NSArray<ADJResultFail *> *optionalFails = nil;
 
     if (costAmountResult.fail != nil) {
-        ADJResultFailBuilder *_Nonnull resultFailBuilder =
-            [[ADJResultFailBuilder alloc] initWithMessage:
-             @"Cannot use invalid cost amount in attribution data from io data map"];
-        [resultFailBuilder withKey:@"costAmount fail"
-                         otherFail:costAmountResult.fail];
-        optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
+        optionalFails = [NSArray arrayWithObject:
+                         [[ADJResultFail alloc]
+                          initWithMessage:@"Cannot use invalid cost amount in attribution data"
+                            " from io data map"
+                          key:@"costAmount fail"
+                          otherFail:costAmountResult.fail]];
     }
 
     return [[ADJCollectionAndValue alloc]

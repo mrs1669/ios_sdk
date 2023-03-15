@@ -23,6 +23,46 @@
 
 @implementation ADJResultFail
 #pragma mark Instantiation
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message {
+    return [self initWithMessage:message params:nil error:nil exception:nil];
+}
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                    key:(nonnull NSString *)key
+                            stringValue:(nonnull NSString *)stringValue
+{
+    return [self initWithMessage:message
+                          params:
+            [[NSDictionary alloc] initWithObjectsAndKeys:stringValue, key, nil]
+                           error:nil
+                       exception:nil];
+}
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                    key:(nonnull NSString *)key
+                              otherFail:(nonnull ADJResultFail *)otherFail
+{
+    return [self initWithMessage:message
+                          params:[[NSDictionary alloc] initWithObjectsAndKeys:
+                                  [otherFail foundationDictionary], key, nil]
+                           error:nil
+                       exception:nil];
+}
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  error:(nullable NSError *)error
+{
+    return [self initWithMessage:message
+                          params:nil
+                           error:error
+                       exception:nil];
+}
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                              exception:(nullable NSException *)exception
+{
+    return [self initWithMessage:message
+                          params:nil
+                           error:nil
+                       exception:exception];
+}
+
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                  params:(nullable NSDictionary<NSString *, id> *)params
                                   error:(nullable NSError *)error

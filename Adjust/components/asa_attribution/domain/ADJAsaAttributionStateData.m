@@ -79,12 +79,13 @@ static NSString *const kErrorReasonKey = @"errorReason";
         [ADJTimestampMilli instanceFromOptionalIoDataValue:
          [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]];
     if (cacheReadTimestampResult.fail != nil) {
-        ADJResultFailBuilder *_Nonnull resultFailBuilder =
-            [[ADJResultFailBuilder alloc] initWithMessage:
-             @"Cannot use invalid cache read timestamp in asa attribution state data from io data"];
-        [resultFailBuilder withKey:@"cacheReadTimestamp fail"
-                         otherFail:cacheReadTimestampResult.fail];
-        optionalFails = [NSArray arrayWithObject:[resultFailBuilder build]];
+        optionalFails =
+            [NSArray arrayWithObject:
+             [[ADJResultFail alloc]
+              initWithMessage:@"Cannot use invalid cache read timestamp"
+                " in asa attribution state data from io data"
+              key:@"cacheReadTimestamp fail"
+              otherFail:cacheReadTimestampResult.fail]];
     }
 
     ADJNonEmptyString *_Nullable errorReason =

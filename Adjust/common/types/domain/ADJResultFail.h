@@ -16,10 +16,23 @@
 @property (nullable, readonly, strong, nonatomic) NSException *exception;
 
 // instantiation
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                    key:(nonnull NSString *)key
+                            stringValue:(nonnull NSString *)stringValue;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                    key:(nonnull NSString *)key
+                              otherFail:(nonnull ADJResultFail *)otherFail;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  error:(nullable NSError *)error;
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                              exception:(nullable NSException *)exception;
+
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                  params:(nullable NSDictionary<NSString *, id> *)params
                                   error:(nullable NSError *)error
-                              exception:(nullable NSException *)exception;
+                              exception:(nullable NSException *)exception
+NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

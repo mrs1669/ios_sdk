@@ -41,10 +41,7 @@
 
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage {
     return [[ADJResultNL alloc] initWithFail:
-            [[ADJResultFail alloc] initWithMessage:failMessage
-                                            params:nil
-                                             error:nil
-                                         exception:nil]];
+            [[ADJResultFail alloc] initWithMessage:failMessage]];
 }
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
                                      key:(nonnull NSString *)key
@@ -52,10 +49,8 @@
 {
     return [[ADJResultNL alloc] initWithFail:
             [[ADJResultFail alloc] initWithMessage:failMessage
-                                            params:
-             [[NSDictionary alloc] initWithObjectsAndKeys:stringValue, key, nil]
-                                             error:nil
-                                         exception:nil]];
+                                               key:key
+                                       stringValue:stringValue]];
 }
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
                                         key:(nonnull NSString *)key
@@ -63,28 +58,21 @@
 {
     return [[ADJResultNL alloc] initWithFail:
             [[ADJResultFail alloc] initWithMessage:failMessage
-                                            params:
-             [[NSDictionary alloc] initWithObjectsAndKeys:
-              [otherFail foundationDictionary], key, nil]
-                                             error:nil
-                                         exception:nil]];
+                                               key:key
+                                         otherFail:otherFail]];
 }
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
                                    error:(nullable NSError *)error
 {
     return [[ADJResultNL alloc] initWithFail:
             [[ADJResultFail alloc] initWithMessage:failMessage
-                                            params:nil
-                                             error:error
-                                         exception:nil]];
+                                             error:error]];
 }
 + (nonnull ADJResultNL *)failWithMessage:(nonnull NSString *)failMessage
                                exception:(nullable NSException *)exception
 {
     return [[ADJResultNL alloc] initWithFail:
             [[ADJResultFail alloc] initWithMessage:failMessage
-                                            params:nil
-                                             error:nil
                                          exception:exception]];
 }
 
