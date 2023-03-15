@@ -24,8 +24,8 @@
                                                                            environment:ADJEnvironmentSandbox];
     [adjustConfig doLogAll];
     [adjustConfig setAdjustAttributionSubscriber:self];
+    [adjustConfig setExternalDeviceId:@"test-ext-device-id"];
     [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
-
     return YES;
 }
 
