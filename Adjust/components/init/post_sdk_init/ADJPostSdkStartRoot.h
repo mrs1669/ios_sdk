@@ -14,6 +14,7 @@
 #import "ADJLaunchedDeeplinkController.h"
 #import "ADJEventController.h"
 #import "ADJPushTokenController.h"
+#import "ADJMeasurementConsentController.h"
 #import "ADJThirdPartySharingController.h"
 #import "ADJGlobalCallbackParametersController.h"
 #import "ADJGlobalPartnerParametersController.h"
@@ -33,6 +34,8 @@
     ADJLaunchedDeeplinkController *launchedDeeplinkController;
 @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJMeasurementConsentController *measurementConsentController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJThirdPartySharingController *thirdPartySharingController;
 @property (nonnull, readonly, strong, nonatomic)

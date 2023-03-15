@@ -34,6 +34,9 @@
 - (void)switchToOfflineMode;
 - (void)switchBackToOnlineMode;
 
+- (void)activateMeasurementConsent;
+- (void)inactivateMeasurementConsent;
+
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 - (void)adjustAttributionWithCallback:
     (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;

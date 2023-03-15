@@ -130,6 +130,19 @@
     } source:@"add info package"];
 }
 
+- (void)addMeasurementConsentPackageToSendWithData:(nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
+                               sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+    __typeof(self) __weak weakSelf = self;
+    [self.executor executeInSequenceWithBlock:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        [strongSelf addSdkPackageToSendWithData:measurementConsentPackageData
+                            sqliteStorageAction:sqliteStorageAction];
+    } source:@"add measurement consent package"];
+}
+
+
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
     __typeof(self) __weak weakSelf = self;

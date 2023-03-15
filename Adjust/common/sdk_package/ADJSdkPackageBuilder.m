@@ -282,6 +282,27 @@
                                               parameters:parameters];
 }
 
+// TODO: (GENA) - shorten the method name
+- (nonnull ADJMeasurementConsentPackageData *)buildMeasurementConsentPackageWithClientData:(nonnull ADJClientMeasurementConsentData *)clienMeasurementConsentData
+                                                                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJMeasurementConsentPackageDataPath];
+    if (clienMeasurementConsentData.measurementConsentWasActivated.boolValue) {
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamMeasurementConsentKey
+                                                constValue:ADJParamMeasurementConsentEnableValue];
+    } else {
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamMeasurementConsentKey
+                                                constValue:ADJParamMeasurementConsentDisableValue];
+    }
+
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJMeasurementConsentPackageDataPath];
+    return [[ADJMeasurementConsentPackageData alloc] initWithClientSdk:self.clientSdk
+                                                            parameters:parameters];
+}
+
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
                                                  logLevel:(nonnull ADJAdjustLogLevel)logLevel
                                                 logSource:(nonnull NSString *)logSource {

@@ -25,6 +25,7 @@
 #import "ADJClickPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJInfoResponseData.h"
+#import "ADJMeasurementConsentPackageData.h"
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJSessionPackageData.h"
 #import "ADJMainQueueTrackedPackages.h"
@@ -63,6 +64,9 @@
 
 - (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+
+- (void)addMeasurementConsentPackageToSendWithData:(nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
+                               sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;

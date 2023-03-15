@@ -104,6 +104,9 @@ NSString *const ADJParamEventCurrencyKey = @"currency";
 NSString *const ADJParamPushTokenKey = @"push_token";
 NSString *const ADJParamPushTokenSourceKey = @"source";
 NSString *const ADJParamPushTokenSourceValue = @"push";
+NSString *const ADJParamMeasurementConsentKey = @"measurement";
+NSString *const ADJParamMeasurementConsentEnableValue = @"enable";
+NSString *const ADJParamMeasurementConsentDisableValue = @"disable";
 
 // log
 NSString *const ADJParamLogMessageKey = @"log_message";

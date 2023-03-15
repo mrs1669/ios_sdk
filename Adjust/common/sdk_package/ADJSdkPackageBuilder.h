@@ -33,6 +33,8 @@
 #import "ADJSessionPackageData.h"
 #import "ADJClientThirdPartySharingData.h"
 #import "ADJThirdPartySharingPackageData.h"
+#import "ADJMeasurementConsentPackageData.h"
+#import "ADJClientMeasurementConsentData.h"
 #import "ADJGdprForgetPackageData.h"
 #import "ADJPackageSessionData.h"
 #import "ADJPublisherController.h"
@@ -76,6 +78,9 @@
 
 - (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
                                                   apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+
+- (nonnull ADJMeasurementConsentPackageData *)buildMeasurementConsentPackageWithClientData:(nonnull ADJClientMeasurementConsentData *)clienMeasurementConsentData
+                                                                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
                                                  logLevel:(nonnull ADJAdjustLogLevel)logLevel

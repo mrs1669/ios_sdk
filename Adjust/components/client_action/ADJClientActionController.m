@@ -22,6 +22,7 @@
 #import "ADJPushTokenController.h"
 #import "ADJClientActionRemoveStorageAction.h"
 #import "ADJThirdPartySharingController.h"
+#import "ADJMeasurementConsentController.h"
 
 @interface ADJClientActionController ()
 #pragma mark - Injected dependencies
@@ -100,6 +101,11 @@
 {
     [self ccSaveClientActionWithIoInjectable:clientPushTokenData
                        clientActionHandlerId:ADJPushTokenControllerClientActionHandlerId];
+}
+
+- (void)ccTrackMeasurementConsent:(ADJClientMeasurementConsentData *)consentData {
+    [self ccSaveClientActionWithIoInjectable:consentData
+                       clientActionHandlerId:ADJMeasurementConsentControllerClientActionHandlerId];
 }
 
 - (void)ccTrackThirdPartySharingWithClientData:
