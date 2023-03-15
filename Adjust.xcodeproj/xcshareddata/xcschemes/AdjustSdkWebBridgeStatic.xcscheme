@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "073D9ECC29B62C6900C755F7"
-               BuildableName = "libAdjustSdkWebBridgeStatic.a"
+               BuildableName = "libAdjustSdkWebBridge.a"
                BlueprintName = "AdjustSdkWebBridgeStatic"
                ReferencedContainer = "container:Adjust.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "073D9ECC29B62C6900C755F7"
-            BuildableName = "libAdjustSdkWebBridgeStatic.a"
+            BuildableName = "libAdjustSdkWebBridge.a"
             BlueprintName = "AdjustSdkWebBridgeStatic"
             ReferencedContainer = "container:Adjust.xcodeproj">
          </BuildableReference>
