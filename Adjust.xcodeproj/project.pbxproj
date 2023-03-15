@@ -66,8 +66,8 @@
 		0737C22C28855B63004C7D59 /* ADJStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22B28855B63004C7D59 /* ADJStringMap.m */; };
 		0737C22F28856EAC004C7D59 /* ADJBooleanWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */; };
 		0737C2352885846A004C7D59 /* ADJNonEmptyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C2332885846A004C7D59 /* ADJNonEmptyString.m */; };
-		073D9EEB29B62D3200C755F7 /* ADJAdjustForegroundSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */; };
-		073D9EEC29B62D3700C755F7 /* ADJAdjustForegroundSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */; };
+		073D9EEB29B62D3200C755F7 /* ADJAdjustForegroundSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		073D9EEC29B62D3700C755F7 /* ADJAdjustForegroundSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A25F88B28E24313001988A1 /* ADJAdjustForegroundSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		073D9EED29B62D4F00C755F7 /* ADJAdjustPublishers.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A25F89028E24313001988A1 /* ADJAdjustPublishers.m */; };
 		073D9EEE29B62D8F00C755F7 /* ADJAdjust.m in Sources */ = {isa = PBXBuildFile; fileRef = 075D8FCA28731314005019E3 /* ADJAdjust.m */; };
 		073D9EEF29B62D9A00C755F7 /* ADJAdjustPushToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 07615EFD288810A300CE57FC /* ADJAdjustPushToken.m */; };
