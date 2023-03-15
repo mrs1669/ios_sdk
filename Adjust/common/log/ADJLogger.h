@@ -66,9 +66,6 @@
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                      subject:(nonnull NSString *)subject
-                                   issueType:(nonnull ADJIssue)issueType;
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                     subject:(nonnull NSString *)subject
                                   resultFail:(nonnull ADJResultFail *)resultFail
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
@@ -87,7 +84,6 @@
                                         key2:(nonnull NSString *)key2
                                       value2:(nullable NSString *)value2
                                    issueType:(nonnull ADJIssue)issueType;
-
 
 // info client
 - (nonnull ADJInputLogMessageData *)infoClient:(nonnull NSString *)message;

@@ -11,7 +11,7 @@
 #import "ADJIoDataSerializable.h"
 #import "ADJNonEmptyString.h"
 #import "ADJTimestampMilli.h"
-#import "ADJCollectionAndValue.h"
+#import "ADJOptionalFailsNN.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAsaAttributionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJAsaAttributionStateData *> *> *)
++ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithIntialState;

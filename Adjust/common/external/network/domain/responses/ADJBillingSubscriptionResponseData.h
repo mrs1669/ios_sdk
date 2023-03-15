@@ -13,7 +13,7 @@
 
 @interface ADJBillingSubscriptionResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJBillingSubscriptionResponseData *> *)
++ (nonnull ADJOptionalFailsNN<ADJBillingSubscriptionResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     billingSubscriptionPackageData:
         (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData;
@@ -21,7 +21,7 @@
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
  NS_UNAVAILABLE;
 
 // public properties

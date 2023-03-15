@@ -25,18 +25,20 @@ static NSString *const kLastPushTokenKey = @"lastPushToken";
 
 @implementation ADJPushTokenStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
-    if (! [ioData isExpectedMetadataTypeValue:ADJPushTokenStateDataMetadataTypeValue
-                                       logger:logger]) {
-        return nil;
++ (nonnull ADJResultNN<ADJPushTokenStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJPushTokenStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create push token state data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJNonEmptyString *_Nullable lastPushToken =
         [ioData.propertiesMap pairValueWithKey:kLastPushTokenKey];
 
-    return [[self alloc] initWithLastPushTokenString:lastPushToken];
+    return [ADJResultNN okWithValue:
+            [[ADJPushTokenStateData alloc] initWithLastPushTokenString:lastPushToken]];
 }
 
 - (nonnull instancetype)initWithInitialState {

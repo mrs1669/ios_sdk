@@ -17,7 +17,7 @@
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

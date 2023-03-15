@@ -382,10 +382,10 @@
 }
 
 - (void)returnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
-    ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *_Nonnull
-    sdkResponseDataResultWithOptionals = [sdkResponseBuilder buildSdkResponseData];
+    ADJOptionalFailsNN<id<ADJSdkResponseData>> *_Nonnull sdkResponseDataWithOptFails =
+        [sdkResponseBuilder buildSdkResponseData];
 
-    for (ADJResultFail *_Nonnull optionalFail in sdkResponseDataResultWithOptionals.collection) {
+    for (ADJResultFail *_Nonnull optionalFail in sdkResponseDataWithOptFails.optionalFails) {
         [self.logger debugDev:
          @"Failed with an optional value when building sdk response from builder"
                    resultFail:optionalFail
@@ -393,12 +393,11 @@
     }
 
     [sdkResponseBuilder.sourceCallback
-     sdkResponseCallbackWithResponseData:sdkResponseDataResultWithOptionals.value];
+     sdkResponseCallbackWithResponseData:sdkResponseDataWithOptFails.value];
 
     id<ADJSdkResponseSubscriber> _Nullable sdkResponseCollector = self.sdkResponseCollectorWeak;
     if (sdkResponseCollector != nil) {
-        [sdkResponseCollector didReceiveSdkResponseWithData:
-         sdkResponseDataResultWithOptionals.value];
+        [sdkResponseCollector didReceiveSdkResponseWithData:sdkResponseDataWithOptFails.value];
     }
 }
 

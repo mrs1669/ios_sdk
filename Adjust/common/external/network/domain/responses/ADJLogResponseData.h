@@ -13,14 +13,14 @@
 
 @interface ADJLogResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJLogResponseData *> *)
++ (nonnull ADJOptionalFailsNN<ADJLogResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     logPackageData:(nonnull ADJLogPackageData *)logPackageData;
 
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
  NS_UNAVAILABLE;
 
 // public properties

@@ -135,65 +135,6 @@
                                resultFail:resultFail
                                messageParams:nil]];
 }
-/*
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                   valueName:(nonnull NSString *)valueName
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               resultFail:nil
-                               messageParams:
-                                   [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    valueName, ADJLogValueNameKey, nil]]];
-}
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                   valueName:(nonnull NSString *)valueName
-                                 failMessage:(nonnull NSString *)failMessage
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               resultFail:nil
-                               messageParams:
-                                   [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    valueName, ADJLogValueNameKey,
-                                    failMessage, ADJLogFailMessageKey, nil]]];
-}
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                        from:(nonnull NSString *)from
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               resultFail:nil
-                               messageParams:
-                                   [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    from, ADJLogFromKey, nil]]];
-}
-
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                        from:(nonnull NSString *)from
-                                 failMessage:(nonnull NSString *)failMessage
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               resultFail:nil
-                               messageParams:
-                                   [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    from, ADJLogFromKey,
-                                    failMessage, ADJLogFailMessageKey, nil]]];
-}
-*/
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                expectedValue:(nonnull NSString *)expectedValue
                                  actualValue:(nullable NSString *)actualValue
@@ -208,19 +149,6 @@
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
                                     expectedValue, ADJLogExpectedKey,
                                     [ADJUtilF stringOrNsNull:actualValue], ADJLogActualKey, nil]]];
-}
-- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
-                                     subject:(nonnull NSString *)subject
-                                   issueType:(nonnull ADJIssue)issueType
-{
-    return [self logWithInput:[[ADJInputLogMessageData alloc]
-                               initWithMessage:message
-                               level:ADJAdjustLogLevelDebug
-                               issueType:issueType
-                               resultFail:nil
-                               messageParams:
-                                   [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    subject, ADJLogSubjectKey, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                      subject:(nonnull NSString *)subject

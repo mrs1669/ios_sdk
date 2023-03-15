@@ -8,21 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-#import <Foundation/Foundation.h>
-
 #import "ADJSdkResponseBaseData.h"
 #import "ADJEventPackageData.h"
 
 @interface ADJEventResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJEventResponseData *> *)
++ (nonnull ADJOptionalFailsNN<ADJEventResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     eventPackageData:(nonnull ADJEventPackageData *)eventPackageData;
 
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
  NS_UNAVAILABLE;
 
 // public properties

@@ -13,14 +13,14 @@
 
 @interface ADJAdRevenueResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJAdRevenueResponseData *> *)
++ (nonnull ADJOptionalFailsNN<ADJAdRevenueResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     adRevenuePackageData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData;
 
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
  NS_UNAVAILABLE;
 
 // public properties

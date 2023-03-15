@@ -61,7 +61,7 @@
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSdkResponseBaseData class]]) {
@@ -80,28 +80,28 @@
     _serverMessage = [ADJSdkResponseBaseData
                       extractOptionalStringWithResponseJson:_jsonDictionary
                       key:ADJParamMessageKey
-                      optionalFailsBuilder:optionalFailsBuilder];
+                      optionalFailsMut:optionalFailsMut];
 
     _adid = [ADJSdkResponseBaseData
              extractOptionalStringWithResponseJson:_jsonDictionary
              key:ADJParamAdidKey
-             optionalFailsBuilder:optionalFailsBuilder];
+             optionalFailsMut:optionalFailsMut];
 
     _trackingState = [ADJSdkResponseBaseData
                       extractOptionalStringWithResponseJson:_jsonDictionary
                       key:ADJParamTrackingStateKey
-                      optionalFailsBuilder:optionalFailsBuilder];
+                      optionalFailsMut:optionalFailsMut];
 
     _timestampString = [ADJSdkResponseBaseData
                         extractOptionalStringWithResponseJson:_jsonDictionary
                         key:ADJParamTimeSpentKey
-                        optionalFailsBuilder:optionalFailsBuilder];
+                        optionalFailsMut:optionalFailsMut];
 
     _askInIntMilli =
         [ADJSdkResponseBaseData
          extractOptionalIntWithResponseJson:_jsonDictionary
          key:ADJParamAskInKey
-         optionalFailsBuilder:optionalFailsBuilder];
+         optionalFailsMut:optionalFailsMut];
     
     _askIn = _askInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_askInIntMilli] : nil;
@@ -110,7 +110,7 @@
         [ADJSdkResponseBaseData
          extractOptionalIntWithResponseJson:_jsonDictionary
          key:ADJParamContinueInKey
-         optionalFailsBuilder:optionalFailsBuilder];
+         optionalFailsMut:optionalFailsMut];
     
     _continueIn = _continueInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_continueInIntMilli] : nil;
@@ -119,7 +119,7 @@
         [ADJSdkResponseBaseData
          extractOptionalIntWithResponseJson:_jsonDictionary
          key:ADJParamRetryInKey
-         optionalFailsBuilder:optionalFailsBuilder];
+         optionalFailsMut:optionalFailsMut];
     
     _retryIn = _retryInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_retryInIntMilli] : nil;
@@ -147,7 +147,7 @@
 + (nullable ADJNonEmptyString *)
     extractOptionalStringWithResponseJson:(nullable NSDictionary *)responseJson
     key:(nonnull NSString *)key
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     ADJResultNL<NSString *> *_Nonnull valueResult =
         [ADJUtilMap extractStringValueWithDictionary:responseJson key:key];
@@ -159,7 +159,7 @@
                          otherFail:valueResult.fail];
         [resultFailBuilder withKey:@"key"
                        stringValue:key];
-        [optionalFailsBuilder addObject:[resultFailBuilder build]];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
     }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
@@ -172,7 +172,7 @@
                          otherFail:stringResult.fail];
         [resultFailBuilder withKey:@"key"
                        stringValue:key];
-        [optionalFailsBuilder addObject:[resultFailBuilder build]];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
     }
 
     return stringResult.value;
@@ -180,7 +180,7 @@
 + (nullable ADJNonNegativeInt *)
     extractOptionalIntWithResponseJson:(nullable NSDictionary *)responseJson
     key:(nonnull NSString *)key
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     ADJResultNL<NSNumber *> *_Nonnull valueResult =
         [ADJUtilMap extractIntegerNumberWithDictionary:responseJson
@@ -193,7 +193,7 @@
                          otherFail:valueResult.fail];
         [resultFailBuilder withKey:@"key"
                        stringValue:key];
-        [optionalFailsBuilder addObject:[resultFailBuilder build]];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
     }
 
     ADJResultNL<ADJNonNegativeInt *> *_Nonnull intResult =
@@ -206,7 +206,7 @@
                          otherFail:intResult.fail];
         [resultFailBuilder withKey:@"key"
                        stringValue:key];
-        [optionalFailsBuilder addObject:[resultFailBuilder build]];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
     }
 
     return intResult.value;

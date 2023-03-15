@@ -11,7 +11,7 @@
 #import "ADJSdkPackageData.h"
 #import "ADJStringMapBuilder.h"
 #import "ADJSdkResponseData.h"
-#import "ADJCollectionAndValue.h"
+#import "ADJOptionalFailsNN.h"
 #import "ADJSdkPackageSender.h"
 
 @interface ADJSdkResponseDataBuilder : NSObject
@@ -33,7 +33,7 @@
 
 - (NSUInteger)retries;
 
-- (nonnull ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)buildSdkResponseData;
+- (nonnull ADJOptionalFailsNN<id<ADJSdkResponseData>> *)buildSdkResponseData;
 
 @end
 

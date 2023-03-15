@@ -39,17 +39,17 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 - (nonnull ADJResultNN<ADJMeasurementSessionStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
-    ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJMeasurementSessionStateData *> *> *_Nonnull
-    resultWithOptionals = [ADJMeasurementSessionStateData instanceFromIoData:ioData];
+    ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *_Nonnull
+    resultDataOptFails = [ADJMeasurementSessionStateData instanceFromIoData:ioData];
 
-    for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
+    for (ADJResultFail *_Nonnull optionalFail in resultDataOptFails.optionalFails) {
         [self.logger debugDev:@"Failed setting measurement session state data optional field"
          " when generating value from io data"
                    resultFail:optionalFail
                     issueType:ADJIssueStorageIo];
     }
 
-    return resultWithOptionals.value;
+    return resultDataOptFails.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue: (nonnull ADJMeasurementSessionStateData *)dataValue {

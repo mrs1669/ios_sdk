@@ -229,22 +229,28 @@
     return [[NSDictionary alloc] init];
 }
 
-+ (nonnull ADJResultNL<ADJCollectionAndValue<ADJResultFail *, ADJStringMap *> *> *)
+
++ (nonnull ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *)
     convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
 {
     if (keyValueArray == nil) {
-        return [ADJResultNL okWithoutValue];
+        return [[ADJOptionalFailsNN alloc] initWithOptionalFails:nil
+                                                           value:[ADJResultNL okWithoutValue]];
     }
 
     if (keyValueArray.count % 2 != 0) {
-        return [ADJResultNL
-                failWithMessage:@"Cannot convert key value array with non-multiple of 2 elements"
-                key:@"keyValueArray count"
-                stringValue:[ADJUtilF uIntegerFormat:keyValueArray.count]];
+        return [[ADJOptionalFailsNN alloc]
+                initWithOptionalFails:nil
+                value:[ADJResultNL
+                       failWithMessage:
+                           @"Cannot convert key value array with non-multiple of 2 elements"
+                       key:@"keyValueArray count"
+                       stringValue:[ADJUtilF uIntegerFormat:keyValueArray.count]]];
     }
 
-    ADJStringMapBuilder *_Nonnull stringMapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
-    NSMutableArray<ADJResultFail *> *_Nonnull resultFailArrayBuilder =
+    ADJStringMapBuilder *_Nonnull stringMapBuilder =
+        [[ADJStringMapBuilder alloc] initWithEmptyMap];
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut =
         [[NSMutableArray alloc] init];
 
     for (NSUInteger i = 0; i < keyValueArray.count; i = i + 2) {
@@ -258,7 +264,7 @@
                              otherFail:keyResult.fail];
             [resultFailBuilder withKey:@"keyValueArray index"
                            stringValue:[ADJUtilF uIntegerFormat:i]];
-            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
+            [optionalFailsMut addObject:[resultFailBuilder build]];
             continue;
         }
 
@@ -272,7 +278,7 @@
                              otherFail:valueResult.fail];
             [resultFailBuilder withKey:@"keyValueArray index"
                            stringValue:[ADJUtilF uIntegerFormat:i + 1]];
-            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
+            [optionalFailsMut addObject:[resultFailBuilder build]];
             continue;
         }
 
@@ -287,27 +293,25 @@
                            stringValue:keyResult.value.stringValue];
             [resultFailBuilder withKey:@"keyValueArray index"
                            stringValue:[ADJUtilF uIntegerFormat:i]];
-            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
+            [optionalFailsMut addObject:[resultFailBuilder build]];
         }
     }
 
-    return [ADJResultNL okWithValue:[[ADJCollectionAndValue alloc]
-                                     initWithCollection:resultFailArrayBuilder
-                                     value:[[ADJStringMap alloc]
-                                            initWithStringMapBuilder:stringMapBuilder]]];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[ADJResultNL okWithValue:
+                   [[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder]]];
 }
 
-+ (nonnull ADJResultNL<ADJCollectionAndValue<
-   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
++ (nonnull ADJOptionalFailsNN<ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-    (nullable NSArray<NSString *> *)nameKeyStringValueArray
+        (nullable NSArray<NSString *> *)nameKeyStringValueArray
 {
     return [self convertToMapCollectionByNameBuilderWithNameKeyValueArray:nameKeyStringValueArray
                                                             isValueString:YES];
 }
 
-+ (nonnull ADJResultNL<ADJCollectionAndValue<
-   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
++ (nonnull ADJOptionalFailsNN<ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
         (nullable NSArray *)nameKeyNumberBooleanValueArray
 {
@@ -316,28 +320,30 @@
             isValueString:NO];
 }
 
-+ (nonnull ADJResultNL<ADJCollectionAndValue<
-   ADJResultFail *, NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
++ (nonnull ADJOptionalFailsNN<ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
     convertToMapCollectionByNameBuilderWithNameKeyValueArray:
         (nullable NSArray<NSString *> *)nameKeyValueArray
     isValueString:(BOOL)isValueString
 {
     if (nameKeyValueArray == nil) {
-        return [ADJResultNL okWithoutValue];
+        return [[ADJOptionalFailsNN alloc] initWithOptionalFails:nil
+                                                           value:[ADJResultNL okWithoutValue]];
     }
 
     if (nameKeyValueArray.count % 3 != 0) {
-        return [ADJResultNL
-                failWithMessage:
-                    @"Cannot convert name key value array with non-multiple of 3 elements"
-                key:@"nameKeyStringValueArray count"
-                stringValue:[ADJUtilF uIntegerFormat:nameKeyValueArray.count]];
+        return [[ADJOptionalFailsNN alloc]
+                initWithOptionalFails:nil
+                value:[ADJResultNL
+                       failWithMessage:
+                           @"Cannot convert name key value array with non-multiple of 3 elements"
+                       key:@"nameKeyStringValueArray count"
+                       stringValue:[ADJUtilF uIntegerFormat:nameKeyValueArray.count]]];
     }
 
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nonnull
         mapCollectionByNameBuilder =
             [[NSMutableDictionary alloc] initWithCapacity:(nameKeyValueArray.count / 3)];
-    NSMutableArray<ADJResultFail *> *_Nonnull resultFailArrayBuilder =
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut =
         [[NSMutableArray alloc] init];
 
     for (NSUInteger i = 0; i < nameKeyValueArray.count; i = i + 3) {
@@ -351,7 +357,7 @@
                              otherFail:nameResult.fail];
             [resultFailBuilder withKey:@"nameKeyValueArray index"
                            stringValue:[ADJUtilF uIntegerFormat:i]];
-            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
+            [optionalFailsMut addObject:[resultFailBuilder build]];
             continue;
         }
 
@@ -365,7 +371,7 @@
                              otherFail:keyResult.fail];
             [resultFailBuilder withKey:@"nameKeyValueArray index"
                            stringValue:[ADJUtilF uIntegerFormat:i + 1]];
-            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
+            [optionalFailsMut addObject:[resultFailBuilder build]];
             continue;
         }
 
@@ -383,7 +389,7 @@
                                  otherFail:valueResult.fail];
                 [resultFailBuilder withKey:@"nameKeyValueArray index"
                                stringValue:[ADJUtilF uIntegerFormat:i + 2]];
-                [resultFailArrayBuilder addObject:[resultFailBuilder build]];
+                [optionalFailsMut addObject:[resultFailBuilder build]];
             } else {
                 value = valueResult.value.stringValue;
             }
@@ -415,15 +421,14 @@
                            stringValue:nameResult.value.stringValue];
             [resultFailBuilder withKey:@"nameKeyValueArray index"
                            stringValue:[ADJUtilF uIntegerFormat:i]];
-            [resultFailArrayBuilder addObject:[resultFailBuilder build]];
+            [optionalFailsMut addObject:[resultFailBuilder build]];
         }
 
         [mapBuilder setObject:value forKey:key];
     }
 
-    return [ADJResultNL okWithValue:[[ADJCollectionAndValue alloc]
-                                     initWithCollection:resultFailArrayBuilder
-                                     value:mapCollectionByNameBuilder]];
+    return [[ADJOptionalFailsNN alloc] initWithOptionalFails:optionalFailsMut
+                                                       value:mapCollectionByNameBuilder];
 }
 
 // assumes [ADJUtilObj copyStringOrNSNullWithInput] was for the string object

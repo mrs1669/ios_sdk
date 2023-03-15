@@ -35,17 +35,17 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 - (nonnull ADJResultNN<ADJAttributionStateData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJAttributionStateData *> *> *_Nonnull
-    resultWithOptionals = [ADJAttributionStateData instanceFromIoData:ioData];
+    ADJOptionalFailsNN<ADJResultNN<ADJAttributionStateData *> *> *_Nonnull
+    attributionStateDataOptFails = [ADJAttributionStateData instanceFromIoData:ioData];
 
-    for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
+    for (ADJResultFail *_Nonnull optionalFail in attributionStateDataOptFails.optionalFails) {
         [self.logger debugDev:@"Failed setting attribution state data optional field"
          " when generating value from io data"
                    resultFail:optionalFail
                     issueType:ADJIssueStorageIo];
     }
 
-    return resultWithOptionals.value;
+    return attributionStateDataOptFails.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJAttributionStateData *)dataValue {

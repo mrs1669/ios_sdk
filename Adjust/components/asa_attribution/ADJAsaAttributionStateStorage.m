@@ -33,17 +33,17 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 - (nonnull ADJResultNN<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJCollectionAndValue<ADJResultFail *, ADJResultNN<ADJAsaAttributionStateData *> *> *_Nonnull
-    resultWithOptionals = [ADJAsaAttributionStateData instanceFromIoData:ioData];
+    ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
+        [ADJAsaAttributionStateData instanceFromIoData:ioData];
 
-    for (ADJResultFail *_Nonnull optionalFail in resultWithOptionals.collection) {
+    for (ADJResultFail *_Nonnull optionalFail in resultOptFails.optionalFails) {
         [self.logger debugDev:@"Failed setting asa attribution state data optional field"
          " when generating value from io data"
                    resultFail:optionalFail
                     issueType:ADJIssueStorageIo];
     }
 
-    return resultWithOptionals.value;
+    return resultOptFails.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJAsaAttributionStateData *)dataValue {

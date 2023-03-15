@@ -21,8 +21,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJPushTokenStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJPushTokenStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithInitialState;
 

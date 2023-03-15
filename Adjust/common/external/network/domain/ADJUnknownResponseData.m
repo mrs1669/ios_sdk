@@ -10,26 +10,26 @@
 
 @implementation ADJUnknownResponseData
 #pragma mark Instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJUnknownResponseData *> *)
++ (nonnull ADJOptionalFailsNN<ADJUnknownResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     unknownPackageData:(nonnull id<ADJSdkPackageData>)unknownPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
-    return [[ADJCollectionAndValue alloc]
-            initWithCollection:optionalFailsBuilder
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
             value:[[ADJUnknownResponseData alloc] initWithBuilder:sdkResponseDataBuilder
                                                unknownPackageData:unknownPackageData
-                                                optionalFailsBuilder:optionalFailsBuilder]];
+                                                 optionalFailsMut:optionalFailsMut]];
 }
 
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     unknownPackageData:(nonnull id<ADJSdkPackageData>)unknownPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:unknownPackageData
-             optionalFailsBuilder:optionalFailsBuilder];
+                 optionalFailsMut:optionalFailsMut];
 
     return self;
 }

@@ -10,26 +10,26 @@
 
 @implementation ADJInfoResponseData
 #pragma mark Instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJInfoResponseData *> *)
++ (nonnull ADJOptionalFailsNN<ADJInfoResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     infoPackageData:(nonnull ADJInfoPackageData *)infoPackageData
 {
-    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder = [[NSMutableArray alloc] init];
-    return [[ADJCollectionAndValue alloc]
-            initWithCollection:optionalFailsBuilder
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMUt = [[NSMutableArray alloc] init];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMUt
             value:[[ADJInfoResponseData alloc] initWithBuilder:sdkResponseDataBuilder
                                                infoPackageData:infoPackageData
-                                          optionalFailsBuilder:optionalFailsBuilder]];
+                                              optionalFailsMut:optionalFailsMUt]];
 }
 
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     infoPackageData:(nonnull ADJInfoPackageData *)infoPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:infoPackageData
-             optionalFailsBuilder:optionalFailsBuilder];
+                 optionalFailsMut:optionalFailsMut];
 
     return self;
 }

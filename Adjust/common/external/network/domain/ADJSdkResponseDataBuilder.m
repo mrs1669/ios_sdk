@@ -75,19 +75,12 @@
 
 #define tryBuildResponse(packageClassType, responseClassType, packageDataName)              \
     if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {                      \
-        return (ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)           \
+        return (ADJOptionalFailsNN<id<ADJSdkResponseData>> *)                               \
             [responseClassType instanceWithBuilder:self                                     \
                                    packageDataName:(packageClassType *)self.sourcePackage]; \
     }                                                                                       \
 
-- (nonnull ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)buildSdkResponseData {
-    if ([self.sourcePackage isKindOfClass:[ADJGdprForgetPackageData class]]) {
-        return (ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)
-            [ADJGdprForgetResponseData
-             instanceWithBuilder:self
-             gdprForgetPackageData:(ADJGdprForgetPackageData *)self.sourcePackage];
-    }
-
+- (nonnull ADJOptionalFailsNN<id<ADJSdkResponseData>> *)buildSdkResponseData {
     tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
     tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
     tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
@@ -108,13 +101,13 @@
     [resultFailBuilder withKey:@"source package class"
                    stringValue:NSStringFromClass([self.sourcePackage class])];
 
-    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder =
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut =
         [[NSMutableArray alloc] initWithObjects:[resultFailBuilder build], nil];
 
-    return (ADJCollectionAndValue<ADJResultFail *, id<ADJSdkResponseData>> *)
+    return (ADJOptionalFailsNN<id<ADJSdkResponseData>> *)
         [ADJUnknownResponseData instanceWithBuilder:self
                                  unknownPackageData:self.sourcePackage
-                               optionalFailsBuilder:optionalFailsBuilder];
+                                   optionalFailsMut:optionalFailsMut];
 }
 
 @end

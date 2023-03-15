@@ -52,7 +52,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
 @implementation ADJAttributionData
 #pragma mark Instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJAttributionData *> *)
++ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
     ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
@@ -70,8 +70,8 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                           otherFail:costAmountResult.fail]];
     }
 
-    return [[ADJCollectionAndValue alloc]
-            initWithCollection:optionalFails
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFails
             value:[[ADJAttributionData alloc]
                    initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
                    trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]

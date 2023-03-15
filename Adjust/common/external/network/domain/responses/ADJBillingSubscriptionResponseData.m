@@ -10,29 +10,29 @@
 
 @implementation ADJBillingSubscriptionResponseData
 #pragma mark Instantiation
-+ (nonnull ADJCollectionAndValue<ADJResultFail *, ADJBillingSubscriptionResponseData *> *)
++ (nonnull ADJOptionalFailsNN<ADJBillingSubscriptionResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     billingSubscriptionPackageData:
         (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
 {
-    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsBuilder = [[NSMutableArray alloc] init];
-    return [[ADJCollectionAndValue alloc]
-            initWithCollection:optionalFailsBuilder
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
             value:[[ADJBillingSubscriptionResponseData alloc]
                    initWithBuilder:sdkResponseDataBuilder
                    billingSubscriptionPackageData:billingSubscriptionPackageData
-                   optionalFailsBuilder:optionalFailsBuilder]];
+                   optionalFailsMut:optionalFailsMut]];
 }
 
 - (nonnull instancetype)
     initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     billingSubscriptionPackageData:
         (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
-    optionalFailsBuilder:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsBuilder
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:billingSubscriptionPackageData
-             optionalFailsBuilder:optionalFailsBuilder];
+                 optionalFailsMut:optionalFailsMut];
 
     return self;
 }
