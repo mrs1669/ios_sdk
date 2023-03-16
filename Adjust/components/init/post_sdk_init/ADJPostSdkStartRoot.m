@@ -78,6 +78,7 @@
     _pushTokenController = [[ADJPushTokenController alloc]
                             initWithLoggerFactory:loggerFactory
                             sdkPackageBuilder:sdkPackageBuilder
+                            pushTokenStateStorage:storageRoot.pushTokenStorage
                             mainQueueController:mainQueueController];
 
     _thirdPartySharingController = [[ADJThirdPartySharingController alloc]
