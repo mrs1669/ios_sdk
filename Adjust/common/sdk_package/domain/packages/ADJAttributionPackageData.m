@@ -36,29 +36,7 @@ NSString *const ADJAttributionPackageDataPath = @"attribution";
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSdkPackageBaseData
 - (nonnull ADJNonEmptyString *)concreteGenerateShortDescription {
-    ADJNonEmptyString *_Nullable initiatedBy =
-    [self.parameters pairValueWithKey:ADJParamAttributionInititedByKey];
-
-    NSString *_Nullable initatedByString = initiatedBy != nil ? initiatedBy.stringValue : nil;
-
-    if ([ADJParamAttributionInititedBySdkValue isEqual:initatedByString]) {
-        return [[ADJNonEmptyString alloc]
-                initWithConstStringValue:@"Attribution initiated by sdk"];
-    }
-
-    if ([ADJParamAttributionInititedByBackendValue isEqual:initatedByString]) {
-        return [[ADJNonEmptyString alloc]
-                initWithConstStringValue:@"Attribution initiated by backend"];
-    }
-
-    if ([ADJParamAttributionInititedBySdkAndBackendValue isEqual:initatedByString]) {
-        return [[ADJNonEmptyString alloc]
-                initWithConstStringValue:@"Attribution initiated by sdk and backend"];
-    }
-
-    return [[ADJNonEmptyString alloc]
-            initWithConstStringValue:@"Attribution without known initiated by"];
+    return [[ADJNonEmptyString alloc] initWithConstStringValue:@"Attribution"];
 }
 
 @end
-

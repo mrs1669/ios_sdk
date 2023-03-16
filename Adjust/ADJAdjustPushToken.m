@@ -11,7 +11,6 @@
 #import "ADJUtilObj.h"
 
 #pragma mark Fields
-
 #pragma mark - Public properties
 /* .h
  @property (nullable, readonly, strong, nonatomic) NSData *dataPushToken;

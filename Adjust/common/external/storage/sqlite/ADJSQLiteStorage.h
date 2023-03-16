@@ -19,7 +19,7 @@
 - (nonnull NSString *)sqlStringForOnCreate;
 
 // - implemented by final class
-- (nullable NSString *)sqlStringForOnUpgrade:(int)oldVersion;
+- (nullable NSString *)sqlStringForOnUpgrade:(nonnull ADJNonNegativeInt *)oldVersion;
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData;

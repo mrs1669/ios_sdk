@@ -13,11 +13,11 @@
 #import "ADJOfflineSubscriber.h"
 #import "ADJReachabilitySubscriber.h"
 #import "ADJLifecycleSubscriber.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
 #import "ADJSdkActiveSubscriber.h"
 #import "ADJPausingSubscriber.h"
 #import "ADJThreadExecutorFactory.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 @interface ADJPausingController : ADJCommonBase<
     // subscriptions
@@ -25,7 +25,7 @@
     ADJOfflineSubscriber,
     ADJReachabilitySubscriber,
     ADJLifecycleSubscriber,
-    ADJMeasurementSessionStartSubscriber,
+    ADJSdkStartSubscriber,
     ADJSdkActiveSubscriber
 >
 
@@ -33,10 +33,11 @@
 @property (nonnull, readonly, strong, nonatomic) ADJPausingPublisher *pausingPublisher;
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                          canSendInBackground:(BOOL)canSendInBackground
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    canSendInBackground:(BOOL)canSendInBackground
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
 @end
 

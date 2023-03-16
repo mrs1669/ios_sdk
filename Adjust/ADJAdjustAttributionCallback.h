@@ -7,11 +7,10 @@
 //
 
 @class ADJAdjustAttribution;
+@protocol ADJAdjustCallback;
 
-@protocol ADJAdjustAttributionCallback <NSObject>
+@protocol ADJAdjustAttributionCallback <ADJAdjustCallback>
 
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution;
-
-- (void)unableToReadAdjustAttributionWithMessage:(nonnull NSString *)message;
 
 @end

@@ -129,7 +129,7 @@
 }
 
 #pragma mark - ADJLifecycleSubscriber
-- (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidForeground {
 
     if (! [self.pluginForegroundPublisher.publisher hasSubscribers]) {
         return;
@@ -142,7 +142,7 @@
     }];
 }
 
-- (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidBackground {
     // nothing to do
 }
 

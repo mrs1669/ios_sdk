@@ -78,7 +78,7 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     if (! [challenge.protectionSpace.authenticationMethod
            isEqualToString:NSURLAuthenticationMethodServerTrust])
     {
-        // TODO should perform default handling or cancel challange?
+        // TODO: should perform default handling or cancel challange?
         completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         //completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, NULL);
         return;
@@ -119,7 +119,7 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
         return NO;
     }
 
-    // TODO see how it is done before iOS 10.3
+    // TODO: see how it is done before iOS 10.3
     SecKeyRef _Nullable serverPublicKey = SecCertificateCopyPublicKey(serverCertificate);
 
     if (! serverPublicKey) {
@@ -138,8 +138,8 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
 - (BOOL)useCredentialWithServerPublicKey:(SecKeyRef _Nonnull)serverPublicKey {
     CFErrorRef errorRef;
 
-    // TODO maybe use __bridge_transfer / CFBridgingRelease instead of CFRelease
-    // TODO see how it is done before iOS 10.0
+    // TODO: maybe use __bridge_transfer / CFBridgingRelease instead of CFRelease
+    // TODO: see how it is done before iOS 10.0
     CFDataRef _Nullable serverPublicKeyData =
     SecKeyCopyExternalRepresentation(serverPublicKey, &errorRef);
 
@@ -171,7 +171,7 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
 
 - (BOOL)useCredentialWithServerPublicKeyData:(nonnull NSData *)serverPublicKeyNSData
                              serverPublicKey:(SecKeyRef _Nonnull)serverPublicKey {
-    // TODO maybe use __bridge_transfer / CFBridgingRelease instead of CFRelease
+    // TODO: maybe use __bridge_transfer / CFBridgingRelease instead of CFRelease
     // Obtain the SPKI header based on the key's algorithm
     CFDictionaryRef _Nullable publicKeyAttributes = SecKeyCopyAttributes(serverPublicKey);
 

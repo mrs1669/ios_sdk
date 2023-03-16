@@ -43,26 +43,25 @@ ADJMainQueueController *mainQueueControllerWeak;
 }
 
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // cannot handle pre first session
-    return ! isPreFirstSession;
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
+    return NO;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     ADJClientLaunchedDeeplinkData *_Nullable clientLaunchedDeeplinkData = [ADJClientLaunchedDeeplinkData
                                                                            instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
                                                                            logger:self.logger];
 
     if (clientLaunchedDeeplinkData == nil) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
         return;
     }
 
     [self ccTrackLaunchedDeeplinkWithClientData:clientLaunchedDeeplinkData
                                    apiTimestamp:apiTimestamp
-                clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+                clientActionRemoveStorageAction:removeStorageAction];
 }
 
 #pragma mark Internal Methods

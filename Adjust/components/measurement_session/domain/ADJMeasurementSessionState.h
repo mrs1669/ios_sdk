@@ -16,38 +16,40 @@
 #import "ADJPackageSessionData.h"
 #import "ADJTimestampMilli.h"
 
+@interface ADJMeasurementSessionStateOutputData : NSObject
+
+@property (nullable, readonly, strong, nonatomic) ADJMeasurementSessionStateData *changedStateData;
+@property (nullable, readonly, strong, nonatomic) ADJPackageSessionData *packageSessionData;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+@end
+
 @interface ADJMeasurementSessionState : ADJCommonBase
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-           minMeasurementSessionIntervalMilli:(nonnull ADJTimeLengthMilli *)minMeasurementSessionIntervalMilli;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    initialMeasurementSessionStateData:
+        (nonnull ADJMeasurementSessionStateData *)initialMeasurementSessionStateData
+    overwriteFirstSdkSessionInterval:
+        (nullable ADJTimeLengthMilli *)overwriteFirstSdkSessionInterval
+    minMeasurementSessionInterval:
+        (nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval;
 
 // public properties
 @property (readonly, assign, nonatomic) BOOL hasFirstMeasurementSessionStartHappened;
 
 // public api
-- (BOOL)canMeasurementSessionBecomeActiveWhenSdkInit;
+- (nullable ADJMeasurementSessionStateOutputData *)sdkStartWithNonMonotonicNowTimestamp:
+    (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp;
 
-- (BOOL)canMeasurementSessionBecomeActiveWhenAppWentToTheForeground;
+- (nullable ADJMeasurementSessionStateOutputData *)resumeMeasurementWithNowTimestamp:
+    (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp;
 
-- (BOOL)canMeasurementSessionBecomeActiveWhenSdkBecameActive;
+- (nullable ADJMeasurementSessionStateOutputData *)pauseMeasurementWithNowTimestamp:
+    (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp;
 
-- (BOOL)changeToActiveSessionWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-                                          sdkStartStateEventWO:(nonnull ADJValueWO<NSString *> *)sdkStartStateEventWO
-                               changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-                                          packageSessionDataWO:(nonnull ADJValueWO<ADJPackageSessionData *> *)packageSessionDataWO
-                                 nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli
-                                                        source:(nonnull NSString *)source;
-
-- (void)appWentToTheBackgroundWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-                                changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-                                  nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
-
-- (void)sdkBecameNotActiveWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-                            changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-                              nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
-
-- (void)keepAlivePingedWithCurrentMeasurementSessionData:(nonnull ADJMeasurementSessionStateData *)currentMeasurementSessionStateData
-                         changedMeasurementSessionDataWO:(nonnull ADJValueWO<ADJMeasurementSessionData *> *)changedMeasurementSessionDataWO
-                           nonMonotonicNowTimestampMilli:(nonnull ADJTimestampMilli *)nonMonotonicNowTimestampMilli;
+- (nullable ADJMeasurementSessionStateOutputData *)keepAlivePingWithNonMonotonicNowTimestamp:
+    (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp;
 
 @end

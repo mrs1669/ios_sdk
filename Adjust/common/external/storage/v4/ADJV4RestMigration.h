@@ -11,11 +11,12 @@
 #import "ADJCommonBase.h"
 #import "ADJV4FilesData.h"
 #import "ADJV4UserDefaultsData.h"
+#import "ADJInstanceIdData.h"
 
 @interface ADJV4RestMigration : ADJCommonBase
 
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   instanceId:(nonnull NSString *)instanceId;
+                                   instanceId:(nonnull ADJInstanceIdData *)instanceId;
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData;

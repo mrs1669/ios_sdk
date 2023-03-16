@@ -9,13 +9,22 @@
 #import <Foundation/Foundation.h>
 #import "ADJAdjustInstance.h"
 #import "ADJSdkConfigData.h"
+#import "ADJInstanceIdData.h"
+#import "ADJInstanceRootBag.h"
+#import "ADJEntryRootBag.h"
 
-@interface ADJInstanceRoot : NSObject <ADJAdjustInstance>
+@interface ADJInstanceRoot : NSObject <
+    ADJAdjustInstance,
+    ADJInstanceRootBag
+>
+// instantiation
++ (nonnull instancetype)instanceWithConfigData:(nonnull ADJSdkConfigData *)configData
+                                    instanceId:(nonnull ADJInstanceIdData *)instanceId
+                                  entryRootBag:(nonnull id<ADJEntryRootBag>)entryRootBag;
 
-- (nonnull instancetype)initWithConfigData:(nonnull ADJSdkConfigData *)configData
-                                instanceId:(nonnull NSString *)instanceId;
 - (nullable instancetype)init NS_UNAVAILABLE;
-- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 
+// public api
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 @end
 

@@ -16,32 +16,31 @@
 #import "ADJSdkResponseData.h"
 #import "ADJDelayData.h"
 
+@interface ADJAttributionStateOutputData : NSObject
+
+@property (nullable, readonly, strong, nonatomic) ADJAttributionStateData *changedStateData;
+@property (nullable, readonly, strong, nonatomic) ADJDelayData *delayData;
+@property (readonly, assign, nonatomic) BOOL startAsking;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+@end
+
 @interface ADJAttributionState : ADJCommonBase
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
-                        isFirstSessionInQueue:(BOOL)isFirstSessionInQueue;
+                             initialStateData:(nonnull ADJAttributionStateData *)initialStateData
+              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk;
 
 // public api
-- (BOOL)stopAskingWhenReceivedAcceptedAttributionResponseWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                                                 attributionResponseData:(nonnull ADJAttributionResponseData *)attributionResponseData
-                                                           changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-                                                                attributionStatusEventWO:(nonnull ADJValueWO<NSString *> *)attributionStatusEventWO;
+- (nullable ADJAttributionStateOutputData *)receivedAcceptedNonAttributionResponse:
+    (nonnull id<ADJSdkResponseData>)nonAttributionResponse;
 
-- (nullable NSString *)startAskingWhenReceivedProcessedSessionResponseWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                                                                  sessionResponseData:(nonnull ADJSessionResponseData *)sessionResponseData
-                                                                        changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-                                                                             attributionStatusEventWO:(nonnull ADJValueWO<NSString *> *)attributionStatusEventWO;
+- (nullable ADJAttributionStateOutputData *)receivedAcceptedAttributionResponse:
+    (nonnull ADJAttributionResponseData *)attributionResponse;
 
-- (nullable NSString *)startAskingWhenReceivedAcceptedSdkResponseWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                                                                     sdkResponse:(nonnull id<ADJSdkResponseData>)sdkResponse
-                                                                   changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-                                                                                     delayDataWO:(nonnull ADJValueWO<ADJDelayData *> *)delayDataWO;
+- (nullable ADJAttributionStateOutputData *)installSessionTracked;
 
-- (nonnull NSString *)statusEventAtGateOpenWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData;
-
-- (nullable NSString *)startAskingWhenSdkStartWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                                                 isFirstStart:(BOOL)isFirstStart
-                                                changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO;
+- (nullable ADJAttributionStateOutputData *)sdkStart;
 
 @end

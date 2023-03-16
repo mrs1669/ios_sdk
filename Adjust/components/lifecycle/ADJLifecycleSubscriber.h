@@ -12,8 +12,8 @@
 
 @protocol ADJLifecycleSubscriber <NSObject>
 
-- (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext;
-- (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext;
+- (void)ccDidForeground;
+- (void)ccDidBackground;
 
 @end
 

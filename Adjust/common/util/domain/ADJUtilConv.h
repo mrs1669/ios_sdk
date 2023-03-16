@@ -21,10 +21,13 @@
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue;
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
-+ (nullable NSData *)convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
-                                                     errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
-+ (nullable id)convertToJsonFoundationValueWithJsonData :(nonnull NSData *)jsonData
-                                                errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
++ (nullable NSData *)
+    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue
+    errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
++ (nullable id)convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString
+                                              errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
++ (nullable id)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData
+                                               errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
 
 + (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
 

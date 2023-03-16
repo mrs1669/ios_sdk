@@ -14,9 +14,9 @@
 #import "ADJNonEmptyString.h"
 
 @interface ADJNonNegativeInt : NSObject<
-NSCopying,
-ADJPackageParamValueSerializable,
-ADJIoValueSerializable
+    NSCopying,
+    ADJPackageParamValueSerializable,
+    ADJIoValueSerializable
 >
 // instantiation
 + (nonnull instancetype)instanceAtZero;

@@ -18,16 +18,18 @@
 
 @interface ADJSQLiteStorageBase : ADJCommonBase<ADJSQLiteStorage>
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
-                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                       sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
-                                    tableName:(nonnull NSString *)tableName
-                            metadataTypeValue:(nonnull NSString *)metadataTypeValue;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    source:(nonnull NSString *)source
+    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+    sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
+    tableName:(nonnull NSString *)tableName
+    metadataTypeValue:(nonnull NSString *)metadataTypeValue;
 
 // protected
-@property (nullable, readonly, weak, nonatomic) ADJSingleThreadExecutor *storageExecutorWeak;
-@property (nullable, readonly, weak, nonatomic) id<ADJSQLiteDatabaseProvider> sqliteDatabaseProviderWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *storageExecutor;
+@property (nonnull, readonly, strong, nonatomic)
+    id<ADJSQLiteDatabaseProvider> sqliteDatabaseProvider;
 @property (nonnull, readonly, strong, nonatomic) NSString *tableName;
 @property (nonnull, readonly, strong, nonatomic) NSString *metadataTypeValue;
 

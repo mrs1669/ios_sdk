@@ -36,7 +36,7 @@
 - (BOOL)concretePerformStorageActionInDbTransaction:(nonnull ADJSQLiteDb *)sqliteDb
                                              logger:(nonnull ADJLogger *)logger {
     ADJSQLiteStoragePropertiesBase *_Nullable sqliteStorageProperties =
-    self.sqliteStoragePropertiesWeak;
+        self.sqliteStoragePropertiesWeak;
 
     if (sqliteStorageProperties == nil) {
         [logger debugDev:

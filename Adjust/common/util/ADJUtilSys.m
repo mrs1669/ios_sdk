@@ -13,88 +13,6 @@
 @implementation ADJUtilSys
 
 #pragma mark Public API
-+ (nullable NSString *)filePathInDocumentsDir:(nonnull NSString *)fileName {
-    // TODO figure out if this is the "right" way
-    //  like for example using NSFileManager URLsForDirectory:inDomains:
-    NSArray *_Nonnull paths =
-    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    if (paths.count == 0) {
-        return nil;
-    }
-    
-    NSString *_Nonnull documentsDirPath = [paths objectAtIndex:0];
-    NSString *_Nonnull filePath = [documentsDirPath stringByAppendingPathComponent:fileName];
-    
-    return filePath;
-}
-
-+ (nullable NSString *)filePathInAdjustAppSupportDir:(NSString *)fileName {
-
-    NSString *_Nullable adjustAppSupportDirPath = [self adjustAppSupportDir];
-    if (! adjustAppSupportDirPath) {
-        return nil;
-    }
-
-    NSString *_Nonnull filePath =
-    [adjustAppSupportDirPath stringByAppendingPathComponent:fileName];
-
-    return filePath;
-}
-
-+ (nullable NSString *)adjustAppSupportDir {
-    NSArray *_Nonnull paths =
-    NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
-                                        NSUserDomainMask,
-                                        YES);
-    if (paths.count == 0) {
-        return nil;
-    }
-
-    NSString *_Nonnull appSupportDirPath = [paths objectAtIndex:0];
-    NSString *_Nonnull adjustAppSupportDirPath =
-    [appSupportDirPath stringByAppendingPathComponent:@"Adjust"];
-
-    return adjustAppSupportDirPath;
-}
-
-+ (BOOL)createAdjustAppSupportDir {
-    // return value indicates if directory was created successfully or not
-    // error won't be reported if directory already exists
-
-    NSString *_Nullable adjustAppSupportDirPath = [self adjustAppSupportDir];
-    if (! adjustAppSupportDirPath) {
-        return NO;
-    }
-
-    NSError *_Nullable error = nil;
-    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:adjustAppSupportDirPath
-                                             withIntermediateDirectories:YES
-                                                              attributes:nil
-                                                                   error:&error];
-    if (! success && error != nil) {
-        // TODO: (Gena) - write these logs into an appropriate loger instance.
-        //NSLog(@"Error while creating directory: %@", adjustAppSupportDirPath);
-        //NSLog(@"Error: %@", error);
-        return NO;
-    }
-    
-    return YES;
-}
-
-+ (void)moveFromDocumentsToSupportFolderOldDbFilename:(nonnull NSString *)oldName
-                                        newDbFileName:(nonnull NSString *)newName {
-    NSString *oldFilePath = [self filePathInDocumentsDir:oldName];
-    NSString *newFilePath = [self filePathInAdjustAppSupportDir:newName];
-
-    NSError *error = nil;
-    BOOL success = [[NSFileManager defaultManager] moveItemAtPath:oldFilePath
-                                                           toPath:newFilePath
-                                                            error:&error];
-    if (! success && error != nil) {
-        // TODO: (Gena) - write these logs into an appropriate loger instance.
-        //NSLog(@"%@", [error localizedDescription]);
-    }
-}
 
 + (nonnull ADJNonEmptyString *)generateUuid {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
@@ -121,6 +39,30 @@
     return [[NSArray alloc] initWithObjects:ADJPluginSignerClassName, nil];
 }
 
++ (nonnull NSString *)clientSdkWithPrefix:(nullable NSString *)sdkPrefix {
+    if ([self isSdkPrefixValid:sdkPrefix]) {
+        return [NSString stringWithFormat:@"%@@%@", sdkPrefix, ADJClientSdk];
+    } else {
+        return ADJClientSdk;
+    }
+}
+
+
 #pragma mark - Private methods
++ (BOOL)isSdkPrefixValid:(nullable NSString *)sdkPrefix {
+    if (sdkPrefix == nil || sdkPrefix.length == 0) {
+        return NO;
+    }
+
+    
+    /* TODO: it has to follow allowed prefixes and version format
+     final String sdkPrefixRegex = "("
+     + Constants.ALLOWED_SDK_PREFIXES
+     + ")\\d.\\d{1,2}.\\d{1,2}";
+
+     return sdkPrefix.matches(sdkPrefixRegex);
+     */
+    return YES;
+}
 
 @end

@@ -7,15 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ADJSdkConfigDataBuilder.h"
+#import "ADJSdkConfigData.h"
 #import "ADJInstanceRoot.h"
+#import "ADJEntryRootBag.h"
 
-@interface ADJEntryRoot : NSObject
+@interface ADJEntryRoot : NSObject <ADJEntryRootBag>
 // instantiation
-- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                          sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder NS_DESIGNATED_INITIALIZER;
++ (nonnull ADJEntryRoot *)instanceWithClientId:(nullable NSString *)clientId
+                                 sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData;
+
 - (nullable instancetype)init NS_UNAVAILABLE;
-- (nonnull ADJInstanceRoot *)instanceForId:(nullable NSString *)instanceId;
+
+// public api
+- (nonnull ADJInstanceRoot *)instanceForClientId:(nullable NSString *)clientId;
+
+- (void)setSdkPrefix:(nullable NSString *)sdkPrefix;
+
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end

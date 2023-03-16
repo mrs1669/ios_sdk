@@ -33,22 +33,27 @@
 
 @implementation ADJSdkPackageSenderController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                          networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-                            adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
+    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"SdkPackageSenderController"];
     _networkEndpointData = networkEndpointData;
     _adjustUrlStrategy = adjustUrlStrategy;
     _clientCustomEndpointData = clientCustomEndpointData;
 
-    _sdkPackageSendingPublisher = [[ADJSdkPackageSendingPublisher alloc] init];
-    [pubRegistry addPublisher:_sdkPackageSendingPublisher];
-    _sdkResponsePublisher = [[ADJSdkResponsePublisher alloc] init];
-    [pubRegistry addPublisher:_sdkResponsePublisher];
+    _sdkPackageSendingPublisher =
+        [[ADJSdkPackageSendingPublisher alloc]
+         initWithSubscriberProtocol:@protocol(ADJSdkPackageSendingSubscriber)
+         controller:publisherController];
+
+    _sdkResponsePublisher = [[ADJSdkResponsePublisher alloc]
+                             initWithSubscriberProtocol:@protocol(ADJSdkResponseSubscriber)
+                             controller:publisherController];
     
     return self;
 }

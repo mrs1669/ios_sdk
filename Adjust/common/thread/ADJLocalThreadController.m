@@ -85,7 +85,7 @@ static dispatch_once_t localThreadControllerOnceToken = 0;
 - (nonnull NSString *)setNextLocalIdWithSerialDispatchQueue:(nonnull dispatch_queue_t)dispachQueue {
     NSUInteger nextLocalIdUInt = [self.atomicTallyCounter incrementAndGetPreviousValue];
     NSString *_Nonnull nextLocalNsString = [ADJUtilF uIntegerFormat:nextLocalIdUInt];
-    // todo check if value that is being pointed at is still there or is cleaned
+    // TODO: check if value that is being pointed at is still there or is cleaned
     dispatch_queue_set_specific(dispachQueue,
                                 kLocalIdKey.UTF8String,
                                 (void *)nextLocalNsString.UTF8String,

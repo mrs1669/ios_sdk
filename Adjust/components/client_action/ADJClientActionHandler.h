@@ -14,10 +14,10 @@
 
 @protocol ADJClientActionHandler <NSObject>
 
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession;
+- (BOOL)ccCanHandlePreFirstSessionClientAction;
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction;
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction;
 
 @end

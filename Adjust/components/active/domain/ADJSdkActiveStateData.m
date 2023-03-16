@@ -28,7 +28,8 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 @implementation ADJSdkActiveStateData
 #pragma mark Instantiation
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
+                                     logger:(nonnull ADJLogger *)logger
+{
     if (! [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
                                        logger:logger]) {
         return nil;
@@ -78,8 +79,9 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 #pragma mark Public API
 #pragma mark - ADJIoDataSerializable
 - (nonnull ADJIoData *)toIoData {
-    ADJIoDataBuilder *_Nonnull ioDataBuilder = [[ADJIoDataBuilder alloc]
-                                                initWithMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
+    ADJIoDataBuilder *_Nonnull ioDataBuilder =
+        [[ADJIoDataBuilder alloc]
+         initWithMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
 
     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataBuilder.propertiesMapBuilder
                                        key:kIsSdkActiveKey
@@ -118,4 +120,3 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 }
 
 @end
-

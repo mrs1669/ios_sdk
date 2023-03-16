@@ -116,11 +116,12 @@
 }
 
 - (nonnull NSString *)millisecondsDescription {
-    return [NSString stringWithFormat:@"%@ millisecond(s)", self.millisecondsSpan];
+    return self.millisecondsSpan.uIntegerValue == 1 ? @"1 millisecond"
+        : [NSString stringWithFormat:@"%@ milliseconds", self.millisecondsSpan];
 }
 
 - (nonnull NSString *)secondsDescription {
-    return [NSString stringWithFormat:@"%@ second(s)",
+    return [NSString stringWithFormat:@"%@ seconds",
             [ADJUtilF secondsFormat:
              [NSNumber numberWithDouble:[self secondsInterval]]]];
 }

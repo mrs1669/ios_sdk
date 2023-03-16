@@ -43,20 +43,19 @@
 
 #pragma mark Public API
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // can handle pre first session
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
     return YES;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     BOOL handled = [self ccTryHandleClientActionWithClientActionIoInjectedData:clientActionIoInjectedData
                                                                   apiTimestamp:apiTimestamp
-                                               clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+                                               clientActionRemoveStorageAction:removeStorageAction];
 
     if (! handled) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
     }
 }
 
@@ -75,7 +74,7 @@
     }
 
     ADJNonEmptyString *_Nullable previousValueBeforeAdding =
-    [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd.stringValue];
+    [storage pairValueWithKey:clientAddGlobalParameterData.keyToAdd];
 
     if ([clientAddGlobalParameterData.valueToAdd isEqual:previousValueBeforeAdding]) {
         [self.logger noticeClient:
@@ -86,7 +85,7 @@
     }
 
     [storage addPairWithValue:clientAddGlobalParameterData.valueToAdd
-                          key:clientAddGlobalParameterData.keyToAdd.stringValue
+                          key:clientAddGlobalParameterData.keyToAdd
           sqliteStorageAction:clientActionRemoveStorageActionData];
 
     if (previousValueBeforeAdding != nil) {
@@ -117,7 +116,7 @@
     }
 
     ADJNonEmptyString *_Nullable removedValue =
-    [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove.stringValue
+    [storage removePairWithKey:clientRemoveGlobalParameterData.keyToRemove
            sqliteStorageAction:clientActionRemoveStorageActionData];
 
     if (removedValue != nil) {

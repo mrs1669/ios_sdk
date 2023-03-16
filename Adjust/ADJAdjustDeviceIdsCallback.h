@@ -6,12 +6,12 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-@class ADJAdjustDeviceIds;
 
-@protocol ADJAdjustDeviceIdsCallback <NSObject>
+@class ADJAdjustDeviceIds;
+@protocol ADJAdjustCallback;
+
+@protocol ADJAdjustDeviceIdsCallback <ADJAdjustCallback>
 
 - (void)didReadWithAdjustDeviceIds:(nonnull ADJAdjustDeviceIds *)adjustDeviceIds;
-
-- (void)unableToReadAdjustDeviceIdsWithMessage:(nonnull NSString *)message;
 
 @end

@@ -8,6 +8,8 @@
 
 #import "ADJV4UserDefaultsData.h"
 
+#import "ADJUtilUserDefaults.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -21,36 +23,37 @@
  @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSNumber *> *iAdErrors;
  @property (nullable, readonly, strong, nonatomic) NSNumber *adServicesTrackedNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSDate * skadRegisterCallTimestamp;
- @property (nullable, readonly, strong, nonatomic) NSNumber *migrationCompletedNumberBool;
  */
 
-NSString *const ADJUserDefaultsPushToken = @"adj_push_token";
-NSString *const ADJUserDefaultsPushTokenString = @"adj_push_token_string";
-NSString *const ADJUserDefaultsInstallTracked = @"adj_install_tracked";
-NSString *const ADJUserDefaultsGdprForgetMe = @"adj_gdpr_forget_me";
-NSString *const ADJUserDefaultsDepplinkUrk = @"adj_deeplink_url";
-NSString *const ADJUserDefaultsDepplinkClickTime = @"adj_deeplink_click_time";
-NSString *const ADJUserDefaultsDisableThirdPartySharing = @"adj_disable_third_party_sharing";
-NSString *const ADJUserDefaultsIadErrors = @"adj_iad_errors";
-NSString *const ADJUserDefaultsAdServicesTracked = @"adj_adservices_tracked";
-NSString *const ADJUserDefaultsSkadRegisterCallTime = @"adj_skad_register_call_time";
-NSString *const ADJUserDefaultsMigrationCompleted = @"adj_migration_completed";
+NSString *const ADJUserDefaultsV4PushToken = @"adj_push_token";
+NSString *const ADJUserDefaultsV4PushTokenString = @"adj_push_token_string";
+NSString *const ADJUserDefaultsV4InstallTracked = @"adj_install_tracked";
+NSString *const ADJUserDefaultsV4GdprForgetMe = @"adj_gdpr_forget_me";
+NSString *const ADJUserDefaultsV4DeeplinkUrk = @"adj_deeplink_url";
+NSString *const ADJUserDefaultsV4DeeplinkClickTime = @"adj_deeplink_click_time";
+NSString *const ADJUserDefaultsV4DisableThirdPartySharing = @"adj_disable_third_party_sharing";
+NSString *const ADJUserDefaultsV4IadErrors = @"adj_iad_errors";
+NSString *const ADJUserDefaultsV4AdServicesTracked = @"adj_adservices_tracked";
+NSString *const ADJUserDefaultsV4SkadRegisterCallTime = @"adj_skad_register_call_time";
 
 @implementation ADJV4UserDefaultsData
-- (nonnull instancetype)initWithLogger:(nonnull ADJLogger *)logger {
+- (nonnull instancetype)initByReadingAll {
     self = [super init];
     
-    _pushTokenData = [ADJV4UserDefaultsData dataWithKey:ADJUserDefaultsPushToken];
-    _pushTokenString = [ADJV4UserDefaultsData stringWithKey:ADJUserDefaultsPushTokenString];
-    _installTrackedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsInstallTracked];
-    _gdprForgetMeNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsGdprForgetMe];
-    _deeplinkUrl = [ADJV4UserDefaultsData urlWithKey:ADJUserDefaultsDepplinkUrk];
-    _deeplinkClickTime = [ADJV4UserDefaultsData dateWithKey:ADJUserDefaultsDepplinkClickTime];
-    _disableThirdPartySharingNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsDisableThirdPartySharing];
-    _iAdErrors = [ADJV4UserDefaultsData dictionaryWithKey:ADJUserDefaultsIadErrors];
-    _adServicesTrackedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsAdServicesTracked];
-    _skadRegisterCallTimestamp = [ADJV4UserDefaultsData dateWithKey:ADJUserDefaultsSkadRegisterCallTime];
-    _migrationCompletedNumberBool = [ADJV4UserDefaultsData numberBoolWithKey:ADJUserDefaultsMigrationCompleted];
+    _pushTokenData = [ADJUtilUserDefaults dataWithKey:ADJUserDefaultsV4PushToken];
+    _pushTokenString = [ADJUtilUserDefaults stringWithKey:ADJUserDefaultsV4PushTokenString];
+    _installTrackedNumberBool =
+        [ADJUtilUserDefaults numberBoolWithKey:ADJUserDefaultsV4InstallTracked];
+    _gdprForgetMeNumberBool = [ADJUtilUserDefaults numberBoolWithKey:ADJUserDefaultsV4GdprForgetMe];
+    _deeplinkUrl = [ADJUtilUserDefaults urlWithKey:ADJUserDefaultsV4DeeplinkUrk];
+    _deeplinkClickTime = [ADJUtilUserDefaults dateWithKey:ADJUserDefaultsV4DeeplinkClickTime];
+    _disableThirdPartySharingNumberBool =
+        [ADJUtilUserDefaults numberBoolWithKey:ADJUserDefaultsV4DisableThirdPartySharing];
+    _iAdErrors = [ADJUtilUserDefaults dictionaryWithKey:ADJUserDefaultsV4IadErrors];
+    _adServicesTrackedNumberBool =
+        [ADJUtilUserDefaults numberBoolWithKey:ADJUserDefaultsV4AdServicesTracked];
+    _skadRegisterCallTimestamp =
+        [ADJUtilUserDefaults dateWithKey:ADJUserDefaultsV4SkadRegisterCallTime];
 
     return self;
 }
@@ -58,67 +61,6 @@ NSString *const ADJUserDefaultsMigrationCompleted = @"adj_migration_completed";
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
-}
-
-- (BOOL)isMigrationCompleted {
-    return (self.migrationCompletedNumberBool != nil) ? [self.migrationCompletedNumberBool boolValue] : NO;
-}
-
-- (void)setMigrationCompleted {
-    [NSUserDefaults.standardUserDefaults setBool:YES forKey:ADJUserDefaultsMigrationCompleted];
-}
-
-#pragma mark Internal Methods
-+ (nullable NSNumber *)numberBoolWithKey:(nonnull NSString *)key {
-    id _Nullable numberBoolValue = [NSUserDefaults.standardUserDefaults objectForKey:key];
-    
-    if (numberBoolValue == nil || ! [numberBoolValue isKindOfClass:[NSNumber class]]) {
-        return nil;
-    }
-    
-    return (NSNumber *)numberBoolValue;
-}
-
-+ (nullable NSString *)stringWithKey:(nonnull NSString *)key {
-    id _Nullable stringValue = [NSUserDefaults.standardUserDefaults objectForKey:key];
-    
-    if (stringValue == nil || ! [stringValue isKindOfClass:[NSString class]]) {
-        return nil;
-    }
-    
-    return (NSString *)stringValue;
-}
-
-+ (nullable NSData *)dataWithKey:(nonnull NSString *)key {
-    id _Nullable dataValue = [NSUserDefaults.standardUserDefaults objectForKey:key];
-    
-    if (dataValue == nil || ! [dataValue isKindOfClass:[NSData class]]) {
-        return nil;
-    }
-    
-    return (NSData *)dataValue;
-}
-
-+ (nullable NSDate *)dateWithKey:(nonnull NSString *)key {
-    id _Nullable dateValue = [NSUserDefaults.standardUserDefaults objectForKey:key];
-    
-    if (dateValue == nil || ! [dateValue isKindOfClass:[NSDate class]]) {
-        return nil;
-    }
-    
-    return (NSDate *)dateValue;
-}
-
-+ (nullable NSURL *)urlWithKey:(nonnull NSString *)key {
-    return [NSUserDefaults.standardUserDefaults URLForKey:key];
-}
-
-+ (nullable NSDictionary *)dictionaryWithKey:(nonnull NSString *)key {
-    return [NSUserDefaults.standardUserDefaults dictionaryForKey:key];
-}
-
-+ (void)removeObjectWithKey:(nonnull NSString *)key {
-    [NSUserDefaults.standardUserDefaults removeObjectForKey:key];
 }
 
 @end

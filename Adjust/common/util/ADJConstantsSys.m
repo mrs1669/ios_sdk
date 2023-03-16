@@ -12,3 +12,7 @@ NSString *const ADJClientSdkHeaderKey = @"Client-SDK";
 NSString *const ADJClientSdk = @"ios5.0.0";
 
 NSString *const ADJPluginSignerClassName = @"ADJSigV2Plugin";
+
+NSString *const ADJAdjustDirPath = @"Adjust";
+
+NSString *const ADJUserDefaultsPrimaryInstanceIdKey = @"ADJPrimaryInstanceId";

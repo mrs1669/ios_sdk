@@ -12,13 +12,9 @@
 
 @interface ADJV4UserDefaultsData : NSObject
 // instantiation
-- (nonnull instancetype)initWithLogger:(nonnull ADJLogger *)logger
-NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initByReadingAll NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
-
-- (BOOL)isMigrationCompleted;
-- (void)setMigrationCompleted;
 
 // public properties
 @property (nullable, readonly, strong, nonatomic) NSData *pushTokenData;
@@ -31,6 +27,5 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, NSNumber *> *iAdErrors;
 @property (nullable, readonly, strong, nonatomic) NSNumber *adServicesTrackedNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSDate * skadRegisterCallTimestamp;
-@property (nullable, readonly, strong, nonatomic) NSNumber *migrationCompletedNumberBool;
 
 @end

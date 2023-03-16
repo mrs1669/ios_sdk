@@ -8,7 +8,7 @@
 
 #import "ADJV4FilesData.h"
 
-#import "ADJUtilSys.h"
+#import "ADJUtilFiles.h"
 #import "ADJAdjustLogMessageData.h"
 
 #pragma mark Fields
@@ -71,7 +71,8 @@
                                 class:(nonnull Class)classToRead
                                logger:(nonnull ADJLogger *)logger {
     // Try to read from Application Support directory first.
-    NSString *_Nullable appSupportFilePath = [ADJUtilSys filePathInAdjustAppSupportDir:fileName];
+    NSString *_Nullable appSupportFilePath =
+        [ADJUtilFiles filePathInAdjustAppSupportDir:fileName];
     
     id _Nullable appSupportReadObject = [self readObjectWithFilePath:appSupportFilePath
                                                             fileName:fileName
@@ -85,7 +86,7 @@
     
     // If in here, for some reason, reading of file from Application Support folder failed.
     // Let's check the Documents folder.
-    NSString *_Nullable documentsFilePath = [ADJUtilSys filePathInDocumentsDir:fileName];
+    NSString *_Nullable documentsFilePath = [ADJUtilFiles filePathInDocumentsDir:fileName];
     
     id _Nullable documentsReadObject = [self readObjectWithFilePath:documentsFilePath
                                                            fileName:fileName

@@ -108,7 +108,8 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
     }
     
     if (SQLITE_ROW != returnCode) {
-        //[self closeStatement]; // TODO check if it can be auto closed
+        // TODO: check if it can be auto closed
+        //[self closeStatement];
         return NO;
     } else {
         return YES;
@@ -256,7 +257,7 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
                       isQueryOrElseUpdate ? @"true" : @"false", @"isQueryOrElseUpdate",
                       self.sqlString, @"sql",
                       [ADJUtilF intFormat:returnCode], @"returnCode",
-                      [self lastErrorMessage], @"lastErrorMessage@", nil]
+                      [self lastErrorMessage], @"lastErrorMessage", nil]
            issueType:ADJIssueStorageIo];
 }
 

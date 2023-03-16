@@ -28,13 +28,15 @@
 
 @implementation ADJOfflineController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"ADJOfflineController"];
 
-    _offlinePublisher = [[ADJOfflinePublisher alloc] init];
-    [pubRegistry addPublisher:_offlinePublisher];
+    _offlinePublisher = [[ADJOfflinePublisher alloc]
+                         initWithSubscriberProtocol:@protocol(ADJOfflineSubscriber)
+                         controller:publisherController];
 
     _isOffline = ADJIsSdkOfflineWhenStarting;
 

@@ -8,7 +8,6 @@
 
 #import "ADJSQLiteController.h"
 
-
 #import "ADJPublisherBase.h"
 #import "ADJUtilSys.h"
 #import "ADJUtilF.h"
@@ -16,6 +15,9 @@
 #import "ADJV4FilesData.h"
 #import "ADJV4UserDefaultsData.h"
 #import "ADJConstants.h"
+#import "ADJConstantsSys.h"
+#import "ADJUtilUserDefaults.h"
+#import "ADJUtilFiles.h"
 
 #pragma mark Private class
 @interface ADJSQLiteStorageAggregator : ADJPublisherBase<id<ADJSQLiteStorage>> @end
@@ -27,38 +29,29 @@
  @property (nonnull, readonly, strong, nonatomic) ADJSQLiteDb *sqliteDb;
  */
 #pragma mark - Private constants
-static int const kDatabaseVersion               = 5000; // v5.00.0
+static NSUInteger const kDatabaseVersion        = 5000; // v5.00.0
 NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 
 @interface ADJSQLiteController ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSQLiteStorageAggregator *sqliteStorageAggregator;
 @property (nonnull, readonly, strong, nonatomic) ADJV4RestMigration *v4RestMigration;
-@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
+@property (nonnull, readonly, strong, nonatomic) ADJInstanceIdData *instanceId;
 @end
 
 @implementation ADJSQLiteController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   instanceId:(nonnull NSString *)instanceId {
+                                   instanceId:(nonnull ADJInstanceIdData *)instanceId
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"SQLiteController"];
-    _instanceId = [instanceId copy];
-    _sqliteStorageAggregator = [[ADJSQLiteStorageAggregator alloc] init];
+    _instanceId = instanceId;
+    _sqliteStorageAggregator = [[ADJSQLiteStorageAggregator alloc] initWithoutSubscriberProtocol];
     
     _v4RestMigration = [[ADJV4RestMigration alloc] initWithLoggerFactory:loggerFactory
                                                               instanceId:instanceId];
-    [ADJUtilSys createAdjustAppSupportDir];
 
-    NSString *oldDbFileName = [NSString stringWithFormat:@"%@.db", ADJDatabaseNamePrefix];
-    NSString *dbFileName = [NSString stringWithFormat:@"%@_%@.db", ADJDatabaseNamePrefix, instanceId];
-
-    // Move an 'adjust.db' file if found in '/Documents' folder to an '/Application Support/Adjust'
-    // while renaming it to a coming first instance id named db file.
-    [ADJUtilSys moveFromDocumentsToSupportFolderOldDbFilename:oldDbFileName
-                                                newDbFileName:dbFileName];
-
-    _sqliteDb = [[ADJSQLiteDb alloc] initWithLoggerFactory:loggerFactory
-                                              databasePath:[ADJUtilSys filePathInAdjustAppSupportDir:dbFileName]];
+    _sqliteDb = [[ADJSQLiteDb alloc] initWithLoggerFactory:loggerFactory];
     return self;
 }
 
@@ -68,139 +61,244 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 }
 
 - (void)readAllIntoMemorySync {
-    [self.logger debugDev:@"Trying to read all database tables into memory"];
-    
-    if (self.sqliteDb.databasePath == nil) {
-        [self.logger debugDev:@"Cannot read into memory without a sqlite file path"
-                    issueType:ADJIssueStorageIo];
-        return;
-    }
-    
-    NSFileManager *_Nonnull fileManager = [NSFileManager defaultManager];
-    BOOL didDbExisted = [fileManager fileExistsAtPath:self.sqliteDb.databasePath];
-    
-    [self.logger debugDev:@"Db file found?"
-                      key:@"didDbExisted"
-                    value:[ADJUtilF boolFormat:didDbExisted].description];
-    
-    BOOL openSuccess = [self.sqliteDb openDb];
-    
-    if (! openSuccess) {
-        [self.logger debugDev:@"Cannot read into memory without being able to open the db"
-                    issueType:ADJIssueStorageIo];
-        return;
-    }
-    
-    int dbVersion = [self.sqliteDb dbVersion];
-    
-    BOOL migrateFromV4 = NO;
-    BOOL upgradeVersion = NO;
-    
-    if (dbVersion != kDatabaseVersion) {
-        [self.sqliteDb setDbVersion:kDatabaseVersion];
-        
-        if (dbVersion == 0) {
-            [self createTables];
-            
-            migrateFromV4 = YES;
-        } else {
-            //[self didUpgradeWithOldVersion:dbVersion];
-            upgradeVersion = YES;
-        }
-    }
-    
+    NSString *_Nullable dbPath = [self loadDbPath];
+    if (dbPath == nil) { return; }
+
+    BOOL dbLoaded = [self loadDbWithPath:dbPath];
+    if (! dbLoaded) { return; }
+
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
         [sqliteStorage readIntoMemorySync:self.sqliteDb];
     }];
-    
-    if (migrateFromV4) {
-        [self migrateFromV4];
-    }
-    
-    if (upgradeVersion) {
-        [self didUpgradeWithOldVersion:dbVersion];
-    }
 }
 
 #pragma mark Internal Methods
+#pragma mark - loadDir
+- (nullable NSString *)loadDbPath {
+    NSString *_Nullable adjustAppSupportDirPath = [self loadAdjustAppSupportDir];
+    if (adjustAppSupportDirPath == nil) { return nil; }
+
+    NSString *_Nonnull dbFilename = [self.instanceId toDbName];
+    NSString *_Nonnull adjustAppSupportDirDbPath =
+        [ADJUtilFiles filePathWithDir:adjustAppSupportDirPath filename:dbFilename];
+
+    return adjustAppSupportDirDbPath;
+}
+
+- (nullable NSString *)loadAdjustAppSupportDir {
+    NSString *_Nullable adjustAppSupportDirPath = [ADJUtilFiles adjustAppSupportDir];
+    if (adjustAppSupportDirPath == nil) {
+        [self.logger debugDev:@"Cannot obtain adjust app dir path"
+                    issueType:ADJIssueStorageIo];
+        return nil;
+    }
+
+    NSError *dirCreateError;
+    BOOL dirCreated = [ADJUtilFiles createDirWithPath:adjustAppSupportDirPath
+                                             errorPtr:&dirCreateError];
+    if (! dirCreated) {
+        [self.logger debugDev:@"Cannot create adjust app dir"
+                      nserror:dirCreateError
+                          key:@"adjust app dir path"
+                        value:adjustAppSupportDirPath
+                    issueType:ADJIssueStorageIo];
+        return nil;
+    }
+
+    [self.logger debugDev:@"Adjust app support dir loaded"
+                      key:@"was dir created"
+                    value:[ADJUtilF boolFormat:YES]];
+
+    return adjustAppSupportDirPath;
+}
+
+#pragma mark - loadDb
+- (BOOL)loadDbWithPath:(nonnull NSString *)dbPath {
+    BOOL dbFileExists = [ADJUtilFiles fileExistsWithPath:dbPath];
+    [self.logger debugDev:@"Was db file found"
+                      key:@"dbFileExists"
+                    value:[ADJUtilF boolFormat:dbFileExists]];
+
+    BOOL dbOpened = [self.sqliteDb openDbWithPath:dbPath];
+    if (! dbOpened) {
+        return NO;
+    }
+
+    [self migrateOpenedDb];
+
+    return YES;
+}
+
+- (void)migrateOpenedDb {
+    ADJNonNegativeInt *_Nonnull dbVersion = [self.sqliteDb dbVersion];
+
+    if (dbVersion.uIntegerValue == kDatabaseVersion) {
+        [self.logger debugDev:@"Same db version found, no migration needed"
+                          key:@"db version"
+                        value:dbVersion.description];
+        return;
+    }
+
+    if (dbVersion.uIntegerValue > kDatabaseVersion) {
+        [self.logger debugDev:@"Future db version found, will use as old version"
+                         key1:@"file db version"
+                       value1:dbVersion.description
+                         key2:@"sdk db version"
+                       value2:@(kDatabaseVersion).description
+                    issueType:ADJIssueStorageIo];
+        return;
+    }
+
+    // TODO: consider doing migration in sql transaction?
+
+    if (dbVersion.uIntegerValue == 0) {
+        [self.logger debugDev:@"No previous db version found"];
+
+        [self migrateNewDb];
+    } else {
+        [self.logger debugDev:@"Older db version found"
+                         key1:@"file db version"
+                       value1:dbVersion.description
+                         key2:@"sdk db version"
+                       value2:@(kDatabaseVersion).description];
+
+        [self migrateOldDbWithVersion:dbVersion];
+    }
+
+    [self.sqliteDb setDbVersion:kDatabaseVersion];
+}
+
+- (void)migrateNewDb {
+    [self createTables];
+
+    [self migratePrimaryInstance];
+}
+
 - (void)createTables {
     [self.logger debugDev:@"Creating database tables"];
-    
+
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
         [self.sqliteDb executeStatements:[sqliteStorage sqlStringForOnCreate]];
     }];
-    
+
     [self.logger debugDev:@"All database tables created"];
 }
 
-- (void)migrateFromV4 {
-    ADJV4UserDefaultsData *_Nonnull v4UserDefaultsData =
-        [[ADJV4UserDefaultsData alloc] initWithLogger:self.logger];
-    if ([v4UserDefaultsData isMigrationCompleted]) {
-        [self.logger debugDev:
-         @"Migration has been already completed. Skipping v4 data migration for instance"
-                          key:@"instanceId"
-                        value:self.instanceId];
+- (void)migratePrimaryInstance {
+    NSString *_Nullable readUserDefaultsPrimaryInstanceIdString =
+        [self readUserDefaultsPrimaryInstanceId];
+    if (readUserDefaultsPrimaryInstanceIdString != nil) {
+        if ([self isPrimaryInstanceWithReadIdString:readUserDefaultsPrimaryInstanceIdString]) {
+            [self.logger debugDev:
+             @"Unexpected to find the same instance as primary already migrated."
+             " Will not try to migrate again"
+                        issueType:ADJIssueStorageIo];
+        } else {
+            [self.logger debugDev:
+             @"Will not migrate, since a previous primary instance already did"
+                              key:@"primary instance id"
+                            value:readUserDefaultsPrimaryInstanceIdString];
+        }
         return;
     }
 
-    // Get the primary instance id from the App Bundle
-    NSString *primaryInstanceId = [[NSBundle mainBundle] objectForInfoDictionaryKey:kAdjustPrimaryInstanceIdKey];
-    if (primaryInstanceId != nil && primaryInstanceId.length > 0) {
-        [self.logger debugDev:@"Adjust v4 data migration configured to primary instance"
-                          key:@"primaryInstanceId" value:primaryInstanceId];
-        if ([primaryInstanceId caseInsensitiveCompare:self.instanceId] != NSOrderedSame) {
-            [self.logger debugDev:@"Skipping Adjust v4 data migration for instance"
-                              key:@"instanceId"
-                            value:self.instanceId];
-            return;
-        }
-    }
+    BOOL isPrimaryInstance = [self isPrimaryInstance];
+    if (! isPrimaryInstance) { return; }
 
     ADJV4FilesData *_Nonnull v4FilesData = [[ADJV4FilesData alloc] initWithLogger:self.logger];
+    ADJV4UserDefaultsData *_Nonnull v4UserDefaultsData =
+        [[ADJV4UserDefaultsData alloc] initByReadingAll];
 
-    [self.logger debugDev:@"Migrating data from v4 to database"];
-
+    // publish v4 migrate each storage instance
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
-        [sqliteStorage migrateFromV4WithV4FilesData:v4FilesData v4UserDefaultsData:v4UserDefaultsData];
+        [sqliteStorage migrateFromV4WithV4FilesData:v4FilesData
+                                 v4UserDefaultsData:v4UserDefaultsData];
     }];
-    
-    [self.v4RestMigration migrateFromV4WithV4FilesData:v4FilesData v4UserDefaultsData:v4UserDefaultsData];
-    
-    [self.logger debugDev:@"All data migrated from v4 to database"];
-    // TODO: (Gena) Alternatively we would like to delete all v4 data instead of 'migrationCompleted' flag.
-    [v4UserDefaultsData setMigrationCompleted];
+
+    [self.v4RestMigration migrateFromV4WithV4FilesData:v4FilesData
+                                    v4UserDefaultsData:v4UserDefaultsData];
+
+    [self markUserDefaultsPrimaryInstanceId];
+    // TODO: Maybe we would like to delete all v4 data after
 }
 
-- (void)didUpgradeWithOldVersion:(int)oldDbVersion {
+- (BOOL)isPrimaryInstance {
+    NSString *_Nullable readInfoPlistPrimaryInstanceIdString =
+        [self readInfoPlistPrimaryInstanceId];
+    if (readInfoPlistPrimaryInstanceIdString != nil) {
+        return [self isPrimaryInstanceWithReadIdString:readInfoPlistPrimaryInstanceIdString];
+    }
+
+    if (self.instanceId.isFirstInstance) {
+        [self.logger debugDev:@"Will be used as the instance to migrate"
+         " , since it was the first one and without any configured primary instance"];
+
+        return YES;
+    } else {
+        [self.logger debugDev:@"Will not be used as the instance to migrate"
+         " , since it was not the first one and without any configured primary instance"];
+
+        return NO;
+    }
+}
+
+- (nullable NSString *)readInfoPlistPrimaryInstanceId {
+    NSDictionary<NSString *, id> *_Nullable infoDictionary =
+        [[NSBundle mainBundle] infoDictionary];
+    if (infoDictionary == nil) { return nil; }
+
+    id _Nullable primaryInstanceId =
+        [infoDictionary objectForKey:ADJUserDefaultsPrimaryInstanceIdKey];
+    if (primaryInstanceId == nil) { return nil;}
+
+    if (! [primaryInstanceId isKindOfClass:[NSString class]]) { return nil; }
+
+    return (NSString *)primaryInstanceId;
+}
+
+- (BOOL)isPrimaryInstanceWithReadIdString:(nonnull NSString *)readInstanceIdString {
+    return [readInstanceIdString isEqualToString:self.instanceId.idString];
+}
+
+- (nullable NSString *)readUserDefaultsPrimaryInstanceId {
+    return [ADJUtilUserDefaults stringWithKey:ADJUserDefaultsPrimaryInstanceIdKey];
+}
+
+- (void)markUserDefaultsPrimaryInstanceId {
+    [ADJUtilUserDefaults setStringValue:self.instanceId.idString
+                                    key:ADJUserDefaultsPrimaryInstanceIdKey];
+}
+
+- (void)migrateOldDbWithVersion:(nonnull ADJNonNegativeInt *)oldDbVersion {
     [self.logger debugDev:@"Upgrading database"
                      key1:@"old version"
-                   value1:[ADJUtilF integerFormat:oldDbVersion]
+                   value1:oldDbVersion.description
                      key2:@"new version"
                    value2:[ADJUtilF integerFormat:kDatabaseVersion]];
-    
+
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
      {
         NSString *_Nullable sqlStringForOnUpgrade =
             [sqliteStorage sqlStringForOnUpgrade:oldDbVersion];
-        
+
         if (sqlStringForOnUpgrade == nil) {
             [self.logger debugDev:@"Not upgrading sqlite storage"
-                        issueType:ADJIssueStorageIo];
+                              key:@"storage description"
+                            value:sqliteStorage.description];
             return;
         }
-        
+
         [self.logger debugDev:@"Upgrading sqlite storage"
                           key:@"sqlStringForOnUpgrade"
                         value:sqlStringForOnUpgrade];
-        
+
         [self.sqliteDb executeStatements:sqlStringForOnUpgrade];
     }];
 }

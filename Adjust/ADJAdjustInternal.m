@@ -14,22 +14,27 @@
 #import "ADJConstantsSys.h"
 #import "ADJUtilF.h"
 #import "ADJAdjustInstance.h"
+#import "ADJUtilFiles.h"
 
 static ADJEntryRoot *entryRootInstance = nil;
 static dispatch_once_t entryRootOnceToken = 0;
 
 @implementation ADJAdjustInternal
 
-+ (nonnull id<ADJAdjustInstance>)sdkInstanceForId:(nullable NSString *)instanceId {
++ (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId {
+    return [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+}
+
++ (nonnull ADJEntryRoot *)entryRootForClientId:(nullable NSString *)clientId {
     // add syncronization for testing teardown
 #ifdef DEBUG
     @synchronized ([ADJEntryRoot class]) {
 #endif
         dispatch_once(&entryRootOnceToken, ^{
-            entryRootInstance = [[ADJEntryRoot alloc] initWithInstanceId:instanceId
-                                                        sdkConfigBuilder:nil];
+            entryRootInstance = [ADJEntryRoot instanceWithClientId:clientId
+                                                     sdkConfigData:nil];
         });
-        return [entryRootInstance instanceForId:instanceId];
+        return entryRootInstance;
 #ifdef DEBUG
     }
 #endif
@@ -39,33 +44,21 @@ static dispatch_once_t entryRootOnceToken = 0;
     return ADJClientSdk;
 }
 
-+ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
-    if ([self isSdkPrefixValid:sdkPrefix]) {
-        return [NSString stringWithFormat:@"%@@%@", sdkPrefix, [self sdkVersion]];
-    } else {
-        return [self sdkVersion];
-    }
++ (void)
+    setSdkPrefix:(nullable NSString *)sdkPrefix
+    fromInstanceWithClientId:(nullable NSString *)clientId
+{
+    [[ADJAdjustInternal entryRootForClientId:clientId] setSdkPrefix:sdkPrefix];
 }
 
-+ (BOOL)isSdkPrefixValid:(nullable NSString *)sdkPrefix {
-    if (sdkPrefix == nil || sdkPrefix.length == 0) {
-        return NO;
-    }
-
-    /* TODO
-     // it has to follow allowed prefixes and version format
-     final String sdkPrefixRegex = "("
-     + Constants.ALLOWED_SDK_PREFIXES
-     + ")\\d.\\d{1,2}.\\d{1,2}";
-
-     return sdkPrefix.matches(sdkPrefixRegex);
-     */
-    return YES;
++ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
+    return [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
 }
 
 // Resets the sdk state, as if it was not initialized or used before.
-+ (nonnull NSString *)teardownWithSdkConfigDataBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder
-                                    shouldClearStorage:(BOOL)shouldClearStorage {
++ (nonnull NSString *)teardownWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
+                             shouldClearStorage:(BOOL)shouldClearStorage
+{
     // restrict teardown to debug builds
 #ifndef DEBUG
     return @"Teardown cannot be done in non-debug mode";
@@ -81,12 +74,12 @@ static dispatch_once_t entryRootOnceToken = 0;
 
         entryRootInstance = nil;
 
-        if (sdkConfigBuilder != nil) {
+        if (sdkConfigData != nil) {
             [returnMessage appendString:@". Creating new entry root instance with injected sdk config"];
             entryRootOnceToken = 0;
             dispatch_once(&entryRootOnceToken, ^{
-                entryRootInstance = [[ADJEntryRoot alloc] initWithInstanceId:nil
-                                                            sdkConfigBuilder:sdkConfigBuilder];
+                entryRootInstance = [ADJEntryRoot instanceWithClientId:nil // TODO: add when testing for it
+                                                         sdkConfigData:sdkConfigData];
             });
         } else {
             [returnMessage appendString:@". Not creating new entry root instance without injected sdk config"];
@@ -157,19 +150,54 @@ static dispatch_once_t entryRootOnceToken = 0;
     }
 }
 
-+ (nonnull NSString *)clearStorage {
 
-    NSString *_Nullable pathToDelete = [ADJUtilSys adjustAppSupportDir];
-    NSFileManager *_Nonnull fileManager = [NSFileManager defaultManager];
++ (nonnull NSString *)clearStorage {
+    // TODO: add delete of all instances
+    NSMutableString *_Nonnull returnString = [[NSMutableString alloc]
+                                              initWithString:@"Clearing storage"];
+
+    [returnString appendFormat:@". %@",
+     [ADJAdjustInternal clearDbInAdjustAppSupportWithIdString:@""]];
+
+    [returnString appendFormat:@". %@",
+     [ADJAdjustInternal clearDbInDocumentsDirWithIdString:@""]];
+
+    //TODO: delete custom user defaults
+
+    return returnString;
+}
+
++ (nonnull NSString *)clearDbInAdjustAppSupportWithIdString:(nonnull NSString *)idString {
+
+    NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
+    NSString *_Nullable appSupportDbFilename = [ADJUtilFiles filePathInAdjustAppSupportDir:dbFilename];
+
+    if (appSupportDbFilename == nil) {
+        return @"Could not obtain db filename in Application Support dir";
+    }
+    return [self clearDbAtPath:appSupportDbFilename];
+}
+
++ (nonnull NSString *)clearDbInDocumentsDirWithIdString:(nonnull NSString *)idString {
+
+    NSString *_Nonnull dbFilename = [ADJInstanceIdData toDbNameWithIdString:idString];
+    NSString *_Nullable documentsDbFilename = [ADJUtilFiles filePathInDocumentsDir:dbFilename];
+    if (documentsDbFilename == nil) {
+        return @"Could not obtain db filename in documents dir";
+    }
+    return [self clearDbAtPath:documentsDbFilename];
+}
+
++ (nonnull NSString *)clearDbAtPath:(nonnull NSString *)dbPath {
+
     NSError *error = nil;
-    BOOL removedSuccessfully = [fileManager removeItemAtPath:pathToDelete
-                                                       error:&error];
+    BOOL success = [[NSFileManager defaultManager] removeItemAtPath:dbPath
+                                                              error:&error];
     if (error) {
         return [ADJUtilF errorFormat:error];
     }
-    return [NSString stringWithFormat:@"fileManager removedSuccessfully: %d", removedSuccessfully];
+    return [NSString stringWithFormat:@"%@ to remove [%@]",
+            success ? @"Succeeded" : @"Failed",
+            dbPath];
 }
-
-
 @end
-

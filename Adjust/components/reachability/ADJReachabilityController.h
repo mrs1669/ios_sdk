@@ -10,17 +10,17 @@
 
 #import "ADJCommonBase.h"
 #import "ADJTeardownFinalizer.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
 #import "ADJReachabilitySubscriber.h"
 #import "ADJThreadController.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 //- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus;
 
 @interface ADJReachabilityController : ADJCommonBase<
    ADJTeardownFinalizer,
    // subscriptions
-   ADJMeasurementSessionStartSubscriber
+    ADJSdkStartSubscriber
 >
 
 // publishers
@@ -30,7 +30,7 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
                                targetEndpoint:(nonnull NSString *)targetEndpoint
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+                          publisherController:(nonnull ADJPublisherController *)publisherController;
 
 @end
 

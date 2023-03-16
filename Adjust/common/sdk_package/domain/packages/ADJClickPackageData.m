@@ -34,6 +34,15 @@ NSString *const ADJClickPackageDataPath = @"sdk_click";
     return [self initWithClientSdk:clientSdk parameters:parameters];
 }
 
+#pragma mark Public API
+- (BOOL)isAsaClick {
+    ADJNonEmptyString *_Nullable clickSourceValue =
+        [self.parameters pairValueWithKey:ADJParamClickSourceKey];
+
+    return clickSourceValue != nil
+        && [clickSourceValue.stringValue isEqualToString:ADJParamAsaAttributionClickSourceValue];
+}
+
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSdkPackageBaseData
 - (nonnull ADJNonEmptyString *)concreteGenerateShortDescription {

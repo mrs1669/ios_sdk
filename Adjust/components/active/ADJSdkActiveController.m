@@ -13,36 +13,41 @@
 #pragma mark Private class
 @implementation ADJSdkActivePublisher @end
 
+#pragma mark Fields
 @interface ADJSdkActiveController ()
-// publishers
-@property (nonnull, readwrite, strong, nonatomic) ADJSdkActivePublisher *sdkActivePublisher;
-#pragma mark - Internal variables
-@property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *activeStateStorage;
+#pragma mark - Injected dependencies
+@property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *storage;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *clientExecutor;
-@property (nonnull, readwrite, strong, nonatomic) ADJSdkActiveState *sdkActiveState;
+
+#pragma mark - Internal variables
+@property (nonnull, readonly, strong, nonatomic) ADJSdkActiveState *sdkActiveState;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkActivePublisher *sdkActivePublisher;
 @property (readwrite, assign, nonatomic) BOOL canPublish;
+
 @end
 
-
 @implementation ADJSdkActiveController
-
-- (instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                   activeStateStorage:(ADJSdkActiveStateStorage *)activeStateStorage
-                       clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
-                          isForgotten:(BOOL)isForgotten
-                   publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+#pragma mark Instantiation
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    activeStateStorage:(nonnull ADJSdkActiveStateStorage *)activeStateStorage
+    clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
+    isForgotten:(BOOL)isForgotten
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkActiveController"];
-
-    _activeStateStorage = activeStateStorage;
+    _storage = activeStateStorage;
     _clientExecutor = clientExecutor;
 
-    _sdkActivePublisher = [[ADJSdkActivePublisher alloc] init];
-    [pubRegistry addPublisher:_sdkActivePublisher];
+    _sdkActivePublisher = [[ADJSdkActivePublisher alloc]
+                           initWithSubscriberProtocol:@protocol(ADJSdkActiveSubscriber)
+                           controller:publisherController];
 
-    _sdkActiveState = [[ADJSdkActiveState alloc] initWithLoggerFactory:loggerFactory
-                                                    sdkActiveStateData:[_activeStateStorage readOnlyStoredDataValue]
-                                                       isGdprForgotten:isForgotten];
+    _sdkActiveState = [[ADJSdkActiveState alloc]
+                       initWithLoggerFactory:loggerFactory
+                       sdkActiveStateData:[activeStateStorage readOnlyStoredDataValue]
+                       isGdprForgotten:isForgotten];
+
     _canPublish = NO;
 
     return self;
@@ -53,116 +58,98 @@
     return nil;
 }
 
+#pragma mark Public API
 - (BOOL)ccTrySdkInit {
     return [self.sdkActiveState trySdkInit];
 }
 
-- (BOOL)ccCanPerformActionWithSource:(nonnull NSString *)source
-                        errorMessage:(NSString * _Nullable * _Nullable)errorMessage {
-    return [self.sdkActiveState canPerformActionWithSource:source errorMessage:errorMessage];
+- (BOOL)ccCanPerformActionWithClientSource:(nonnull NSString *)clientSource {
+    return [self ccCanPerformActionOrElseMessageWithClientSource:clientSource] == nil;
+}
+
+- (nullable NSString *)ccCanPerformActionOrElseMessageWithClientSource:
+    (nonnull NSString *)clientSource
+{
+    return [self.sdkActiveState canPerformActionOrElseMessageWithClientSource:clientSource];
 }
 
 - (void)ccInactivateSdk {
-
-    ADJValueWO<ADJSdkActiveStateData *> *_Nonnull changedSdkActiveStateDataWO = [[ADJValueWO alloc] init];
-    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
-
-    [self.sdkActiveState inactivateSdkWithActiveStatusEventWO:sdkActiveStatusEventWO
-                                            activeStateDataWO:changedSdkActiveStateDataWO];
-
-    [self handleStateSideEffectsWithChangedSdkActiveStateData:changedSdkActiveStateDataWO.changedValue
-                                         sdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
-                                                       source:@"ccInactivateSdk"];
+    ADJActivityStateOutputData *_Nullable output = [self.sdkActiveState inactivateSdk];
+    [self ccHandleSideEffectsWithOutputData:output source:@"ccInactivateSdk"];
 }
 
 - (void)ccReactivateSdk {
-
-    ADJValueWO<ADJSdkActiveStateData *> *_Nonnull changedSdkActiveStateDataWO = [[ADJValueWO alloc] init];
-    ADJValueWO<NSString *> *_Nonnull sdkActiveStatusEventWO = [[ADJValueWO alloc] init];
-
-    [self.sdkActiveState reactivateSdkWithActiveStatusEventWO:sdkActiveStatusEventWO
-                                            activeStateDataWO:changedSdkActiveStateDataWO];
-
-    [self handleStateSideEffectsWithChangedSdkActiveStateData:changedSdkActiveStateDataWO.changedValue
-                                         sdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
-                                                       source:@"ccReactivateSdk"];
+    ADJActivityStateOutputData *_Nullable output = [self.sdkActiveState reactivateSdk];
+    [self ccHandleSideEffectsWithOutputData:output source:@"ccReactivateSdk"];
 }
 
 - (BOOL)ccGdprForgetDevice {
-
-    ADJValueWO<NSString *> * sdkActiveStatusEventWO = [self.sdkActiveState gdprForgottenByClient];
-    if (! sdkActiveStatusEventWO) {
-        return NO;
-    }
-
-    [self handleSdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue source:@"ccGdprForgetDevice"];
-    return YES;
+    ADJActivityStateOutputData *_Nullable output = [self.sdkActiveState forgottenFromClient];
+    return [self ccHandleSideEffectsWithOutputData:output source:@"ccGdprForgetDevice"];
 }
 
 #pragma mark - ADJGdprForgetSubscriber
 - (void)didGdprForget {
-
     __typeof(self) __weak weakSelf = self;
     [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) {
-            return;
-        }
+        if (strongSelf == nil) { return; }
 
-        [strongSelf processGdprForgetEvent];
+        ADJActivityStateOutputData *_Nullable outputData =
+            [strongSelf.sdkActiveState forgottenFromEvent];
+
+        [strongSelf ccHandleSideEffectsWithOutputData:outputData source:@"didGdprForget"];
     } source:@"didGdprForget"];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
 - (void)ccAllowedToPublishNotifications {
-
     self.canPublish = YES;
-    NSString *sdkActiveStatus = [self.sdkActiveState sdkActiveStatus];
-    [self.logger debugDev:@"ccAllowedToPublishNotifications, we can now publish"
-                      key:@"sdkActiveStatus"
-                    value:sdkActiveStatus];
 
-    [self handleSdkActiveStatusEvent:sdkActiveStatus source:@"ccAllowedToPublishNotifications"];
+    ADJSdkActiveStatus _Nonnull sdkActiveStatus = [self.sdkActiveState sdkActiveStatus];
+
+    [self ccHandleEventWithSdkActiveStatus:sdkActiveStatus
+                                    source:@"ccAllowedToPublishNotifications"];
 }
-
 
 #pragma mark Internal Methods
+- (BOOL)ccHandleSideEffectsWithOutputData:(nullable ADJActivityStateOutputData *)outputData
+                                   source:(nonnull NSString *)source
+{
+    if (outputData == nil) { return NO; }
 
-- (void)handleStateSideEffectsWithChangedSdkActiveStateData:(nullable ADJSdkActiveStateData *)changedSdkActiveStateData
-                                       sdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
-                                                     source:(nonnull NSString *)source {
-    if (changedSdkActiveStateData != nil) {
-        [self.activeStateStorage updateWithNewDataValue:changedSdkActiveStateData];
-    }
+    [self ccHandleStateUpdateWithChangedStateData:outputData.changedStateData
+                                           source:source];
 
-    [self handleSdkActiveStatusEvent:sdkActiveStatusEvent source:source];
+    [self ccHandleEventWithSdkActiveStatus:outputData.sdkActiveStatus
+                                    source:source];
+
+    return YES;
 }
 
-- (void)handleSdkActiveStatusEvent:(nullable NSString *)sdkActiveStatusEvent
-                            source:(nonnull NSString *)source {
-    if (sdkActiveStatusEvent == nil) {
-        return;
-    }
+- (void)ccHandleStateUpdateWithChangedStateData:(nullable ADJSdkActiveStateData *)stateData
+                                         source:(nonnull NSString *)source
+{
+    if (stateData == nil) { return; }
 
-    if (! self.canPublish) {
-        return;
-    }
+    [self.storage updateWithNewDataValue:stateData];
+}
+
+- (void)ccHandleEventWithSdkActiveStatus:(nullable ADJSdkActiveStatus)sdkActiveStatus
+                                  source:(nonnull NSString *)source
+{
+    if (sdkActiveStatus == nil) { return; }
+    if (! self.canPublish) { return; }
 
     [self.logger debugDev:@"Publishing Sdk Active Status"
                      from:source
                       key:@"sdkActiveStatusEvent"
-                    value:sdkActiveStatusEvent];
+                    value:sdkActiveStatus];
 
     [self.sdkActivePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJSdkActiveSubscriber> _Nonnull subscriber) {
-        [subscriber ccSdkActiveWithStatus:sdkActiveStatusEvent];
+        [subscriber ccSdkActiveWithStatus:sdkActiveStatus];
     }];
-}
-
-- (void)processGdprForgetEvent {
-    ADJValueWO<NSString *> * sdkActiveStatusEventWO = [self.sdkActiveState gdprForgottenByEvent];
-    [self handleSdkActiveStatusEvent:sdkActiveStatusEventWO.changedValue
-                              source:@"didGdprForget"];
 }
 
 @end
