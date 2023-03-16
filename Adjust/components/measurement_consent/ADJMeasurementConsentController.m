@@ -65,7 +65,6 @@ NSString *const ADJMeasurementConsentControllerClientActionHandlerId = @"Measure
 }
 
 #pragma mark Internal Methods
-// TODO: (GENA) - rename clientActionRemoveStorageAction / removeStorageAction, etc.
 - (void)ccTrackMeasurementConsent:(nonnull ADJClientMeasurementConsentData *)consentData
                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
   clientActionRemoveStorageAction:(nullable ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {

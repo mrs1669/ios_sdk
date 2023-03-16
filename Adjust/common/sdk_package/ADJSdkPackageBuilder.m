@@ -282,7 +282,6 @@
                                               parameters:parameters];
 }
 
-// TODO: (GENA) - shorten the method name
 - (nonnull ADJMeasurementConsentPackageData *)buildMeasurementConsentPackageWithClientData:(nonnull ADJClientMeasurementConsentData *)clienMeasurementConsentData
                                                                               apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
 

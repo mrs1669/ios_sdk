@@ -27,8 +27,6 @@ NS_ASSUME_NONNULL_END
 
 + (nullable instancetype)instanceWithInactivateConsent;
 
-// TODO: GENA - Rename all these functions
-// instanceFromClientActionIoData:(nonnull ADJIoData *)clientActionIoData
 + (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
                                                                  logger:(nonnull ADJLogger *)logger;
 - (nullable instancetype)init NS_UNAVAILABLE;
