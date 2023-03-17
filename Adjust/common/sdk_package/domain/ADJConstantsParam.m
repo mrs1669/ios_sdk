@@ -99,6 +99,7 @@ NSString *const ADJParamEventCountKey = @"event_count";
 NSString *const ADJParamEventTokenKey = @"event_token";
 NSString *const ADJParamEventRevenueKey = @"revenue";
 NSString *const ADJParamEventCurrencyKey = @"currency";
+NSString *const ADJParamEventDeduplicationKey = @"deduplication_id";
 
 // info
 NSString *const ADJParamPushTokenKey = @"push_token";
