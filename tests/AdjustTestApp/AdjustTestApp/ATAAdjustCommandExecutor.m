@@ -79,7 +79,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 } else                                                  \
 
 - (void)executeAdjustCommandWithMethodName:(NSString *)methodName
-                      dictionaryParameters:(nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters {
+                      dictionaryParameters:(nonnull NSDictionary<NSString *,
+                                            NSArray<NSString *> *> *)dictionaryParameters {
     self.commandParameters = dictionaryParameters;
 
     adjustCommand(start)
@@ -118,6 +119,10 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     if ([self isValueTrueWithKey:@"sendInBackground"]) {
         [adjustConfig allowSendingFromBackground];
+    }
+
+    if ([self containsKey:@"externalDeviceId"]) {
+        [adjustConfig setExternalDeviceId: [self firstParameterValueWithKey:@"externalDeviceId"]];
     }
 
     if ([self containsKey:@"deferredDeeplinkCallback"]) {
@@ -419,8 +424,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [self iterateWithKey:@"partnerSharingSettings"
                       source:@"third party partner sharing settings"
            nameKeyValueBlock:^(NSString * _Nonnull name,
-           NSString * _Nonnull key,
-           NSString * _Nonnull value) {
+                               NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
             [adjustThirdPartySharing
              addPartnerSharingSettingWithPartnerName:name key:key value:value];
         }];
