@@ -37,14 +37,11 @@ static NSString *const kWasMeasurementConsentActivatedKey = @"wasMeasurementCons
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
     ADJNonEmptyString *_Nullable ioValue = [propertiesMap
                                             pairValueWithKey:kWasMeasurementConsentActivatedKey];
-    ADJBooleanWrapper *_Nullable wasMeasurementConsentActivated = [ADJBooleanWrapper
-                                                                   instanceFromIoValue:ioValue
-                                                                   logger:logger];
+    ADJBooleanWrapper *_Nullable wasMeasurementConsentActivated =
+        [ADJBooleanWrapper instanceFromIoValue:ioValue logger:logger];
 
     if (wasMeasurementConsentActivated == nil) {
         [logger debugDev:@"Could not recreate ClientMeasurementConsentData from ClientAction. "
-                     key:kWasMeasurementConsentActivatedKey
-                   value:ioValue.description
                issueType:ADJIssueStorageIo];
         return nil;
     }
