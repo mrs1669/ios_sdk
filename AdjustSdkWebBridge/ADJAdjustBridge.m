@@ -7,7 +7,6 @@
 //
 
 #import "ADJAdjustBridge.h"
-
 #import "ADJAdjustEvent.h"
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustInternal.h"
@@ -29,20 +28,17 @@ NSString *const ADJAdjustBridgeMessageTrackAdRevenue = @"adjust_trackAdRevenue";
 NSString *const ADJAdjustBridgeMessageTrackPushToken = @"adjust_trackPushToken";
 NSString *const ADJAdjustBridgeMessageTrackDeeplink = @"adjust_trackDeeplink";
 NSString *const ADJAdjustBridgeMessageTrackThirdPartySharing = @"adjust_trackThirdPartySharing";
-NSString *const ADJAdjustBridgeMessageTrackInActivateSdk = @"adjust_inactivateSdk";
-NSString *const ADJAdjustBridgeMessageTrackReactiveSdk = @"adjust_reactivateSdk";
-
+NSString *const ADJAdjustBridgeMessageInActivateSdk = @"adjust_inactivateSdk";
+NSString *const ADJAdjustBridgeMessageReactiveSdk = @"adjust_reactivateSdk";
 NSString *const ADJAdjustBridgeMessageOfflineMode = @"adjust_switchToOfflineMode";
 NSString *const ADJAdjustBridgeMessageOnlineMode = @"adjust_switchBackToOnlineMode";
 NSString *const ADJAdjustBridgeMessageGdprForgetMe = @"adjust_gdprForgetMe";
-
 NSString *const ADJAdjustBridgeMessageAddGlobalCallbackParameter = @"adjust_addGlobalCallbackParameter";
 NSString *const ADJAdjustBridgeMessageRemoveGlobalCallbackParameterByKey = @"adjust_removeGlobalCallbackParameterByKey";
 NSString *const ADJAdjustBridgeMessageClearAllGlobalCallbackParameters = @"adjust_clearAllGlobalCallbackParameters";
 NSString *const ADJAdjustBridgeMessageAddGlobalPartnerParameter = @"adjust_addGlobalPartnerParameter";
 NSString *const ADJAdjustBridgeMessageRemoveGlobalPartnerParameterByKey = @"adjust_removeGlobalPartnerParameterByKey";
 NSString *const ADJAdjustBridgeMessageClearAllGlobalPartnerParameters = @"adjust_clearAllGlobalPartnerParameters";
-
 NSString *const ADJAdjustBridgeMessageAppWentToTheBackgroundManualCall = @"adjust_appWentToTheBackgroundManualCall";
 NSString *const ADJAdjustBridgeMessageAppWentToTheForegroundManualCall = @"adjust_appWentToTheForegroundManualCall";
 
@@ -157,11 +153,11 @@ NS_ASSUME_NONNULL_END
 
         [[ADJAdjust instanceForId:instanceId] switchBackToOnlineMode];
 
-    } else if ([action isEqual:ADJAdjustBridgeMessageTrackInActivateSdk]) {
+    } else if ([action isEqual:ADJAdjustBridgeMessageInActivateSdk]) {
 
         [[ADJAdjust instanceForId:instanceId] inactivateSdk];
 
-    } else if ([action isEqual:ADJAdjustBridgeMessageTrackReactiveSdk]) {
+    } else if ([action isEqual:ADJAdjustBridgeMessageReactiveSdk]) {
 
         [[ADJAdjust instanceForId:instanceId] reactivateSdk];
 
@@ -209,7 +205,7 @@ NS_ASSUME_NONNULL_END
 
     } else if ([action isEqual:@"adjust_teardown"]) {
 
-      // TODO: Do we need this?
+        // TODO: Do we need this?
     }
 }
 
@@ -251,7 +247,7 @@ NS_ASSUME_NONNULL_END
     if (attributionCallback != nil) {
         [adjustConfig setAdjustAttributionSubscriber:self];
     }
-    
+
     if ([self isFieldValid:allowAdServicesInfoReading]) {
         if ([allowAdServicesInfoReading boolValue] == NO) {
             [adjustConfig doNotReadAppleSearchAdsAttributionNumberBool];
@@ -269,7 +265,7 @@ NS_ASSUME_NONNULL_END
             [adjustConfig allowSendingFromBackground];
         }
     }
-    
+
     if ([self isFieldValid:eventDeduplicationListLimit]) {
         [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
     }
@@ -395,4 +391,5 @@ NS_ASSUME_NONNULL_END
 }
 
 @end
+
 
