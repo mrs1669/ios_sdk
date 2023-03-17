@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const ADJAdjustBridgeMessageInitSdk = @"adjust_initSdk";
 NSString *const ADJAdjustBridgeMessageSdkVersion = @"adjust_getSdkVersion";
-
 NSString *const ADJAdjustBridgeMessageTrackEvent = @"adjust_trackEvent";
 NSString *const ADJAdjustBridgeMessageTrackAdRevenue = @"adjust_trackAdRevenue";
 NSString *const ADJAdjustBridgeMessageTrackPushToken = @"adjust_trackPushToken";

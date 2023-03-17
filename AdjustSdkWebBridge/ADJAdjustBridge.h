@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageInitSdk;
 FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageSdkVersion;
-
 FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackEvent;
 FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackAdRevenue;
 FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackPushToken;
