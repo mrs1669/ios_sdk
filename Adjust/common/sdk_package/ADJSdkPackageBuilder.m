@@ -241,6 +241,10 @@
                                                    key:ADJParamEventTokenKey
                          packageParamValueSerializable:clientEventData.eventId];
 
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamEventDeduplicationKey
+                         packageParamValueSerializable:clientEventData.deduplicationId];
+
     if (clientEventData.revenue != nil) {
         [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                        key:ADJParamEventRevenueKey
@@ -249,13 +253,6 @@
         [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                        key:ADJParamEventCurrencyKey
                              packageParamValueSerializable:clientEventData.revenue.currency];
-    }
-
-    if (clientEventData.deduplicationId != nil) {
-        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                       key:ADJParamEventDeduplicationKey
-                             packageParamValueSerializable:clientEventData.deduplicationId];
-
     }
 
     ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
