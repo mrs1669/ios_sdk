@@ -36,9 +36,6 @@
     minMeasurementSessionInterval:
         (nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval;
 
-// public properties
-@property (readonly, assign, nonatomic) BOOL hasFirstMeasurementSessionStartHappened;
-
 // public api
 - (nullable ADJMeasurementSessionStateOutputData *)sdkStartWithNonMonotonicNowTimestamp:
     (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp;
