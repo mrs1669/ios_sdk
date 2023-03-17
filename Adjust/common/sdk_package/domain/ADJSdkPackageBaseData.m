@@ -22,6 +22,7 @@
 #import "ADJInfoPackageData.h"
 #import "ADJClickPackageData.h"
 #import "ADJThirdPartySharingPackageData.h"
+#import "ADJMeasurementConsentPackageData.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -100,6 +101,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     pathToPackage(ADJEventPackageData)
     pathToPackage(ADJInfoPackageData)
     pathToPackage(ADJThirdPartySharingPackageData)
+    pathToPackage(ADJMeasurementConsentPackageData)
 
     [logger debugDev:@"Cannot create instance from io data without matching path to valid package type"
                  key:@"path"

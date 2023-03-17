@@ -20,7 +20,6 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 @property (nullable, readonly, weak, nonatomic) ADJPushTokenStateStorage *pushTokenStorageWeak;
 @property (nullable, readonly, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
 @property (nullable, readonly, weak, nonatomic) ADJMainQueueController *mainQueueControllerWeak;
-
 @end
 
 @implementation ADJPushTokenController

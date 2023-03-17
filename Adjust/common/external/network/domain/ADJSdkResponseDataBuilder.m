@@ -29,6 +29,8 @@
 #import "ADJInfoPackageData.h"
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJThirdPartySharingResponseData.h"
+#import "ADJMeasurementConsentPackageData.h"
+#import "ADJMeasurementConsentResponseData.h"
 #import "ADJUnknownResponseData.h"
 
 #pragma mark Fields
@@ -107,6 +109,7 @@ logger:logger];                                             \
     tryBuildResponse(ADJAdRevenuePackageData, ADJAdRevenueResponseData, adRevenuePackageData)
     tryBuildResponse(ADJInfoPackageData, ADJInfoResponseData, infoPackageData)
     tryBuildResponse(ADJThirdPartySharingPackageData, ADJThirdPartySharingResponseData, thirdPartySharingPackageData)
+    tryBuildResponse(ADJMeasurementConsentPackageData, ADJMeasurementConsentResponseData, measurementConsentPackageData)
 
     if (logger != nil) {
         [logger debugDev:

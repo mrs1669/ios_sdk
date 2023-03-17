@@ -107,6 +107,10 @@ FOUNDATION_EXPORT NSString *const ADJParamEventDeduplicationKey;
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenKey;
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenSourceKey;
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenSourceValue;
+FOUNDATION_EXPORT NSString *const ADJParamMeasurementConsentKey;
+FOUNDATION_EXPORT NSString *const ADJParamMeasurementConsentEnableValue;
+FOUNDATION_EXPORT NSString *const ADJParamMeasurementConsentDisableValue;
+
 
 // log
 FOUNDATION_EXPORT NSString *const ADJParamLogMessageKey;

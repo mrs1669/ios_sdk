@@ -217,6 +217,28 @@
      } clientSource:@"switchBackToOnlineMode"];
  }
 
+- (void)activateMeasurementConsent {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientMeasurementConsentData *consentData = [ADJClientMeasurementConsentData instanceWithActivateConsent];
+        if (consentData == nil) { return; }
+
+        [clientActionsAPI ccTrackMeasurementConsent:consentData];
+    } clientSource:@"activateMeasurementConsent"];
+}
+
+- (void)inactivateMeasurementConsent {
+    [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                                            ADJLogger * _Nonnull logger)
+     {
+        ADJClientMeasurementConsentData *consentData = [ADJClientMeasurementConsentData instanceWithInactivateConsent];
+        if (consentData == nil) { return; }
+
+        [clientActionsAPI ccTrackMeasurementConsent:consentData];
+    } clientSource:@"inactivateMeasurementConsent"];
+}
+
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
     [self ccWithAdjustCallback:adjustDeviceIdsCallback
                       preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)

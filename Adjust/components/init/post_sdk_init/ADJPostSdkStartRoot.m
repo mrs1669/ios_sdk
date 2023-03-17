@@ -81,6 +81,11 @@
                             pushTokenStateStorage:storageRoot.pushTokenStorage
                             mainQueueController:mainQueueController];
 
+    _measurementConsentController = [[ADJMeasurementConsentController alloc]
+                                     initWithLoggerFactory:loggerFactory
+                                     sdkPackageBuilder:sdkPackageBuilder
+                                     mainQueueController:mainQueueController];
+
     _thirdPartySharingController = [[ADJThirdPartySharingController alloc]
                                     initWithLoggerFactory:loggerFactory
                                     sdkPackageBuilder:sdkPackageBuilder
@@ -108,6 +113,7 @@
          _launchedDeeplinkController, ADJLaunchedDeeplinkClientActionHandlerId,
          _pushTokenController, ADJPushTokenControllerClientActionHandlerId,
          _thirdPartySharingController, ADJThirdPartySharingControllerClientActionHandlerId,
+         _measurementConsentController, ADJMeasurementConsentControllerClientActionHandlerId,
          nil];
 
     return self;
@@ -143,6 +149,10 @@
 
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData {
     [self.pushTokenController ccTrackPushTokenWithClientData:clientPushTokenData];
+}
+
+- (void)ccTrackMeasurementConsent:(ADJClientMeasurementConsentData *)consentData {
+    [self.measurementConsentController ccTrackMeasurementConsent:consentData];
 }
 
 - (void)ccTrackThirdPartySharingWithClientData:

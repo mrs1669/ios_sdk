@@ -18,6 +18,7 @@
 #import "ADJClientBillingSubscriptionData.h"
 #import "ADJClientThirdPartySharingData.h"
 #import "ADJClientActionHandler.h"
+#import "ADJClientMeasurementConsentData.h"
 
 @protocol ADJClientActionsAPI <NSObject>
 
@@ -26,6 +27,8 @@
 - (void)ccTrackAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData;
 
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;
+
+- (void)ccTrackMeasurementConsent:(nonnull ADJClientMeasurementConsentData *)consentData;
 
 - (void)ccTrackBillingSubscriptionWithClientData:
     (nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData;
