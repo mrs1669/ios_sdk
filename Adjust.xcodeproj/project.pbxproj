@@ -4038,6 +4038,20 @@
 		6F8AB2B429C1104D001E371E /* ADJOptionalFailsNN.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2A829C1104D001E371E /* ADJOptionalFailsNN.m */; };
 		6F8AB2B529C1104D001E371E /* ADJOptionalFailsNN.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2A829C1104D001E371E /* ADJOptionalFailsNN.m */; };
 		6F8AB2B629C1104D001E371E /* ADJOptionalFailsNN.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2A829C1104D001E371E /* ADJOptionalFailsNN.m */; };
+		6F8AB2CA29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
+		6F8AB2CB29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
+		6F8AB2CC29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
+		6F8AB2CD29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
+		6F8AB2CE29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
+		6F8AB2CF29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
+		6F8AB2D029C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
+		6F8AB2D129C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F8AB2D229C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F8AB2D329C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F8AB2D429C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F8AB2D529C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F8AB2D629C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F8AB2D729C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
 		6F8EE4CE29AF9A0A00BABF8C /* ADJResultFail.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6F8EE4CF29AF9A0A00BABF8C /* ADJResultFail.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */; };
 		6F8EE4D029AF9A0A00BABF8C /* ADJResultFail.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */; };
@@ -4711,6 +4725,8 @@
 		6F8547A22919337F008F6F42 /* ADJConcurrentThreadExecutor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJConcurrentThreadExecutor.h; sourceTree = "<group>"; };
 		6F8AB2A729C1104D001E371E /* ADJOptionalFailsNN.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJOptionalFailsNN.h; sourceTree = "<group>"; };
 		6F8AB2A829C1104D001E371E /* ADJOptionalFailsNN.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJOptionalFailsNN.m; sourceTree = "<group>"; };
+		6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJOptionalFailsNL.h; sourceTree = "<group>"; };
+		6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJOptionalFailsNL.m; sourceTree = "<group>"; };
 		6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJResultFail.h; sourceTree = "<group>"; };
 		6F8EE4CD29AF9A0A00BABF8C /* ADJResultFail.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJResultFail.m; sourceTree = "<group>"; };
 		6FAC56AC288FDF610070F564 /* ADJSdkPackageCreatingSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSdkPackageCreatingSubscriber.h; sourceTree = "<group>"; };
@@ -5076,6 +5092,8 @@
 				6F8EE4CD29AF9A0A00BABF8C /* ADJResultFail.m */,
 				6F8AB2A729C1104D001E371E /* ADJOptionalFailsNN.h */,
 				6F8AB2A829C1104D001E371E /* ADJOptionalFailsNN.m */,
+				6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */,
+				6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */,
 			);
 			path = domain;
 			sourceTree = "<group>";
@@ -6249,6 +6267,7 @@
 				0A7ED74A2892B11B00CC20DE /* ADJSQLiteDb.h in Headers */,
 				0A7ED74B2892B11B00CC20DE /* ADJSQLiteDbMessageProvider.h in Headers */,
 				0A7ED74C2892B11B00CC20DE /* ADJSQLiteStatement.h in Headers */,
+				6F8AB2CA29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */,
 				0741CE3528D9B4E60041C816 /* ADJLogResponseData.h in Headers */,
 				0A7ED74D2892B11B00CC20DE /* ADJSQLiteController.h in Headers */,
 				0A7ED74E2892B11B00CC20DE /* ADJSQLiteStorageQueueBase.h in Headers */,
@@ -7133,6 +7152,7 @@
 				0A25F9A128E5CAC9001988A1 /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A25F9A228E5CAC9001988A1 /* ADJSdkConfigData.h in Headers */,
 				0A25F9A428E5CAC9001988A1 /* ADJSdkActiveSubscriber.h in Headers */,
+				6F8AB2CB29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */,
 				0A25F9A528E5CAC9001988A1 /* ADJPreSdkInitRoot.h in Headers */,
 				0A25F9A628E5CAC9001988A1 /* ADJSdkActiveStateStorage.h in Headers */,
 				6FCD54D8298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
@@ -7406,6 +7426,7 @@
 				0A25FB9E28F42382001988A1 /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A25FB9F28F42382001988A1 /* ADJSdkConfigData.h in Headers */,
 				0A25FBA128F42382001988A1 /* ADJSdkActiveSubscriber.h in Headers */,
+				6F8AB2CC29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */,
 				0A25FBA228F42382001988A1 /* ADJPreSdkInitRoot.h in Headers */,
 				0A25FBA328F42382001988A1 /* ADJSdkActiveStateStorage.h in Headers */,
 				6FCD54D9298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
@@ -7679,6 +7700,7 @@
 				0A25FD6D28F43C2D001988A1 /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A25FD6E28F43C2D001988A1 /* ADJSdkConfigData.h in Headers */,
 				0A25FD7028F43C2D001988A1 /* ADJSdkActiveSubscriber.h in Headers */,
+				6F8AB2CD29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */,
 				0A25FD7128F43C2D001988A1 /* ADJPreSdkInitRoot.h in Headers */,
 				0A25FD7228F43C2D001988A1 /* ADJSdkActiveStateStorage.h in Headers */,
 				6FCD54DA298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
@@ -7952,6 +7974,7 @@
 				0A7E494E28F8276D00827F0B /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A7E494F28F8276D00827F0B /* ADJSdkConfigData.h in Headers */,
 				0A7E495128F8276D00827F0B /* ADJSdkActiveSubscriber.h in Headers */,
+				6F8AB2CE29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */,
 				0A7E495228F8276D00827F0B /* ADJPreSdkInitRoot.h in Headers */,
 				0A7E495328F8276D00827F0B /* ADJSdkActiveStateStorage.h in Headers */,
 				6FCD54DB298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
@@ -8225,6 +8248,7 @@
 				0A7E4A3E28F82F6D00827F0B /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A7E4A3F28F82F6D00827F0B /* ADJSdkConfigData.h in Headers */,
 				0A7E4A4128F82F6D00827F0B /* ADJSdkActiveSubscriber.h in Headers */,
+				6F8AB2CF29C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */,
 				0A7E4A4228F82F6D00827F0B /* ADJPreSdkInitRoot.h in Headers */,
 				0A7E4A4328F82F6D00827F0B /* ADJSdkActiveStateStorage.h in Headers */,
 				6FCD54DC298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
@@ -8498,6 +8522,7 @@
 				0A7E4B2928F830AF00827F0B /* ADJSdkConfigDataBuilder.h in Headers */,
 				0A7E4B2A28F830AF00827F0B /* ADJSdkConfigData.h in Headers */,
 				0A7E4B2C28F830AF00827F0B /* ADJSdkActiveSubscriber.h in Headers */,
+				6F8AB2D029C4D5CE001E371E /* ADJOptionalFailsNL.h in Headers */,
 				0A7E4B2D28F830AF00827F0B /* ADJPreSdkInitRoot.h in Headers */,
 				0A7E4B2E28F830AF00827F0B /* ADJSdkActiveStateStorage.h in Headers */,
 				6FCD54DD298BABBA007542FB /* ADJPreSdkInitRootBag.h in Headers */,
@@ -9334,6 +9359,7 @@
 				6FE447B0288E8D5600FF06E0 /* ADJMainQueueController.m in Sources */,
 				0735D62428D36DAE00614B88 /* ADJClientCallbacksController.m in Sources */,
 				07F8F5CD2886DE520089653A /* ADJV4UserDefaultsData.m in Sources */,
+				6F8AB2D129C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE2299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
 				6FCEAF4F290ACAB5009F1DAD /* ADJLogMessageData.m in Sources */,
 				0788448D2886CB72001814F7 /* ADJTimeLengthMilli.m in Sources */,
@@ -9552,6 +9578,7 @@
 				0A25F9C228E5CB2D001988A1 /* ADJBooleanWrapper.m in Sources */,
 				0A25F9C328E5CB2D001988A1 /* ADJValueWO.m in Sources */,
 				0A25F9C428E5CB2D001988A1 /* ADJNonNegativeInt.m in Sources */,
+				6F8AB2D229C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE3299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
 				0A25F9C528E5CB2D001988A1 /* ADJTallyCounter.m in Sources */,
 				0A25F9C628E5CB2D001988A1 /* ADJAtomicBoolean.m in Sources */,
@@ -9770,6 +9797,7 @@
 				0A25FBC828F43027001988A1 /* ADJBooleanWrapper.m in Sources */,
 				0A25FBC928F43027001988A1 /* ADJValueWO.m in Sources */,
 				0A25FBCA28F43027001988A1 /* ADJNonNegativeInt.m in Sources */,
+				6F8AB2D329C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE4299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
 				0A25FBCB28F43027001988A1 /* ADJTallyCounter.m in Sources */,
 				0A25FBCC28F43027001988A1 /* ADJAtomicBoolean.m in Sources */,
@@ -9988,6 +10016,7 @@
 				0A25FDC728F442DD001988A1 /* ADJBooleanWrapper.m in Sources */,
 				0A25FDC828F442DE001988A1 /* ADJValueWO.m in Sources */,
 				0A25FDC928F442DE001988A1 /* ADJNonNegativeInt.m in Sources */,
+				6F8AB2D429C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE5299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
 				0A25FDCA28F442DE001988A1 /* ADJTallyCounter.m in Sources */,
 				0A25FDCB28F442DE001988A1 /* ADJAtomicBoolean.m in Sources */,
@@ -10206,6 +10235,7 @@
 				0A2BF90A28F6053000852E17 /* ADJBooleanWrapper.m in Sources */,
 				0A2BF90B28F6053000852E17 /* ADJValueWO.m in Sources */,
 				0A2BF90C28F6053000852E17 /* ADJNonNegativeInt.m in Sources */,
+				6F8AB2D529C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE6299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
 				0A2BF90D28F6053000852E17 /* ADJTallyCounter.m in Sources */,
 				0A2BF90E28F6053000852E17 /* ADJAtomicBoolean.m in Sources */,
@@ -10424,6 +10454,7 @@
 				0A2BF9E728F6072400852E17 /* ADJBooleanWrapper.m in Sources */,
 				0A2BF9E828F6072400852E17 /* ADJValueWO.m in Sources */,
 				0A2BF9E928F6072400852E17 /* ADJNonNegativeInt.m in Sources */,
+				6F8AB2D629C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE7299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
 				0A2BF9EA28F6072400852E17 /* ADJTallyCounter.m in Sources */,
 				0A2BF9EB28F6072400852E17 /* ADJAtomicBoolean.m in Sources */,
@@ -10642,6 +10673,7 @@
 				0A2BFACA28F60B8C00852E17 /* ADJBooleanWrapper.m in Sources */,
 				0A2BFACB28F60B8C00852E17 /* ADJValueWO.m in Sources */,
 				0A2BFACC28F60B8C00852E17 /* ADJNonNegativeInt.m in Sources */,
+				6F8AB2D729C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE8299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
 				0A2BFACD28F60B8C00852E17 /* ADJTallyCounter.m in Sources */,
 				0A2BFACE28F60B8C00852E17 /* ADJAtomicBoolean.m in Sources */,
