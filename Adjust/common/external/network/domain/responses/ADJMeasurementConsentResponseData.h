@@ -15,8 +15,15 @@
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementConsentPackageData *measurementConsentPackageData;
 
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-          measurementConsentPackageData:(nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
-                                 logger:(nonnull ADJLogger *)logger;
-@end
++ (nonnull ADJOptionalFailsNN<ADJMeasurementConsentResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    measurementConsentPackageData:
+        (nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData;
 
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+ NS_UNAVAILABLE;
+
+@end
