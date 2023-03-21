@@ -45,7 +45,8 @@ static NSString *const kClientActionStorageTableName = @"client_action";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
     // nothing to migrate from
 }
 

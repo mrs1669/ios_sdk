@@ -4888,16 +4888,9 @@
 		071E44BB2886DC4400695D89 /* v4 */ = {
 			isa = PBXGroup;
 			children = (
+				6F8AB2E329C9F09F001E371E /* domain */,
 				071E44BC2886DC5800695D89 /* ADJV4FilesData.h */,
 				071E44BD2886DC5800695D89 /* ADJV4FilesData.m */,
-				071E44C02886DCB300695D89 /* ADJV4ActivityState.h */,
-				071E44C12886DCB300695D89 /* ADJV4ActivityState.m */,
-				071E44C42886DCFC00695D89 /* ADJV4Attribution.h */,
-				071E44C52886DCFC00695D89 /* ADJV4Attribution.m */,
-				07F8F5C52886DDC20089653A /* ADJV4ActivityPackage.h */,
-				07F8F5C62886DDC20089653A /* ADJV4ActivityPackage.m */,
-				07F8F5CA2886DE520089653A /* ADJV4UserDefaultsData.h */,
-				07F8F5CB2886DE520089653A /* ADJV4UserDefaultsData.m */,
 				071594012886E3B400E7F2F8 /* ADJV4RestMigration.h */,
 				071594022886E3B400E7F2F8 /* ADJV4RestMigration.m */,
 			);
@@ -5884,6 +5877,21 @@
 				6FE447A5288E892800FF06E0 /* ADJLifecycleController.m */,
 			);
 			path = lifecycle;
+			sourceTree = "<group>";
+		};
+		6F8AB2E329C9F09F001E371E /* domain */ = {
+			isa = PBXGroup;
+			children = (
+				071E44C02886DCB300695D89 /* ADJV4ActivityState.h */,
+				071E44C12886DCB300695D89 /* ADJV4ActivityState.m */,
+				071E44C42886DCFC00695D89 /* ADJV4Attribution.h */,
+				071E44C52886DCFC00695D89 /* ADJV4Attribution.m */,
+				07F8F5C52886DDC20089653A /* ADJV4ActivityPackage.h */,
+				07F8F5C62886DDC20089653A /* ADJV4ActivityPackage.m */,
+				07F8F5CA2886DE520089653A /* ADJV4UserDefaultsData.h */,
+				07F8F5CB2886DE520089653A /* ADJV4UserDefaultsData.m */,
+			);
+			path = domain;
 			sourceTree = "<group>";
 		};
 		6FAC56B0288FDF9E0070F564 /* packages */ = {

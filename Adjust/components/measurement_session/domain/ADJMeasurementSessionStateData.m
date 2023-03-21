@@ -67,6 +67,25 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
                    initWithMeasurementSessionData:measurementSessionData]];
 }
 
++ (nonnull ADJResultNL<ADJMeasurementSessionStateData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull sessionDataResult =
+        [ADJMeasurementSessionData instanceFromV4WithActivityState:v4ActivityState];
+    if (sessionDataResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Could not create session data from activity state"
+                                        key:@"session data fail"
+                                  otherFail:sessionDataResult.fail];
+    }
+
+    return [ADJResultNL okWithValue:[[ADJMeasurementSessionStateData alloc]
+                                     initWithMeasurementSessionData:sessionDataResult.value]];
+}
+
 - (nonnull instancetype)initWithIntialState {
     return [self initWithMeasurementSessionData:nil];
 }

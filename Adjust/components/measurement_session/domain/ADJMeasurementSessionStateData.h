@@ -12,6 +12,7 @@
 #import "ADJIoData.h"
 #import "ADJOptionalFailsNN.h"
 #import "ADJMeasurementSessionData.h"
+#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -24,6 +25,9 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nonnull ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
+
++ (nonnull ADJResultNL<ADJMeasurementSessionStateData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState;
 
 - (nonnull instancetype)initWithIntialState;
 

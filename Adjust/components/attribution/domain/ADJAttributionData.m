@@ -88,58 +88,73 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]]];
 }
 
-- (nullable ADJNonEmptyString *)convExternalWithValue:(nullable NSString *)value
-                                              subject:(nonnull NSString *)subject
-                                               logger:(nonnull ADJLogger *)logger
-{
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
-        [ADJNonEmptyString instanceFromOptionalString:value];
-    if (valueResult.fail != nil) {
-        [logger debugDev:@"Invalid string from external data"
-               subject:subject
-              resultFail:valueResult.fail
-               issueType:ADJIssueInvalidInput];
-    }
-    return valueResult.value;
-}
+#define convV4String(field) \
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull field ## Result =                \
+        [ADJNonEmptyString instanceFromOptionalString:v4Attribution.field];     \
+    if (field ## Result.fail != nil) {                                                  \
+        [optFailsMut addObject:[[ADJResultFail alloc]                                   \
+                                initWithMessage:@"Invalid value from v4 attribution"    \
+                                key:@"field fail"                                       \
+                                otherFail:field ## Result.fail]];                       \
+    }                                                                                   \
+    if (field ## Result.value != nil) {     \
+        hasAtLeastOneValidField = YES;      \
+    }                                       \
 
-#define convExtCall(value, name) \
-    [self convExternalWithValue:(value) subject:(name) logger:logger] \
-
-- (nonnull instancetype)initFromExternalDataWithLogger:(nonnull ADJLogger *)logger
-                                    trackerTokenString:(nullable NSString *)trackerTokenString
-                                     trackerNameString:(nullable NSString *)trackerNameString
-                                         networkString:(nullable NSString *)networkString
-                                        campaignString:(nullable NSString *)campaignString
-                                         adgroupString:(nullable NSString *)adgroupString
-                                        creativeString:(nullable NSString *)creativeString
-                                      clickLabelString:(nullable NSString *)clickLabelString
-                                            adidString:(nullable NSString *)adidString
-                                        costTypeString:(nullable NSString *)costTypeString
-                                costAmountDoubleNumber:(nullable NSNumber *)costAmountDoubleNumber
-                                    costCurrencyString:(nullable NSString *)costCurrencyString
++ (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
+    instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution
 {
+    NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut = [[NSMutableArray alloc] init];
+
+    BOOL hasAtLeastOneValidField = NO;
+
     ADJResultNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
-        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:costAmountDoubleNumber];
+        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:v4Attribution.costAmount];
     if (costAmountDoubleResult.fail != nil) {
-        [logger debugDev:@"Invalid cost amount double from external data"
-              resultFail:costAmountDoubleResult.fail
-               issueType:ADJIssueInvalidInput];
+        [optFailsMut addObject:[[ADJResultFail alloc]
+                                initWithMessage:@"Invalid value from v4 attribution"
+                                key:@"cost amount double fail"
+                                otherFail:costAmountDoubleResult.fail]];
+    }
+    if (costAmountDoubleResult.value != nil) {
+        hasAtLeastOneValidField = YES;
     }
 
-    return [self initWithTrackerToken:convExtCall(trackerTokenString, kTrackerTokenKey)
-                          trackerName:convExtCall(trackerNameString, kTrackerNameKey)
-                              network:convExtCall(networkString, kNetworkKey)
-                             campaign:convExtCall(campaignString, kCampaignKey)
-                              adgroup:convExtCall(adgroupString, kAdgroupKey)
-                             creative:convExtCall(creativeString, kCreativeKey)
-                           clickLabel:convExtCall(clickLabelString, kClickLabelKey)
-                                 adid:convExtCall(adidString, kAdidKey)
-                             deeplink:nil
-                                state:nil
-                             costType:convExtCall(costTypeString, kCostTypeKey)
-                           costAmount:costAmountDoubleResult.value
-                         costCurrency:convExtCall(costCurrencyString, kCostCurrencyKey)];
+    convV4String(trackerToken)
+    convV4String(trackerName)
+    convV4String(network)
+    convV4String(campaign)
+    convV4String(adgroup)
+    convV4String(creative)
+    convV4String(clickLabel)
+    convV4String(adid)
+    convV4String(costType)
+    convV4String(costCurrency)
+
+    if (! hasAtLeastOneValidField) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:optFailsMut
+                value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc]
+            initWithOptionalFails:optFailsMut
+            value:[[ADJAttributionData alloc]
+                   initWithTrackerToken:trackerTokenResult.value
+                   trackerName:trackerNameResult.value
+                   network:networkResult.value
+                   campaign:campaignResult.value
+                   adgroup:adgroupResult.value
+                   creative:creativeResult.value
+                   clickLabel:clickLabelResult.value
+                   adid:adidResult.value
+                   // deeplink and state not coming from v4
+                   // TODO: confirm that assumption is correct
+                   deeplink:nil
+                   state:nil
+                   costType:costTypeResult.value
+                   costAmount:costAmountDoubleResult.value
+                   costCurrency:costCurrencyResult.value]];
 }
 
 - (nullable ADJNonEmptyString *)extractJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary

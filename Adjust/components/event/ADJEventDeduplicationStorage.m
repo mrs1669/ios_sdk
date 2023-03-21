@@ -45,38 +45,24 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
-    if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *_Nonnull
+    eventDeduplicationArrayOptFails =
+        [ADJEventDeduplicationData instanceArrayFromV4WithActivityState:
+         [v4FilesData v4ActivityState]];
+    for (ADJResultFail *_Nonnull optionalFails in eventDeduplicationArrayOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 event deduplication migration"
+                   resultFail:optionalFails
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (eventDeduplicationArrayOptFails.value == nil) {
         return;
     }
 
-    if (v4ActivityState.transactionIds == nil) {
-        [self.logger debugDev:@"Cannot find event deduplication list"
-         " in v4 activity state file"];
-        return;
-    }
-
-    for (id _Nonnull transactionIdObject in v4ActivityState.transactionIds) {
-        if (! [transactionIdObject isKindOfClass:[NSString class]]) {
-            continue;
-        }
-
-        NSString *_Nonnull transactionId = (NSString *)transactionIdObject;
-
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull deduplicationIdResult =
-            [ADJNonEmptyString instanceFromString:transactionId];
-        if (deduplicationIdResult.fail != nil) {
-            [self.logger debugDev:@"Invalid transaction id for v4 migration of event deduplication"
-                       resultFail:deduplicationIdResult.fail
-                        issueType:ADJIssueStorageIo];
-            continue;
-        }
-
-        [self enqueueElementToLast:
-         [[ADJEventDeduplicationData alloc] initWithDeduplicationId:deduplicationIdResult.value]
-               sqliteStorageAction:nil];
+    for (ADJEventDeduplicationData *_Nonnull eventDedup in eventDeduplicationArrayOptFails.value) {
+        [self enqueueElementToLast:eventDedup sqliteStorageAction:nil];
     }
 }
 

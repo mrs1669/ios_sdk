@@ -39,6 +39,29 @@ static NSString *const kUuidKey = @"uuid";
     return [ADJResultNN okWithValue:[[ADJDeviceIdsData alloc] initWithUuid:uuid]];
 }
 
++ (nonnull ADJResultNL<ADJDeviceIdsData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull v4UuidResult =
+         [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid];
+    if (v4UuidResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Cannot parse uuid from v4 activity state"
+                                        key:@"uuid parse fail"
+                                  otherFail:v4UuidResult.fail];
+    }
+
+    if (v4UuidResult.value == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    return [ADJResultNL okWithValue:v4UuidResult.value];
+}
+
+
 - (nonnull instancetype)initWithInitialState {
     return [self initWithUuid:nil];
 }
@@ -100,6 +123,3 @@ static NSString *const kUuidKey = @"uuid";
 }
 
 @end
-
-
-

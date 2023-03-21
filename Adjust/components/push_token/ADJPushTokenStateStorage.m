@@ -64,19 +64,20 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
                       key:@"activity_state"
                     value:[v4ActivityState description]];
 
-    ADJResultNL<ADJNonEmptyString *> *_Nullable v4PushTokenResult =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken];
-    if (v4PushTokenResult.fail != nil) {
-        [self.logger debugDev:@"Cannot parse v4 push token"
-                   resultFail:v4PushTokenResult.fail
+    ADJOptionalFailsNL<ADJPushTokenStateData *> *_Nonnull stateDataOptFails =
+        [ADJPushTokenStateData instanceFromExternalWithPushTokenString:v4ActivityState.pushToken];
+    for (ADJResultFail *_Nonnull optionalFail in stateDataOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 push token"
+                   resultFail:optionalFail
                     issueType:ADJIssueStorageIo];
+    }
+
+    if (stateDataOptFails.value == nil) {
+        [self.logger debugDev:@"Did not find valid v4 push token to migrate"];
         return;
     }
 
-    ADJPushTokenStateData *_Nonnull v4PushTokenData =
-        [[ADJPushTokenStateData alloc] initWithLastPushTokenString:v4PushTokenResult.value];
-
-    [self updateWithNewDataValue:v4PushTokenData];
+    [self updateWithNewDataValue:stateDataOptFails.value];
 }
 
 @end

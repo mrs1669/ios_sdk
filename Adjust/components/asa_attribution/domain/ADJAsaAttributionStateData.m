@@ -105,6 +105,27 @@ static NSString *const kErrorReasonKey = @"errorReason";
                    errorReason:errorReason]];
 }
 
++ (nullable ADJAsaAttributionStateData *)instanceFromV4WithUserDefaults:
+    (nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    if (v4UserDefaultsData.adServicesTrackedNumberBool == nil ||
+        ! v4UserDefaultsData.adServicesTrackedNumberBool.boolValue)
+    {
+        return nil;
+    }
+
+    ADJAsaAttributionStateData *_Nonnull initialStateData =
+        [[ADJAsaAttributionStateData alloc] initWithIntialState];
+
+    // only update HasReceivedValidAsaClickResponse from initial state
+    return [[ADJAsaAttributionStateData alloc]
+            initWithHasReceivedValidAsaClickResponse:YES
+            hasReceivedAdjustAttribution:initialStateData.hasReceivedAdjustAttribution
+            cachedToken:initialStateData.cachedToken
+            cacheReadTimestamp:initialStateData.cacheReadTimestamp
+            errorReason:initialStateData.errorReason];
+}
+
 - (nonnull instancetype)initWithIntialState {
     return [self initWithHasReceivedValidAsaClickResponse:NO
                              hasReceivedAdjustAttribution:NO

@@ -11,6 +11,8 @@
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
 #import "ADJNonEmptyString.h"
+#import "ADJOptionalFailsNL.h"
+#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -23,6 +25,9 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nonnull ADJResultNN<ADJEventDeduplicationData *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
+
++ (nonnull ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *)
+    instanceArrayFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState;
 
 - (nonnull instancetype)initWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId;
 

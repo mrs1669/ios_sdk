@@ -23,6 +23,7 @@
 #import "ADJClickPackageData.h"
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJMeasurementConsentPackageData.h"
+#import "ADJV4ActivityPackage.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -108,6 +109,37 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
             stringValue:path.stringValue];
 }
 
++ (nonnull ADJOptionalFailsNL<NSArray<id<ADJSdkPackageData>> *> *)
+    instanceArrayFromV4WithActivityPackageArray:(nullable NSArray *)v4ActivityPackageArray
+{
+    if (v4ActivityPackageArray == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+    }
+
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    NSMutableArray<id<ADJSdkPackageData>> *_Nonnull activityPackageArryMut =
+        [[NSMutableArray alloc] init];
+
+    for (id _Nonnull activityPackageObject in v4ActivityPackageArray) {
+        id<ADJSdkPackageData> _Nullable sdkPackageData =
+            [ADJSdkPackageBaseData convertV4PackageWithActivityPackageObject:activityPackageObject
+                                                            optionalFailsMut:optionalFailsMut];
+
+        if (sdkPackageData != nil) {
+            [activityPackageArryMut addObject:sdkPackageData];
+        }
+    }
+
+    if (activityPackageArryMut.count == 0) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:optionalFailsMut
+                value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optionalFailsMut
+                                                       value:activityPackageArryMut];
+}
+
 - (nonnull instancetype)initWithPath:(nonnull NSString *)path
                            clientSdk:(nonnull NSString *)clientSdk
         isPostOrElseGetNetworkMethod:(BOOL)isPostOrElseGetNetworkMethod
@@ -189,19 +221,141 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
 }
 
 #pragma mark Internal Methods
-- (nonnull NSString *)generateExtendDescriptionLineWithKey:(nonnull NSString *)key
-                                                     value:(nonnull NSString *)value {
-    return [NSString stringWithFormat:@"%-25s%@\n",
-            [NSString stringWithFormat:@"%@:", key].UTF8String,
-            value];
++ (nullable id<ADJSdkPackageData>)
+    convertV4PackageWithActivityPackageObject:
+        (nullable id)activityPackageObject
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    // is expected to be ADJV4ActivityPackage class
+    //  because when read, name @"ADJActivityPackage" was set to ADJV4ActivityPackage
+    if (! [activityPackageObject isKindOfClass:[ADJV4ActivityPackage class]]) {
+        [optionalFailsMut addObject:
+         [[ADJResultFail alloc]
+          initWithMessage:@"Could not cast object as a v4 activity package"
+          key:@"unexpected class"
+          stringValue:NSStringFromClass([activityPackageObject class])]];
+
+        return nil;
+    }
+
+    ADJV4ActivityPackage *_Nonnull v4ActivityPackage =
+        (ADJV4ActivityPackage *)activityPackageObject;
+
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull v4ClientSdkResult =
+        [ADJNonEmptyString instanceFromString:v4ActivityPackage.clientSdk];
+
+    if (v4ClientSdkResult.fail != nil) {
+        [optionalFailsMut addObject:[[ADJResultFail alloc]
+                                     initWithMessage:@"Could not parse client sdk"
+                                     key:@"client sdk parse fail"
+                                     otherFail:v4ClientSdkResult.fail]];
+        return nil;
+    }
+
+    ADJResultNN<ADJStringMap *> * _Nonnull parametersResult =
+        [ADJSdkPackageBaseData convertV4ParametersWithV4ActivityPackage:v4ActivityPackage
+                                                       optionalFailsMut:optionalFailsMut];
+    if (parametersResult.fail != nil) {
+        [optionalFailsMut addObject:parametersResult.fail];
+
+        return nil;
+    }
+
+    ADJResultNN<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
+        [ADJSdkPackageBaseData convertSdkPackageFromV4WithV4Path:v4ActivityPackage.path
+                                                     v4ClientSdk:v4ClientSdkResult.value
+                                                      parameters:parametersResult.value];
+
+    if (sdkPackageDataResult.fail != nil) {
+        [optionalFailsMut addObject:sdkPackageDataResult.fail];
+        return nil;
+    }
+
+    return (id<ADJSdkPackageData>)sdkPackageDataResult.value;
 }
 
-- (nonnull NSString *)generateExtendMapLineWithKey:(nonnull NSString *)key
-                                             value:(nonnull NSString *)value {
-    return [NSString stringWithFormat:@"\n\t%-25s%@",
-            [NSString stringWithFormat:@"%@:", key].UTF8String,
-            value];
++ (nonnull ADJResultNN<ADJStringMap *> *)
+    convertV4ParametersWithV4ActivityPackage:(nonnull ADJV4ActivityPackage *)v4ActivityPackage
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    if (v4ActivityPackage.parameters == nil) {
+        return [ADJResultNN failWithMessage:@"Cannot use nil v4 activity package parameters"];
+    }
+    if (v4ActivityPackage.parameters.count == 0) {
+        return [ADJResultNN failWithMessage:@"Cannot use empty v4 activity package parameters"];
+    }
+
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+        [[ADJStringMapBuilder alloc] initWithEmptyMap];
+
+    for (NSString *key in v4ActivityPackage.parameters) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+            [ADJNonEmptyString instanceFromString:key];
+        if (keyResult.fail != nil) {
+            [optionalFailsMut addObject:[[ADJResultFail alloc]
+                                         initWithMessage:
+                                             @"Cannot parse key of v4 activity package parameter"
+                                         key:@"key parsing fail"
+                                         otherFail:keyResult.fail]];
+            continue;
+        }
+
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+            [ADJNonEmptyString instanceFromString:
+             [v4ActivityPackage.parameters objectForKey:keyResult.value.stringValue]];
+        if (valueResult.fail != nil) {
+            [optionalFailsMut addObject:[[ADJResultFail alloc]
+                                         initWithMessage:
+                                             @"Cannot parse value of v4 activity package parameter"
+                                         key:@"value parsing fail"
+                                         otherFail:valueResult.fail]];
+            continue;
+        }
+
+        [parametersBuilder addPairWithValue:valueResult.value
+                                        key:keyResult.value.stringValue];
+    }
+
+    return [ADJResultNN okWithValue:
+            [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder]];
+}
+
+#define v4PathToPackage(v4PathConst, packageClass)                                  \
+    if ([v4Path isEqualToString:v4PathConst]) {                                     \
+        return [ADJResultNN okWithValue:                                            \
+                [[packageClass alloc] initWithClientSdk:v4ClientSdk.stringValue     \
+                                             parameters:parameters]];               \
+}
+
++ (nonnull ADJResultNN<ADJSdkPackageBaseData *> *)
+    convertSdkPackageFromV4WithV4Path:(nullable NSString *)v4Path
+    v4ClientSdk:(nonnull ADJNonEmptyString *)v4ClientSdk
+    parameters:(nonnull ADJStringMap *)parameters
+{
+    if (v4Path == nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create package with nil v4 path"];
+    }
+
+    v4PathToPackage(ADJV4PurchasePath, ADJBillingSubscriptionPackageData)
+    v4PathToPackage(ADJV4SessionPath, ADJSessionPackageData)
+    v4PathToPackage(ADJV4EventPath, ADJEventPackageData)
+    v4PathToPackage(ADJV4AdRevenuePath, ADJAdRevenuePackageData)
+    v4PathToPackage(ADJV4InfoPath, ADJInfoPackageData)
+    v4PathToPackage(ADJV4ThirdPartySharingPath, ADJThirdPartySharingPackageData)
+
+    // there are no attribution, click or gdpr packages in v4 main queue
+    // TODO: Add more package types, if they are added to v4
+
+    if ([v4Path isEqualToString:ADJV4DisableThirdPartySharingPath]) {
+        return [ADJResultNN okWithValue:
+                [[ADJThirdPartySharingPackageData alloc]
+                 initV4DisableThirdPartySharingMigratedWithClientSdk:v4ClientSdk.stringValue
+                 parameters:parameters]];
+    }
+
+    return [ADJResultNN failWithMessage:@"Cannot create package from unknown v4 path"
+                                    key:@"v4 path"
+                            stringValue:v4Path];
 }
 
 @end
-

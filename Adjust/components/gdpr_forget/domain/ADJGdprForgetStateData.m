@@ -63,6 +63,29 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
              askedToForgetBySdk:askedToForgetBySdkResult.value.boolValue]];
 }
 
++ (nullable ADJGdprForgetStateData *)instanceFromV4WithUserDefaults:
+    (nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    if (v4UserDefaultsData.gdprForgetMeNumberBool == nil
+        || ! v4UserDefaultsData.gdprForgetMeNumberBool)
+    {
+        return nil;
+    }
+
+    return [[ADJGdprForgetStateData alloc] initAskedButNotForgotten];
+}
++ (nullable ADJGdprForgetStateData *)instanceFromV4WithActivityState:
+    (nonnull ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState.isGdprForgottenNumberBool == nil ||
+        ! v4ActivityState.isGdprForgottenNumberBool)
+    {
+        return nil;
+    }
+
+    return [[ADJGdprForgetStateData alloc] initAskedButNotForgotten];
+}
+
 - (nonnull instancetype)initWithInitialState {
     return [self initWithForgottenByBackend:NO
                          askedToForgetBySdk:NO];

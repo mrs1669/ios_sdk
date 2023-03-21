@@ -9,6 +9,7 @@
 #import "ADJGlobalCallbackParametersStorage.h"
 
 #import "ADJStringMapBuilder.h"
+#import "ADJGlobalParametersControllerBase.h"
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -36,44 +37,23 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSDictionary<NSString *, NSString *> *_Nullable v4SessionCallbackParameters =
-        [v4FilesData v4SessionCallbackParameters];
-    if (v4SessionCallbackParameters == nil) {
-        [self.logger debugDev:@"Session Callback Parameters v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJOptionalFailsNL<ADJStringMap *> *_Nonnull callbackParamsOptFails =
+        [ADJGlobalParametersControllerBase paramsInstanceFromV4WithSessionParameters:
+         [v4FilesData v4SessionCallbackParameters]];
+    for (ADJResultFail *_Nonnull optionalFail in callbackParamsOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 session callback parameters migration"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (callbackParamsOptFails.value == nil) {
         return;
     }
 
-    ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
-
-    for (NSString *_Nonnull key in v4SessionCallbackParameters) {
-        ADJResultNL<ADJNonEmptyString *> *_Nonnull keyResult =
-            [ADJNonEmptyString instanceFromOptionalString:key];
-        if (keyResult.fail != nil) {
-            [self.logger debugDev:@"Invalid v4 Session Callback Parameter key"
-                       resultFail:keyResult.fail
-                        issueType:ADJIssueStorageIo];
-        }
-        if (keyResult.value == nil) {
-            continue;
-        }
-
-        ADJResultNL<ADJNonEmptyString *> *_Nonnull valueResult =
-            [ADJNonEmptyString instanceFromOptionalString:
-             [v4SessionCallbackParameters objectForKey:key]];
-        if (valueResult.fail != nil) {
-            [self.logger debugDev:@"Invalid v4 Callback Partner Parameter value"
-                       resultFail:valueResult.fail
-                        issueType:ADJIssueStorageIo];
-        }
-
-        [mapBuilder addPairWithValue:valueResult.value
-                                 key:keyResult.value.stringValue];
-    }
-
-    [self replaceAllWithStringMap:[[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder]
+    [self replaceAllWithStringMap:callbackParamsOptFails.value
               sqliteStorageAction:nil];
 }
 
 @end
-

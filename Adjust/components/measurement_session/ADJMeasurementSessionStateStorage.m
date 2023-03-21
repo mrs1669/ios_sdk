@@ -64,35 +64,24 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
-    if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
-        return;
-    }
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJResultNL<ADJMeasurementSessionStateData *> *_Nonnull sessionStateDataResult =
+        [ADJMeasurementSessionStateData instanceFromV4WithActivityState:
+         [v4FilesData v4ActivityState]];
 
-    [self.logger debugDev:@"Read v4 activity state"
-                      key:@"activity_state"
-                    value:[v4ActivityState description]];
-
-    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull v4MeasurementSessionDataResult =
-        [ADJMeasurementSessionData
-         instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
-         lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
-         sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
-         timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble];
-    if (v4MeasurementSessionDataResult.fail != nil) {
-        [self.logger debugDev:@"Cannot convert v4 session data"
-                   resultFail:v4MeasurementSessionDataResult.fail
+    if (sessionStateDataResult.fail != nil) {
+        [self.logger debugDev:@"Cannot migrate measurement session from v4"
+                   resultFail:sessionStateDataResult.fail
                     issueType:ADJIssueStorageIo];
         return;
     }
 
-    ADJMeasurementSessionStateData *_Nullable v4MeasurementSessionStateData =
-        [[ADJMeasurementSessionStateData alloc] initWithMeasurementSessionData:
-         v4MeasurementSessionDataResult.value];
+    if (sessionStateDataResult.value == nil) {
+        return;
+    }
 
-    [self updateWithNewDataValue:v4MeasurementSessionStateData];
+    [self updateWithNewDataValue:sessionStateDataResult.value];
 }
 
 @end

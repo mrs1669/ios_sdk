@@ -48,27 +48,21 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
-    if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJOptionalFailsNL<ADJEventStateData *> *_Nonnull eventStateDataOptFails =
+        [ADJEventStateData instanceFromV4WithActivityState:[v4FilesData v4ActivityState]];
+    for (ADJResultFail *_Nonnull optionalFail in eventStateDataOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 event"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (eventStateDataOptFails.value == nil) {
         return;
     }
 
-    if (v4ActivityState.eventCountNumberInt == nil) {
-        [self.logger debugDev:@"Cannot find event count in v4 activity state"];
-        return;
-    }
-
-    ADJEventStateData *_Nullable eventStateData =
-    [ADJEventStateData instanceFromExternalWithEventCountNumberInt:v4ActivityState.eventCountNumberInt
-                                                            logger:self.logger];
-    if (eventStateData == nil) {
-        return;
-    }
-
-    [self updateWithNewDataValue:eventStateData];
+    [self updateWithNewDataValue:eventStateDataOptFails.value];
 }
 
 @end
-

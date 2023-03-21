@@ -48,22 +48,35 @@ static NSString *const kEventCountKey = @"eventCount";
             [[ADJEventStateData alloc] initWithEventCount:eventCountResult.value]];
 }
 
-+ (nullable instancetype)
-    instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt    
-    logger:(nonnull ADJLogger *)logger
++ (nonnull ADJOptionalFailsNL<ADJEventStateData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
 {
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
-        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt];
-
-    if (eventCountIntResult.fail != nil) {
-        [logger debugDev:@"Invalid event count from external"
-              resultFail:eventCountIntResult.fail
-               issueType:ADJIssueExternalApi];
-        return nil;
+    if (v4ActivityState == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
     }
 
-    return [[self alloc] initWithEventCount:
-            [[ADJTallyCounter alloc] initWithCountValue:eventCountIntResult.value]];
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
+        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:v4ActivityState.eventCountNumberInt];
+
+    NSArray<ADJResultFail *> *optionalFails = nil;
+    if (eventCountIntResult.fail != nil) {
+        optionalFails = [NSArray arrayWithObject:
+                         [[ADJResultFail alloc]
+                          initWithMessage:@"Invalid value from v4 activity state"
+                          key:@"event count integer number fail"
+                          otherFail:eventCountIntResult.fail]];
+    }
+
+    if (eventCountIntResult.value == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optionalFails
+                                                           value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc]
+            initWithOptionalFails:optionalFails
+            value:[[ADJEventStateData alloc]
+                   initWithEventCount:
+                       [[ADJTallyCounter alloc] initWithCountValue:eventCountIntResult.value]]];
 }
 
 - (nonnull instancetype)initWithIntialState {

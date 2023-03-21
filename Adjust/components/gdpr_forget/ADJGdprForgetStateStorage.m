@@ -48,38 +48,34 @@ static NSString *const kGdprForgetStateStorageTableName = @"gdpr_forget_state";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSNumber *_Nullable gdprForgetMeNumberBool = v4UserDefaultsData.gdprForgetMeNumberBool;
-
-    if (gdprForgetMeNumberBool != nil && gdprForgetMeNumberBool.boolValue) {
-        [self.logger debugDev:@"GDPR forgotten state found in v4 shared preferences"];
-        [self updateWithNewDataValue:[[ADJGdprForgetStateData alloc] initAskedButNotForgotten]];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJGdprForgetStateData *_Nullable stateDataFromUserDefaults =
+        [ADJGdprForgetStateData instanceFromV4WithUserDefaults:v4UserDefaultsData];
+    if (stateDataFromUserDefaults != nil) {
+        [self.logger debugDev:@"GDPR forget found in v4 user defaults"];
+        [self updateWithNewDataValue:stateDataFromUserDefaults];
         return;
     }
 
-    [self.logger debugDev:@"GDPR forgotten state not found in v4 shared preferences"];
+    [self.logger debugDev:@"GDPR forget not found in v4 user defaults"];
 
     ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
     if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
         return;
     }
 
-    if (v4ActivityState.isGdprForgottenNumberBool == nil) {
-        [self.logger debugDev:@"Cannot find is isGdprForgotten v4 activity state file"];
+    ADJGdprForgetStateData *_Nullable stateDataFromActivityState =
+        [ADJGdprForgetStateData instanceFromV4WithActivityState:v4ActivityState];
+
+    if (stateDataFromActivityState == nil) {
+        [self.logger debugDev:@"GDPR forget not found in v4 activity state"];
         return;
     }
 
-    if (! v4ActivityState.isGdprForgottenNumberBool.boolValue) {
-        [self.logger debugDev:@"Cannot use false isGdprForgotten in v4 activity state file"];
-        return;
-    }
+    [self.logger debugDev:@"GDPR forget found in v4 activity state"];
 
-    [self.logger debugDev:@"GDPR forgotten state found in v4 activity state file"];
-
-    [self updateWithNewDataValue:[[ADJGdprForgetStateData alloc] initAskedButNotForgotten]];
+    [self updateWithNewDataValue:stateDataFromActivityState];
 }
 
 @end
-
-

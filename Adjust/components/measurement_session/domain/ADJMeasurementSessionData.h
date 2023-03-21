@@ -15,6 +15,7 @@
 #import "ADJTallyCounter.h"
 #import "ADJTimestampMilli.h"
 #import "ADJTimeLengthMilli.h"
+#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -32,11 +33,7 @@ NS_ASSUME_NONNULL_END
     instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder;
 
 + (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
-    instanceFromExternalWithSessionCountNumberInt:(nullable NSNumber *)sessionCountNumberInt
-    lastActivityTimestampNumberDoubleSeconds:
-        (nullable NSNumber *)lastActivityTimestampNumberDoubleSeconds
-    sessionLengthNumberDoubleSeconds:(nullable NSNumber *)sessionLengthNumberDoubleSeconds
-    timeSpentNumberDoubleSeconds:(nullable NSNumber *)timeSpentNumberDoubleSeconds;
+    instanceFromV4WithActivityState:(nonnull ADJV4ActivityState *)v4ActivityState;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

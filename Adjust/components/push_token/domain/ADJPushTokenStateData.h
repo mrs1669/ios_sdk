@@ -11,6 +11,7 @@
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
 #import "ADJNonEmptyString.h"
+#import "ADJOptionalFailsNL.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -22,6 +23,9 @@ NS_ASSUME_NONNULL_END
 @interface ADJPushTokenStateData : NSObject<ADJIoDataSerializable>
 // instantiation
 + (nonnull ADJResultNN<ADJPushTokenStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
+
++ (nonnull ADJOptionalFailsNL<ADJPushTokenStateData *> *)
+    instanceFromExternalWithPushTokenString:(nullable NSString *)pushTokenString;
 
 - (nonnull instancetype)initWithInitialState;
 

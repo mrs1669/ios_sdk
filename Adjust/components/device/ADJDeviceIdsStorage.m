@@ -52,30 +52,23 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
-    if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
-        return;
-    }
-
-    [self.logger debugDev:@"Read v4 activity state"
-                      key:@"activity_state"
-                    value:[v4ActivityState description]];
-
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull v4UuidResult =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid];
-    if (v4UuidResult.fail != nil) {
-        [self.logger debugDev:@"Invalid v4 uuid read"
-                   resultFail:v4UuidResult.fail
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJResultNL<ADJDeviceIdsData *> *_Nonnull deviceIdsDataResult =
+        [ADJDeviceIdsData instanceFromV4WithActivityState:[v4FilesData v4ActivityState]];
+    if (deviceIdsDataResult.fail != nil) {
+        [self.logger debugDev:@"Cannot migrate v4 device ids"
+                   resultFail:deviceIdsDataResult.fail
                     issueType:ADJIssueStorageIo];
+
         return;
     }
 
-    ADJDeviceIdsData *_Nonnull v4DeviceIdsData =
-        [[ADJDeviceIdsData alloc] initWithUuid:v4UuidResult.value];
+    if (deviceIdsDataResult.value == nil) {
+        return;
+    }
 
-    [self updateWithNewDataValue:v4DeviceIdsData];
+    [self updateWithNewDataValue:deviceIdsDataResult.value];
 }
 
 @end

@@ -110,6 +110,35 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                    isAsking:isAskingResult.value.boolValue]];
 }
 
++ (nonnull ADJOptionalFailsNL<ADJAttributionStateData *> *)
+    instanceFromV4WithAttribution:(nullable ADJV4Attribution *)v4Attribution
+{
+    if (v4Attribution == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+    }
+
+    ADJOptionalFailsNL<ADJAttributionData *> *_Nonnull attributionDataOptFails =
+        [ADJAttributionData instanceFromV4WithAttribution:v4Attribution];
+
+    if (attributionDataOptFails.value == nil) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:attributionDataOptFails.optionalFails
+                value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc]
+            initWithOptionalFails:attributionDataOptFails.optionalFails
+            value:[[ADJAttributionStateData alloc]
+                   initWithAttributionData:attributionDataOptFails.value
+                   // with attribution data, assume install session has been tracked
+                   installSessionTracked:YES
+                   // and that the attribution received is available
+                   //  otherwise it would be null from 'ADJAttributionData instanceFromV4'
+                   unavailableAttribution:NO
+                   // it starts by default by not asking, should be the same in 'initWithIntialState'
+                   isAsking:NO]];
+}
+
 - (nonnull instancetype)initWithIntialState {
     return [self initWithAttributionData:nil
                    installSessionTracked:NO

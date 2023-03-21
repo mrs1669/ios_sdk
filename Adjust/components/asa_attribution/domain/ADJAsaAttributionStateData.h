@@ -12,6 +12,7 @@
 #import "ADJNonEmptyString.h"
 #import "ADJTimestampMilli.h"
 #import "ADJOptionalFailsNN.h"
+#import "ADJV4UserDefaultsData.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -24,6 +25,9 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nonnull ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
+
++ (nullable ADJAsaAttributionStateData *)instanceFromV4WithUserDefaults:
+    (nonnull ADJV4UserDefaultsData *)v4UserDefaultsData;
 
 - (nonnull instancetype)initWithIntialState;
 
