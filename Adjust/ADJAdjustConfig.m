@@ -37,6 +37,10 @@ NSString *const ADJEnvironmentSandbox = @"sandbox";
 NSString *const ADJEnvironmentProduction = @"production";
 NSString *const ADJUrlStategyChina = @"CHINA";
 NSString *const ADJUrlStategyIndia = @"INDIA";
+NSString *const ADJDataResidencyEU = @"DataResidencyEU";
+NSString *const ADJDataResidencyTR = @"DataResidencyTR";
+NSString *const ADJDataResidencyUS = @"DataResidencyUS";
+
 
 @implementation ADJAdjustConfig
 

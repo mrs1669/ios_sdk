@@ -17,6 +17,9 @@ FOUNDATION_EXPORT NSString *const ADJEnvironmentSandbox;
 FOUNDATION_EXPORT NSString *const ADJEnvironmentProduction;
 FOUNDATION_EXPORT NSString *const ADJUrlStategyChina;
 FOUNDATION_EXPORT NSString *const ADJUrlStategyIndia;
+FOUNDATION_EXPORT NSString *const ADJDataResidencyEU;
+FOUNDATION_EXPORT NSString *const ADJDataResidencyTR;
+FOUNDATION_EXPORT NSString *const ADJDataResidencyUS;
 
 NS_ASSUME_NONNULL_END
 
