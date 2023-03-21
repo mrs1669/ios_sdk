@@ -20,8 +20,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
-    ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc"
-                                                                           environment:ADJEnvironmentSandbox];
+    ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc]
+                                              initWithAppToken:@"2fm9gkqubvpc"
+                                              environment:ADJEnvironmentSandbox];
     [adjustConfig doLogAll];
     [adjustConfig setAdjustAttributionSubscriber:self];
     [adjustConfig setExternalDeviceId:@"test-ext-device-id"];

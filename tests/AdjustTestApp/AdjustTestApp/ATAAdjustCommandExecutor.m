@@ -25,7 +25,8 @@
 @property (nonnull, readonly, nonatomic, strong) NSString *url;
 @property (nonnull, readonly, nonatomic, strong) ATLTestLibrary *testLibrary;
 //@property (nonnull, readonly, nonatomic, strong) ATAAdjustCommandExecutor *adjustV4CommandExecutor;
-@property (nullable, readwrite, nonatomic, strong) NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
+@property (nullable, readwrite, nonatomic, strong)
+NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
 @property (nullable, readwrite, nonatomic, strong) NSString *extraPathTestOptions;
 
 @end
@@ -321,7 +322,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 - (void)openDeeplink {
     NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
 
-    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
+    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc]
+                                                                  initWithString:openDeeplink];
 
     [[ADJAdjust instance] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
@@ -357,7 +359,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         if (adImpressionsCountIntNumber != nil) {
             [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCountIntNumber];
         } else {
-            [self logError:@"Could not parse adImpressionsCount value: %@", adImpressionsCountString];
+            [self logError:@"Could not parse adImpressionsCount value: %@",
+             adImpressionsCountString];
         }
     }
 
@@ -434,7 +437,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)measurementConsent {
-    NSNumber *_Nullable measurementConsentEnabledNumberBool = [self strictParseNumberBoolWithKey:@"isEnabled"];
+    NSNumber *_Nullable measurementConsentEnabledNumberBool =
+    [self strictParseNumberBoolWithKey:@"isEnabled"];
     if (measurementConsentEnabledNumberBool != nil) {
         if (measurementConsentEnabledNumberBool.boolValue) {
             [[ADJAdjust instance] activateMeasurementConsent];
@@ -621,6 +625,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 @end
+
 
 
 

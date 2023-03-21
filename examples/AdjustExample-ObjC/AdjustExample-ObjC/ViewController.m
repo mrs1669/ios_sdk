@@ -67,7 +67,8 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 }
 
 // create a cell for each table view row
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     // create a new cell if needed or reuse an old one
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier];
 
@@ -130,7 +131,7 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
         default :
             NSLog(@"No functionality has been added.");
     }
-    
+
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -144,10 +145,10 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
 - (void)trackAdRevenue {
     // initilise ADJAdRevenue instance with appropriate ad revenue source
-    ADJAdjustAdRevenue *adRevenue = [[ADJAdjustAdRevenue alloc] initWithSource: ADJAdRevenueSourceMopub];
+    ADJAdjustAdRevenue *adRevenue = [[ADJAdjustAdRevenue alloc]
+                                     initWithSource: ADJAdRevenueSourceMopub];
     // pass revenue and currency values
     [adRevenue setRevenueWithDouble:3.0 currency:@"USD"];
-
     // pass optional parameters
     //    [adRevenue setAdImpressionsCountWithInteger:3];
     //    [adRevenue setAdRevenueUnit:adRevenueUnit];
@@ -203,7 +204,7 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 
 - (void)trackPushToken {
     ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc]
-                                                    initWithStringPushToken:@"965b251c6cb1926de3cb366fdfb16ddde6b9086a 8a3cac9e5f857679376eab7C"];
+                                                    initWithStringPushToken:@"965b251c6cb1926de3cb366fdfb16ddde6b9086a8a3cac9e5f857679376eab7C"];
     [[ADJAdjust instance] trackPushToken:adjustPushToken];
 }
 
@@ -216,4 +217,6 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 }
 
 @end
+
+
 
