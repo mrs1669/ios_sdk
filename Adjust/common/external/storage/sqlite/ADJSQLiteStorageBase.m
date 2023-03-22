@@ -11,9 +11,9 @@
 #pragma mark Fields
 #pragma mark - Protected properties
 /* .h
- @property (nullable, readonly, weak, nonatomic) ADJSingleThreadExecutor *storageExecutorWeak;
- @property (nullable, readonly, weak, nonatomic)
- id<ADJSQLiteDatabaseProvider> sqliteDatabaseProviderWeak;
+ @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *storageExecutor;
+ @property (nonnull, readonly, strong, nonatomic)
+     id<ADJSQLiteDatabaseProvider> sqliteDatabaseProvider;
  @property (nonnull, readonly, strong, nonatomic) NSString *tableName;
  @property (nonnull, readonly, strong, nonatomic) NSString *metadataTypeValue;
 
@@ -24,12 +24,14 @@
 
 @implementation ADJSQLiteStorageBase
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
-                              storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                       sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
-                                    tableName:(nonnull NSString *)tableName
-                            metadataTypeValue:(nonnull NSString *)metadataTypeValue {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    source:(nonnull NSString *)source
+    storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
+    sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
+    tableName:(nonnull NSString *)tableName
+    metadataTypeValue:(nonnull NSString *)metadataTypeValue
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSQLiteStorageBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -37,8 +39,8 @@
     }
 
     self = [super initWithLoggerFactory:loggerFactory source:source];
-    _storageExecutorWeak = storageExecutor;
-    _sqliteDatabaseProviderWeak = sqliteDatabaseProvider;
+    _storageExecutor = storageExecutor;
+    _sqliteDatabaseProvider = sqliteDatabaseProvider;
     _tableName = tableName;
     _metadataTypeValue = metadataTypeValue;
 
@@ -73,7 +75,7 @@
 }
 
 // - implemented by final class
-- (nullable NSString *)sqlStringForOnUpgrade:(int)oldVersion {
+- (nullable NSString *)sqlStringForOnUpgrade:(nonnull ADJNonNegativeInt *)oldVersion {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -134,12 +136,17 @@
     return NO;
 }
 
+#pragma mark - NSObject
+ - (nonnull NSString *)description {
+     return self.source;
+ }
+
 #pragma mark Internal Methods
 - (BOOL)transactReadIntoMemory:(nonnull ADJSQLiteDb *)sqliteDb {
     [sqliteDb beginTransaction];
 
     ADJSQLiteStatement *_Nullable selectStatement =
-    [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
+        [sqliteDb prepareStatementWithSqlString:self.selectSql.stringValue];
 
     if (selectStatement == nil) {
         [self.logger debugDev:
@@ -155,10 +162,9 @@
 
     if (! wasAbleToStepToFirstRow) {
         [self.logger debugDev:
-         @"Cannot read value from Select queryCursor without a queryCursor from the select query"
+         @"Was not able to step to first row of select statement. It could be empty"
                           key:@"selectSql"
-                        value:self.selectSql.stringValue
-                    issueType:ADJIssueStorageIo];
+                        value:self.selectSql.stringValue];
         [selectStatement closeStatement];
         [sqliteDb rollback];
         return NO;

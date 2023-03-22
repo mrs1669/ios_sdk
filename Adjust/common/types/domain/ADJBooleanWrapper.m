@@ -117,7 +117,7 @@ NSString *const ADJBooleanFalseString = @"false";
 
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
-    // TODO change all boolean values to be "true"/"false" instead of "0"/"1" in the backend
+    // TODO: change all boolean values to be "true"/"false" instead of "0"/"1" in the backend
     return self.boolValue ? [ADJBooleanWrapper trueString] : [ADJBooleanWrapper falseString];
 }
 

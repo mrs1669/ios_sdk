@@ -14,7 +14,7 @@
 #import "ADJSdkResponseSubscriber.h"
 #import "ADJNetworkEndpointData.h"
 #import "ADJClientConfigData.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 @interface ADJSdkPackageSenderController : ADJCommonBase<
     ADJSdkPackageSenderFactory,
@@ -26,10 +26,11 @@
 @property (nonnull, readonly, strong, nonatomic) ADJSdkResponsePublisher *sdkResponsePublisher;
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                          networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-                            adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
-                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
+    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
 @end

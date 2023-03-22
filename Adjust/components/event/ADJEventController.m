@@ -56,27 +56,26 @@ ADJMainQueueController *mainQueueControllerWeak;
 }
 
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // cannot handle pre first session
-    return ! isPreFirstSession;
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
+    return NO;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     ADJClientEventData *_Nullable clientEventData =
     [ADJClientEventData
      instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
      logger:self.logger];
 
     if (clientEventData == nil) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
         return;
     }
 
     [self trackEventWithClientData:clientEventData
                       apiTimestamp:apiTimestamp
-   clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+   clientActionRemoveStorageAction:removeStorageAction];
 }
 
 #pragma mark Internal Methods
@@ -130,7 +129,7 @@ ADJMainQueueController *mainQueueControllerWeak;
         return YES;
     }
 
-    if ([self.eventDeduplicationController ccContainsWithDeduplicationId:deduplicationId]) {
+    if ([self.eventDeduplicationController ccContainsDeduplicationId:deduplicationId]) {
         [self.logger infoClient:
          @"Event won't be tracked, since it has a previously used deduplication id"
                             key:@"deduplication id"
@@ -138,7 +137,7 @@ ADJMainQueueController *mainQueueControllerWeak;
         return NO;
     }
 
-    ADJNonNegativeInt *_Nonnull newDeduplicationCount = [self.eventDeduplicationController ccAddWithDeduplicationId:deduplicationId];
+    ADJNonNegativeInt *_Nonnull newDeduplicationCount = [self.eventDeduplicationController ccAddDeduplicationId:deduplicationId];
 
     [self.logger debugDev:
      @"Saving deduplication id to avoid tracking an event with the same value in the future"

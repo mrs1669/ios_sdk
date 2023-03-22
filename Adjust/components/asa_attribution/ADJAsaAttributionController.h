@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
-#import "ADJKeepAliveSubscriber.h"
-#import "ADJPreFirstMeasurementSessionStartSubscriber.h"
+#import "ADJKeepAlivePingSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
 #import "ADJSdkResponseSubscriber.h"
 #import "ADJAttributionSubscriber.h"
 #import "ADJSdkPackageSendingSubscriber.h"
@@ -28,8 +28,8 @@
 
 @interface ADJAsaAttributionController : ADJCommonBase<
     // subscriptions
-    ADJKeepAliveSubscriber,
-    ADJPreFirstMeasurementSessionStartSubscriber,
+    ADJKeepAlivePingSubscriber,
+    ADJSdkStartSubscriber,
     ADJSdkResponseSubscriber,
     ADJAttributionSubscriber,
     ADJSdkPackageSendingSubscriber

@@ -9,6 +9,7 @@
 #import "ATOAdjustTestOptions.h"
 
 #import "ADJSdkConfigDataBuilder.h"
+#import "ADJSdkConfigData.h"
 #import "ADJNetworkEndpointData.h"
 #import "ADJTimeLengthMilli.h"
 #import "ADJAdjustInternal.h"
@@ -132,38 +133,47 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
     teardownAndApplyAdjustTestOptions:(nonnull ATOAdjustTestOptions *)adjustTestOptions
 {
     [self mergeIntoCachedWithTestOptions:adjustTestOptions];
+    ATOAdjustTestOptions *_Nonnull mergedTestOptions = [self cachedTestOptions];
 
-    ADJSdkConfigDataBuilder *_Nullable sdkConfigDataBuilder = nil;
-
-    ATOAdjustTestOptions *_Nonnull cachedTestOptions = [self cachedTestOptions];
-
-    if (cachedTestOptions.doCreateEntryRootInstance) {
-        sdkConfigDataBuilder = [[ADJSdkConfigDataBuilder alloc] initWithDefaultValues];
-
-        sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging = YES;
-        sdkConfigDataBuilder.assumeDevLogs = YES;
-
-        [self mergeIntoSdkConfigWithAdjustTestOptions:cachedTestOptions
-                                 sdkConfigDataBuilder:sdkConfigDataBuilder];
-    }
+    ADJSdkConfigData *_Nullable sdkConfigData =
+        [self sdkConfigDataWithTestOptions:mergedTestOptions];
 
     NSString *_Nonnull returnMessage =
-        [ADJAdjustInternal teardownWithSdkConfigDataBuilder:sdkConfigDataBuilder
-                                         shouldClearStorage:cachedTestOptions.clearStorage];
+        [ADJAdjustInternal teardownWithSdkConfigData:sdkConfigData
+                                  shouldClearStorage:mergedTestOptions.clearStorage];
 
     [[ATOLogger sharedInstance] debugDev:returnMessage
                                      key:@"from"
                                    value:@"teardownAndApplySdkConfig"];
 
-    NSString *_Nullable extraPath = cachedTestOptions.extraPath;
+    NSString *_Nullable extraPath = mergedTestOptions.extraPath;
 
     [self clearAndResetCachedOptions];
 
-    if (sdkConfigDataBuilder != nil) {
-        return sdkConfigDataBuilder.networkEndpointData.extraPath;
+    if (sdkConfigData != nil) {
+        return sdkConfigData.networkEndpointData.extraPath;
     } else {
         return extraPath;
     }
+}
+
++ (nullable ADJSdkConfigData *)
+    sdkConfigDataWithTestOptions:(nonnull ATOAdjustTestOptions *)testOptions
+{
+    if (! testOptions.doCreateEntryRootInstance) {
+        return nil;
+    }
+
+    ADJSdkConfigDataBuilder *_Nonnull sdkConfigDataBuilder =
+        [[ADJSdkConfigDataBuilder alloc] initWithDefaultValues];
+
+    sdkConfigDataBuilder.assumeSandboxEnvironmentForLogging = YES;
+    sdkConfigDataBuilder.assumeDevLogs = YES;
+
+    [self mergeIntoSdkConfigWithAdjustTestOptions:testOptions
+                             sdkConfigDataBuilder:sdkConfigDataBuilder];
+
+    return [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigDataBuilder];
 }
 
 + (void)mergeIntoTestOptionsWithSet:(nonnull NSSet<NSArray<NSString *> *> *)testOptionsSet

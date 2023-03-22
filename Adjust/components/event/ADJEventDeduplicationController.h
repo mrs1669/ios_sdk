@@ -17,8 +17,8 @@
                 maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication;
 
 // public api
-- (BOOL)ccContainsWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId;
+- (BOOL)ccContainsDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId;
 
-- (nonnull ADJNonNegativeInt *)ccAddWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId;
+- (nonnull ADJNonNegativeInt *)ccAddDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId;
 
 @end

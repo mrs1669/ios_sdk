@@ -15,25 +15,17 @@
 #import "ADJDelayData.h"
 #import "ADJTallyCounter.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-FOUNDATION_EXPORT NSString *const ADJAskingAttributionStatusFromBackend;
-FOUNDATION_EXPORT NSString *const ADJAskingAttributionStatusFromSdk;
-FOUNDATION_EXPORT NSString *const ADJAskingAttributionStatusFromBackendAndSdk;
-
-NS_ASSUME_NONNULL_END
-
 @interface ADJAttributionTracker : ADJCommonBase
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                   attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
+    startsAsking:(BOOL)startsAsking;
 
 @property (nonnull, readonly, strong, nonatomic) ADJTallyCounter *retriesSinceLastSuccessSend;
 
 // public api
-- (BOOL)canSendWhenAskingWithAskingAttribution:(nonnull NSString *)askingAttribution;
-
-- (void)stopAsking;
+- (BOOL)sendWhenStartAsking;
 
 - (BOOL)sendWhenSdkResumingSending;
 
@@ -44,13 +36,6 @@ NS_ASSUME_NONNULL_END
 - (nullable ADJDelayData *)delaySendingWhenReceivedAttributionResponseWithData:
 (nonnull ADJAttributionResponseData *)attributionResponse;
 
-- (BOOL)canDelay;
-
-- (nullable ADJAttributionPackageData *)attributionPackage;
-
-- (nullable NSString *)initiatedBy;
-
-- (void)setAttributionPackageToSendWithData:
-(nonnull ADJAttributionPackageData *)attributionPackageToSend;
+- (BOOL)tryToDelay;
 
 @end

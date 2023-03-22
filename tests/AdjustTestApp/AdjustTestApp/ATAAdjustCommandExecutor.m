@@ -100,6 +100,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     adjustCommand(gdprForgetMe)
     adjustCommand(trackAdRevenue)
     adjustCommand(thirdPartySharing)
+    adjustCommand(measurementConsent)
     [self logError:@"method name %@ not found", methodName];
 }
 
@@ -174,7 +175,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [adjustConfig doNotReadAppleSearchAdsAttribution];
     }
 
-    [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
+    [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
 }
 /*
  if (parameters.containsKey("defaultTracker")) {
@@ -426,6 +427,17 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     }
 
     [[ADJAdjust instance] trackThirdPartySharing:adjustThirdPartySharing];
+}
+
+- (void)measurementConsent {
+    NSNumber *_Nullable measurementConsentEnabledNumberBool = [self strictParseNumberBoolWithKey:@"isEnabled"];
+    if (measurementConsentEnabledNumberBool != nil) {
+        if (measurementConsentEnabledNumberBool.boolValue) {
+            [[ADJAdjust instance] activateMeasurementConsent];
+        } else {
+            [[ADJAdjust instance] inactivateMeasurementConsent];
+        }
+    }
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {

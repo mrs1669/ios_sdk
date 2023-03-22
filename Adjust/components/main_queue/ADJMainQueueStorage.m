@@ -27,7 +27,8 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"MainQueueStorage"
                         storageExecutor:storageExecutor
@@ -50,7 +51,7 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 
 #pragma mark Public API
 #pragma mark - ADJSQLiteStorage
-- (nullable NSString *)sqlStringForOnUpgrade:(int)oldVersion {
+- (nullable NSString *)sqlStringForOnUpgrade:(nonnull ADJNonNegativeInt *)oldVersion {
     // nothing to upgrade from (yet)
     return nil;
 }

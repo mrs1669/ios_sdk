@@ -27,16 +27,19 @@
 // public api
 - (NSUInteger)countPairs;
 
-- (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull NSString *)key;
+- (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull ADJNonEmptyString *)key;
 
-- (nullable ADJNonEmptyString *)addPairWithValue:(nonnull ADJNonEmptyString *)value
-                                             key:(nonnull NSString *)key
-                             sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+- (nullable ADJNonEmptyString *)
+    addPairWithValue:(nonnull ADJNonEmptyString *)value
+    key:(nonnull ADJNonEmptyString *)key
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
-- (nullable ADJNonEmptyString *)removePairWithKey:(nonnull NSString *)key
-                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+- (nullable ADJNonEmptyString *)
+    removePairWithKey:(nonnull ADJNonEmptyString *)key
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
-- (NSUInteger)removeAllPairsWithSqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+- (NSUInteger)removeAllPairsWithSqliteStorageAction:
+    (nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 - (void)replaceAllWithStringMap:(nonnull ADJStringMap *)stringMap
             sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;

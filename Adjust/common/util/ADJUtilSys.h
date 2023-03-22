@@ -13,14 +13,6 @@
 
 @interface ADJUtilSys : NSObject
 
-+ (BOOL)createAdjustAppSupportDir;
-
-+ (nullable NSString *)filePathInDocumentsDir:(nonnull NSString *)fileName;
-
-+ (nullable NSString *)filePathInAdjustAppSupportDir:(nonnull NSString *)fileName;
-
-+ (nullable NSString *)adjustAppSupportDir;
-
 + (nonnull ADJNonEmptyString *)generateUuid;
 
 + (dispatch_time_t)dispatchTimeWithMilli:(NSUInteger)milli;
@@ -31,8 +23,7 @@
 
 + (nonnull NSArray<NSString *> *)pluginsClassNameList;
 
-+ (void)moveFromDocumentsToSupportFolderOldDbFilename:(nonnull NSString *)oldName
-                                        newDbFileName:(nonnull NSString *)newName;
++ (nonnull NSString *)clientSdkWithPrefix:(nullable NSString *)sdkPrefix;
 
 @end
 

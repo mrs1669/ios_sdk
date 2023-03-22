@@ -53,6 +53,8 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
                          @"Remove Global Partner Parameters",
                          @"Clear All Global Partner Parameters",
                          @"Track Push Token",
+                         @"Activate Measurement Consent",
+                         @"Inactivate Measurement Consent",
                          nil];
 }
 
@@ -119,13 +121,22 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
         case 12:
             [self trackPushToken];
             break;
+        case 13:
+            [self activateMasurementConsent];
+            break;
+        case 14:
+            [self inactivateMasurementConsent];
+            break;
         default :
             NSLog(@"No functionality has been added.");
     }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)trackEvent {
     ADJAdjustEvent *event = [[ADJAdjustEvent alloc] initWithEventId:@"g3mfiw"];
+    [event setDeduplicationId:@"testDedup"];
     [event addCallbackParameterWithKey:@"partner" value:@"partnerValue"];
     [event addCallbackParameterWithKey:@"callback" value:@"callbackValue"];
     [[ADJAdjust instance] trackEvent:event];
@@ -194,6 +205,14 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
     ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc]
                                                     initWithStringPushToken:@"965b251c6cb1926de3cb366fdfb16ddde6b9086a 8a3cac9e5f857679376eab7C"];
     [[ADJAdjust instance] trackPushToken:adjustPushToken];
+}
+
+- (void)activateMasurementConsent {
+    [[ADJAdjust instance] activateMeasurementConsent];
+}
+
+- (void)inactivateMasurementConsent {
+    [[ADJAdjust instance] inactivateMeasurementConsent];
 }
 
 @end

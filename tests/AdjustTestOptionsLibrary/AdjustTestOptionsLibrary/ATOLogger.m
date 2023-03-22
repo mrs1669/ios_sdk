@@ -33,7 +33,8 @@ API_AVAILABLE(macos(10.12), ios(10.0), watchos(3.0), tvos(10.0), macCatalyst(13.
 }
 
 - (nonnull instancetype)initTestLogger {
-    self = [super initWithSource:@"ATOLogger" logCollector:self];
+    // TODO: fix logging bootstrapping with ADJNonNegativeInt
+    self = [super initWithSource:@"ATOLogger" logCollector:self instanceId:nil];
 
     if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
         _osLogLogger = os_log_create("com.adjust.sdk", "Adjust");

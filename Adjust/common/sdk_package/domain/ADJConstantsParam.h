@@ -75,10 +75,6 @@ FOUNDATION_EXPORT NSString *const ADJParamAdRevenueUnitKey;
 FOUNDATION_EXPORT NSString *const ADJParamAdRevenuePlacementKey;
 
 // attribution
-FOUNDATION_EXPORT NSString *const ADJParamAttributionInititedByKey;
-FOUNDATION_EXPORT NSString *const ADJParamAttributionInititedBySdkValue;
-FOUNDATION_EXPORT NSString *const ADJParamAttributionInititedByBackendValue;
-FOUNDATION_EXPORT NSString *const ADJParamAttributionInititedBySdkAndBackendValue;
 FOUNDATION_EXPORT NSString *const ADJParamAttributionTrackerTokenKey;
 FOUNDATION_EXPORT NSString *const ADJParamAttributionTrackerNameKey;
 FOUNDATION_EXPORT NSString *const ADJParamAttributionNetworkKey;
@@ -105,11 +101,16 @@ FOUNDATION_EXPORT NSString *const ADJParamEventCountKey;
 FOUNDATION_EXPORT NSString *const ADJParamEventTokenKey;
 FOUNDATION_EXPORT NSString *const ADJParamEventRevenueKey;
 FOUNDATION_EXPORT NSString *const ADJParamEventCurrencyKey;
+FOUNDATION_EXPORT NSString *const ADJParamEventDeduplicationKey;
 
 // info
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenKey;
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenSourceKey;
 FOUNDATION_EXPORT NSString *const ADJParamPushTokenSourceValue;
+FOUNDATION_EXPORT NSString *const ADJParamMeasurementConsentKey;
+FOUNDATION_EXPORT NSString *const ADJParamMeasurementConsentEnableValue;
+FOUNDATION_EXPORT NSString *const ADJParamMeasurementConsentDisableValue;
+
 
 // log
 FOUNDATION_EXPORT NSString *const ADJParamLogMessageKey;

@@ -33,25 +33,31 @@
 #import "ADJSessionPackageData.h"
 #import "ADJClientThirdPartySharingData.h"
 #import "ADJThirdPartySharingPackageData.h"
+#import "ADJMeasurementConsentPackageData.h"
+#import "ADJClientMeasurementConsentData.h"
 #import "ADJGdprForgetPackageData.h"
 #import "ADJPackageSessionData.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
 
 @interface ADJSdkPackageBuilder : ADJCommonBase
 // publishers
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageCreatingPublisher *sdkPackageCreatingPublisher;
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                        clock:(nonnull ADJClock *)clock
-                                    clientSdk:(nonnull NSString *)clientSdk
-                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                             deviceController:(nonnull ADJDeviceController *)deviceController
-              globalCallbackParametersStorage:(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
-               globalPartnerParametersStorage:(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
-                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    clock:(nonnull ADJClock *)clock
+    sdkPrefix:(nullable NSString *)sdkPrefix
+    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+    deviceController:(nonnull ADJDeviceController *)deviceController
+    globalCallbackParametersStorage:
+        (nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
+    globalPartnerParametersStorage:
+        (nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
+    eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+    measurementSessionStateStorage:
+        (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
 - (nonnull ADJEventPackageData *)buildEventPackageWithClientData:(nonnull ADJClientEventData *)clientEventData
                                                     apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
@@ -59,7 +65,7 @@
 - (nonnull ADJAdRevenuePackageData *)buildAdRevenueWithClientData:(nonnull ADJClientAdRevenueData *)clientAdRevenueData
                                                      apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
-- (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy;
+- (nonnull ADJAttributionPackageData *)buildAttributionPackage;
 
 - (nonnull ADJBillingSubscriptionPackageData *)buildBillingSubscriptionWithClientData:(nonnull ADJClientBillingSubscriptionData *)clientBillingSubscriptionData
                                                                          apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
@@ -72,6 +78,9 @@
 
 - (nonnull ADJInfoPackageData *)buildInfoPackageWithClientData:(nonnull ADJClientPushTokenData*)clientPushTokenData
                                                   apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
+
+- (nonnull ADJMeasurementConsentPackageData *)buildMeasurementConsentPackageWithClientData:(nonnull ADJClientMeasurementConsentData *)clienMeasurementConsentData
+                                                                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp;
 
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
                                                  logLevel:(nonnull ADJAdjustLogLevel)logLevel

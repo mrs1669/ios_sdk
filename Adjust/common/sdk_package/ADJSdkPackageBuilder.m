@@ -14,6 +14,7 @@
 #import "ADJTimestampMilli.h"
 #import "ADJConstantsParam.h"
 #import "ADJTallyCounter.h"
+#import "ADJUtilSys.h"
 
 #pragma mark Private class
 @implementation ADJSdkPackageCreatingPublisher @end
@@ -41,20 +42,24 @@
 
 @implementation ADJSdkPackageBuilder
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                        clock:(nonnull ADJClock *)clock
-                                    clientSdk:(nonnull NSString *)clientSdk
-                             clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
-                             deviceController:(nonnull ADJDeviceController *)deviceController
-              globalCallbackParametersStorage:(nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
-               globalPartnerParametersStorage:(nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
-                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-               measurementSessionStateStorage:(nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    clock:(nonnull ADJClock *)clock
+    sdkPrefix:(nullable NSString *)sdkPrefix
+    clientConfigData:(nonnull ADJClientConfigData *)clientConfigData
+    deviceController:(nonnull ADJDeviceController *)deviceController
+    globalCallbackParametersStorage:
+        (nonnull ADJGlobalCallbackParametersStorage *)globalCallbackParametersStorage
+    globalPartnerParametersStorage:
+        (nonnull ADJGlobalPartnerParametersStorage *)globalPartnerParametersStorage
+    eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+    measurementSessionStateStorage:
+        (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
     _clockWeak = clock;
-    _clientSdk = clientSdk;
+    _clientSdk = [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
     _clientConfigData = clientConfigData;
     _deviceControllerWeak = deviceController;
     _globalCallbackParametersStorageWeak = globalCallbackParametersStorage;
@@ -62,8 +67,10 @@
     _eventStateStorageWeak = eventStateStorage;
     _measurementSessionStateStorageWeak = measurementSessionStateStorage;
 
-    _sdkPackageCreatingPublisher = [[ADJSdkPackageCreatingPublisher alloc] init];
-    [pubRegistry addPublisher:_sdkPackageCreatingPublisher];
+    _sdkPackageCreatingPublisher =
+        [[ADJSdkPackageCreatingPublisher alloc]
+         initWithSubscriberProtocol:@protocol(ADJSdkPackageCreatingSubscriber)
+         controller:publisherController];
 
     return self;
 }
@@ -115,15 +122,13 @@
                                                    parameters:parameters];
 }
 
-- (nonnull ADJAttributionPackageData *)buildAttributionPackageWithInitiatedBy:(nullable NSString *)initatedBy {
-    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJAttributionPackageDataPath];
+- (nonnull ADJAttributionPackageData *)buildAttributionPackage {
+    ADJStringMapBuilder *_Nonnull parametersBuilder =
+        [self generateParametersBuilderWithPath:ADJAttributionPackageDataPath];
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamAttributionInititedByKey
-                                            constValue:initatedBy];
-
-    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
-                                                                                           path:ADJAttributionPackageDataPath];
+    ADJStringMap *_Nonnull parameters =
+        [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                           path:ADJAttributionPackageDataPath];
 
     return [[ADJAttributionPackageData alloc] initWithClientSdk:self.clientSdk
                                                      parameters:parameters];
@@ -241,6 +246,10 @@
                                                    key:ADJParamEventTokenKey
                          packageParamValueSerializable:clientEventData.eventId];
 
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamEventDeduplicationKey
+                         packageParamValueSerializable:clientEventData.deduplicationId];
+
     if (clientEventData.revenue != nil) {
         [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                        key:ADJParamEventRevenueKey
@@ -275,6 +284,26 @@
 
     return [[ADJInfoPackageData alloc] initWithClientSdk:self.clientSdk
                                               parameters:parameters];
+}
+
+- (nonnull ADJMeasurementConsentPackageData *)buildMeasurementConsentPackageWithClientData:(nonnull ADJClientMeasurementConsentData *)clienMeasurementConsentData
+                                                                              apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+
+    ADJStringMapBuilder *_Nonnull parametersBuilder = [self generateParametersBuilderWithPath:ADJMeasurementConsentPackageDataPath];
+    if (clienMeasurementConsentData.measurementConsentWasActivated.boolValue) {
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamMeasurementConsentKey
+                                                constValue:ADJParamMeasurementConsentEnableValue];
+    } else {
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamMeasurementConsentKey
+                                                constValue:ADJParamMeasurementConsentDisableValue];
+    }
+
+    ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
+                                                                                           path:ADJMeasurementConsentPackageDataPath];
+    return [[ADJMeasurementConsentPackageData alloc] initWithClientSdk:self.clientSdk
+                                                            parameters:parameters];
 }
 
 - (nonnull ADJLogPackageData *)buildLogPackageWithMessage:(nonnull ADJNonEmptyString *)logMessage
@@ -595,7 +624,7 @@
                                                    key:ADJParamDefaultTrackerKey
                          packageParamValueSerializable:self.clientConfigData.defaultTracker];
 
-    /* TODO
+    /* TODO: 
      UtilMap.injectIntoPackageParameters(packageParametersBuilder,
      ConstantsParam.DEFAULT_TRACKER_KEY,
      clientConfigData.defaultTracker);

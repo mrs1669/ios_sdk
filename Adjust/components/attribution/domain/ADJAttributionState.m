@@ -10,6 +10,35 @@
 #import "ADJAttributionTracker.h"
 
 #pragma mark Fields
+/* .h
+ @property (nullable, readonly, strong, nonatomic) ADJAttributionStateData *changedStateData;
+ @property (nullable, readonly, strong, nonatomic) ADJDelayData *delayData;
+ @property (readonly, assign, nonatomic) BOOL startAsking;
+ */
+
+@implementation ADJAttributionStateOutputData
+#pragma mark Instantiation
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+#pragma mark - Private constructors
+- (nonnull instancetype)
+    initWithChangedStateData:(nullable ADJAttributionStateData *)changedStateData
+    delayData:(nullable ADJDelayData *)delayData
+    startAsking:(BOOL)startAsking
+{
+    self = [super init];
+
+    _changedStateData = changedStateData;
+    _delayData = delayData;
+    _startAsking = startAsking;
+
+    return self;
+}
+
+@end
+
 #pragma mark - Public constants
 NSString *const ADJAttributionStatusCreated = @"Created";
 NSString *const ADJAttributionStatusUpdated = @"Updated";
@@ -19,12 +48,10 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 
 @interface ADJAttributionState ()
 #pragma mark - Injected dependencies
+@property (nonnull, readwrite, strong, nonatomic) ADJAttributionStateData *stateData;
 @property (readonly, assign, nonatomic) BOOL doNotInitiateAttributionFromSdk;
 
 #pragma mark - Internal variables
-@property (readwrite, assign, nonatomic) BOOL isFirstSessionWaitingToBeSent;
-@property (readwrite, assign, nonatomic) BOOL wasSessionSent;
-@property (readwrite, assign, nonatomic) BOOL isFirstStart;
 @property (readwrite, assign, nonatomic) BOOL hasSdkStart;
 
 @end
@@ -32,17 +59,12 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 @implementation ADJAttributionState
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             initialStateData:(nonnull ADJAttributionStateData *)initialStateData
               doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
-                        isFirstSessionInQueue:(BOOL)isFirstSessionInQueue
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"AttributionState"];
+    _stateData = initialStateData;
     _doNotInitiateAttributionFromSdk = doNotInitiateAttributionFromSdk;
-
-    _isFirstSessionWaitingToBeSent = isFirstSessionInQueue;
-
-    _wasSessionSent = NO;
-
-    _isFirstStart = YES;
 
     _hasSdkStart = NO;
 
@@ -50,396 +72,201 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 }
 
 #pragma mark Public API
-- (BOOL)
-    stopAskingWhenReceivedAcceptedAttributionResponseWithCurrentAttributionStateData:
-        (nonnull ADJAttributionStateData *)currentAttributionStateData
-    attributionResponseData:(nonnull ADJAttributionResponseData *)attributionResponseData
-    changedAttributionStateDataWO:
-        (nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-    attributionStatusEventWO:(nonnull ADJValueWO<NSString *> *)attributionStatusEventWO
+- (nullable ADJAttributionStateOutputData *)receivedAcceptedNonAttributionResponse:
+    (nonnull id<ADJSdkResponseData>)nonAttributionResponse
 {
-    if (attributionResponseData.shouldRetry) {
+    ADJTimeLengthMilli *_Nullable askIn = nonAttributionResponse.askIn;
+    if (askIn == nil) { return nil; }
+
+    [self.logger debugDev:@"Ask in found in non attribution response"
+                     key1:@"askIn"
+                   value1:askIn.description
+                     key2:@"sdkResponse"
+                   value2:[nonAttributionResponse description]];
+
+    if (self.stateData.isAsking) {
         [self.logger debugDev:
-            @"Cannot process attribution data when received non accepted attribution response"
-                    issueType:ADJIssueLogicError];
-        return NO;
+         @"No need to delay to ask for attribution since it is already asking"];
+
+        return nil;
     }
 
-    // attribution data is ignored with ask_in
-    if (attributionResponseData.askIn != nil) {
-        return NO;
-    }
+    self.stateData = [self.stateData withNewIsAsking:YES];
 
-    ADJAttributionData *_Nullable attributionDataFromResponse =
-        [self extractAttributionWithResponse:attributionResponseData];
-
-    if (attributionDataFromResponse == nil) {
-        [self.logger debugDev:@"Process unavailable attribution"
-            " because it could not extract attribution from response"];
-
-        [self
-         processUnavailableAttributionWithCurrentAttributionStateData:
-             currentAttributionStateData
-         changedAttributionStateDataWO:changedAttributionStateDataWO
-         attributionStatusEventWO:attributionStatusEventWO];
-    } else {
-        [self.logger debugDev:@"Process received attribution"
-         " because it could extract attribution from response"];
-
-        [self
-         processReceivedAttributionCurrentAttributionStateData:currentAttributionStateData
-         attributionDataFromResponse:attributionDataFromResponse
-         changedAttributionStateDataWO:changedAttributionStateDataWO
-         attributionStatusEventWO:attributionStatusEventWO];
-    }
-
-    return YES;
+    return [[ADJAttributionStateOutputData alloc]
+            initWithChangedStateData:self.stateData
+            delayData:[[ADJDelayData alloc]
+                       initWithDelay:askIn
+                       source:@"received accepted non attribution response"]
+            startAsking:YES];
 }
 
-- (nullable NSString *)
-    startAskingWhenReceivedProcessedSessionResponseWithCurrentAttributionStateData:
-        (nonnull ADJAttributionStateData *)currentAttributionStateData
-    sessionResponseData:(nonnull ADJSessionResponseData *)sessionResponseData
-    changedAttributionStateDataWO:
-        (nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-    attributionStatusEventWO:(nonnull ADJValueWO<NSString *> *)attributionStatusEventWO
+- (nullable ADJAttributionStateOutputData *)receivedAcceptedAttributionResponse:
+    (nonnull ADJAttributionResponseData *)attributionResponse
 {
-    [self updateSessionSendingStatusWithSessionResponse:sessionResponseData];
+    ADJTimeLengthMilli *_Nullable askIn = attributionResponse.askIn;
+    if (askIn != nil) {
+        [self.logger debugDev:@"Ask in found in attribution response"
+                         key1:@"askIn"
+                       value1:askIn.description
+                         key2:@"sdkResponse"
+                       value2:[attributionResponse description]];
 
-    [self
-     updateReceivedSessionResponseWithCurrentAttributionStateData:currentAttributionStateData
-     changedAttributionStateDataWO:changedAttributionStateDataWO];
+        if (! self.stateData.isAsking) {
+            [self.logger debugDev:
+             @"It should have been asking when it received an accepted attribution response"
+                        issueType:ADJIssueUnexpectedInput];
 
-    ADJAttributionStateData *_Nullable changedAttributionStateData =
-    [changedAttributionStateDataWO changedValue];
+            return [[ADJAttributionStateOutputData alloc]
+                    initWithChangedStateData:self.stateData
+                    delayData:
+                        [[ADJDelayData alloc]
+                         initWithDelay:askIn
+                         source:@"unexpected state when received an accepted attribution response"]
+                    startAsking:YES];
+        }
 
-    if (changedAttributionStateData == nil) {
+        return [[ADJAttributionStateOutputData alloc]
+                initWithChangedStateData:nil
+                delayData:[[ADJDelayData alloc]
+                           initWithDelay:askIn
+                           source:@"received an accepted attribution response"]
+                startAsking:YES];
+    }
+
+    [self updateWithReceivedAttribution:[self extractAttributionWithResponse:attributionResponse]];
+
+    self.stateData = [self.stateData withNewIsAsking:NO];
+
+    return [[ADJAttributionStateOutputData alloc]
+            initWithChangedStateData:self.stateData
+            delayData:nil
+            startAsking:NO];
+}
+
+- (nullable ADJAttributionStateOutputData *)installSessionTracked {
+    if (self.stateData.installSessionTracked) {
         return nil;
     }
 
-    if ([changedAttributionStateData unavailableStatus]) {
-        [attributionStatusEventWO setNewValue:ADJAttributionStatusNotAvailableFromBackend];
-        return nil;
+    self.stateData = [self.stateData withInstallSessionTracked];
+
+    if ([self canStartAskingFromSdkWithSource:@"installSessionTracked"]) {
+        return [self startAskingNow];
     }
 
-    return [self
-            startAskingFromSdkWithLatestAttributionStateData:changedAttributionStateData
-            changedAttributionStateDataWO:changedAttributionStateDataWO
-            sourceDescription:@"ReceivedProcessedSessionResponse"];
+    return [[ADJAttributionStateOutputData alloc]
+            initWithChangedStateData:self.stateData
+            delayData:nil
+            startAsking:NO];
 }
 
-// 1. With ask_in
-//  ASKING_FROM_SDK ? -> ASKING_FROM_BACKEND_AND_SDK
-//  !ASKING_FROM_BACKEND && !ASKING_FROM_BACKEND_AND_SDK -> ASKING_FROM_BACKEND
-// 2. Without ask_in
-//  * ->
-- (nullable NSString *)
-    startAskingWhenReceivedAcceptedSdkResponseWithCurrentAttributionStateData:
-        (nonnull ADJAttributionStateData *)currentAttributionStateData
-    sdkResponse:(nonnull id<ADJSdkResponseData>)sdkResponse
-    changedAttributionStateDataWO:
-        (nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-    delayDataWO:(nonnull ADJValueWO<ADJDelayData *> *)delayDataWO
-{
-    ADJTimeLengthMilli *_Nullable askIn = sdkResponse.askIn;
-    if (askIn == nil) {
-        return nil;
-    }
-
-    [self.logger debugDev:@"Ask in found in response"
-                     key:@"askIn"
-                    value:askIn.description];
-
-    NSString *_Nonnull askingAttributionFromBackend =
-        [self startAskingFromBackendWithCurrentAttributionStateData:currentAttributionStateData
-                                      changedAttributionStateDataWO:changedAttributionStateDataWO];
-
-    [delayDataWO setNewValue:[[ADJDelayData alloc] initWithDelay:askIn source:@"askIn"]];
-
-    return askingAttributionFromBackend;
-}
-
-- (nonnull NSString *)statusEventAtGateOpenWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData {
-    if ([currentAttributionStateData unavailableStatus]) {
-        return ADJAttributionStatusNotAvailableFromBackend;
-    }
-
-    if (currentAttributionStateData.attributionData != nil) {
-        return ADJAttributionStatusRead;
-    } else {
-        return ADJAttributionStatusWaiting;
-    }
-}
-
-- (nullable NSString *)startAskingWhenSdkStartWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                                                 isFirstStart:(BOOL)isFirstStart
-                                                changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO {
+- (nullable ADJAttributionStateOutputData *)sdkStart {
     self.hasSdkStart = YES;
 
-    self.isFirstStart = isFirstStart;
+    if ([self canStartAskingFromSdkWithSource:@"sdkStart"]) {
+        return [self startAskingNow];
+    }
 
-    [self
-     updateReceivedSessionResponseWithCurrentAttributionStateData:currentAttributionStateData
-     changedAttributionStateDataWO:changedAttributionStateDataWO];
-
-    ADJAttributionStateData *_Nullable changedAttributionStateData =
-    [changedAttributionStateDataWO changedValue];
-
-    ADJAttributionStateData *_Nonnull latestAttributionStateData =
-    changedAttributionStateData != nil ?
-    changedAttributionStateData : currentAttributionStateData;
-
-    return [self startAskingFromSdkWithLatestAttributionStateData:latestAttributionStateData
-                                    changedAttributionStateDataWO:changedAttributionStateDataWO
-                                                sourceDescription:@"SdkStart"];
+    return nil;
 }
 
 #pragma mark Internal Methods
-- (nullable ADJAttributionData *)extractAttributionWithResponse:(nonnull ADJAttributionResponseData *)attributionResponseData {
+- (nullable ADJAttributionData *)extractAttributionWithResponse:
+    (nonnull ADJAttributionResponseData *)attributionResponseData
+{
     NSDictionary *_Nullable attributionJson = attributionResponseData.attributionJson;
-    if (attributionJson == nil) {
-        return nil;
-    }
+    if (attributionJson == nil) { return nil; }
 
     return [[ADJAttributionData alloc] initFromJsonWithDictionary:attributionJson
                                                              adid:attributionResponseData.adid
                                                            logger:self.logger];
 }
-
-- (void)
-    processUnavailableAttributionWithCurrentAttributionStateData:
-        (nonnull ADJAttributionStateData *)currentAttributionStateData
-    changedAttributionStateDataWO:
-        (nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-    attributionStatusEventWO:(nonnull ADJValueWO<NSString *> *)attributionStatusEventWO
-{
-    ADJAttributionStateData *_Nonnull receivedUnavailableAttributionStateData =
-        [[ADJAttributionStateData alloc]
-         // Clears attribution
-         initWithAttributionData:nil
-         receivedSessionResponse:currentAttributionStateData.receivedSessionResponse
-         // Sets unavailableAttribution to true
-         //  to mark that is has not received a valid attribution from the backend
-         unavailableAttribution:YES
-         // Clears asking askingFromSdk askingFromBackend to false
-         //  to mark that it has received an attribution response
-         askingFromSdk:NO
-         askingFromBackend:NO];
-
-    // nothing to do when is already not available
-    if ([receivedUnavailableAttributionStateData isEqual:currentAttributionStateData]) {
-        return;
-    }
-
-    [changedAttributionStateDataWO setNewValue:receivedUnavailableAttributionStateData];
-
-    if ([receivedUnavailableAttributionStateData unavailableStatus]) {
-        [attributionStatusEventWO setNewValue:ADJAttributionStatusNotAvailableFromBackend];
-    } else {
-        [self.logger debugDev:
-            @"Cannot trigger expected NotAvailableFromBackend without being unavailableFromBackend"
-                    issueType:ADJIssueLogicError];
-    }
-}
-
-- (void)processReceivedAttributionCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                  attributionDataFromResponse:(nullable ADJAttributionData *)attributionDataFromResponse
-                                changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-                                     attributionStatusEventWO:(nonnull ADJValueWO<NSString *> *)attributionStatusEventWO {
-    ADJAttributionStateData *_Nonnull receivedAttributionStateData =
-    [[ADJAttributionStateData alloc]
-     // Saves received attribution
-     initWithAttributionData:attributionDataFromResponse
-     receivedSessionResponse:currentAttributionStateData.receivedSessionResponse
-     // Clears unavailableAttribution to false
-     //  to mark that is has received a valid attribution from the backend
-     unavailableAttribution:NO
-     // Clears asking askingFromSdk askingFromBackend to false
-     //  to mark that it has received an attribution response
-     askingFromSdk:NO
-     askingFromBackend:NO];
-
-    // nothing to do when the received attribution is the same as the current one
-    if ([receivedAttributionStateData isEqual:currentAttributionStateData]) {
-        return;
-    }
-
-    // only publish attribution status event if it's considered a new attribution
-    if (! [attributionDataFromResponse isEqual:currentAttributionStateData.attributionData]) {
-        if (currentAttributionStateData.attributionData != nil) {
-            [attributionStatusEventWO setNewValue:ADJAttributionStatusUpdated];
-        } else {
-            [attributionStatusEventWO setNewValue:ADJAttributionStatusCreated];
+- (void)updateWithReceivedAttribution:(nullable ADJAttributionData *)receivedAttribution {
+    if (receivedAttribution == nil) {
+        if (self.stateData.unavailableAttribution) {
+            [self.logger debugDev:@"Received attribution continues to be unavailable"];
+            return;
         }
-    } else {
-        [self.logger debugDev:
-            @"Not setting AttributionStatusEvent when attributionData is the same"];
-    }
 
-    [changedAttributionStateDataWO setNewValue:receivedAttributionStateData];
-}
+        [self.logger debugDev:@"Received attribution is now unavailable"];
 
-- (void)updateSessionSendingStatusWithSessionResponse:(nonnull ADJSessionResponseData *)sessionResponseData {
-    self.wasSessionSent = YES;
+        self.stateData = [self.stateData withUnavailableAttribution];
 
-    BOOL wasFirstSessionSent = [sessionResponseData.sourceSessionPackage isFirstSession];
-
-    if (wasFirstSessionSent) {
-        self.isFirstSessionWaitingToBeSent = NO;
-    }
-}
-
-- (void)updateReceivedSessionResponseWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                       changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO {
-    if (! [self needsToUpdateReceivedSessionResponseWithCurrentAttributionStateData:
-           currentAttributionStateData]) {
         return;
     }
 
-    [changedAttributionStateDataWO setNewValue:
-     [[ADJAttributionStateData alloc]
-      initWithAttributionData:currentAttributionStateData.attributionData
-      // Set only receivedSessionResponse to true
-      receivedSessionResponse:YES
-      unavailableAttribution:currentAttributionStateData.unavailableAttribution
-      askingFromSdk:currentAttributionStateData.askingFromSdk
-      askingFromBackend:currentAttributionStateData.askingFromBackend]];
+    if ([receivedAttribution isEqual:self.stateData.attributionData]) {
+        [self.logger debugDev:@"Received same attribution"];
+        return;
+    }
+
+    [self.logger debugDev:@"Received attribution updates state data"];
+
+    self.stateData = [self.stateData withAvailableAttribution:receivedAttribution];
 }
 
-- (BOOL)needsToUpdateReceivedSessionResponseWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData {
-    if (currentAttributionStateData.receivedSessionResponse) {
-        return NO;
-    }
-
-    if (self.wasSessionSent) {
-        return YES;
-    }
-
-    if (! self.hasSdkStart) {
-        return NO;
-    }
-
-    // when it's not first start
-    //  - if it still has the first session package in the main queue
-    //      -> has not received session response
-    //  - if we can't find the first session package in the main queue
-    //      -> assume that it has received session response at some point
-    //      since there are no feasible scenarios where all are true:
-    //      1. The sdk has started before (not first start)
-    //      2. The first session package is *not* in the package queue
-    //      3. The session has not been processed in the backend
-    if (! self.isFirstStart) {
-        return ! self.isFirstSessionWaitingToBeSent;
-    }
-
-    // when it's first start
-    //  assume wasSessionSent will catch it
-    return NO;
-}
-
-- (nonnull NSString *)startAskingFromBackendWithCurrentAttributionStateData:(nonnull ADJAttributionStateData *)currentAttributionStateData
-                                              changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO {
-    if (! currentAttributionStateData.askingFromBackend) {
-        [changedAttributionStateDataWO setNewValue:
-         [[ADJAttributionStateData alloc]
-          initWithAttributionData:currentAttributionStateData.attributionData
-          receivedSessionResponse:currentAttributionStateData.receivedSessionResponse
-          unavailableAttribution:currentAttributionStateData.unavailableAttribution
-          askingFromSdk:currentAttributionStateData.askingFromSdk
-          // Set only askingFromBackend to true
-          askingFromBackend:YES]];
-    } else {
-        [self.logger debugDev:@"Cannot start asking from backend, since it's already doing it"];
-    }
-
-    if (currentAttributionStateData.askingFromSdk) {
-        return ADJAskingAttributionStatusFromBackendAndSdk;
-    } else {
-        return ADJAskingAttributionStatusFromBackend;
-    }
-}
-
-- (nullable NSString *)startAskingFromSdkWithLatestAttributionStateData:(nonnull ADJAttributionStateData *)latestAttributionStateData
-                                          changedAttributionStateDataWO:(nonnull ADJValueWO<ADJAttributionStateData *> *)changedAttributionStateDataWO
-                                                      sourceDescription:(nonnull NSString *)sourceDescription {
+- (BOOL)canStartAskingFromSdkWithSource:(nonnull NSString *)source {
     if (self.doNotInitiateAttributionFromSdk) {
-        return [self logCannotStartAskingWithSource:sourceDescription
+        return [self logCannotStartAskingWithSource:source
                                              reason:@"it has been configured to not do so"];
     }
 
     if (! self.hasSdkStart) {
-        return [self logCannotStartAskingWithSource:sourceDescription
+        return [self logCannotStartAskingWithSource:source
                                              reason:@"the sdk has not started yet"];
     }
 
-    if ([latestAttributionStateData waitingForSessionResponseStatus]) {
-        return [self logCannotStartAskingWithSource:sourceDescription
-                                             reason:@"is waiting for session response"];
+    if ([self.stateData isAskingStatus]) {
+        return [self logCannotStartAskingWithSource:source
+                                             reason:@"is already asking attribution"];
     }
 
-    if ([latestAttributionStateData unavailableStatus]) {
-        return [self
-                logCannotStartAskingWithSource:sourceDescription
-                reason:@"the attribution was unavailable from the backend"];
+    if ([self.stateData waitingForInstallSessionTrackingStatus]) {
+        return [self logCannotStartAskingWithSource:source
+                                             reason:@"is waiting for install tracking"];
     }
 
-    if ([latestAttributionStateData hasAttributionStatus]) {
-        return [self logCannotStartAskingWithSource:sourceDescription
+    if ([self.stateData unavailableAttribution]) {
+        return [self logCannotStartAskingWithSource:source
+                                             reason:@"the attribution is unavailable"];
+    }
+
+    if ([self.stateData hasAttributionStatus]) {
+        return [self logCannotStartAskingWithSource:source
                                              reason:@"it already has the attribution"];
     }
 
-    if ([latestAttributionStateData askingFromBackendAndSdkStatus]) {
-        [self logStartAskingWihtSource:sourceDescription startingSource:@"backend and sdk"];
-
-        return ADJAskingAttributionStatusFromBackendAndSdk;
+    if (! [self.stateData canAskStatus]) {
+        [self.logger debugDev:@"Unexpected Attribution Status to start asking"
+                expectedValue:ADJAttributionStateStatusCanAsk
+                  actualValue:[self.stateData attributionStateStatus]
+                    issueType:ADJIssueLogicError];
     }
 
-    if ([latestAttributionStateData askingFromSdk]) {
-        [self logStartAskingWihtSource:sourceDescription startingSource:@"sdk"];
+    [self.logger debugDev:@"Can start asking"
+                     from:source];
 
-        return ADJAskingAttributionStatusFromSdk;
-    }
-
-    [changedAttributionStateDataWO setNewValue:
-     [[ADJAttributionStateData alloc]
-      initWithAttributionData:latestAttributionStateData.attributionData
-      receivedSessionResponse:latestAttributionStateData.receivedSessionResponse
-      unavailableAttribution:latestAttributionStateData.unavailableAttribution
-      // Set only askingFromSdk to true
-      askingFromSdk:YES
-      askingFromBackend:latestAttributionStateData.askingFromBackend]];
-
-    if (latestAttributionStateData.askingFromBackend) {
-        [self logStartAskingWihtSource:sourceDescription startingSource:@"backend and sdk"];
-
-        return ADJAskingAttributionStatusFromBackendAndSdk;
-    } else {
-        [self logStartAskingWihtSource:sourceDescription startingSource:@"sdk"];
-
-        return ADJAskingAttributionStatusFromSdk;
-    }
-
-    return nil;
+    return YES;
 }
 
-- (nullable NSString *)logCannotStartAskingWithSource:(nonnull NSString *)source
-                                               reason:(nonnull NSString *)reason
+- (BOOL)logCannotStartAskingWithSource:(nonnull NSString *)source
+                                                        reason:(nonnull NSString *)reason
 {
     [self.logger debugDev:@"Cannot start asking"
                      from:source
                       key:@"reason"
                     value:reason];
-    return nil;
+    return NO;
 }
 
-- (void)logStartAskingWihtSource:(nonnull NSString *)source
-                  startingSource:(nonnull NSString *)startingSource
-{
-    [self.logger debugDev:@"Start asking"
-                     from:source
-                      key:@"startingSource"
-                    value:startingSource];
+- (nonnull ADJAttributionStateOutputData *)startAskingNow {
+    self.stateData = [self.stateData withNewIsAsking:YES];
+
+    return [[ADJAttributionStateOutputData alloc]
+            initWithChangedStateData:self.stateData
+            delayData:nil
+            startAsking:YES];
 }
 
 @end
-

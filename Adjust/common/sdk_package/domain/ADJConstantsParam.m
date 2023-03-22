@@ -73,10 +73,6 @@ NSString *const ADJParamAdRevenueUnitKey = @"ad_revenue_unit";
 NSString *const ADJParamAdRevenuePlacementKey = @"ad_revenue_placement";
 
 // attribution
-NSString *const ADJParamAttributionInititedByKey = @"initiated_by";
-NSString *const ADJParamAttributionInititedBySdkValue = @"sdk";
-NSString *const ADJParamAttributionInititedByBackendValue = @"backend";
-NSString *const ADJParamAttributionInititedBySdkAndBackendValue = @"backend_and_sdk";
 NSString *const ADJParamAttributionTrackerTokenKey = @"tracker_token";
 NSString *const ADJParamAttributionTrackerNameKey = @"tracker_name";
 NSString *const ADJParamAttributionNetworkKey = @"network";
@@ -103,11 +99,15 @@ NSString *const ADJParamEventCountKey = @"event_count";
 NSString *const ADJParamEventTokenKey = @"event_token";
 NSString *const ADJParamEventRevenueKey = @"revenue";
 NSString *const ADJParamEventCurrencyKey = @"currency";
+NSString *const ADJParamEventDeduplicationKey = @"deduplication_id";
 
 // info
 NSString *const ADJParamPushTokenKey = @"push_token";
 NSString *const ADJParamPushTokenSourceKey = @"source";
 NSString *const ADJParamPushTokenSourceValue = @"push";
+NSString *const ADJParamMeasurementConsentKey = @"measurement";
+NSString *const ADJParamMeasurementConsentEnableValue = @"enable";
+NSString *const ADJParamMeasurementConsentDisableValue = @"disable";
 
 // log
 NSString *const ADJParamLogMessageKey = @"log_message";

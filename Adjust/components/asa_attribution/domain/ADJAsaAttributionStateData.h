@@ -36,6 +36,13 @@ NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
+// public api
+- (nonnull ADJAsaAttributionStateData *)withHasReceivedValidAsaClickResponse;
+- (nonnull ADJAsaAttributionStateData *)withHasReceivedAdjustAttribution;
+- (nonnull ADJAsaAttributionStateData *)withToken:(nullable ADJNonEmptyString *)token
+                                        timestamp:(nullable ADJTimestampMilli *)timestamp
+                                      errorReason:(nullable ADJNonEmptyString *)errorReason;
+
 // public properties
 @property (readonly, assign, nonatomic) BOOL hasReceivedValidAsaClickResponse;
 @property (readonly, assign, nonatomic) BOOL hasReceivedAdjustAttribution;

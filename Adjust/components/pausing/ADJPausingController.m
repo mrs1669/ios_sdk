@@ -42,16 +42,19 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 
 @implementation ADJPausingController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                          canSendInBackground:(BOOL)canSendInBackground
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    canSendInBackground:(BOOL)canSendInBackground
+    publisherController:(nonnull ADJPublisherController *)publisherController
+{
 
     self = [super initWithLoggerFactory:loggerFactory source:@"PausingController"];
     _canSendInBackground = canSendInBackground;
 
-    _pausingPublisher = [[ADJPausingPublisher alloc] init];
-    [pubRegistry addPublisher:_pausingPublisher];
+    _pausingPublisher = [[ADJPausingPublisher alloc]
+                         initWithSubscriberProtocol:@protocol(ADJPausingSubscriber)
+                         controller:publisherController];
 
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -146,7 +149,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 }
 
 #pragma mark - ADJLifecycleSubscriber
-- (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidForeground {
     if ([self.pausingState ignoringForegroundOrBackground]) {
         return;
     }
@@ -166,7 +169,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     } source:@"foreground"];
 }
 
-- (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidBackground {
     if ([self.pausingState ignoringForegroundOrBackground]) {
         return;
     }
@@ -186,8 +189,8 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     } source:@"background"];
 }
 
-#pragma mark - ADJMeasurementSessionStartSubscriber
-- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
+#pragma mark - ADJSdkStartSubscriber
+- (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -200,11 +203,11 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkStart];
         }
-    } source:@"measurement session start"];
+    } source:@"sdk start"];
 }
 
 #pragma mark - ADJSdkActiveSubscriber
-- (void)ccSdkActiveWithStatus:(nonnull NSString *)status {
+- (void)ccSdkActiveWithStatus:(nonnull ADJSdkActiveStatus)status {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;

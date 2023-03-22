@@ -35,12 +35,18 @@
 
 + (nonnull NSString *)dateTimestampFormat:(nonnull ADJTimestampMilli *)timestamp;
 
++ (nonnull NSString *)logMessageAndParamsFormat:
+    (nonnull ADJInputLogMessageData *)inputLogMessageData;
++ (nonnull id)stringOrNsNull:(nullable NSString *)string;
+
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex;
 
 + (BOOL)isNotANumber:(nonnull NSNumber *)numberValue;
 
 + (nullable NSString *)urlReservedEncodeWithSpaceAsPlus:(nonnull NSString *)stringToEncode;
+
++ (nonnull NSString *)normaliseFilename:(nonnull NSString *)filename;
 
 + (nonnull NSString *)joinString:(nonnull NSString *)first, ...;
 

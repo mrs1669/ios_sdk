@@ -22,6 +22,10 @@ FOUNDATION_EXPORT NSString *const ADJClientPushTokenDataMetadataTypeValue;
 NS_ASSUME_NONNULL_END
 
 @interface ADJClientPushTokenData : NSObject<ADJClientActionIoDataInjectable>
+
+// public properties
+@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *pushTokenString;
+
 // instantiation
 + (nullable instancetype)instanceFromClientWithAdjustPushToken:(nullable ADJAdjustPushToken *)adjustPushToken
                                                         logger:(nonnull ADJLogger *)logger;
@@ -30,9 +34,6 @@ NS_ASSUME_NONNULL_END
                                                                  logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
-
-// public properties
-@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *pushTokenString;
 
 @end
 

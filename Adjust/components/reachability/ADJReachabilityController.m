@@ -70,16 +70,17 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              threadController:(nonnull ADJThreadController *)threadController
                                targetEndpoint:(nonnull NSString *)targetEndpoint
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry {
-
+                          publisherController:(nonnull ADJPublisherController *)publisherController
+{
     self = [super initWithLoggerFactory:loggerFactory source:@"ReachabilityController"];
     _targetEndpoint = targetEndpoint;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                             sourceDescription:self.source];
 
-    _reachabilityPublisher = [[ADJReachabilityPublisher alloc] init];
-    [pubRegistry addPublisher:_reachabilityPublisher];
+    _reachabilityPublisher = [[ADJReachabilityPublisher alloc]
+                              initWithSubscriberProtocol:@protocol(ADJReachabilitySubscriber)
+                              controller:publisherController];
 
     //_reachableNetwork = nil;
 
@@ -89,17 +90,17 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 }
 
 #pragma mark Public API
-#pragma mark - ADJMeasurementSessionStartSubscriber
-- (void)ccMeasurementSessionStartWithStatus:(nonnull NSString *)measurementSessionStartStatus {
+#pragma mark - ADJSdkStartSubscriber
+- (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeAsyncWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        // TODO possibly use private queue
+        // TODO: possibly use private queue
         [strongSelf startNetworkReachabilityWithDispatchQueue:
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
-    } source:@"measurement session start"];
+    } source:@"sdk start"];
 }
 
 #pragma mark Internal Methods

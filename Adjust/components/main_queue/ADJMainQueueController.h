@@ -25,8 +25,10 @@
 #import "ADJClickPackageData.h"
 #import "ADJEventPackageData.h"
 #import "ADJInfoResponseData.h"
+#import "ADJMeasurementConsentPackageData.h"
 #import "ADJThirdPartySharingPackageData.h"
 #import "ADJSessionPackageData.h"
+#import "ADJMainQueueTrackedPackages.h"
 
 @interface ADJMainQueueController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
@@ -35,19 +37,19 @@
     ADJPausingSubscriber,
     ADJOfflineSubscriber
 >
-
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                             mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
-                             threadController:(nonnull ADJThreadController *)threadController
-                                        clock:(nonnull ADJClock *)clock
-                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
+    threadController:(nonnull ADJThreadController *)threadController
+    clock:(nonnull ADJClock *)clock
+    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+
+// public properties
+@property (nonnull, readonly, strong, nonatomic) ADJMainQueueTrackedPackages *trackedPackages;
 
 // public api
-- (BOOL)containsFirstSessionPackage;
-- (BOOL)containsAsaClickPackage;
-
 - (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
                       sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
@@ -62,6 +64,9 @@
 
 - (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
+
+- (void)addMeasurementConsentPackageToSendWithData:(nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
+                               sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;
 
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
                     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction;

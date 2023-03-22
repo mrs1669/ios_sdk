@@ -92,43 +92,19 @@ static NSString *const kColumnValue = @"value";
 }
 
 - (void)updateInStorageOnlyWithNewDataValue:(nonnull id)newDataValue {
-    ADJSingleThreadExecutor *_Nullable storageExecutor = self.storageExecutorWeak;
-    if (storageExecutor == nil) {
-        [self.logger debugDev:
-         @"Cannot update new value in storage without a reference to storage executor"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    id<ADJSQLiteDatabaseProvider> _Nullable sqliteDatabaseProvider =
-        self.sqliteDatabaseProviderWeak;
-    if (sqliteDatabaseProvider == nil) {
-        [self.logger debugDev:
-         @"Cannot update new value in storage without a reference to sqliteDatabaseProvider"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJSQLiteDb *_Nullable sqliteDb = sqliteDatabaseProvider.sqliteDb;
-    if (sqliteDb == nil) {
-        [self.logger debugDev:
-         @"Cannot update new value in storage without a reference to sqliteDb"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
     __typeof(self) __weak weakSelf = self;
-    [storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
-        [strongSelf updateInStorageSyncWithSqliteDb:sqliteDb
+        [strongSelf updateInStorageSyncWithSqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        newDataValue:newDataValue];
     } source:@"update in storage only"];
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb
-                            newDataValue:(nonnull id)newDataValue {
+                            newDataValue:(nonnull id)newDataValue
+{
     //[self printRowNumberWithSQLiteDb:sqliteDb];
     // delete all rows
     BOOL deletedSuccess = [self deleteAllInTransactionWithDb:sqliteDb];
@@ -140,13 +116,15 @@ static NSString *const kColumnValue = @"value";
     //[self printRowNumberWithSQLiteDb:sqliteDb];
     
     BOOL insertedSuccess =
-    [self insertValueInTransactionToDb:sqliteDb newDataValue:newDataValue];
+        [self insertValueInTransactionToDb:sqliteDb newDataValue:newDataValue];
     
     if (! insertedSuccess) {
         return NO;
     }
-    [self.logger debugDev:@"Inserted new data values in update transaction"];
-    
+    [self.logger debugDev:@"Inserted new data values in update transaction"
+                      key:@"newDataValue"
+                    value:[newDataValue description]];
+
     return YES;
 }
 
@@ -158,10 +136,11 @@ static NSString *const kColumnValue = @"value";
                              newDataValue:self.inMemoryDataValue];
 }
 
-- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:(nonnull ADJSQLiteStatement *)selectStatement {
+- (BOOL)concreteReadIntoMemoryFromSelectStatementInFirstRowSync:
+    (nonnull ADJSQLiteStatement *)selectStatement
+{
     ADJIoDataBuilder *_Nonnull ioDataBuilder =
-    [[ADJIoDataBuilder alloc]
-     initWithMetadataTypeValue:self.metadataTypeValue];
+        [[ADJIoDataBuilder alloc] initWithMetadataTypeValue:self.metadataTypeValue];
     
     do {
         [self readFromSelectStatementIntoBuildingData:selectStatement
@@ -169,7 +148,7 @@ static NSString *const kColumnValue = @"value";
     } while ([selectStatement nextInQueryStatementWithLogger:self.logger]);
     
     ADJIoData *_Nonnull ioData =
-    [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
+        [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
     
     _Nullable id valueFromIoData = [self concreteGenerateValueFromIoData:ioData];
     
@@ -186,7 +165,9 @@ static NSString *const kColumnValue = @"value";
     return valueFromIoData != nil;
 }
 
-- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:(nonnull NSString *)tableName {
+- (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:
+    (nonnull NSString *)tableName
+{
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:
                 [NSString stringWithFormat:@"SELECT %@, %@, %@ FROM %@",
@@ -237,7 +218,8 @@ static int const kInsertValueFieldPosition = 3;
 
 #pragma mark Internal Methods
 - (void)updateInStorageSyncWithSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb
-                           newDataValue:(nonnull id)newDataValue {
+                           newDataValue:(nonnull id)newDataValue
+{
     [sqliteDb beginTransaction];
     
     [self updateInTransactionWithsSQLiteDb:sqliteDb newDataValue:newDataValue];

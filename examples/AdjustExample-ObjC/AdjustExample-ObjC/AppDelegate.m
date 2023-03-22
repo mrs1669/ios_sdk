@@ -24,17 +24,18 @@
                                                                            environment:ADJEnvironmentSandbox];
     [adjustConfig doLogAll];
     [adjustConfig setAdjustAttributionSubscriber:self];
-    [[ADJAdjust instance] initSdkWithConfiguration:adjustConfig];
+    [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
 
     return YES;
 }
 
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
-    NSLog(@"Adjust Attribution: %@", adjustAttribution);
+    NSLog(@"Adjust Attribution Read: %@", adjustAttribution);
 }
 
-- (void)unableToReadAdjustAttributionWithMessage:(nonnull NSString *)message {
-    NSLog(@"Adjust Attribution: %@", message);
+- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+    NSLog(@"Adjust Attribution Changed: %@", adjustAttribution);
 }
+
 
 @end

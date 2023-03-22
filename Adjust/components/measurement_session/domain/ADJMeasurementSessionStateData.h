@@ -25,17 +25,21 @@ NS_ASSUME_NONNULL_END
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
                                      logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)instanceFromExternalWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
++ (nullable instancetype)
+    instanceFromExternalWithMeasurementSessionData:
+        (nullable ADJMeasurementSessionData *)measurementSessionData
     logger:(nonnull ADJLogger *)logger;
 
 - (nonnull instancetype)initWithIntialState;
 
-- (nonnull instancetype)initWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
+- (nonnull instancetype)
+    initWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
     NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nullable, readonly, strong, nonatomic) ADJMeasurementSessionData *measurementSessionData;
+@property (nullable, readonly, strong, nonatomic)
+    ADJMeasurementSessionData *measurementSessionData;
 
 @end

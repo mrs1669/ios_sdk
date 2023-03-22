@@ -31,7 +31,7 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
  @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
  @property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
  @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
- @property (nullable, readonly, strong, nonatomic) NSString *instanceId;
+ @property (nullable, readonly, strong, nonatomic) NSString *idString;
  */
 
 @implementation ADJLogMessageData
@@ -39,13 +39,14 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 - (nonnull instancetype)initWithInputData:(nonnull ADJInputLogMessageData *)inputData
                         sourceDescription:(nonnull NSString *)sourceDescription
                           runningThreadId:(nullable NSString *)runningThreadId
-                               instanceId:(nullable NSString *)instanceId {
+                                 idString:(nullable NSString *)idString
+{
     self = [super init];
 
     _inputData = inputData;
     _sourceDescription = sourceDescription;
     _runningThreadId = runningThreadId;
-    _instanceId = instanceId;
+    _idString = idString;
 
     return self;
 }
@@ -105,8 +106,8 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
                                  forKey:ADJLogParamsKey];
     }
 
-    if (self.instanceId != nil) {
-        [foundationDictionary setObject:self.instanceId forKey:ADJLogInstanceIdKey];
+    if (self.idString != nil) {
+        [foundationDictionary setObject:self.idString forKey:ADJLogInstanceIdKey];
     } else {
         [foundationDictionary setObject:[NSNull null] forKey:ADJLogInstanceIdKey];
     }

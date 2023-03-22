@@ -11,7 +11,7 @@
 #import "ADJCommonBase.h"
 #import "ADJSdkPackageSenderFactory.h"
 #import "ADJPublishingGateSubscriber.h"
-#import "ADJMeasurementSessionStartSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
 #import "ADJSdkResponseSubscriber.h"
 #import "ADJPausingSubscriber.h"
 #import "ADJAttributionStateStorage.h"
@@ -22,32 +22,31 @@
 #import "ADJBackoffStrategy.h"
 #import "ADJNetworkEndpointData.h"
 #import "ADJClientConfigData.h"
-#import "ADJMainQueueController.h"
-#import "ADJPublishersRegistry.h"
+#import "ADJPublisherController.h"
+#import "ADJMainQueueTrackedPackages.h"
 
 @interface ADJAttributionController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
     // subscriptions
     ADJPublishingGateSubscriber,
-    ADJMeasurementSessionStartSubscriber,
+    ADJSdkStartSubscriber,
     ADJSdkResponseSubscriber,
     ADJPausingSubscriber
 >
 
-// publishers
-@property (nonnull, readonly, strong, nonatomic) ADJAttributionPublisher *attributionPublisher;
-
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                      attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
-                                        clock:(nonnull ADJClock *)clock
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                             threadController:(nonnull ADJThreadController *)threadController
-                   attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-              doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
-                           publishersRegistry:(nonnull ADJPublishersRegistry *)pubRegistry;
++ (nonnull ADJAttributionController *)
+    instanceWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
+    clock:(nonnull ADJClock *)clock
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    threadController:(nonnull ADJThreadController *)threadController
+    attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+    mainQueueTrackedPackages:
+        (nonnull ADJMainQueueTrackedPackages *)mainQueueTrackedPackages
+    doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
+    publisherController:(nonnull ADJPublisherController *)publisherController;
 
 @end
 

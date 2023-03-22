@@ -42,26 +42,26 @@ NSString *const ADJAdRevenueControllerClientActionHandlerId = @"AdRevenueControl
 }
 
 #pragma mark - ADJClientActionHandler
-- (BOOL)ccCanHandleClientActionWithIsPreFirstSession:(BOOL)isPreFirstSession {
-    // cannot handle pre first session
-    return ! isPreFirstSession;
+- (BOOL)ccCanHandlePreFirstSessionClientAction {
+    return NO;
 }
 
-- (void)ccHandleClientActionWithClientActionIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
-                                              apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
-                           clientActionRemoveStorageAction:(nonnull ADJSQLiteStorageActionBase *)clientActionRemoveStorageAction {
+
+- (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
+                                  apiTimestamp:(nonnull ADJTimestampMilli *)apiTimestamp
+                           removeStorageAction:(nonnull ADJSQLiteStorageActionBase *)removeStorageAction {
     ADJClientAdRevenueData *_Nullable clientAdRevenueData = [ADJClientAdRevenueData
                                                              instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
                                                              logger:self.logger];
 
     if (clientAdRevenueData == nil) {
-        [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
+        [ADJUtilSys finalizeAtRuntime:removeStorageAction];
         return;
     }
 
     [self trackAdRevenueWithClientData:clientAdRevenueData
                           apiTimestamp:apiTimestamp
-       clientActionRemoveStorageAction:clientActionRemoveStorageAction];
+       clientActionRemoveStorageAction:removeStorageAction];
 }
 
 #pragma mark Internal Methods

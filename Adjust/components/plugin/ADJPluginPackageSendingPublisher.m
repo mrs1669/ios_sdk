@@ -24,7 +24,7 @@
 - (nonnull instancetype)init {
     self = [super init];
 
-    _publisher = [[ADJPackageSendingPublisherWrapper alloc] init];
+    _publisher = [[ADJPackageSendingPublisherWrapper alloc] initWithoutSubscriberProtocol];
 
     return self;
 }

@@ -1,12 +1,12 @@
 //
-//  ADJStorageRootController.m
+//  ADJStorageRoot.m
 //  Adjust
 //
 //  Created by Aditi Agrawal on 20/07/22.
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-#import "ADJStorageRootController.h"
+#import "ADJStorageRoot.h"
 #import "ADJSingleThreadExecutor.h"
 
 #pragma mark Fields
@@ -30,25 +30,27 @@
  @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *sdkActiveStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
  */
-@interface ADJStorageRootController ()
+@interface ADJStorageRoot ()
 
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *storageExecutor;
 //@property (nonnull, readonly, strong, nonatomic) ADJV4FilesController *v4FilesController;
 @end
 
-@implementation ADJStorageRootController
+@implementation ADJStorageRoot
 #pragma mark Instantiation
 #define buildAndInjectStorage(varName, classType)       \
-_ ## varName = [[classType alloc]                   \
-initWithLoggerFactory:loggerFactory             \
-storageExecutor:self.storageExecutor            \
-sqliteController:self.sqliteController];        \
-[self.sqliteController addSqlStorage:self.varName]  \
+    _ ## varName = [[classType alloc]                   \
+        initWithLoggerFactory:loggerFactory             \
+        storageExecutor:self.storageExecutor            \
+        sqliteController:self.sqliteController];        \
+    [self.sqliteController addSqlStorage:self.varName]  \
 
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                                   instanceId:(nonnull NSString *)instanceId {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    instanceId:(nonnull ADJInstanceIdData *)instanceId
+{
     self = [super init];
 
     _storageExecutor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory

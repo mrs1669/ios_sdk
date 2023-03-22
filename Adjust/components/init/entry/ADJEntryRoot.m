@@ -10,34 +10,53 @@
 #import "ADJInstanceRoot.h"
 #import "ADJSdkConfigData.h"
 #import "ADJConstants.h"
+#import "ADJInstanceIdData.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
+/* .h
+ @property (nullable, readonly, strong, nonatomic) NSString *sdkPrefix;
+ */
 
 @interface ADJEntryRoot ()
-@property (nonnull, readwrite, strong, nonatomic) NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
+#pragma mark - Injected dependencies
+@property (nullable, readwrite, strong, nonatomic) NSString *sdkPrefix;
 @property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
+
+#pragma mark - Internal variables
+@property (nonnull, readwrite, strong, nonatomic)
+    NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
+
 @end
 
 @implementation ADJEntryRoot
 #pragma mark Instantiation
-- (nonnull instancetype)initWithInstanceId:(nullable NSString *)instanceId
-                          sdkConfigBuilder:(nullable ADJSdkConfigDataBuilder *)sdkConfigBuilder {
++ (nonnull ADJEntryRoot *)instanceWithClientId:(nullable NSString *)clientId
+                                 sdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
+{
+    ADJEntryRoot *_Nonnull entryRoot = [[ADJEntryRoot alloc] initWithSdkConfigData:sdkConfigData];
+
+    ADJInstanceIdData *_Nonnull firstInstanceId =
+        [[ADJInstanceIdData alloc] initFirstInstanceWithClientId:clientId];
+
+    ADJInstanceRoot *instanceRoot = [ADJInstanceRoot
+                                     instanceWithConfigData:entryRoot.sdkConfigData
+                                     instanceId:firstInstanceId
+                                     entryRootBag:entryRoot];
+
+    [entryRoot.instanceMap setObject:instanceRoot forKey:firstInstanceId.idString];
+
+    return entryRoot;
+}
+
+- (nonnull instancetype)initWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
+{
     self = [super init];
+    _sdkPrefix = nil;
+
+    _sdkConfigData = sdkConfigData ?: [[ADJSdkConfigData alloc] initWithDefaultValues];
 
     _instanceMap = [[NSMutableDictionary alloc] init];
-
-    if (sdkConfigBuilder != nil) {
-        _sdkConfigData = [[ADJSdkConfigData alloc] initWithBuilderData:sdkConfigBuilder];
-    } else {
-        _sdkConfigData = [[ADJSdkConfigData alloc] initWithDefaultValues];
-    }
-
-    // TODO: (Gena) instance id validation
-    NSString *localInstanceId = (instanceId) ? : ADJDefaultInstanceId;
-    ADJInstanceRoot *instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:_sdkConfigData
-                                                                     instanceId:localInstanceId];
-    [_instanceMap setObject:instanceRoot forKey:localInstanceId];
 
     return self;
 }
@@ -48,25 +67,32 @@
 }
 
 #pragma mark Public API
-- (nonnull ADJInstanceRoot *)instanceForId:(nullable NSString *)instanceId {
-
-    NSString *localInstanceId = (instanceId) ? : ADJDefaultInstanceId;
-    ADJInstanceRoot * instanceRoot = [self.instanceMap objectForKey:localInstanceId];
-    if(instanceRoot != nil) {
+- (nonnull ADJInstanceRoot *)instanceForClientId:(nullable NSString *)clientId {
+    ADJInstanceRoot *_Nullable instanceRoot =
+        [self.instanceMap objectForKey:[ADJInstanceIdData toIdStringWithClientId:clientId]];
+    if (instanceRoot != nil) {
         return instanceRoot;
     }
 
     @synchronized ([ADJEntryRoot class]) {
-        instanceRoot = [self.instanceMap objectForKey:localInstanceId];
+        // repeat map query to detect duplicate concurrent access
+        instanceRoot =
+            [self.instanceMap objectForKey:[ADJInstanceIdData toIdStringWithClientId:clientId]];
         if (instanceRoot != nil) {
             return instanceRoot;
         }
 
-        // TODO: (Gena) instance id validation
-        instanceRoot = [[ADJInstanceRoot alloc] initWithConfigData:self.sdkConfigData
-                                                        instanceId:localInstanceId];
-        [self.instanceMap setObject:instanceRoot forKey:localInstanceId];
-        return instanceRoot;
+        ADJInstanceIdData *_Nonnull newInstanceId =
+            [[ADJInstanceIdData alloc] initNonFirstWithClientId:clientId];
+
+        ADJInstanceRoot *newInstanceRoot =
+            [ADJInstanceRoot instanceWithConfigData:self.sdkConfigData
+                                         instanceId:newInstanceId
+                                       entryRootBag:self];
+
+        [self.instanceMap setObject:newInstanceRoot forKey:newInstanceId.idString];
+
+        return newInstanceRoot;
     }
 }
 

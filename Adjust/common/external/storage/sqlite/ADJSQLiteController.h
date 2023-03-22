@@ -12,6 +12,7 @@
 #import "ADJSQLiteDatabaseProvider.h"
 #import "ADJSQLiteDb.h"
 #import "ADJSQLiteStorage.h"
+#import "ADJInstanceIdData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_END
 @interface ADJSQLiteController : ADJCommonBase<ADJSQLiteDatabaseProvider>
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   instanceId:(nonnull NSString *)instanceId;
+                                   instanceId:(nonnull ADJInstanceIdData *)instanceId;
 
 // public api
 - (void)addSqlStorage:(nonnull id<ADJSQLiteStorage>)sqlStorage;

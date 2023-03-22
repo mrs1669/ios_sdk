@@ -14,16 +14,17 @@
 #import "ADJAdjustPushToken.h"
 
 @interface ADJV4RestMigration ()
-@property (nonnull, readonly, strong, nonatomic) NSString *instanceId;
+@property (nonnull, readonly, strong, nonatomic) ADJInstanceIdData *instanceId;
 @end
 
 @implementation ADJV4RestMigration
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                   instanceId:(nonnull NSString *)instanceId {
+                                   instanceId:(nonnull ADJInstanceIdData *)instanceId
+{
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"ADJV4RestMigration"];
-    _instanceId = [instanceId copy];
+    _instanceId = instanceId;
     return self;
 }
 
@@ -46,7 +47,7 @@
     }
 
     ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithUrl:v4DeeplinkUrl];
-    [[ADJAdjust instanceForId:self.instanceId] trackLaunchedDeeplink:adjustLaunchedDeeplink];
+    [[ADJAdjust instanceForId:self.instanceId.idString] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)migrateV4PushTokenWithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
@@ -58,7 +59,7 @@
         if (v4ActivityState.deviceToken != nil) {
             [self.logger debugDev:@"Push token found in v4 Activity state"];
             ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:v4ActivityState.deviceToken];
-            [[ADJAdjust instanceForId:self.instanceId] trackPushToken:adjustPushToken];
+            [[ADJAdjust instanceForId:self.instanceId.idString] trackPushToken:adjustPushToken];
             return;
         }
 
@@ -71,7 +72,7 @@
     if (pushTokenString != nil) {
         [self.logger debugDev:@"Push token string found in v4 user defaults"];
         ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:pushTokenString];
-        [[ADJAdjust instanceForId:self.instanceId] trackPushToken:adjustPushToken];
+        [[ADJAdjust instanceForId:self.instanceId.idString] trackPushToken:adjustPushToken];
         return;
     }
 
@@ -81,7 +82,7 @@
     if (pushTokenData != nil) {
         [self.logger debugDev:@"Push token data found in v4 user defaults"];
         ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithDataPushToken:pushTokenData];
-        [[ADJAdjust instanceForId:self.instanceId] trackPushToken:adjustPushToken];
+        [[ADJAdjust instanceForId:self.instanceId.idString] trackPushToken:adjustPushToken];
         return;
     }
 

@@ -18,13 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJAttributionStateDataMetadataTypeValue;
 
-FOUNDATION_EXPORT NSString *const ADJAttributionStateStatusWaitingForSessionResponse;
-FOUNDATION_EXPORT NSString *const ADJAttributionStateStatusReceivedSessionResponse;
-FOUNDATION_EXPORT NSString *const ADJAttributionStateStatusAskingFromSdk;
-FOUNDATION_EXPORT NSString *const ADJAttributionStateStatusAskingFromBackend;
-FOUNDATION_EXPORT NSString *const ADJAttributionStateStatusAskingFromBackendAndSdk;
-FOUNDATION_EXPORT NSString *const ADJAttributionStateStatusHasAttribution;
-FOUNDATION_EXPORT NSString *const ADJAttributionStateStatusUnavailable;
+typedef NSString *ADJAttributionStateStatus NS_TYPED_ENUM;
+FOUNDATION_EXPORT ADJAttributionStateStatus const ADJAttributionStateStatusWaitingForInstallSessionTracking;
+FOUNDATION_EXPORT ADJAttributionStateStatus const ADJAttributionStateStatusCanAsk;
+FOUNDATION_EXPORT ADJAttributionStateStatus const ADJAttributionStateStatusIsAsking;
+FOUNDATION_EXPORT ADJAttributionStateStatus const ADJAttributionStateStatusHasAttribution;
+FOUNDATION_EXPORT ADJAttributionStateStatus const ADJAttributionStateStatusUnavailable;
 
 NS_ASSUME_NONNULL_END
 
@@ -36,30 +35,34 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)initWithIntialState;
 
 - (nonnull instancetype)initWithAttributionData:(nullable ADJAttributionData *)attributionData
-                        receivedSessionResponse:(BOOL)receivedSessionResponse
+                          installSessionTracked:(BOOL)installSessionTracked
                          unavailableAttribution:(BOOL)unavailableAttribution
-                                  askingFromSdk:(BOOL)askingFromSdk
-                              askingFromBackend:(BOOL)askingFromBackend
-NS_DESIGNATED_INITIALIZER;
+                                       isAsking:(BOOL)isAsking
+    NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (readonly, assign, nonatomic) BOOL receivedSessionResponse;
+@property (readonly, assign, nonatomic) BOOL installSessionTracked;
 @property (readonly, assign, nonatomic) BOOL unavailableAttribution;
-@property (readonly, assign, nonatomic) BOOL askingFromSdk;
-@property (readonly, assign, nonatomic) BOOL askingFromBackend;
+@property (readonly, assign, nonatomic) BOOL isAsking;
 @property (nullable, readonly, strong, nonatomic) ADJAttributionData *attributionData;
 
 // public api
-- (nonnull NSString *)attributionStateStatus;
+- (nonnull ADJAttributionStateStatus)attributionStateStatus;
 
-- (BOOL)askingFromBackendAndSdkStatus;
-- (BOOL)askingFromSdkStatus;
-- (BOOL)askingFromBackendStatus;
+- (BOOL)isAskingStatus;
 - (BOOL)unavailableStatus;
 - (BOOL)hasAttributionStatus;
-- (BOOL)receivedSessionResponseStatus;
-- (BOOL)waitingForSessionResponseStatus;
+- (BOOL)canAskStatus;
+- (BOOL)waitingForInstallSessionTrackingStatus;
+
+- (BOOL)hasAcceptedResponseFromBackend;
+
+- (nonnull ADJAttributionStateData *)withNewIsAsking:(BOOL)newIsAsking;
+- (nonnull ADJAttributionStateData *)withInstallSessionTracked;
+- (nonnull ADJAttributionStateData *)withUnavailableAttribution;
+- (nonnull ADJAttributionStateData *)withAvailableAttribution:
+    (nonnull ADJAttributionData *)attributionData;
 
 @end

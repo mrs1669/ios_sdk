@@ -89,7 +89,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 }
 
 #pragma mark - ADJLifecycleSubscriber
-- (void)onForegroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidForeground {
     if (self.deviceIdsConfigData.cacheValidityPeriod == nil) {
         [self.logger debugDev:@"Lifecycle should not be subscribed without a cached timeLength"
                     issueType:ADJIssueLogicError];
@@ -139,7 +139,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     }
 }
 
-- (void)onBackgroundWithIsFromClientContext:(BOOL)isFromClientContext {
+- (void)ccDidBackground {
     if (self.deviceIdsConfigData.cacheValidityPeriod == nil) {
         [self.logger debugDev:@"Lifecycle should not be subscribed without a cached timeLength"
                     issueType:ADJIssueLogicError];
