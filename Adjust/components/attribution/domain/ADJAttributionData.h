@@ -31,9 +31,9 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
     instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution;
 
-- (nonnull instancetype)initFromJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
-                                              adid:(nonnull ADJNonEmptyString *)adid
-                                            logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
+    instanceFromJson:(nonnull NSDictionary *)attributionJson
+    adid:(nonnull ADJNonEmptyString *)adid;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

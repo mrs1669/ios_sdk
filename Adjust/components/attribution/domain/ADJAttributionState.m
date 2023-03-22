@@ -135,7 +135,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
                 startAsking:YES];
     }
 
-    [self updateWithReceivedAttribution:[self extractAttributionWithResponse:attributionResponse]];
+    [self updateWithReceivedAttributionWithResponse:attributionResponse];
 
     self.stateData = [self.stateData withNewIsAsking:NO];
 
@@ -173,38 +173,40 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 }
 
 #pragma mark Internal Methods
-- (nullable ADJAttributionData *)extractAttributionWithResponse:
+- (void)updateWithReceivedAttributionWithResponse:
     (nonnull ADJAttributionResponseData *)attributionResponseData
 {
-    NSDictionary *_Nullable attributionJson = attributionResponseData.attributionJson;
-    if (attributionJson == nil) { return nil; }
+   NSDictionary *_Nullable attributionJson = attributionResponseData.attributionJson;
+   if (attributionJson == nil) {
+       if (self.stateData.unavailableAttribution) {
+           [self.logger debugDev:@"Received attribution continues to be unavailable"];
+           return;
+       }
 
-    return [[ADJAttributionData alloc] initFromJsonWithDictionary:attributionJson
-                                                             adid:attributionResponseData.adid
-                                                           logger:self.logger];
-}
-- (void)updateWithReceivedAttribution:(nullable ADJAttributionData *)receivedAttribution {
-    if (receivedAttribution == nil) {
-        if (self.stateData.unavailableAttribution) {
-            [self.logger debugDev:@"Received attribution continues to be unavailable"];
-            return;
-        }
+       [self.logger debugDev:@"Received attribution is now unavailable"];
 
-        [self.logger debugDev:@"Received attribution is now unavailable"];
+       self.stateData = [self.stateData withUnavailableAttribution];
 
-        self.stateData = [self.stateData withUnavailableAttribution];
+       return;
+   }
 
-        return;
-    }
+   ADJOptionalFailsNN<ADJAttributionData *> *_Nonnull receivedAttributionOptFails =
+       [ADJAttributionData instanceFromJson:attributionJson
+                                       adid:attributionResponseData.adid];
+   for (ADJResultFail *_Nonnull optionalFail in receivedAttributionOptFails.optionalFails) {
+       [self.logger debugDev:@"Failed processing value in attribution json response"
+                  resultFail:optionalFail
+                   issueType:ADJIssueNetworkRequest];
+   }
 
-    if ([receivedAttribution isEqual:self.stateData.attributionData]) {
-        [self.logger debugDev:@"Received same attribution"];
-        return;
-    }
+   if ([receivedAttributionOptFails.value isEqual:self.stateData.attributionData]) {
+       [self.logger debugDev:@"Received same attribution"];
+       return;
+   }
 
-    [self.logger debugDev:@"Received attribution updates state data"];
+   [self.logger debugDev:@"Received attribution updates state data"];
 
-    self.stateData = [self.stateData withAvailableAttribution:receivedAttribution];
+   self.stateData = [self.stateData withAvailableAttribution:receivedAttributionOptFails.value];
 }
 
 - (BOOL)canStartAskingFromSdkWithSource:(nonnull NSString *)source {

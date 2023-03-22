@@ -157,74 +157,55 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    costCurrency:costCurrencyResult.value]];
 }
 
-- (nullable ADJNonEmptyString *)extractJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
-                                                      key:(nonnull NSString *)key
-                                                   logger:(nonnull ADJLogger *)logger
-{
-    ADJResultNL<NSString *> *_Nonnull valueResult =
-        [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
-                                                 key:key];
-    if (valueResult.fail != nil) {
-        [logger debugDev:@"Invalid string value in json dictionary"
-                     key:@"key"
-                   value:key
-              resultFail:valueResult.fail
-               issueType:ADJIssueInvalidInput];
-        return nil;
-    }
-
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull parsedResult =
-        [ADJNonEmptyString instanceFromOptionalString:valueResult.value];
-    if (parsedResult.fail != nil) {
-        [logger debugDev:@"Failed parsing string value in json dictionary"
-                     key:@"key"
-                   value:key
-              resultFail:parsedResult.fail
-               issueType:ADJIssueInvalidInput];
-        return nil;
-    }
-
-    return parsedResult.value;
-}
-
 #define extrJsonCall(dictKey) \
-    [self extractJsonWithDictionary:jsonDictionary key:(dictKey) logger:logger] \
+    [ADJAttributionData extractStringWithDictionary:attributionJson     \
+                                                key:(dictKey)           \
+                                   optionalFailsMut:optionalFailsMut]   \
 
-- (nonnull instancetype)initFromJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
-                                              adid:(nonnull ADJNonEmptyString *)adid
-                                            logger:(nonnull ADJLogger *)logger
+
++ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
+    instanceFromJson:(nonnull NSDictionary *)attributionJson
+    adid:(nonnull ADJNonEmptyString *)adid
 {
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+
     ADJResultNL<NSNumber *> *_Nonnull costAmountDoubleNumberResult =
-        [ADJUtilMap extractDoubleNumberWithDictionary:jsonDictionary
+        [ADJUtilMap extractDoubleNumberWithDictionary:attributionJson
                                                   key:ADJParamAttributionCostAmountKey];
     if (costAmountDoubleNumberResult.fail != nil) {
-        [logger debugDev:@"Invalid cost amount double number in json dictionary"
-              resultFail:costAmountDoubleNumberResult.fail
-               issueType:ADJIssueInvalidInput];
+        [optionalFailsMut addObject:
+         [[ADJResultFail alloc]
+          initWithMessage:@"Cannot parse double value for cost amount from number"
+          key:@"double number fail"
+          otherFail:costAmountDoubleNumberResult.fail]];
     }
     ADJResultNL<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
         [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:
          costAmountDoubleNumberResult.value];
     if (costAmountDoubleResult.fail != nil) {
-        [logger debugDev:@"Failed parsing cost amount double"
-              resultFail:costAmountDoubleResult.fail
-               issueType:ADJIssueInvalidInput];
+        [optionalFailsMut addObject:
+         [[ADJResultFail alloc]
+          initWithMessage:@"Cannot parse money value for cost amount from double number"
+          key:@"money amount fail"
+          otherFail:costAmountDoubleResult.fail]];
     }
 
-    return [self
-            initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey)
-            trackerName:extrJsonCall(ADJParamAttributionTrackerNameKey)
-            network:extrJsonCall(ADJParamAttributionNetworkKey)
-            campaign:extrJsonCall(ADJParamAttributionCampaignKey)
-            adgroup:extrJsonCall(ADJParamAttributionAdGroupKey)
-            creative:extrJsonCall(ADJParamAttributionCreativeKey)
-            clickLabel:extrJsonCall(ADJParamAttributionClickLableKey)
-            adid:adid
-            deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey)
-            state:extrJsonCall(ADJParamAttributionStateKey)
-            costType:extrJsonCall(ADJParamAttributionCostTypeKey)
-            costAmount:costAmountDoubleResult.value
-            costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey)];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJAttributionData alloc]
+                   initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey)
+                   trackerName:extrJsonCall(ADJParamAttributionTrackerNameKey)
+                   network:extrJsonCall(ADJParamAttributionNetworkKey)
+                   campaign:extrJsonCall(ADJParamAttributionCampaignKey)
+                   adgroup:extrJsonCall(ADJParamAttributionAdGroupKey)
+                   creative:extrJsonCall(ADJParamAttributionCreativeKey)
+                   clickLabel:extrJsonCall(ADJParamAttributionClickLableKey)
+                   adid:adid
+                   deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey)
+                   state:extrJsonCall(ADJParamAttributionStateKey)
+                   costType:extrJsonCall(ADJParamAttributionCostTypeKey)
+                   costAmount:costAmountDoubleResult.value
+                   costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey)]];
 }
 
 - (nullable instancetype)init {
@@ -381,6 +362,42 @@ ioValueSerializable:ioValue]            \
 #pragma mark Internal Methods
 + (nonnull NSString *)coallesceToEmptyStringWithValue:(nullable ADJNonEmptyString *)value {
     return value != nil ? value.stringValue : @"";
+}
+
++ (nullable ADJNonEmptyString *)
+    extractStringWithDictionary:(nonnull NSDictionary *)jsonDictionary
+    key:(nonnull NSString *)key
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    ADJResultNL<NSString *> *_Nonnull extractedNsStringResult =
+        [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
+                                                 key:key];
+
+    if (extractedNsStringResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull failBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot extract string value from json"];
+
+        [failBuilder withKey:@"extraction fail" otherFail:extractedNsStringResult.fail];
+        [failBuilder withKey:@"json key" stringValue:key];
+
+        [optionalFailsMut addObject:[failBuilder build]];
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
+        [ADJNonEmptyString instanceFromOptionalString:extractedNsStringResult.value];
+    if (stringResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull failBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot parse string from extracted json value"];
+
+        [failBuilder withKey:@"string parsing fail" otherFail:stringResult.fail];
+        [failBuilder withKey:@"json key" stringValue:key];
+
+        [optionalFailsMut addObject:[failBuilder build]];
+    }
+
+    return stringResult.value;
 }
 
 @end
