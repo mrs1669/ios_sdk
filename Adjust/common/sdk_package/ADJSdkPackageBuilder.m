@@ -105,15 +105,15 @@
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAdRevenueNetworkKey
-                         packageParamValueSerializable:clientAdRevenueData.adRevenueNetwork];
+                         packageParamValueSerializable:clientAdRevenueData.network];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAdRevenueUnitKey
-                         packageParamValueSerializable:clientAdRevenueData.adRevenueUnit];
+                         packageParamValueSerializable:clientAdRevenueData.unit];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAdRevenuePlacementKey
-                         packageParamValueSerializable:clientAdRevenueData.adRevenuePlacement];
+                         packageParamValueSerializable:clientAdRevenueData.placement];
 
     ADJStringMap *_Nonnull parameters =
     [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder

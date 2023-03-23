@@ -391,9 +391,9 @@ NS_ASSUME_NONNULL_END
                                                     initWithSource:adRevenueSource];
     [adjustAdRevenue setRevenueWithDoubleNumber:revenue currency:currency];
     [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCount];
-    [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork];
-    [adjustAdRevenue setAdRevenueUnit:adRevenueUnit];
-    [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement];
+    [adjustAdRevenue setNetwork:adRevenueNetwork];
+    [adjustAdRevenue setUnit:adRevenueUnit];
+    [adjustAdRevenue setPlacement:adRevenuePlacement];
 
     for (int i = 0; i < [callbackParameters count]; i += 2) {
         NSString *key = [callbackParameters objectAtIndex:i];

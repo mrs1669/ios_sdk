@@ -371,16 +371,15 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     }
 
     if ([self containsKey:@"adRevenueNetwork"]) {
-        [adjustAdRevenue setAdRevenueNetwork:[self firstParameterValueWithKey:@"adRevenueNetwork"]];
+        [adjustAdRevenue setNetwork:[self firstParameterValueWithKey:@"adRevenueNetwork"]];
     }
 
     if ([self containsKey:@"adRevenueUnit"]) {
-        [adjustAdRevenue setAdRevenueUnit:[self firstParameterValueWithKey:@"adRevenueUnit"]];
+        [adjustAdRevenue setUnit:[self firstParameterValueWithKey:@"adRevenueUnit"]];
     }
 
     if ([self containsKey:@"adRevenuePlacement"]) {
-        [adjustAdRevenue setAdRevenuePlacement:
-         [self firstParameterValueWithKey:@"adRevenuePlacement"]];
+        [adjustAdRevenue setPlacement:[self firstParameterValueWithKey:@"adRevenuePlacement"]];
     }
 
     [self iterateWithKey:@"callbackParams"

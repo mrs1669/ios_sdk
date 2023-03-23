@@ -36,11 +36,11 @@ NS_ASSUME_NONNULL_END
 - (void)setAdImpressionsCountWithInteger:(NSInteger)adImpressionsCount;
 - (void)setAdImpressionsCountWithIntegerNumber:(nonnull NSNumber *)adImpressionsCountIntegerNumber;
 
-- (void)setAdRevenueNetwork:(nonnull NSString *)adRevenueNetwork;
+- (void)setNetwork:(nonnull NSString *)network;
 
-- (void)setAdRevenueUnit:(nonnull NSString *)adRevenueUnit;
+- (void)setUnit:(nonnull NSString *)unit;
 
-- (void)setAdRevenuePlacement:(nonnull NSString *)adRevenuePlacement;
+- (void)setPlacement:(nonnull NSString *)placement;
 
 - (void)addCallbackParameterWithKey:(nonnull NSString *)key
                               value:(nonnull NSString *)value;
@@ -52,11 +52,13 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) NSNumber *revenueAmountDoubleNumber;
 @property (nullable, readonly, strong, nonatomic) NSString *revenueCurrency;
 @property (nullable, readonly, strong, nonatomic) NSNumber *adImpressionsCountIntegerNumber;
-@property (nullable, readonly, strong, nonatomic) NSString *adRevenueNetwork;
-@property (nullable, readonly, strong, nonatomic) NSString *adRevenueUnit;
-@property (nullable, readonly, strong, nonatomic) NSString *adRevenuePlacement;
-@property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *callbackParameterKeyValueArray;
-@property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *partnerParameterKeyValueArray;
+@property (nullable, readonly, strong, nonatomic) NSString *network;
+@property (nullable, readonly, strong, nonatomic) NSString *unit;
+@property (nullable, readonly, strong, nonatomic) NSString *placement;
+@property (nullable, readonly, strong, nonatomic)
+    NSArray<NSString *> *callbackParameterKeyValueArray;
+@property (nullable, readonly, strong, nonatomic)
+    NSArray<NSString *> *partnerParameterKeyValueArray;
 
 @end
 

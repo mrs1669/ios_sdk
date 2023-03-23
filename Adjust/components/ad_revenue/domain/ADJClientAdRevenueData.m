@@ -17,12 +17,12 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
- @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *adRevenueSource;
+ @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *source;
  @property (nullable, readonly, strong, nonatomic) ADJMoney *revenue;
  @property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *adImpressionsCount;
- @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adRevenueNetwork;
- @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adRevenueUnit;
- @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adRevenuePlacement;
+ @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *network;
+ @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *unit;
+ @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *placement;
  @property (nullable, readonly, strong, nonatomic) ADJStringMap *callbackParameters;
  @property (nullable, readonly, strong, nonatomic) ADJStringMap *partnerParameters;
  */
@@ -44,9 +44,9 @@ static NSString *const kSourceKey = @"source";
 static NSString *const kRevenueAmountKey = @"revenueAmount";
 static NSString *const kRevenueCurrencyKey = @"revenueCurrency";
 static NSString *const kAdImpressionsCountKey = @"adImpressionsCount";
-static NSString *const kAdRevenueNetworkKey = @"adRevenueNetwork";
-static NSString *const kAdRevenueUnitKey = @"adRevenueUnit";
-static NSString *const kAdRevenuePlacementKey = @"adRevenuePlacement";
+static NSString *const kNetworkKey = @"network";
+static NSString *const kUnitKey = @"unit";
+static NSString *const kPlacementKey = @"placement";
 static NSString *const kCallbackParametersMapName = @"CALLBACK_PARAMETER_MAP";
 static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
@@ -67,7 +67,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     ADJResult<ADJNonEmptyString *> *_Nonnull sourceResult =
         [ADJNonEmptyString instanceFromString:adjustAdRevenue.source];
     if (sourceResult.fail != nil) {
-        [logger errorClient:@"Cannot create ad revenue without ad revenue source"
+        [logger errorClient:@"Cannot create ad revenue with invalid source"
                 resultFail:sourceResult.fail];
         return nil;
     }
@@ -85,9 +85,9 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
                               nil];
     });
 
-    if (![adRevenueSourceSet containsObject:sourceResult.value.stringValue]) {
-        [logger noticeClient:@"Cannot match ad revenue source to an expected one,"
-            " but will be used as is"
+    if (! [adRevenueSourceSet containsObject:sourceResult.value.stringValue]) {
+        [logger noticeClient:
+         @"Cannot match ad revenue source to an expected one, but will be used as is"
                          key:@"ad revenue source"
                        value:sourceResult.value.stringValue];
     }
@@ -100,7 +100,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
             [ADJMoney instanceFromAmountDoubleNumber:adjustAdRevenue.revenueAmountDoubleNumber
                                             currency:adjustAdRevenue.revenueCurrency];
         if (revenueResult.fail != nil) {
-            [logger noticeClient:@"Cannot use invalid revenue"
+            [logger noticeClient:@"Cannot use invalid revenue in ad revenue"
                       resultFail:revenueResult.fail];
         } else {
             revenue = revenueResult.value;
@@ -108,32 +108,32 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     }
 
     ADJResult<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
-        [ADJNonNegativeInt
-         instanceFromIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber];
+        [ADJNonNegativeInt instanceFromIntegerNumber:
+         adjustAdRevenue.adImpressionsCountIntegerNumber];
     if (adImpressionsCountResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot use invalid ad impressions count"
+        [logger noticeClient:@"Cannot use invalid ad impressions count in ad revenue"
                   resultFail:adImpressionsCountResult.fail];
     }
 
-    ADJResult<ADJNonEmptyString *> *_Nonnull adRevenueNetworkResult =
-        [ADJNonEmptyString instanceFromString:adjustAdRevenue.adRevenueNetwork];
-    if (adRevenueNetworkResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot use invalid ad revenue network"
-                 resultFail:adRevenueNetworkResult.fail];
+    ADJResult<ADJNonEmptyString *> *_Nonnull networkResult =
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.network];
+    if (networkResult.failNonNilInput != nil) {
+        [logger noticeClient:@"Cannot use invalid network in ad revenue"
+                 resultFail:networkResult.fail];
     }
 
-    ADJResult<ADJNonEmptyString *> *_Nonnull adRevenueUnitResult =
-        [ADJNonEmptyString instanceFromString:adjustAdRevenue.adRevenueUnit];
-    if (adRevenueUnitResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot use invalid ad revenue unit"
-                 resultFail:adRevenueUnitResult.fail];
+    ADJResult<ADJNonEmptyString *> *_Nonnull unitResult =
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.unit];
+    if (unitResult.failNonNilInput != nil) {
+        [logger noticeClient:@"Cannot use invalid unit in ad revenue"
+                 resultFail:unitResult.fail];
     }
 
-    ADJResult<ADJNonEmptyString *> *_Nonnull adRevenuePlacementResult =
-        [ADJNonEmptyString instanceFromString:adjustAdRevenue.adRevenuePlacement];
-    if (adRevenueUnitResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot use invalid ad revenue placement"
-                 resultFail:adRevenueUnitResult.fail];
+    ADJResult<ADJNonEmptyString *> *_Nonnull placementResult =
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.placement];
+    if (unitResult.failNonNilInput != nil) {
+        [logger noticeClient:@"Cannot use invalid placement in ad revenue"
+                 resultFail:unitResult.fail];
     }
 
     ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
@@ -184,14 +184,14 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         }
     }
 
-    return [[self alloc] initWithSource:sourceResult.value
-                                revenue:revenue
-                     adImpressionsCount:adImpressionsCountResult.value
-                       adRevenueNetwork:adRevenueNetworkResult.value
-                          adRevenueUnit:adRevenueUnitResult.value
-                     adRevenuePlacement:adRevenuePlacementResult.value
-                     callbackParameters:callbackParameters
-                      partnerParameters:partnerParameters];
+    return [[ADJClientAdRevenueData alloc] initWithSource:sourceResult.value
+                                                  revenue:revenue
+                                       adImpressionsCount:adImpressionsCountResult.value
+                                                  network:networkResult.value
+                                                     unit:unitResult.value
+                                                placement:placementResult.value
+                                       callbackParameters:callbackParameters
+                                        partnerParameters:partnerParameters];
 }
 
 + (nullable instancetype)
@@ -238,22 +238,19 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
          adImpressionsCountResult.value.uIntegerValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenueNetwork =
-        [propertiesMap pairValueWithKey:kAdRevenueNetworkKey];
-    if (adRevenueNetwork != nil) {
-        [adjustAdRevenue setAdRevenueNetwork:adRevenueNetwork.stringValue];
+    ADJNonEmptyString *_Nullable network = [propertiesMap pairValueWithKey:kNetworkKey];
+    if (network != nil) {
+        [adjustAdRevenue setNetwork:network.stringValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenueUnit =
-        [propertiesMap pairValueWithKey:kAdRevenueUnitKey];
-    if (adRevenueUnit != nil) {
-        [adjustAdRevenue setAdRevenueUnit:adRevenueUnit.stringValue];
+    ADJNonEmptyString *_Nullable unit = [propertiesMap pairValueWithKey:kUnitKey];
+    if (unit != nil) {
+        [adjustAdRevenue setUnit:unit.stringValue];
     }
 
-    ADJNonEmptyString *_Nullable adRevenuePlacement =
-        [propertiesMap pairValueWithKey:kAdRevenuePlacementKey];
-    if (adRevenuePlacement != nil) {
-        [adjustAdRevenue setAdRevenuePlacement:adRevenuePlacement.stringValue];
+    ADJNonEmptyString *_Nullable placement = [propertiesMap pairValueWithKey:kPlacementKey];
+    if (placement != nil) {
+        [adjustAdRevenue setPlacement:placement.stringValue];
     }
 
     ADJStringMap *_Nullable callbackParametersMap =
@@ -291,19 +288,20 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 - (nonnull instancetype)initWithSource:(nonnull ADJNonEmptyString *)source
                                revenue:(nullable ADJMoney *)revenue
                     adImpressionsCount:(nullable ADJNonNegativeInt *)adImpressionsCount
-                      adRevenueNetwork:(nullable ADJNonEmptyString *)adRevenueNetwork
-                         adRevenueUnit:(nullable ADJNonEmptyString *)adRevenueUnit
-                    adRevenuePlacement:(nullable ADJNonEmptyString *)adRevenuePlacement
+                               network:(nullable ADJNonEmptyString *)network
+                                  unit:(nullable ADJNonEmptyString *)unit
+                             placement:(nullable ADJNonEmptyString *)placement
                     callbackParameters:(nullable ADJStringMap *)callbackParameters
-                     partnerParameters:(nullable ADJStringMap *)partnerParameters {
+                     partnerParameters:(nullable ADJStringMap *)partnerParameters
+{
     self = [super init];
 
     _source = source;
     _revenue = revenue;
     _adImpressionsCount = adImpressionsCount;
-    _adRevenueNetwork = adRevenueNetwork;
-    _adRevenueUnit = adRevenueUnit;
-    _adRevenuePlacement = adRevenuePlacement;
+    _network = network;
+    _unit = unit;
+    _placement = placement;
     _callbackParameters = callbackParameters;
     _partnerParameters = partnerParameters;
 
@@ -335,16 +333,16 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
                        ioValueSerializable:self.adImpressionsCount];
 
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                                       key:kAdRevenueNetworkKey
-                       ioValueSerializable:self.adRevenueNetwork];
+                                       key:kNetworkKey
+                       ioValueSerializable:self.network];
 
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                                       key:kAdRevenueUnitKey
-                       ioValueSerializable:self.adRevenueUnit];
+                                       key:kUnitKey
+                       ioValueSerializable:self.unit];
 
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                                       key:kAdRevenuePlacementKey
-                       ioValueSerializable:self.adRevenuePlacement];
+                                       key:kPlacementKey
+                       ioValueSerializable:self.placement];
 
     if (self.callbackParameters != nil) {
         ADJStringMapBuilder *_Nonnull callbackParametersMapBuilder =
@@ -371,9 +369,9 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
             kRevenueAmountKey, self.revenue != nil ? self.revenue.amount : nil,
             kRevenueCurrencyKey, self.revenue != nil ? self.revenue.currency : nil,
             kAdImpressionsCountKey, self.adImpressionsCount,
-            kAdRevenueNetworkKey, self.adRevenueNetwork,
-            kAdRevenueUnitKey, self.adRevenueUnit,
-            kAdRevenuePlacementKey, self.adRevenuePlacement,
+            kNetworkKey, self.network,
+            kUnitKey, self.unit,
+            kPlacementKey, self.placement,
             kCallbackParametersMapName, self.callbackParameters,
             kPartnerParametersMapName, self.partnerParameters,
             nil];
@@ -383,20 +381,19 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     NSUInteger hashCode = ADJInitialHashCode;
 
     hashCode = ADJHashCodeMultiplier * hashCode + self.source.hash;
+    hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.revenue];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.revenue];
+        [ADJUtilObj objecNullableHash:self.adImpressionsCount];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.adImpressionsCount];
+        [ADJUtilObj objecNullableHash:self.network];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.adRevenueNetwork];
+        [ADJUtilObj objecNullableHash:self.unit];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.adRevenueUnit];
+        [ADJUtilObj objecNullableHash:self.placement];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.adRevenuePlacement];
+        [ADJUtilObj objecNullableHash:self.callbackParameters];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.callbackParameters];
-    hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.partnerParameters];
+        [ADJUtilObj objecNullableHash:self.partnerParameters];
 
     return hashCode;
 }
@@ -414,9 +411,9 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     return [ADJUtilObj objectEquals:self.source other:other.source]
     && [ADJUtilObj objectEquals:self.revenue other:other.revenue]
     && [ADJUtilObj objectEquals:self.adImpressionsCount other:other.adImpressionsCount]
-    && [ADJUtilObj objectEquals:self.adRevenueNetwork other:other.adRevenueNetwork]
-    && [ADJUtilObj objectEquals:self.adRevenueUnit other:other.adRevenueUnit]
-    && [ADJUtilObj objectEquals:self.adRevenuePlacement other:other.adRevenuePlacement]
+    && [ADJUtilObj objectEquals:self.network other:other.network]
+    && [ADJUtilObj objectEquals:self.unit other:other.unit]
+    && [ADJUtilObj objectEquals:self.placement other:other.placement]
     && [ADJUtilObj objectEquals:self.callbackParameters other:other.callbackParameters]
     && [ADJUtilObj objectEquals:self.partnerParameters other:other.partnerParameters];
 }
