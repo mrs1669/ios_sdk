@@ -269,7 +269,7 @@ NS_ASSUME_NONNULL_END
         [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
     }
 
-    [[ADJAdjust instanceForId:instanceId] initSdkWithConfiguration:adjustConfig];
+    [[ADJAdjust instanceForId:instanceId] initSdkWithConfig:adjustConfig];
 }
 
 - (void)trackEvent:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
