@@ -10,6 +10,7 @@
 
 #import "ADJUtilSys.h"
 #import "ADJLocalThreadController.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 @interface ADJSingleThreadExecutor ()
@@ -45,16 +46,17 @@
 }
 
 #pragma mark Public API
-- (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
-                     delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
-                             from:(nonnull NSString *)from
+- (nullable ADJResultFail *)scheduleInSequenceFrom:(nonnull NSString *)from
+                                    delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+                                             block:(nonnull void (^)(void))blockToSchedule
 {
     if (delayTimeMilli.millisecondsSpan.uIntegerValue == 0) {
-        return [self executeInSequenceWithBlock:blockToSchedule from:from];
+        return [self executeInSequenceFrom:from block:blockToSchedule];
     }
 
     if (self.hasFinalized) {
-        return NO;
+        return [[ADJResultFail alloc]
+                initWithMessage:@"Cannot schedule in sequence when it has finalized"];
     }
 
     __block ADJLocalThreadController *_Nonnull localThreadController =
@@ -76,33 +78,60 @@
 
         [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                runningThreadId:runningLocalId
-                                             callerDescription:from];
+                                                    fromCaller:from];
 
         blockToSchedule();
     });
 
-    return YES;
+    return nil;
 }
-
-- (BOOL)executeInSequenceSkippingTraceWithBlock:(nonnull void (^)(void))blockToExecute {
-    return [self executeInSequenceWithBlock:blockToExecute
-                                       from:@""
-                           skipTraceLocalId:YES];
-}
-
-- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
-                            from:(nonnull NSString *)from
+- (void)scheduleInSequenceWithLogger:(nonnull ADJLogger *)logger
+                                from:(nonnull NSString *)from
+                      delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+                               block:(nonnull void (^)(void))block
 {
-    return [self executeInSequenceWithBlock:blockToExecute
-                                       from:from
-                           skipTraceLocalId:NO];
+    ADJResultFail *_Nullable scheduleFail =
+        [self scheduleInSequenceFrom:from
+                      delayTimeMilli:delayTimeMilli
+                               block:block];
+    if (scheduleFail != nil) {
+        [logger debugDev:@"Failed to schedule in sequence with delay"
+                    from:from
+              resultFail:scheduleFail
+               issueType:ADJIssueThreadsAndLocks];
+    }
 }
 
-- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute
-                         from:(nonnull NSString *)from
+- (nullable ADJResultFail *)executeInSequenceFrom:(nonnull NSString *)from
+                                            block:(nonnull void (^)(void))blockToExecute
+{
+    return [self executeInSequenceFromCaller:from block:blockToExecute];
+}
+- (void)executeInSequenceWithLogger:(nonnull ADJLogger *)logger
+                               from:(nonnull NSString *)from
+                              block:(nonnull void (^)(void))blockToExecute
+{
+    ADJResultFail *_Nullable executeFail = [self executeInSequenceFrom:from block:blockToExecute];
+    if (executeFail != nil) {
+        [logger debugDev:@"Failed to execute in sequence"
+                    from:from
+              resultFail:executeFail
+               issueType:ADJIssueThreadsAndLocks];
+    }
+}
+
+- (nullable ADJResultFail *)
+    executeInSequenceSkippingTraceWithBlock:(nonnull void (^)(void))blockToExecute
+{
+    return [self executeInSequenceFromCaller:nil block:blockToExecute];
+}
+
+- (nullable ADJResultFail *)executeAsyncFrom:(nonnull NSString *)from
+                                       block:(nonnull void (^)(void))blockToExecute
 {
     if (self.hasFinalized) {
-        return NO;
+        return [[ADJResultFail alloc]
+                initWithMessage:@"Cannot execute async when it has finalized"];
     }
 
     __block ADJLocalThreadController *_Nonnull localThreadController =
@@ -123,7 +152,7 @@
         //  If/when that changes, it will be necessary to check here
         [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                runningThreadId:runningLocalId
-                                             callerDescription:from];
+                                                    fromCaller:from];
 
         blockToExecute();
 
@@ -132,22 +161,37 @@
         [localThreadController removeLocalIdInConcurrentThread];
     });
 
-    return YES;
+    return nil;
+}
+- (void)executeAsyncWithLogger:(nonnull ADJLogger *)logger
+                          from:(nonnull NSString *)from
+                         block:(nonnull void (^)(void))blockToExecute
+{
+    ADJResultFail *_Nullable executeFail = [self executeAsyncFrom:from block:blockToExecute];
+    if (executeFail != nil) {
+        [logger debugDev:@"Failed to execute async"
+                    from:from
+              resultFail:executeFail
+               issueType:ADJIssueThreadsAndLocks];
+    }
 }
 
-- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
-                         blockToExecute:(nonnull void (^)(void))blockToExecute
-                                   from:(nonnull NSString *)from
+- (nullable ADJResultFail *)executeSynchronouslyFrom:(nonnull NSString *)from
+                                             timeout:(nonnull ADJTimeLengthMilli *)timeout
+                                               block:(nonnull void (^)(void))blockToExecute
 {
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-    BOOL canExecuteTask = [self executeAsyncWithBlock:^{
+    ADJResultFail *_Nullable executeAsyncFail = [self executeAsyncFrom:from
+                                                                 block:^{
         blockToExecute();
         dispatch_semaphore_signal(semaphore);
-    } from:from];
+    }];
 
-    if (! canExecuteTask) {
-        return NO;
+    if (executeAsyncFail != nil) {
+        return [[ADJResultFail alloc] initWithMessage:@"Cannot execute sync with timeout"
+                                                  key:@"execute async fail"
+                                            otherFail:executeAsyncFail];
     }
 
     intptr_t waitResult =
@@ -155,9 +199,28 @@
                                 [ADJUtilSys
                                  dispatchTimeWithMilli:timeout.millisecondsSpan.uIntegerValue]);
 
-    BOOL timedOut = waitResult != 0;
+    if (waitResult != 0) {
+        return [[ADJResultFail alloc] initWithMessage:@"Could end sync execution within timeout"
+                                                  key:@"timeout milliseconds"
+                                          stringValue:timeout.millisecondsDescription];
+    }
 
-    return ! timedOut;
+    return nil;
+}
+- (void)executeSynchronouslyWithLogger:(nonnull ADJLogger *)logger
+                                  from:(nonnull NSString *)from
+                               timeout:(nonnull ADJTimeLengthMilli *)timeout
+                                 block:(nonnull void (^)(void))blockToExecute
+{
+    ADJResultFail *_Nullable executeFail = [self executeSynchronouslyFrom:from
+                                                                  timeout:timeout
+                                                                    block:blockToExecute];
+    if (executeFail != nil) {
+        [logger debugDev:@"Failed to execute sync"
+                    from:from
+              resultFail:executeFail
+               issueType:ADJIssueThreadsAndLocks];
+    }
 }
 
 #pragma mark - ADJTeardownFinalizer
@@ -174,12 +237,12 @@
 }
 
 #pragma mark Internal Methods
-- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
-                              from:(nonnull NSString *)from
-                  skipTraceLocalId:(BOOL)skipTraceLocalId
+- (nullable ADJResultFail *)executeInSequenceFromCaller:(nullable NSString *)fromCaller
+                                                  block:(nonnull void (^)(void))blockToExecute
 {
     if (self.hasFinalized) {
-        return NO;
+        return [[ADJResultFail alloc]
+                initWithMessage:@"Cannot execute in sequence when it has finalized"];
     }
 
     __block ADJLocalThreadController *_Nonnull localThreadController =
@@ -192,7 +255,7 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        if (! skipTraceLocalId) {
+        if (fromCaller != nil) {
             // no need to set a new thread id when it is tracing a new thread
             //  because, so far, there is any sort of logging downstream of the log collector
             // If that changes and some "special" (to avoid looping) logging is done, then
@@ -202,13 +265,13 @@
 
             [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                    runningThreadId:runningLocalId
-                                                 callerDescription:from];
+                                                        fromCaller:fromCaller];
         }
 
         blockToExecute();
     });
 
-    return YES;
+    return nil;
 }
 
 /*

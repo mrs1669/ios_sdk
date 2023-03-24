@@ -99,7 +99,9 @@
 #pragma mark Internal Methods
 - (void)sendSdkPackageWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeAsyncWithBlock:^{
+    [self.executor executeAsyncWithLogger:self.logger
+                                     from:@"send sdk package"
+                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -108,7 +110,7 @@
 
         [strongSelf sendWithUrlRequest:urlRequest
                     sdkResponseBuilder:sdkResponseDataBuilder];
-    } from:@"send sdk package"];
+    }];
 }
 
 - (nonnull NSURLRequest *)buildUrlRequestWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
@@ -272,14 +274,16 @@
 
         dispatch_semaphore_signal(semaphore);
 
-        [strongSelf.executor executeAsyncWithBlock:^{
+        [strongSelf.executor executeAsyncWithLogger:strongSelf.logger
+                                               from:@"request response"
+                                              block:^{
             [strongSelf handleRequestCallbackWithData:data
                                              response:response
                                                 error:error
                                    sdkResponseBuilder:sdkResponseBuilder];
 
             [strongSelf retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
-        } from:@"request response"];
+        }];
     }];
     [sessionDatatask resume];
 

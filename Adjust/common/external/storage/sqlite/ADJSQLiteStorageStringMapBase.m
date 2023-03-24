@@ -236,7 +236,9 @@ static int const kDeleteKeyFieldPosition = 1;
               sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"add pair to storage"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
@@ -247,7 +249,7 @@ static int const kDeleteKeyFieldPosition = 1;
                                 value:value
                                   key:key
                   sqliteStorageAction:sqliteStorageAction];
-    } from:@"add pair to storage"];
+    }];
 }
 
 - (void)addPairToDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -308,7 +310,9 @@ static int const kDeleteKeyFieldPosition = 1;
                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"remove pair from storage"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
@@ -318,7 +322,7 @@ static int const kDeleteKeyFieldPosition = 1;
         [strongSelf removePairFromDatabase:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        key:key
                        sqliteStorageAction:sqliteStorageAction];
-    } from:@"remove pair from storage"];
+    }];
 }
 
 - (void)removePairFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -367,7 +371,9 @@ static int const kDeleteKeyFieldPosition = 1;
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"replace all from storage"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
@@ -377,7 +383,7 @@ static int const kDeleteKeyFieldPosition = 1;
         [strongSelf replaceAllFromDatabase:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                  stringMap:stringMap
                        sqliteStorageAction:sqliteStorageAction];
-    } from:@"replace all from storage"];
+    }];
 }
 
 - (void)replaceAllFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb

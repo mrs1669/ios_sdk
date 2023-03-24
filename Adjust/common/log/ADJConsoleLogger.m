@@ -190,9 +190,9 @@
     NSString *_Nonnull issueFormat = logMessageData.inputData.issueType == nil ? @"" :
         [NSString stringWithFormat:@"{%@}", logMessageData.inputData.issueType];
 
-    [foundationDictionary removeObjectForKey:ADJLogCallerDescriptionKey];
-    NSString *_Nonnull callerDescriptionFormat = logMessageData.inputData.callerDescription == nil ? @"" :
-        [NSString stringWithFormat:@" %@", logMessageData.inputData.callerDescription];
+    [foundationDictionary removeObjectForKey:ADJLogFromCallerKey];
+    NSString *_Nonnull fromCallerFormat = logMessageData.inputData.fromCaller == nil ? @"" :
+        [NSString stringWithFormat:@" %@", logMessageData.inputData.fromCaller];
 
 
     id _Nullable paramsFoundationDictionary =
@@ -250,14 +250,14 @@
          paramsFormat, failResultFormat, restFormat, sdkPackageParamsFormat];
 
     /**
-     [loggerName]{issue} message callerDescription {params}fail:{fail}rest:{rest} clientLevel_instanceId<threadId>PreInit
+     [loggerName]{issue} message fromCaller {params}fail:{fail}rest:{rest} clientLevel_instanceId<threadId>PreInit
      */
     return [NSString stringWithFormat:@"[%@]%@ %@%@%@ %@%@%@%@",
             logMessageData.loggerName,
             issueFormat,
 
             logMessageData.inputData.message,
-            callerDescriptionFormat,
+            fromCallerFormat,
 
             collectionsFormat,
 

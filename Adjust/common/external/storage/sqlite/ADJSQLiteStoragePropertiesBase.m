@@ -94,13 +94,15 @@ static NSString *const kColumnValue = @"value";
 
 - (void)updateInStorageOnlyWithNewDataValue:(nonnull id)newDataValue {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"update in storage only"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf updateInStorageSyncWithSqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        newDataValue:newDataValue];
-    } from:@"update in storage only"];
+    }];
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb

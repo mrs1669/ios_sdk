@@ -60,9 +60,9 @@
                                  forKey:ADJLogCallerThreadIdKey];
     }
 
-    if (self.inputData.callerDescription != nil) {
-        [foundationDictionary setObject:self.inputData.callerDescription
-                                 forKey:ADJLogCallerDescriptionKey];
+    if (self.inputData.fromCaller != nil) {
+        [foundationDictionary setObject:self.inputData.fromCaller
+                                 forKey:ADJLogFromCallerKey];
     }
 
     if (self.inputData.runningThreadId != nil) {

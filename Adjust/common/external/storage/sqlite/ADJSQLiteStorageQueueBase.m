@@ -205,7 +205,10 @@ static NSString *const kColumnValue = @"value";
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor
+     executeInSequenceWithLogger:self.logger
+     from:@"remove element by position in storage only"
+     block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
@@ -215,7 +218,7 @@ static NSString *const kColumnValue = @"value";
         [strongSelf removeElementByPosition:elementPositionToRemove
                                    sqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                         sqliteStorageAction:sqliteStorageAction];
-    } from:@"remove element by position in storage only"];
+    }];
 }
 
 - (void)removeAllElements {
@@ -229,13 +232,15 @@ static NSString *const kColumnValue = @"value";
 
     // in storage
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"remove all elements"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         ADJSQLiteDb *_Nonnull sqliteDb = [strongSelf.sqliteDatabaseProvider sqliteDb];
         [sqliteDb executeStatements:strongSelf.deleteAllSql.stringValue];
-    } from:@"remove all elements"];
+    }];
 }
 
 - (void)updateMetadataWithMap:(nonnull ADJStringMap *)newMetadataMap {
@@ -535,7 +540,9 @@ static int const kDeleteElementPositionFieldPosition = 1;
         sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"add element to storage"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
@@ -546,7 +553,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
                               newElement:newElement
                       newElementPosition:newElementPosition
                      sqliteStorageAction:sqliteStorageAction];
-    } from:@"add element to storage"];
+    }];
 }
 
 - (void)addElementToSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb

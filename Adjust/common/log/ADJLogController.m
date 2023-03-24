@@ -102,14 +102,18 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [commonExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-        
-        [strongSelf.consoleLogger didSdkInitWithIsSandboxEnvironment:clientConfigData.isSandboxEnvironmentOrElseProduction
-                                                            doLogAll:clientConfigData.doLogAll
-                                                         doNotLogAny:clientConfigData.doNotLogAny];
-    } from:@"sdk init"];
+    ADJResultFail *_Nullable execFail =
+        [commonExecutor executeInSequenceFrom:@"sdk init"
+                                        block:^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
+
+            [strongSelf.consoleLogger
+             didSdkInitWithIsSandboxEnvironment:
+                 clientConfigData.isSandboxEnvironmentOrElseProduction
+             doLogAll:clientConfigData.doLogAll
+             doNotLogAny:clientConfigData.doNotLogAny];
+        }];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -120,24 +124,26 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [commonExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-        
-        strongSelf.canPublish = YES;
-        
-        NSArray<ADJLogMessageData *> *_Nonnull preInitLogMessageArray =
-            [strongSelf.logMessageDataArray copy];
-        
-        [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
-         ^(id<ADJLogSubscriber> _Nonnull subscriber)
-         {
-            [subscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
+    ADJResultFail *_Nullable execFail =
+        [commonExecutor executeInSequenceFrom:@"allowed to publish notifications"
+                                        block:^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
+
+            strongSelf.canPublish = YES;
+
+            NSArray<ADJLogMessageData *> *_Nonnull preInitLogMessageArray =
+                [strongSelf.logMessageDataArray copy];
+
+            [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
+             ^(id<ADJLogSubscriber> _Nonnull subscriber)
+             {
+                [subscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
+            }];
+
+            // can flush memory stored logs
+            [strongSelf.logMessageDataArray removeAllObjects];
         }];
-        
-        // can flush memory stored logs
-        [strongSelf.logMessageDataArray removeAllObjects];
-    } from:@"allowed to publish notifications"];
 }
 
 @end

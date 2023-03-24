@@ -104,12 +104,14 @@
 
 - (void)forgetDevice {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"forget device"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf processForgetDevice];
-    } from:@"forget device"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
@@ -127,61 +129,71 @@
     (ADJGdprForgetResponseData *)sdkResponseData;
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"received gdpr forget response"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf processGdprForgetResponseInStateWithData:gdprForgetResponseData];
         
         [strongSelf processGdprForgetResponseInTrackerWithData:gdprForgetResponseData];
-    } from:@"received gdpr forget response"];
+    }];
 }
 
 #pragma mark - ADJSdkInitSubscriber
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk init"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf processSdkInit];
-    } from:@"sdk init"];
+    }];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
 - (void)ccAllowedToPublishNotifications {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"allowed to publish notifications"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf.gdprForgetState canStartPublish];
-    } from:@"allowed to publish notifications"];
+    }];
 }
 
 #pragma mark - ADJLifecycleSubscriber
 - (void)ccDidForeground {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"foreground"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf processForegroundInState];
         
         [strongSelf processForegroundInTracker];
-    } from:@"foreground"];
+    }];
 }
 
 - (void)ccDidBackground {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"background"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf.gdprForgetState appWentToTheBackground];
         
         [strongSelf.gdprForgetTracker pauseTrackingWhenAppWentToBackground];
-    } from:@"background"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -192,12 +204,14 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received opt out sdk response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf processOptOut];
-    } from:@"received opt out sdk response"];
+    }];
 }
 
 #pragma mark Internal Methods
@@ -263,7 +277,9 @@
      gdprForgetStateStorage:gdprForgetStateStorage];
 }
 
-- (void)processGdprForgetResponseInTrackerWithData:(nonnull ADJGdprForgetResponseData *)gdprForgetResponseData {
+- (void)processGdprForgetResponseInTrackerWithData:
+    (nonnull ADJGdprForgetResponseData *)gdprForgetResponseData
+{
     ADJDelayData *_Nullable delayData =
     [self.gdprForgetTracker
      delayTrackingWhenReceivedGdprForgetResponseWithData:gdprForgetResponseData];
@@ -276,7 +292,10 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"send gdpr forget"
+                                 delayTimeMilli:delayData.delay
+                                          block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
@@ -285,9 +304,7 @@
         if (sendGdprForget) {
             [strongSelf sendGdprForgetWithSourceDescription:@"DelayEnd"];
         }
-    }
-                                delayTimeMilli:delayData.delay
-                                        from:@"send gdpr forget"];
+    }];
 }
 
 - (void)processSdkInit {

@@ -57,54 +57,64 @@
 #pragma mark Public API
 - (void)addLogPackageDataToSendWithData:(nonnull ADJLogPackageData *)logPackageData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add log package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleLogPackageAddedToSendWithData:logPackageData];
-    } from:@"add log package"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
 - (void)sdkResponseCallbackWithResponseData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"received sdk response"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResponseWithData:sdkResponseData];
-    } from:@"received sdk response"];
+    }];
 }
 
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk init"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleSdkInit];
-    } from:@"sdk init"];
+    }];
 }
 
 #pragma mark - ADJPausingSubscriber
 - (void)didResumeSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"resume sending"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResumeSending];
-    } from:@"resume sending"];
+    }];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"pause sending"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf.logQueueStateAndTracker pauseSending];
-    } from:@"pause sending"];
+    }];
 }
 
 #pragma mark Internal Methods
@@ -224,14 +234,15 @@
 
 - (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"delay end"
+                                 delayTimeMilli:delayData.delay
+                                          block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleDelayEndFrom:delayData.from];
-    }
-                                delayTimeMilli:delayData.delay
-                                        from:@"delay end"];
+    }];
 }
 
 - (void)handleDelayEndFrom:(nonnull NSString *)from {

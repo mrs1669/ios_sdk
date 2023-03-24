@@ -123,13 +123,15 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"keep alive ping"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    } from:@"keep alive ping"];
+    }];
 }
 
 #pragma mark - ADJSdkStartSubscriber
@@ -139,13 +141,15 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"sdk start"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    } from:@"sdk start"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -159,12 +163,14 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received asa click response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAsaClickPackage];
-    } from:@"received asa click response"];
+    }];
 }
 
 #pragma mark - ADJAttributionSubscriber
@@ -172,12 +178,14 @@
              previousAttribution:(nullable ADJAttributionData *)previousAttribution
 {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"handle adjust attribution"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAdjustAttributionStateData:attributionStateData];
-    } from:@"handle adjust attribution"];
+    }];
 }
 
 #pragma mark - ADJSdkPackageSendingSubscriber
@@ -380,17 +388,20 @@
 
     __block NSString *_Nullable asaAttributionTokenString;
 
-    BOOL readAsaAttributionTokenFinishedSuccessfully =
-    [self.executor
-     executeSynchronouslyWithTimeout:self.asaAttributionConfig.timeoutPerAttempt
-     blockToExecute:^{
-        // TODO: cache in a dispatch_once: methodImplementation, classFromName and methodSelector
-        asaAttributionTokenString = func(classFromName, methodSelector, &error);
-    } from:@"read AAAttribution attributionTokenWithError with timeout"];
+    ADJResultFail *_Nullable execFail  =
+        [self.executor
+         executeSynchronouslyFrom:@"read AAAttribution attributionTokenWithError with timeout"
+         timeout:self.asaAttributionConfig.timeoutPerAttempt
+         block:^{
+            // TODO: cache in a dispatch_once: methodImplementation, classFromName and methodSelector
+            asaAttributionTokenString = func(classFromName, methodSelector, &error);
+        }];
 
-    if (! readAsaAttributionTokenFinishedSuccessfully) {
+    if (execFail != nil) {
         return [ADJResult failWithMessage:
-                @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"];
+                @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"
+                                        key:@"exec fail"
+                                  otherFail:execFail];
     }
 
     if (asaAttributionTokenString != nil) {
@@ -447,7 +458,10 @@
     self.isInDelay = YES;
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"retry asa attribution"
+                                 delayTimeMilli:self.asaAttributionConfig.delayBetweenAttempts
+                                          block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -455,9 +469,7 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          [[ADJNonNegativeInt alloc] initWithUIntegerValue:nextNumberOfAttemptsLeft]];
-    }
-                                delayTimeMilli:self.asaAttributionConfig.delayBetweenAttempts
-                                        from:@"retry asa attribution"];
+    }];
 }
 
 - (void)trackAsaClickWithStateData:(nonnull ADJAsaAttributionStateData *)stateData {

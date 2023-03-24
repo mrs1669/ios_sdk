@@ -143,13 +143,15 @@
 #pragma mark - ADJKeepAlivePingPublisher
 - (void)didPingKeepAliveInActiveSession {
     __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
+    [self.clientExecutor executeInSequenceWithLogger:self.logger
+                                                    from:@"didPingKeepAliveInActiveSession"
+                                                   block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf ccKeepAlivePing];
 
-    } from:@"didPingKeepAliveInActiveSession"];
+    }];
 }
 
 #pragma mark Internal Methods

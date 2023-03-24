@@ -91,7 +91,9 @@
 #pragma mark - ADJGdprForgetSubscriber
 - (void)didGdprForget {
     __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
+    [self.clientExecutor executeInSequenceWithLogger:self.logger
+                                                    from:@"didGdprForget"
+                                                   block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -99,7 +101,7 @@
             [strongSelf.sdkActiveState forgottenFromEvent];
 
         [strongSelf ccHandleSideEffectsWithOutputData:outputData from:@"didGdprForget"];
-    } from:@"didGdprForget"];
+    }];
 }
 
 #pragma mark - ADJPublishingGateSubscriber

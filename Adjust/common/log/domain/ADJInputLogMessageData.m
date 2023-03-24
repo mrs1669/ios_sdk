@@ -19,7 +19,7 @@
  @property (nonnull, readonly, strong, nonatomic) NSString *message;
  @property (nonnull, readonly, strong, nonatomic) NSString *level;
  @property (nullable, readonly, strong, nonatomic) NSString *callerThreadId;
- @property (nullable, readonly, strong, nonatomic) NSString *callerDescription;
+ @property (nullable, readonly, strong, nonatomic) NSString *fromCaller;
  @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
  @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
  @property (nullable, readonly, strong, nonatomic) ADJResultFail * resultFail;
@@ -49,7 +49,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                            level:level
                        issueType:nil
                   callerThreadId:nil
-               callerDescription:nil
+                      fromCaller:nil
                  runningThreadId:nil
                       resultFail:nil
                    messageParams:nil
@@ -64,7 +64,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                            level:level
                        issueType:nil
                   callerThreadId:nil
-               callerDescription:nil
+                      fromCaller:nil
                  runningThreadId:nil
                       resultFail:nil
                    messageParams:messageParams
@@ -81,7 +81,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
                            level:level
                        issueType:issueType
                   callerThreadId:nil
-               callerDescription:nil
+                      fromCaller:nil
                  runningThreadId:nil
                       resultFail:resultFail
                    messageParams:messageParams
@@ -91,14 +91,14 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level
                          callerThreadId:(nullable NSString *)callerThreadId
-                      callerDescription:(nullable NSString *)callerDescription
+                             fromCaller:(nullable NSString *)fromCaller
                         runningThreadId:(nullable NSString *)runningThreadId
 {
     return [self initWithMessage:message
                            level:level
                        issueType:nil
                   callerThreadId:callerThreadId
-               callerDescription:callerDescription
+                      fromCaller:fromCaller
                  runningThreadId:runningThreadId
                       resultFail:nil
                    messageParams:nil
@@ -110,7 +110,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     callerThreadId:(nullable NSString *)callerThreadId
-    callerDescription:(nullable NSString *)callerDescription
+    fromCaller:(nullable NSString *)fromCaller
     runningThreadId:(nullable NSString *)runningThreadId
     resultFail:(nullable ADJResultFail *)resultFail
     messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
@@ -122,7 +122,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     _level = level;
     _issueType = issueType;
     _callerThreadId = callerThreadId;
-    _callerDescription = callerDescription;
+    _fromCaller = fromCaller;
     _runningThreadId = runningThreadId;
     _resultFail = resultFail;
     _messageParams = messageParams;
@@ -143,7 +143,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 @property (nonnull, readonly, strong, nonatomic) NSString *message;
 @property (nonnull, readonly, strong, nonatomic) NSString *level;
 @property (nullable, readwrite, strong, nonatomic) NSString *callerThreadId;
-@property (nullable, readwrite, strong, nonatomic) NSString *callerDescription;
+@property (nullable, readwrite, strong, nonatomic) NSString *fromCaller;
 @property (nullable, readwrite, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readwrite, strong, nonatomic) ADJIssue issueType;
 @property (nullable, readwrite, strong, nonatomic) ADJResultFail * resultFail;
@@ -164,7 +164,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     _level = level;
 
     _callerThreadId = nil;
-    _callerDescription = nil;
+    _fromCaller = nil;
     _runningThreadId = nil;
     _issueType = nil;
     _resultFail = nil;
@@ -180,7 +180,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
             level:self.level
             issueType:self.issueType
             callerThreadId:self.callerThreadId
-            callerDescription:self.callerDescription
+            fromCaller:self.fromCaller
             runningThreadId:self.runningThreadId
             resultFail:self.resultFail
             messageParams:self.messageParams

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "ADJCommonBase.h"
 #import "ADJTeardownFinalizer.h"
 #import "ADJLoggerFactory.h"
 #import "ADJThreadExecutorFactory.h"
@@ -29,12 +30,12 @@
 #import "ADJMeasurementSessionStateStorage.h"
 #import "ADJLaunchedDeeplinkStateStorage.h"
 
-@interface ADJStorageRoot : NSObject<ADJTeardownFinalizer>
+@interface ADJStorageRoot : ADJCommonBase<ADJTeardownFinalizer>
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                                   instanceId:(nonnull ADJInstanceIdData *)instanceId
-NS_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    instanceId:(nonnull ADJInstanceIdData *)instanceId;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

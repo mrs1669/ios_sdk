@@ -120,10 +120,10 @@
     __block ADJValueWO<ADJResult<ADJNonEmptyString *> *> *_Nonnull identifierForVendorResultWO =
         [[ADJValueWO alloc] init];
 
-    BOOL readIdentifierForVendorFinishedSuccessfully =
-        [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                        blockToExecute:
-         ^{
+    ADJResultFail *_Nullable execFail =
+        [self.executor executeSynchronouslyFrom:@"read system idfv with timeout"
+                                        timeout:timeoutPerAttempt
+                                          block:^{
             NSUUID *_Nullable identifierForVendor = UIDevice.currentDevice.identifierForVendor;
             // According to https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor?language=objc
             //  'If the value is nil, wait and get the value again later.
@@ -139,11 +139,13 @@
                  [ADJNonEmptyString instanceFromString:
                   [UIDevice.currentDevice.identifierForVendor UUIDString]]];
             }
-        } from:@"read system idfv with timeout"];
+        }];
 
-    if (! readIdentifierForVendorFinishedSuccessfully) {
+    if (execFail != nil) {
         return [ADJResult failWithMessage:
-                @"Could not read Advertising for Vendor synchronously within timeout"];
+                @"Failed to execute block to read Advertising for Vendor synchronously"
+                                        key:@"exec fail"
+                                  otherFail:execFail];
     }
 
     ADJResult<ADJNonEmptyString *> *_Nullable identifierForVendorResult =
@@ -163,18 +165,20 @@
     __block ADJValueWO<ADJResult<ADJNonEmptyString *> *> *_Nonnull advertisingIdentifierResultWO =
         [[ADJValueWO alloc] init];
 
-    BOOL readAdvertisingIdentifierFinishedSuccessfully =
-        [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                        blockToExecute:
-         ^{
+    ADJResultFail *_Nullable execFail =
+        [self.executor executeSynchronouslyFrom:@"read system idfa"
+                                        timeout:timeoutPerAttempt
+                                          block:^{
             ADJResult<ADJNonEmptyString *> *_Nonnull advertisingIdentifierResult =
                 [ADJSessionDeviceIdsController readAdvertisingIdentifier];
             [advertisingIdentifierResultWO setNewValue:advertisingIdentifierResult];
-        } from:@"read system idfa"];
+        }];
 
-    if (! readAdvertisingIdentifierFinishedSuccessfully) {
+    if (execFail != nil) {
         return [ADJResult failWithMessage:
-                @"Could not read Advertising Identifier synchronously within timeout"];
+                @"Failed to execute block to read Advertising Identifier synchronously"
+                                      key:@"exec fail"
+                                otherFail:execFail];
     }
 
     ADJResult<ADJNonEmptyString *> *_Nullable advertisingIdentifierResult =

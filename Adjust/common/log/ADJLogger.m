@@ -46,13 +46,13 @@
 - (nonnull ADJInputLogMessageData *)
     traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
     runningThreadId:(nonnull NSString *)runningThreadId
-    callerDescription:(nonnull NSString *)callerDescription
+    fromCaller:(nonnull NSString *)fromCaller
 {
     return [self logWithInput: [[ADJInputLogMessageData alloc]
                                 initWithMessage:@"New thread"
                                 level:ADJAdjustLogLevelTrace
                                 callerThreadId:callerThreadId
-                                callerDescription:callerDescription
+                                fromCaller:fromCaller
                                 runningThreadId:runningThreadId]];
 }
 
@@ -135,6 +135,20 @@
                                resultFail:resultFail
                                messageParams:nil]];
 }
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                        from:(nonnull NSString *)from
+                                  resultFail:(nullable ADJResultFail *)resultFail
+                                   issueType:(nonnull ADJIssue)issueType
+{
+    return [self logWithInput:[[ADJInputLogMessageData alloc]
+                               initWithMessage:message
+                               level:ADJAdjustLogLevelDebug
+                               issueType:issueType
+                               resultFail:resultFail
+                               messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
+                                              from, ADJLogFromKey, nil]]];
+}
+
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                expectedValue:(nonnull NSString *)expectedValue
                                  actualValue:(nullable NSString *)actualValue

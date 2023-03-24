@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level
                          callerThreadId:(nullable NSString *)callerThreadId
-                      callerDescription:(nullable NSString *)callerDescription
+                             fromCaller:(nullable NSString *)fromCaller
                         runningThreadId:(nullable NSString *)runningThreadId;
 
 - (nonnull instancetype)
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_END
     level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     callerThreadId:(nullable NSString *)callerThreadId
-    callerDescription:(nullable NSString *)callerDescription
+    fromCaller:(nullable NSString *)fromCaller
     runningThreadId:(nullable NSString *)runningThreadId
     resultFail:(nullable ADJResultFail *)resultFail
     messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
@@ -82,7 +82,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) NSString *message;
 @property (nonnull, readonly, strong, nonatomic) NSString *level;
 @property (nullable, readonly, strong, nonatomic) NSString *callerThreadId;
-@property (nullable, readonly, strong, nonatomic) NSString *callerDescription;
+@property (nullable, readonly, strong, nonatomic) NSString *fromCaller;
 @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
 @property (nullable, readonly, strong, nonatomic) ADJResultFail * resultFail;

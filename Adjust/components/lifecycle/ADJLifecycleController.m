@@ -177,21 +177,25 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 #pragma mark - Internal Methods
 - (void)putInForegroundWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
+    [self.clientExecutor executeInSequenceWithLogger:self.logger
+                                                    from:@"put in foreground"
+                                                   block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf ccChangeTo:YES onlyChangeFromNil:NO from:source];
-    } from:@"put in foreground"];
+    }];
 }
 - (void)putInBackgroundWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
+    [self.clientExecutor executeInSequenceWithLogger:self.logger
+                                                    from:@"put in background"
+                                                   block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf ccChangeTo:NO onlyChangeFromNil:NO from:source];
-    } from:@"put in background"];
+    }];
 }
 
 - (void)
@@ -320,7 +324,9 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
         UIApplicationState applicationState = application.applicationState;
 
-        [strongSelf.clientExecutor executeAsyncWithBlock:^{
+        [strongSelf.clientExecutor executeAsyncWithLogger:strongSelf.logger
+                                                     from:@"ReadInitialApplicationState"
+                                                    block:^{
             if (UIApplicationStateBackground == applicationState) {
                 [strongSelf ccChangeTo:NO
                      onlyChangeFromNil:YES
@@ -338,9 +344,8 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
                  @"Could not detect applicationState from main thread"
                                   issueType:ADJIssueInvalidInput];
             }
-        } from:@"ReadInitialApplicationState"];
+        }];
     }];
 }
 
 @end
-

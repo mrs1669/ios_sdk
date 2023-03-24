@@ -46,10 +46,12 @@
         sqliteController:self.sqliteController];        \
     [self.sqliteController addSqlStorage:self.varName]  \
 
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                                   instanceId:(nonnull ADJInstanceIdData *)instanceId {
-    self = [super init];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    instanceId:(nonnull ADJInstanceIdData *)instanceId
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"StorageRoot"];
 
     _storageExecutor = [threadExecutorFactory
                         createSingleThreadExecutorWithLoggerFactory:loggerFactory
@@ -87,25 +89,31 @@
 }
 
 #pragma mark Public API
-
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock {
     __typeof(self) __weak weakSelf = self;
-    BOOL canExecuteTask = [self.storageExecutor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
+    ADJResultFail *_Nullable executeFail =
+        [self.storageExecutor executeInSequenceFrom:@"finalize at teardown"
+                                              block:^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
 
-        [strongSelf.sqliteController.sqliteDb close];
+            [strongSelf.sqliteController.sqliteDb close];
+
+            if (closeStorageBlock != nil) {
+                closeStorageBlock();
+            }
+
+            // prevent any other storage task from executing
+            [strongSelf.storageExecutor finalizeAtTeardown];
+        }];
+    if (executeFail != nil) {
+        [self.logger debugDev:@"Cannot execute finalize at teardown"
+                   resultFail:executeFail
+                    issueType:ADJIssueThreadsAndLocks];
 
         if (closeStorageBlock != nil) {
             closeStorageBlock();
         }
-
-        // prevent any other storage task from executing
-        [strongSelf.storageExecutor finalizeAtTeardown];
-    } from:@"finalize at teardown"];
-
-    if (! canExecuteTask && closeStorageBlock != nil) {
-        closeStorageBlock();
     }
 }
 

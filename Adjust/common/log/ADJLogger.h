@@ -27,7 +27,7 @@
 - (nonnull ADJInputLogMessageData *)
     traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
     runningThreadId:(nonnull NSString *)runningThreadId
-    callerDescription:(nonnull NSString *)callerDescription;
+    fromCaller:(nonnull NSString *)fromCaller;
 
 - (void)
     debugWithMessage:(nonnull NSString *)message
@@ -59,6 +59,10 @@
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                   resultFail:(nonnull ADJResultFail *)resultFail
+                                   issueType:(nonnull ADJIssue)issueType;
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                        from:(nonnull NSString *)from
+                                  resultFail:(nullable ADJResultFail *)resultFail
                                    issueType:(nonnull ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                expectedValue:(nonnull NSString *)expectedValue

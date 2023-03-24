@@ -134,12 +134,14 @@
         (ADJAttributionResponseData *)sdkResponseData;
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received attribution response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf attributionResponseWithData:attributionResponseData];
-    } from:@"received attribution response"];
+    }];
 }
 - (void)attributionResponseWithData:(nonnull ADJAttributionResponseData *)attributionResponse {
     ADJDelayData *_Nullable delay =
@@ -166,7 +168,9 @@
 #pragma mark - ADJPublishingGateSubscriber
 - (void)ccAllowedToPublishNotifications {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"allowed to publish"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -177,7 +181,7 @@
         [strongSelf handlePublishWithStateData:stateData
                            previousAttribution:stateData.attributionData
                                         source:@"allowed to publish"];
-    } from:@"allowed to publish"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -193,12 +197,14 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received sdk response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAcceptedNonAttributionResponse:sdkResponseData];
-    } from:@"received sdk response"];
+    }];
 }
 /**
  The order checked here is important.
@@ -230,7 +236,9 @@
 #pragma mark - ADJSdkStartSubscriber
 - (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"sdk start"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -238,36 +246,42 @@
             [strongSelf.attributionState sdkStart];
 
         [strongSelf handleSideEffectsWithOutputData:outputData source:@"sdk start"];
-    } from:@"sdk start"];
+    }];
 }
 
 #pragma mark - ADJPausingSubscriber
 - (void)didResumeSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"resume sending"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         if ([strongSelf.attributionTracker sendWhenSdkResumingSending]) {
             [strongSelf sendAttributionWithSource:@"ResumeSending"];
         }
-    } from:@"resume sending"];
+    }];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"pause sending"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf.attributionTracker pauseSending];
-    } from:@"pause sending"];
+    }];
 }
 
 #pragma mark Internal Methods
 - (void)installSessionTrackedAtLoad {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"install session tracked at load"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -276,7 +290,7 @@
 
         [strongSelf handleSideEffectsWithOutputData:outputData
                                              source:@"install session tracked at load"];
-    } from:@"install session tracked at load"];
+    }];
 }
 
 - (void)handleSideEffectsWithOutputData:(nullable ADJAttributionStateOutputData *)outputData
@@ -342,14 +356,15 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"delay end"
+                                 delayTimeMilli:delayData.delay
+                                          block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleDelayEndWithData:delayData source:source];
-    }
-                                delayTimeMilli:delayData.delay
-                                        from:@"delay end"];
+    }];
 }
 - (void)handleDelayEndWithData:(nonnull ADJDelayData *)delayData
                         source:(nonnull NSString *)source
