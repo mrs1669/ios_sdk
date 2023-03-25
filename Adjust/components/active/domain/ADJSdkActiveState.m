@@ -72,22 +72,16 @@ ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     return YES;
 }
 
-- (nullable ADJInputLogMessageData *)canPerformActionOrElseErrorLogWithClientSource:
-    (nonnull NSString *)clientSource
-{
+- (nullable ADJResultFail *)canPerformActionClientAction {
     ADJSdkActiveStatus _Nonnull sdkActiveStatus = [self sdkActiveStatus];
 
     if (ADJSdkActiveStatusForgotten == sdkActiveStatus) {
-        return [self.logger errorClient:@"Sdk cannot perform action."
-                " Sdk was forgotten in accordance with GDPR law"
-                                   key:ADJLogFromKey
-                                  value:clientSource];
+        return [[ADJResultFail alloc]
+                initWithMessage:@"Sdk was forgotten in accordance with GDPR law"];
     }
 
     if (ADJSdkActiveStatusInactive == sdkActiveStatus) {
-        return [self.logger errorClient:@"Sdk cannot perform action. Sdk is currently inactive"
-                                    key:ADJLogFromKey
-                                  value:clientSource];
+        return [[ADJResultFail alloc] initWithMessage:@"Sdk is currently inactive"];
     }
 
     return nil;

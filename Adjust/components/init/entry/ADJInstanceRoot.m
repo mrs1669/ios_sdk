@@ -529,9 +529,16 @@
 {
     [self ccExecuteFrom:from
                preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
-        if ([preSdkInitRoot.sdkActiveController ccCanPerformActionWithClientSource:from]) {
-            preBlock(preSdkInitRoot);
+        ADJResultFail *_Nullable cannotPerformFail =
+            [preSdkInitRoot.sdkActiveController ccCanPerformClientAction];
+        if (cannotPerformFail != nil) {
+            [preSdkInitRoot.logger errorClient:@"Sdk cannot perform action"
+                                           from:from
+                                    resultFail:cannotPerformFail];
+            return;
         }
+
+        preBlock(preSdkInitRoot);
     }];
 }
 
@@ -544,21 +551,23 @@
                preBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
         if (adjustCallback == nil) {
             [preSdkInitRoot.logger errorClient:@"Cannot use invalid callback"
-                                           key:ADJLogFromKey
-                                         value:from];
+                                           from:from
+                                    resultFail:nil];
             return;
         }
 
-        ADJInputLogMessageData *_Nullable errorLog =
-            [preSdkInitRoot.sdkActiveController
-             ccCanPerformActionOrElseErrorLogWithClientSource:from];
+        ADJResultFail *_Nullable cannotPerformFail =
+            [preSdkInitRoot.sdkActiveController ccCanPerformClientAction];
+        if (cannotPerformFail != nil) {
+            [preSdkInitRoot.logger errorClient:@"Sdk cannot perform action with adjust callback"
+                                           from:from
+                                    resultFail:cannotPerformFail];
 
-        if (errorLog != nil) {
             [preSdkInitRoot.clientCallbacksController
              failWithAdjustCallback:adjustCallback
              clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
-             cannotPerformMessage:
-                 [ADJConsoleLogger clientCallbackFormatMessageWithLog:errorLog]];
+             cannotPerformFail:cannotPerformFail];
+
             return;
         }
 

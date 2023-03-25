@@ -313,6 +313,18 @@
                                messageParams:nil]];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
+                                           from:(nonnull NSString *)from
+                                     resultFail:(nullable ADJResultFail *)resultFail
+{
+    return [self logWithInput:[[ADJInputLogMessageData alloc]
+                               initWithMessage:message
+                               level:ADJAdjustLogLevelError
+                               issueType:nil
+                               resultFail:resultFail
+                               messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
+                                              from, ADJLogFromKey, nil]]];
+}
+- (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                             key:(nonnull NSString *)key
                                           value:(nullable NSString *)value
                                      resultFail:(nonnull ADJResultFail *)resultFail
@@ -352,7 +364,7 @@
 }
 
 - (nonnull ADJInputLogMessageData *)logWithMessage:(nonnull NSString *)message
-              logLevel:(nonnull ADJAdjustLogLevel)logLevel
+                                          logLevel:(nonnull ADJAdjustLogLevel)logLevel
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc] initWithMessage:message
                                                                         level:logLevel

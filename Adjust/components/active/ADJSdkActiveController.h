@@ -30,9 +30,7 @@
 // public api
 - (BOOL)ccTrySdkInit;
 
-- (BOOL)ccCanPerformActionWithClientSource:(nonnull NSString *)clientSource;
-- (nullable ADJInputLogMessageData *)ccCanPerformActionOrElseErrorLogWithClientSource:
-    (nonnull NSString *)clientSource;
+- (nullable ADJResultFail *)ccCanPerformClientAction;
 
 - (void)ccInactivateSdk;
 - (void)ccReactivateSdk;

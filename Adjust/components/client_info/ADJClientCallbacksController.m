@@ -30,8 +30,11 @@
 #pragma mark Public API
 - (void)failWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
           clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-          cannotPerformMessage:(nonnull NSString *)cannotPerformMessage
+             cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail
 {
+    __block NSString *_Nonnull cannotPerformMessage =
+        [ADJLogMessageData generateJsonStringFromFoundationDictionary:
+         [cannotPerformFail foundationDictionary]];
     [clientReturnExecutor executeClientReturnWithBlock:^{
         [adjustCallback didFailWithAdjustCallbackMessage:cannotPerformMessage];
     }];

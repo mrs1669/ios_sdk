@@ -126,6 +126,9 @@
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                      resultFail:(nonnull ADJResultFail *)resultFail;
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
+                                           from:(nonnull NSString *)from
+                                     resultFail:(nullable ADJResultFail *)resultFail;
+- (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                             key:(nonnull NSString *)key
                                           value:(nullable NSString *)value
                                      resultFail:(nonnull ADJResultFail *)resultFail;

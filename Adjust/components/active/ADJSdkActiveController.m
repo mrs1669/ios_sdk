@@ -63,14 +63,8 @@
     return [self.sdkActiveState trySdkInit];
 }
 
-- (BOOL)ccCanPerformActionWithClientSource:(nonnull NSString *)clientSource {
-    return [self ccCanPerformActionOrElseErrorLogWithClientSource:clientSource] == nil;
-}
-
-- (nullable ADJInputLogMessageData *)ccCanPerformActionOrElseErrorLogWithClientSource:
-    (nonnull NSString *)clientSource
-{
-    return [self.sdkActiveState canPerformActionOrElseErrorLogWithClientSource:clientSource];
+- (nullable ADJResultFail *)ccCanPerformClientAction {
+    return [self.sdkActiveState canPerformActionClientAction];
 }
 
 - (void)ccInactivateSdk {
