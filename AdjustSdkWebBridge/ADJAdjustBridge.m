@@ -108,6 +108,7 @@ NS_ASSUME_NONNULL_END
 
     }else if ([action isEqual:ADJAdjustBridgeMessageSdkVersion]) {
 
+        //        [ADJAdjustInternal setSdkPrefix:@"web-bridge5.0.0" fromInstanceWithClientId:@"xyz"];
         NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.getSdkVersion('%@')",
                                 [ADJAdjustInternal sdkVersion]];
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
@@ -128,7 +129,12 @@ NS_ASSUME_NONNULL_END
 
         ADJAdjustPushToken *pushToken = [[ADJAdjustPushToken alloc]
                                          initWithStringPushToken:(NSString *)data];
-        [[ADJAdjust instanceForId:instanceId] trackPushToken:pushToken];
+
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] trackPushToken:pushToken];
+        } else {
+            [[ADJAdjust instance] trackPushToken:pushToken];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageTrackDeeplink]) {
 
@@ -138,7 +144,12 @@ NS_ASSUME_NONNULL_END
 
         ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink =
         [[ADJAdjustLaunchedDeeplink alloc] initWithString:(NSString *)data];
-        [[ADJAdjust instanceForId:instanceId] trackLaunchedDeeplink:adjustLaunchedDeeplink];
+
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] trackLaunchedDeeplink:adjustLaunchedDeeplink];
+        } else {
+            [[ADJAdjust instance] trackLaunchedDeeplink:adjustLaunchedDeeplink];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageTrackThirdPartySharing]) {
 
@@ -146,64 +157,118 @@ NS_ASSUME_NONNULL_END
 
     } else if ([action isEqual:ADJAdjustBridgeMessageOfflineMode]) {
 
-        [[ADJAdjust instanceForId:instanceId] switchToOfflineMode];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] switchToOfflineMode];
+        } else {
+            [[ADJAdjust instance] switchToOfflineMode];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageOnlineMode]) {
 
-        [[ADJAdjust instanceForId:instanceId] switchBackToOnlineMode];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] switchBackToOnlineMode];
+        } else {
+            [[ADJAdjust instance] switchBackToOnlineMode];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageInActivateSdk]) {
 
-        [[ADJAdjust instanceForId:instanceId] inactivateSdk];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] inactivateSdk];
+        } else {
+            [[ADJAdjust instance] inactivateSdk];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageReactiveSdk]) {
 
-        [[ADJAdjust instanceForId:instanceId] reactivateSdk];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] reactivateSdk];
+        } else {
+            [[ADJAdjust instance] reactivateSdk];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageAddGlobalCallbackParameter]) {
 
         NSString *key = [message objectForKey:@"key"];
         NSString *value = [message objectForKey:@"value"];
-        [[ADJAdjust instanceForId:instanceId] addGlobalCallbackParameterWithKey:key value:value];
+
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] addGlobalCallbackParameterWithKey:key value:value];
+        } else {
+            [[ADJAdjust instance] addGlobalCallbackParameterWithKey:key value:value];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageRemoveGlobalCallbackParameterByKey]) {
 
         NSString *key = [message objectForKey:@"key"];
-        [[ADJAdjust instanceForId:instanceId] removeGlobalCallbackParameterByKey:key];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] removeGlobalCallbackParameterByKey:key];
+        } else {
+            [[ADJAdjust instance] removeGlobalCallbackParameterByKey:key];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageClearAllGlobalCallbackParameters]) {
 
-        [[ADJAdjust instanceForId:instanceId] clearAllGlobalCallbackParameters];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] clearAllGlobalCallbackParameters];
+        } else {
+            [[ADJAdjust instance] clearAllGlobalCallbackParameters];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageAddGlobalPartnerParameter]) {
 
         NSString *key = [message objectForKey:@"key"];
         NSString *value = [message objectForKey:@"value"];
-        [[ADJAdjust instanceForId:instanceId] addGlobalPartnerParameterWithKey:key value:value];
+
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] addGlobalPartnerParameterWithKey:key value:value];
+        } else {
+            [[ADJAdjust instance] addGlobalPartnerParameterWithKey:key value:value];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageRemoveGlobalPartnerParameterByKey]) {
 
         NSString *key = [message objectForKey:@"key"];
-        [[ADJAdjust instanceForId:instanceId] removeGlobalPartnerParameterByKey:key];
+
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] removeGlobalPartnerParameterByKey:key];
+        } else {
+            [[ADJAdjust instance] removeGlobalPartnerParameterByKey:key];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageClearAllGlobalPartnerParameters]) {
 
-        [[ADJAdjust instanceForId:instanceId] clearAllGlobalPartnerParameters];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] clearAllGlobalPartnerParameters];
+        } else {
+            [[ADJAdjust instance] clearAllGlobalPartnerParameters];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageGdprForgetMe]) {
 
-        [[ADJAdjust instanceForId:instanceId] gdprForgetDevice];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] gdprForgetDevice];
+        } else {
+            [[ADJAdjust instance] gdprForgetDevice];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageAppWentToTheBackgroundManualCall]) {
 
-        [[ADJAdjust instanceForId:instanceId] appWentToTheBackgroundManualCall];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] appWentToTheBackgroundManualCall];
+        } else {
+            [[ADJAdjust instance] appWentToTheBackgroundManualCall];
+        }
 
     } else if ([action isEqual:ADJAdjustBridgeMessageAppWentToTheForegroundManualCall]) {
 
-        [[ADJAdjust instanceForId:instanceId] appWentToTheForegroundManualCall];
+        if ([self isInstanceIdValid:instanceId]) {
+            [[ADJAdjust instanceForId:instanceId] appWentToTheForegroundManualCall];
+        } else {
+            [[ADJAdjust instance] appWentToTheForegroundManualCall];
+        }
 
     } else if ([action isEqual:@"adjust_teardown"]) {
-
         // TODO: Do we need this?
     }
 }
@@ -269,7 +334,11 @@ NS_ASSUME_NONNULL_END
         [adjustConfig setEventIdDeduplicationMaxCapacity:[eventDeduplicationListLimit intValue]];
     }
 
-    [[ADJAdjust instanceForId:instanceId] initSdkWithConfig:adjustConfig];
+    if ([self isInstanceIdValid:instanceId]) {
+        [[ADJAdjust instanceForId:instanceId] initSdkWithConfig:adjustConfig];
+    } else {
+        [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
+    }
 }
 
 - (void)trackEvent:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
@@ -297,7 +366,11 @@ NS_ASSUME_NONNULL_END
         [adjustEvent addPartnerParameterWithKey:key value:value];
     }
 
-    [[ADJAdjust instanceForId:instanceId] trackEvent:adjustEvent];
+    if ([self isInstanceIdValid:instanceId]) {
+        [[ADJAdjust instanceForId:instanceId] trackEvent:adjustEvent];
+    } else {
+        [[ADJAdjust instance] trackEvent:adjustEvent];
+    }
 }
 
 - (void)trackAdRevenue:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
@@ -332,7 +405,11 @@ NS_ASSUME_NONNULL_END
         [adjustAdRevenue addPartnerParameterWithKey:key value:value];
     }
 
-    [[ADJAdjust instanceForId:instanceId] trackAdRevenue:adjustAdRevenue];
+    if ([self isInstanceIdValid:instanceId]) {
+        [[ADJAdjust instanceForId:instanceId] trackAdRevenue:adjustAdRevenue];
+    } else {
+        [[ADJAdjust instance] trackAdRevenue:adjustAdRevenue];
+    }
 }
 
 - (void)trackThirdPartySharing:(NSDictionary *)data forInstanceId:(nullable NSString *)instanceId {
@@ -371,7 +448,11 @@ NS_ASSUME_NONNULL_END
                                                                      key:key value:value];
     }
 
-    [[ADJAdjust instanceForId:instanceId] trackThirdPartySharing:adjustThirdPartySharing];
+    if ([self isInstanceIdValid:instanceId]) {
+        [[ADJAdjust instanceForId:instanceId] trackThirdPartySharing:adjustThirdPartySharing];
+    } else {
+        [[ADJAdjust instance] trackThirdPartySharing:adjustThirdPartySharing];
+    }
 }
 
 #pragma mark - Private & helper methods
@@ -389,6 +470,14 @@ NS_ASSUME_NONNULL_END
     return YES;
 }
 
+- (BOOL)isInstanceIdValid:(NSObject *)field {
+    if ([field isKindOfClass:[NSString class]]) {
+        return YES;
+    }
+    return NO;
+}
+
 @end
+
 
 
