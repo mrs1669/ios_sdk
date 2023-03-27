@@ -43,16 +43,9 @@ startTestSession: function () {
 getSdkVersion: function(sdkVersion) {
     const message = {
     action:'adjustTLB_startTestSession',
-    data: 'web-bridge5.0.0@ios5.0.0'
+    data: sdkVersion
     };
     window.webkit.messageHandlers.adjustTest.postMessage(message);
-
-//TODO: uncomment below once getSDKVersion API is configured at the native SDK side.
-//    const message = {
-//    action:'adjustTLB_startTestSession',
-//    data: sdkVersion
-//    };
-//    window.webkit.messageHandlers.adjustTest.postMessage(message);
 },
 
 addTestDirectory: function(directoryName) {

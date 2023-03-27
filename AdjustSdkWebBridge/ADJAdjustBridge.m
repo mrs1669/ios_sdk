@@ -108,9 +108,9 @@ NS_ASSUME_NONNULL_END
 
     }else if ([action isEqual:ADJAdjustBridgeMessageSdkVersion]) {
 
-        //        [ADJAdjustInternal setSdkPrefix:@"web-bridge5.0.0" fromInstanceWithClientId:@"xyz"];
+        [ADJAdjustInternal setSdkPrefix:@"web-bridge5.0.0" fromInstanceWithClientId:instanceId];
         NSString *javaScript = [NSString stringWithFormat:@"TestLibraryBridge.getSdkVersion('%@')",
-                                [ADJAdjustInternal sdkVersion]];
+                                [ADJAdjustInternal sdkVersionWithSdkPrefix:@"web-bridge5.0.0"]];
         [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 
     } else  if ([action isEqual:ADJAdjustBridgeMessageTrackEvent]) {
