@@ -16,7 +16,5 @@
 
 @end
 
-@interface ADJSdkStartPublisher :
-    ADJPublisherBase<id<ADJSdkStartSubscriber>>
+@interface ADJSdkStartPublisher : ADJPublisherBase<id<ADJSdkStartSubscriber>>
 @end
-

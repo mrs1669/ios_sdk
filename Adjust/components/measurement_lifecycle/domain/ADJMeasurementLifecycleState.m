@@ -12,9 +12,11 @@
 
 #pragma mark Fields
 /* .h
+ @property (readonly, assign, nonatomic) BOOL appStarted;
  @property (readonly, assign, nonatomic) BOOL sdkStarted;
- @property (readonly, assign, nonatomic) BOOL measurementPaused;
- */
+ @property (nullable, readonly, strong, nonatomic)
+    ADJBooleanWrapper *measurementResumedOrElsePaused;
+*/
 
 @implementation ADJMeasurementLifecycleStateOutputData
 #pragma mark Instantiation
@@ -24,27 +26,17 @@
 }
 #pragma mark - Private constructors
 - (nonnull instancetype)
-    initWithSdkStarted:(BOOL)sdkStarted
-    measurementPaused:(BOOL)measurementPaused
+    initWithAppStarted:(BOOL)appStarted
+    sdkStarted:(BOOL)sdkStarted
+    measurementResumedOrElsePaused:(nullable ADJBooleanWrapper *)measurementResumedOrElsePaused
 {
     self = [super init];
 
+    _appStarted = appStarted;
     _sdkStarted = sdkStarted;
-    _measurementPaused = measurementPaused;
+    _measurementResumedOrElsePaused = measurementResumedOrElsePaused;
 
     return self;
-}
-
-- (nonnull instancetype)initWhenStartinSdk {
-    return [self initWithSdkStarted:YES measurementPaused:NO];
-}
-
-- (nonnull instancetype)initWhenResumingMeasurement {
-    return [self initWithSdkStarted:NO measurementPaused:NO];
-}
-
-- (nonnull instancetype)initWhenPausingMeasurement {
-    return [self initWithSdkStarted:NO measurementPaused:YES];
 }
 
 @end
@@ -54,6 +46,7 @@
 @property (readwrite, assign, nonatomic) BOOL isOnForeground;
 @property (readwrite, assign, nonatomic) BOOL isSdkActive;
 @property (readwrite, assign, nonatomic) BOOL hasSdkInit;
+@property (readwrite, assign, nonatomic) BOOL hasAppStarted;
 @property (readwrite, assign, nonatomic) BOOL hasSdkStarted;
 @property (readwrite, assign, nonatomic) BOOL isMeasurementResumed;
 
@@ -68,6 +61,7 @@
     _isOnForeground = ADJIsSdkInForegroundWhenStarting;
     _isSdkActive = ADJIsSdkActiveWhenStarting;
     _hasSdkInit = NO;
+    _hasAppStarted = NO;
     _hasSdkStarted = NO;
     _isMeasurementResumed = NO;
 
@@ -127,36 +121,57 @@
 }
 
 #pragma mark Internal Methods
+- (BOOL)tryStartApp {
+    if (self.hasAppStarted) { return NO; }
+
+    [self.logger debugDev:@"App started"];
+    self.hasAppStarted = YES;
+
+    return YES;
+}
 - (nullable ADJMeasurementLifecycleStateOutputData *)tryToResumeMeasurement {
     if (! self.hasSdkInit) {
         [self.logger debugDev:@"Cannot resume measurement when sdk has not init"];
-        return nil;
-    }
-    if (! self.isSdkActive) {
-        [self.logger debugDev:@"Cannot resume measurement when sdk is not active"];
         return nil;
     }
     if (! self.isOnForeground) {
         [self.logger debugDev:@"Cannot resume measurement when sdk is not on the foreground"];
         return nil;
     }
+    if (! self.isSdkActive) {
+        [self.logger debugDev:@"Cannot resume measurement when sdk is not active"];
+        if ([self tryStartApp]) {
+            return [[ADJMeasurementLifecycleStateOutputData alloc]
+                    initWithAppStarted:YES
+                    sdkStarted:NO
+                    measurementResumedOrElsePaused:nil];
+        }
+        return nil;
+    }
     if (self.isMeasurementResumed) {
         [self.logger debugDev:@"Cannot resume measurement when it was already resumed"
                     issueType:ADJIssueLogicError];
-        return nil;
     }
 
     [self.logger debugDev:@"Will resume measurement"];
     self.isMeasurementResumed = YES;
 
+    BOOL appStarted = [self tryStartApp];
+
     if (! self.hasSdkStarted) {
         [self.logger debugDev:@"Will start the sdk"];
         self.hasSdkStarted = YES;
 
-        return [[ADJMeasurementLifecycleStateOutputData alloc] initWhenStartinSdk];
+        return [[ADJMeasurementLifecycleStateOutputData alloc]
+                initWithAppStarted:appStarted
+                sdkStarted:YES
+                measurementResumedOrElsePaused:[ADJBooleanWrapper instanceFromBool:YES]];
     }
 
-    return [[ADJMeasurementLifecycleStateOutputData alloc] initWhenResumingMeasurement];
+    return [[ADJMeasurementLifecycleStateOutputData alloc]
+            initWithAppStarted:appStarted
+            sdkStarted:NO
+            measurementResumedOrElsePaused:[ADJBooleanWrapper instanceFromBool:YES]];
 }
 
 - (nullable ADJMeasurementLifecycleStateOutputData *)tryToPauseMeasurement {
@@ -178,7 +193,10 @@
             [self.logger debugDev:@"Will pause measurement because sdk is not active"];
         }
 
-        return [[ADJMeasurementLifecycleStateOutputData alloc] initWhenPausingMeasurement];
+        return [[ADJMeasurementLifecycleStateOutputData alloc]
+                initWithAppStarted:NO
+                sdkStarted:NO
+                measurementResumedOrElsePaused:[ADJBooleanWrapper instanceFromBool:NO]];
     }
 
     if (! self.isOnForeground) {
@@ -186,7 +204,10 @@
 
         [self.logger debugDev:@"Will pause measurement because app is not on the foreground"];
 
-        return [[ADJMeasurementLifecycleStateOutputData alloc] initWhenPausingMeasurement];
+        return [[ADJMeasurementLifecycleStateOutputData alloc]
+                initWithAppStarted:NO
+                sdkStarted:NO
+                measurementResumedOrElsePaused:[ADJBooleanWrapper instanceFromBool:NO]];
     }
 
     [self.logger debugDev:@"Was not able to pause measurement"

@@ -4063,6 +4063,13 @@
 		6F8AB2D529C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
 		6F8AB2D629C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
 		6F8AB2D729C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F8AB30429D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */; };
+		6F8AB30529D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */; };
+		6F8AB30629D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */; };
+		6F8AB30729D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */; };
+		6F8AB30829D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */; };
+		6F8AB30929D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */; };
+		6F8AB30A29D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */; };
 		6F8EE4CE29AF9A0A00BABF8C /* ADJResultFail.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6F8EE4CF29AF9A0A00BABF8C /* ADJResultFail.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */; };
 		6F8EE4D029AF9A0A00BABF8C /* ADJResultFail.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */; };
@@ -4711,6 +4718,7 @@
 		6F8AB2A829C1104D001E371E /* ADJOptionalFailsNN.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJOptionalFailsNN.m; sourceTree = "<group>"; };
 		6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJOptionalFailsNL.h; sourceTree = "<group>"; };
 		6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJOptionalFailsNL.m; sourceTree = "<group>"; };
+		6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAppStartSubscriber.h; sourceTree = "<group>"; };
 		6F8EE4CC29AF9A0A00BABF8C /* ADJResultFail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJResultFail.h; sourceTree = "<group>"; };
 		6F8EE4CD29AF9A0A00BABF8C /* ADJResultFail.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJResultFail.m; sourceTree = "<group>"; };
 		6FAC56AC288FDF610070F564 /* ADJSdkPackageCreatingSubscriber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSdkPackageCreatingSubscriber.h; sourceTree = "<group>"; };
@@ -5984,6 +5992,7 @@
 		6FCD5453298AAE1B007542FB /* measurement_lifecycle */ = {
 			isa = PBXGroup;
 			children = (
+				6F8AB30229D1DFA6001E371E /* ADJAppStartSubscriber.h */,
 				6FCD5455298AAE51007542FB /* ADJSdkStartSubscriber.h */,
 				6FCD5465298AAEB1007542FB /* ADJMeasurementLifecycleSubscriber.h */,
 				6FCD5475298AAEC5007542FB /* ADJKeepAlivePingSubscriber.h */,
@@ -6137,6 +6146,7 @@
 				0735D61328D3676700614B88 /* ADJAttributionStateData.h in Headers */,
 				0AA5A5D72893D32C00CD9EA1 /* ADJClientActionController.h in Headers */,
 				0A25F8A528E24346001988A1 /* ADJPluginController.h in Headers */,
+				6F8AB30429D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */,
 				0AF6436A29C1E3C200941AB3 /* ADJMeasurementConsentResponseData.h in Headers */,
 				0724D53428995F4F0050E2C4 /* ADJEventDeduplicationData.h in Headers */,
 				0781F23428D9E6CB0041AAA3 /* ADJAsaAttributionStateStorage.h in Headers */,
@@ -6912,6 +6922,7 @@
 				0A25F8DB28E5CAC3001988A1 /* ADJAdjustAdRevenue.h in Headers */,
 				0A25F8DC28E5CAC3001988A1 /* ADJAdjustLaunchedDeeplink.h in Headers */,
 				0A25F8DD28E5CAC3001988A1 /* ADJAdjustBillingSubscription.h in Headers */,
+				6F8AB30529D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */,
 				0A25F8DE28E5CAC3001988A1 /* ADJAdjustThirdPartySharing.h in Headers */,
 				0A25F8D028E5CAC3001988A1 /* ADJAdjustInternal.h in Headers */,
 				0A25F8DF28E5CAC3001988A1 /* ADJCommonBase.h in Headers */,
@@ -7184,6 +7195,7 @@
 				0A25FAD928F42380001988A1 /* ADJAdjustLaunchedDeeplink.h in Headers */,
 				0A25FADA28F42380001988A1 /* ADJAdjustBillingSubscription.h in Headers */,
 				0A25FADB28F42380001988A1 /* ADJAdjustThirdPartySharing.h in Headers */,
+				6F8AB30629D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */,
 				075D903928744D17005019E3 /* AdjustSdkTv.h in Headers */,
 				0A25FACD28F42380001988A1 /* ADJAdjustInternal.h in Headers */,
 				0A25FADC28F42380001988A1 /* ADJCommonBase.h in Headers */,
@@ -7456,6 +7468,7 @@
 				0A25FCA828F43C2C001988A1 /* ADJAdjustLaunchedDeeplink.h in Headers */,
 				0A25FCA928F43C2C001988A1 /* ADJAdjustBillingSubscription.h in Headers */,
 				0A25FCAA28F43C2C001988A1 /* ADJAdjustThirdPartySharing.h in Headers */,
+				6F8AB30729D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */,
 				075D905528745EBB005019E3 /* AdjustSdkIm.h in Headers */,
 				0A25FC9C28F43C2C001988A1 /* ADJAdjustInternal.h in Headers */,
 				0A25FCAB28F43C2C001988A1 /* ADJCommonBase.h in Headers */,
@@ -7728,6 +7741,7 @@
 				0A7E488928F8276C00827F0B /* ADJAdjustLaunchedDeeplink.h in Headers */,
 				0A7E488A28F8276C00827F0B /* ADJAdjustBillingSubscription.h in Headers */,
 				0A7E488B28F8276C00827F0B /* ADJAdjustThirdPartySharing.h in Headers */,
+				6F8AB30829D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */,
 				0A7E496128F8292100827F0B /* AdjustSdk.h in Headers */,
 				0A7E487D28F8276C00827F0B /* ADJAdjustInternal.h in Headers */,
 				0A7E488C28F8276C00827F0B /* ADJCommonBase.h in Headers */,
@@ -8000,6 +8014,7 @@
 				0A7E497928F82F6B00827F0B /* ADJAdjustLaunchedDeeplink.h in Headers */,
 				0A7E497A28F82F6B00827F0B /* ADJAdjustBillingSubscription.h in Headers */,
 				0A7E497B28F82F6B00827F0B /* ADJAdjustThirdPartySharing.h in Headers */,
+				6F8AB30929D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */,
 				0A7E4A5128F8306300827F0B /* AdjustSdkTv.h in Headers */,
 				0A7E496D28F82F6B00827F0B /* ADJAdjustInternal.h in Headers */,
 				0A7E497C28F82F6B00827F0B /* ADJCommonBase.h in Headers */,
@@ -8271,6 +8286,7 @@
 				0A7E4A6328F830AC00827F0B /* ADJAdjustAdRevenue.h in Headers */,
 				0A7E4A6428F830AC00827F0B /* ADJAdjustLaunchedDeeplink.h in Headers */,
 				0A7E4A6528F830AC00827F0B /* ADJAdjustBillingSubscription.h in Headers */,
+				6F8AB30A29D1DFA6001E371E /* ADJAppStartSubscriber.h in Headers */,
 				0A7E4A6628F830AC00827F0B /* ADJAdjustThirdPartySharing.h in Headers */,
 				0A7E4A5828F830AB00827F0B /* ADJAdjustInternal.h in Headers */,
 				0A7E4A6728F830AC00827F0B /* ADJCommonBase.h in Headers */,
