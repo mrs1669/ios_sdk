@@ -32,7 +32,7 @@ FOUNDATION_EXPORT NSUInteger const ADJHashCodeMultiplier;
 
 FOUNDATION_EXPORT NSUInteger const ADJDefaultMaxCapacityEventDeduplication;
 
-FOUNDATION_EXPORT NSString *const ADJIdForAdvertisersZeros;
+FOUNDATION_EXPORT NSString *const ADJAppleUUIDZeros;
 
 // IoData metadata
 FOUNDATION_EXPORT NSString *const ADJMetadataVersionKey;

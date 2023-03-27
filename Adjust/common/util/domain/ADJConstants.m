@@ -30,7 +30,7 @@ NSUInteger const ADJHashCodeMultiplier = 37;
 
 NSUInteger const ADJDefaultMaxCapacityEventDeduplication = 10;
 
-NSString *const ADJIdForAdvertisersZeros = @"00000000-0000-0000-0000-000000000000";
+NSString *const ADJAppleUUIDZeros = @"00000000-0000-0000-0000-000000000000";
 
 // IoData metadata
 NSString *const ADJMetadataVersionKey = @"METADATA_VERSION";
