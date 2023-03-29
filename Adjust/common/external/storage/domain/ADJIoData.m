@@ -64,23 +64,25 @@
     return [self.mapCollectionByName objectForKey:mapName];
 }
 
-- (nullable ADJResult<NSNull *> *)
+- (nullable ADJResultFail *)
     isExpectedMetadataTypeValue:(nonnull NSString *)expectedMetadataTypeValue
 {
     ADJNonEmptyString *_Nonnull typeValue =
         [self.metadataMap pairValueWithKey:ADJMetadataIoDataTypeKey];
 
     if (typeValue == nil) {
-        return [ADJResult failWithMessage:@"Cannot obtain type value from metadata map"];
+        return [[ADJResultFail alloc]
+                initWithMessage:@"Cannot obtain type value from metadata map"];
     }
 
     if (! [typeValue.stringValue isEqualToString:expectedMetadataTypeValue]) {
-        return [ADJResult failWithMessage:@"Actual type value different than expected"
-                              wasInputNil:NO
-                             builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
-            [resultFailBuilder withKey:ADJLogExpectedKey stringValue:expectedMetadataTypeValue];
-            [resultFailBuilder withKey:ADJLogActualKey stringValue:typeValue.stringValue];
-        }];
+        ADJResultFailBuilder *_Nonnull failBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Actual type value different than expected"];
+        [failBuilder withKey:ADJLogExpectedKey stringValue:expectedMetadataTypeValue];
+        [failBuilder withKey:ADJLogActualKey stringValue:typeValue.stringValue];
+
+        return [failBuilder build];
     }
 
     return nil;
