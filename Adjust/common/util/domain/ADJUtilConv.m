@@ -427,8 +427,9 @@
         [mapBuilder setObject:value forKey:key];
     }
 
-    return [[ADJOptionalFailsNN alloc] initWithOptionalFails:optionalFailsMut
-                                                       value:mapCollectionByNameBuilder];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[ADJResultNL okWithValue: mapCollectionByNameBuilder]];
 }
 
 // assumes [ADJUtilObj copyStringOrNSNullWithInput] was for the string object
