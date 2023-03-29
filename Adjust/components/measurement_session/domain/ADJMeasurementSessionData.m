@@ -86,27 +86,27 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
     instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
 {
     ADJTallyCounter *_Nullable sessionCount = measurementSessionDataBuilder.sessionCount;
-    if (sessionCount != nil) {
+    if (sessionCount == nil) {
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from builder without session count"];
     }
 
     ADJTimestampMilli *_Nullable lastActivityTimestampMilli =
         measurementSessionDataBuilder.lastActivityTimestampMilli;
-    if (lastActivityTimestampMilli != nil) {
+    if (lastActivityTimestampMilli == nil) {
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from builder without last activity timestamp"];
     }
 
     ADJTimeLengthMilli *_Nullable sessionLengthMilli =
         measurementSessionDataBuilder.sessionLengthMilli;
-    if (sessionLengthMilli != nil) {
+    if (sessionLengthMilli == nil) {
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from builder without session length"];
     }
 
     ADJTimeLengthMilli *_Nullable timeSpentMilli = measurementSessionDataBuilder.timeSpentMilli;
-    if (timeSpentMilli != nil) {
+    if (timeSpentMilli == nil) {
         return [ADJResultNN failWithMessage:
                 @"Cannot create instance from builder without time spent"];
     }
@@ -163,8 +163,7 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 
     return [ADJResultNN okWithValue:
             [[ADJMeasurementSessionData alloc]
-             initWithSessionCount:
-                 [[ADJTallyCounter alloc] initWithCountValue:sessionCountIntResult.value]
+             initWithSessionCount:sessionCount
              lastActivityTimestampMilli:lastActivityTimestampResult.value
              sessionLengthMilli:sessionLengthResult.value
              timeSpentMilli:timeSpentResult.value]];
