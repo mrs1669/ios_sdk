@@ -103,11 +103,12 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 
     return [[ADJOptionalFailsNN alloc]
             initWithOptionalFails:optionalFails
-            value:[[ADJAttributionStateData alloc]
-                   initWithAttributionData:attributionData
-                   installSessionTracked:installSessionTrackedResult.value.boolValue
-                   unavailableAttribution:unavailableAttributionResult.value.boolValue
-                   isAsking:isAskingResult.value.boolValue]];
+            value:[ADJResultNN okWithValue:
+                   [[ADJAttributionStateData alloc]
+                    initWithAttributionData:attributionData
+                    installSessionTracked:installSessionTrackedResult.value.boolValue
+                    unavailableAttribution:unavailableAttributionResult.value.boolValue
+                    isAsking:isAskingResult.value.boolValue]]];
 }
 
 + (nonnull ADJOptionalFailsNL<ADJAttributionStateData *> *)

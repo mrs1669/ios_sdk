@@ -96,13 +96,14 @@ static NSString *const kErrorReasonKey = @"errorReason";
 
     return [[ADJOptionalFailsNN alloc]
             initWithOptionalFails:optionalFails
-            value:[[ADJAsaAttributionStateData alloc]
-                   initWithHasReceivedValidAsaClickResponse:
-                       hasReceivedValidAsaClickResponseResult.value.boolValue
-                   hasReceivedAdjustAttribution:hasReceivedAdjustAttributionResult.value.boolValue
-                   cachedToken:cachedToken
-                   cacheReadTimestamp:cacheReadTimestampResult.value
-                   errorReason:errorReason]];
+            value:[ADJResultNN okWithValue:
+                   [[ADJAsaAttributionStateData alloc]
+                    initWithHasReceivedValidAsaClickResponse:
+                        hasReceivedValidAsaClickResponseResult.value.boolValue
+                    hasReceivedAdjustAttribution:hasReceivedAdjustAttributionResult.value.boolValue
+                    cachedToken:cachedToken
+                    cacheReadTimestamp:cacheReadTimestampResult.value
+                    errorReason:errorReason]]];
 }
 
 + (nullable ADJAsaAttributionStateData *)instanceFromV4WithUserDefaults:

@@ -63,8 +63,9 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
 
     return [[ADJOptionalFailsNN alloc]
             initWithOptionalFails:optionalFails
-            value:[[ADJMeasurementSessionStateData alloc]
-                   initWithMeasurementSessionData:measurementSessionData]];
+            value:[ADJResultNN okWithValue:
+                   [[ADJMeasurementSessionStateData alloc]
+                    initWithMeasurementSessionData:measurementSessionData]]];
 }
 
 + (nonnull ADJResultNL<ADJMeasurementSessionStateData *> *)
