@@ -22,8 +22,8 @@
 #pragma mark - Internal variables
 @property (readwrite, assign, nonatomic) BOOL isInDelay;
 @property (readwrite, assign, nonatomic) BOOL isSending;
-@property (readwrite, assign, nonatomic) BOOL isStopped;
 @property (readwrite, assign, nonatomic) BOOL isPaused;
+@property (readwrite, assign, nonatomic) BOOL askedToSend;
 @property (nonnull, readwrite, strong, nonatomic) ADJTallyCounter *retriesSinceLastSuccessSend;
 
 @end
@@ -33,6 +33,7 @@
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
+    startsAsking:(BOOL)startsAsking
 {
     self = [super initWithLoggerFactory:loggerFactory loggerName:@"GdprForgetTracker"];
     _gdprForgetBackoffStrategy = gdprForgetBackoffStrategy;
@@ -41,9 +42,9 @@
 
     _isSending = NO;
 
-    _isStopped = YES;
-
     _isPaused = ADJIsSdkPausedWhenStarting;
+
+    _askedToSend = startsAsking;
 
     _retriesSinceLastSuccessSend = [ADJTallyCounter instanceStartingAtZero];
 
@@ -52,22 +53,18 @@
 
 #pragma mark Public API
 - (BOOL)sendWhenStartTracking {
-    self.isStopped = NO;
+    self.askedToSend = YES;
 
     return [self tryToSend];
 }
 
-- (void)stopTracking {
-    self.isStopped = YES;
-}
-
-- (BOOL)sendWhenAppWentToForeground {
+- (BOOL)resumeSendingWhenAppWentToForeground {
     self.isPaused = NO;
 
     return [self tryToSend];
 }
 
-- (void)pauseTrackingWhenAppWentToBackground {
+- (void)pauseSendingWhenAppWentToBackground {
     self.isPaused = YES;
 }
 
@@ -77,7 +74,15 @@
     return [self tryToSend];
 }
 
-- (nullable ADJDelayData *)delayTrackingWhenReceivedGdprForgetResponseWithData:(nonnull ADJGdprForgetResponseData *)gdprForgetResponse {
+- (nullable ADJDelayData *)
+    delayTrackingWhenReceivedGdprForgetResponseWithData:
+        (nonnull ADJGdprForgetResponseData *)gdprForgetResponse
+{
+    if (! self.isSending || ! self.askedToSend) {
+        [self.logger debugDev:@"Should have been sending and asked when receiving response"
+                    issueType:ADJIssueUnexpectedInput];
+    }
+
     // received gdpr forget response implies that is no longer sending
     self.isSending = NO;
 
@@ -85,12 +90,14 @@
         self.isInDelay = YES;
 
         return [self delayWithRetryIn:gdprForgetResponse.retryIn];
-    } else {
-        self.retriesSinceLastSuccessSend = [ADJTallyCounter instanceStartingAtZero];
-
-        // no delay to retry
-        return nil;
     }
+
+    self.retriesSinceLastSuccessSend = [ADJTallyCounter instanceStartingAtZero];
+
+    self.askedToSend = NO;
+
+    // no delay to retry
+    return nil;
 }
 
 #pragma mark Internal Methods
@@ -105,8 +112,8 @@
         return NO;
     }
 
-    if (self.isStopped) {
-        [self.logger debugDev:@"Cannot track GDPR forget because it's stopped"];
+    if (! self.askedToSend) {
+        [self.logger debugDev:@"Cannot track GDPR forget because it was not asked to send"];
         return NO;
     }
 
@@ -122,20 +129,17 @@
 
 - (nonnull ADJDelayData *)delayWithRetryIn:(nullable ADJTimeLengthMilli *)retryIn {
     if (retryIn != nil) {
-        return [[ADJDelayData alloc] initWithDelay:retryIn
-                                              from:@"retry_in"];
+        return [[ADJDelayData alloc] initWithDelay:retryIn from:@"retry_in"];
     }
 
     self.retriesSinceLastSuccessSend =
-    [self.retriesSinceLastSuccessSend generateIncrementedCounter];
+        [self.retriesSinceLastSuccessSend generateIncrementedCounter];
 
     ADJTimeLengthMilli *_Nonnull backoffDelay =
-    [self.gdprForgetBackoffStrategy
-     calculateBackoffTimeWithRetries:self.retriesSinceLastSuccessSend.countValue];
+        [self.gdprForgetBackoffStrategy
+         calculateBackoffTimeWithRetries:self.retriesSinceLastSuccessSend.countValue];
 
-    return [[ADJDelayData alloc] initWithDelay:backoffDelay
-                                          from:@"backoff"];
+    return [[ADJDelayData alloc] initWithDelay:backoffDelay from:@"backoff"];
 }
 
 @end
-

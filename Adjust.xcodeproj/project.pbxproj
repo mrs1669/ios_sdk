@@ -1087,7 +1087,6 @@
 		0781F24228D9ECDA0041AAA3 /* ADJUtilR.m in Sources */ = {isa = PBXBuildFile; fileRef = 0781F24028D9ECDA0041AAA3 /* ADJUtilR.m */; };
 		0787C287288838EB00B1DD52 /* ADJStorageRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 0787C285288838EB00B1DD52 /* ADJStorageRoot.m */; };
 		0787C28C2888395100B1DD52 /* ADJKeychainStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0787C28A2888395100B1DD52 /* ADJKeychainStorage.m */; };
-		078844802886B0F0001814F7 /* ADJValueWO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788447E2886B0F0001814F7 /* ADJValueWO.m */; };
 		078844842886B4CE001814F7 /* ADJTimestampMilli.m in Sources */ = {isa = PBXBuildFile; fileRef = 078844822886B4CE001814F7 /* ADJTimestampMilli.m */; };
 		078844892886C963001814F7 /* ADJSQLiteStoragePropertiesBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 078844872886C963001814F7 /* ADJSQLiteStoragePropertiesBase.m */; };
 		0788448D2886CB72001814F7 /* ADJTimeLengthMilli.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448B2886CB72001814F7 /* ADJTimeLengthMilli.m */; };
@@ -1243,7 +1242,6 @@
 		0A25F8E128E5CAC3001988A1 /* ADJStringMapBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C7287F3E2A004C7D59 /* ADJStringMapBuilder.h */; };
 		0A25F8E228E5CAC4001988A1 /* ADJStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22A28855B63004C7D59 /* ADJStringMap.h */; };
 		0A25F8E328E5CAC4001988A1 /* ADJBooleanWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */; };
-		0A25F8E428E5CAC4001988A1 /* ADJValueWO.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788447D2886B0F0001814F7 /* ADJValueWO.h */; };
 		0A25F8E528E5CAC4001988A1 /* ADJNonNegativeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */; };
 		0A25F8E628E5CAC4001988A1 /* ADJTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */; };
 		0A25F8E728E5CAC4001988A1 /* ADJAtomicBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F278FB2288AD79A00804594 /* ADJAtomicBoolean.h */; };
@@ -1460,7 +1458,6 @@
 		0A25F9C028E5CB2D001988A1 /* ADJStringMapBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1C9287F3E2A004C7D59 /* ADJStringMapBuilder.m */; };
 		0A25F9C128E5CB2D001988A1 /* ADJStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22B28855B63004C7D59 /* ADJStringMap.m */; };
 		0A25F9C228E5CB2D001988A1 /* ADJBooleanWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */; };
-		0A25F9C328E5CB2D001988A1 /* ADJValueWO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788447E2886B0F0001814F7 /* ADJValueWO.m */; };
 		0A25F9C428E5CB2D001988A1 /* ADJNonNegativeInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */; };
 		0A25F9C528E5CB2D001988A1 /* ADJTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E8C288AD4B9002319D7 /* ADJTallyCounter.m */; };
 		0A25F9C628E5CB2D001988A1 /* ADJAtomicBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F278FB3288AD79A00804594 /* ADJAtomicBoolean.m */; };
@@ -1653,7 +1650,6 @@
 		0A25FADE28F42380001988A1 /* ADJStringMapBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C7287F3E2A004C7D59 /* ADJStringMapBuilder.h */; };
 		0A25FADF28F42380001988A1 /* ADJStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22A28855B63004C7D59 /* ADJStringMap.h */; };
 		0A25FAE028F42380001988A1 /* ADJBooleanWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */; };
-		0A25FAE128F42380001988A1 /* ADJValueWO.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788447D2886B0F0001814F7 /* ADJValueWO.h */; };
 		0A25FAE228F42380001988A1 /* ADJNonNegativeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */; };
 		0A25FAE328F42380001988A1 /* ADJTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */; };
 		0A25FAE428F42380001988A1 /* ADJAtomicBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F278FB2288AD79A00804594 /* ADJAtomicBoolean.h */; };
@@ -1871,7 +1867,6 @@
 		0A25FBC628F43026001988A1 /* ADJStringMapBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1C9287F3E2A004C7D59 /* ADJStringMapBuilder.m */; };
 		0A25FBC728F43027001988A1 /* ADJStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22B28855B63004C7D59 /* ADJStringMap.m */; };
 		0A25FBC828F43027001988A1 /* ADJBooleanWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */; };
-		0A25FBC928F43027001988A1 /* ADJValueWO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788447E2886B0F0001814F7 /* ADJValueWO.m */; };
 		0A25FBCA28F43027001988A1 /* ADJNonNegativeInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */; };
 		0A25FBCB28F43027001988A1 /* ADJTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E8C288AD4B9002319D7 /* ADJTallyCounter.m */; };
 		0A25FBCC28F43027001988A1 /* ADJAtomicBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F278FB3288AD79A00804594 /* ADJAtomicBoolean.m */; };
@@ -2063,7 +2058,6 @@
 		0A25FCAD28F43C2C001988A1 /* ADJStringMapBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C7287F3E2A004C7D59 /* ADJStringMapBuilder.h */; };
 		0A25FCAE28F43C2C001988A1 /* ADJStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22A28855B63004C7D59 /* ADJStringMap.h */; };
 		0A25FCAF28F43C2C001988A1 /* ADJBooleanWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */; };
-		0A25FCB028F43C2C001988A1 /* ADJValueWO.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788447D2886B0F0001814F7 /* ADJValueWO.h */; };
 		0A25FCB128F43C2C001988A1 /* ADJNonNegativeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */; };
 		0A25FCB228F43C2C001988A1 /* ADJTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */; };
 		0A25FCB328F43C2C001988A1 /* ADJAtomicBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F278FB2288AD79A00804594 /* ADJAtomicBoolean.h */; };
@@ -2281,7 +2275,6 @@
 		0A25FDC528F442DD001988A1 /* ADJStringMapBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1C9287F3E2A004C7D59 /* ADJStringMapBuilder.m */; };
 		0A25FDC628F442DD001988A1 /* ADJStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22B28855B63004C7D59 /* ADJStringMap.m */; };
 		0A25FDC728F442DD001988A1 /* ADJBooleanWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */; };
-		0A25FDC828F442DE001988A1 /* ADJValueWO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788447E2886B0F0001814F7 /* ADJValueWO.m */; };
 		0A25FDC928F442DE001988A1 /* ADJNonNegativeInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */; };
 		0A25FDCA28F442DE001988A1 /* ADJTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E8C288AD4B9002319D7 /* ADJTallyCounter.m */; };
 		0A25FDCB28F442DE001988A1 /* ADJAtomicBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F278FB3288AD79A00804594 /* ADJAtomicBoolean.m */; };
@@ -2465,7 +2458,6 @@
 		0A2BF90828F6053000852E17 /* ADJStringMapBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1C9287F3E2A004C7D59 /* ADJStringMapBuilder.m */; };
 		0A2BF90928F6053000852E17 /* ADJStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22B28855B63004C7D59 /* ADJStringMap.m */; };
 		0A2BF90A28F6053000852E17 /* ADJBooleanWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */; };
-		0A2BF90B28F6053000852E17 /* ADJValueWO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788447E2886B0F0001814F7 /* ADJValueWO.m */; };
 		0A2BF90C28F6053000852E17 /* ADJNonNegativeInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */; };
 		0A2BF90D28F6053000852E17 /* ADJTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E8C288AD4B9002319D7 /* ADJTallyCounter.m */; };
 		0A2BF90E28F6053000852E17 /* ADJAtomicBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F278FB3288AD79A00804594 /* ADJAtomicBoolean.m */; };
@@ -2649,7 +2641,6 @@
 		0A2BF9E528F6072400852E17 /* ADJStringMapBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1C9287F3E2A004C7D59 /* ADJStringMapBuilder.m */; };
 		0A2BF9E628F6072400852E17 /* ADJStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22B28855B63004C7D59 /* ADJStringMap.m */; };
 		0A2BF9E728F6072400852E17 /* ADJBooleanWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */; };
-		0A2BF9E828F6072400852E17 /* ADJValueWO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788447E2886B0F0001814F7 /* ADJValueWO.m */; };
 		0A2BF9E928F6072400852E17 /* ADJNonNegativeInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */; };
 		0A2BF9EA28F6072400852E17 /* ADJTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E8C288AD4B9002319D7 /* ADJTallyCounter.m */; };
 		0A2BF9EB28F6072400852E17 /* ADJAtomicBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F278FB3288AD79A00804594 /* ADJAtomicBoolean.m */; };
@@ -2833,7 +2824,6 @@
 		0A2BFAC828F60B8C00852E17 /* ADJStringMapBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C1C9287F3E2A004C7D59 /* ADJStringMapBuilder.m */; };
 		0A2BFAC928F60B8C00852E17 /* ADJStringMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22B28855B63004C7D59 /* ADJStringMap.m */; };
 		0A2BFACA28F60B8C00852E17 /* ADJBooleanWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */; };
-		0A2BFACB28F60B8C00852E17 /* ADJValueWO.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788447E2886B0F0001814F7 /* ADJValueWO.m */; };
 		0A2BFACC28F60B8C00852E17 /* ADJNonNegativeInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */; };
 		0A2BFACD28F60B8C00852E17 /* ADJTallyCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E8C288AD4B9002319D7 /* ADJTallyCounter.m */; };
 		0A2BFACE28F60B8C00852E17 /* ADJAtomicBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F278FB3288AD79A00804594 /* ADJAtomicBoolean.m */; };
@@ -3053,7 +3043,6 @@
 		0A7E488E28F8276C00827F0B /* ADJStringMapBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C7287F3E2A004C7D59 /* ADJStringMapBuilder.h */; };
 		0A7E488F28F8276C00827F0B /* ADJStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22A28855B63004C7D59 /* ADJStringMap.h */; };
 		0A7E489028F8276C00827F0B /* ADJBooleanWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */; };
-		0A7E489128F8276C00827F0B /* ADJValueWO.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788447D2886B0F0001814F7 /* ADJValueWO.h */; };
 		0A7E489228F8276C00827F0B /* ADJNonNegativeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */; };
 		0A7E489328F8276C00827F0B /* ADJTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */; };
 		0A7E489428F8276C00827F0B /* ADJAtomicBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F278FB2288AD79A00804594 /* ADJAtomicBoolean.h */; };
@@ -3280,7 +3269,6 @@
 		0A7E497E28F82F6B00827F0B /* ADJStringMapBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C7287F3E2A004C7D59 /* ADJStringMapBuilder.h */; };
 		0A7E497F28F82F6B00827F0B /* ADJStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22A28855B63004C7D59 /* ADJStringMap.h */; };
 		0A7E498028F82F6B00827F0B /* ADJBooleanWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */; };
-		0A7E498128F82F6B00827F0B /* ADJValueWO.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788447D2886B0F0001814F7 /* ADJValueWO.h */; };
 		0A7E498228F82F6B00827F0B /* ADJNonNegativeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */; };
 		0A7E498328F82F6B00827F0B /* ADJTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */; };
 		0A7E498428F82F6B00827F0B /* ADJAtomicBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F278FB2288AD79A00804594 /* ADJAtomicBoolean.h */; };
@@ -3506,7 +3494,6 @@
 		0A7E4A6928F830AC00827F0B /* ADJStringMapBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C7287F3E2A004C7D59 /* ADJStringMapBuilder.h */; };
 		0A7E4A6A28F830AC00827F0B /* ADJStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22A28855B63004C7D59 /* ADJStringMap.h */; };
 		0A7E4A6B28F830AC00827F0B /* ADJBooleanWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */; };
-		0A7E4A6C28F830AC00827F0B /* ADJValueWO.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788447D2886B0F0001814F7 /* ADJValueWO.h */; };
 		0A7E4A6D28F830AC00827F0B /* ADJNonNegativeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */; };
 		0A7E4A6E28F830AC00827F0B /* ADJTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */; };
 		0A7E4A6F28F830AC00827F0B /* ADJAtomicBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F278FB2288AD79A00804594 /* ADJAtomicBoolean.h */; };
@@ -3724,7 +3711,6 @@
 		0A7ED7072892B11B00CC20DE /* ADJStringMapBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C1C7287F3E2A004C7D59 /* ADJStringMapBuilder.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED7082892B11B00CC20DE /* ADJStringMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22A28855B63004C7D59 /* ADJStringMap.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED7092892B11B00CC20DE /* ADJBooleanWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		0A7ED70A2892B11B00CC20DE /* ADJValueWO.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788447D2886B0F0001814F7 /* ADJValueWO.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED70B2892B11B00CC20DE /* ADJNonNegativeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED70C2892B11B00CC20DE /* ADJTallyCounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0A7ED70D2892B11B00CC20DE /* ADJAtomicBoolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F278FB2288AD79A00804594 /* ADJAtomicBoolean.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -4515,8 +4501,6 @@
 		0787C285288838EB00B1DD52 /* ADJStorageRoot.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJStorageRoot.m; sourceTree = "<group>"; };
 		0787C2892888395100B1DD52 /* ADJKeychainStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJKeychainStorage.h; sourceTree = "<group>"; };
 		0787C28A2888395100B1DD52 /* ADJKeychainStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJKeychainStorage.m; sourceTree = "<group>"; };
-		0788447D2886B0F0001814F7 /* ADJValueWO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJValueWO.h; sourceTree = "<group>"; };
-		0788447E2886B0F0001814F7 /* ADJValueWO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJValueWO.m; sourceTree = "<group>"; };
 		078844812886B4CE001814F7 /* ADJTimestampMilli.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJTimestampMilli.h; sourceTree = "<group>"; };
 		078844822886B4CE001814F7 /* ADJTimestampMilli.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJTimestampMilli.m; sourceTree = "<group>"; };
 		078844862886C963001814F7 /* ADJSQLiteStoragePropertiesBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSQLiteStoragePropertiesBase.h; sourceTree = "<group>"; };
@@ -5047,8 +5031,6 @@
 				0737C22B28855B63004C7D59 /* ADJStringMap.m */,
 				0737C22D28856EAC004C7D59 /* ADJBooleanWrapper.h */,
 				0737C22E28856EAC004C7D59 /* ADJBooleanWrapper.m */,
-				0788447D2886B0F0001814F7 /* ADJValueWO.h */,
-				0788447E2886B0F0001814F7 /* ADJValueWO.m */,
 				0788448E2886CC66001814F7 /* ADJNonNegativeInt.h */,
 				0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */,
 				6F214E8B288AD4B9002319D7 /* ADJTallyCounter.h */,
@@ -6179,7 +6161,6 @@
 				0A7ED7082892B11B00CC20DE /* ADJStringMap.h in Headers */,
 				07C6204A28B76D1900404236 /* ADJClientClearGlobalParametersData.h in Headers */,
 				0A7ED7092892B11B00CC20DE /* ADJBooleanWrapper.h in Headers */,
-				0A7ED70A2892B11B00CC20DE /* ADJValueWO.h in Headers */,
 				0A7ED70C2892B11B00CC20DE /* ADJTallyCounter.h in Headers */,
 				0A7ED70D2892B11B00CC20DE /* ADJAtomicBoolean.h in Headers */,
 				0A7ED70E2892B11B00CC20DE /* ADJMoney.h in Headers */,
@@ -6931,7 +6912,6 @@
 				0A25F8E128E5CAC3001988A1 /* ADJStringMapBuilder.h in Headers */,
 				0A25F8E228E5CAC4001988A1 /* ADJStringMap.h in Headers */,
 				0A25F8E328E5CAC4001988A1 /* ADJBooleanWrapper.h in Headers */,
-				0A25F8E428E5CAC4001988A1 /* ADJValueWO.h in Headers */,
 				0A25F8E528E5CAC4001988A1 /* ADJNonNegativeInt.h in Headers */,
 				0A25F8E628E5CAC4001988A1 /* ADJTallyCounter.h in Headers */,
 				0A25F8E728E5CAC4001988A1 /* ADJAtomicBoolean.h in Headers */,
@@ -7204,7 +7184,6 @@
 				0A25FADE28F42380001988A1 /* ADJStringMapBuilder.h in Headers */,
 				0A25FADF28F42380001988A1 /* ADJStringMap.h in Headers */,
 				0A25FAE028F42380001988A1 /* ADJBooleanWrapper.h in Headers */,
-				0A25FAE128F42380001988A1 /* ADJValueWO.h in Headers */,
 				0A25FAE228F42380001988A1 /* ADJNonNegativeInt.h in Headers */,
 				0A25FAE328F42380001988A1 /* ADJTallyCounter.h in Headers */,
 				0A25FAE428F42380001988A1 /* ADJAtomicBoolean.h in Headers */,
@@ -7477,7 +7456,6 @@
 				0A25FCAD28F43C2C001988A1 /* ADJStringMapBuilder.h in Headers */,
 				0A25FCAE28F43C2C001988A1 /* ADJStringMap.h in Headers */,
 				0A25FCAF28F43C2C001988A1 /* ADJBooleanWrapper.h in Headers */,
-				0A25FCB028F43C2C001988A1 /* ADJValueWO.h in Headers */,
 				0A25FCB128F43C2C001988A1 /* ADJNonNegativeInt.h in Headers */,
 				0A25FCB228F43C2C001988A1 /* ADJTallyCounter.h in Headers */,
 				0A25FCB328F43C2C001988A1 /* ADJAtomicBoolean.h in Headers */,
@@ -7750,7 +7728,6 @@
 				0A7E488E28F8276C00827F0B /* ADJStringMapBuilder.h in Headers */,
 				0A7E488F28F8276C00827F0B /* ADJStringMap.h in Headers */,
 				0A7E489028F8276C00827F0B /* ADJBooleanWrapper.h in Headers */,
-				0A7E489128F8276C00827F0B /* ADJValueWO.h in Headers */,
 				0A7E489228F8276C00827F0B /* ADJNonNegativeInt.h in Headers */,
 				0A7E489328F8276C00827F0B /* ADJTallyCounter.h in Headers */,
 				0A7E489428F8276C00827F0B /* ADJAtomicBoolean.h in Headers */,
@@ -8023,7 +8000,6 @@
 				0A7E497E28F82F6B00827F0B /* ADJStringMapBuilder.h in Headers */,
 				0A7E497F28F82F6B00827F0B /* ADJStringMap.h in Headers */,
 				0A7E498028F82F6B00827F0B /* ADJBooleanWrapper.h in Headers */,
-				0A7E498128F82F6B00827F0B /* ADJValueWO.h in Headers */,
 				0A7E498228F82F6B00827F0B /* ADJNonNegativeInt.h in Headers */,
 				0A7E498328F82F6B00827F0B /* ADJTallyCounter.h in Headers */,
 				0A7E498428F82F6B00827F0B /* ADJAtomicBoolean.h in Headers */,
@@ -8295,7 +8271,6 @@
 				0A7E4A6928F830AC00827F0B /* ADJStringMapBuilder.h in Headers */,
 				0A7E4A6A28F830AC00827F0B /* ADJStringMap.h in Headers */,
 				0A7E4A6B28F830AC00827F0B /* ADJBooleanWrapper.h in Headers */,
-				0A7E4A6C28F830AC00827F0B /* ADJValueWO.h in Headers */,
 				0A7E4A6D28F830AC00827F0B /* ADJNonNegativeInt.h in Headers */,
 				0A7E4A6E28F830AC00827F0B /* ADJTallyCounter.h in Headers */,
 				0A7E4A6F28F830AC00827F0B /* ADJAtomicBoolean.h in Headers */,
@@ -9468,7 +9443,6 @@
 				6F278FB0288AD72600804594 /* ADJSQLiteStorageActionBase.m in Sources */,
 				078844A02886D388001814F7 /* ADJSQLiteDb.m in Sources */,
 				6FAC56F4288FE6C90070F564 /* ADJSdkPackageUrlBuilder.m in Sources */,
-				078844802886B0F0001814F7 /* ADJValueWO.m in Sources */,
 				0741CDFA28D895C00041C816 /* ADJGdprForgetController.m in Sources */,
 				0781F23128D9E6040041AAA3 /* ADJAsaAttributionController.m in Sources */,
 				6FCD53C82981D61C007542FB /* ADJUtilFiles.m in Sources */,
@@ -9567,7 +9541,6 @@
 				6F85472E2913B896008F6F42 /* ADJLogMessageData.m in Sources */,
 				0A25F9C128E5CB2D001988A1 /* ADJStringMap.m in Sources */,
 				0A25F9C228E5CB2D001988A1 /* ADJBooleanWrapper.m in Sources */,
-				0A25F9C328E5CB2D001988A1 /* ADJValueWO.m in Sources */,
 				0A25F9C428E5CB2D001988A1 /* ADJNonNegativeInt.m in Sources */,
 				6F8AB2D229C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE3299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
@@ -9785,7 +9758,6 @@
 				6F8547312913B896008F6F42 /* ADJLogMessageData.m in Sources */,
 				0A25FBC728F43027001988A1 /* ADJStringMap.m in Sources */,
 				0A25FBC828F43027001988A1 /* ADJBooleanWrapper.m in Sources */,
-				0A25FBC928F43027001988A1 /* ADJValueWO.m in Sources */,
 				0A25FBCA28F43027001988A1 /* ADJNonNegativeInt.m in Sources */,
 				6F8AB2D329C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE4299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
@@ -10003,7 +9975,6 @@
 				6F8547342913B897008F6F42 /* ADJLogMessageData.m in Sources */,
 				0A25FDC628F442DD001988A1 /* ADJStringMap.m in Sources */,
 				0A25FDC728F442DD001988A1 /* ADJBooleanWrapper.m in Sources */,
-				0A25FDC828F442DE001988A1 /* ADJValueWO.m in Sources */,
 				0A25FDC928F442DE001988A1 /* ADJNonNegativeInt.m in Sources */,
 				6F8AB2D429C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE5299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
@@ -10221,7 +10192,6 @@
 				6F8547372913B898008F6F42 /* ADJLogMessageData.m in Sources */,
 				0A2BF90928F6053000852E17 /* ADJStringMap.m in Sources */,
 				0A2BF90A28F6053000852E17 /* ADJBooleanWrapper.m in Sources */,
-				0A2BF90B28F6053000852E17 /* ADJValueWO.m in Sources */,
 				0A2BF90C28F6053000852E17 /* ADJNonNegativeInt.m in Sources */,
 				6F8AB2D529C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE6299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
@@ -10439,7 +10409,6 @@
 				6F85473A2913B898008F6F42 /* ADJLogMessageData.m in Sources */,
 				0A2BF9E628F6072400852E17 /* ADJStringMap.m in Sources */,
 				0A2BF9E728F6072400852E17 /* ADJBooleanWrapper.m in Sources */,
-				0A2BF9E828F6072400852E17 /* ADJValueWO.m in Sources */,
 				0A2BF9E928F6072400852E17 /* ADJNonNegativeInt.m in Sources */,
 				6F8AB2D629C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE7299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,
@@ -10657,7 +10626,6 @@
 				6F85473D2913B898008F6F42 /* ADJLogMessageData.m in Sources */,
 				0A2BFAC928F60B8C00852E17 /* ADJStringMap.m in Sources */,
 				0A2BFACA28F60B8C00852E17 /* ADJBooleanWrapper.m in Sources */,
-				0A2BFACB28F60B8C00852E17 /* ADJValueWO.m in Sources */,
 				0A2BFACC28F60B8C00852E17 /* ADJNonNegativeInt.m in Sources */,
 				6F8AB2D729C4D5CE001E371E /* ADJOptionalFailsNL.m in Sources */,
 				07F40AE8299A7E0200BDECB6 /* ADJPushTokenStateStorage.m in Sources */,

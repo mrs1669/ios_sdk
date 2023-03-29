@@ -10,34 +10,30 @@
 
 #import "ADJCommonBase.h"
 #import "ADJGdprForgetStateData.h"
-#import "ADJValueWO.h"
+#import "ADJDelayData.h"
 
-@interface ADJGdprForgetState : ADJCommonBase
-// instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
+@interface ADJGdprForgetStateOutputData : NSObject
 
-// public api
-- (BOOL)shouldStartTrackingWhenForgottenByClientWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
-                                        changedGdprForgetStateDataWO:(nonnull ADJValueWO<ADJGdprForgetStateData *> *)changedGdprForgetStateDataWO
-                                             gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO;
+@property (nullable, readonly, strong, nonatomic) ADJGdprForgetStateData *changedStateData;
+@property (nullable, readonly, strong, nonatomic) ADJGdprForgetStatus status;
+@property (readonly, assign, nonatomic) BOOL startTracking;
 
-- (BOOL)shouldStartTrackingWhenSdkInitWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
-                                   gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO;
-
-- (void)canStartPublish;
-
-- (BOOL)shouldStartTrackingWhenAppWentToTheForegroundWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData;
-
-- (void)appWentToTheBackground;
-
-- (BOOL)shouldStopTrackingWhenReceivedOptOutWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
-                                    changedGdprForgetStateDataWO:(nonnull ADJValueWO<ADJGdprForgetStateData *> *)changedGdprForgetStateDataWO
-                                         gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO;
-
-- (BOOL)shouldStopTrackingWhenReceivedProcessedGdprResponseWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
-                                                   changedGdprForgetStateDataWO:(nonnull ADJValueWO<ADJGdprForgetStateData *> *)changedGdprForgetStateDataWO
-                                                        gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO;
-
+- (nullable instancetype)init NS_UNAVAILABLE;
 
 @end
 
+@interface ADJGdprForgetState : ADJCommonBase
+// instantiation
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                             initialStateData:(nonnull ADJGdprForgetStateData *)initialStateData;
+
+// public api
+- (nullable ADJGdprForgetStateOutputData *)forgottenByClient;
+
+- (nullable ADJGdprForgetStateOutputData *)appStart;
+
+- (nullable ADJGdprForgetStateOutputData *)receivedOptOut;
+
+- (nullable ADJGdprForgetStateOutputData *)receivedAcceptedGdprResponse;
+
+@end

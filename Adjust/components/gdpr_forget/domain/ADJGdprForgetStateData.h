@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJGdprForgetStateDataMetadataTypeValue;
 
+typedef NSString *ADJGdprForgetStatus NS_TYPED_ENUM;
+FOUNDATION_EXPORT ADJGdprForgetStatus const ADJGdprForgetStatusAskedToForget;
+FOUNDATION_EXPORT ADJGdprForgetStatus const ADJGdprForgetStatusForgottenByBackend;
+
 NS_ASSUME_NONNULL_END
 
 @interface ADJGdprForgetStateData : NSObject<ADJIoDataSerializable>
@@ -43,5 +47,7 @@ NS_ASSUME_NONNULL_END
 
 // public api
 - (BOOL)isForgotten;
+- (BOOL)isAsking;
+- (nullable ADJGdprForgetStatus)status;
 
 @end

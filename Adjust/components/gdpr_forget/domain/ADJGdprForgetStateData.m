@@ -22,6 +22,9 @@
 #pragma mark - Public constants
 NSString *const ADJGdprForgetStateDataMetadataTypeValue = @"GdprForgetStateData";
 
+ADJGdprForgetStatus const ADJGdprForgetStatusAskedToForget = @"AskedToForget";
+ADJGdprForgetStatus const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
+
 #pragma mark - Private constants
 static NSString *const kForgottenByBackendKey = @"forgottenByBackend";
 static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
@@ -119,6 +122,20 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
 #pragma mark Public API
 - (BOOL)isForgotten {
     return self.askedToForgetBySdk || self.forgottenByBackend;
+}
+
+- (BOOL)isAsking {
+    return self.askedToForgetBySdk && (! self.forgottenByBackend);
+}
+
+- (nullable ADJGdprForgetStatus)status {
+    if (self.forgottenByBackend) {
+        return ADJGdprForgetStatusForgottenByBackend;
+    }
+    if (self.askedToForgetBySdk) {
+        return ADJGdprForgetStatusAskedToForget;
+    }
+    return nil;
 }
 
 #pragma mark - ADJIoDataSerializable
