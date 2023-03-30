@@ -45,7 +45,7 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
 #pragma mark - ADJClientActionHandler
 - (BOOL)ccCanHandlePreFirstSessionClientAction {
-    return YES;
+    return NO;
 }
 
 - (void)ccHandleClientActionWithIoInjectedData:(nonnull ADJIoData *)clientActionIoInjectedData
