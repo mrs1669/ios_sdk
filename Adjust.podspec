@@ -14,7 +14,16 @@ Pod::Spec.new do |s|
   s.requires_arc           = true
   s.default_subspec        = 'Core'
   s.pod_target_xcconfig    = { 'BITCODE_GENERATION_MODE' => 'bitcode' }
+
   s.subspec 'Core' do |co|
     co.source_files        = 'Adjust/**/*.{h,m}'
   end
+
+  s.subspec 'WebBridge' do |wb|
+    wb.source_files = 'AdjustSdkWebBridge/ADJAdjustBridge.{h,m}'
+    wb.dependency 'Adjust/Core'
+    wb.resources = 'AdjustSdkWebBridge/*.js'
+    wb.ios.deployment_target = '9.0'
+  end
+  
 end
