@@ -1,22 +1,18 @@
 var Adjust = {
-instance: function(instanceId = null) {
-    if (typeof instanceId === "string") {
-        if (! this._instanceMap) {
-            this._instanceMap = new Map();
-        }
-
-        if (! this._instanceMap.has(instanceId)) {
-            this._instanceMap.set(instanceId, new AdjustInstance(instanceId));
-        }
-
-        return this._instanceMap.get(instanceId);
-    } else {
-        if (! this._defaultInstance) {
-            this._defaultInstance = new AdjustInstance(null);
-        }
-
-        return this._defaultInstance;
+instance: function(instanceId = "") {
+    if (! this._instanceMap) {
+        this._instanceMap = new Map();
     }
+
+    if (! (typeof instanceId === "string")) {
+        instanceId = ""
+    }
+
+    if (! this._instanceMap.has(instanceId)) {
+        this._instanceMap.set(instanceId, new AdjustInstance(instanceId));
+    }
+
+    return this._instanceMap.get(instanceId);
 },
 
 getSdkVersion: function() {
