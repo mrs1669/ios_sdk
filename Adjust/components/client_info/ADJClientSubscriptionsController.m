@@ -9,6 +9,7 @@
 #import "ADJClientSubscriptionsController.h"
 
 #import "ADJAdjustLogMessageData.h"
+#import "ADJConsoleLogger.h"
 
 #import <UIKit/UIKit.h>
 
@@ -85,8 +86,11 @@
         return;
     }
 
+    __block NSString *_Nonnull clientLogMessage =
+        [ADJConsoleLogger clientCallbackFormatMessageWithLog:logMessageData.inputData];
+
     [self.clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustLogSubscriber didLogWithMessage:logMessageData.inputData.message
+        [localAdjustLogSubscriber didLogWithMessage:clientLogMessage
                                            logLevel:logMessageData.inputData.level];
     }];
 }
