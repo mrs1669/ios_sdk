@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
-#import "ADJAdjust.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,8 +36,10 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAdjustBridge : NSObject
 
-@property (nonatomic, strong) WKWebView *_Nonnull webView;
+@property (nonnull, readonly, nonatomic, strong) WKWebView *webView;
 
-- (void)augmentHybridWKWebView:(WKWebView *_Nonnull)webView;
+- (nullable instancetype)init NS_UNAVAILABLE;
+
++ (nullable ADJAdjustBridge *)instanceWithWKWebView:(nonnull WKWebView *)webView;
 
 @end

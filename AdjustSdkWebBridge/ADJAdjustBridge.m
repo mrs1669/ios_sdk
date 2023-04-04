@@ -18,6 +18,9 @@
 #import "ADJAdjustThirdPartySharing.h"
 #import "ADJAdjustAttributionSubscriber.h"
 
+#import "ADJAdjust.h"
+#import "ADJResult.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NSString *const ADJAdjustBridgeMessageInitSdk = @"adjust_initSdk";
@@ -51,28 +54,68 @@ NS_ASSUME_NONNULL_END
 
 #pragma mark - Init Web View
 
-- (void)augmentHybridWKWebView:(WKWebView *_Nonnull)webView {
-    if ([webView isKindOfClass:WKWebView.class]) {
-        self.webView = webView;
-        WKUserContentController *controller = webView.configuration.userContentController;
-        [controller addUserScript:[[WKUserScript.class alloc]
-                                   initWithSource:[self getWebBridgeScriptFor:@"adjust"]
-                                   injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                   forMainFrameOnly:NO]];
-        [controller addScriptMessageHandler:self name:@"adjust"];
++ (nullable ADJAdjustBridge *)instanceWithWKWebView:(nonnull WKWebView *)webView {
+    if (! [webView isKindOfClass:WKWebView.class]) {
+        return nil;
     }
+
+    ADJResult<NSString *> *_Nonnull scriptSourceResult =
+        [ADJAdjustBridge getAdjustWebBridgeScript];
+    if (scriptSourceResult.fail != nil) {
+        // TODO possibly add a way to return the fail message
+        //  at least some internal API that can be accessed for this purpose
+        return nil;
+    }
+
+    ADJAdjustBridge *_Nonnull bridge = [[ADJAdjustBridge alloc] initWithWithWKWebView:webView];
+    WKUserContentController *controller = webView.configuration.userContentController;
+    [controller addUserScript:[[WKUserScript.class alloc]
+                               initWithSource:scriptSourceResult.value
+                               injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                               forMainFrameOnly:NO]];
+    [controller addScriptMessageHandler:bridge name:@"adjust"];
+
+    return bridge;
 }
 
-- (NSString *)getWebBridgeScriptFor:(NSString *)resource {
-    NSBundle *sourceBundle = [NSBundle bundleForClass:self.class];
-    NSString *adjustScriptPath = [sourceBundle pathForResource:resource ofType:@"js"];
-    NSString *adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath
-                                                       encoding:NSUTF8StringEncoding error:nil];
-    return adjustScript;
+- (nonnull instancetype)initWithWithWKWebView:(nonnull WKWebView *)webView {
+    self = [super init];
+    _webView = webView;
+
+    return self;
+}
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
-#pragma mark - Attribution callbacks
++ (nonnull ADJResult<NSString *> *)getAdjustWebBridgeScript {
+    NSBundle *_Nonnull sourceBundle = [NSBundle bundleForClass:self.class];
+    // requires that the file 'adjust.js' is in the same location/folder
+    NSString *_Nullable adjustScriptPath = [sourceBundle pathForResource:@"adjust" ofType:@"js"];
+    if  (adjustScriptPath == nil) {
+        return [ADJResult failWithMessage:@"Cannot obtain adjust js path from bundle"];
+    }
 
+    NSError *_Nullable error;
+    NSString *_Nullable adjustScript = [NSString stringWithContentsOfFile:adjustScriptPath
+                                                                 encoding:NSUTF8StringEncoding
+                                                                    error:nil];
+    if (adjustScript == nil) {
+        return [ADJResult failWithMessage:@"Cannot read adjust js file"
+                              wasInputNil:NO
+                             builderBlock:
+                ^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
+            [resultFailBuilder withError:error];
+            [resultFailBuilder withKey:@"adjust js path"
+                           stringValue:adjustScriptPath];
+        }];
+    }
+
+    return [ADJResult okWithValue:adjustScript];
+}
+
+#pragma mark - ADJAdjustAttributionSubscriber
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     NSString *adjustAttributionString = adjustAttribution.description;
     NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')",
