@@ -1,3 +1,204 @@
+
+var Adjust = {
+    instance: function(instanceId = "", errSubscriber) {
+        if (! this._instanceMap) {
+            this._instanceMap = new Map();
+        }
+
+        let instance = this._instanceMap.get(instanceId);
+        if (instance) {
+            return instance;
+        }
+
+        if (! (typeof errSubscriber === "function")) {
+            errSubscriber = undefined;
+        }
+
+        if (! (typeof instanceId === "string")) {
+            if (errSubscriber) {
+                errSubscriber('undefined or string expected for instance id.'
+                              + ' Instead received: ' + typeof instanceId);
+            }
+            instanceId = "";
+        }
+
+        instance = new AdjustInstance(instanceId, errSubscriber);
+        this._instanceMap.set(instanceId, instance);
+
+        return instance;
+    },
+
+    _postMessage(action, instanceId = "", data = "{}", errSubscriber) {
+        if (! this._adjustMessageHandler) {
+            function canSend(okCheck, errReason) {
+                if (! okCheck) { if (errSubscriber) {
+                    errSubscriber('Cannot send message to native sdk '.concat(errReason)); }}
+                return okCheck;
+            }
+            const canSendSendToNative =
+            canSend(window, 'without valid: "window"') &&
+            canSend(window.webkit, 'without valid: "window.webkit"') &&
+            canSend(window.webkit.messageHandlers,
+                    'without valid: "window.webkit.messageHandlers"') &&
+            canSend(window.webkit.messageHandlers.adjust,
+                    'without valid: "window.webkit.messageHandlers.adjust"') &&
+            canSend(window.webkit.messageHandlers.adjust.postMessage,
+                    'without valid: "window.webkit.messageHandlers.adjust.postMessage"') &&
+            canSend(typeof window.webkit.messageHandlers.adjust.postMessage === "function",
+                    'when "window.webkit.messageHandlers.adjust.postMessage" is not a function');
+
+            if (! canSendSendToNative) { return; }
+
+            this._adjustMessageHandler = window.webkit.messageHandlers.adjust;
+        }
+
+        this._adjustMessageHandler.postMessage({
+            action: 'adjust_'.concat(action),
+            instanceId: instanceId,
+            data: data
+        });
+    },
+
+    getSdkVersion: function() {
+        Adjust.postMessage('getSdkVersion');
+    },
+
+    teardown: function() {
+        this._instanceMap = undefined;
+        // TODO reset js interface?
+    },
+
+};
+
+function AdjustInstance(instanceId) {
+    this._instanceId = instanceId;
+    this._callbackMap = new Map();
+};
+
+AdjustInstance.prototype._postMessage = function(action, data) {
+    Adjust._postMessage(action, this._instanceId, data); }
+
+AdjustInstance.prototype.initSdk = function(adjustConfig) {
+    this._postMessage('initSdk', JSON.stringify(adjustConfig)); };
+/*
+AdjustInstance.prototype.inactivateSdk = function() {
+    this._postMessage('inactivateSdk'); }
+AdjustInstance.prototype.reactivateSdk = function() {
+    this._postMessage('reactivateSdk'); }
+
+AdjustInstance.prototype.gdprForgetDevice = function() {
+    this._postMessage('gdprForgetDevice'); }
+
+AdjustInstance.prototype.appWentToTheBackgroundManualCall = function() {
+    this._postMessage('appWentToTheBackgroundManualCall'); }
+AdjustInstance.prototype.appWentToTheForegroundManualCall = function() {
+    this._postMessage('appWentToTheForegroundManualCall'); }
+
+AdjustInstance.prototype.switchToOfflineMode = function() {
+    this._postMessage('switchToOfflineMode'); }
+AdjustInstance.prototype.switchBackToOnlineMode = function() {
+    this._postMessage('switchBackToOnlineMode'); }
+*/
+AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
+    this._postMessage('trackLaunchedDeeplink',
+                      JSON.stringify({_url: url, _urlType: typeof url})); }
+
+AdjustInstance.prototype.trackPushToken = function(pushToken) {
+    this._postMessage('trackPushToken',
+                      JSON.stringify({_pushToken: pushToken, _pushTokenType: typeof pushToken})); }
+
+AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
+    this._postMessage('addGlobalCallbackParameter',
+                      JSON.stringify({
+        _key: key, _keyType: typeof key,
+        _value: value, _valueType: typeof value})); }
+AdjustInstance.prototype.removeGlobalCallbackParameter = function(key) {
+    this._postMessage('removeGlobalCallbackParameter', JSON.stringify({
+        _key: key, _keyType: typeof key})); }
+AdjustInstance.prototype.clearGlobalCallbackParameters = function() {
+    this._postMessage('clearGlobalCallbackParameters'); }
+
+AdjustInstance.prototype.addGlobalPartnerParameter = function(key, value) {
+    this._postMessage('addGlobalPartnerParameter',
+                      JSON.stringify({
+        _key: key, _keyType: typeof key,
+        _value: value, _valueType: typeof value})); }
+AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
+    this._postMessage('removeGlobalPartnerParameter', JSON.stringify({
+        _key: key, _keyType: typeof key})); }
+AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
+    this._postMessage('clearGlobalPartnerParameters'); }
+
+
+function AdjustConfig(appToken, environment) {
+    this._appToken = appToken;
+    this._appTokenType = typeof appToken;
+
+    this._environment = environment;
+    this._environmentType = typeof environment;
+
+    this._defaultTracker = null;
+    this._urlStrategy = null;
+    this._customEndpointUrl = null;
+    this._customEndpointPublicKeyHash = null;
+    this._doLogAll = null;
+    this._doNotLogAny = null;
+    this._canSendInBackground = null;
+    this._doNotOpenDeferredDeeplink = null;
+    this._doNotReadAppleSearchAdsAttribution = null;
+    this._eventIdDeduplicationMaxCapacity = null;
+    this._adjustAttributionSubscriberCallbackId = null;
+    this._adjustAttributionSubscriberCallback = null;
+    this._adjustLogSubscriberCallbackId = null;
+    this._adjustLogSubscriberCallback = null;
+}
+
+AdjustConfig.EnvironmentSandbox = 'sandbox';
+AdjustConfig.EnvironmentProduction = 'production';
+
+AdjustConfig.UrlStrategyIndia = "INDIA";
+AdjustConfig.UrlStrategyChina = "CHINA";
+
+AdjustConfig.DataResidencyEU = "EU";
+AdjustConfig.DataResidencyTR = "TR";
+AdjustConfig.DataResidencyUS = "US";
+
+
+AdjustConfig.prototype.setDefaultTracker = function(defaultTracker) {
+    this._defaultTracker = defaultTracker;
+    this._defaultTrackerType = typeof defaultTracker; };
+
+AdjustConfig.prototype.doLogAll = function() {
+    this._doLogAll = true; };
+
+AdjustConfig.prototype.doNotLogAny = function() {
+    this._doNotLogAny = true; };
+
+AdjustConfig.prototype.setUrlStrategy = function(urlStrategy) {
+    this._urlStrategy = urlStrategy;
+    this._urlStrategyType = typeof urlStrategy };
+
+AdjustConfig.prototype.setCustomEndpoint = function(customEndpointUrl, optionalPublicKeyKeyHash) {
+    this._customEndpointUrl = customEndpointUrl;
+    this._customEndpointUrlType = typeof customEndpointUrl;
+    this._customEndpointPublicKeyHash = optionalPublicKeyKeyHash;
+    this._customEndpointPublicKeyHashType = typeof optionalPublicKeyKeyHash; };
+
+AdjustConfig.prototype.preventOpenDeferredDeeplink = function() {
+    this._doNotOpenDeferredDeeplink = true; };
+
+AdjustConfig.prototype.doNotReadAppleSearchAdsAttribution = function() {
+    this._doNotReadAppleSearchAdsAttribution = true; };
+
+AdjustConfig.prototype.allowSendingFromBackground = function() {
+    this._canSendInBackground = true; };
+
+AdjustConfig.prototype.setEventIdDeduplicationMaxCapacity =
+    function(eventIdDeduplicationMaxCapacity) {
+        this._eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
+        this._eventIdDeduplicationMaxCapacityType = typeof eventIdDeduplicationMaxCapacity; };
+
+ /*
 var Adjust = {
 instance: function(instanceId = "") {
     if (! this._instanceMap) {
@@ -413,3 +614,4 @@ AdjustThirdPartySharing.prototype.addPartnerSharingSettings = function(partnerNa
     this.partnerSharingSettings.push(key);
     this.partnerSharingSettings.push(value);
 };
+*/
