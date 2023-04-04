@@ -18,16 +18,11 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 @implementation ADJUtilObj
 
 + (nullable NSString *)copyStringWithInput:(nullable id)inputValue {
-
-    if (inputValue == nil || ![inputValue isKindOfClass:[NSString class]]) {
+    if (inputValue == nil || ! [inputValue isKindOfClass:[NSString class]]) {
         return nil;
     }
 
-    if ([inputValue isKindOfClass:[NSString class]]) {
-        return [inputValue copy];
-    }
-
-    return [inputValue description];
+    return [inputValue copy];
 }
 
 + (nonnull id)copyStringOrNSNullWithInput:(nullable id)inputValue {
