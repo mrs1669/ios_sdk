@@ -71,6 +71,22 @@ NSString *const ADJBooleanFalseString = @"false";
     return [ADJBooleanWrapper instanceFromIoValue:booleanStringResult.value];
 }
 
++ (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromObject:(nullable id)objectValue {
+    if (objectValue == nil) {
+        return [ADJResult nilInputWithMessage:@"Cannot create boolean wrapper with nil object value"];
+    }
+
+    if (! [objectValue isKindOfClass:[NSNumber class]]) {
+        return [ADJResult failWithMessage:@"Cannot create string from non-NSNumber object"
+                                      key:ADJLogActualKey
+                              stringValue:NSStringFromClass([objectValue class])];
+    }
+
+    NSNumber *_Nonnull booleanNumber = (NSNumber *)objectValue;
+
+    return [ADJResult okWithValue:[ADJBooleanWrapper instanceFromBool:booleanNumber.boolValue]];
+}
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

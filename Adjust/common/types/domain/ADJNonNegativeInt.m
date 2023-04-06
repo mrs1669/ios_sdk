@@ -76,6 +76,21 @@
     return [self instanceFromIntegerNumber:integerNumberResult.value];
 }
 
++ (nonnull ADJResult<ADJNonNegativeInt *> *)instanceFromObject:(nullable id)objectValue {
+    if (objectValue == nil) {
+        return [ADJResult nilInputWithMessage:@"Cannot create non negative int with nil object"];
+    }
+
+    if (! [objectValue isKindOfClass:[NSNumber class]]) {
+        return [ADJResult
+                failWithMessage:@"Cannot create non negative int from non-NSNumber object"
+                key:ADJLogActualKey
+                stringValue:NSStringFromClass([objectValue class])];
+    }
+
+    return [ADJNonNegativeInt instanceFromIntegerNumber:(NSNumber *)objectValue];
+}
+
 - (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue {
     self = [super init];
 

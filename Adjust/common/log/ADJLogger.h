@@ -15,7 +15,7 @@
 @interface ADJLogger : NSObject
 // instantiation
 - (nonnull instancetype)initWithName:(nonnull NSString *)name
-                        logCollector:(nonnull id<ADJLogCollector>)logCollector
+                        logCollector:(nullable id<ADJLogCollector>)logCollector
                           instanceId:(nonnull ADJInstanceIdData *)instanceId
     NS_DESIGNATED_INITIALIZER;
 
@@ -81,13 +81,13 @@
                                          key:(nonnull NSString *)key
                                        value:(nullable NSString *)value
                                   resultFail:(nonnull ADJResultFail *)resultFail
-                                   issueType:(nonnull ADJIssue)issueType;
+                                   issueType:(nullable ADJIssue)issueType;
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         key1:(nonnull NSString *)key1
                                       value1:(nullable NSString *)value1
                                         key2:(nonnull NSString *)key2
                                       value2:(nullable NSString *)value2
-                                   issueType:(nonnull ADJIssue)issueType;
+                                   issueType:(nullable ADJIssue)issueType;
 
 // info client
 - (nonnull ADJInputLogMessageData *)infoClient:(nonnull NSString *)message;

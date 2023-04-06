@@ -28,6 +28,8 @@
 + (nonnull ADJResult<ADJNonNegativeInt *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
++ (nonnull ADJResult<ADJNonNegativeInt *> *)instanceFromObject:(nullable id)objectValue;
+
 - (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue
     NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;

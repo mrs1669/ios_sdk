@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_END
 
 + (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromString:(nullable NSString *)stringValue;
 
++ (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromObject:(nullable id)objectValue;
+
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties

@@ -25,7 +25,7 @@
 @implementation ADJLogger
 #pragma mark Constructors
 - (nonnull instancetype)initWithName:(nonnull NSString *)name
-                        logCollector:(nonnull id<ADJLogCollector>)logCollector
+                        logCollector:(nullable id<ADJLogCollector>)logCollector
                           instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
     self = [super init];
@@ -197,7 +197,7 @@
                                          key:(nonnull NSString *)key
                                        value:(nullable NSString *)value
                                   resultFail:(nonnull ADJResultFail *)resultFail
-                                   issueType:(nonnull ADJIssue)issueType
+                                   issueType:(nullable ADJIssue)issueType
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
                                initWithMessage:message
@@ -214,7 +214,7 @@
                                       value1:(nullable NSString *)value1
                                         key2:(nonnull NSString *)key2
                                       value2:(nullable NSString *)value2
-                                   issueType:(nonnull ADJIssue)issueType
+                                   issueType:(nullable ADJIssue)issueType
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
                                initWithMessage:message

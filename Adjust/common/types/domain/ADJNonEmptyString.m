@@ -41,7 +41,9 @@
     }
 
     if (! [objectValue isKindOfClass:[NSString class]]) {
-        return [ADJResult failWithMessage:@"Cannot create string from non-string object"];
+        return [ADJResult failWithMessage:@"Cannot create string from non-string object"
+                                      key:ADJLogActualKey
+                              stringValue:NSStringFromClass([objectValue class])];
     }
 
     return [ADJNonEmptyString instanceFromString:(NSString *)objectValue];
