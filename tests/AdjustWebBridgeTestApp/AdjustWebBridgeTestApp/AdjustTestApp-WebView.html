@@ -10,6 +10,7 @@
 </head><body>
     <h1>Adjust TestApp</h1>
     <script type="text/javascript" src="TestLibraryBridge.js"></script>
+    <script type="text/javascript" src="adjust.js"></script>
 
     <script>
         window.onerror = function(err) {
@@ -29,6 +30,8 @@
 
         function btnStartTestSession() {
             console.log('btnStartTestSession');
+            Adjust.instance(12, function(errMessage) {console.log(errMessage);});
+            /*
             TestLibraryBridge.addTestDirectory('deeplink');
             TestLibraryBridge.addTestDirectory('stop-restart');
             TestLibraryBridge.addTestDirectory('third-party-sharing');
@@ -48,6 +51,7 @@
             TestLibraryBridge.addTestDirectory('ad-revenue')
             TestLibraryBridge.addTestDirectory('event-tracking');
             TestLibraryBridge.startTestSession();
+             */
         }
 
         setupWebViewJavascriptBridge(function(bridge) {

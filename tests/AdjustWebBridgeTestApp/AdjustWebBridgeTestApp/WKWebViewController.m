@@ -32,8 +32,7 @@
     WKWebView *webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:webView];
 
-    self.adjustBridge = [[ADJAdjustBridge alloc] init];
-    [self.adjustBridge augmentHybridWKWebView:webView];
+    self.adjustBridge = [ADJAdjustBridge instanceWithWKWebView:webView];
 
     self.testLibraryBridge = [[TestLibraryBridge alloc]
                               initWithAdjustBridgeRegister:self.adjustBridge];

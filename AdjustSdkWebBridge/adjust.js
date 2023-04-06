@@ -28,7 +28,8 @@ var Adjust = {
         return instance;
     },
 
-    _postMessage(action, instanceId = "", data = "{}", errSubscriber) {
+    // TODO inject undefined instanceId and handle that on the native side
+    _postMessage(methodName, instanceId = "", data = "{}", errSubscriber) {
         if (! this._adjustMessageHandler) {
             function canSend(okCheck, errReason) {
                 if (! okCheck) { if (errSubscriber) {
@@ -53,7 +54,7 @@ var Adjust = {
         }
 
         this._adjustMessageHandler.postMessage({
-            action: 'adjust_'.concat(action),
+            methodName: methodName,
             instanceId: instanceId,
             data: data
         });
@@ -75,12 +76,12 @@ function AdjustInstance(instanceId) {
     this._callbackMap = new Map();
 };
 
-AdjustInstance.prototype._postMessage = function(action, data) {
-    Adjust._postMessage(action, this._instanceId, data); }
+AdjustInstance.prototype._postMessage = function(methodName, data) {
+    Adjust._postMessage(methodName, this._instanceId, data); }
 
 AdjustInstance.prototype.initSdk = function(adjustConfig) {
     this._postMessage('initSdk', JSON.stringify(adjustConfig)); };
-/*
+
 AdjustInstance.prototype.inactivateSdk = function() {
     this._postMessage('inactivateSdk'); }
 AdjustInstance.prototype.reactivateSdk = function() {
@@ -98,7 +99,7 @@ AdjustInstance.prototype.switchToOfflineMode = function() {
     this._postMessage('switchToOfflineMode'); }
 AdjustInstance.prototype.switchBackToOnlineMode = function() {
     this._postMessage('switchBackToOnlineMode'); }
-*/
+
 AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
     this._postMessage('trackLaunchedDeeplink',
                       JSON.stringify({_url: url, _urlType: typeof url})); }

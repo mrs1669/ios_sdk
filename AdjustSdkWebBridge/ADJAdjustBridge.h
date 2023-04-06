@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
+#import "ADJAdjustLogSubscriber.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageInitSdk;
@@ -41,5 +43,9 @@ NS_ASSUME_NONNULL_END
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 + (nullable ADJAdjustBridge *)instanceWithWKWebView:(nonnull WKWebView *)webView;
+
++ (nullable ADJAdjustBridge *)
+    instanceWithWKWebView:(nonnull WKWebView *)webView
+    adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber;
 
 @end

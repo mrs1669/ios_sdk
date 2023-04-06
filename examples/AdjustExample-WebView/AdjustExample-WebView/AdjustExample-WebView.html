@@ -33,9 +33,11 @@
 
             function adjustInitSdk() {
                 var adjustConfig = new AdjustConfig('2fm9gkqubvpc', AdjustConfig.EnvironmentSandbox);
-                adjustConfig.setAttributionCallback(true);
-                adjustConfig.setLogLevel(AdjustConfig.LogLevelAll);
-                Adjust.instance().initSDK(adjustConfig);
+                console.log('adjustConfig type ' + typeof adjustConfig);
+                //adjustConfig.setAttributionCallback(true);
+                //adjustConfig.setLogLevel(AdjustConfig.LogLevelAll);
+                console.log('Adjust.instance() type ' + typeof Adjust.instance());
+                Adjust.instance().initSdk(adjustConfig);
             }
 
             function trackEvent() {

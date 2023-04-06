@@ -8,6 +8,51 @@
 
 #import "ADJWebBridgeConstants.h"
 
-@implementation ADJWebBridgeConstants
+NSString *const ADJWBMethodNameKey = @"methodName";
+NSString *const ADJWBInstanceIdKey = @"instanceId";
+NSString *const ADJWBParametersKey = @"parameters";
 
-@end
+NSString *const ADJWBInitSdkMethodName = @"initSdk";
+NSString *const ADJWBInactivateSdkMethodName = @"inactivateSdk";
+NSString *const ADJWBReactiveSdkMethodName = @"reactivateSdk";
+NSString *const ADJWBGdprForgetDeviceMethodName = @"gdprForgetDevice";
+NSString *const ADJWBAppWentToTheForegroundManualCallMethodName = @"appWentToTheForegroundManualCall";
+NSString *const ADJWBAppWentToTheBackgroundManualCallMethodName = @"appWentToTheBackgroundManualCall";
+NSString *const ADJWBOfflineModeMethodName = @"switchToOfflineMode";
+NSString *const ADJWBOnlineModeMethodName = @"switchBackToOnlineMode";
+
+NSString *const ADJWBTrackEventMethodName = @"trackEvent";
+NSString *const ADJWBTrackLaunchedDeeplinkMethodName = @"trackLaunchedDeeplink";
+NSString *const ADJWBTrackPushTokenMethodName = @"trackPushToken";
+NSString *const ADJWBTrackThirdPartySharingMethodName = @"trackThirdPartySharing";
+NSString *const ADJWBTrackAdRevenueMethodName = @"trackAdRevenue";
+
+NSString *const ADJWBAddGlobalCallbackParameterMethodName = @"addGlobalCallbackParameter";
+NSString *const ADJWBRemoveGlobalCallbackParameterByKeyMethodName = @"removeGlobalCallbackParameterByKey";
+NSString *const ADJWBClearGlobalCallbackParametersMethodName = @"clearGlobalCallbackParameters";
+NSString *const ADJWBAddGlobalPartnerParameterMethodName = @"addGlobalPartnerParameter";
+NSString *const ADJWBRemoveGlobalPartnerParameterByKeyMethodName = @"removeGlobalPartnerParameterByKey";
+NSString *const ADJWBClearGlobalPartnerParametersMethodName = @"clearGlobalPartnerParameters";
+
+NSString *const ADJWBSdkVersionMethodName = @"getSdkVersion";
+
+NSString *const ADJWBJsStringType = @"string";
+NSString *const ADJWBJsNumberType = @"number";
+NSString *const ADJWBJsBooleanType = @"boolean";
+NSString *const ADJWBJsUndefinedType = @"undefined";
+NSString *const ADJWBJsFunctionType = @"function";
+
+NSString *const ADJWBAppTokenConfigKey = @"_appToken";
+NSString *const ADJWBEnvironmentConfigKey = @"_environment";
+NSString *const ADJWBDefaultTrackerConfigKey = @"_defaultTracker";
+NSString *const ADJWBUrlStrategyConfigKey = @"_urlStrategy";
+NSString *const ADJWBCustomEndpointUrlConfigKey = @"_customEndpointUrl";
+NSString *const ADJWBCustomEndpointPublicKeyHashConfigKey = @"_customEndpointPublicKeyHash";
+NSString *const ADJWBDoLogAllConfigKey = @"_doLogAll";
+NSString *const ADJWBDoNotLogAnyConfigKey = @"_doNotLogAny";
+NSString *const ADJWBCanSendInBackgroundConfigKey = @"_canSendInBackground";
+NSString *const ADJWBDoNotOpenDeferredDeeplinkConfigKey = @"_doNotOpenDeferredDeeplink";
+NSString *const ADJWBDoNotReadAppleSearchAdsAttributionConfigKey = @"_doNotReadAppleSearchAdsAttribution";
+NSString *const ADJWBEventIdDeduplicationMaxCapacityConfigKey = @"_eventIdDeduplicationMaxCapacity";
+NSString *const ADJWBAdjustAttributionSubscriberCallbackIdConfigKey = @"_adjustAttributionSubscriberCallbackId";
+NSString *const ADJWBAdjustLogSubscriberCallbackIdConfigKey = @"_adjustLogSubscriberCallbackId";

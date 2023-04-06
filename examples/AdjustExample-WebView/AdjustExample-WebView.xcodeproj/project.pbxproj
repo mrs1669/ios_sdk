@@ -30,6 +30,7 @@
 		07558853290A342300A3AD50 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0755885C290A407A00A3AD50 /* AdjustExample-WebView.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "AdjustExample-WebView.html"; sourceTree = "<group>"; };
 		20A45DBAA85F58CFB0586EB1 /* Pods_AdjustExample_WebView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdjustExample_WebView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F20027329DEC064005C60DF /* Adjust.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Adjust.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B65FDE5BDE1516D7B9A86994 /* Pods-AdjustExample-WebView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-WebView.release.xcconfig"; path = "Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView.release.xcconfig"; sourceTree = "<group>"; };
 		BCF06B57F6BFD1E16D3ED973 /* Pods-AdjustExample-WebView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdjustExample-WebView.debug.xcconfig"; path = "Target Support Files/Pods-AdjustExample-WebView/Pods-AdjustExample-WebView.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +85,7 @@
 		5BE5E914E7AF954141099281 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6F20027329DEC064005C60DF /* Adjust.framework */,
 				20A45DBAA85F58CFB0586EB1 /* Pods_AdjustExample_WebView.framework */,
 			);
 			name = Frameworks;

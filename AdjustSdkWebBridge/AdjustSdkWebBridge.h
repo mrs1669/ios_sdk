@@ -15,6 +15,7 @@ FOUNDATION_EXPORT double AdjustSdkWebBridgeVersionNumber;
 FOUNDATION_EXPORT const unsigned char AdjustSdkWebBridgeVersionString[];
 
 #import <AdjustSdkWebBridge/ADJAdjustBridge.h>
+#import <AdjustSdkWebBridge/ADJWebBridgeConstants.h>
 #import <AdjustSdkWebBridge/ADJAdjust.h>
 #import <AdjustSdkWebBridge/ADJAdjustEvent.h>
 #import <AdjustSdkWebBridge/ADJAdjustLogger.h>

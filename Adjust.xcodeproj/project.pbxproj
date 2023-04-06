@@ -3967,6 +3967,10 @@
 		6F20026329D74AA6005C60DF /* ADJOptionalFailsNL.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F8AB2C829C4D5CE001E371E /* ADJOptionalFailsNL.h */; };
 		6F20026429D74AA9005C60DF /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
 		6F20026529D74AA9005C60DF /* ADJOptionalFailsNL.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8AB2C929C4D5CE001E371E /* ADJOptionalFailsNL.m */; };
+		6F20026F29DDB0B3005C60DF /* ADJWebBridgeConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F20026D29DDB0B3005C60DF /* ADJWebBridgeConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F20027029DDB0B3005C60DF /* ADJWebBridgeConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F20026D29DDB0B3005C60DF /* ADJWebBridgeConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F20027129DDB0B3005C60DF /* ADJWebBridgeConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F20026E29DDB0B3005C60DF /* ADJWebBridgeConstants.m */; };
+		6F20027229DDB0B3005C60DF /* ADJWebBridgeConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F20026E29DDB0B3005C60DF /* ADJWebBridgeConstants.m */; };
 		6F214E5C288A9EF6002319D7 /* ADJAdjustInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E5A288A9EF6002319D7 /* ADJAdjustInternal.m */; };
 		6F214E60288AA43F002319D7 /* ADJPostSdkInitRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E5E288AA43F002319D7 /* ADJPostSdkInitRoot.m */; };
 		6F214E66288AA8FE002319D7 /* ADJMeasurementSessionStateStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F214E64288AA8FE002319D7 /* ADJMeasurementSessionStateStorage.m */; };
@@ -4672,6 +4676,8 @@
 		0AF6437929C1E48F00941AB3 /* ADJMeasurementConsentPackageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJMeasurementConsentPackageData.m; sourceTree = "<group>"; };
 		6F1223972A28DED200FCD961 /* ADJResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJResult.h; sourceTree = "<group>"; };
 		6F1223982A28DED200FCD961 /* ADJResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJResult.m; sourceTree = "<group>"; };
+		6F20026D29DDB0B3005C60DF /* ADJWebBridgeConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJWebBridgeConstants.h; sourceTree = "<group>"; };
+		6F20026E29DDB0B3005C60DF /* ADJWebBridgeConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJWebBridgeConstants.m; sourceTree = "<group>"; };
 		6F214E59288A9EF5002319D7 /* ADJAdjustInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAdjustInternal.h; sourceTree = "<group>"; };
 		6F214E5A288A9EF6002319D7 /* ADJAdjustInternal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJAdjustInternal.m; sourceTree = "<group>"; };
 		6F214E5D288AA43F002319D7 /* ADJPostSdkInitRoot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJPostSdkInitRoot.h; sourceTree = "<group>"; };
@@ -5341,6 +5347,8 @@
 				075586A329093BDB00A3AD50 /* ADJAdjustBridge.h */,
 				075586A429093BDB00A3AD50 /* ADJAdjustBridge.m */,
 				07066DF329473DF800ABF24D /* adjust.js */,
+				6F20026D29DDB0B3005C60DF /* ADJWebBridgeConstants.h */,
+				6F20026E29DDB0B3005C60DF /* ADJWebBridgeConstants.m */,
 			);
 			path = AdjustSdkWebBridge;
 			sourceTree = "<group>";
@@ -6480,6 +6488,7 @@
 				6F20025B29D74A97005C60DF /* ADJResultFail.h in Headers */,
 				073DA07729B6418D00C755F7 /* ADJEventStateStorage.h in Headers */,
 				6F1223A12A28DED200FCD961 /* ADJResult.h in Headers */,
+				6F20027029DDB0B3005C60DF /* ADJWebBridgeConstants.h in Headers */,
 				073DA07E29B641AE00C755F7 /* ADJGdprForgetSubscriber.h in Headers */,
 				07F39A9D2A08DEFC0046EB40 /* ADJLaunchedDeeplinkStateStorage.h in Headers */,
 				073DA03729B6413B00C755F7 /* ADJV4FilesData.h in Headers */,
@@ -6884,6 +6893,7 @@
 				0755881829096C0500A3AD50 /* ADJAdjustPublishers.h in Headers */,
 				075586FB29096A4500A3AD50 /* ADJLogController.h in Headers */,
 				074B02BF29CB4037007337BA /* ADJMeasurementConsentPackageData.h in Headers */,
+				6F20026F29DDB0B3005C60DF /* ADJWebBridgeConstants.h in Headers */,
 				0755877929096ACB00A3AD50 /* ADJGdprForgetController.h in Headers */,
 				074B02C729CB4043007337BA /* ADJMeasurementLifecycleSubscriber.h in Headers */,
 				0755882329096CCC00A3AD50 /* ADJSingleThreadExecutor.h in Headers */,
@@ -9095,6 +9105,7 @@
 				073D9F7F29B62E1900C755F7 /* ADJGlobalParametersControllerBase.m in Sources */,
 				073D9FAD29B62E5C00C755F7 /* ADJClientThirdPartySharingData.m in Sources */,
 				073D9FA529B62E5100C755F7 /* ADJPluginLogger.m in Sources */,
+				6F20027229DDB0B3005C60DF /* ADJWebBridgeConstants.m in Sources */,
 				073D9F7929B62E1200C755F7 /* ADJEventDeduplicationController.m in Sources */,
 				073D9FA929B62E5500C755F7 /* ADJPushTokenStateStorage.m in Sources */,
 				073D9F8029B62E1E00C755F7 /* ADJGlobalPartnerParametersStorage.m in Sources */,
@@ -9316,6 +9327,7 @@
 				075587C429096B2B00A3AD50 /* ADJDeviceInfoData.m in Sources */,
 				0755873B29096A8800A3AD50 /* ADJV4UserDefaultsData.m in Sources */,
 				075586D529096A2000A3AD50 /* ADJEventPackageData.m in Sources */,
+				6F20027129DDB0B3005C60DF /* ADJWebBridgeConstants.m in Sources */,
 				075587CF29096B4100A3AD50 /* ADJMainQueueController.m in Sources */,
 				075586FD29096A4500A3AD50 /* ADJLogController.m in Sources */,
 				075586CE29096A1100A3AD50 /* ADJUtilConv.m in Sources */,
