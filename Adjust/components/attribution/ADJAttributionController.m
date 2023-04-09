@@ -30,7 +30,6 @@
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionState *attributionState;
 @property (nullable, readwrite, strong, nonatomic)
     ADJAttributionPackageData *attributionPackageToSend;
-@property (readwrite, assign, nonatomic) BOOL canPublish;
 
 @end
 
@@ -113,8 +112,6 @@
 
     _attributionPackageToSend = nil;
 
-    _canPublish = NO;
-
     return self;
 }
 
@@ -163,25 +160,6 @@
         [self.attributionState receivedAcceptedAttributionResponse:attributionResponse];
 
     [self handleSideEffectsWithOutputData:output source:@"attributionResponse from state"];
-}
-
-#pragma mark - ADJPublishingGateSubscriber
-- (void)ccAllowedToPublishNotifications {
-    __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithLogger:self.logger
-                                          from:@"allowed to publish"
-                                         block:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        strongSelf.canPublish = YES;
-
-        ADJAttributionStateData *_Nonnull stateData = [strongSelf.storage readOnlyStoredDataValue];
-
-        [strongSelf handlePublishWithStateData:stateData
-                           previousAttribution:stateData.attributionData
-                                        source:@"allowed to publish"];
-    }];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -300,12 +278,7 @@
         return;
     }
 
-    ADJAttributionData *_Nullable previousAttribution =
-        [self handleChangedStateData:outputData.changedStateData];
-
-    [self handlePublishWithStateData:outputData.changedStateData
-                 previousAttribution:previousAttribution
-                              source:source];
+    [self handleChangedStateData:outputData.changedStateData];
 
     [self handleDelay:outputData.delayData
                source:source];
@@ -313,34 +286,19 @@
     [self handleAskingCommand:outputData.startAsking source:source];
 }
 
-- (nullable ADJAttributionData *)handleChangedStateData:
+- (void)handleChangedStateData:
     (nullable ADJAttributionStateData *)changedStateData
 {
-    if (changedStateData == nil) { return nil; }
-
-    ADJAttributionStateData *_Nonnull stateDataBeforeUpdate =
-        [self.storage readOnlyStoredDataValue];
+    if (changedStateData == nil) { return; }
 
     [self.storage updateWithNewDataValue:changedStateData];
 
-    return stateDataBeforeUpdate.attributionData;
-}
-
-- (void)handlePublishWithStateData:(nullable ADJAttributionStateData *)stateData
-               previousAttribution:(nullable ADJAttributionData *)previousAttribution
-                            source:(nonnull NSString *)source
-{
-    if (stateData == nil) { return; }
-    if (! self.canPublish) { return; }
-
-    [self.logger debugDev:@"Publishing attribution state"
-                     from:source];
+    [self.logger debugDev:@"Publishing attribution state"];
 
     [self.attributionPublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJAttributionSubscriber> _Nonnull subscriber)
      {
-        [subscriber attributionWithStateData:stateData
-                         previousAttribution:previousAttribution];
+        [subscriber attributionWithStateData:changedStateData];
     }];
 }
 

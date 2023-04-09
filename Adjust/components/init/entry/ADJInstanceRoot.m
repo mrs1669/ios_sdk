@@ -164,9 +164,9 @@
 
         // Initialize PostSdkInitRoot instance
         instanceRoot.postSdkInitRoot =
-        [[ADJPostSdkInitRoot alloc] initWithClientConfig:clientConfig
-                                         instanceRootBag:instanceRoot
-                                       preSdkInitRootBag:preSdkInitRoot];
+            [[ADJPostSdkInitRoot alloc] initWithClientConfig:clientConfig
+                                             instanceRootBag:instanceRoot
+                                           preSdkInitRootBag:preSdkInitRoot];
 
         // Inject remaining dependencies before subscriptions
         [preSdkInitRoot
@@ -181,7 +181,6 @@
 
         // Finalize Initialization process
         [instanceRoot.postSdkInitRoot ccCompletePostSdkInit];
-
     }];
 }
 

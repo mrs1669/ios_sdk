@@ -13,8 +13,7 @@
 
 @protocol ADJAttributionSubscriber <NSObject>
 
-- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData
-             previousAttribution:(nullable ADJAttributionData *)previousAttribution;
+- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData;
 
 @end
 

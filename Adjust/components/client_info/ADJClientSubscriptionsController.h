@@ -9,25 +9,31 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
+#import "ADJSdkInitSubscriber.h"
 #import "ADJAttributionSubscriber.h"
 #import "ADJLogSubscriber.h"
 #import "ADJThreadController.h"
+#import "ADJAttributionStateStorage.h"
 #import "ADJClientReturnExecutor.h"
 #import "ADJAdjustLogSubscriber.h"
 #import "ADJAdjustAttributionSubscriber.h"
 
 @interface ADJClientSubscriptionsController : ADJCommonBase<
     // subscriptions
+    ADJSdkInitSubscriber,
     ADJAttributionSubscriber,
     ADJLogSubscriber
 >
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                             threadController:(nonnull ADJThreadController *)threadController
-                         clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-                  adjustAttributionSubscriber:(nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
-                          adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
-                    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadController:(nonnull ADJThreadController *)threadController
+    attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    adjustAttributionSubscriber:
+        (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
+    adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
+    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink;
 
 @end
