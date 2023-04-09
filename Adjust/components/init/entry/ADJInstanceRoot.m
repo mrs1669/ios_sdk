@@ -427,9 +427,8 @@
         [clientActionsAPI ccRemoveGlobalCallbackParameterWithClientData:clientData];
     }];
 }
-
-- (void)clearAllGlobalCallbackParameters {
-    [self ccExecuteFrom:@"clearAllGlobalCallbackParameters"
+- (void)clearGlobalCallbackParameters {
+    [self ccExecuteFrom:@"clearGlobalCallbackParameters"
      clientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                           ADJLogger *_Nonnull logger)
      {
@@ -475,8 +474,8 @@
     }];
 }
 
-- (void)clearAllGlobalPartnerParameters {
-    [self ccExecuteFrom:@"clearAllGlobalPartnerParameters"
+- (void)clearGlobalPartnerParameters {
+    [self ccExecuteFrom:@"clearGlobalPartnerParameters"
      clientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                           ADJLogger *_Nonnull logger)
      {

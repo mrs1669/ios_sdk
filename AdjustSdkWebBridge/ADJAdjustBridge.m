@@ -282,7 +282,7 @@
         [adjustInstance removeGlobalCallbackParameterByKey:
          [self keyWithJsParameters:jsParameters]];
     } else if ([ADJWBClearGlobalCallbackParametersMethodName isEqualToString:methodName]) {
-        [adjustInstance clearAllGlobalCallbackParameters];
+        [adjustInstance clearGlobalCallbackParameters];
     } else if ([ADJWBAddGlobalPartnerParameterMethodName isEqualToString:methodName]) {
         [adjustInstance
          addGlobalPartnerParameterWithKey:[self keyWithJsParameters:jsParameters]
@@ -291,7 +291,7 @@
         [adjustInstance removeGlobalPartnerParameterByKey:
          [self keyWithJsParameters:jsParameters]];
     } else if ([ADJWBClearGlobalPartnerParametersMethodName isEqualToString:methodName]) {
-        [adjustInstance clearAllGlobalPartnerParameters];
+        [adjustInstance clearGlobalPartnerParameters];
     } else {
         [self errorWithLogData:
          [self.logger debugDev:@"Could not map method name with any of the possible values"
