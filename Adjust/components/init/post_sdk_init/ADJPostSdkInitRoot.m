@@ -112,7 +112,8 @@
         [[ADJSdkPackageSenderController alloc]
          initWithLoggerFactory:loggerFactory
          networkEndpointData:sdkConfig.networkEndpointData
-         adjustUrlStrategy:clientConfig.urlStrategy
+         urlStrategyBaseDomain:clientConfig.urlStrategyBaseDomain
+         dataResidency:clientConfig.dataResidency
          clientCustomEndpointData:clientConfig.clientCustomEndpointData
          publisherController:instanceRootBag.publisherController];
 

@@ -32,7 +32,8 @@
                    sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
                          sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
                           networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-                            adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+                        urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+                                dataResidency:(nullable AdjustDataResidency)dataResidency
                      clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData;
 
 // public api

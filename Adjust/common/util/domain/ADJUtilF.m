@@ -224,9 +224,9 @@
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex {
-    return [regex matchesInString:stringValue
-                          options:0
-                            range:NSMakeRange(0, stringValue.length)].count > 0;
+    return ([regex matchesInString:stringValue
+                           options:0
+                             range:NSMakeRange(0, stringValue.length)].count > 0);
 }
 
 + (BOOL)isNotANumber:(nonnull NSNumber *)numberValue {

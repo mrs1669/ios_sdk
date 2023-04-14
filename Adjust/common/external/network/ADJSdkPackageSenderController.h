@@ -29,7 +29,8 @@
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+    urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+    dataResidency:(nullable AdjustDataResidency)dataResidency
     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
     publisherController:(nonnull ADJPublisherController *)publisherController;
 
