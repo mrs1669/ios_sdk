@@ -33,7 +33,7 @@
           cannotPerformMessage:(nonnull NSString *)cannotPerformMessage
 {
     [clientReturnExecutor executeClientReturnWithBlock:^{
-        [adjustCallback didFailWithMessage:cannotPerformMessage];
+        [adjustCallback didFailWithAdjustCallbackMessage:cannotPerformMessage];
     }];
 }
 
@@ -62,14 +62,14 @@ attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateSt
         [self.logger debugDev:@"Returning fail on client attribution callback"
          " because it is not available from the backend"];
         [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustAttributionCallback didFailWithMessage:
+            [adjustAttributionCallback didFailWithAdjustCallbackMessage:
              @"Cannot read attribution data because it is not available from the backend"];
         }];
     } else {
         [self.logger debugDev:@"Returning fail on client attribution callback"
          " because it still waiting"];
         [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustAttributionCallback didFailWithMessage:
+            [adjustAttributionCallback didFailWithAdjustCallbackMessage:
              @"Cannot read attribution data because it still waiting."
              " Please try again later or subscribe for attribution at sdk init"];
         }];
@@ -96,7 +96,7 @@ LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launched
         [self.logger debugDev:@"Cannot get launched deeplink for callback"];
         [clientReturnExecutor executeClientReturnWithBlock:^{
             [adjustLaunchedDeeplinkCallback
-             didFailWithMessage:@"Cannot get launched deeplink data because it is not available"];
+             didFailWithAdjustCallbackMessage:@"Cannot get launched deeplink data because it is not available"];
         }];
     }
 }
@@ -117,7 +117,7 @@ LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launched
         NSString *_Nonnull callbackFailMessage = [ADJUtilF logMessageAndParamsFormat:inputLog];
 
         [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustDeviceIdsCallback didFailWithMessage:callbackFailMessage];
+            [adjustDeviceIdsCallback didFailWithAdjustCallbackMessage:callbackFailMessage];
         }];
         return;
     }
