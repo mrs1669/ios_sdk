@@ -10,6 +10,7 @@
 #import "ADJAdjust.h"
 #import "ADJAdjustInstance.h"
 #import "ADJAdjustConfig.h"
+#import "ADJAdjustLaunchedDeeplink.h"
 
 @interface AppDelegate ()
 
@@ -27,6 +28,9 @@
     [adjustConfig setAdjustAttributionSubscriber:self];
     [adjustConfig setExternalDeviceId:@"test-ext-device-id"];
     [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
+    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:self];
+    [[ADJAdjust instance] trackLaunchedDeeplink:[[ADJAdjustLaunchedDeeplink alloc]
+                                                 initWithString:@"https://github.com/"]];
     return YES;
 }
 
@@ -38,5 +42,14 @@
     NSLog(@"Adjust Attribution Changed: %@", adjustAttribution);
 }
 
+- (void)didFailWithMessage:(NSString *)message {
+    NSLog(@"Adjust Fail Message: %@", message);
+}
+
+- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSURL *)adjustLaunchedDeeplink {
+    NSLog(@"Adjust Launched Deeplink: %@", adjustLaunchedDeeplink);
+}
 
 @end
+
+
