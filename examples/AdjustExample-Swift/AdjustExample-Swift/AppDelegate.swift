@@ -50,7 +50,7 @@ extension AppDelegate: ADJAdjustLaunchedDeeplinkCallback {
         print("Adjust Launched Deeplink:\(adjustLaunchedDeeplink)")
     }
     
-    func didFail(withMessage message: String) {
+    func didFail(withAdjustCallbackMessage message: String) {
         print("Adjust Fail Message:\(message)")
     }
 }

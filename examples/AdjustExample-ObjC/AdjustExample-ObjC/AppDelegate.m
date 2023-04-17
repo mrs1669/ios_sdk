@@ -42,7 +42,7 @@
     NSLog(@"Adjust Attribution Changed: %@", adjustAttribution);
 }
 
-- (void)didFailWithMessage:(NSString *)message {
+- (void)didFailWithAdjustCallbackMessage:(NSString *)message {
     NSLog(@"Adjust Fail Message: %@", message);
 }
 
