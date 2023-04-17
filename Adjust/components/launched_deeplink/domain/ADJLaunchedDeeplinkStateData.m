@@ -30,7 +30,7 @@ static NSString *const kLaunchedDeeplinkKey = @"launchedDeeplink";
 + (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
                                      logger:(nonnull ADJLogger *)logger {
     if (![ioData isExpectedMetadataTypeValue:ADJLaunchedDeeplinkStateDataMetadataTypeValue
-                                       logger:logger]) {
+                                      logger:logger]) {
         return nil;
     }
 
@@ -99,4 +99,5 @@ static NSString *const kLaunchedDeeplinkKey = @"launchedDeeplink";
 }
 
 @end
+
 

@@ -34,4 +34,6 @@
 
 - (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 
+- (void)ccLaunchedDeeplinkWithCallback:(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback;
+
 @end

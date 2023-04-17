@@ -65,6 +65,7 @@
     _launchedDeeplinkController = [[ADJLaunchedDeeplinkController alloc]
                                    initWithLoggerFactory:loggerFactory
                                    sdkPackageBuilder:sdkPackageBuilder
+                                   launchedDeeplinkStateStorage:storageRoot.launchedDeeplinkStateStorage
                                    mainQueueController:mainQueueController];
 
     _eventController = [[ADJEventController alloc]

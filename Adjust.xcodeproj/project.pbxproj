@@ -1096,6 +1096,13 @@
 		078844912886CC66001814F7 /* ADJNonNegativeInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788448F2886CC66001814F7 /* ADJNonNegativeInt.m */; };
 		0788449A2886D271001814F7 /* ADJSQLiteStorageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 078844982886D271001814F7 /* ADJSQLiteStorageBase.m */; };
 		078844A02886D388001814F7 /* ADJSQLiteDb.m in Sources */ = {isa = PBXBuildFile; fileRef = 0788449E2886D388001814F7 /* ADJSQLiteDb.m */; };
+		078FE1A829DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		078FE1A929DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		078FE1AA29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		078FE1AB29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		078FE1AC29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		078FE1AD29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		078FE1AE29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07926DAF289A7E0200260E25 /* ADJEventStateData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07926DAD289A7E0200260E25 /* ADJEventStateData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		07926DB0289A7E0200260E25 /* ADJEventStateData.m in Sources */ = {isa = PBXBuildFile; fileRef = 07926DAE289A7E0200260E25 /* ADJEventStateData.m */; };
 		07926DB4289A806000260E25 /* ADJClientAddGlobalParameterData.h in Headers */ = {isa = PBXBuildFile; fileRef = 07926DB2289A806000260E25 /* ADJClientAddGlobalParameterData.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -4466,6 +4473,7 @@
 		0788449D2886D388001814F7 /* ADJSQLiteDb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSQLiteDb.h; sourceTree = "<group>"; };
 		0788449E2886D388001814F7 /* ADJSQLiteDb.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJSQLiteDb.m; sourceTree = "<group>"; };
 		078844A22886D43F001814F7 /* ADJSQLiteDbMessageProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJSQLiteDbMessageProvider.h; sourceTree = "<group>"; };
+		078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJAdjustLaunchedDeeplinkCallback.h; sourceTree = "<group>"; };
 		07926DAD289A7E0200260E25 /* ADJEventStateData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJEventStateData.h; sourceTree = "<group>"; };
 		07926DAE289A7E0200260E25 /* ADJEventStateData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJEventStateData.m; sourceTree = "<group>"; };
 		07926DB2289A806000260E25 /* ADJClientAddGlobalParameterData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJClientAddGlobalParameterData.h; sourceTree = "<group>"; };
@@ -5321,6 +5329,7 @@
 				0737C1AC287F3E18004C7D59 /* ADJAdjustConfig.m */,
 				07615EF428880E8800CE57FC /* ADJAdjustAttributionCallback.h */,
 				0737C1AD287F3E18004C7D59 /* ADJAdjustAttributionSubscriber.h */,
+				078FE1A629DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h */,
 				071594052886E41C00E7F2F8 /* ADJAdjustAttribution.h */,
 				071594062886E41C00E7F2F8 /* ADJAdjustAttribution.m */,
 				071594092886E53F00E7F2F8 /* ADJAdjustLogSubscriber.h */,
@@ -6201,6 +6210,7 @@
 				0A7ED75F2892B11B00CC20DE /* ADJGlobalCallbackParametersStorage.h in Headers */,
 				6FCD5487298AAF10007542FB /* ADJMeasurementLifecycleController.h in Headers */,
 				0A7ED7612892B11B00CC20DE /* ADJMainQueueStateAndTracker.h in Headers */,
+				078FE1A829DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */,
 				0A7ED7622892B11B00CC20DE /* ADJMainQueueController.h in Headers */,
 				0A7ED7632892B11B00CC20DE /* ADJMainQueueStorage.h in Headers */,
 				6FE8489829717BF8003AAFA8 /* ADJPublisherController.h in Headers */,
@@ -6966,6 +6976,7 @@
 				0A25F95C28E5CAC7001988A1 /* ADJBillingSubscriptionController.h in Headers */,
 				0A25F95D28E5CAC7001988A1 /* ADJAttributionSubscriber.h in Headers */,
 				0A25F95E28E5CAC7001988A1 /* ADJAttributionStateData.h in Headers */,
+				078FE1A929DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */,
 				0A25F95F28E5CAC7001988A1 /* ADJAttributionData.h in Headers */,
 				0A25F96028E5CAC7001988A1 /* ADJAttributionState.h in Headers */,
 				0A25F96128E5CAC7001988A1 /* ADJAttributionTracker.h in Headers */,
@@ -7235,6 +7246,7 @@
 				0A25FB5928F42381001988A1 /* ADJBillingSubscriptionController.h in Headers */,
 				0A25FB5A28F42381001988A1 /* ADJAttributionSubscriber.h in Headers */,
 				0A25FB5B28F42381001988A1 /* ADJAttributionStateData.h in Headers */,
+				078FE1AA29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */,
 				0A25FB5C28F42381001988A1 /* ADJAttributionData.h in Headers */,
 				0A25FB5D28F42381001988A1 /* ADJAttributionState.h in Headers */,
 				0A25FB5E28F42381001988A1 /* ADJAttributionTracker.h in Headers */,
@@ -7504,6 +7516,7 @@
 				0A25FD2828F43C2C001988A1 /* ADJBillingSubscriptionController.h in Headers */,
 				0A25FD2928F43C2C001988A1 /* ADJAttributionSubscriber.h in Headers */,
 				0A25FD2A28F43C2C001988A1 /* ADJAttributionStateData.h in Headers */,
+				078FE1AB29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */,
 				0A25FD2B28F43C2C001988A1 /* ADJAttributionData.h in Headers */,
 				0A25FD2C28F43C2C001988A1 /* ADJAttributionState.h in Headers */,
 				0A25FD2D28F43C2C001988A1 /* ADJAttributionTracker.h in Headers */,
@@ -7773,6 +7786,7 @@
 				0A7E490928F8276C00827F0B /* ADJBillingSubscriptionController.h in Headers */,
 				0A7E490A28F8276C00827F0B /* ADJAttributionSubscriber.h in Headers */,
 				0A7E490B28F8276C00827F0B /* ADJAttributionStateData.h in Headers */,
+				078FE1AC29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */,
 				0A7E490C28F8276C00827F0B /* ADJAttributionData.h in Headers */,
 				0A7E490D28F8276C00827F0B /* ADJAttributionState.h in Headers */,
 				0A7E490E28F8276C00827F0B /* ADJAttributionTracker.h in Headers */,
@@ -8042,6 +8056,7 @@
 				0A7E49F928F82F6C00827F0B /* ADJBillingSubscriptionController.h in Headers */,
 				0A7E49FA28F82F6C00827F0B /* ADJAttributionSubscriber.h in Headers */,
 				0A7E49FB28F82F6C00827F0B /* ADJAttributionStateData.h in Headers */,
+				078FE1AD29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */,
 				0A7E49FC28F82F6C00827F0B /* ADJAttributionData.h in Headers */,
 				0A7E49FD28F82F6C00827F0B /* ADJAttributionState.h in Headers */,
 				0A7E49FE28F82F6C00827F0B /* ADJAttributionTracker.h in Headers */,
@@ -8310,6 +8325,7 @@
 				0A7E4AE428F830AE00827F0B /* ADJBillingSubscriptionController.h in Headers */,
 				0A7E4AE528F830AE00827F0B /* ADJAttributionSubscriber.h in Headers */,
 				0A7E4AE628F830AE00827F0B /* ADJAttributionStateData.h in Headers */,
+				078FE1AE29DDC3DC00D3B16F /* ADJAdjustLaunchedDeeplinkCallback.h in Headers */,
 				0A7E4AE728F830AE00827F0B /* ADJAttributionData.h in Headers */,
 				0A7E4AE828F830AE00827F0B /* ADJAttributionState.h in Headers */,
 				0A7E4AE928F830AE00827F0B /* ADJAttributionTracker.h in Headers */,

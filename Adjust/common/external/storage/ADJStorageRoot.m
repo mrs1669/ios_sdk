@@ -29,6 +29,7 @@
  @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStorage *mainQueueStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *sdkActiveStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkStateStorage *launchedDeeplinkStateStorage;
  */
 @interface ADJStorageRoot ()
 
@@ -40,21 +41,23 @@
 @implementation ADJStorageRoot
 #pragma mark Instantiation
 #define buildAndInjectStorage(varName, classType)       \
-    _ ## varName = [[classType alloc]                   \
-        initWithLoggerFactory:loggerFactory             \
-        storageExecutor:self.storageExecutor            \
-        sqliteController:self.sqliteController];        \
-    [self.sqliteController addSqlStorage:self.varName]  \
+_ ## varName = [[classType alloc]                   \
+initWithLoggerFactory:loggerFactory             \
+storageExecutor:self.storageExecutor            \
+sqliteController:self.sqliteController];        \
+[self.sqliteController addSqlStorage:self.varName]  \
 
 - (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    instanceId:(nonnull ADJInstanceIdData *)instanceId
+initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
     self = [super init];
 
-    _storageExecutor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                        sourceDescription:@"storageExecutor"];
+    _storageExecutor =
+    [threadExecutorFactory
+     createSingleThreadExecutorWithLoggerFactory:loggerFactory
+     sourceDescription:@"storageExecutor"];
 
     _keychainStorage = [[ADJKeychainStorage alloc] initWithLoggerFactory:loggerFactory];
 
@@ -75,6 +78,7 @@
     buildAndInjectStorage(mainQueueStorage, ADJMainQueueStorage);
     buildAndInjectStorage(sdkActiveStateStorage, ADJSdkActiveStateStorage);
     buildAndInjectStorage(measurementSessionStateStorage, ADJMeasurementSessionStateStorage);
+    buildAndInjectStorage(launchedDeeplinkStateStorage, ADJLaunchedDeeplinkStateStorage);
 
     [self.sqliteController readAllIntoMemorySync];
 
@@ -116,3 +120,4 @@
 }
 
 @end
+

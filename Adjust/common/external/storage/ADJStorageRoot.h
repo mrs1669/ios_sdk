@@ -27,6 +27,7 @@
 #import "ADJMainQueueStorage.h"
 #import "ADJSdkActiveStateStorage.h"
 #import "ADJMeasurementSessionStateStorage.h"
+#import "ADJLaunchedDeeplinkStateStorage.h"
 
 @interface ADJStorageRoot : NSObject<ADJTeardownFinalizer>
 // instantiation
@@ -56,6 +57,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStorage *mainQueueStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *sdkActiveStateStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
+@property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkStateStorage *launchedDeeplinkStateStorage;
 
 // public api
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;

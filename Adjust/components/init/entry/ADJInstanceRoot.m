@@ -263,6 +263,19 @@
     } clientSource:@"adjustAttributionWithCallback"];
 }
 
+- (void)adjustLaunchedDeeplinkWithCallback:
+(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
+{
+    [self ccWithAdjustCallback:adjustLaunchedDeeplinkCallback
+                      preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
+     {
+        [preSdkInitRoot.clientCallbacksController
+         ccLaunchedDeepLinkWithCallback:adjustLaunchedDeeplinkCallback
+         clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
+         LaunchedDeeplinkStateStorage:preSdkInitRoot.storageRoot.launchedDeeplinkStateStorage];
+    } clientSource:@"adjustLaunchedDeeplinkWithCallback"];
+}
+
 - (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
     [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                                             ADJLogger * _Nonnull logger)

@@ -44,5 +44,7 @@
 @property (nullable, readonly, strong, nonatomic) NSNumber *sessionLengthNumberDouble;
 //@property (nonatomic, strong) NSMutableArray *transactionIds;
 @property (nullable, readonly, strong, nonatomic) NSMutableArray *transactionIds;
+//@property (nonatomic, copy) NSString *launchedDeeplink;
+@property (nullable, readonly, strong, nonatomic) NSString *launchedDeeplink;
 
 @end
