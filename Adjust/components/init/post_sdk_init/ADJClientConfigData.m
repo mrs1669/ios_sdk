@@ -98,14 +98,14 @@
                      nserror:error
                    issueType:ADJIssueLogicError];
         } else {
-            if ([ADJUtilF matchesWithString:adjustConfig.urlStrategyDomain
-                                      regex:domainValidationRegex])  {
-                urlStrategyDomain = [[ADJNonEmptyString alloc]
-                                     initWithConstStringValue:adjustConfig.urlStrategyDomain];
-            } else {
+            if (! [ADJUtilF matchesWithString:adjustConfig.urlStrategyDomain
+                                        regex:domainValidationRegex])  {
                 NSString * errMessage = [NSString stringWithFormat:@"Invalid URL strategy domain: [%@]",
                                          adjustConfig.urlStrategyDomain];
                 [logger errorClient:errMessage];
+            } else {
+                urlStrategyDomain = [[ADJNonEmptyString alloc]
+                                     initWithConstStringValue:adjustConfig.urlStrategyDomain];
             }
         }
     }
