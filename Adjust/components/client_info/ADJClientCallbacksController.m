@@ -31,12 +31,19 @@
 - (void)failWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
           clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
              cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail
+                          from:(nonnull NSString *)from
 {
-    __block NSString *_Nonnull cannotPerformMessage =
-        [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-         [cannotPerformFail foundationDictionary]];
+    ADJOptionalFailsNN<NSString *> *_Nonnull cannotPerformMessageOptFails =
+        [ADJUtilJson toStringFromDictionary:[cannotPerformFail toJsonDictionary]];
+    for (ADJResultFail *_Nonnull optFail in cannotPerformMessageOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse json dictionary"
+                         from:from
+                   resultFail:optFail
+                    issueType:ADJIssueLogicError];
+    }
+
     [clientReturnExecutor executeClientReturnWithBlock:^{
-        [adjustCallback didFailWithAdjustCallbackMessage:cannotPerformMessage];
+        [adjustCallback didFailWithAdjustCallbackMessage:cannotPerformMessageOptFails.value];
     }];
 }
 

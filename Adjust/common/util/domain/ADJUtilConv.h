@@ -17,6 +17,7 @@
 
 + (NSTimeInterval)convertToSecondsWithMilliseconds:(NSUInteger)milliseconds;
 
+// string to numbers
 + (nonnull ADJResult<NSNumber *> *)
     convertToIntegerNumberWithStringValue:(nonnull NSString *)stringValue;
 + (nonnull ADJResult<NSNumber *> *)
@@ -24,26 +25,18 @@
 + (nonnull ADJResult<NSNumber *> *)
     convertToDoubleNumberWithStringValue:(nonnull NSString *)stringValue;
 
+// to and from base 64
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue;
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
-+ (nonnull ADJResult<NSData *> *)
-    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue;
-+ (nonnull ADJResult<id> *)
-    convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString;
-+ (nonnull ADJResult<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData;
-
-+ (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
-
+// string map convertions
 + (nonnull ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *)
     convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
 
-+ (nonnull ADJOptionalFailsNN<ADJResult<NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
-    convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray<NSString *> *)nameKeyStringValueArray;
-
-+ (nonnull ADJOptionalFailsNN<ADJResult<NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
-    convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray *)nameKeyNumberBooleanValueArray;
+// nameKeyValueArray maps [name, key, value] to <name, <key, value>>
+//  value can be either string or boolean
++ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
+    jsonStringFromNameKeyValueArray:
+    (nullable NSArray<NSString *> *)nameKeyValueArray;
 
 @end

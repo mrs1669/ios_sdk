@@ -199,7 +199,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
 
 - (nonnull NSDictionary<NSString *, NSString *> *)foundationStringMap {
     NSMutableDictionary<NSString *, NSString *> *_Nonnull builder =
-        [[NSMutableDictionary alloc] initWithDictionary:[self.parameters foundationStringMap]];
+        [[NSMutableDictionary alloc] initWithDictionary:[self.parameters jsonStringDictionary]];
 
     [builder setObject:self.path forKey:kPathKey];
     [builder setObject:self.clientSdk forKey:kClientSdkKey];

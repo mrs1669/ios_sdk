@@ -15,8 +15,8 @@
 // public constants
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSString *const ADJBooleanTrueString;
-FOUNDATION_EXPORT NSString *const ADJBooleanFalseString;
+FOUNDATION_EXPORT NSString *const ADJBooleanTrueJsonString;
+FOUNDATION_EXPORT NSString *const ADJBooleanFalseJsonString;
 
 NS_ASSUME_NONNULL_END
 
@@ -27,7 +27,8 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nonnull instancetype)instanceFromBool:(BOOL)boolValue;
 
-+ (nullable instancetype)instanceFromNumberBoolean:(nullable NSNumber *)numberBooleanValue;
++ (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromNumberBoolean:
+    (nullable NSNumber *)numberBooleanValue;
 
 + (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromIoValue:
     (nullable ADJNonEmptyString *)ioValue;
@@ -41,6 +42,7 @@ NS_ASSUME_NONNULL_END
 // public properties
 @property (readonly, assign, nonatomic) BOOL boolValue;
 @property (nonnull, readonly, strong, nonatomic) NSNumber *numberBoolValue;
+@property (nonnull, readonly, strong, nonatomic) NSString *jsonString;
 
 @end
 

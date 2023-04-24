@@ -29,7 +29,6 @@ NS_DESIGNATED_INITIALIZER;
 // public API
 - (nonnull NSMutableDictionary <NSString *, id>*)generateFoundationDictionary;
 
-+ (nonnull NSString *)generateJsonStringFromFoundationDictionary:
-    (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
+- (nullable NSString *)runningThreadIdCoalesce;
 
 @end

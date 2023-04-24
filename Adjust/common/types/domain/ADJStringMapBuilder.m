@@ -92,8 +92,8 @@ NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
     return self.mapBuilder.count == 0;
 }
 
-- (nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)mapCopy {
-    return [self.mapBuilder copy];
+- (nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)mapCast {
+    return self.mapBuilder;
 }
 
 #pragma mark - NSCopying

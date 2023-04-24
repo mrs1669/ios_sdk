@@ -13,8 +13,6 @@
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJStringMap.h"
 
-typedef NSDictionary<NSString *, id> * ADJStringKeyDict;
-
 @interface ADJUtilMap : NSObject
 
 + (void)injectIntoIoDataBuilderMap:(nonnull ADJStringMapBuilder *)ioDataMapBuilder

@@ -322,12 +322,11 @@
     ADJNonEmptyString *_Nullable errorReasonToWrite;
 
     if (asaAttributionTokenResult.fail != nil) {
-        ADJNonEmptyString *_Nonnull errorMessage =
-            [[ADJNonEmptyString alloc] initWithConstStringValue:
-             [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-              [asaAttributionTokenResult.fail foundationDictionary]]];
+        ADJNonEmptyString *_Nullable errorMessage =
+            [self toJsonStringWithFail:asaAttributionTokenResult.fail];
 
-        if (! [ADJUtilObj objectEquals:errorMessage
+        if (errorMessage != nil &&
+            ! [ADJUtilObj objectEquals:errorMessage
                                  other:currentStateData.errorReason])
         {
             errorReasonToWrite = errorMessage;
@@ -349,6 +348,27 @@
                                                          errorReason:errorReasonToWrite]];
 
     return YES;
+}
+- (nullable ADJNonEmptyString *)toJsonStringWithFail:(nonnull ADJResultFail *)resultFail {
+    ADJOptionalFailsNN<NSString *> *_Nonnull jsonStringOptFails =
+        [ADJUtilJson toStringFromDictionary:[resultFail toJsonDictionary]];
+    for (ADJResultFail *_Nonnull optFail in jsonStringOptFails.optionalFails) {
+        [self.logger debugDev:@"Issue while converting fail to string"
+                   resultFail:optFail
+                    issueType:ADJIssueLogicError];
+    }
+
+    ADJResult<ADJNonEmptyString *> *_Nonnull jsonStringResult =
+        [ADJNonEmptyString instanceFromString:jsonStringOptFails.value];
+    if (jsonStringResult.fail != nil) {
+        [self.logger debugDev:@"Invalid json string from fail"
+                   resultFail:jsonStringResult.fail
+                    issueType:ADJIssueLogicError];
+
+        return nil;
+    }
+
+    return jsonStringResult.value;
 }
 
 // TODO return Result

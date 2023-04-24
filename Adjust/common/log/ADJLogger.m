@@ -9,7 +9,7 @@
 #import "ADJLogger.h"
 
 #import "ADJAdjustLogMessageData.h"
-#import "ADJUtilF.h"
+#import "ADJUtilObj.h"
 #import "ADJConstants.h"
 #import "ADJLocalThreadController.h"
 //#import <os/log.h>
@@ -85,7 +85,7 @@
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                          value:[ADJUtilObj idOrNsNull:value]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         from:(nonnull NSString *)from
@@ -97,7 +97,7 @@
                            key1:ADJLogFromKey
                          value1:from
                            key2:key
-                         value2:[ADJUtilF stringOrNsNull:value]];
+                         value2:[ADJUtilObj idOrNsNull:value]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         key1:(nonnull NSString *)key1
@@ -108,9 +108,9 @@
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
                            key1:key1
-                         value1:[ADJUtilF stringOrNsNull:value1]
+                         value1:[ADJUtilObj idOrNsNull:value1]
                            key2:key2
-                         value2:[ADJUtilF stringOrNsNull:value2]];
+                         value2:[ADJUtilObj idOrNsNull:value2]];
 }
 
 #pragma mark - debug dev with issue
@@ -162,7 +162,7 @@
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
                                     expectedValue, ADJLogExpectedKey,
-                                    [ADJUtilF stringOrNsNull:actualValue], ADJLogActualKey, nil]]];
+                                    [ADJUtilObj idOrNsNull:actualValue], ADJLogActualKey, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                      subject:(nonnull NSString *)subject
@@ -191,7 +191,7 @@
                                resultFail:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    [ADJUtilF stringOrNsNull:value], key, nil]]];
+                                    [ADJUtilObj idOrNsNull:value], key, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
@@ -206,7 +206,7 @@
                                resultFail:resultFail
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    [ADJUtilF stringOrNsNull:value], key, nil]]];
+                                    [ADJUtilObj idOrNsNull:value], key, nil]]];
 }
 
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
@@ -223,8 +223,8 @@
                                resultFail:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    [ADJUtilF stringOrNsNull:value1], key1,
-                                    [ADJUtilF stringOrNsNull:value2], key2, nil]]];
+                                    [ADJUtilObj idOrNsNull:value1], key1,
+                                    [ADJUtilObj idOrNsNull:value2], key2, nil]]];
 }
 
 #pragma mark - info client
@@ -238,7 +238,7 @@
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelInfo
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                          value:[ADJUtilObj idOrNsNull:value]];
 }
 - (nonnull ADJInputLogMessageData *)infoClient:(nonnull NSString *)message
                                           key1:(nonnull NSString *)key1
@@ -249,9 +249,9 @@
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelInfo
                            key1:key1
-                         value1:[ADJUtilF stringOrNsNull:value1]
+                         value1:[ADJUtilObj idOrNsNull:value1]
                            key2:key2
-                         value2:[ADJUtilF stringOrNsNull:value2]];
+                         value2:[ADJUtilObj idOrNsNull:value2]];
 }
 
 #pragma mark - notice client
@@ -265,7 +265,7 @@
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelNotice
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                          value:[ADJUtilObj idOrNsNull:value]];
 }
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
                                       resultFail:(nonnull ADJResultFail *)resultFail
@@ -289,7 +289,7 @@
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelError
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                          value:[ADJUtilObj idOrNsNull:value]];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                   expectedValue:(nonnull NSString *)expectedValue
@@ -300,7 +300,7 @@
                            key1:ADJLogExpectedKey
                          value1:expectedValue
                            key2:ADJLogActualKey
-                         value2:[ADJUtilF stringOrNsNull:actualValue]];
+                         value2:[ADJUtilObj idOrNsNull:actualValue]];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                      resultFail:(nonnull ADJResultFail *)resultFail
@@ -335,7 +335,7 @@
                                issueType:nil
                                resultFail:resultFail
                                messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
-                                              [ADJUtilF stringOrNsNull:value], key, nil]]];
+                                              [ADJUtilObj idOrNsNull:value], key, nil]]];
 }
 
 #pragma mark Internal methods

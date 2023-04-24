@@ -11,7 +11,7 @@
 #import "ADJSdkPackageUrlBuilder.h"
 #import "ADJSdkResponseDataBuilder.h"
 #import "ADJUtilF.h"
-#import "ADJUtilConv.h"
+#import "ADJUtilJson.h"
 #import "ADJUtilSys.h"
 #import "ADJSdkPackageSenderPinningDelegate.h"
 #import "ADJTimerOnce.h"
@@ -307,32 +307,20 @@
     [self retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
 }
 
-+ (nonnull ADJResult<NSData *> *)requestResultWithData:(nullable NSData *)data
-                                                   error:(nullable NSError *)error
-{
-    if (data != nil) {
-        return [ADJResult okWithValue:data];
-    }
-
-    return [ADJResult failWithMessage:@"dataTaskWithRequest error"
-                                error:error];
-}
-
 - (void)handleRequestCallbackWithData:(nullable NSData *)data
                              response:(nullable NSURLResponse *)response
                                 error:(nullable NSError *)error
                    sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
 {
-    ADJResult<NSData *> *_Nonnull callbackDataResult =
-        [ADJSdkPackageSender requestResultWithData:data error:error];
-    if (callbackDataResult.fail) {
+    if (data == nil) {
         [self.logger debugDev:@"Cannot process request"
-                   resultFail:callbackDataResult.fail
+                   resultFail:[[ADJResultFail alloc] initWithMessage:@"dataTaskWithRequest error"
+                                                               error:error]
                     issueType:ADJIssueNetworkRequest];
         return;
     }
 
-    ADJResult<NSString *> *_Nonnull responseStringResult = [ADJUtilF jsonDataFormat:data];
+    ADJResult<NSString *> *_Nonnull responseStringResult = [ADJUtilJson toStringFromData:data];
 
     if (responseStringResult.fail != nil) {
         [self.logger debugDev:@"Server with response"
@@ -344,34 +332,24 @@
                         value:responseStringResult.value];
     }
 
-    [self injectJsonWithResponseData:callbackDataResult.value
+    [self injectJsonWithResponseData:data
                   sdkResponseBuilder:sdkResponseBuilder];
 }
 
 - (void)injectJsonWithResponseData:(nonnull NSData *)responseData
                 sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
 {
-    ADJResult<id> *_Nonnull responseJsonFoundationObjectResult =
-        [ADJUtilConv convertToJsonFoundationValueWithJsonData:responseData];
+    ADJResult<NSDictionary<NSString *, id> *> *_Nonnull jsonDictionaryResult =
+        [ADJUtilJson toDictionaryFromData:responseData];
 
-    if (responseJsonFoundationObjectResult.fail != nil) {
-        [self.logger debugDev:@"Cannot not parse json response data"
-                   resultFail:responseJsonFoundationObjectResult.fail
+    if (jsonDictionaryResult.fail != nil) {
+        [self.logger debugDev:@"Cannot not parse json dictionary response data"
+                   resultFail:jsonDictionaryResult.fail
                     issueType:ADJIssueNetworkRequest];
         return;
     }
 
-    id _Nonnull responseJsonFoundationObject = responseJsonFoundationObjectResult.value;
-
-    if (! [responseJsonFoundationObject isKindOfClass:[NSDictionary class]]) {
-        [self.logger debugDev:@"Parsed json response is not of expected type dictionary"
-                          key:@"json response type"
-                        value:NSStringFromClass([responseJsonFoundationObject class])
-                    issueType:ADJIssueNetworkRequest];
-        return;
-    }
-
-    sdkResponseBuilder.jsonDictionary = (NSDictionary *)responseJsonFoundationObject;
+    sdkResponseBuilder.jsonDictionary = jsonDictionaryResult.value;
 }
 
 - (void)retryOrReturnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {

@@ -8,8 +8,9 @@
 
 #import "ADJInputLogMessageData.h"
 
-#import "ADJUtilF.h"
 #import "ADJConstants.h"
+#import "ADJUtilObj.h"
+#import "ADJUtilJson.h"
 
 //#import "ADJResultFail.h"
 
@@ -241,7 +242,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
         self.messageParams = [[NSMutableDictionary alloc] init];
     }
 
-    [self.messageParams setObject:[ADJUtilF idOrNsNull:value] forKey:key];
+    [self.messageParams setObject:[ADJUtilObj idOrNsNull:value] forKey:key];
 }
 
 #pragma mark Internal Methods

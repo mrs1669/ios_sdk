@@ -564,7 +564,8 @@
             [preSdkInitRoot.clientCallbacksController
              failWithAdjustCallback:adjustCallback
              clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
-             cannotPerformFail:cannotPerformFail];
+             cannotPerformFail:cannotPerformFail
+             from:from];
 
             return;
         }

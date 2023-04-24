@@ -37,7 +37,7 @@ NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
+- (nonnull NSDictionary<NSString *, id> *)toJsonDictionary;
 
 @end
 
@@ -51,7 +51,7 @@ NS_DESIGNATED_INITIALIZER;
 - (void)withError:(nonnull NSError *)error;
 - (void)withException:(nonnull NSException *)exception;
 - (void)withKey:(nonnull NSString *)key
-      otherFail:(nonnull ADJResultFail *)otherFail;
+      otherFail:(nullable ADJResultFail *)otherFail;
 - (void)withKey:(nonnull NSString *)key
     stringValue:(nonnull NSString *)stringValue;
 

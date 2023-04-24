@@ -24,7 +24,7 @@
 @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
 @property (nonnull, readonly, strong, nonatomic) ADJStringMapBuilder *sendingParameters;
 @property (nonnull, readonly, strong, nonatomic) id<ADJSdkResponseCallbackSubscriber> sourceCallback;
-@property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
+@property (nullable, readwrite, strong, nonatomic) NSDictionary<NSString *, id> *jsonDictionary;
 
 // public api
 - (BOOL)didReceiveJsonResponse;
@@ -36,4 +36,3 @@
 - (nonnull ADJOptionalFailsNN<id<ADJSdkResponseData>> *)buildSdkResponseData;
 
 @end
-

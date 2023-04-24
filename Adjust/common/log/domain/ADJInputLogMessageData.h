@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_END
     resultFail:(nullable ADJResultFail *)resultFail
     messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
     sdkPackageParams:(nullable NSDictionary<NSString *, NSString *> *)sdkPackageParams
-NS_DESIGNATED_INITIALIZER;
+    NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -87,7 +87,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
 @property (nullable, readonly, strong, nonatomic) ADJResultFail * resultFail;
 @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *messageParams;
-@property (nullable, readwrite, strong, nonatomic)
+@property (nullable, readonly, strong, nonatomic)
     NSDictionary<NSString *, NSString *> *sdkPackageParams;
 
 @end

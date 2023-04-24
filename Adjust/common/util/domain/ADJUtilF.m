@@ -125,7 +125,7 @@
 }
 
 + (nonnull NSString *)boolFormat:(BOOL)boolValue {
-    return boolValue ? ADJBooleanTrueString : ADJBooleanFalseString;
+    return boolValue ? ADJBooleanTrueJsonString : ADJBooleanFalseJsonString;
 }
 
 + (nonnull NSString *)intFormat:(int)intValue {
@@ -152,6 +152,10 @@
     return [NSString stringWithFormat:@"%lu", (unsigned long)uIntegerFormat];
 }
 
++ (nonnull NSString *)longFormat:(long)longValue {
+    return [NSString stringWithFormat:@"%ld", longValue];
+}
+
 + (nonnull NSString *)longLongFormat:(long long)longLongValue {
     return [NSString stringWithFormat:@"%lld", longLongValue];
 }
@@ -169,48 +173,6 @@
             nil];
 }
 
-+ (nonnull ADJResult<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData {
-    NSString *_Nullable converted =
-        [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
-    if (converted == nil) {
-        return [ADJResult failWithMessage:@"Could not convert init NSString with NSData"];
-    }
-
-    return [ADJResult okWithValue:converted];
-    // TODO: figure out if trimming is needed here
-    //return [converted stringByTrimmingCharactersInSet:
-    //        [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-+ (nonnull ADJResult<ADJNonEmptyString *> *)jsonFoundationValueFormat:
-    (nullable id)jsonFoundationValue
-{
-    if (jsonFoundationValue == nil) {
-        return [ADJResult nilInputWithMessage:
-                @"Cannot convert to strin with nil json foundation value"];
-    }
-
-    ADJResult<NSData *> *_Nonnull jsonDataResult =
-        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue];
-
-    if (jsonDataResult.fail != nil) {
-        return [ADJResult failWithMessage:@"Cannot convert json foundation value to string"
-                                      key:@"json foundation value to data fail"
-                                otherFail:jsonDataResult.fail];
-    }
-
-    ADJResult<NSString *> *_Nonnull jsonStringResult =
-        [ADJUtilF jsonDataFormat:jsonDataResult.value];
-    if (jsonStringResult.fail != nil) {
-        return [ADJResult failWithMessage:@"Cannot convert json foundation value to string"
-                                      key:@"json data to string fail"
-                                otherFail:jsonStringResult.fail];
-    }
-
-    return [ADJNonEmptyString instanceFromString:jsonStringResult.value];
-}
-
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber {
     ADJUtilF *_Nonnull sharedInstance = [self sharedInstance];
     return [sharedInstance.secondsFormatter stringFromNumber:secondsNumber];
@@ -224,11 +186,14 @@
               timestamp.millisecondsSince1970Int.uIntegerValue]]];
 }
 
-+ (nonnull id)stringOrNsNull:(nullable NSString *)string {
-    return string == nil ? [NSNull null] : string;
-}
-+ (nonnull id)idOrNsNull:(nullable id)idObject {
-    return idObject == nil ? [NSNull null] : idObject;
++ (nonnull NSString *)emptyFallbackWithFormat:(nonnull NSString *)format
+                                       string:(nullable NSString *)string
+{
+    if (string == nil) {
+        return @"";
+    }
+
+    return [NSString stringWithFormat:format, string];
 }
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
@@ -279,11 +244,7 @@
 }
 
 + (nullable NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value {
-    if (value == nil) {
-        return nil;
-    }
-
-    return value.stringValue;
+    return value != nil ? value.stringValue : nil;
 }
 
 @end

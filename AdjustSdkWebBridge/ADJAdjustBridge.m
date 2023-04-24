@@ -216,29 +216,19 @@
         return;
     }
 
-    ADJResult<id> *_Nonnull jsParametersObjectResult =
-        [ADJUtilConv convertToFoundationObjectWithJsonString:jsParametersResult.value.stringValue];
-    if (jsParametersObjectResult.fail != nil) {
+    ADJResult<NSDictionary<NSString *, id> *> *_Nonnull jsParametersDictionaryResult =
+        [ADJUtilJson toDictionaryFromString:jsParametersResult.value.stringValue];
+    if (jsParametersDictionaryResult.fail != nil) {
         [self errorWithLogData:
          [self.logger debugDev:@"Cannot convert JSON string from parameters field"
                            key:@"method name"
                          value:methodName
-                    resultFail:jsParametersObjectResult.fail
+                    resultFail:jsParametersDictionaryResult.fail
                      issueType:nil]];
         return;
     }
-    if (! [jsParametersObjectResult.value isKindOfClass:[NSDictionary class]]) {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Converted JSON value from parameters field is not a dictionary"
-                          key1:@"JSON value class"
-                        value1:NSStringFromClass([jsParametersObjectResult.value class])
-                          key2:@"method name"
-                        value2:methodName]];
-        return;
-    }
 
-    NSDictionary<NSString *, id> *_Nonnull jsParameters =
-        (NSDictionary<NSString *, id> *)jsParametersObjectResult.value;
+    NSDictionary<NSString *, id> *_Nonnull jsParameters = jsParametersDictionaryResult.value;
 
     id<ADJAdjustInstance> _Nonnull adjustInstance =
         [ADJAdjust instanceForId:instanceIdResult.value.stringValue];

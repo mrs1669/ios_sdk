@@ -14,12 +14,14 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
- @property (nonatomic, readonly, assign) BOOL boolValue;
+ @property (readonly, assign, nonatomic) BOOL boolValue;
+ @property (nonnull, readonly, strong, nonatomic) NSNumber *numberBoolValue;
+ @property (nonnull, readonly, strong, nonatomic) NSString *jsonString;
  */
 
 #pragma mark - Public constants
-NSString *const ADJBooleanTrueString = @"true";
-NSString *const ADJBooleanFalseString = @"false";
+NSString *const ADJBooleanTrueJsonString = @"true";
+NSString *const ADJBooleanFalseJsonString = @"false";
 
 @implementation ADJBooleanWrapper
 #pragma mark Instantiation
@@ -27,12 +29,34 @@ NSString *const ADJBooleanFalseString = @"false";
     return boolValue ? [self trueInstance] : [self falseInstance];
 }
 
-+ (nullable instancetype)instanceFromNumberBoolean:(nullable NSNumber *)numberBooleanValue {
++ (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromNumberBoolean:
+    (nullable NSNumber *)numberBooleanValue
+{
     if (numberBooleanValue == nil) {
-        return nil;
+        return [ADJResult nilInputWithMessage:@"Cannot create boolean with nil number boolean"];
     }
 
-    return [self instanceFromBool:[numberBooleanValue boolValue]];
+    /** TODO: test if it works for:
+     - @(YES)/@(NO)
+     - [NSNumber numberWithBool:]
+     - (json string -> json dictionary with json boolean value)
+        - from IoData serialization/desiralization
+        - backend/fakend json parsing
+        - webview json
+     */
+
+    if ((__bridge CFBooleanRef)numberBooleanValue == kCFBooleanTrue) {
+        return [ADJResult okWithValue:[self trueInstance]];
+    }
+    if ((__bridge CFBooleanRef)numberBooleanValue == kCFBooleanFalse) {
+        return [ADJResult okWithValue:[self falseInstance]];
+    }
+
+    return [ADJResult failWithMessage:
+            @"Number value does not seem to have been created from boolean"
+                                  key:@"CFNumberType value"
+                          stringValue:[ADJUtilF longFormat:
+                                       CFNumberGetType((CFNumberRef)numberBooleanValue)]];
 }
 
 + (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromIoValue:
@@ -42,11 +66,11 @@ NSString *const ADJBooleanFalseString = @"false";
         return [ADJResult nilInputWithMessage:@"Cannot create boolean wrapper with nil io value"];
     }
 
-    if ([ioValue.stringValue isEqualToString:ADJBooleanTrueString]) {
+    if ([ioValue.stringValue isEqualToString:ADJBooleanTrueJsonString]) {
         return [ADJResult okWithValue:[self trueInstance]];
     }
 
-    if ([ioValue.stringValue isEqualToString:ADJBooleanFalseString]) {
+    if ([ioValue.stringValue isEqualToString:ADJBooleanFalseJsonString]) {
         return [ADJResult okWithValue:[self falseInstance]];
     }
 
@@ -116,7 +140,7 @@ NSString *const ADJBooleanFalseString = @"false";
     static ADJNonEmptyString * trueString;
     dispatch_once(&onceTrueStringToken, ^{
         trueString = [[ADJNonEmptyString alloc]
-                      initWithConstStringValue:ADJBooleanTrueString];
+                      initWithConstStringValue:ADJBooleanTrueJsonString];
     });
     return trueString;
 }
@@ -126,7 +150,7 @@ NSString *const ADJBooleanFalseString = @"false";
     static ADJNonEmptyString * falseString;
     dispatch_once(&onceFalseStringToken, ^{
         falseString = [[ADJNonEmptyString alloc]
-                       initWithConstStringValue:ADJBooleanFalseString];
+                       initWithConstStringValue:ADJBooleanFalseJsonString];
     });
     return falseString;
 }
@@ -141,6 +165,10 @@ NSString *const ADJBooleanFalseString = @"false";
 }
 
 #pragma mark Public API
+- (nonnull NSString *)jsonString {
+    return self.boolValue ? ADJBooleanTrueJsonString : ADJBooleanFalseJsonString;
+}
+
 #pragma mark - ADJIoValueSerializable
 - (nonnull ADJNonEmptyString *)toIoValue {
     return self.boolValue ? [ADJBooleanWrapper trueString] : [ADJBooleanWrapper falseString];

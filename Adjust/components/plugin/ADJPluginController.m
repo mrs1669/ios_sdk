@@ -98,17 +98,17 @@
         return;
     }
 
-    NSDictionary<NSString *, NSString *> *_Nonnull parametersFoundationMap =
-        [sdkPackageData.parameters foundationStringMap];
+    NSDictionary<NSString *, NSString *> *_Nonnull parametersDto =
+        [sdkPackageData.parameters jsonStringDictionary];
 
     ADJStringMap *_Nonnull parametersToAddStringMap =
         [[ADJStringMap alloc] initWithStringMapBuilder:parametersToAdd];
 
-    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap =
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddDto =
         [NSMutableDictionary dictionaryWithDictionary:
-         [parametersToAddStringMap foundationStringMap]];
+         [parametersToAddStringMap jsonStringDictionary]];
 
-    NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap =
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddDto =
         [[NSMutableDictionary alloc] init];
 
     [self.pluginPackageSendingPublisher.publisher notifySubscribersWithSubscriberBlock:
@@ -117,18 +117,18 @@
 
         [subscriber willSendSdkPackageWithClientSdk:sdkPackageData.clientSdk
                                                path:sdkPackageData.path
-                                 readOnlyParameters:parametersFoundationMap
-                                    parametersToAdd:parametersToAddFoundationMutableMap
-                                       headersToAdd:headersToAddFoundationMutableMap];
+                                 readOnlyParameters:parametersDto
+                                    parametersToAdd:parametersToAddDto
+                                       headersToAdd:headersToAddDto];
     }];
 
     [self
-     transferExternalParametersWithFoundationMapToRead:parametersToAddFoundationMutableMap
+     transferExternalParametersWithFoundationMapToRead:parametersToAddDto
      parametersToWrite:parametersToAdd
      source:@"Plugin sending Sdk Package parameters"];
 
     [self
-     transferExternalParametersWithFoundationMapToRead:headersToAddFoundationMutableMap
+     transferExternalParametersWithFoundationMapToRead:headersToAddDto
      parametersToWrite:headersToAdd
      source:@"Plugin sending Sdk Package headers"];
 

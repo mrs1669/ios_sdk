@@ -362,13 +362,16 @@
         }
     }
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamThirdPartySharingGranularOptionsKey
-                         packageParamValueSerializable:clientThirdPartySharingData.stringGranularOptionsByName];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamThirdPartySharingGranularOptionsKey
+     packageParamValueSerializable:clientThirdPartySharingData.granularOptionsByNameJsonString];
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamThirdPartySharingPartnerSharingSettingsKey
-                         packageParamValueSerializable:clientThirdPartySharingData.stringPartnerSharingSettingsByName];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamThirdPartySharingPartnerSharingSettingsKey
+     packageParamValueSerializable:
+         clientThirdPartySharingData.partnerSharingSettingsByNameJsonString];
 
     ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                                                            path:ADJThirdPartySharingPackageDataPath];

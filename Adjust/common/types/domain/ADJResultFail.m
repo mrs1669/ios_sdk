@@ -42,7 +42,7 @@
 {
     return [self initWithMessage:message
                           params:[[NSDictionary alloc] initWithObjectsAndKeys:
-                                  [otherFail foundationDictionary], key, nil]
+                                  [otherFail toJsonDictionary], key, nil]
                            error:nil
                        exception:nil];
 }
@@ -83,18 +83,18 @@
 }
 
 #pragma mark Public API
-- (nonnull NSDictionary<NSString *, id> *)foundationDictionary {
+- (nonnull NSDictionary<NSString *, id> *)toJsonDictionary {
     NSMutableDictionary *_Nonnull resultFailDictionary =
         [[NSMutableDictionary alloc] initWithObjectsAndKeys:self.message, ADJLogMessageKey,  nil];
 
     if (self.error != nil) {
         [resultFailDictionary setObject:
-         [ADJResultFail generateFoundationDictionaryFromNsError:self.error]
+         [ADJResultFail jsonDictionaryFromNsError:self.error]
                                  forKey:ADJLogErrorKey];
     }
     if (self.exception != nil) {
         [resultFailDictionary setObject:
-         [ADJResultFail generateFoundationDictionaryFromNsException:self.exception]
+         [ADJResultFail jsonDictionaryFromNsException:self.exception]
                                  forKey:ADJLogExceptionKey];
     }
     if (self.params != nil) {
@@ -106,37 +106,33 @@
 }
 
 #pragma mark Internal Methods
-+ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsError:(nonnull NSError *)nsError {
-    NSMutableDictionary *_Nonnull errorFoundationDictionary =
++ (nonnull NSDictionary<NSString *, id> *)jsonDictionaryFromNsError:(nonnull NSError *)nsError {
+    NSMutableDictionary<NSString *, id> *_Nonnull errorFoundationDictionary =
         [[NSMutableDictionary alloc] initWithObjectsAndKeys:
          nsError.domain, @"domain",
-         [ADJUtilF integerFormat:nsError.code], @"code",  nil];
+         [ADJUtilF integerFormat:nsError.code], @"code", nil];
 
     if (nsError.userInfo != nil) {
-        [errorFoundationDictionary
-         setObject:[ADJUtilConv convertToFoundationObject:nsError.userInfo]
-         forKey:@"userInfo"];
+        [errorFoundationDictionary setObject:[ADJUtilJson toJsonDictionary:nsError.userInfo]
+                                      forKey:@"userInfo"];
     }
 
     return errorFoundationDictionary;
 }
 
-+ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsException:
++ (nonnull NSDictionary<NSString *, id> *)jsonDictionaryFromNsException:
     (nonnull NSException *)nsException
 {
     NSMutableDictionary *_Nonnull exceptionFoundationDictionary =
-    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-     nsException.name, @"name", nil];
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:nsException.name, @"name", nil];
 
     if (nsException.reason != nil) {
-        [exceptionFoundationDictionary setObject:nsException.reason
-                                          forKey:@"reason"];
+        [exceptionFoundationDictionary setObject:nsException.reason forKey:@"reason"];
     }
 
     if (nsException.userInfo != nil) {
-        [exceptionFoundationDictionary
-         setObject:[ADJUtilConv convertToFoundationObject:nsException.userInfo]
-         forKey:@"userInfo"];
+        [exceptionFoundationDictionary setObject:
+         [ADJUtilJson toJsonDictionary:nsException.userInfo] forKey:@"userInfo"];
     }
 
     return exceptionFoundationDictionary;
@@ -181,13 +177,17 @@
     self.exception = exception;
 }
 - (void)withKey:(nonnull NSString *)key
-      otherFail:(nonnull ADJResultFail *)otherFail
+      otherFail:(nullable ADJResultFail *)otherFail
 {
+    if (otherFail == nil) {
+        return;
+    }
+
     if (self.paramsMut == nil) {
         self.paramsMut = [[NSMutableDictionary alloc] init];
     }
 
-    [self.paramsMut setObject:[otherFail foundationDictionary]
+    [self.paramsMut setObject:[otherFail toJsonDictionary]
                        forKey:key];
 }
 - (void)withKey:(nonnull NSString *)key

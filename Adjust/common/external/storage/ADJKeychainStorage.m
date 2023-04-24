@@ -42,7 +42,7 @@
         return nil;
     }
 
-    NSString *_Nonnull stringValue =
+    NSString *_Nullable stringValue =
         [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     ADJResult<ADJNonEmptyString *> *_Nonnull stringResult =

@@ -43,6 +43,7 @@ static NSString *const kCampaignKey = @"campaign";
 static NSString *const kAdgroupKey = @"adgroup";
 static NSString *const kCreativeKey = @"creative";
 static NSString *const kClickLabelKey = @"clickLabel";
+// TODO: adid to be extracted from attribution
 static NSString *const kAdidKey = @"adid";
 static NSString *const kDeeplinkKey = @"deeplink";
 static NSString *const kStateKey = @"state";
@@ -80,6 +81,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    adgroup:[ioDataMap pairValueWithKey:kAdgroupKey]
                    creative:[ioDataMap pairValueWithKey:kCreativeKey]
                    clickLabel:[ioDataMap pairValueWithKey:kClickLabelKey]
+                   // TODO: adid to be extracted from attribution
                    adid:[ioDataMap pairValueWithKey:kAdidKey]
                    deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
                    state:[ioDataMap pairValueWithKey:kStateKey]
@@ -127,6 +129,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     convV4String(adgroup)
     convV4String(creative)
     convV4String(clickLabel)
+    // TODO: adid to be extracted from attribution
     convV4String(adid)
     convV4String(costType)
     convV4String(costCurrency)
@@ -147,6 +150,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    adgroup:adgroupResult.value
                    creative:creativeResult.value
                    clickLabel:clickLabelResult.value
+                   // TODO: adid to be extracted from attribution
                    adid:adidResult.value
                    // deeplink and state not coming from v4
                    // TODO: confirm that assumption is correct
@@ -163,6 +167,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                                    optionalFailsMut:optionalFailsMut]   \
 
 
+// TODO: adid to be extracted from attribution
 + (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
     instanceFromJson:(nonnull NSDictionary *)attributionJson
     adid:(nonnull ADJNonEmptyString *)adid
@@ -199,6 +204,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    adgroup:extrJsonCall(ADJParamAttributionAdGroupKey)
                    creative:extrJsonCall(ADJParamAttributionCreativeKey)
                    clickLabel:extrJsonCall(ADJParamAttributionClickLableKey)
+                   // TODO: adid to be extracted from attribution
                    adid:adid
                    deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey)
                    state:extrJsonCall(ADJParamAttributionStateKey)
@@ -220,6 +226,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                                      adgroup:(nullable ADJNonEmptyString *)adgroup
                                     creative:(nullable ADJNonEmptyString *)creative
                                   clickLabel:(nullable ADJNonEmptyString *)clickLabel
+// TODO: adid to be extracted from attribution
                                         adid:(nullable ADJNonEmptyString *)adid
                                     deeplink:(nullable ADJNonEmptyString *)deeplink
                                        state:(nullable ADJNonEmptyString *)state
@@ -236,6 +243,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     _adgroup = adgroup;
     _creative = creative;
     _clickLabel = clickLabel;
+    // TODO: adid to be extracted from attribution
     _adid = adid;
     _deeplink = deeplink;
     _state = state;
@@ -282,6 +290,7 @@ ioValueSerializable:ioValue]            \
     injectIoData(kAdgroupKey, self.adgroup);
     injectIoData(kCreativeKey, self.creative);
     injectIoData(kClickLabelKey, self.clickLabel);
+    // TODO: adid to be extracted from attribution
     injectIoData(kAdidKey, self.adid);
     injectIoData(kDeeplinkKey, self.deeplink);
     injectIoData(kStateKey, self.state);
@@ -301,6 +310,7 @@ ioValueSerializable:ioValue]            \
             kAdgroupKey, self.adgroup,
             kCreativeKey, self.creative,
             kClickLabelKey, self.clickLabel,
+            // TODO: adid to be extracted from attribution
             kAdidKey, self.adid,
             kDeeplinkKey, self.deeplink,
             kStateKey, self.state,
@@ -314,21 +324,22 @@ ioValueSerializable:ioValue]            \
     NSUInteger hashCode = ADJInitialHashCode;
     
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.trackerToken];
+        [ADJUtilObj objecNullableHash:self.trackerToken];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.trackerName];
+        [ADJUtilObj objecNullableHash:self.trackerName];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.network];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.campaign];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.adgroup];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.creative];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.clickLabel];
+    // TODO: adid to be extracted from attribution
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.adid];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.deeplink];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.state];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.costType];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.costAmount];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.costCurrency];
+        [ADJUtilObj objecNullableHash:self.costCurrency];
     
     return hashCode;
 }

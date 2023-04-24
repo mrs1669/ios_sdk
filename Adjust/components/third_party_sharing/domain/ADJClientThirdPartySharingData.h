@@ -24,18 +24,23 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJClientThirdPartySharingData : NSObject<ADJClientActionIoDataInjectable>
 // instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustThirdPartySharing:(nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
-                                                                logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientWithAdjustThirdPartySharing:
+        (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:
+        (nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
 @property (nullable, readonly, strong, nonatomic) ADJBooleanWrapper *enabledOrElseDisabledSharing;
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *stringGranularOptionsByName;
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *stringPartnerSharingSettingsByName;
-
+@property (nullable, readonly, strong, nonatomic)
+    ADJNonEmptyString *granularOptionsByNameJsonString;
+@property (nullable, readonly, strong, nonatomic)
+    ADJNonEmptyString *partnerSharingSettingsByNameJsonString;
 
 @end

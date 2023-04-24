@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
     instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution;
 
+// TODO: adid to be extracted from attribution
 + (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
     instanceFromJson:(nonnull NSDictionary *)attributionJson
     adid:(nonnull ADJNonEmptyString *)adid;
@@ -45,6 +46,7 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adgroup;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *creative;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *clickLabel;
+// TODO: adid to be extracted from attribution
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adid;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *deeplink;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *state;

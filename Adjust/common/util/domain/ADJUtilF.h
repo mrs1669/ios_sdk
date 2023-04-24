@@ -23,21 +23,18 @@
 + (nonnull NSString *)uLongLongFormat:(unsigned long long)uLongLongValue;
 + (nonnull NSString *)integerFormat:(NSInteger)integerValue;
 + (nonnull NSString *)uIntegerFormat:(NSUInteger)uIntegerFormat;
++ (nonnull NSString *)longFormat:(long)longValue;
 + (nonnull NSString *)longLongFormat:(long long)longLongValue;
 + (nonnull NSString *)usLocaleNumberFormat:(nonnull NSNumber *)number;
 
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error;
 
-+ (nonnull ADJResult<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData;
-+ (nonnull ADJResult<ADJNonEmptyString *> *)jsonFoundationValueFormat:
-    (nullable id)jsonFoundationValue;
-
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber;
 
 + (nonnull NSString *)dateTimestampFormat:(nonnull ADJTimestampMilli *)timestamp;
 
-+ (nonnull id)stringOrNsNull:(nullable NSString *)string;
-+ (nonnull id)idOrNsNull:(nullable id)idObject;
++ (nonnull NSString *)emptyFallbackWithFormat:(nonnull NSString *)format
+                                       string:(nullable NSString *)string;
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex;

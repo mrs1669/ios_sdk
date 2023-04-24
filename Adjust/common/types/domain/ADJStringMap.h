@@ -13,6 +13,7 @@
 #import "ADJStringMapBuilder.h"
 #import "ADJNonEmptyString.h"
 #import "ADJResult.h"
+#import "ADJUtilJson.h"
 
 @interface ADJStringMap : NSObject<
     ADJPackageParamValueSerializable,
@@ -26,7 +27,8 @@
     instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue;
 
 // public properties
-@property (nonnull, readwrite, strong, nonatomic) NSDictionary<NSString *, ADJNonEmptyString *> *map;
+@property (nonnull, readwrite, strong, nonatomic)
+    NSDictionary<NSString *, ADJNonEmptyString *> *map;
 
 // public api
 - (nullable ADJNonEmptyString *)pairValueWithKey:(nonnull NSString *)key;
@@ -35,6 +37,6 @@
 
 - (BOOL)isEmpty;
 
-- (nonnull NSDictionary<NSString *, NSString *> *)foundationStringMap;
+- (nonnull NSDictionary<NSString *, NSString *> *)jsonStringDictionary;
 
 @end

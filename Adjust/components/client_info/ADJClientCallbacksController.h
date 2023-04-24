@@ -23,7 +23,8 @@
 // public api
 - (void)failWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
           clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-             cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail;
+             cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail
+                          from:(nonnull NSString *)from;
 
 - (void)
 ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
