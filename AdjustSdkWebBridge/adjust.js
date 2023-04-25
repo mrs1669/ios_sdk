@@ -16,8 +16,8 @@ var Adjust = {
 
         if (! (typeof instanceId === "string")) {
             if (errSubscriber) {
-                errSubscriber('undefined or string expected for instance id.'
-                              + ' Instead received: ' + typeof instanceId);
+                errSubscriber("undefined or string expected for instance id."
+                              + " Instead received: " + typeof instanceId);
             }
             instanceId = "";
         }
@@ -29,24 +29,24 @@ var Adjust = {
     },
 
     // TODO inject undefined instanceId and handle that on the native side
-    _postMessage(methodName, instanceId = "", data = "{}", errSubscriber) {
+    _postMessage(methodName, instanceId = "", parameters = "{}", errSubscriber) {
         if (! this._adjustMessageHandler) {
             function canSend(okCheck, errReason) {
                 if (! okCheck) { if (errSubscriber) {
-                    errSubscriber('Cannot send message to native sdk '.concat(errReason)); }}
+                    errSubscriber("Cannot send message to native sdk ".concat(errReason)); }}
                 return okCheck;
             }
             const canSendSendToNative =
-            canSend(window, 'without valid: "window"') &&
-            canSend(window.webkit, 'without valid: "window.webkit"') &&
+            canSend(window, "without valid: 'window'") &&
+            canSend(window.webkit, "without valid: 'window.webkit'") &&
             canSend(window.webkit.messageHandlers,
-                    'without valid: "window.webkit.messageHandlers"') &&
+                    "without valid: 'window.webkit.messageHandlers'") &&
             canSend(window.webkit.messageHandlers.adjust,
-                    'without valid: "window.webkit.messageHandlers.adjust"') &&
+                    "without valid: 'window.webkit.messageHandlers.adjust'") &&
             canSend(window.webkit.messageHandlers.adjust.postMessage,
-                    'without valid: "window.webkit.messageHandlers.adjust.postMessage"') &&
+                    "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
             canSend(typeof window.webkit.messageHandlers.adjust.postMessage === "function",
-                    'when "window.webkit.messageHandlers.adjust.postMessage" is not a function');
+                    "when 'window.webkit.messageHandlers.adjust.postMessage' is not a function");
 
             if (! canSendSendToNative) { return; }
 
@@ -56,12 +56,12 @@ var Adjust = {
         this._adjustMessageHandler.postMessage({
             methodName: methodName,
             instanceId: instanceId,
-            data: data
+            parameters: parameters
         });
     },
 
     getSdkVersion: function() {
-        Adjust.postMessage('getSdkVersion');
+        Adjust.postMessage("getSdkVersion");
     },
 
     teardown: function() {
@@ -71,64 +71,65 @@ var Adjust = {
 
 };
 
-function AdjustInstance(instanceId) {
+function AdjustInstance(instanceId, errSubscriber) {
     this._instanceId = instanceId;
+    this._errSubscriber = errSubscriber;
     this._callbackMap = new Map();
 };
 
-AdjustInstance.prototype._postMessage = function(methodName, data) {
-    Adjust._postMessage(methodName, this._instanceId, data); }
+AdjustInstance.prototype._postMessage = function(methodName, parameters) {
+    Adjust._postMessage(methodName, this._instanceId, parameters, this._errSubscriber); }
 
 AdjustInstance.prototype.initSdk = function(adjustConfig) {
-    this._postMessage('initSdk', JSON.stringify(adjustConfig)); };
+    this._postMessage("initSdk", JSON.stringify(adjustConfig)); };
 
 AdjustInstance.prototype.inactivateSdk = function() {
-    this._postMessage('inactivateSdk'); }
+    this._postMessage("inactivateSdk"); }
 AdjustInstance.prototype.reactivateSdk = function() {
-    this._postMessage('reactivateSdk'); }
+    this._postMessage("reactivateSdk"); }
 
 AdjustInstance.prototype.gdprForgetDevice = function() {
-    this._postMessage('gdprForgetDevice'); }
+    this._postMessage("gdprForgetDevice"); }
 
 AdjustInstance.prototype.appWentToTheBackgroundManualCall = function() {
-    this._postMessage('appWentToTheBackgroundManualCall'); }
+    this._postMessage("appWentToTheBackgroundManualCall"); }
 AdjustInstance.prototype.appWentToTheForegroundManualCall = function() {
-    this._postMessage('appWentToTheForegroundManualCall'); }
+    this._postMessage("appWentToTheForegroundManualCall"); }
 
 AdjustInstance.prototype.switchToOfflineMode = function() {
-    this._postMessage('switchToOfflineMode'); }
+    this._postMessage("switchToOfflineMode"); }
 AdjustInstance.prototype.switchBackToOnlineMode = function() {
-    this._postMessage('switchBackToOnlineMode'); }
+    this._postMessage("switchBackToOnlineMode"); }
 
 AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
-    this._postMessage('trackLaunchedDeeplink',
+    this._postMessage("trackLaunchedDeeplink",
                       JSON.stringify({_url: url, _urlType: typeof url})); }
 
 AdjustInstance.prototype.trackPushToken = function(pushToken) {
-    this._postMessage('trackPushToken',
+    this._postMessage("trackPushToken",
                       JSON.stringify({_pushToken: pushToken, _pushTokenType: typeof pushToken})); }
 
 AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
-    this._postMessage('addGlobalCallbackParameter',
+    this._postMessage("addGlobalCallbackParameter",
                       JSON.stringify({
         _key: key, _keyType: typeof key,
         _value: value, _valueType: typeof value})); }
 AdjustInstance.prototype.removeGlobalCallbackParameter = function(key) {
-    this._postMessage('removeGlobalCallbackParameter', JSON.stringify({
+    this._postMessage("removeGlobalCallbackParameter", JSON.stringify({
         _key: key, _keyType: typeof key})); }
 AdjustInstance.prototype.clearGlobalCallbackParameters = function() {
-    this._postMessage('clearGlobalCallbackParameters'); }
+    this._postMessage("clearGlobalCallbackParameters"); }
 
 AdjustInstance.prototype.addGlobalPartnerParameter = function(key, value) {
-    this._postMessage('addGlobalPartnerParameter',
+    this._postMessage("addGlobalPartnerParameter",
                       JSON.stringify({
         _key: key, _keyType: typeof key,
         _value: value, _valueType: typeof value})); }
 AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
-    this._postMessage('removeGlobalPartnerParameter', JSON.stringify({
+    this._postMessage("removeGlobalPartnerParameter", JSON.stringify({
         _key: key, _keyType: typeof key})); }
 AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
-    this._postMessage('clearGlobalPartnerParameters'); }
+    this._postMessage("clearGlobalPartnerParameters"); }
 
 
 function AdjustConfig(appToken, environment) {
@@ -154,8 +155,8 @@ function AdjustConfig(appToken, environment) {
     this._adjustLogSubscriberCallback = null;
 }
 
-AdjustConfig.EnvironmentSandbox = 'sandbox';
-AdjustConfig.EnvironmentProduction = 'production';
+AdjustConfig.EnvironmentSandbox = "sandbox";
+AdjustConfig.EnvironmentProduction = "production";
 
 AdjustConfig.UrlStrategyIndia = "INDIA";
 AdjustConfig.UrlStrategyChina = "CHINA";
