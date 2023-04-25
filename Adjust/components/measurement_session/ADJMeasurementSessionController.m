@@ -160,7 +160,7 @@
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot obtain a valid now timestamp"
                          key:ADJLogFromKey
-                        value:from
+                  stringValue:from
                    resultFail:nowResult.fail
                     issueType:ADJIssueExternalApi];
         return nil;

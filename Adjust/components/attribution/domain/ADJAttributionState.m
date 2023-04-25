@@ -81,9 +81,9 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 
     [self.logger debugDev:@"Ask in found in non attribution response"
                      key1:@"askIn"
-                   value1:askIn.description
+             stringValue1:askIn.description
                      key2:@"sdkResponse"
-                   value2:[nonAttributionResponse description]];
+             stringValue2:[nonAttributionResponse description]];
 
     if (self.stateData.isAsking) {
         [self.logger debugDev:
@@ -109,9 +109,9 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
     if (askIn != nil) {
         [self.logger debugDev:@"Ask in found in attribution response"
                          key1:@"askIn"
-                       value1:askIn.description
+                 stringValue1:askIn.description
                          key2:@"sdkResponse"
-                       value2:[attributionResponse description]];
+                 stringValue2:[attributionResponse description]];
 
         if (! self.stateData.isAsking) {
             [self.logger debugDev:
@@ -243,7 +243,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
     if (! [self.stateData canAskStatus]) {
         [self.logger debugDev:@"Unexpected Attribution Status to start asking"
                 expectedValue:ADJAttributionStateStatusCanAsk
-                  actualValue:[self.stateData attributionStateStatus]
+            actualStringValue:[self.stateData attributionStateStatus]
                     issueType:ADJIssueLogicError];
     }
 
@@ -259,7 +259,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
     [self.logger debugDev:@"Cannot start asking"
                      from:from
                       key:ADJLogWhyKey
-                    value:why];
+              stringValue:why];
     return NO;
 }
 

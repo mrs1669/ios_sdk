@@ -176,7 +176,7 @@
     if (deferredDeeplinkUrl == nil) {
         [self.logger infoClient:@"Could not parse deferred deeplink as NSURL"
                             key:@"deferred deeplink"
-                          value:deferredDeeplink.stringValue];
+                    stringValue:deferredDeeplink.stringValue];
         return;
     }
 

@@ -125,7 +125,7 @@
     if(errCode != SQLITE_OK) {
         [self.logger debugDev:@"sqlite3_open error"
                           key:@"errCode"
-                        value:[ADJUtilF intFormat:errCode]
+                  stringValue:[ADJUtilF intFormat:errCode]
                     issueType:ADJIssueStorageIo];
         return NO;
     }
@@ -171,10 +171,9 @@
     if (errmsg) {
         [self.logger debugDev:@"Error inserting batch"
                          key1:@"errmsg"
-                       value1:[NSString stringWithCString:errmsg
-                                                 encoding:NSASCIIStringEncoding]
+                 stringValue1:[NSString stringWithCString:errmsg encoding:NSASCIIStringEncoding]
                          key2:@"sqlString"
-                       value2:sqlString
+                 stringValue2:sqlString
                     issueType:ADJIssueStorageIo];
 
         sqlite3_free(errmsg);
@@ -198,9 +197,9 @@
     if (SQLITE_OK != returnCode) {
         [self.logger debugWithMessage:@"Cannot prepare statement"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
-            [logBuilder withKey:@"sql string" value:sqlString];
-            [logBuilder withKey:@"return code" value:[ADJUtilF intFormat:returnCode]];
-            [logBuilder withKey:@"last error message" value:[self lastErrorMessage]];
+            [logBuilder withKey:@"sql string" stringValue:sqlString];
+            [logBuilder withKey:@"return code" stringValue:[ADJUtilF intFormat:returnCode]];
+            [logBuilder withKey:@"last error message" stringValue:[self lastErrorMessage]];
             [logBuilder issue:ADJIssueStorageIo];
         }];
 
@@ -320,7 +319,7 @@
         } else if (SQLITE_OK != returnCode) {
             [self.logger debugDev:@"error closing db"
                               key:@"returnCode"
-                            value:[ADJUtilF intFormat:returnCode]
+                      stringValue:[ADJUtilF intFormat:returnCode]
                         issueType:ADJIssueStorageIo];
         }
     }

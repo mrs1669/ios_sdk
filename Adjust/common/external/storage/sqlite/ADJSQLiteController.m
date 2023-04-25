@@ -103,8 +103,8 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
          {
             [logBuilder withFail:dirCreatedResult.fail
                            issue:ADJIssueStorageIo];
-            [logBuilder withSubject:@"adjust app support dir"
-                              value:adjustAppSupportDirPath];
+            [logBuilder withKey:@"adjust app support dir"
+                    stringValue:adjustAppSupportDirPath];
             [logBuilder where:@"load adjust app support dir"];
         }];
 
@@ -113,7 +113,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 
     [self.logger debugDev:@"Adjust app support dir loaded"
                       key:@"was dir created"
-                    value:[ADJUtilF boolFormat:dirCreatedResult.value.boolValue]];
+              stringValue:[ADJUtilF boolFormat:dirCreatedResult.value.boolValue]];
 
     return adjustAppSupportDirPath;
 }
@@ -123,7 +123,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     BOOL dbFileExists = [ADJUtilFiles fileExistsWithPath:dbPath];
     [self.logger debugDev:@"Was db file found"
                       key:@"dbFileExists"
-                    value:[ADJUtilF boolFormat:dbFileExists]];
+              stringValue:[ADJUtilF boolFormat:dbFileExists]];
 
     BOOL dbOpened = [self.sqliteDb openDbWithPath:dbPath];
     if (! dbOpened) {
@@ -141,16 +141,16 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     if (dbVersion.uIntegerValue == kDatabaseVersion) {
         [self.logger debugDev:@"Same db version found, no migration needed"
                           key:@"db version"
-                        value:dbVersion.description];
+                  stringValue:dbVersion.description];
         return;
     }
 
     if (dbVersion.uIntegerValue > kDatabaseVersion) {
         [self.logger debugDev:@"Future db version found, will use as old version"
                          key1:@"file db version"
-                       value1:dbVersion.description
+                 stringValue1:dbVersion.description
                          key2:@"sdk db version"
-                       value2:@(kDatabaseVersion).description
+                 stringValue2:[ADJUtilF uIntegerFormat:kDatabaseVersion]
                     issueType:ADJIssueStorageIo];
         return;
     }
@@ -164,9 +164,9 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     } else {
         [self.logger debugDev:@"Older db version found"
                          key1:@"file db version"
-                       value1:dbVersion.description
+                 stringValue1:dbVersion.description
                          key2:@"sdk db version"
-                       value2:@(kDatabaseVersion).description];
+                 stringValue2:[ADJUtilF uIntegerFormat:kDatabaseVersion]];
 
         [self migrateOldDbWithVersion:dbVersion];
     }
@@ -205,7 +205,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
             [self.logger debugDev:
              @"Will not migrate, since a previous primary instance already did"
                               key:@"primary instance id"
-                            value:readUserDefaultsPrimaryInstanceIdString];
+                      stringValue:readUserDefaultsPrimaryInstanceIdString];
         }
         return;
     }
@@ -289,9 +289,9 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 - (void)migrateOldDbWithVersion:(nonnull ADJNonNegativeInt *)oldDbVersion {
     [self.logger debugDev:@"Upgrading database"
                      key1:@"old version"
-                   value1:oldDbVersion.description
+             stringValue1:oldDbVersion.description
                      key2:@"new version"
-                   value2:[ADJUtilF integerFormat:kDatabaseVersion]];
+             stringValue2:[ADJUtilF uIntegerFormat:kDatabaseVersion]];
 
     [self.sqliteStorageAggregator notifySubscribersWithSubscriberBlock:
      ^(id<ADJSQLiteStorage> _Nonnull sqliteStorage)
@@ -302,13 +302,13 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
         if (sqlStringForOnUpgrade == nil) {
             [self.logger debugDev:@"Not upgrading sqlite storage"
                               key:@"storage description"
-                            value:sqliteStorage.description];
+                      stringValue:sqliteStorage.description];
             return;
         }
 
         [self.logger debugDev:@"Upgrading sqlite storage"
                           key:@"sqlStringForOnUpgrade"
-                        value:sqlStringForOnUpgrade];
+                  stringValue:sqlStringForOnUpgrade];
 
         [self.sqliteDb executeStatements:sqlStringForOnUpgrade];
     }];

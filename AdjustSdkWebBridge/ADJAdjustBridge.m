@@ -198,7 +198,7 @@
         [self errorWithLogData:
          [self.logger debugDev:@"Cannot obtain instanceId field from script body"
                            key:@"method name"
-                         value:methodName
+                   stringValue:methodName
                     resultFail:instanceIdResult.fail
                      issueType:nil]];
         return;
@@ -210,7 +210,7 @@
         [self errorWithLogData:
          [self.logger debugDev:@"Cannot obtain parameters field from script body"
                            key:@"method name"
-                         value:methodName
+                   stringValue:methodName
                     resultFail:jsParametersResult.fail
                      issueType:nil]];
         return;
@@ -222,7 +222,7 @@
         [self errorWithLogData:
          [self.logger debugDev:@"Cannot convert JSON string from parameters field"
                            key:@"method name"
-                         value:methodName
+                   stringValue:methodName
                     resultFail:jsParametersDictionaryResult.fail
                      issueType:nil]];
         return;
@@ -286,9 +286,9 @@
         [self errorWithLogData:
          [self.logger debugDev:@"Could not map method name with any of the possible values"
                           key1:@"method name"
-                        value1:methodName
+                  stringValue1:methodName
                           key2:@"Js parameters"
-                        value2:jsParametersResult.value.stringValue]];
+                  stringValue2:jsParametersResult.value.stringValue]];
     }
 }
 
@@ -360,7 +360,7 @@
         [self errorWithLogData:
          [self.logger debugDev:@"Could not parse JS field for adjust config"
                            key:@"field name"
-                         value:ADJWBEventIdDeduplicationMaxCapacityConfigKey
+                   stringValue:ADJWBEventIdDeduplicationMaxCapacityConfigKey
                     resultFail:eventIdDeduplicationMaxCapacityResult.fail
                      issueType:nil]];
     } else {
@@ -382,7 +382,7 @@
         [self errorWithLogData:
          [self.logger debugDev:@"Could not parse JS field for adjust config"
                            key:@"field name"
-                         value:key
+                   stringValue:key
                     resultFail:stringResult.fail
                      issueType:nil]];
     }
@@ -398,7 +398,7 @@
         [self errorWithLogData:
          [self.logger debugDev:@"Could not parse boolean JS field for adjust config"
                            key:@"boolean field name"
-                         value:key
+                   stringValue:key
                     resultFail:trueResult.fail
                      issueType:nil]];
     }

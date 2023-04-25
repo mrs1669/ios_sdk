@@ -58,14 +58,14 @@
         if (objectInstance == nil) {
             [self.logger debugDev:@"Could not find plugin"
                               key:@"plugin class name"
-                            value:pluginClassName];
+                      stringValue:pluginClassName];
             continue;
         }
 
         if (! [objectInstance conformsToProtocol:@protocol(ADJAdjustPlugin)]) {
             [self.logger debugDev:@"Could not cast class name to plugin"
                               key:@"plugin class name"
-                            value:pluginClassName
+                      stringValue:pluginClassName
                         issueType:ADJIssuePluginOrigin];
             continue;
         }
@@ -82,9 +82,9 @@
 
         [self.logger debugDev:@"Found plugin"
                          key1:@"plugin class name"
-                       value1:pluginClassName
+                 stringValue1:pluginClassName
                          key2:@"plugin name"
-                       value2:[pluginInstance name]];
+                 stringValue2:[pluginInstance name]];
     }
 }
 
@@ -169,7 +169,7 @@
         if (keyToWriteResult.fail != nil) {
             [self.logger debugDev:@"Invalid key for parameter"
                               key:ADJLogFromKey
-                            value:source
+                      stringValue:source
                        resultFail:keyToWriteResult.fail
                         issueType:ADJIssueInvalidInput];;
 
@@ -184,7 +184,7 @@
         if (valueToWriteResult.fail != nil) {
             [self.logger debugDev:@"Invalid value for parameter"
                               key:ADJLogFromKey
-                            value:source
+                      stringValue:source
                        resultFail:valueToWriteResult.fail
                         issueType:ADJIssueInvalidInput];
 

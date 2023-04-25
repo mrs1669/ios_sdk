@@ -348,7 +348,7 @@ static NSString *const kColumnValue = @"value";
     if (atLeastOneElementAdded) {
         [self.logger debugDev:@"Read elements to the queue"
                           key:@"count"
-                        value:[self count].description];
+                  stringValue:[self count].description];
     } else {
         [self.logger debugDev:@"Did not read any element to the queue"];
     }
@@ -446,7 +446,8 @@ static int const kDeleteElementPositionFieldPosition = 1;
                                 why:@"failed to parse from number"];
             [logBuilder withFail:elementPositionToAddResult.fail
                            issue:ADJIssueStorageIo];
-            [logBuilder withKey:@"metadata type" value:self.metadataTypeValue];
+            [logBuilder withKey:@"metadata type"
+                    stringValue:self.metadataTypeValue];
         }];
 
         return nil;
@@ -467,9 +468,9 @@ static int const kDeleteElementPositionFieldPosition = 1;
             [logBuilder withFail:lastReadElementResult.fail
                            issue:ADJIssueStorageIo];
             [logBuilder withKey:@"element position"
-                          value:elementPositionToAddResult.value.description];
+                    stringValue:elementPositionToAddResult.value.description];
             [logBuilder withKey:@"metadata type"
-                          value:self.metadataTypeValue];
+                    stringValue:self.metadataTypeValue];
         }];
 
         return nil;

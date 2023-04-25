@@ -69,7 +69,7 @@ static NSString *const kDomainValidationRegexString =
         [logger errorClient:@"Cannot create config with unexpected environment value"
               expectedValue:[NSString stringWithFormat:@"%@ or %@",
                              ADJEnvironmentSandbox, ADJEnvironmentProduction]
-                actualValue:environmentResult.value.stringValue];
+          actualStringValue:environmentResult.value.stringValue];
         return nil;
     }
 
@@ -305,7 +305,7 @@ static NSString *const kDomainValidationRegexString =
     {
         [logger noticeClient:@"Cannot use URL strategy domain that does not match expected pattern"
                          key:@"URL strategy domain"
-                       value:urlStrategyDomainResult.value.stringValue];
+                 stringValue:urlStrategyDomainResult.value.stringValue];
         return nil;
     }
 

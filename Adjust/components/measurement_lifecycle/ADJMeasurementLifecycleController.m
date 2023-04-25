@@ -96,7 +96,7 @@
 - (void)ccSdkActiveWithStatus:(nonnull NSString *)status {
     [self.logger debugDev:@"Handling ccSdkActiveWithStatus"
                       key:@"status"
-                    value:status];
+              stringValue:status];
 
     ADJMeasurementLifecycleStateOutputData *_Nullable output;
     if (ADJSdkActiveStatusActive == status) {

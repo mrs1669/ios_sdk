@@ -176,7 +176,7 @@ static NSString *const kColumnValue = @"value";
     if (atLeastOneElementAdded) {
         [self.logger debugDev:@"Read key value pairs to the map"
                           key:@"pairs count"
-                        value:[ADJUtilF uIntegerFormat:[self.inMemoryMapRO countPairs]]];
+                  stringValue:[ADJUtilF uIntegerFormat:[self.inMemoryMapRO countPairs]]];
     } else {
         [self.logger debugDev:@"Did not read any key value pairs to the map"];
     }

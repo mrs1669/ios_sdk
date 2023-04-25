@@ -55,7 +55,8 @@
 #pragma mark - ADJSQLiteStorage
 - (void)readIntoMemorySync:(nonnull ADJSQLiteDb *)sqliteDb {
     [self.logger debugDev:@"Trying to read data from table in database to memory"
-                      key:@"table name" value:self.tableName];
+                      key:@"table name"
+              stringValue:self.tableName];
 
     if ([self transactReadIntoMemory:sqliteDb]) {
         [self.logger debugDev:@"Read data to memory"];
@@ -156,7 +157,7 @@
         [self.logger debugDev:
          @"Cannot read value from Db without a prepared statement from the select query"
                           key:@"selectSql"
-                        value:self.selectSql.stringValue
+                  stringValue:self.selectSql.stringValue
                     issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         return NO;
@@ -168,7 +169,7 @@
         [self.logger debugDev:
          @"Was not able to step to first row of select statement. It could be empty"
                           key:@"selectSql"
-                        value:self.selectSql.stringValue];
+                  stringValue:self.selectSql.stringValue];
         [selectStatement closeStatement];
         [sqliteDb rollback];
         return NO;

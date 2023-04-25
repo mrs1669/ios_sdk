@@ -40,7 +40,7 @@ static NSString *const kValueToAddKey = @"valueToAdd";
     if (keyToAddResult.fail != nil) {
         [logger errorClient:@"Invalid add global parameter key"
                         key:@"global parameter type"
-                      value:globalParameterType
+                stringValue:globalParameterType
                  resultFail:keyToAddResult.fail];
         return nil;
     }
@@ -50,7 +50,7 @@ static NSString *const kValueToAddKey = @"valueToAdd";
     if (valueToAddResult.fail != nil) {
         [logger errorClient:@"Invalid add global parameter value"
                         key:@"global parameter type"
-                      value:globalParameterType
+                stringValue:globalParameterType
                  resultFail:valueToAddResult.fail];
         return nil;
     }
@@ -81,7 +81,7 @@ static NSString *const kValueToAddKey = @"valueToAdd";
          @"Cannot create ClientAddGlobalParameterData from client action io data"
          " with different client action type"
          expectedValue:ADJClientAddGlobalParameterDataMetadataTypeValue
-             actualValue:clientActionTypeValue.stringValue
+       actualStringValue:clientActionTypeValue.stringValue
                issueType:ADJIssueStorageIo];
          return nil;
     }

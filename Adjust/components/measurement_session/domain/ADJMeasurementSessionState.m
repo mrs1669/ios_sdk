@@ -80,7 +80,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     if (self.measurementSessionStatus != kPreSdkStartStatus) {
         [self.logger debugDev:@"Not in the expected status at sdk start"
                 expectedValue:kPreSdkStartStatus
-                  actualValue:self.measurementSessionStatus
+            actualStringValue:self.measurementSessionStatus
                     issueType:ADJIssueUnexpectedInput];
         return nil;
     }
@@ -95,7 +95,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     if (self.measurementSessionStatus != kActiveSessionStatus) {
         [self.logger debugDev:@"Not in the expected status at resume measurement"
                 expectedValue:kActiveSessionStatus
-                  actualValue:self.measurementSessionStatus
+            actualStringValue:self.measurementSessionStatus
                     issueType:ADJIssueUnexpectedInput];
         return nil;
     }
@@ -110,7 +110,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     if (self.measurementSessionStatus != kPausedSessionStatus) {
         [self.logger debugDev:@"Not in the expected status at pause measurement"
                 expectedValue:kPausedSessionStatus
-                  actualValue:self.measurementSessionStatus
+            actualStringValue:self.measurementSessionStatus
                     issueType:ADJIssueUnexpectedInput];
         return nil;
     }
@@ -136,7 +136,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     [self.logger debugDev:@"Changing to ActiveState"
                      from:from
                       key:@"status"
-                    value:self.measurementSessionStatus];
+              stringValue:self.measurementSessionStatus];
 
     ADJTimestampMilli *_Nonnull nonMonotonicNowTimestamp =
         [self overwriteNowTimestampOnFirstSdkSession:externalNonMonotonicNowTimestamp];
@@ -210,9 +210,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
         [self.logger debugDev:
          @"Create a new session, because there was enough interval since the last activity"
                          key1:@"intervalSinceLastActivity"
-                       value1:intervalSinceLastActivity.description
+                 stringValue1:intervalSinceLastActivity.description
                          key2:@"minMeasurementSessionInterval"
-                       value2:self.minMeasurementSessionInterval.description];
+                 stringValue2:self.minMeasurementSessionInterval.description];
 
         packageSessionData =
             [self processNewSessionWithBuilder:builder];
@@ -220,9 +220,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
         [self.logger debugDev:@"Will not create a new session,"
          " because there was not enough interval since the last activity"
                          key1:@"intervalSinceLastActivity"
-                       value1:intervalSinceLastActivity.description
+                 stringValue1:intervalSinceLastActivity.description
                          key2:@"minMeasurementSessionInterval"
-                       value2:self.minMeasurementSessionInterval.description];
+                 stringValue2:self.minMeasurementSessionInterval.description];
 
         [self increaseSessionLengthWithBuilder:builder
                      intervalSinceLastActivity:intervalSinceLastActivity];
@@ -263,7 +263,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 
     [self.logger debugDev:@"Trying to overwrite First Sdk Session Interval"
                       key:@"overwriteFirstSdkSessionInterval"
-                    value:self.overwriteFirstSdkSessionInterval.description];
+              stringValue:self.overwriteFirstSdkSessionInterval.description];
 
     // no matter what, the overwrite value should be cleared after the first possible use
     ADJTimeLengthMilli *_Nonnull firstSdkSessionInterval = self.overwriteFirstSdkSessionInterval;
@@ -283,10 +283,11 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
                      builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
      {
         [logBuilder withKey:@"externalNonMonotonicNowTimestamp"
-                      value:externalNonMonotonicNowTimestamp.description];
-        [logBuilder withKey:@"overwrittenNowTimestamp" value:overwrittenNowTimestamp.description];
+                stringValue:externalNonMonotonicNowTimestamp.description];
+        [logBuilder withKey:@"overwrittenNowTimestamp"
+                stringValue:overwrittenNowTimestamp.description];
         [logBuilder withKey:@"lastActivityTimestamp"
-                      value:
+                stringValue:
          self.stateData.measurementSessionData.lastActivityTimestampMilli.description];
     }];
 
@@ -320,7 +321,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
         [self.logger debugDev:@"Cannot update intervals in non-active session"
                          from:from
                           key:@"status"
-                        value:self.measurementSessionStatus];
+                  stringValue:self.measurementSessionStatus];
         return nil;
     }
 
@@ -390,9 +391,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 
     [self.logger debugDev:@"Session length increased"
                      key1:@"interval"
-                   value1:intervalSinceLastActivity.description
+             stringValue1:intervalSinceLastActivity.description
                      key2:@"session lenght"
-                   value2:builder.sessionLengthMilli.description];
+             stringValue2:builder.sessionLengthMilli.description];
 }
 
 - (void)
@@ -413,9 +414,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 
     [self.logger debugDev:@"Time Spent increased"
                      key1:@"interval"
-                   value1:intervalSinceLastActivity.description
+             stringValue1:intervalSinceLastActivity.description
                      key2:@"time spent"
-                   value2:builder.timeSpentMilli.description];
+             stringValue2:builder.timeSpentMilli.description];
 }
 
 @end

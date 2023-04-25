@@ -139,7 +139,7 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
     } else if (SQLITE_ROW == returnCode) {
         [logger debugDev:@"Query executed as an update"
                      key:@"sql"
-                   value:self.sqlString
+             stringValue:self.sqlString
                issueType:ADJIssueStorageIo];
     } else {
         if (SQLITE_INTERRUPT == returnCode) {
@@ -258,12 +258,12 @@ id<ADJSQLiteDbMessageProvider> sqliteDbMessageProviderWeak;
 {
     [logger debugWithMessage:@"Error stepping"
                 builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
-        [logBuilder withKey:@"sqlite error code name" value:errorCodeName];
+        [logBuilder withKey:@"sqlite error code name" stringValue:errorCodeName];
         [logBuilder withKey:@"is query or else update"
-                      value:[ADJUtilF boolFormat:isQueryOrElseUpdate]];
-        [logBuilder withKey:@"sql string" value:self.sqlString];
-        [logBuilder withKey:@"return code" value:[ADJUtilF intFormat:returnCode]];
-        [logBuilder withKey:@"last error message" value:[self lastErrorMessage]];
+                stringValue:[ADJUtilF boolFormat:isQueryOrElseUpdate]];
+        [logBuilder withKey:@"sql string" stringValue:self.sqlString];
+        [logBuilder withKey:@"return code" stringValue:[ADJUtilF intFormat:returnCode]];
+        [logBuilder withKey:@"last error message" stringValue:[self lastErrorMessage]];
         [logBuilder issue:ADJIssueStorageIo];
     }];
 }

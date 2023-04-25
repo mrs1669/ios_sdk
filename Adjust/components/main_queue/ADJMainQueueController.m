@@ -369,11 +369,12 @@
         [self.logger debugWithMessage:
          @"Unexpected difference between package from response and removed at position in front"
                          builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"package from response" value:sourceResponsePackage.description];
+            [logBuilder withKey:@"package from response"
+                    stringValue:sourceResponsePackage.description];
             [logBuilder withKey:@"position at front"
-                          value:positionAtFront.description];
+                    stringValue:positionAtFront.description];
             [logBuilder withKey:@"element at position at front"
-                          value:removedSdkPackage != nil ? [removedSdkPackage description] : nil];
+                    stringValue:removedSdkPackage != nil ? [removedSdkPackage description] : nil];
             [logBuilder issue:ADJIssueStorageIo];
         }];
         return;
@@ -388,9 +389,9 @@
     if (! [sourceResponsePackage isEqual:[self.storage elementAtFront]]) {
         [self.logger debugDev:@"Unexpected difference between packages from response and at front"
                          key1:@"package from response"
-                       value1:sourceResponsePackage.description
+                 stringValue1:sourceResponsePackage.description
                          key2:@"package at front"
-                       value2:[self.storage elementAtFront].description
+                 stringValue2:[self.storage elementAtFront].description
                     issueType:ADJIssueStorageIo];
         return nil;
     }
@@ -401,11 +402,12 @@
         [self.logger debugWithMessage:
          @"Unexpected difference between package from response and at position in front"
                          builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"package from response" value:sourceResponsePackage.description];
+            [logBuilder withKey:@"package from response"
+                    stringValue:sourceResponsePackage.description];
             [logBuilder withKey:@"position at front"
-                          value:positionAtFront != nil ? positionAtFront.description : nil];
+                    stringValue:positionAtFront != nil ? positionAtFront.description : nil];
             [logBuilder withKey:@"element at position at front"
-                          value:
+                    stringValue:
              elementAtFrontPosition != nil ? [elementAtFrontPosition description] : nil];
             [logBuilder issue:ADJIssueStorageIo];
         }];
@@ -456,7 +458,7 @@
     [self.logger debugDev:@"To send sdk package"
                      from:from
                       key:@"package"
-                    value:[packageToSend generateShortDescription].stringValue];
+              stringValue:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
         [self generateSendingParametersWithStorage:self.storage];

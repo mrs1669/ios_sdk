@@ -62,7 +62,7 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
 
     [self.logger debugDev:@"Read v4 activity state"
                       key:@"activity_state"
-                    value:[v4ActivityState description]];
+              stringValue:[v4ActivityState description]];
 
     ADJOptionalFailsNL<ADJPushTokenStateData *> *_Nonnull stateDataOptFails =
         [ADJPushTokenStateData instanceFromExternalWithPushTokenString:v4ActivityState.pushToken];

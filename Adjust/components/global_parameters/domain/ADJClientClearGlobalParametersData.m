@@ -39,7 +39,7 @@ NSString *const ADJClientClearGlobalParametersDataMetadataTypeValue =
          @"Cannot create ClientClearGlobalParametersData from client action io data"
          " with different client action type"
            expectedValue:ADJClientClearGlobalParametersDataMetadataTypeValue
-             actualValue:clientActionTypeValue.stringValue
+       actualStringValue:clientActionTypeValue.stringValue
                issueType:ADJIssueStorageIo];
         return nil;
     }

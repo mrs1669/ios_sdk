@@ -122,7 +122,7 @@
         [self.logger debugDev:
          @"Cannot process response data with that is not an attribution"
                 expectedValue:NSStringFromClass([ADJAttributionResponseData class])
-                  actualValue:NSStringFromClass([sdkResponseData class])
+            actualStringValue:NSStringFromClass([sdkResponseData class])
                     issueType:ADJIssueLogicError];
         return;
     }
@@ -330,7 +330,7 @@
     [self.logger debugDev:@"Delay ended"
                      from:source
                       key:@"delay from"
-                    value:delayData.from];
+              stringValue:delayData.from];
 
     if ([self.attributionTracker sendWhenDelayEnded]) {
         [self sendAttributionWithSource:@"Delay ended"];
@@ -356,7 +356,7 @@
     [self.logger debugDev:@"To send sdk package"
                      from:source
                       key:@"package"
-                    value:[attributionPackage generateShortDescription].stringValue];
+              stringValue:[attributionPackage generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters = [self generateSendingParameters];
 

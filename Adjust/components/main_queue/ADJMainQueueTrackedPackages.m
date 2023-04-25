@@ -139,7 +139,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
 
     [self.logger debugDev:@"Previous first sesssion count found"
                       key:@"current First Session Count IoValue"
-                    value:currentIoValue.stringValue
+              stringValue:currentIoValue.stringValue
                 issueType:ADJIssueUnexpectedInput];
 
     ADJResult<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
@@ -213,7 +213,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
                                 why:@"failed to parse from io value"];
             [logBuilder where:@"decremented first session count"];
             [logBuilder withKey:@"io value"
-                          value:currentIoValue.stringValue];
+                    stringValue:currentIoValue.stringValue];
             [logBuilder withFail:currentFirstSessionCountResult.fail
                            issue:ADJIssueStorageIo];
         }];
@@ -275,7 +275,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
 
     [self.logger debugDev:@"Previous asa click count found"
                       key:@"current Asa Click Count IoValue"
-                    value:currentIoValue.stringValue
+              stringValue:currentIoValue.stringValue
                 issueType:ADJIssueUnexpectedInput];
 
     ADJResult<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
@@ -352,7 +352,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
                                 why:@"failed to parse from io value"];
             [logBuilder where:@"decremented asa click count"];
             [logBuilder withKey:@"io value"
-                          value:currentIoValue.stringValue];
+                    stringValue:currentIoValue.stringValue];
             [logBuilder withFail:currentAsaClickCountResult.fail
                            issue:ADJIssueStorageIo];
         }];

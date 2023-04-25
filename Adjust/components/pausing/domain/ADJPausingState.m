@@ -162,7 +162,7 @@
     [self.logger debugDev:@"Cannot resume sending"
                      from:source
                       key:@"reason"
-                    value:reason];
+              stringValue:reason];
 }
 
 - (BOOL)publishPauseSendingWithSource:(nonnull NSString *)source {

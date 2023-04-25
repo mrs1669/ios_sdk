@@ -208,10 +208,10 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 }
 
 - (void)withExpected:(nonnull NSString *)expectedValue
-              actual:(nullable NSString *)actualValue
+   actualStringValue:(nullable NSString *)actualStringValue
 {
     [self withKey:ADJLogExpectedKey constValue:expectedValue];
-    [self withKey:ADJLogActualKey value:actualValue];
+    [self withKey:ADJLogActualKey stringValue:actualStringValue];
 }
 
 - (void)withFail:(nonnull ADJResultFail *)resultFail
@@ -222,13 +222,6 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 }
 
 - (void)withSubject:(nonnull NSString *)subject
-              value:(nonnull NSString *)value
-{
-    [self subject:subject];
-    [self value:value];
-}
-
-- (void)withSubject:(nonnull NSString *)subject
                 why:(nonnull NSString *)why
 {
     [self subject:subject];
@@ -236,20 +229,16 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 }
 
 - (void)withKey:(nonnull NSString *)key
-          value:(nullable id)value
+    stringValue:(nullable NSString *)stringValue
 {
     if (self.messageParams == nil) {
         self.messageParams = [[NSMutableDictionary alloc] init];
     }
 
-    [self.messageParams setObject:[ADJUtilObj idOrNsNull:value] forKey:key];
+    [self.messageParams setObject:[ADJUtilObj idOrNsNull:stringValue] forKey:key];
 }
 
 #pragma mark Internal Methods
-- (void)value:(nonnull NSString *)value {
-    [self withKey:ADJLogValueKey value:value];
-}
-
 - (void)withKey:(nonnull NSString *)key
      constValue:(nonnull NSString *)constValue
 {

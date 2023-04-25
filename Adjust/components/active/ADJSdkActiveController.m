@@ -137,7 +137,7 @@
     [self.logger debugDev:@"Publishing Sdk Active Status"
                      from:from
                       key:@"sdkActiveStatusEvent"
-                    value:sdkActiveStatus];
+              stringValue:sdkActiveStatus];
 
     [self.sdkActivePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJSdkActiveSubscriber> _Nonnull subscriber) {

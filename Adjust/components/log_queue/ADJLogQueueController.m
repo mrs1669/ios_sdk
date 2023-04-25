@@ -275,7 +275,7 @@
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package when it is nil"
                           key:ADJLogFromKey
-                        value:from
+                  stringValue:from
                     issueType:ADJIssueInvalidInput];
         return;
     }
@@ -283,7 +283,7 @@
     [self.logger debugDev:@"To send sdk package"
                      from:from
                       key:@"package"
-                    value:[packageToSend generateShortDescription].stringValue];
+              stringValue:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
     [self generateSendingParametersWithStorage:storage];

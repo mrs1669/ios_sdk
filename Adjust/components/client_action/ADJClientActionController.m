@@ -202,9 +202,9 @@
 
     [self.logger debugDev:@"Trying to process client actions"
                      key1:@"count"
-                   value1:[ADJUtilF uIntegerFormat:elementPositionList.count]
+             stringValue1:[ADJUtilF uIntegerFormat:elementPositionList.count]
                      key2:@"is pre first session"
-                   value2:[ADJUtilF boolFormat:isPreFirstSession]];
+             stringValue2:[ADJUtilF boolFormat:isPreFirstSession]];
 
     for (ADJNonNegativeInt *_Nonnull elementPosition in elementPositionList) {
         ADJClientActionData *_Nullable clientActionData =
@@ -212,7 +212,7 @@
         if (clientActionData == nil) {
             [self.logger debugDev:@"Cannot process client action from queue with queue id"
                               key:@"elementPosition"
-                            value:elementPosition.description
+                      stringValue:elementPosition.description
                         issueType:ADJIssueStorageIo];
             continue;
         }
@@ -223,7 +223,7 @@
         if (clientActionHandler == nil) {
             [self.logger debugDev:@"Cannot process client action with handler id"
                               key:@"clientActionHandlerId"
-                            value:clientActionData.clientActionHandlerId.stringValue
+                      stringValue:clientActionData.clientActionHandlerId.stringValue
                         issueType:ADJIssueStorageIo];
             continue;
         }
@@ -235,7 +235,7 @@
             if (! canHandleClientAction) {
                 [self.logger debugDev:@"Client Actino Handler cannot proccess pre first session"
                                   key:@"clientActionHandlerId"
-                                value:clientActionData.clientActionHandlerId.stringValue];
+                          stringValue:clientActionData.clientActionHandlerId.stringValue];
                 continue;
             }
         }

@@ -108,18 +108,15 @@ NS_ASSUME_NONNULL_END
 - (void)sdkPackageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams;
 
 - (void)withExpected:(nonnull NSString *)expectedValue
-              actual:(nullable NSString *)actualValue;
+   actualStringValue:(nullable NSString *)actualStringValue;
 
 - (void)withFail:(nonnull ADJResultFail *)resultFail
            issue:(nonnull ADJIssue)issueType;
 
 - (void)withSubject:(nonnull NSString *)subject
-              value:(nonnull NSString *)value;
-
-- (void)withSubject:(nonnull NSString *)subject
                 why:(nonnull NSString *)why;
 
 - (void)withKey:(nonnull NSString *)key
-          value:(nullable id)value;
+    stringValue:(nullable NSString *)stringValue;
 
 @end

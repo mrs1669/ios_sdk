@@ -51,7 +51,7 @@ NS_DESIGNATED_INITIALIZER;
 - (void)withError:(nonnull NSError *)error;
 - (void)withException:(nonnull NSException *)exception;
 - (void)withKey:(nonnull NSString *)key
-      otherFail:(nullable ADJResultFail *)otherFail;
+      otherFail:(nonnull ADJResultFail *)otherFail;
 - (void)withKey:(nonnull NSString *)key
     stringValue:(nonnull NSString *)stringValue;
 

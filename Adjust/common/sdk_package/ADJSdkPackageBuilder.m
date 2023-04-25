@@ -518,7 +518,7 @@
     if (deviceController == nil) {
         [self.logger debugDev:@"Cannot inject device info for package without a reference to device controller"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -633,7 +633,7 @@
     if (eventStateStorage == nil) {
         [self.logger debugDev:@"Cannot inject event data for package without a reference to event state storage"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -657,7 +657,7 @@
          @"Cannot inject global callback parameters for package"
          " without a reference to global callback parameters storage"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         globalCallbackParametersMap = nil;
     } else {
@@ -682,7 +682,7 @@
          @"Cannot inject global partner parameters for package"
          " without a reference to global partner parameters storage"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         globalPartnerParametersMap = nil;
     } else {

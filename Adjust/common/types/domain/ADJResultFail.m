@@ -177,12 +177,8 @@
     self.exception = exception;
 }
 - (void)withKey:(nonnull NSString *)key
-      otherFail:(nullable ADJResultFail *)otherFail
+      otherFail:(nonnull ADJResultFail *)otherFail
 {
-    if (otherFail == nil) {
-        return;
-    }
-
     if (self.paramsMut == nil) {
         self.paramsMut = [[NSMutableDictionary alloc] init];
     }
@@ -203,8 +199,7 @@
 
 - (nonnull ADJResultFail *)build {
     return [[ADJResultFail alloc] initWithMessage:self.message
-                                           params:
-            self.paramsMut != nil ? [self.paramsMut copy] : nil
+                                           params:self.paramsMut
                                             error:self.error
                                         exception:self.exception];
 }

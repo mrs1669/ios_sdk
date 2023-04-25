@@ -89,7 +89,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         [logger noticeClient:
          @"Cannot match ad revenue source to an expected one, but will be used as is"
                          key:@"ad revenue source"
-                       value:sourceResult.value.stringValue];
+                 stringValue:sourceResult.value.stringValue];
     }
 
     ADJMoney *_Nullable revenue = nil;

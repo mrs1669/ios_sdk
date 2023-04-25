@@ -85,9 +85,9 @@ static NSString *const kColumnValue = @"value";
 - (void)updateInMemoryOnlyWithNewDataValue:(nonnull id)newDataValue {
     [self.logger debugDev:@"Updating value in memory"
                      key1:@"inMemoryDataValue"
-                   value1:[self.inMemoryDataValue description]
+             stringValue1:[self.inMemoryDataValue description]
                      key2:@"newDataValue"
-                   value2:[newDataValue description]];
+             stringValue2:[newDataValue description]];
 
     self.inMemoryDataValue = newDataValue;
 }
@@ -126,7 +126,7 @@ static NSString *const kColumnValue = @"value";
     }
     [self.logger debugDev:@"Inserted new data values in update transaction"
                       key:@"newDataValue"
-                    value:[newDataValue description]];
+              stringValue:[newDataValue description]];
 
     return YES;
 }
@@ -161,7 +161,7 @@ static NSString *const kColumnValue = @"value";
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
             [logBuilder withFail:valueFromIoDataResult.fail
                            issue:ADJIssueStorageIo];
-            [logBuilder withKey:@"io data" value:[ioData description]];
+            [logBuilder withKey:@"io data" stringValue:[ioData description]];
         }];
     } else {
         _inMemoryDataValue = valueFromIoDataResult.value;
@@ -345,7 +345,7 @@ static int const kInsertValueFieldPosition = 3;
         [self.logger debugDev:
          @"Cannot count rows without a prepared statement from the select query"
                          key:@"selectCountSql"
-                       value:selectCountSql
+                  stringValue:selectCountSql
                     issueType:ADJIssueStorageIo];
         return;
     }
@@ -358,19 +358,19 @@ static int const kInsertValueFieldPosition = 3;
         [self.logger debugDev:
          @"Cannot count rows from Select queryCursor without a queryCursor from the select query"
                           key:@"selectCountSql"
-                        value:selectCountSql
+                  stringValue:selectCountSql
                     issueType:ADJIssueStorageIo];
         [selectCountStatement closeStatement];
         return;
     }
     
     NSNumber *_Nullable countNumber = [selectCountStatement numberIntForColumnIndex:0];
-    
+
     [self.logger debugDev:@"table read with count number"
                      key1:@"tableName"
-                   value1:self.tableName
+             stringValue1:self.tableName
                      key2:@"countNumber"
-                   value2:countNumber.description];
+             stringValue2:countNumber != nil ? [countNumber description] : nil];
     
     [selectCountStatement closeStatement];
 }

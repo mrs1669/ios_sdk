@@ -210,7 +210,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
             @"Did not change, since it was already in the same lifecycle state"
                          from:from
                           key:@"lifecycle state"
-                        value:foregroundOrElseBackground ? @"foreground" : @"background"];
+                  stringValue:foregroundOrElseBackground ? @"foreground" : @"background"];
         return;
     }
 
@@ -320,7 +320,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
         [strongSelf.logger debugDev:@"Shared UIApplication state to read"
                                 key:@"UIApplicationState"
-                              value:[ADJUtilF integerFormat:application.applicationState]];
+                        stringValue:[ADJUtilF integerFormat:application.applicationState]];
 
         UIApplicationState applicationState = application.applicationState;
 

@@ -89,7 +89,7 @@ ADJMainQueueController *mainQueueControllerWeak;
 {
     [self.logger debugDev:@"Trying to track event"
                       key:@"event token"
-                value:clientEventData.eventId.stringValue];
+              stringValue:clientEventData.eventId.stringValue];
 
     if (! [self canTrackEventWithDeduplicationId:clientEventData.deduplicationId]) {
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
@@ -135,7 +135,7 @@ ADJMainQueueController *mainQueueControllerWeak;
         [self.logger infoClient:
          @"Event won't be tracked, since it has a previously used deduplication id"
                             key:@"deduplication id"
-                          value:deduplicationId.stringValue];
+                    stringValue:deduplicationId.stringValue];
         return NO;
     }
 
@@ -144,7 +144,7 @@ ADJMainQueueController *mainQueueControllerWeak;
     [self.logger debugDev:
      @"Saving deduplication id to avoid tracking an event with the same value in the future"
                       key:@"deduplication id"
-                    value:deduplicationId.stringValue];
+              stringValue:deduplicationId.stringValue];
 
     return YES;
 }
@@ -166,7 +166,7 @@ ADJMainQueueController *mainQueueControllerWeak;
 
     [self.logger debugDev:@"Event count incremented"
                       key:@"event count"
-                    value:newEventStateData.eventCount.description];
+              stringValue:newEventStateData.eventCount.description];
 }
 
 @end

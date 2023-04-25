@@ -63,7 +63,7 @@ ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     } else {
         [self.logger debugDev:@"Found unknown sdk active status"
                           key:@"sdkActiveStatus"
-                        value:sdkActiveStatus
+                  stringValue:sdkActiveStatus
                     issueType:ADJIssueLogicError];
     }
 

@@ -226,7 +226,7 @@
         if (escapedKey == nil) {
             [self.logger debugDev:@"Could not inject url escaped key"
                               key:@"key"
-                            value:key
+                      stringValue:key
                         issueType:ADJIssueNetworkRequest];
             continue;
         }
@@ -237,7 +237,7 @@
         if (escapeValue == nil) {
             [self.logger debugDev:@"Could not inject url escaped key"
                               key:@"value"
-                            value:value.stringValue
+                      stringValue:value.stringValue
                         issueType:ADJIssueNetworkRequest];
             continue;
         }
@@ -301,7 +301,7 @@
 
     [self.logger debugDev:@"Did not succesfully ended waiting for response"
                       key:@"did wait timeout"
-                    value:[ADJUtilF boolFormat:timedOut]
+              stringValue:[ADJUtilF boolFormat:timedOut]
                 issueType:ADJIssueNetworkRequest];
 
     [self retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
@@ -329,7 +329,7 @@
     } else {
         [self.logger debugDev:@"Server with response"
                           key:@"raw response"
-                        value:responseStringResult.value];
+                  stringValue:responseStringResult.value];
     }
 
     [self injectJsonWithResponseData:data
@@ -401,9 +401,9 @@
         [self.logger debugDev:
          @"Cannot retry a bigger number of times than the number of possible urls"
                          key1:@"retries tried"
-                       value1:[ADJUtilF uIntegerFormat:[sdkResponseBuilder retries]]
+                 stringValue1:[ADJUtilF uIntegerFormat:[sdkResponseBuilder retries]]
                          key2:@"url count"
-                       value2:[ADJUtilF uIntegerFormat:urlCount]];
+                 stringValue2:[ADJUtilF uIntegerFormat:urlCount]];
         return NO;
     }
 

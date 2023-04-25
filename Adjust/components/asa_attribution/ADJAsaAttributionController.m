@@ -15,6 +15,7 @@
 #import "ADJUtilMap.h"
 #import "ADJUtilR.h"
 #import "ADJUtilObj.h"
+#import "ADJUtilF.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
 
@@ -108,9 +109,12 @@
     [logger debugWithMessage:@"Initial canReadToken values"
                 builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
      {
-        [logBuilder withKey:@"canReadTokenFromClient" value:@(canReadTokenFromClient).description];
-        [logBuilder withKey:@"canReadTokenFromConfig" value:@(canReadTokenFromConfig).description];
-        [logBuilder withKey:@"hasMininumOsVersion" value:@(hasMininumOsVersion).description];
+        [logBuilder withKey:@"canReadTokenFromClient"
+                      stringValue:[ADJUtilF boolFormat:canReadTokenFromClient]];
+        [logBuilder withKey:@"canReadTokenFromConfig"
+                stringValue:[ADJUtilF boolFormat:canReadTokenFromConfig]];
+        [logBuilder withKey:@"hasMininumOsVersion"
+                stringValue:[ADJUtilF boolFormat:hasMininumOsVersion]];
     }];
 
     return canReadTokenFromClient && canReadTokenFromConfig && hasMininumOsVersion;
@@ -174,9 +178,7 @@
 }
 
 #pragma mark - ADJAttributionSubscriber
-- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData
-             previousAttribution:(nullable ADJAttributionData *)previousAttribution
-{
+- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData {
     __typeof(self) __weak weakSelf = self;
     [self.executor executeInSequenceWithLogger:self.logger
                                           from:@"handle adjust attribution"
@@ -247,9 +249,9 @@
 
     [self.logger debugDev:@"Has Finished Reading Asa Attribution?"
                      key1:@"hasReceivedAdjustAttribution"
-                   value1:@(stateData.hasReceivedAdjustAttribution).description
+             stringValue1:[ADJUtilF boolFormat:stateData.hasReceivedAdjustAttribution]
                      key2:@"hasReceivedValidAsaClickResponse"
-                   value2:@(stateData.hasReceivedValidAsaClickResponse).description];
+             stringValue2:[ADJUtilF boolFormat:stateData.hasReceivedValidAsaClickResponse]];
 
     if (hasFinishedReadingAsaAttribution) {
         self.isFinishedReading = YES;

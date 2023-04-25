@@ -118,7 +118,7 @@
     if (storage == nil) {
         [self.logger debugDev:@"Cannot add global parameter without a reference to storage"
                           key:@"parameter type"
-                        value:self.globalParametersType
+                  stringValue:self.globalParametersType
                     issueType:ADJIssueWeakReference];
         return NO;
     }
@@ -130,7 +130,7 @@
         [self.logger noticeClient:
          @"Cannot add global parameter since the same key/value is already present"
                               key:@"parameter type"
-                            value:self.globalParametersType];
+                      stringValue:self.globalParametersType];
         return NO;
     }
 
@@ -142,11 +142,11 @@
         [self.logger infoClient:
          @"Added global parameter with key already present, value will be overwritten"
                             key:@"parameter type"
-                          value:self.globalParametersType];
+                    stringValue:self.globalParametersType];
     } else {
         [self.logger infoClient:@"Added global parameter"
                             key:@"parameter type"
-                          value:self.globalParametersType];
+                    stringValue:self.globalParametersType];
     }
 
     return YES;
@@ -160,7 +160,7 @@
     if (storage == nil) {
         [self.logger debugDev:@"Cannot remove global parameter without a reference to storage"
                           key:@"parameter type"
-                        value:self.globalParametersType
+                  stringValue:self.globalParametersType
                     issueType:ADJIssueWeakReference];
         return NO;
     }
@@ -172,11 +172,11 @@
     if (removedValue != nil) {
         [self.logger infoClient:@"Removed global parameter"
                             key:@"parameter type"
-                          value:self.globalParametersType];
+                    stringValue:self.globalParametersType];
     } else {
         [self.logger noticeClient:@"Cannot remove global parameter without key being present"
                               key:@"parameter type"
-                            value:self.globalParametersType];
+                      stringValue:self.globalParametersType];
     }
 
     return YES;
@@ -190,7 +190,7 @@
     if (storage == nil) {
         [self.logger debugDev:@"Cannot clear global parameters without a reference to storage"
                           key:@"parameter type"
-                        value:self.globalParametersType];
+                  stringValue:self.globalParametersType];
         return NO;
     }
 
@@ -199,9 +199,9 @@
 
     [self.logger infoClient:@"Cleared %@ global %@ parameters"
                        key1:@"cleared values count"
-                     value1:[ADJUtilF uIntegerFormat:clearedKeys].description
+               stringValue1:[ADJUtilF uIntegerFormat:clearedKeys].description
                        key2:@"parameter type"
-                     value2:self.globalParametersType];
+               stringValue2:self.globalParametersType];
 
     return YES;
 }
@@ -217,7 +217,7 @@
         [self.logger debugDev:
          @"Cannot handle global parameter client action without clientActionType"
                           key:@"parameter type"
-                        value:self.globalParametersType];
+                  stringValue:self.globalParametersType];
         return NO;
     }
 
@@ -274,9 +274,9 @@
     [self.logger debugDev:
      @"Cannot handle global parameter client action with unknown client action type"
                      key1:@"parameter type"
-                   value1:self.globalParametersType
+             stringValue1:self.globalParametersType
                      key2:@"clientActionType"
-                   value2:clientActionType.stringValue
+             stringValue2:clientActionType.stringValue
                 issueType:ADJIssueInvalidInput];
 
     return NO;

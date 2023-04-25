@@ -117,7 +117,7 @@
         [self.logger debugDev:
          @"Cannot process response data with that is not an gdpr forget"
                 expectedValue:NSStringFromClass([ADJGdprForgetResponseData class])
-                  actualValue:NSStringFromClass([sdkResponseData class])
+            actualStringValue:NSStringFromClass([sdkResponseData class])
                     issueType:ADJIssueLogicError];
         return;
     }
@@ -235,9 +235,9 @@
             if (strongSelf == nil) { return; }
 
             [strongSelf.logger debugDev:@"Delay ended"
-                             from:@"gdpr forget response delay"
-                              key:@"delay from"
-                            value:delayData.from];
+                                   from:@"gdpr forget response delay"
+                                    key:@"delay from"
+                            stringValue:delayData.from];
 
             if ([strongSelf.gdprForgetTracker sendWhenDelayEnded]) {
                 [strongSelf sendPackageFrom:@"Delay ended"];
@@ -321,7 +321,7 @@
     [self.logger debugDev:@"To send sdk package"
                      from:from
                       key:@"package"
-                    value:[self.packageToSend generateShortDescription].stringValue];
+              stringValue:[self.packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters = [self generateSendingParameters];
 
