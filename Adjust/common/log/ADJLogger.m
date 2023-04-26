@@ -25,7 +25,7 @@
 @implementation ADJLogger
 #pragma mark Constructors
 - (nonnull instancetype)initWithName:(nonnull NSString *)name
-                        logCollector:(nullable id<ADJLogCollector>)logCollector
+                        logCollector:(nonnull id<ADJLogCollector>)logCollector
                           instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
     self = [super init];

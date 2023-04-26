@@ -278,6 +278,71 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     return adjustAttribution;
 }
 
+- (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
+    buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName
+{
+    NSMutableDictionary<NSString *, id> *_Nonnull callbackDataMut =
+        [[NSMutableDictionary alloc] init];
+
+    ADJAdjustAttribution *_Nonnull adjustAttribution = [self toAdjustAttribution];
+    [callbackDataMut setObject:adjustAttribution
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackAdjustDataSuffix]];
+
+    NSDictionary<NSString *, id> *_Nonnull jsonDictionary =
+        [ADJAttributionData toJsonDictionaryWithAdjustAttribution:adjustAttribution];
+    [callbackDataMut setObject:jsonDictionary
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackNsDictionarySuffix]];
+
+    ADJOptionalFailsNN<NSString *> *_Nonnull jsonStringOptFails =
+        [ADJUtilJson toStringFromDictionary:jsonDictionary];
+    [callbackDataMut setObject:jsonStringOptFails.value
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackJsonStringSuffix]];
+
+    return [[ADJOptionalFailsNN alloc] initWithOptionalFails:jsonStringOptFails.optionalFails
+                                                       value:callbackDataMut];
+}
+
++ (nonnull NSDictionary<NSString *, id> *)toJsonDictionaryWithAdjustAttribution:
+    (nonnull ADJAdjustAttribution *)adjustAttribution
+{
+    NSMutableDictionary<NSString *, id> *_Nonnull jsonDictionaryMut =
+        [[NSMutableDictionary alloc] initWithCapacity:13];
+
+    // keys in ioData match the AdjustAttribution names, so might just well use them
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.trackerToken]
+                          forKey:kTrackerTokenKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.trackerName]
+                          forKey:kTrackerNameKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.network]
+                          forKey:kNetworkKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.campaign]
+                          forKey:kCampaignKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.adgroup]
+                          forKey:kAdgroupKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.creative]
+                          forKey:kCreativeKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.clickLabel]
+                          forKey:kClickLabelKey];
+    // TODO: adid to be extracted from attribution
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.adid]
+                          forKey:kAdidKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.deeplink]
+                          forKey:kDeeplinkKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.state]
+                          forKey:kStateKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.costType]
+                          forKey:kCostTypeKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.costAmount]
+                          forKey:kCostAmountKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.costCurrency]
+                          forKey:kCostCurrencyKey];
+
+    return jsonDictionaryMut;
+}
+
 #pragma mark - ADJIoDataMapBuilderInjectable
 
 #define injectIoData(keyValue, ioValue)                         \

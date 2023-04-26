@@ -80,7 +80,69 @@ function AdjustInstance(instanceId, errSubscriber) {
 AdjustInstance.prototype._postMessage = function(methodName, parameters) {
     Adjust._postMessage(methodName, this._instanceId, parameters, this._errSubscriber); }
 
+AdjustInstance.prototype.adjust_clientSubscription =
+function(callbackId, methodName, callbackParameter) {
+    /*
+    console.log("TORMV adjust_clientSubscription");
+    console.log("" + callbackId);
+    console.log("" + methodName);
+    console.log("" + JSON.stringify(callbackParameter));
+     */
+    const callbackFunction = this._callbackMap.get(callbackId);
+    if (! callbackFunction) {
+        const errMessage = "Could not find valid client subscription callback function";
+        //console.log("TORMV " + errMessage);
+        //console.log("" + JSON.stringify(Array.from(this._callbackMap.keys())));
+        this._postMessage("jsFail",
+                          JSON.stringify({
+            _message: errMessage,
+            _callbackId: callbackId,
+            _callbackIdType: typeof callbackId,
+            _methodName: methodName,
+            _methodNameType: typeof methodName,
+            _callbackParameter: callbackParameter,
+            _callbackParameterType: typeof callbackParameter,
+            _callbackMapKeys: Array.from(this._callbackMap.keys())
+        }));
+        return;
+    }
+
+    callbackFunction(methodName, callbackParameter);
+}
+
+/*
+
+ AdjustInstance.prototype.adjust_clientGetterAsync =
+ function(callbackId, methodName, callbackParameter) {
+     const callbackFunction = this.callbacksMap.get(callbackId);
+     this.callbacksMap.delete(callbackId);
+
+     if (! callbackFunction) { return; }
+
+     callbackFunction(methodName, callbackParameter)
+ }
+ */
+
 AdjustInstance.prototype.initSdk = function(adjustConfig) {
+    // save permanent callbacks
+    if (adjustConfig._adjustAttributionSubscriberCallbackId) {
+        this._callbackMap.set(adjustConfig._adjustAttributionSubscriberCallbackId,
+                              adjustConfig._adjustAttributionSubscriberCallback);
+    }
+    /*
+    if (adjustConfig.adjustIdentifierSubscriberCallbackId) {
+        this.callbacksMap.set(
+          adjustConfig.adjustIdentifierSubscriberCallbackId,
+          adjustConfig.adjustIdentifierSubscriberCallback);
+    }
+
+    if (adjustConfig.adjustLogSubscriberCallbackId) {
+        this.callbacksMap.set(
+          adjustConfig.adjustLogSubscriberCallbackId,
+          adjustConfig.adjustLogSubscriberCallback);
+    }
+     */
+
     this._postMessage("initSdk", JSON.stringify(adjustConfig)); };
 
 AdjustInstance.prototype.inactivateSdk = function() {
@@ -199,6 +261,18 @@ AdjustConfig.prototype.setEventIdDeduplicationMaxCapacity =
     function(eventIdDeduplicationMaxCapacity) {
         this._eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
         this._eventIdDeduplicationMaxCapacityType = typeof eventIdDeduplicationMaxCapacity; };
+
+AdjustConfig.prototype.setAdjustAttributionSubscriber = function(adjustAttributionSubscriber) {
+    this._adjustAttributionSubscriberCallbackType = typeof adjustAttributionSubscriber;
+    this._adjustAttributionSubscriberCallbackId = "adjustAttributionSubscriberCallback";
+    this._adjustAttributionSubscriberCallback =  adjustAttributionSubscriber;
+};
+
+AdjustConfig.prototype.setAdjustLogSubscriber = function(adjustLogSubscriber) {
+    this.adjustLogSubscriberCallbackType = typeof adjustLogSubscriberCallback;
+    this.adjustLogSubscriberCallbackId = "adjustLogSubscriberCallback";
+    this.adjustLogSubscriberCallback =  adjustLogSubscriberCallback;
+};
 
  /*
 var Adjust = {

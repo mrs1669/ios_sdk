@@ -29,6 +29,7 @@
 
 + (nonnull ADJOptionalFailsNN<NSString *> *)toStringFromDictionary:
     (nonnull NSDictionary<NSString *, id> *)jsonDictionary;
++ (nonnull ADJOptionalFailsNN<NSString *> *)toStringFromArray:(nonnull NSArray<id> *)jsonArray;
 
 + (nonnull ADJResult<NSDictionary<NSString *, id> *> *)
     toDictionaryFromString:(nonnull NSString *)jsonString;

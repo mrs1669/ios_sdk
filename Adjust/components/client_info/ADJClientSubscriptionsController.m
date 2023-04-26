@@ -10,6 +10,7 @@
 
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
+#import "ADJUtilF.h"
 
 #import <UIKit/UIKit.h>
 
@@ -21,6 +22,8 @@
 @property (nullable, readonly, strong, nonatomic)
     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+@property (nullable, readonly, strong, nonatomic)
+    NSDictionary<NSString *, id<ADJInternalCallback>> *internalConfigSubscriptions;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
 
 #pragma mark - Internal variables
@@ -38,7 +41,9 @@
     adjustAttributionSubscriber:
         (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
-    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
+    doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink;
 {
     self = [super initWithLoggerFactory:loggerFactory loggerName:@"ClientSubscriptionsController"];
     _threadController = threadController;
@@ -46,6 +51,7 @@
     _clientReturnExecutor = clientReturnExecutor;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
     _adjustLogSubscriber = adjustLogSubscriber;
+    _internalConfigSubscriptions = internalConfigSubscriptions;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;
 
     _cachedAttributionData = nil;
@@ -123,7 +129,14 @@
 - (void)ccNotifyClientOnSdkInitForAttribution {
     __block id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
         self.adjustAttributionSubscriber;
-    if (localAdjustAttributionSubscriber == nil) { return; }
+
+    __block id<ADJInternalCallback> _Nullable internalAttributionCallback =
+        self.internalConfigSubscriptions == nil ? nil :
+        [self.internalConfigSubscriptions objectForKey:ADJInternalAttributionSubscriberV5000Key];
+
+    if (localAdjustAttributionSubscriber == nil && internalAttributionCallback == nil) {
+        return;
+    }
 
     ADJAttributionStateData *_Nonnull attributionStateData =
         [self.attributionStateStorage readOnlyStoredDataValue];
@@ -137,26 +150,70 @@
     [self.logger debugDev:@"Notifying client on init with read attribution"];
     self.cachedAttributionData = attributionData;
 
-    __block ADJAdjustAttribution *_Nonnull adjustAttribution = [attributionData toAdjustAttribution];
+    if (localAdjustAttributionSubscriber != nil) {
+        __block ADJAdjustAttribution *_Nonnull adjustAttribution =
+            [attributionData toAdjustAttribution];
 
-    [self.clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustAttributionSubscriber didReadWithAdjustAttribution:adjustAttribution];
-    }];
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [localAdjustAttributionSubscriber didReadWithAdjustAttribution:adjustAttribution];
+        }];
+    }
+
+    if (internalAttributionCallback != nil) {
+        ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+            [attributionData
+             buildInternalCallbackDataWithMethodName:ADJDidReadAttributionMethodName];
+        for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {
+            [self.logger debugDev:@"Issue while building read attribution internal callback"
+                       resultFail:optFail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+
+        __block NSDictionary<NSString *, id> *_Nonnull callbackData = callbackDataOptFails.value;
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [internalAttributionCallback didInternalCallbackWithData:callbackData];
+        }];
+    }
 }
 
 - (void)notifyClientWithChangedAttribution:(nonnull ADJAttributionData *)attributionData {
     __block id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
         self.adjustAttributionSubscriber;
-    if (localAdjustAttributionSubscriber == nil) { return; }
 
-    __block ADJAdjustAttribution *_Nonnull adjustAttribution =
-        [attributionData toAdjustAttribution];
+    __block id<ADJInternalCallback> _Nullable internalAttributionCallback =
+        self.internalConfigSubscriptions == nil ? nil :
+        [self.internalConfigSubscriptions objectForKey:ADJInternalAttributionSubscriberV5000Key];
+
+    if (localAdjustAttributionSubscriber == nil && internalAttributionCallback == nil) {
+        return;
+    }
 
     [self.logger debugDev:@"Notifying client on changed attribution"];
 
-    [self.clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustAttributionSubscriber didChangeWithAdjustAttribution:adjustAttribution];
-    }];
+    if (localAdjustAttributionSubscriber != nil) {
+        __block ADJAdjustAttribution *_Nonnull adjustAttribution =
+            [attributionData toAdjustAttribution];
+
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [localAdjustAttributionSubscriber didChangeWithAdjustAttribution:adjustAttribution];
+        }];
+    }
+
+    if (internalAttributionCallback != nil) {
+        ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+            [attributionData
+             buildInternalCallbackDataWithMethodName:ADJDidChangeAttributionMethodName];
+        for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {
+            [self.logger debugDev:@"Issue while building changed attribution internal callback"
+                       resultFail:optFail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+
+        __block NSDictionary<NSString *, id> *_Nonnull callbackData = callbackDataOptFails.value;
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [internalAttributionCallback didInternalCallbackWithData:callbackData];
+        }];
+    }
 }
 
 - (void)openDeferredDeeplink:(nullable ADJNonEmptyString *)deferredDeeplink {

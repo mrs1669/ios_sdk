@@ -19,6 +19,22 @@
 static ADJEntryRoot *entryRootInstance = nil;
 static dispatch_once_t entryRootOnceToken = 0;
 
+NSString *const ADJInternalAttributionSubscriberV5000Key = @"internalAttributionSubscriberV5000";
+NSString *const ADJInternalLogSubscriberV5000Key = @"internalLogSubscriberV5000";
+
+NSString *const ADJDidReadAttributionMethodName = @"didReadAttribution";
+NSString *const ADJDidChangeAttributionMethodName = @"didChangeAttribution";
+
+NSString *const ADJDidLogMessageMethodName = @"didLogMessage";
+NSString *const ADJDidLogMessagesPreInitMethodName = @"didLogMessagesPreInit";
+
+NSString *const ADJDidFailMethodName = @"didFail";
+
+NSString *const ADJInternalCallbackStringSuffix = @"_string";
+NSString *const ADJInternalCallbackAdjustDataSuffix = @"_adjustData";
+NSString *const ADJInternalCallbackNsDictionarySuffix = @"_nsDictionary";
+NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
+
 @implementation ADJAdjustInternal
 
 + (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId {
@@ -38,6 +54,19 @@ static dispatch_once_t entryRootOnceToken = 0;
 #ifdef DEBUG
     }
 #endif
+}
+
++ (void)
+    initSdkInternalForClientId:(nullable NSString *)clientId
+    adjustConfig:(nonnull ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot initSdkInternalWithConfig:adjustConfig
+                internalConfigSubscriptions:internalConfigSubscriptions];
 }
 
 + (nonnull NSString *)sdkVersion {

@@ -43,7 +43,7 @@
 - (void)didLogWithMessage:(nonnull NSString *)logMessage
                  logLevel:(nonnull ADJAdjustLogLevel)logLevel
 {
-    NSLog(@"%@", logMessage);
+    NSLog(@"bridge: %@", logMessage);
 }
 
 - (void)didLogMessagesPreInitWithArray:

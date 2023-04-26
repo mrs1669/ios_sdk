@@ -59,7 +59,7 @@ NSString *const ADJSessionPackageDataPath = @"session";
     }
     if ([self isOneWithNonEmtpyString:sessionCountString]) {
         return [[ADJNonEmptyString alloc]
-                initWithConstStringValue:@"Install / First Session"];
+                initWithConstStringValue:@"Install, First Session"];
     }
     return [[ADJNonEmptyString alloc]
                 initWithConstStringValue:

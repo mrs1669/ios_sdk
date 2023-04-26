@@ -56,7 +56,7 @@ FOUNDATION_EXPORT NSString *const ADJWBCanSendInBackgroundConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBDoNotOpenDeferredDeeplinkConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBDoNotReadAppleSearchAdsAttributionConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBEventIdDeduplicationMaxCapacityConfigKey;
-FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionSubscriberCallbackIdConfigKey;
-FOUNDATION_EXPORT NSString *const ADJWBAdjustLogSubscriberCallbackIdConfigKey;
+FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionSubscriberCallbackConfigKey;
+FOUNDATION_EXPORT NSString *const ADJWBAdjustLogSubscriberCallbackConfigKey;
 
 NS_ASSUME_NONNULL_END

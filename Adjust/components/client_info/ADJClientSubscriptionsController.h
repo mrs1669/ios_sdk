@@ -17,6 +17,7 @@
 #import "ADJClientReturnExecutor.h"
 #import "ADJAdjustLogSubscriber.h"
 #import "ADJAdjustAttributionSubscriber.h"
+#import "ADJAdjustInternal.h"
 
 @interface ADJClientSubscriptionsController : ADJCommonBase<
     // subscriptions
@@ -34,6 +35,8 @@
     adjustAttributionSubscriber:
         (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
     doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink;
 
 @end

@@ -119,4 +119,7 @@ NS_ASSUME_NONNULL_END
 - (void)withKey:(nonnull NSString *)key
     stringValue:(nullable NSString *)stringValue;
 
+- (void)withKey:(nonnull NSString *)key
+      jsonArray:(nonnull NSArray<id> *)jsonArray;
+
 @end

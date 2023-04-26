@@ -24,10 +24,10 @@
                                     error:errorPtr];
     }
 
-    if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+    if (! [jsonObject isKindOfClass:[NSDictionary class]]) {
         return [ADJResult failWithMessage:@"Converted Json object is not a dictionary"
-                                      key:ADJLogActualKey
-                              stringValue:NSStringFromClass([jsonObject class])];
+                                        key:ADJLogActualKey
+                                stringValue:NSStringFromClass([jsonObject class])];
     }
 
     return [ADJResult okWithValue:jsonObject];
@@ -48,7 +48,7 @@
     (nonnull NSDictionary<NSString *, id> *)jsonDictionary
 {
     ADJResult<NSString *> *_Nonnull jsonStringResult =
-        [ADJUtilJson toStringThroughNSJSONSerializationWithDictionary:jsonDictionary];
+        [ADJUtilJson toStringThroughNSJSONSerializationWithObject:jsonDictionary];
     if (jsonStringResult.fail == nil) {
         return [[ADJOptionalFailsNN alloc] initWithOptionalFails:nil
                                                            value:jsonStringResult.value];
@@ -62,14 +62,30 @@
             value:[ADJUtilJson toStringManuallyWithDictionary:jsonDictionary
                                              optionalFailsMut:optionalFailsMut]];
 }
-+ (nonnull ADJResult<NSString *> *)toStringThroughNSJSONSerializationWithDictionary:
-    (nonnull NSDictionary<NSString *, id> *)jsonDictionary
++ (nonnull ADJOptionalFailsNN<NSString *> *)toStringFromArray:(nonnull NSArray<id> *)jsonArray {
+    ADJResult<NSString *> *_Nonnull jsonStringResult =
+        [ADJUtilJson toStringThroughNSJSONSerializationWithObject:jsonArray];
+    if (jsonStringResult.fail == nil) {
+        return [[ADJOptionalFailsNN alloc] initWithOptionalFails:nil
+                                                           value:jsonStringResult.value];
+    }
+
+    NSMutableArray<ADJResultFail *> *optionalFailsMut =
+        [[NSMutableArray alloc] initWithObjects:jsonStringResult.fail, nil];
+
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[ADJUtilJson toStringManuallyWithArray:jsonArray
+                                             optionalFailsMut:optionalFailsMut]];
+}
+
++ (nonnull ADJResult<NSString *> *)toStringThroughNSJSONSerializationWithObject:
+    (nonnull id)jsonObject
 {
-    ADJResult<NSData *> *_Nonnull jsonDataResult =
-        [ADJUtilJson toDataFromDictionary:jsonDictionary];
+    ADJResult<NSData *> *_Nonnull jsonDataResult = [ADJUtilJson toDataFromObject:jsonObject];
     if (jsonDataResult.fail != nil) {
         return [ADJResult failWithMessage:
-                @"Cannot convert json dictionary to data using NSJSONSerialization"
+                @"Cannot convert json object to data using NSJSONSerialization"
                                       key:@"data convertion fail"
                                 otherFail:jsonDataResult.fail];
     }
@@ -189,7 +205,7 @@
         return [ADJUtilJson toStringManuallyWithArray:jsonValue
                                      optionalFailsMut:optionalFailsMut];
     }
-    if ([jsonValue isKindOfClass:[NSString class]]) {
+    if ([jsonValue isKindOfClass:[NSNull class]]) {
         return @"null";
     }
     if ([jsonValue isKindOfClass:[NSNumber class]]) {
@@ -209,14 +225,12 @@
 
     return nil;
 }
-+ (nonnull ADJResult<NSData *> *)
-    toDataFromDictionary:(nonnull NSDictionary<NSString *, id> *)jsonDictionary
-{
++ (nonnull ADJResult<NSData *> *)toDataFromObject:(nonnull id)jsonObject {
     @try {
         NSError *_Nullable errorPtr = nil;
         // If the object will not produce valid JSON then an exception will be thrown
         NSData *_Nullable data =
-            [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:&errorPtr];
+            [NSJSONSerialization dataWithJSONObject:jsonObject options:0 error:&errorPtr];
 
         if (data != nil) {
             return [ADJResult okWithValue:data];
@@ -291,10 +305,10 @@
              setObject:[ADJUtilJson toJsonDictionaryWithDictionary:value
                                                   optionalFailsMut:optionalFailsMut]
              forKey:keyString];;
-        } else if ([value isKindOfClass:[NSDictionary class]]) {
+        } else if ([value isKindOfClass:[NSArray class]]) {
             [jsonDictionaryMut
              setObject:[ADJUtilJson toJsonArrayWithArray:value
-                                                  optionalFailsMut:optionalFailsMut]
+                                        optionalFailsMut:optionalFailsMut]
              forKey:keyString];
         } else {
             ADJResultFailBuilder *_Nonnull failBuilder =
@@ -327,7 +341,7 @@
         } else if ([value isKindOfClass:[NSDictionary class]]) {
             [jsonArrayMut addObject:[ADJUtilJson toJsonDictionaryWithDictionary:value
                                                                optionalFailsMut:optionalFailsMut]];
-        } else if ([value isKindOfClass:[NSDictionary class]]) {
+        } else if ([value isKindOfClass:[NSArray class]]) {
             [jsonArrayMut addObject:[ADJUtilJson toJsonArrayWithArray:value
                                                      optionalFailsMut:optionalFailsMut]];
         } else {

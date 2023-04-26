@@ -28,16 +28,28 @@
         <script>
 
             window.onload = event => {
-                adjustInitSdk();
+                //adjustInitSdk();
             };
+
+            function adjustAttributionSubscriber(methodName, parameter) {
+                console.log("adjustAttributionSubscriber, methodName = " + methodName
+                      + ", parameter = " + JSON.stringify(parameter));
+            }
+
+            function errSubscriber(errMessage) {
+                console.log(errMessage);
+            }
 
             function adjustInitSdk() {
                 var adjustConfig = new AdjustConfig('2fm9gkqubvpc', AdjustConfig.EnvironmentSandbox);
                 console.log('adjustConfig type ' + typeof adjustConfig);
+
+                adjustConfig.doLogAll();
+                adjustConfig.setAdjustAttributionSubscriber(adjustAttributionSubscriber);
                 //adjustConfig.setAttributionCallback(true);
                 //adjustConfig.setLogLevel(AdjustConfig.LogLevelAll);
                 console.log('Adjust.instance() type ' + typeof Adjust.instance());
-                Adjust.instance().initSdk(adjustConfig);
+                Adjust.instance("",errSubscriber).initSdk(adjustConfig);
             }
 
             function trackEvent() {

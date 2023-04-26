@@ -15,7 +15,7 @@
 @interface ADJLogger : NSObject
 // instantiation
 - (nonnull instancetype)initWithName:(nonnull NSString *)name
-                        logCollector:(nullable id<ADJLogCollector>)logCollector
+                        logCollector:(nonnull id<ADJLogCollector>)logCollector
                           instanceId:(nonnull ADJInstanceIdData *)instanceId
     NS_DESIGNATED_INITIALIZER;
 

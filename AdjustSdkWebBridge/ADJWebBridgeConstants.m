@@ -52,7 +52,10 @@ NSString *const ADJWBDoLogAllConfigKey = @"_doLogAll";
 NSString *const ADJWBDoNotLogAnyConfigKey = @"_doNotLogAny";
 NSString *const ADJWBCanSendInBackgroundConfigKey = @"_canSendInBackground";
 NSString *const ADJWBDoNotOpenDeferredDeeplinkConfigKey = @"_doNotOpenDeferredDeeplink";
-NSString *const ADJWBDoNotReadAppleSearchAdsAttributionConfigKey = @"_doNotReadAppleSearchAdsAttribution";
-NSString *const ADJWBEventIdDeduplicationMaxCapacityConfigKey = @"_eventIdDeduplicationMaxCapacity";
-NSString *const ADJWBAdjustAttributionSubscriberCallbackIdConfigKey = @"_adjustAttributionSubscriberCallbackId";
-NSString *const ADJWBAdjustLogSubscriberCallbackIdConfigKey = @"_adjustLogSubscriberCallbackId";
+NSString *const ADJWBDoNotReadAppleSearchAdsAttributionConfigKey =
+    @"_doNotReadAppleSearchAdsAttribution";
+NSString *const ADJWBEventIdDeduplicationMaxCapacityConfigKey =
+    @"_eventIdDeduplicationMaxCapacity";
+NSString *const ADJWBAdjustAttributionSubscriberCallbackConfigKey =
+    @"_adjustAttributionSubscriberCallback";
+NSString *const ADJWBAdjustLogSubscriberCallbackConfigKey = @"_adjustLogSubscriberCallback";

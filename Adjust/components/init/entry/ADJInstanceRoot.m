@@ -149,6 +149,14 @@
 
 #pragma mark - ADJAdjustInstance
 - (void)initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig {
+    [self initSdkInternalWithConfig:adjustConfig
+        internalConfigSubscriptions:nil];
+}
+- (void)
+    initSdkInternalWithConfig:(nonnull ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
+{
     [self ccExecuteFrom:@"initSdk"
         preAndSelfBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot,
                           ADJInstanceRoot *_Nonnull instanceRoot)
@@ -156,6 +164,7 @@
         ADJClientConfigData *_Nullable clientConfig =
             [ADJClientConfigData
              instanceFromClientWithAdjustConfig:adjustConfig
+             internalConfigSubscriptions:internalConfigSubscriptions
              logger:preSdkInitRoot.logger];
 
         if (! [preSdkInitRoot.sdkActiveController ccTrySdkInit]) {

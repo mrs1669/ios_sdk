@@ -28,17 +28,227 @@
 #import "ADJConsoleLogger.h"
 #import "ADJUtilConv.h"
 #import "ADJBooleanWrapper.h"
+#import "ADJInstanceRoot.h"
+#import "ADJUtilF.h"
+
+@interface ADJWebViewCallback : NSObject
+- (nonnull instancetype)initWithWebView:(nonnull WKWebView *)webView
+                                 logger:(nonnull ADJLogger *)logger;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+- (void)
+    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
+    callbackId:(nonnull NSString *)callbackId
+    methodName:(nonnull NSString *)methodName
+    jsonNonStringParameter:(nonnull NSString *)jsonNonStringParameter;
+
+@property (nonnull, readonly, strong, nonatomic) WKWebView *webView;
+@property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
+
+@end
+
+@implementation ADJWebViewCallback
+- (nonnull instancetype)initWithWebView:(nonnull WKWebView *)webView
+                                 logger:(nonnull ADJLogger *)logger
+{
+    self = [super init];
+    _webView = webView;
+    _logger = logger;
+
+    return self;
+}
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+#pragma mark Public API
+- (void)
+    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
+    callbackId:(nonnull NSString *)callbackId
+    methodName:(nonnull NSString *)methodName
+    jsonNonStringParameter:(nonnull NSString *)jsonNonStringParameter
+{
+    [self execJsCallbackWithInstanceIdString:instanceIdString
+                                  callbackId:callbackId
+                                  methodName:methodName
+                               jsonParameter:jsonNonStringParameter
+                    subscriptionOrElseGetter:YES];
+}
+- (void)
+    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
+    callbackId:(nonnull NSString *)callbackId
+    methodName:(nonnull NSString *)methodName
+    jsonStringParameter:(nonnull NSString *)jsonStringParameter
+{
+    [self
+     execJsCallbackWithInstanceIdString:instanceIdString
+     callbackId:callbackId
+     methodName:methodName
+     jsonParameter:[NSString stringWithFormat:@"\"%@\"", jsonStringParameter]
+     subscriptionOrElseGetter:YES];
+}
+
+#pragma mark Internal Methods
+- (void)
+    execJsCallbackWithInstanceIdString:(nonnull NSString *)instanceIdString
+    callbackId:(nonnull NSString *)callbackId
+    methodName:(nonnull NSString *)methodName
+    jsonParameter:(nonnull NSString *)jsonParameter
+    subscriptionOrElseGetter:(BOOL)subscriptionOrElseGetter
+{
+    NSString *_Nonnull jsonInstanceId = [NSString stringWithFormat:@"\"%@\"", instanceIdString];
+    NSString *_Nonnull jsExecCommand =
+        [NSString stringWithFormat:@"Adjust.instance(%@).adjust_client%@(\"%@\", \"%@\", %@);",
+         jsonInstanceId,
+         subscriptionOrElseGetter ? @"Subscription" : @"GetterAsync",
+         callbackId, methodName, jsonParameter];
+
+    [self.logger debugWithMessage:@"TORMV execJsCallback"
+                     builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+        [logBuilder withKey:@"jsonParameter"
+                stringValue:jsonParameter];
+        [logBuilder withKey:@"subscriptionOrElseGetter"
+                stringValue:[ADJUtilF boolFormat:subscriptionOrElseGetter]];
+        [logBuilder withKey:@"jsExecCommand"
+                stringValue:jsExecCommand];
+    }];
+
+    __typeof(self) __weak weakSelf = self;
+    [self.webView evaluateJavaScript:jsExecCommand
+                   completionHandler:^(id _Nullable jsonReturnValue,
+                                       NSError *_Nullable error)
+     {
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+
+        if (error != nil) {
+            [strongSelf.logger
+             debugWithMessage:@"Cannot evaluate javascript"
+             builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+                [logBuilder withFail:[[ADJResultFail alloc]
+                                      initWithMessage:@"evaluateJavaScript completionHandler error"
+                                      error:error]
+                               issue:ADJIssueNonNativeIntegration];
+                [logBuilder withKey:@"instanceIdString" stringValue:instanceIdString];
+                [logBuilder withKey:@"callbackId" stringValue:callbackId];
+                [logBuilder withKey:@"methodName" stringValue:methodName];
+                [logBuilder withKey:@"jsonParameter" stringValue:jsonParameter];
+                [logBuilder withKey:@"subscriptionOrElseGetter"
+                        stringValue:[ADJUtilF boolFormat:subscriptionOrElseGetter]];
+                if (jsonReturnValue != nil) {
+                    [logBuilder withKey:@"jsonReturnValue"
+                            stringValue:[jsonReturnValue description]];
+                }
+            }];
+        }
+    }];
+}
+
+@end
+
+@interface ADJAttributionInternalCallback : NSObject<ADJInternalCallback>
+
+@property (nullable, readonly, weak, nonatomic) ADJWebViewCallback *webViewCallbackWeak;
+@property (nonnull, readonly, strong, nonatomic) NSString *attributionSubscriberCallbackId;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceIdString;
+
+@end
+
+@implementation ADJAttributionInternalCallback
+#pragma mark Instantiation
+- (nonnull instancetype)
+    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
+    attributionSubscriberCallbackId:(nonnull NSString *)attributionSubscriberCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    self = [super init];
+    _webViewCallbackWeak = webViewCallback;
+    _attributionSubscriberCallbackId = attributionSubscriberCallbackId;
+    _instanceIdString = instanceIdString;
+
+    return self;
+}
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+#pragma mark Public API
+#pragma mark - ADJInternalCallback
+- (void)didInternalCallbackWithData:(nonnull NSDictionary<NSString *, id> *)data {
+    ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
+    NSLog(@"TORMV didInternalCallbackWithData webViewCallback == nil: %@", @(webViewCallback == nil));
+    if (webViewCallback == nil) {
+        // TODO: log weak ref fail, maybe to adjust internal?
+        return;
+    }
+
+    [webViewCallback.logger debugDev:@"TORMV didInternalCallbackWithData saved"
+                                 key1:@"attributionSubscriberCallbackId"
+                        stringValue1:self.attributionSubscriberCallbackId
+                                key2:@"instanceIdString"
+                        stringValue2:self.instanceIdString];
+
+    [webViewCallback.logger debugDev:@"TORMV didInternalCallbackWithData received"
+                                 key:@"data keys"
+                         stringValue:[[ADJUtilJson toStringFromArray:[data allKeys]] value]];
+
+    id _Nullable didReadAdjustAttributonJsonStringValue =
+        [data objectForKey:[NSString stringWithFormat:@"%@%@",
+                            ADJDidReadAttributionMethodName, ADJInternalCallbackJsonStringSuffix]];
+
+    if (didReadAdjustAttributonJsonStringValue != nil
+        && [didReadAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
+    {
+        [webViewCallback
+         execJsCallbackSubscriptionWithInstanceIdString:self.instanceIdString
+         callbackId:self.attributionSubscriberCallbackId
+         methodName:ADJDidReadAttributionMethodName
+         jsonNonStringParameter:(NSString *)didReadAdjustAttributonJsonStringValue];
+        return;
+    }
+
+    id _Nullable didChangeAdjustAttributonJsonStringValue =
+        [data objectForKey:[NSString stringWithFormat:@"%@%@",
+                            ADJDidChangeAttributionMethodName,
+                            ADJInternalCallbackJsonStringSuffix]];
+
+    if (didChangeAdjustAttributonJsonStringValue != nil
+        && [didChangeAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
+    {
+        [webViewCallback
+         execJsCallbackSubscriptionWithInstanceIdString:self.instanceIdString
+         callbackId:self.attributionSubscriberCallbackId
+         methodName:ADJDidChangeAttributionMethodName
+         jsonNonStringParameter:(NSString *)didChangeAdjustAttributonJsonStringValue];
+        return;
+    }
+
+    [webViewCallback.logger
+     debugWithMessage:@"Could not find either attribution subscription callback json string values"
+     builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+        [logBuilder withKey:@"callback data keys"
+                  jsonArray:[data allKeys]];
+        [logBuilder issue:ADJIssueNonNativeIntegration];
+    }];
+}
+
+@end
 
 #pragma mark Fields
-@interface ADJAdjustBridge() <ADJAdjustAttributionSubscriber, WKScriptMessageHandler>
+@interface ADJAdjustBridge() <
+    ADJAdjustAttributionSubscriber,
+    ADJLogCollector,
+    WKScriptMessageHandler>
 
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> logSubscriber;
-@property (nullable, readonly, strong, nonatomic) ADJLogger *logger;
+@property (nonnull, readonly, strong, nonatomic) ADJWebViewCallback *webViewCallback;
+@property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
 
 @end
 
 @implementation ADJAdjustBridge
-
 #pragma mark - Init Web View
 + (nullable ADJAdjustBridge *)instanceWithWKWebView:(nonnull WKWebView *)webView {
     return [ADJAdjustBridge instanceWithWKWebView:webView adjustJsLogSubscriber:nil];
@@ -51,11 +261,6 @@
         return nil;
     }
 
-    ADJLogger *_Nonnull logger = [[ADJLogger alloc] initWithName:@"AdjustBridge"
-                                                    logCollector:nil
-                                                      instanceId:[[ADJInstanceIdData alloc]
-                                                                  initNonFirstWithClientId:nil]];
-
     ADJResult<NSString *> *_Nonnull scriptSourceResult =
         [ADJAdjustBridge getAdjustWebBridgeScript];
     if (scriptSourceResult.fail != nil) {
@@ -63,8 +268,12 @@
             [adjustJsLogSubscriber
              didLogWithMessage:
                  [ADJConsoleLogger clientCallbackFormatMessageWithLog:
-                 [logger errorClient:@"Cannot generate script for web bridge"
-                          resultFail:scriptSourceResult.fail]]
+                  [[ADJInputLogMessageData alloc]
+                   initWithMessage:@"Cannot generate script for web bridge"
+                   level:ADJAdjustLogLevelError
+                   issueType:nil
+                   resultFail:scriptSourceResult.fail
+                   messageParams:nil]]
              logLevel:ADJAdjustLogLevelError];
         }
         return nil;
@@ -72,8 +281,7 @@
 
     ADJAdjustBridge *_Nonnull bridge = [[ADJAdjustBridge alloc]
                                         initWithWithWKWebView:webView
-                                        adjustLogSubscriber:adjustJsLogSubscriber
-                                        logger:logger];
+                                        adjustLogSubscriber:adjustJsLogSubscriber];
     WKUserContentController *controller = webView.configuration.userContentController;
     [controller addUserScript:[[WKUserScript.class alloc]
                                initWithSource:scriptSourceResult.value
@@ -98,10 +306,16 @@
 - (nonnull instancetype)
     initWithWithWKWebView:(nonnull WKWebView *)webView
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
-    logger:(nonnull ADJLogger *)logger
 {
     self = [super init];
-    _webView = webView;
+    ADJLogger *_Nonnull logger =
+        [[ADJLogger alloc] initWithName:@"AdjustBridge"
+                           logCollector:self
+                             instanceId:[[ADJInstanceIdData alloc] initNonFirstWithClientId:nil]];
+
+
+    _webViewCallback = [[ADJWebViewCallback alloc] initWithWebView:webView
+                                                            logger:logger];
     _logSubscriber = adjustLogSubscriber;
     _logger = logger;
 
@@ -110,6 +324,10 @@
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+- (nonnull WKWebView *)webView {
+    return self.webViewCallback.webView;
 }
 
 + (nonnull ADJResult<NSString *> *)getAdjustWebBridgeScript {
@@ -153,20 +371,16 @@
     [self.webView evaluateJavaScript:javaScript completionHandler:nil];
 }
 
-- (void)errorWithLogData:(nonnull ADJInputLogMessageData *)logData {
-    [self logWithData:logData logLevel:ADJAdjustLogLevelError];
-}
-
-- (void)logWithData:(nonnull ADJInputLogMessageData *)logData
-           logLevel:(nonnull ADJAdjustLogLevel)logLevel
-{
+#pragma mark - ADJLogCollector
+- (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData {
     if (self.logSubscriber == nil) {
+        NSLog(@"TORMV bridge logSubscriber = nil");
         return;
     }
 
-    [self.logSubscriber
-     didLogWithMessage:[ADJConsoleLogger clientCallbackFormatMessageWithLog:logData]
-     logLevel:logLevel];
+    [self.logSubscriber didLogWithMessage:
+     [ADJConsoleLogger clientCallbackFormatMessageWithLog:logMessageData.inputData]
+                                 logLevel:logMessageData.inputData.level];
 }
 
 #pragma mark - WKScriptMessageHandler
@@ -174,68 +388,95 @@
       didReceiveScriptMessage:(nonnull WKScriptMessage *)message
 {
     if (! [message.body isKindOfClass:[NSDictionary class]]) {
-        [self errorWithLogData:
-         [self.logger errorClient:@"Cannot handle script message with non-dictionary body"]];
+        [self.logger debugDev:@"Cannot handle script message with non-dictionary body"
+                    issueType:ADJIssueNonNativeIntegration];
         return;
     }
 
-    NSDictionary<NSString *, NSString *> *_Nonnull body =
-    (NSDictionary<NSString *, id> *)message.body;
+    NSDictionary<NSString *, id> *_Nonnull body =
+        (NSDictionary<NSString *, id> *)message.body;
+
+    [self.logger debugDev:@"TORMV userContentController"
+                      key:@"js body"
+              stringValue:[[ADJUtilJson toStringFromDictionary:body] value]];
 
     ADJResult<ADJNonEmptyString *> *_Nonnull methodNameResult =
         [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBMethodNameKey]];
     if (methodNameResult.fail != nil) {
-        [self errorWithLogData:
-         [self.logger errorClient:@"Cannot obtain methodName field from script body"
-                       resultFail:methodNameResult.fail]];
+        [self.logger debugDev:@"Cannot obtain methodName field from script body"
+                      resultFail:methodNameResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
         return;
     }
     NSString *_Nonnull methodName = methodNameResult.value.stringValue;
 
-    ADJResult<ADJNonEmptyString *> *_Nonnull instanceIdResult =
-        [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBInstanceIdKey]];
-    if (instanceIdResult.fail != nil) {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Cannot obtain instanceId field from script body"
-                           key:@"method name"
-                   stringValue:methodName
-                    resultFail:instanceIdResult.fail
-                     issueType:nil]];
+    id _Nullable instanceIdObject = [body objectForKey:ADJWBInstanceIdKey];
+    if (instanceIdObject == nil) {
+        [self.logger debugDev:@"Cannot obtain instanceId field from script body"
+                          key:@"method name"
+                  stringValue:methodName
+                    issueType:ADJIssueNonNativeIntegration];
         return;
     }
+    if (! [instanceIdObject isKindOfClass:[NSString class]]) {
+        [self.logger debugDev:@"Cannot use non-string instanceId field from script body"
+                         key1:@"method name"
+                 stringValue1:methodName
+                         key2:ADJLogActualKey
+                 stringValue2:NSStringFromClass([instanceIdObject class])
+                    issueType:ADJIssueNonNativeIntegration];
+        return;
+    }
+    NSString *_Nonnull instanceIdString = (NSString *)instanceIdObject;
 
-    ADJResult<ADJNonEmptyString *> *_Nonnull jsParametersResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull parametersJsonStringResult =
         [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBParametersKey]];
-    if (jsParametersResult.fail != nil) {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Cannot obtain parameters field from script body"
-                           key:@"method name"
-                   stringValue:methodName
-                    resultFail:jsParametersResult.fail
-                     issueType:nil]];
+    if (parametersJsonStringResult.fail != nil) {
+        [self.logger debugDev:@"Cannot obtain parameters field from script body"
+                          key:@"method name"
+                  stringValue:methodName
+                   resultFail:parametersJsonStringResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
         return;
     }
 
-    ADJResult<NSDictionary<NSString *, id> *> *_Nonnull jsParametersDictionaryResult =
-        [ADJUtilJson toDictionaryFromString:jsParametersResult.value.stringValue];
-    if (jsParametersDictionaryResult.fail != nil) {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Cannot convert JSON string from parameters field"
-                           key:@"method name"
-                   stringValue:methodName
-                    resultFail:jsParametersDictionaryResult.fail
-                     issueType:nil]];
+    ADJResult<NSDictionary<NSString *, id> *> *_Nonnull parametersJsonDictionaryResult =
+        [ADJUtilJson toDictionaryFromString:parametersJsonStringResult.value.stringValue];
+    if (parametersJsonDictionaryResult.fail != nil) {
+         [self.logger debugWithMessage:
+          @"Cannot convert json string from parameters field to dictionary"
+                          builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+             [logBuilder withKey:@"method name" stringValue:methodName];
+             [logBuilder withKey:@"json string"
+                     stringValue:parametersJsonStringResult.value.stringValue];
+             [logBuilder withFail:parametersJsonDictionaryResult.fail
+                            issue:ADJIssueNonNativeIntegration];
+         }];
         return;
     }
 
-    NSDictionary<NSString *, id> *_Nonnull jsParameters = jsParametersDictionaryResult.value;
-
-    id<ADJAdjustInstance> _Nonnull adjustInstance =
-        [ADJAdjust instanceForId:instanceIdResult.value.stringValue];
+    NSDictionary<NSString *, id> *_Nonnull jsParameters =
+        parametersJsonDictionaryResult.value;
 
     if ([ADJWBInitSdkMethodName isEqualToString:methodName]) {
-        [adjustInstance initSdkWithConfig:[self adjustConfigWithJsParameters:jsParameters]];
-    } else if ([ADJWBInactivateSdkMethodName isEqualToString:methodName]) {
+        ADJAdjustConfig *_Nonnull adjustConfig =
+            [self adjustConfigWithParametersJsonDictionary:jsParameters];
+
+        NSDictionary<NSString *, id<ADJInternalCallback>> *_Nullable internalConfigSubscriptions =
+            [self
+             extractInternalConfigSubscriptionsWithJsParameters:jsParameters
+             instanceIdString:instanceIdString];
+
+        [ADJAdjustInternal initSdkInternalForClientId:instanceIdString
+                                         adjustConfig:adjustConfig
+                          internalConfigSubscriptions:internalConfigSubscriptions];
+
+        return;
+    }
+
+    id<ADJAdjustInstance> _Nonnull adjustInstance = [ADJAdjust instanceForId:instanceIdString];
+
+    if ([ADJWBInactivateSdkMethodName isEqualToString:methodName]) {
         [adjustInstance inactivateSdk];
     } else if ([ADJWBReactiveSdkMethodName isEqualToString:methodName]) {
         [adjustInstance reactivateSdk];
@@ -283,16 +524,15 @@
     } else if ([ADJWBClearGlobalPartnerParametersMethodName isEqualToString:methodName]) {
         [adjustInstance clearGlobalPartnerParameters];
     } else {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Could not map method name with any of the possible values"
-                          key1:@"method name"
-                  stringValue1:methodName
-                          key2:@"Js parameters"
-                  stringValue2:jsParametersResult.value.stringValue]];
+        [self.logger debugDev:@"Could not map method name with any of the possible values"
+                         key1:@"method name"
+                 stringValue1:methodName
+                         key2:@"js parameters"
+                 stringValue2:parametersJsonStringResult.value.stringValue];
     }
 }
 
-- (nonnull ADJAdjustConfig *)adjustConfigWithJsParameters:
+- (nonnull ADJAdjustConfig *)adjustConfigWithParametersJsonDictionary:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
     NSString *_Nullable appTokenResult =
@@ -357,13 +597,13 @@
     ADJResult<NSNumber *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
         [self intWithJsParameters:jsParameters key:ADJWBEventIdDeduplicationMaxCapacityConfigKey];
     if (eventIdDeduplicationMaxCapacityResult.failNonNilInput != nil) {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Could not parse JS field for adjust config"
-                           key:@"field name"
-                   stringValue:ADJWBEventIdDeduplicationMaxCapacityConfigKey
-                    resultFail:eventIdDeduplicationMaxCapacityResult.fail
-                     issueType:nil]];
-    } else {
+        [self.logger debugDev:@"Could not parse JS field for adjust config"
+                          key:@"field name"
+                  stringValue:ADJWBEventIdDeduplicationMaxCapacityConfigKey
+                   resultFail:eventIdDeduplicationMaxCapacityResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+    if (eventIdDeduplicationMaxCapacityResult.value != nil) {
         [adjustConfig setEventIdDeduplicationMaxCapacity:
          eventIdDeduplicationMaxCapacityResult.value.intValue];
     }
@@ -379,12 +619,11 @@
     ADJResult<NSString *> *_Nonnull stringResult =
         [self stringWithJsParameters:jsParameters key:key];
     if (stringResult.failNonNilInput != nil) {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Could not parse JS field for adjust config"
-                           key:@"field name"
-                   stringValue:key
-                    resultFail:stringResult.fail
-                     issueType:nil]];
+        [self.logger debugDev:@"Could not parse JS field for adjust config"
+                          key:@"field name"
+                  stringValue:key
+                   resultFail:stringResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
     }
 
     return stringResult.value;
@@ -395,12 +634,11 @@
     ADJResult<ADJBooleanWrapper *> *_Nonnull trueResult =
         [self trueWithJsParameters:jsParameters key:key];
     if (trueResult.failNonNilInput != nil) {
-        [self errorWithLogData:
-         [self.logger debugDev:@"Could not parse boolean JS field for adjust config"
-                           key:@"boolean field name"
-                   stringValue:key
-                    resultFail:trueResult.fail
-                     issueType:nil]];
+        [self.logger debugDev:@"Could not parse boolean JS field for adjust config"
+                          key:@"boolean field name"
+                  stringValue:key
+                   resultFail:trueResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
     }
 
     return trueResult.value != nil;
@@ -829,6 +1067,45 @@
 }
 
 - (nonnull ADJResult<NSString *> *)
+    functionIdWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    key:(nonnull NSString *)key
+{
+    id _Nullable typeObject =
+        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
+
+    ADJResult<ADJNonEmptyString *> *_Nonnull typeResult =
+        [ADJNonEmptyString instanceFromObject:typeObject];
+
+    if (typeResult.wasInputNil) {
+        return [ADJResult nilInputWithMessage:@"Cannot find JS type"];
+    }
+    if (typeResult.failNonNilInput != nil) {
+        return [ADJResult failWithMessage:@"Invalid JS type"
+                                      key:@"js type fail"
+                                otherFail:typeResult.fail];
+    }
+
+    if (! [typeResult.value.stringValue isEqualToString:ADJWBJsFunctionType]) {
+        return [ADJResult failWithMessage:@"Expected function JS type"
+                                      key:ADJLogActualKey
+                              stringValue:typeResult.value.stringValue];
+    }
+
+    id _Nullable functionIdObject =
+        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Id", key]];
+
+    ADJResult<ADJNonEmptyString *> *_Nonnull functionIdResult =
+        [ADJNonEmptyString instanceFromObject:functionIdObject];
+    if (functionIdResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Invalid JS string value for function id"
+                                      key:@"js string fail"
+                                otherFail:functionIdResult.fail];
+    }
+
+    return [ADJResult okWithValue:functionIdResult.value.stringValue];
+}
+
+- (nonnull ADJResult<NSString *> *)
     stringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     key:(nonnull NSString *)key
 {
@@ -855,10 +1132,10 @@
                               stringValue:typeResult.value.stringValue];
     }
 
-    id _Nullable valueObject = [jsParameters objectForKey:key];
+    id _Nullable stringObject = [jsParameters objectForKey:key];
 
     ADJResult<ADJNonEmptyString *> *_Nonnull valueResult =
-        [ADJNonEmptyString instanceFromObject:valueObject];
+        [ADJNonEmptyString instanceFromObject:stringObject];
     if (valueResult.fail != nil) {
         return [ADJResult failWithMessage:@"Invalid JS string value"
                                       key:@"js string fail"
@@ -895,10 +1172,10 @@
                               stringValue:typeResult.value.stringValue];
     }
 
-    id _Nullable valueObject = [jsParameters objectForKey:key];
+    id _Nullable intObject = [jsParameters objectForKey:key];
 
     ADJResult<ADJNonNegativeInt *> *_Nonnull valueResult =
-        [ADJNonNegativeInt instanceFromObject:valueObject];
+        [ADJNonNegativeInt instanceFromObject:intObject];
     if (valueResult.fail != nil) {
         return [ADJResult failWithMessage:@"Invalid JS int value"
                                       key:@"js int fail"
@@ -919,44 +1196,17 @@
     trueWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     key:(nonnull NSString *)key
  {
-     /*
-     id _Nullable typeObject =
-        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
-
-     ADJResultNL<ADJNonEmptyString *> *_Nonnull typeResult =
-         [ADJNonEmptyString instanceFromOptionalObject:typeObject];
-     if (typeResult != nil) {
-         return [ADJResultNL failWithMessage:@"Invalid JS type"
-                                         key:@"js type fail"
-                                   otherFail:typeResult.fail];
-     }
-     if (typeResult.value == nil) {
-         return [ADJResultNL okWithoutValue];
-     }
-
-     if (! [typeResult.value.stringValue isEqualToString:ADJWBJsBooleanType]) {
-         return [ADJResultNL failWithMessage:@"Expected boolean JS type"
-                                         key:ADJLogActualKey
-                                 stringValue:typeResult.value.stringValue];
-     }
-
      id _Nullable valueObject = [jsParameters objectForKey:key];
-     ADJResultNN<ADJBooleanWrapper *> *_Nonnull valueResult =
-        [ADJBooleanWrapper instanceFromObject:valueObject];
-     if (valueResult.fail != nil) {
-         return [ADJResultNL failWithMessage:@"Invalid JS boolean value"
-                                         key:@"js boolean fail"
-                                   otherFail:valueResult.fail];
+
+     if (valueObject == nil) {
+         return [ADJResult failWithMessage:@"Boolean field could not be found in parameters."
+                 " Was expecetd to be initialised to 'null'"];
      }
 
-     if (valueResult.value.boolValue) {
-         return [ADJResultNL okWithValue:valueResult.value];
-     } else {
-         return [ADJResultNL okWithoutValue];
+     if ([valueObject isKindOfClass:[NSNull class]]) {
+         return [ADJResult nilInputWithMessage:@"Cannot use NSNull field as true"];
      }
-      */
 
-     id _Nullable valueObject = [jsParameters objectForKey:key];
      ADJResult<ADJBooleanWrapper *> *_Nonnull valueResult =
         [ADJBooleanWrapper instanceFromObject:valueObject];
      if (valueResult.failNonNilInput != nil) {
@@ -970,6 +1220,43 @@
      }
 
      return valueResult;
+}
+
+- (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)
+    extractInternalConfigSubscriptionsWithJsParameters:
+        (nonnull NSDictionary<NSString *, id> *)jsParameters
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    NSMutableDictionary<NSString *, id<ADJInternalCallback>> *_Nonnull subscriptionsMap =
+        [[NSMutableDictionary alloc] init];
+
+    ADJResult<NSString *> *_Nonnull attributionSubscriberIdResult =
+        [self functionIdWithJsParameters:jsParameters
+                                     key:ADJWBAdjustAttributionSubscriberCallbackConfigKey];
+    if (attributionSubscriberIdResult.failNonNilInput != nil) {
+         [self.logger
+          debugDev:@"Could not parse JS field for adjust config attribution subscription"
+          resultFail:attributionSubscriberIdResult.fail
+          issueType:ADJIssueNonNativeIntegration];
+    }
+    [self.logger debugDev:@"TORMV extractInternalConfigSubscriptionsWithJsParameters"
+                     key:@"attributionSubscriberIdResult.value != nil"
+             stringValue:[ADJUtilF boolFormat:attributionSubscriberIdResult.value != nil]];
+
+    if (attributionSubscriberIdResult.value != nil) {
+        [subscriptionsMap
+         setObject:[[ADJAttributionInternalCallback alloc]
+                    initWithWebViewCallback:self.webViewCallback
+                    attributionSubscriberCallbackId:attributionSubscriberIdResult.value
+                    instanceIdString:instanceIdString]
+         forKey:ADJInternalAttributionSubscriberV5000Key];
+    }
+
+    if (subscriptionsMap.count == 0) {
+        return nil;
+    }
+
+    return subscriptionsMap;
 }
 
 @end

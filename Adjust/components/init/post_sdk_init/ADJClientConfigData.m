@@ -22,13 +22,18 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
  @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *externalDeviceId;
- @property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
+ @property (nullable, readonly, strong, nonatomic)
+     ADJClientCustomEndpointData *clientCustomEndpointData;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
  @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
  @property (readonly, assign, nonatomic) BOOL canSendInBackground;
- @property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
- @property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
+     ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+ @property (nullable, readonly, strong, nonatomic)
+     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
  @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
+     NSDictionary<NSString *, id<ADJInternalCallback>> *internalConfigSubscriptions;
  */
 
 #pragma mark - Private constants
@@ -37,8 +42,12 @@ static NSString *const kDomainValidationRegexString =
 
 @implementation ADJClientConfigData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
-                                                     logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustConfig == nil) {
         [logger errorClient:@"Cannot create config with null adjust config value"];
         return nil;
@@ -167,7 +176,8 @@ static NSString *const kDomainValidationRegexString =
             canSendInBackground:canSendInBackground
             eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
             adjustAttributionSubscriber:adjustConfig.adjustAttributionSubscriber
-            adjustLogSubscriber:adjustConfig.adjustLogSubscriber];
+            adjustLogSubscriber:adjustConfig.adjustLogSubscriber
+            internalConfigSubscriptions:internalConfigSubscriptions];
 }
 
 - (nullable instancetype)init {
@@ -193,6 +203,8 @@ static NSString *const kDomainValidationRegexString =
     adjustAttributionSubscriber:
         (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
 {
     self = [super init];
 
@@ -211,7 +223,8 @@ static NSString *const kDomainValidationRegexString =
     _eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
     _adjustLogSubscriber = adjustLogSubscriber;
-
+    _internalConfigSubscriptions = internalConfigSubscriptions;
+    
     return self;
 }
 

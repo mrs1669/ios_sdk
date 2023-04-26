@@ -8,13 +8,10 @@
 
 #import "ADJStringMapBuilder.h"
 #import "ADJStringMap.h"
+#import "ADJUtilObj.h"
 
 #pragma mark Fields
-#pragma mark - Public properties
-/* .h
- // @property (nonnull, readwrite, strong, nonatomic)
- //     NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
- */
+
 @interface ADJStringMapBuilder ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
@@ -101,6 +98,12 @@ NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
     return [[ADJStringMapBuilder allocWithZone:zone]
             initWithMapBuilderDictionary:
                 [[NSMutableDictionary alloc] initWithDictionary:self.mapBuilder]];
+}
+
+#pragma mark - NSObject
+- (nonnull NSString *)description {
+    return [ADJUtilObj formatInlineKeyValuesWithName:@""
+                                 stringKeyDictionary:self.mapBuilder];
 }
 
 @end

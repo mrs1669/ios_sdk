@@ -238,6 +238,16 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
     [self.messageParams setObject:[ADJUtilObj idOrNsNull:stringValue] forKey:key];
 }
 
+- (void)withKey:(nonnull NSString *)key
+      jsonArray:(nonnull NSArray<id> *)jsonArray
+{
+    if (self.messageParams == nil) {
+        self.messageParams = [[NSMutableDictionary alloc] init];
+    }
+
+    [self.messageParams setObject:jsonArray forKey:key];
+}
+
 #pragma mark Internal Methods
 - (void)withKey:(nonnull NSString *)key
      constValue:(nonnull NSString *)constValue

@@ -211,9 +211,9 @@
     ADJUtilF *_Nonnull sharedInstance = [self sharedInstance];
 
     NSString *_Nullable urlEncoded =
-    [stringToEncode
-     stringByAddingPercentEncodingWithAllowedCharacters:
-         sharedInstance.urlUnreservedCharacterSet];
+        [stringToEncode
+         stringByAddingPercentEncodingWithAllowedCharacters:
+             sharedInstance.urlUnreservedCharacterSet];
 
     if (urlEncoded == nil) {
         return nil;

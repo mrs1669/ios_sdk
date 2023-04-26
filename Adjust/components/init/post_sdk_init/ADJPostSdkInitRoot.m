@@ -89,6 +89,7 @@
          clientReturnExecutor:preSdkInitRootBag.clientReturnExecutor
          adjustAttributionSubscriber:clientConfig.adjustAttributionSubscriber
          adjustLogSubscriber:clientConfig.adjustLogSubscriber
+         internalConfigSubscriptions:clientConfig.internalConfigSubscriptions
          doNotOpenDeferredDeeplink:clientConfig.doNotOpenDeferredDeeplink];
 
     _pausingController = [[ADJPausingController alloc]

@@ -57,4 +57,10 @@ NS_ASSUME_NONNULL_END
 // public api
 - (nonnull ADJAdjustAttribution *)toAdjustAttribution;
 
+- (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
+    buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName;
+
++ (nonnull NSDictionary<NSString *, id> *)toJsonDictionaryWithAdjustAttribution:
+    (nonnull ADJAdjustAttribution *)adjustAttribution;
+
 @end

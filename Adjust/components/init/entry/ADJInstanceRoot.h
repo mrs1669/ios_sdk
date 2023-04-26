@@ -12,6 +12,7 @@
 #import "ADJInstanceIdData.h"
 #import "ADJInstanceRootBag.h"
 #import "ADJEntryRootBag.h"
+#import "ADJAdjustInternal.h"
 
 @interface ADJInstanceRoot : NSObject <
     ADJAdjustInstance,
@@ -25,6 +26,11 @@
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
-@end
+- (void)
+    initSdkInternalWithConfig:(nonnull ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions;
 
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
+
+@end

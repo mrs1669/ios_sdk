@@ -115,8 +115,8 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 {
     NSMutableString *_Nonnull sb =
         [name length] == 0
-        ? [NSMutableString stringWithString:@"/"]
-        : [NSMutableString stringWithFormat:@"%@ /", name];
+        ? [NSMutableString stringWithString:@"<"]
+        : [NSMutableString stringWithFormat:@"%@ <", name];
 
     if (keyValueArray != nil && (keyValueArray.count % 2) != 0) {
         [sb appendFormat:@"Invalid array key value of size %@>",
@@ -210,9 +210,9 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     }
 
     if (formatCStringKeyAndAppendEquals) {
-        [sb appendString:@"\n\\"];
+        [sb appendString:@"\n>"];
     } else {
-        [sb appendString:@"\\"];
+        [sb appendString:@">"];
     }
 
     if (emptyKeysSb != nil) {
