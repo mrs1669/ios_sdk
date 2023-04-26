@@ -13,6 +13,8 @@
 #import "ADJConstants.h"
 #import "ADJConstantsParam.h"
 #import "ADJMoneyDoubleAmount.h"
+#import "ADJAdjustInternal.h"
+#import "ADJUtilF.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -258,19 +260,20 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 - (nonnull ADJAdjustAttribution *)toAdjustAttribution {
     ADJAdjustAttribution *_Nonnull adjustAttribution = [[ADJAdjustAttribution alloc] init];
     
-    adjustAttribution.trackerToken = [ADJAttributionData coallesceToEmptyStringWithValue:self.trackerToken];
-    adjustAttribution.trackerName = [ADJAttributionData coallesceToEmptyStringWithValue:self.trackerName];
-    adjustAttribution.network = [ADJAttributionData coallesceToEmptyStringWithValue:self.network];
-    adjustAttribution.campaign = [ADJAttributionData coallesceToEmptyStringWithValue:self.campaign];
-    adjustAttribution.adgroup = [ADJAttributionData coallesceToEmptyStringWithValue:self.adgroup];
-    adjustAttribution.creative = [ADJAttributionData coallesceToEmptyStringWithValue:self.creative];
-    adjustAttribution.clickLabel = [ADJAttributionData coallesceToEmptyStringWithValue:self.clickLabel];
-    adjustAttribution.adid = [ADJAttributionData coallesceToEmptyStringWithValue:self.adid];
-    adjustAttribution.deeplink = [ADJAttributionData coallesceToEmptyStringWithValue:self.deeplink];
-    adjustAttribution.state = [ADJAttributionData coallesceToEmptyStringWithValue:self.state];
-    adjustAttribution.costType = [ADJAttributionData coallesceToEmptyStringWithValue:self.costType];
-    adjustAttribution.costAmount = self.costAmount != nil ? self.costAmount.doubleValue : -1.0;
-    adjustAttribution.costCurrency = [ADJAttributionData coallesceToEmptyStringWithValue:self.costCurrency];
+    adjustAttribution.trackerToken = [ADJUtilF stringValueOrNil:self.trackerToken];
+    adjustAttribution.trackerName = [ADJUtilF stringValueOrNil:self.trackerName];
+    adjustAttribution.network = [ADJUtilF stringValueOrNil:self.network];
+    adjustAttribution.campaign = [ADJUtilF stringValueOrNil:self.campaign];
+    adjustAttribution.adgroup = [ADJUtilF stringValueOrNil:self.adgroup];
+    adjustAttribution.creative = [ADJUtilF stringValueOrNil:self.creative];
+    adjustAttribution.clickLabel = [ADJUtilF stringValueOrNil:self.clickLabel];
+    // TODO: adid to be extracted from attribution
+    adjustAttribution.adid = [ADJUtilF stringValueOrNil:self.adid];
+    adjustAttribution.deeplink = [ADJUtilF stringValueOrNil:self.deeplink];
+    adjustAttribution.state = [ADJUtilF stringValueOrNil:self.state];
+    adjustAttribution.costType = [ADJUtilF stringValueOrNil:self.costType];
+    adjustAttribution.costAmount = self.costAmount != nil ? self.costAmount.numberValue : nil;
+    adjustAttribution.costCurrency = [ADJUtilF stringValueOrNil:self.costCurrency];
     
     return adjustAttribution;
 }
@@ -278,9 +281,9 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 #pragma mark - ADJIoDataMapBuilderInjectable
 
 #define injectIoData(keyValue, ioValue)                         \
-[ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder    \
-key:keyValue            \
-ioValueSerializable:ioValue]            \
+     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder    \
+                                        key:keyValue            \
+                        ioValueSerializable:ioValue]            \
 
 - (void)injectIntoIoDataMapBuilder:(nonnull ADJStringMapBuilder *)ioDataMapBuilder {
     injectIoData(kTrackerTokenKey, self.trackerToken);
@@ -355,23 +358,24 @@ ioValueSerializable:ioValue]            \
     
     ADJAttributionData *other = (ADJAttributionData *)object;
     return [ADJUtilObj objectEquals:self.trackerToken other:other.trackerToken]
-    && [ADJUtilObj objectEquals:self.trackerName other:other.trackerName]
-    && [ADJUtilObj objectEquals:self.network other:other.network]
-    && [ADJUtilObj objectEquals:self.campaign other:other.campaign]
-    && [ADJUtilObj objectEquals:self.adgroup other:other.adgroup]
-    && [ADJUtilObj objectEquals:self.creative other:other.creative]
-    && [ADJUtilObj objectEquals:self.clickLabel other:other.clickLabel]
-    && [ADJUtilObj objectEquals:self.adid other:other.adid]
-    && [ADJUtilObj objectEquals:self.deeplink other:other.deeplink]
-    && [ADJUtilObj objectEquals:self.state other:other.state]
-    && [ADJUtilObj objectEquals:self.costType other:other.costType]
-    && [ADJUtilObj objectEquals:self.costAmount other:other.costAmount]
-    && [ADJUtilObj objectEquals:self.costCurrency other:other.costCurrency];
+        && [ADJUtilObj objectEquals:self.trackerName other:other.trackerName]
+        && [ADJUtilObj objectEquals:self.network other:other.network]
+        && [ADJUtilObj objectEquals:self.campaign other:other.campaign]
+        && [ADJUtilObj objectEquals:self.adgroup other:other.adgroup]
+        && [ADJUtilObj objectEquals:self.creative other:other.creative]
+        && [ADJUtilObj objectEquals:self.clickLabel other:other.clickLabel]
+        // TODO: adid to be extracted from attribution
+        && [ADJUtilObj objectEquals:self.adid other:other.adid]
+        && [ADJUtilObj objectEquals:self.deeplink other:other.deeplink]
+        && [ADJUtilObj objectEquals:self.state other:other.state]
+        && [ADJUtilObj objectEquals:self.costType other:other.costType]
+        && [ADJUtilObj objectEquals:self.costAmount other:other.costAmount]
+        && [ADJUtilObj objectEquals:self.costCurrency other:other.costCurrency];
 }
 
 #pragma mark Internal Methods
-+ (nonnull NSString *)coallesceToEmptyStringWithValue:(nullable ADJNonEmptyString *)value {
-    return value != nil ? value.stringValue : @"";
++ (nonnull NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value {
+    return value != nil ? value.stringValue : nil;
 }
 
 + (nullable ADJNonEmptyString *)
