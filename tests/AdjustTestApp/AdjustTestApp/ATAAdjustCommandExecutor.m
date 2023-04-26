@@ -19,8 +19,10 @@
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
 #import "ADJAdjustInstance.h"
+#import "ADJAdjustLaunchedDeeplinkCallback.h"
+#import "ADJAdjustCallback.h"
 
-@interface ATAAdjustCommandExecutor ()
+@interface ATAAdjustCommandExecutor ()<ADJAdjustLaunchedDeeplinkCallback>
 
 @property (nonnull, readonly, nonatomic, strong) NSString *url;
 @property (nonnull, readonly, nonatomic, strong) ATLTestLibrary *testLibrary;
@@ -41,7 +43,6 @@ NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
     _testLibrary = testLibrary;
     //_adjustV4CommandExecutor = [[ATAAdjustCommandExecutor alloc] initWithUrl:url];
     //[self.adjustV4CommandExecutor setTestLibrary:testLibrary];
-
     return self;
 }
 
@@ -102,6 +103,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     adjustCommand(trackAdRevenue)
     adjustCommand(thirdPartySharing)
     adjustCommand(measurementConsent)
+    adjustCommand(getLastDeeplink)
     [self logError:@"method name %@ not found", methodName];
 }
 
@@ -281,7 +283,6 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
      {
         [[ADJAdjust instance] addGlobalPartnerParameterWithKey:key value:value];
     }];
-
 }
 
 - (void)removeGlobalCallbackParameter {
@@ -446,6 +447,10 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
             [[ADJAdjust instance] inactivateMeasurementConsent];
         }
     }
+}
+
+- (void)getLastDeeplink {
+    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:self];
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {
@@ -624,8 +629,16 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     return value == nil || value == [NSNull null];
 }
 
+- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSURL *)adjustLaunchedDeeplink {
+    [self.testLibrary addInfoToSend:@"last_deeplink" value:adjustLaunchedDeeplink.description];
+    [self.testLibrary sendInfoToServer:self.extraPathTestOptions];
+}
+
+- (void)didFailWithAdjustCallbackMessage:(NSString *)message {
+    [self.testLibrary addInfoToSend:@"last_deeplink" value:@""];
+    [self.testLibrary sendInfoToServer:self.extraPathTestOptions];
+}
+
 @end
-
-
 
 
