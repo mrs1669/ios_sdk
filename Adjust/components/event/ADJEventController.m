@@ -89,7 +89,7 @@ ADJMainQueueController *mainQueueControllerWeak;
 {
     [self.logger debugDev:@"Trying to track event"
                       key:@"event token"
-              stringValue:clientEventData.eventId.stringValue];
+              stringValue:clientEventData.eventToken.stringValue];
 
     if (! [self canTrackEventWithDeduplicationId:clientEventData.deduplicationId]) {
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];

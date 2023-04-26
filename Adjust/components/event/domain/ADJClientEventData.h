@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_END
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *eventId;
+@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *eventToken;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *deduplicationId;
 @property (nullable, readonly, strong, nonatomic) ADJMoney *revenue;
 @property (nullable, readonly, strong, nonatomic) ADJStringMap *callbackParameters;

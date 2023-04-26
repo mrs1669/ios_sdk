@@ -17,7 +17,7 @@
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
- @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *eventId;
+ @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *eventToken;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *deduplicationId;
  @property (nullable, readonly, strong, nonatomic) ADJMoney *revenue;
  @property (nullable, readonly, strong, nonatomic) ADJStringMap *callbackParameters;
@@ -28,7 +28,7 @@
 NSString *const ADJClientEventDataMetadataTypeValue = @"ClientEventData";
 
 #pragma mark - Private constants
-static NSString *const kEventIdKey = @"eventId";
+static NSString *const kEventTokenKey = @"eventToken";
 static NSString *const kDeduplicationIdKey = @"deduplicationId";
 static NSString *const kRevenueAmountKey = @"revenueAmount";
 static NSString *const kRevenueCurrencyKey = @"revenueCurrency";
@@ -114,11 +114,11 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         }
     }
 
-    return [[ADJClientEventData alloc] initWithEventId:eventTokenResult.value
-                                       deduplicationId:deduplicationIdResult.value
-                                               revenue:revenueResult.value
-                                    callbackParameters:callbackParameters
-                                     partnerParameters:partnerParameters];
+    return [[ADJClientEventData alloc] initWithEventToken:eventTokenResult.value
+                                          deduplicationId:deduplicationIdResult.value
+                                                  revenue:revenueResult.value
+                                       callbackParameters:callbackParameters
+                                        partnerParameters:partnerParameters];
 }
 
 + (nullable instancetype)
@@ -128,12 +128,12 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 {
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
     
-    ADJNonEmptyString *_Nullable eventId =
-        [propertiesMap pairValueWithKey:kEventIdKey];
+    ADJNonEmptyString *_Nullable eventToken =
+        [propertiesMap pairValueWithKey:kEventTokenKey];
     
     ADJAdjustEvent *_Nonnull adjustEvent =
         [[ADJAdjustEvent alloc] initWithEventToken:
-         eventId != nil ? eventId.stringValue : nil];
+         eventToken != nil ? eventToken.stringValue : nil];
     
     ADJNonEmptyString *_Nullable deduplicationId =
         [propertiesMap pairValueWithKey:kDeduplicationIdKey];
@@ -177,14 +177,15 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 }
 
 #pragma mark - Private constructors
-- (nonnull instancetype)initWithEventId:(nonnull ADJNonEmptyString *)eventId
-                        deduplicationId:(nullable ADJNonEmptyString *)deduplicationId
-                                revenue:(nullable ADJMoney *)revenue
-                     callbackParameters:(nullable ADJStringMap *)callbackParameters
-                      partnerParameters:(nullable ADJStringMap *)partnerParameters {
+- (nonnull instancetype)initWithEventToken:(nonnull ADJNonEmptyString *)eventToken
+                           deduplicationId:(nullable ADJNonEmptyString *)deduplicationId
+                                   revenue:(nullable ADJMoney *)revenue
+                        callbackParameters:(nullable ADJStringMap *)callbackParameters
+                         partnerParameters:(nullable ADJStringMap *)partnerParameters
+{
     self = [super init];
     
-    _eventId = eventId;
+    _eventToken = eventToken;
     _deduplicationId = deduplicationId;
     _revenue = revenue;
     _callbackParameters = callbackParameters;
@@ -200,8 +201,8 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     clientActionIoDataBuilder.propertiesMapBuilder;
     
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
-                                       key:kEventIdKey
-                       ioValueSerializable:self.eventId];
+                                       key:kEventTokenKey
+                       ioValueSerializable:self.eventToken];
     
     [ADJUtilMap injectIntoIoDataBuilderMap:propertiesMapBuilder
                                        key:kDeduplicationIdKey
@@ -244,7 +245,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
             ADJClientEventDataMetadataTypeValue,
-            kEventIdKey, self.eventId,
+            kEventTokenKey, self.eventToken,
             kDeduplicationIdKey, self.deduplicationId,
             kRevenueAmountKey, self.revenue != nil ? self.revenue.amount : nil,
             kRevenueCurrencyKey, self.revenue != nil ? self.revenue.currency : nil,
@@ -256,7 +257,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 - (NSUInteger)hash {
     NSUInteger hashCode = ADJInitialHashCode;
     
-    hashCode = ADJHashCodeMultiplier * hashCode + self.eventId.hash;
+    hashCode = ADJHashCodeMultiplier * hashCode + self.eventToken.hash;
     hashCode = ADJHashCodeMultiplier * hashCode +
     [ADJUtilObj objecNullableHash:self.deduplicationId];
     hashCode = ADJHashCodeMultiplier * hashCode +
@@ -279,7 +280,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     }
     
     ADJClientEventData *other = (ADJClientEventData *)object;
-    return [ADJUtilObj objectEquals:self.eventId other:other.eventId]
+    return [ADJUtilObj objectEquals:self.eventToken other:other.eventToken]
         && [ADJUtilObj objectEquals:self.deduplicationId other:other.deduplicationId]
         && [ADJUtilObj objectEquals:self.revenue other:other.revenue]
         && [ADJUtilObj objectEquals:self.callbackParameters other:other.callbackParameters]

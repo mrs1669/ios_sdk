@@ -245,7 +245,7 @@
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamEventTokenKey
-                         packageParamValueSerializable:clientEventData.eventId];
+                         packageParamValueSerializable:clientEventData.eventToken];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamEventDeduplicationKey
