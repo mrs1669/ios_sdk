@@ -32,7 +32,9 @@ NSString *const ADJFailedMethodName = @"failed";
 
 NSString *const ADJAttributionGetterReadMethodName = @"getAttributionRead";
 NSString *const ADJAttributionGetterFailedMethodName = @"getAttributionFailed";
-NSString *const ADJDeviceIdsGetterMethodName = @"getDeviceIds";
+
+NSString *const ADJDeviceIdsGetterReadMethodName = @"getDeviceIdsRead";
+NSString *const ADJDeviceIdsGetterFailedMethodName = @"getDeviceIdsFailed";
 
 NSString *const ADJInternalCallbackStringSuffix = @"_string";
 NSString *const ADJInternalCallbackAdjustDataSuffix = @"_adjustData";
@@ -80,6 +82,14 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
         [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
 
     [instanceRoot adjustAttributionWithInternalCallback:internalCallback];
+}
++ (void)adjustDeviceIdsWithClientId:(nullable NSString *)clientId
+                   internalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot adjustDeviceIdsWithInternalCallback:internalCallback];
 }
 
 + (nonnull NSString *)sdkVersion {

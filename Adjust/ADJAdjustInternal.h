@@ -34,7 +34,8 @@ FOUNDATION_EXPORT NSString *const ADJFailedMethodName;
 FOUNDATION_EXPORT NSString *const ADJAttributionGetterReadMethodName;
 FOUNDATION_EXPORT NSString *const ADJAttributionGetterFailedMethodName;
 
-FOUNDATION_EXPORT NSString *const ADJDeviceIdsGetterMethodName;
+FOUNDATION_EXPORT NSString *const ADJDeviceIdsGetterReadMethodName;
+FOUNDATION_EXPORT NSString *const ADJDeviceIdsGetterFailedMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJInternalCallbackStringSuffix;
 FOUNDATION_EXPORT NSString *const ADJInternalCallbackAdjustDataSuffix;
@@ -55,6 +56,8 @@ NS_ASSUME_NONNULL_END
 
 + (void)adjustAttributionWithClientId:(nullable NSString *)clientId
                      internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
++ (void)adjustDeviceIdsWithClientId:(nullable NSString *)clientId
+                   internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 
 + (nonnull NSString *)sdkVersion;
 

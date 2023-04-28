@@ -32,6 +32,7 @@
         (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions;
 
 - (void)adjustAttributionWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
+- (void)adjustDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 

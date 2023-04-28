@@ -25,17 +25,30 @@
 
 @end
 
-@interface ADJAttributionGetterAsyncInternalCallback : NSObject<ADJInternalCallback>
-
+@interface ADJAttributionGetterInternalCallback : NSObject<ADJInternalCallback>
 - (nonnull instancetype)
     initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
-    attributionGetterAsyncCallbackId:(nonnull NSString *)attributionGetterAsyncCallbackId
+    attributionGetterCallbackId:(nonnull NSString *)attributionGetterCallbackId
     instanceIdString:(nonnull NSString *)instanceIdString;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 @property (nullable, readonly, weak, nonatomic) ADJWebViewCallback *webViewCallbackWeak;
-@property (nonnull, readonly, strong, nonatomic) NSString *attributionGetterAsyncCallbackId;
+@property (nonnull, readonly, strong, nonatomic) NSString *attributionGetterCallbackId;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceIdString;
+
+@end
+
+@interface ADJDeviceIdsGetterInternalCallback : NSObject<ADJInternalCallback>
+- (nonnull instancetype)
+    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
+    deviceIdsGetterCallbackId:(nonnull NSString *)deviceIdsGetterCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+@property (nullable, readonly, weak, nonatomic) ADJWebViewCallback *webViewCallbackWeak;
+@property (nonnull, readonly, strong, nonatomic) NSString *deviceIdsGetterCallbackId;
 @property (nonnull, readonly, strong, nonatomic) NSString *instanceIdString;
 
 @end
@@ -68,19 +81,30 @@
 }
 
 - (nonnull id<ADJInternalCallback>)
-    attributionGetterAsyncInternalCallbackWithId:
-        (nonnull NSString *)attributionGetterAsyncCallbackId
+    attributionGetterInternalCallbackWithId:
+        (nonnull NSString *)attributionGetterCallbackId
     instanceIdString:(nonnull NSString *)instanceIdString
 {
-    return [[ADJAttributionGetterAsyncInternalCallback alloc]
+    return [[ADJAttributionGetterInternalCallback alloc]
             initWithWebViewCallback:self
-            attributionGetterAsyncCallbackId:attributionGetterAsyncCallbackId
+            attributionGetterCallbackId:attributionGetterCallbackId
+            instanceIdString:instanceIdString];
+}
+
+- (nonnull id<ADJInternalCallback>)
+    deviceIdsGetterInternalCallbackWithId:
+        (nonnull NSString *)deviceIdsGetterCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    return [[ADJDeviceIdsGetterInternalCallback alloc]
+            initWithWebViewCallback:self
+            deviceIdsGetterCallbackId:deviceIdsGetterCallbackId
             instanceIdString:instanceIdString];
 }
 
 #pragma mark Internal Methods
 - (void)
-    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
+    execJsCallbackSubscriberWithInstanceIdString:(nonnull NSString *)instanceIdString
     callbackId:(nonnull NSString *)callbackId
     methodName:(nonnull NSString *)methodName
     jsonNonStringParameter:(nonnull NSString *)jsonNonStringParameter
@@ -89,10 +113,10 @@
                                   callbackId:callbackId
                                   methodName:methodName
                                jsonParameter:jsonNonStringParameter
-                    subscriptionOrElseGetter:YES];
+                      subscriberOrElseGetter:YES];
 }
 - (void)
-    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
+    execJsCallbackSubscriberWithInstanceIdString:(nonnull NSString *)instanceIdString
     callbackId:(nonnull NSString *)callbackId
     methodName:(nonnull NSString *)methodName
     jsonStringParameter:(nonnull NSString *)jsonStringParameter
@@ -102,7 +126,7 @@
      callbackId:callbackId
      methodName:methodName
      jsonParameter:[NSString stringWithFormat:@"\"%@\"", jsonStringParameter]
-     subscriptionOrElseGetter:YES];
+     subscriberOrElseGetter:YES];
 }
 - (void)
     execJsCallbackGetterWithInstanceIdString:(nonnull NSString *)instanceIdString
@@ -114,7 +138,7 @@
                                   callbackId:callbackId
                                   methodName:methodName
                                jsonParameter:jsonNonStringParameter
-                    subscriptionOrElseGetter:NO];
+                      subscriberOrElseGetter:NO];
 }
 - (void)
     execJsCallbackGetterWithInstanceIdString:(nonnull NSString *)instanceIdString
@@ -127,7 +151,7 @@
      callbackId:callbackId
      methodName:methodName
      jsonParameter:[NSString stringWithFormat:@"\"%@\"", jsonStringParameter]
-     subscriptionOrElseGetter:NO];
+     subscriberOrElseGetter:NO];
 }
 
 - (void)
@@ -135,21 +159,21 @@
     callbackId:(nonnull NSString *)callbackId
     methodName:(nonnull NSString *)methodName
     jsonParameter:(nonnull NSString *)jsonParameter
-    subscriptionOrElseGetter:(BOOL)subscriptionOrElseGetter
+    subscriberOrElseGetter:(BOOL)subscriberOrElseGetter
 {
     NSString *_Nonnull jsonInstanceId = [NSString stringWithFormat:@"\"%@\"", instanceIdString];
     NSString *_Nonnull jsExecCommand =
         [NSString stringWithFormat:@"Adjust.instance(%@).adjust_client%@(\"%@\", \"%@\", %@);",
          jsonInstanceId,
-         subscriptionOrElseGetter ? @"Subscription" : @"GetterAsync",
+         subscriberOrElseGetter ? @"Subscriber" : @"Getter",
          callbackId, methodName, jsonParameter];
 
     [self.logger debugWithMessage:@"TORMV execJsCallback"
                      builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
         [logBuilder withKey:@"jsonParameter"
                 stringValue:jsonParameter];
-        [logBuilder withKey:@"subscriptionOrElseGetter"
-                stringValue:[ADJUtilF boolFormat:subscriptionOrElseGetter]];
+        [logBuilder withKey:@"subscriberOrElseGetter"
+                stringValue:[ADJUtilF boolFormat:subscriberOrElseGetter]];
         [logBuilder withKey:@"jsExecCommand"
                 stringValue:jsExecCommand];
     }];
@@ -174,8 +198,8 @@
                 [logBuilder withKey:@"callbackId" stringValue:callbackId];
                 [logBuilder withKey:@"methodName" stringValue:methodName];
                 [logBuilder withKey:@"jsonParameter" stringValue:jsonParameter];
-                [logBuilder withKey:@"subscriptionOrElseGetter"
-                        stringValue:[ADJUtilF boolFormat:subscriptionOrElseGetter]];
+                [logBuilder withKey:@"subscriberOrElseGetter"
+                        stringValue:[ADJUtilF boolFormat:subscriberOrElseGetter]];
                 if (jsonReturnValue != nil) {
                     [logBuilder withKey:@"jsonReturnValue"
                             stringValue:[jsonReturnValue description]];
@@ -234,7 +258,7 @@
         && [didReadAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
     {
         [webViewCallback
-         execJsCallbackSubscriptionWithInstanceIdString:self.instanceIdString
+         execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
          callbackId:self.attributionSubscriberCallbackId
          methodName:ADJReadAttributionMethodName
          jsonNonStringParameter:(NSString *)didReadAdjustAttributonJsonStringValue];
@@ -250,7 +274,7 @@
         && [didChangeAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
     {
         [webViewCallback
-         execJsCallbackSubscriptionWithInstanceIdString:self.instanceIdString
+         execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
          callbackId:self.attributionSubscriberCallbackId
          methodName:ADJChangedAttributionMethodName
          jsonNonStringParameter:(NSString *)didChangeAdjustAttributonJsonStringValue];
@@ -258,7 +282,7 @@
     }
 
     [webViewCallback.logger
-     debugWithMessage:@"Could not find either attribution subscription callback values"
+     debugWithMessage:@"Could not find either attribution subscriber callback values"
      builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
         [logBuilder withKey:@"callback data keys" jsonArray:[data allKeys]];
         [logBuilder issue:ADJIssueNonNativeIntegration];
@@ -267,16 +291,16 @@
 
 @end
 
-@implementation ADJAttributionGetterAsyncInternalCallback
+@implementation ADJAttributionGetterInternalCallback
 #pragma mark Instantiation
 - (nonnull instancetype)
     initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
-    attributionGetterAsyncCallbackId:(nonnull NSString *)attributionGetterAsyncCallbackId
+    attributionGetterCallbackId:(nonnull NSString *)attributionGetterCallbackId
     instanceIdString:(nonnull NSString *)instanceIdString
 {
     self = [super init];
     _webViewCallbackWeak = webViewCallback;
-    _attributionGetterAsyncCallbackId = attributionGetterAsyncCallbackId;
+    _attributionGetterCallbackId = attributionGetterCallbackId;
     _instanceIdString = instanceIdString;
 
     return self;
@@ -298,8 +322,8 @@
     }
 
     [webViewCallback.logger debugDev:@"TORMV didInternalCallbackWithData saved"
-                                 key1:@"attributionGetterAsyncCallbackId"
-                        stringValue1:self.attributionGetterAsyncCallbackId
+                                 key1:@"attributionGetterCallbackId"
+                        stringValue1:self.attributionGetterCallbackId
                                 key2:@"instanceIdString"
                         stringValue2:self.instanceIdString];
 
@@ -317,7 +341,7 @@
     {
         [webViewCallback
          execJsCallbackGetterWithInstanceIdString:self.instanceIdString
-         callbackId:self.attributionGetterAsyncCallbackId
+         callbackId:self.attributionGetterCallbackId
          methodName:ADJAttributionGetterReadMethodName
          jsonNonStringParameter:(NSString *)attributionGetterJsonStringValue];
         return;
@@ -331,7 +355,7 @@
     {
         [webViewCallback
          execJsCallbackGetterWithInstanceIdString:self.instanceIdString
-         callbackId:self.attributionGetterAsyncCallbackId
+         callbackId:self.attributionGetterCallbackId
          methodName:ADJAttributionGetterFailedMethodName
          jsonStringParameter:(NSString *)attributionGetterFailedStringValue];
         return;
@@ -339,6 +363,86 @@
 
     [webViewCallback.logger
      debugWithMessage:@"Could not find either attribution getter callback values"
+     builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+        [logBuilder withKey:@"callback data keys" jsonArray:[data allKeys]];
+        [logBuilder issue:ADJIssueNonNativeIntegration];
+    }];
+}
+
+@end
+
+@implementation ADJDeviceIdsGetterInternalCallback
+#pragma mark Instantiation
+- (nonnull instancetype)
+    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
+    deviceIdsGetterCallbackId:(nonnull NSString *)deviceIdsGetterCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    self = [super init];
+    _webViewCallbackWeak = webViewCallback;
+    _deviceIdsGetterCallbackId = deviceIdsGetterCallbackId;
+    _instanceIdString = instanceIdString;
+
+    return self;
+}
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+#pragma mark Public API
+#pragma mark - ADJInternalCallback
+- (void)didInternalCallbackWithData:(nonnull NSDictionary<NSString *, id> *)data {
+    ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
+    NSLog(@"TORMV didInternalCallbackWithData webViewCallback == nil: %@",
+          @(webViewCallback == nil));
+    if (webViewCallback == nil) {
+        // TODO: log weak ref fail, maybe to adjust internal?
+        return;
+    }
+
+    [webViewCallback.logger debugDev:@"TORMV didInternalCallbackWithData saved"
+                                 key1:@"deviceIdsGetterCallbackId"
+                        stringValue1:self.deviceIdsGetterCallbackId
+                                key2:@"instanceIdString"
+                        stringValue2:self.instanceIdString];
+
+    [webViewCallback.logger debugDev:@"TORMV didInternalCallbackWithData received"
+                                 key:@"data keys"
+                         stringValue:[[ADJUtilJson toStringFromArray:[data allKeys]] value]];
+
+    id _Nullable readDeviceIdsJsonStringValue =
+        [data objectForKey:[NSString stringWithFormat:@"%@%@",
+                            ADJDeviceIdsGetterReadMethodName,
+                            ADJInternalCallbackJsonStringSuffix]];
+
+    if (readDeviceIdsJsonStringValue != nil
+        && [readDeviceIdsJsonStringValue isKindOfClass:[NSString class]])
+    {
+        [webViewCallback
+         execJsCallbackGetterWithInstanceIdString:self.instanceIdString
+         callbackId:self.deviceIdsGetterCallbackId
+         methodName:ADJDeviceIdsGetterReadMethodName
+         jsonNonStringParameter:(NSString *)readDeviceIdsJsonStringValue];
+        return;
+    }
+
+    id _Nullable deviceIdsGetterFailedStringValue =
+        [data objectForKey:ADJDeviceIdsGetterFailedMethodName];
+
+    if (deviceIdsGetterFailedStringValue != nil
+        && [deviceIdsGetterFailedStringValue isKindOfClass:[NSString class]])
+    {
+        [webViewCallback
+         execJsCallbackGetterWithInstanceIdString:self.instanceIdString
+         callbackId:self.deviceIdsGetterCallbackId
+         methodName:ADJDeviceIdsGetterFailedMethodName
+         jsonStringParameter:(NSString *)deviceIdsGetterFailedStringValue];
+        return;
+    }
+
+    [webViewCallback.logger
+     debugWithMessage:@"Could not find either device ids getter callback values"
      builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
         [logBuilder withKey:@"callback data keys" jsonArray:[data allKeys]];
         [logBuilder issue:ADJIssueNonNativeIntegration];

@@ -80,14 +80,14 @@ function AdjustInstance(instanceId, errSubscriber) {
 AdjustInstance.prototype._postMessage = function(methodName, parameters) {
     Adjust._postMessage(methodName, this._instanceId, parameters, this._errSubscriber); }
 
-AdjustInstance.prototype.adjust_clientSubscription =
+AdjustInstance.prototype.adjust_clientSubscriber =
 function(callbackId, methodName, callbackParameter) {
-    this.adjust_clientCallback(false, "Could not find valid client subscription callback function",
+    this.adjust_clientCallback(false, "Could not find valid client subscriber callback function",
                                callbackId, methodName, callbackParameter);
 }
-AdjustInstance.prototype.adjust_clientGetterAsync =
+AdjustInstance.prototype.adjust_clientGetter =
 function(callbackId, methodName, callbackParameter) {
-    this.adjust_clientCallback(true, "Could not find valid client getter async callback function",
+    this.adjust_clientCallback(true, "Could not find valid client getter callback function",
                                callbackId, methodName, callbackParameter);
 }
 AdjustInstance.prototype.adjust_clientCallback =
@@ -195,6 +195,17 @@ AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionC
     this._postMessage("getAdjustAttributionAsync", JSON.stringify({
         _adjustAttributionAsyncGetterCallbackId: callbackIdWithRandomPrefix,
         _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback}));
+}
+
+AdjustInstance.prototype.getAdjustDeviceIdsAsync = function(adjustDeviceIdsCallback) {
+    const callbackIdWithRandomPrefix =
+        this._callbackIdWithRandomPrefix('getAdjustDeviceIdsAsync');
+
+    this._callbackMap.set(callbackIdWithRandomPrefix, adjustDeviceIdsCallback);
+
+    this._postMessage("getAdjustDeviceIdsAsync", JSON.stringify({
+        _adjustDeviceIdsAsyncGetterCallbackId: callbackIdWithRandomPrefix,
+        _adjustDeviceIdsAsyncGetterCallbackType: typeof adjustDeviceIdsCallback}));
 }
 
 AdjustInstance.prototype._callbackIdWithRandomPrefix = function(suffix) {

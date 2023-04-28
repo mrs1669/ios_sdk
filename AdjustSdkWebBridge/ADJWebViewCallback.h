@@ -25,8 +25,13 @@
     instanceIdString:(nonnull NSString *)instanceIdString;
 
 - (nonnull id<ADJInternalCallback>)
-    attributionGetterAsyncInternalCallbackWithId:
-        (nonnull NSString *)attributionGetterAsyncCallbackId
+    attributionGetterInternalCallbackWithId:
+        (nonnull NSString *)attributionGetterCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString;
+
+- (nonnull id<ADJInternalCallback>)
+    deviceIdsGetterInternalCallbackWithId:
+        (nonnull NSString *)deviceIdsGetterCallbackId
     instanceIdString:(nonnull NSString *)instanceIdString;
 
 @property (nonnull, readonly, strong, nonatomic) WKWebView *webView;

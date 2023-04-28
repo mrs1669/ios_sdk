@@ -274,6 +274,11 @@
                                  instanceIdString:instanceIdString];
         return;
     }
+    if ([ADJWBGetAdjustDeviceIdsAsyncMethodName isEqualToString:methodName]) {
+        [self getDeviceIdsAsyncWithJsParameters:jsParameters
+                               instanceIdString:instanceIdString];
+        return;
+    }
 
     id<ADJAdjustInstance> _Nonnull adjustInstance = [ADJAdjust instanceForId:instanceIdString];
 
@@ -408,8 +413,6 @@
         [adjustConfig setEventIdDeduplicationMaxCapacity:
          eventIdDeduplicationMaxCapacityResult.value.intValue];
     }
-
-    // TODO: set subscriptions
 
     return adjustConfig;
 }
@@ -845,8 +848,105 @@
     }
 }
 
-#pragma mark - Private & helper methods
 
+#pragma mark - Adjust Internal methods
+- (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)
+    extractInternalConfigSubscriptionsWithJsParameters:
+        (nonnull NSDictionary<NSString *, id> *)jsParameters
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    NSMutableDictionary<NSString *, id<ADJInternalCallback>> *_Nonnull subscriptionsMap =
+        [[NSMutableDictionary alloc] init];
+
+    ADJResult<NSString *> *_Nonnull attributionSubscriberIdResult =
+        [self functionIdWithJsParameters:jsParameters
+                                     key:ADJWBAdjustAttributionSubscriberCallbackConfigKey];
+    if (attributionSubscriberIdResult.failNonNilInput != nil) {
+         [self.logger
+          debugDev:
+              @"Could not parse JS field for adjust config attribution subscription callback id"
+          resultFail:attributionSubscriberIdResult.fail
+          issueType:ADJIssueNonNativeIntegration];
+    }
+    [self.logger debugDev:@"TORMV extractInternalConfigSubscriptionsWithJsParameters"
+                     key:@"attributionSubscriberIdResult.value != nil"
+             stringValue:[ADJUtilF boolFormat:attributionSubscriberIdResult.value != nil]];
+
+    if (attributionSubscriberIdResult.value != nil) {
+        [subscriptionsMap
+         setObject:[self.webViewCallback
+                    attributionSubscriberInternalCallbackWithId:
+                        attributionSubscriberIdResult.value
+                    instanceIdString:instanceIdString]
+         forKey:ADJInternalAttributionSubscriberV5000Key];
+    }
+
+    if (subscriptionsMap.count == 0) {
+        return nil;
+    }
+
+    return subscriptionsMap;
+}
+
+- (void)getAttributionAsyncWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+                           instanceIdString:(id)instanceIdString
+{
+    ADJResult<NSString *> *_Nonnull attributionGetterIdResult =
+        [self functionIdWithJsParameters:jsParameters
+                                     key:ADJWBAdjustAttributionAsyncGetterCallbackKey];
+    if (attributionGetterIdResult.wasInputNil) {
+        [self.logger
+         debugDev:@"Could not find JS field for attribution getter callback id"
+         issueType:ADJIssueNonNativeIntegration];
+        return;
+    }
+    if (attributionGetterIdResult.fail != nil) {
+         [self.logger
+          debugDev:@"Could not parse JS field for attribution getter callback id"
+          resultFail:attributionGetterIdResult.fail
+          issueType:ADJIssueNonNativeIntegration];
+        return;
+    }
+
+    id<ADJInternalCallback> attributionGetterInternalCallback =
+        [self.webViewCallback
+         attributionGetterInternalCallbackWithId:attributionGetterIdResult.value
+         instanceIdString:instanceIdString];
+
+    [ADJAdjustInternal adjustAttributionWithClientId:instanceIdString
+                                    internalCallback:attributionGetterInternalCallback];
+}
+
+- (void)getDeviceIdsAsyncWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+                         instanceIdString:(id)instanceIdString
+{
+    ADJResult<NSString *> *_Nonnull deviceIdsGetterIdResult =
+        [self functionIdWithJsParameters:jsParameters
+                                     key:ADJWBAdjustDeviceIdsAsyncGetterCallbackKey];
+    if (deviceIdsGetterIdResult.wasInputNil) {
+        [self.logger
+         debugDev:@"Could not find JS field for device ids getter callback id"
+         issueType:ADJIssueNonNativeIntegration];
+        return;
+    }
+    if (deviceIdsGetterIdResult.fail != nil) {
+        [self.logger
+         debugDev:@"Could not parse JS field for device ids getter callback id"
+         resultFail:deviceIdsGetterIdResult.fail
+         issueType:ADJIssueNonNativeIntegration];
+        return;
+    }
+
+    id<ADJInternalCallback> deviceIdsGetterInternalCallback =
+        [self.webViewCallback
+         deviceIdsGetterInternalCallbackWithId:deviceIdsGetterIdResult.value
+         instanceIdString:instanceIdString];
+
+    [ADJAdjustInternal adjustDeviceIdsWithClientId:instanceIdString
+                                  internalCallback:deviceIdsGetterInternalCallback];
+}
+
+#pragma mark - Helper methods
 - (BOOL)isFieldValid:(NSObject *)field {
     if (field == nil) {
         return NO;
@@ -986,13 +1086,6 @@
     return [ADJResult okWithValue:@(valueResult.value.uIntegerValue)];
 }
 
-/*
- NSNumber *_Nonnull eventIdDeduplicationMaxCapacity =
-     [self intConfigWithJsParameters:jsParameters
-                                 key:ADJWBEventIdDeduplicationMaxCapacityConfigKey];
-
- */
-
 - (nonnull ADJResult<ADJBooleanWrapper *> *)
     trueWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     key:(nonnull NSString *)key
@@ -1021,74 +1114,6 @@
      }
 
      return valueResult;
-}
-
-- (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)
-    extractInternalConfigSubscriptionsWithJsParameters:
-        (nonnull NSDictionary<NSString *, id> *)jsParameters
-    instanceIdString:(nonnull NSString *)instanceIdString
-{
-    NSMutableDictionary<NSString *, id<ADJInternalCallback>> *_Nonnull subscriptionsMap =
-        [[NSMutableDictionary alloc] init];
-
-    ADJResult<NSString *> *_Nonnull attributionSubscriberIdResult =
-        [self functionIdWithJsParameters:jsParameters
-                                     key:ADJWBAdjustAttributionSubscriberCallbackConfigKey];
-    if (attributionSubscriberIdResult.failNonNilInput != nil) {
-         [self.logger
-          debugDev:
-              @"Could not parse JS field for adjust config attribution subscription callback id"
-          resultFail:attributionSubscriberIdResult.fail
-          issueType:ADJIssueNonNativeIntegration];
-    }
-    [self.logger debugDev:@"TORMV extractInternalConfigSubscriptionsWithJsParameters"
-                     key:@"attributionSubscriberIdResult.value != nil"
-             stringValue:[ADJUtilF boolFormat:attributionSubscriberIdResult.value != nil]];
-
-    if (attributionSubscriberIdResult.value != nil) {
-        [subscriptionsMap
-         setObject:[self.webViewCallback
-                    attributionSubscriberInternalCallbackWithId:
-                        attributionSubscriberIdResult.value
-                    instanceIdString:instanceIdString]
-         forKey:ADJInternalAttributionSubscriberV5000Key];
-    }
-
-    if (subscriptionsMap.count == 0) {
-        return nil;
-    }
-
-    return subscriptionsMap;
-}
-
-- (void)getAttributionAsyncWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-                           instanceIdString:(id)instanceIdString
-{
-    ADJResult<NSString *> *_Nonnull attributionGetterIdResult =
-        [self functionIdWithJsParameters:jsParameters
-                                     key:ADJWBAdjustAttributionAsyncGetterCallbackKey];
-    if (attributionGetterIdResult.wasInputNil) {
-        [self.logger
-         debugDev:@"Could not find JS field for attribution getter callback id"
-         issueType:ADJIssueNonNativeIntegration];
-       return;
-    }
-
-    if (attributionGetterIdResult.fail != nil) {
-         [self.logger
-          debugDev:@"Could not parse JS field for attribution getter callback id"
-          resultFail:attributionGetterIdResult.fail
-          issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-
-    id<ADJInternalCallback> attributionGetterInternalCallback =
-        [self.webViewCallback
-         attributionGetterAsyncInternalCallbackWithId:attributionGetterIdResult.value
-         instanceIdString:instanceIdString];
-
-    [ADJAdjustInternal adjustAttributionWithClientId:instanceIdString
-                                    internalCallback:attributionGetterInternalCallback];
 }
 
 @end

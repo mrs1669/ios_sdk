@@ -24,7 +24,10 @@ NSString *const ADJWBOnlineModeMethodName = @"switchBackToOnlineMode";
 NSString *const ADJWBGetAdjustAttributionAsyncMethodName = @"getAdjustAttributionAsync";
 NSString *const ADJWBAdjustAttributionAsyncGetterCallbackKey =
     @"_adjustAttributionAsyncGetterCallback";
-NSString *const ADJWBGetDeviceIdsAsyncMethodName = @"getDeviceIdsAsync";
+
+NSString *const ADJWBGetAdjustDeviceIdsAsyncMethodName = @"getAdjustDeviceIdsAsync";
+NSString *const ADJWBAdjustDeviceIdsAsyncGetterCallbackKey =
+    @"_adjustDeviceIdsAsyncGetterCallback";
 
 NSString *const ADJWBTrackEventMethodName = @"trackEvent";
 NSString *const ADJWBTrackLaunchedDeeplinkMethodName = @"trackLaunchedDeeplink";

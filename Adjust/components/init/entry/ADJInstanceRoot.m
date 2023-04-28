@@ -192,11 +192,23 @@
     [self ccExecuteFrom:@"adjustAttributionWithInternalCallback"
        internalCallback:internalCallback
          failMethodName:ADJAttributionGetterFailedMethodName
-               preBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot)
+               preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
      {
         [preSdkInitRoot.clientCallbacksController
          ccAttributionWithInternalCallback:internalCallback
          attributionStateReadOnlyStorage:preSdkInitRoot.storageRoot.attributionStateStorage];
+    }];
+}
+
+- (void)adjustDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback {
+    [self ccExecuteFrom:@"adjustDeviceIdsWithInternalCallback"
+       internalCallback:internalCallback
+         failMethodName:ADJDeviceIdsGetterFailedMethodName
+               preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
+     {
+        [preSdkInitRoot.clientCallbacksController
+         ccDeviceIdsWithInternalCallback:internalCallback
+         deviceController:preSdkInitRoot.deviceController];
     }];
 }
 
@@ -290,8 +302,7 @@
                preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
      {
         [preSdkInitRoot.clientCallbacksController
-         ccDeviceIdsWithCallback:adjustDeviceIdsCallback
-         clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
+         ccDeviceIdsWithAdjustCallback:adjustDeviceIdsCallback
          deviceController:preSdkInitRoot.deviceController];
     }];
 }

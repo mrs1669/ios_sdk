@@ -44,8 +44,10 @@
     attributionStateReadOnlyStorage:
         (nonnull ADJAttributionStateStorage *)attributionStateReadOnlyStorage;
 
-- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
-           clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+- (void)
+    ccDeviceIdsWithAdjustCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
+    deviceController:(nonnull ADJDeviceController *)deviceController;
+- (void)ccDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback
                deviceController:(nonnull ADJDeviceController *)deviceController;
 
 - (void)
