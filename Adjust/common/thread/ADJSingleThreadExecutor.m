@@ -73,8 +73,8 @@
         if (strongSelf == nil) { return; }
 
         NSString *_Nonnull runningLocalId =
-        [localThreadController
-         setNextLocalIdWithSerialDispatchQueue:strongSelf.serialQueue];
+            [localThreadController
+             setNextLocalIdWithSerialDispatchQueue:strongSelf.serialQueue];
 
         [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                runningThreadId:runningLocalId

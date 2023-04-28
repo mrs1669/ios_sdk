@@ -543,7 +543,7 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
              adjustTestOptions.foregroundTimerIntervalMilli];
         if (foregroundTimerIntervalMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid foregroundTimerIntervalMilliNumber"
-                  failDict:[foregroundTimerIntervalMilliNumberResult.fail foundationDictionary]];
+                  failDict:[foregroundTimerIntervalMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.foregroundTimerIntervalMilli =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
@@ -561,7 +561,7 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
              adjustTestOptions.foregroundTimerStartMilli];
         if (foregroundTimerStartMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid foregroundTimerStartMilliNumber"
-                  failDict:[foregroundTimerStartMilliNumberResult.fail foundationDictionary]];
+                  failDict:[foregroundTimerStartMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.foregroundTimerStartMilli =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
@@ -579,7 +579,7 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
              adjustTestOptions.minSdkSessionIntervalMilli];
         if (minSdkSessionIntervalMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid minSdkSessionIntervalMilliNumber"
-                  failDict:[minSdkSessionIntervalMilliNumberResult.fail foundationDictionary]];
+                  failDict:[minSdkSessionIntervalMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.minMeasurementSessionIntervalMilli =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
@@ -617,7 +617,7 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                  adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
         if (overwriteFirstSdkSessionIntervalMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid overwriteFirstSdkSessionIntervalMilliNumber"
-                failDict:[overwriteFirstSdkSessionIntervalMilliNumberResult.fail foundationDictionary]];
+                failDict:[overwriteFirstSdkSessionIntervalMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.overwriteFirstSdkSessionInterval =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:

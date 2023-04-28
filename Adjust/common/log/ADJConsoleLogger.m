@@ -209,8 +209,9 @@
         [ADJUtilF
          emptyFallbackWithFormat:@"sdkPkg:%@"
          string:logMessageData.inputData.sdkPackageParams == nil ? nil :
-             [[ADJUtilJson toStringFromDictionary:
-               logMessageData.inputData.sdkPackageParams] value]];
+             [ADJUtilObj
+              formatNewlineKeyValuesWithName:@""
+              stringKeyDictionary:logMessageData.inputData.sdkPackageParams]];
 
     ADJAdjustLogLevel _Nonnull clientLogLevelFormat =
         [ADJConsoleLogger clientLogLevelFormat:logMessageData.inputData.level];
