@@ -23,6 +23,11 @@ FOUNDATION_EXPORT NSString *const ADJWBAppWentToTheBackgroundManualCallMethodNam
 FOUNDATION_EXPORT NSString *const ADJWBOfflineModeMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBOnlineModeMethodName;
 
+FOUNDATION_EXPORT NSString *const ADJWBGetAdjustAttributionAsyncMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionAsyncGetterCallbackKey;
+
+FOUNDATION_EXPORT NSString *const ADJWBGetDeviceIdsAsyncMethodName;
+
 FOUNDATION_EXPORT NSString *const ADJWBTrackEventMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBTrackLaunchedDeeplinkMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBTrackPushTokenMethodName;

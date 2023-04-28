@@ -4287,6 +4287,10 @@
 		6FCEAF4B290ACA9E009F1DAD /* ADJInputLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */; };
 		6FCEAF4E290ACAB5009F1DAD /* ADJLogMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6FCEAF4F290ACAB5009F1DAD /* ADJLogMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */; };
+		6FDFDF7029F961ED009DB922 /* ADJWebViewCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FDFDF6729F961ED009DB922 /* ADJWebViewCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6FDFDF7129F961ED009DB922 /* ADJWebViewCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FDFDF6729F961ED009DB922 /* ADJWebViewCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6FDFDF7929F961ED009DB922 /* ADJWebViewCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDFDF6829F961ED009DB922 /* ADJWebViewCallback.m */; };
+		6FDFDF7A29F961ED009DB922 /* ADJWebViewCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FDFDF6829F961ED009DB922 /* ADJWebViewCallback.m */; };
 		6FE44798288AE4E800FF06E0 /* ADJNetworkEndpointData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE44796288AE4E800FF06E0 /* ADJNetworkEndpointData.m */; };
 		6FE4479D288AE53100FF06E0 /* ADJExternalConfigData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE4479B288AE53100FF06E0 /* ADJExternalConfigData.m */; };
 		6FE447A2288AE58500FF06E0 /* ADJBackoffStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE447A0288AE58500FF06E0 /* ADJBackoffStrategy.m */; };
@@ -4812,6 +4816,8 @@
 		6FCEAF49290ACA9E009F1DAD /* ADJInputLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJInputLogMessageData.m; sourceTree = "<group>"; };
 		6FCEAF4C290ACAB5009F1DAD /* ADJLogMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJLogMessageData.h; sourceTree = "<group>"; };
 		6FCEAF4D290ACAB5009F1DAD /* ADJLogMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJLogMessageData.m; sourceTree = "<group>"; };
+		6FDFDF6729F961ED009DB922 /* ADJWebViewCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJWebViewCallback.h; sourceTree = "<group>"; };
+		6FDFDF6829F961ED009DB922 /* ADJWebViewCallback.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJWebViewCallback.m; sourceTree = "<group>"; };
 		6FE44795288AE4E800FF06E0 /* ADJNetworkEndpointData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJNetworkEndpointData.h; sourceTree = "<group>"; };
 		6FE44796288AE4E800FF06E0 /* ADJNetworkEndpointData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADJNetworkEndpointData.m; sourceTree = "<group>"; };
 		6FE4479A288AE53100FF06E0 /* ADJExternalConfigData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADJExternalConfigData.h; sourceTree = "<group>"; };
@@ -5371,6 +5377,8 @@
 				07066DF329473DF800ABF24D /* adjust.js */,
 				6F20026D29DDB0B3005C60DF /* ADJWebBridgeConstants.h */,
 				6F20026E29DDB0B3005C60DF /* ADJWebBridgeConstants.m */,
+				6FDFDF6729F961ED009DB922 /* ADJWebViewCallback.h */,
+				6FDFDF6829F961ED009DB922 /* ADJWebViewCallback.m */,
 			);
 			path = AdjustSdkWebBridge;
 			sourceTree = "<group>";
@@ -6483,6 +6491,7 @@
 				073DA08029B641B200C755F7 /* ADJGdprForgetTracker.h in Headers */,
 				073DA00729B6411C00C755F7 /* ADJConstantsParam.h in Headers */,
 				073DA00329B6411C00C755F7 /* ADJSdkPackageBuilder.h in Headers */,
+				6FDFDF7129F961ED009DB922 /* ADJWebViewCallback.h in Headers */,
 				073DA02529B6413400C755F7 /* ADJThirdPartySharingResponseData.h in Headers */,
 				073DA06A29B6416300C755F7 /* ADJClientActionIoDataInjectable.h in Headers */,
 				073DA02D29B6413400C755F7 /* ADJEventResponseData.h in Headers */,
@@ -6715,6 +6724,7 @@
 				075587B329096B1F00A3AD50 /* ADJGlobalPartnerParametersController.h in Headers */,
 				075586A22909354E00A3AD50 /* ADJAdjustConfig.h in Headers */,
 				075587CD29096B4100A3AD50 /* ADJMainQueueController.h in Headers */,
+				6FDFDF7029F961ED009DB922 /* ADJWebViewCallback.h in Headers */,
 				075586A9290969E800A3AD50 /* ADJMoney.h in Headers */,
 				0755879929096B0100A3AD50 /* ADJOfflineSubscriber.h in Headers */,
 				0755878829096AE400A3AD50 /* ADJAttributionStateData.h in Headers */,
@@ -9080,6 +9090,7 @@
 				073D9F4129B62DC900C755F7 /* ADJV4ActivityPackage.m in Sources */,
 				073D9FA229B62E4A00C755F7 /* ADJPausingController.m in Sources */,
 				073D9F5729B62DE800C755F7 /* ADJSdkActiveController.m in Sources */,
+				6FDFDF7A29F961ED009DB922 /* ADJWebViewCallback.m in Sources */,
 				073D9F4029B62DC900C755F7 /* ADJV4Attribution.m in Sources */,
 				074B02E429CB40A5007337BA /* ADJPostSdkStartRoot.m in Sources */,
 				073D9FA029B62E4500C755F7 /* ADJMeasurementSessionStateStorage.m in Sources */,
@@ -9303,6 +9314,7 @@
 				0755874629096A8F00A3AD50 /* ADJSQLiteDb.m in Sources */,
 				075586E829096A2400A3AD50 /* ADJSdkPackageBaseData.m in Sources */,
 				075587A129096B1600A3AD50 /* ADJEventStateStorage.m in Sources */,
+				6FDFDF7929F961ED009DB922 /* ADJWebViewCallback.m in Sources */,
 				0755872629096A6B00A3AD50 /* ADJSdkPackageSenderController.m in Sources */,
 				074B02E129CB40A4007337BA /* ADJPostSdkStartRoot.m in Sources */,
 				075586CB29096A1100A3AD50 /* ADJUtilF.m in Sources */,

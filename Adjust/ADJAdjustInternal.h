@@ -23,13 +23,18 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const ADJInternalAttributionSubscriberV5000Key;
 FOUNDATION_EXPORT NSString *const ADJInternalLogSubscriberV5000Key;
 
-FOUNDATION_EXPORT NSString *const ADJDidReadAttributionMethodName;
-FOUNDATION_EXPORT NSString *const ADJDidChangeAttributionMethodName;
+FOUNDATION_EXPORT NSString *const ADJReadAttributionMethodName;
+FOUNDATION_EXPORT NSString *const ADJChangedAttributionMethodName;
 
-FOUNDATION_EXPORT NSString *const ADJDidLogMessageMethodName;
-FOUNDATION_EXPORT NSString *const ADJDidLogMessagesPreInitMethodName;
+FOUNDATION_EXPORT NSString *const ADJLoggedMessageMethodName;
+FOUNDATION_EXPORT NSString *const ADJLoggedMessagesPreInitMethodName;
 
-FOUNDATION_EXPORT NSString *const ADJDidFailMethodName;
+FOUNDATION_EXPORT NSString *const ADJFailedMethodName;
+
+FOUNDATION_EXPORT NSString *const ADJAttributionGetterReadMethodName;
+FOUNDATION_EXPORT NSString *const ADJAttributionGetterFailedMethodName;
+
+FOUNDATION_EXPORT NSString *const ADJDeviceIdsGetterMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJInternalCallbackStringSuffix;
 FOUNDATION_EXPORT NSString *const ADJInternalCallbackAdjustDataSuffix;
@@ -43,13 +48,13 @@ NS_ASSUME_NONNULL_END
 + (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId;
 
 + (void)
-    initSdkInternalForClientId:(nullable NSString *)clientId
+    initSdkForClientId:(nullable NSString *)clientId
     adjustConfig:(nonnull ADJAdjustConfig *)adjustConfig
     internalConfigSubscriptions:
         (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions;
 
-+ (nonnull NSString *)teardownWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
-                             shouldClearStorage:(BOOL)shouldClearStorage;
++ (void)adjustAttributionWithClientId:(nullable NSString *)clientId
+                     internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 
 + (nonnull NSString *)sdkVersion;
 
@@ -58,5 +63,8 @@ NS_ASSUME_NONNULL_END
 + (void)
     setSdkPrefix:(nullable NSString *)sdkPrefix
     fromInstanceWithClientId:(nullable NSString *)clientId;
+
++ (nonnull NSString *)teardownWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
+                             shouldClearStorage:(BOOL)shouldClearStorage;
 
 @end

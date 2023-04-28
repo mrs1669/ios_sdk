@@ -147,13 +147,8 @@
     }
 }
 
-#pragma mark - ADJAdjustInstance
-- (void)initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig {
-    [self initSdkInternalWithConfig:adjustConfig
-        internalConfigSubscriptions:nil];
-}
 - (void)
-    initSdkInternalWithConfig:(nonnull ADJAdjustConfig *)adjustConfig
+    initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig
     internalConfigSubscriptions:
         (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
 {
@@ -191,6 +186,24 @@
         // Finalize Initialization process
         [instanceRoot.postSdkInitRoot ccCompletePostSdkInit];
     }];
+}
+
+- (void)adjustAttributionWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback {
+    [self ccExecuteFrom:@"adjustAttributionWithInternalCallback"
+       internalCallback:internalCallback
+         failMethodName:ADJAttributionGetterFailedMethodName
+               preBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot)
+     {
+        [preSdkInitRoot.clientCallbacksController
+         ccAttributionWithInternalCallback:internalCallback
+         attributionStateReadOnlyStorage:preSdkInitRoot.storageRoot.attributionStateStorage];
+    }];
+}
+
+#pragma mark - ADJAdjustInstance
+- (void)initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig {
+    [self initSdkWithConfig:adjustConfig
+        internalConfigSubscriptions:nil];
 }
 
 - (void)inactivateSdk {
@@ -282,7 +295,6 @@
          deviceController:preSdkInitRoot.deviceController];
     }];
 }
-
 - (void)adjustAttributionWithCallback:
     (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
 {
@@ -292,8 +304,7 @@
      {
         [preSdkInitRoot.clientCallbacksController
          ccAttributionWithCallback:adjustAttributionCallback
-         clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
-         attributionStateStorage:preSdkInitRoot.storageRoot.attributionStateStorage];
+         attributionStateReadOnlyStorage:preSdkInitRoot.storageRoot.attributionStateStorage];
     }];
 }
 
@@ -551,6 +562,34 @@
 
 - (void)
     ccExecuteFrom:(nonnull NSString *)from
+    internalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+    failMethodName:(nonnull NSString *)failMethodName
+    preBlock:(void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
+{
+    [self ccExecuteFrom:from
+               preBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
+        ADJResultFail *_Nullable cannotPerformFail =
+            [preSdkInitRoot.sdkActiveController ccCanPerformClientAction];
+        if (cannotPerformFail != nil) {
+            [preSdkInitRoot.logger errorClient:@"Sdk cannot perform action with callback"
+                                           from:from
+                                    resultFail:cannotPerformFail];
+
+            [preSdkInitRoot.clientCallbacksController
+             failWithInternalCallback:internalCallback
+             failMethodName:failMethodName
+             cannotPerformFail:cannotPerformFail
+             from:from];
+
+            return;
+        }
+
+        preBlock(preSdkInitRoot);
+    }];
+}
+
+- (void)
+    ccExecuteFrom:(nonnull NSString *)from
     adjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
     preBlock:(void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
 {
@@ -572,7 +611,6 @@
 
             [preSdkInitRoot.clientCallbacksController
              failWithAdjustCallback:adjustCallback
-             clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
              cannotPerformFail:cannotPerformFail
              from:from];
 

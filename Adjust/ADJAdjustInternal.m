@@ -22,13 +22,17 @@ static dispatch_once_t entryRootOnceToken = 0;
 NSString *const ADJInternalAttributionSubscriberV5000Key = @"internalAttributionSubscriberV5000";
 NSString *const ADJInternalLogSubscriberV5000Key = @"internalLogSubscriberV5000";
 
-NSString *const ADJDidReadAttributionMethodName = @"didReadAttribution";
-NSString *const ADJDidChangeAttributionMethodName = @"didChangeAttribution";
+NSString *const ADJReadAttributionMethodName = @"readAttribution";
+NSString *const ADJChangedAttributionMethodName = @"changedAttribution";
 
-NSString *const ADJDidLogMessageMethodName = @"didLogMessage";
-NSString *const ADJDidLogMessagesPreInitMethodName = @"didLogMessagesPreInit";
+NSString *const ADJLoggedMessageMethodName = @"loggedMessage";
+NSString *const ADJLoggedMessagesPreInitMethodName = @"loggedMessagesPreInit";
 
-NSString *const ADJDidFailMethodName = @"didFail";
+NSString *const ADJFailedMethodName = @"failed";
+
+NSString *const ADJAttributionGetterReadMethodName = @"getAttributionRead";
+NSString *const ADJAttributionGetterFailedMethodName = @"getAttributionFailed";
+NSString *const ADJDeviceIdsGetterMethodName = @"getDeviceIds";
 
 NSString *const ADJInternalCallbackStringSuffix = @"_string";
 NSString *const ADJInternalCallbackAdjustDataSuffix = @"_adjustData";
@@ -57,7 +61,7 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
 }
 
 + (void)
-    initSdkInternalForClientId:(nullable NSString *)clientId
+    initSdkForClientId:(nullable NSString *)clientId
     adjustConfig:(nonnull ADJAdjustConfig *)adjustConfig
     internalConfigSubscriptions:
         (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
@@ -65,12 +69,25 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
     ADJInstanceRoot *_Nonnull instanceRoot =
         [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
 
-    [instanceRoot initSdkInternalWithConfig:adjustConfig
-                internalConfigSubscriptions:internalConfigSubscriptions];
+    [instanceRoot initSdkWithConfig:adjustConfig
+        internalConfigSubscriptions:internalConfigSubscriptions];
+}
+
++ (void)adjustAttributionWithClientId:(nullable NSString *)clientId
+                     internalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot adjustAttributionWithInternalCallback:internalCallback];
 }
 
 + (nonnull NSString *)sdkVersion {
     return ADJClientSdk;
+}
+
++ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
+    return [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
 }
 
 + (void)
@@ -78,10 +95,6 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
     fromInstanceWithClientId:(nullable NSString *)clientId
 {
     [[ADJAdjustInternal entryRootForClientId:clientId] setSdkPrefix:sdkPrefix];
-}
-
-+ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
-    return [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
 }
 
 // Resets the sdk state, as if it was not initialized or used before.

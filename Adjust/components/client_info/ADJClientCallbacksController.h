@@ -15,30 +15,45 @@
 #import "ADJLaunchedDeeplinkStateStorage.h"
 #import "ADJDeviceController.h"
 #import "ADJAdjustCallback.h"
+#import "ADJAdjustInternal.h"
 
 @interface ADJClientCallbacksController : ADJCommonBase
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor;
 
 // public api
-- (void)failWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
-          clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+- (void)failWithAdjustCallback:(nonnull id<ADJAdjustCallback>)adjustCallback
              cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail
                           from:(nonnull NSString *)from;
 
+- (void)failWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+                  failMethodName:(nonnull NSString *)failMethodName
+               cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail
+                            from:(nonnull NSString *)from;
+
 - (void)
-ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
-clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage;
+    ccAttributionWithCallback:
+        (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
+    attributionStateReadOnlyStorage:
+        (nonnull ADJAttributionStateStorage *)attributionStateReadOnlyStorage;
+- (void)
+    ccAttributionWithInternalCallback:
+        (nonnull id<ADJInternalCallback>)internalCallback
+    attributionStateReadOnlyStorage:
+        (nonnull ADJAttributionStateStorage *)attributionStateReadOnlyStorage;
 
 - (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
            clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
                deviceController:(nonnull ADJDeviceController *)deviceController;
 
 - (void)
-ccLaunchedDeepLinkWithCallback:(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
-clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage;
+    ccLaunchedDeepLinkWithCallback:
+        (nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    LaunchedDeeplinkStateStorage:
+        (nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage;
 
 @end
 

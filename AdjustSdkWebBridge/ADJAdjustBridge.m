@@ -30,211 +30,7 @@
 #import "ADJBooleanWrapper.h"
 #import "ADJInstanceRoot.h"
 #import "ADJUtilF.h"
-
-@interface ADJWebViewCallback : NSObject
-- (nonnull instancetype)initWithWebView:(nonnull WKWebView *)webView
-                                 logger:(nonnull ADJLogger *)logger;
-
-- (nullable instancetype)init NS_UNAVAILABLE;
-
-- (void)
-    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
-    callbackId:(nonnull NSString *)callbackId
-    methodName:(nonnull NSString *)methodName
-    jsonNonStringParameter:(nonnull NSString *)jsonNonStringParameter;
-
-@property (nonnull, readonly, strong, nonatomic) WKWebView *webView;
-@property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
-
-@end
-
-@implementation ADJWebViewCallback
-- (nonnull instancetype)initWithWebView:(nonnull WKWebView *)webView
-                                 logger:(nonnull ADJLogger *)logger
-{
-    self = [super init];
-    _webView = webView;
-    _logger = logger;
-
-    return self;
-}
-- (nullable instancetype)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-#pragma mark Public API
-- (void)
-    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
-    callbackId:(nonnull NSString *)callbackId
-    methodName:(nonnull NSString *)methodName
-    jsonNonStringParameter:(nonnull NSString *)jsonNonStringParameter
-{
-    [self execJsCallbackWithInstanceIdString:instanceIdString
-                                  callbackId:callbackId
-                                  methodName:methodName
-                               jsonParameter:jsonNonStringParameter
-                    subscriptionOrElseGetter:YES];
-}
-- (void)
-    execJsCallbackSubscriptionWithInstanceIdString:(nonnull NSString *)instanceIdString
-    callbackId:(nonnull NSString *)callbackId
-    methodName:(nonnull NSString *)methodName
-    jsonStringParameter:(nonnull NSString *)jsonStringParameter
-{
-    [self
-     execJsCallbackWithInstanceIdString:instanceIdString
-     callbackId:callbackId
-     methodName:methodName
-     jsonParameter:[NSString stringWithFormat:@"\"%@\"", jsonStringParameter]
-     subscriptionOrElseGetter:YES];
-}
-
-#pragma mark Internal Methods
-- (void)
-    execJsCallbackWithInstanceIdString:(nonnull NSString *)instanceIdString
-    callbackId:(nonnull NSString *)callbackId
-    methodName:(nonnull NSString *)methodName
-    jsonParameter:(nonnull NSString *)jsonParameter
-    subscriptionOrElseGetter:(BOOL)subscriptionOrElseGetter
-{
-    NSString *_Nonnull jsonInstanceId = [NSString stringWithFormat:@"\"%@\"", instanceIdString];
-    NSString *_Nonnull jsExecCommand =
-        [NSString stringWithFormat:@"Adjust.instance(%@).adjust_client%@(\"%@\", \"%@\", %@);",
-         jsonInstanceId,
-         subscriptionOrElseGetter ? @"Subscription" : @"GetterAsync",
-         callbackId, methodName, jsonParameter];
-
-    [self.logger debugWithMessage:@"TORMV execJsCallback"
-                     builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-        [logBuilder withKey:@"jsonParameter"
-                stringValue:jsonParameter];
-        [logBuilder withKey:@"subscriptionOrElseGetter"
-                stringValue:[ADJUtilF boolFormat:subscriptionOrElseGetter]];
-        [logBuilder withKey:@"jsExecCommand"
-                stringValue:jsExecCommand];
-    }];
-
-    __typeof(self) __weak weakSelf = self;
-    [self.webView evaluateJavaScript:jsExecCommand
-                   completionHandler:^(id _Nullable jsonReturnValue,
-                                       NSError *_Nullable error)
-     {
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        if (error != nil) {
-            [strongSelf.logger
-             debugWithMessage:@"Cannot evaluate javascript"
-             builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-                [logBuilder withFail:[[ADJResultFail alloc]
-                                      initWithMessage:@"evaluateJavaScript completionHandler error"
-                                      error:error]
-                               issue:ADJIssueNonNativeIntegration];
-                [logBuilder withKey:@"instanceIdString" stringValue:instanceIdString];
-                [logBuilder withKey:@"callbackId" stringValue:callbackId];
-                [logBuilder withKey:@"methodName" stringValue:methodName];
-                [logBuilder withKey:@"jsonParameter" stringValue:jsonParameter];
-                [logBuilder withKey:@"subscriptionOrElseGetter"
-                        stringValue:[ADJUtilF boolFormat:subscriptionOrElseGetter]];
-                if (jsonReturnValue != nil) {
-                    [logBuilder withKey:@"jsonReturnValue"
-                            stringValue:[jsonReturnValue description]];
-                }
-            }];
-        }
-    }];
-}
-
-@end
-
-@interface ADJAttributionInternalCallback : NSObject<ADJInternalCallback>
-
-@property (nullable, readonly, weak, nonatomic) ADJWebViewCallback *webViewCallbackWeak;
-@property (nonnull, readonly, strong, nonatomic) NSString *attributionSubscriberCallbackId;
-@property (nonnull, readonly, strong, nonatomic) NSString *instanceIdString;
-
-@end
-
-@implementation ADJAttributionInternalCallback
-#pragma mark Instantiation
-- (nonnull instancetype)
-    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
-    attributionSubscriberCallbackId:(nonnull NSString *)attributionSubscriberCallbackId
-    instanceIdString:(nonnull NSString *)instanceIdString
-{
-    self = [super init];
-    _webViewCallbackWeak = webViewCallback;
-    _attributionSubscriberCallbackId = attributionSubscriberCallbackId;
-    _instanceIdString = instanceIdString;
-
-    return self;
-}
-- (nullable instancetype)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-#pragma mark Public API
-#pragma mark - ADJInternalCallback
-- (void)didInternalCallbackWithData:(nonnull NSDictionary<NSString *, id> *)data {
-    ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
-    NSLog(@"TORMV didInternalCallbackWithData webViewCallback == nil: %@", @(webViewCallback == nil));
-    if (webViewCallback == nil) {
-        // TODO: log weak ref fail, maybe to adjust internal?
-        return;
-    }
-
-    [webViewCallback.logger debugDev:@"TORMV didInternalCallbackWithData saved"
-                                 key1:@"attributionSubscriberCallbackId"
-                        stringValue1:self.attributionSubscriberCallbackId
-                                key2:@"instanceIdString"
-                        stringValue2:self.instanceIdString];
-
-    [webViewCallback.logger debugDev:@"TORMV didInternalCallbackWithData received"
-                                 key:@"data keys"
-                         stringValue:[[ADJUtilJson toStringFromArray:[data allKeys]] value]];
-
-    id _Nullable didReadAdjustAttributonJsonStringValue =
-        [data objectForKey:[NSString stringWithFormat:@"%@%@",
-                            ADJDidReadAttributionMethodName, ADJInternalCallbackJsonStringSuffix]];
-
-    if (didReadAdjustAttributonJsonStringValue != nil
-        && [didReadAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
-    {
-        [webViewCallback
-         execJsCallbackSubscriptionWithInstanceIdString:self.instanceIdString
-         callbackId:self.attributionSubscriberCallbackId
-         methodName:ADJDidReadAttributionMethodName
-         jsonNonStringParameter:(NSString *)didReadAdjustAttributonJsonStringValue];
-        return;
-    }
-
-    id _Nullable didChangeAdjustAttributonJsonStringValue =
-        [data objectForKey:[NSString stringWithFormat:@"%@%@",
-                            ADJDidChangeAttributionMethodName,
-                            ADJInternalCallbackJsonStringSuffix]];
-
-    if (didChangeAdjustAttributonJsonStringValue != nil
-        && [didChangeAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
-    {
-        [webViewCallback
-         execJsCallbackSubscriptionWithInstanceIdString:self.instanceIdString
-         callbackId:self.attributionSubscriberCallbackId
-         methodName:ADJDidChangeAttributionMethodName
-         jsonNonStringParameter:(NSString *)didChangeAdjustAttributonJsonStringValue];
-        return;
-    }
-
-    [webViewCallback.logger
-     debugWithMessage:@"Could not find either attribution subscription callback json string values"
-     builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-        [logBuilder withKey:@"callback data keys"
-                  jsonArray:[data allKeys]];
-        [logBuilder issue:ADJIssueNonNativeIntegration];
-    }];
-}
-
-@end
+#import "ADJWebViewCallback.h"
 
 #pragma mark Fields
 @interface ADJAdjustBridge() <
@@ -467,10 +263,15 @@
              extractInternalConfigSubscriptionsWithJsParameters:jsParameters
              instanceIdString:instanceIdString];
 
-        [ADJAdjustInternal initSdkInternalForClientId:instanceIdString
-                                         adjustConfig:adjustConfig
-                          internalConfigSubscriptions:internalConfigSubscriptions];
+        [ADJAdjustInternal initSdkForClientId:instanceIdString
+                                 adjustConfig:adjustConfig
+                  internalConfigSubscriptions:internalConfigSubscriptions];
 
+        return;
+    }
+    if ([ADJWBGetAdjustAttributionAsyncMethodName isEqualToString:methodName]) {
+        [self getAttributionAsyncWithJsParameters:jsParameters
+                                 instanceIdString:instanceIdString];
         return;
     }
 
@@ -1235,7 +1036,8 @@
                                      key:ADJWBAdjustAttributionSubscriberCallbackConfigKey];
     if (attributionSubscriberIdResult.failNonNilInput != nil) {
          [self.logger
-          debugDev:@"Could not parse JS field for adjust config attribution subscription"
+          debugDev:
+              @"Could not parse JS field for adjust config attribution subscription callback id"
           resultFail:attributionSubscriberIdResult.fail
           issueType:ADJIssueNonNativeIntegration];
     }
@@ -1245,9 +1047,9 @@
 
     if (attributionSubscriberIdResult.value != nil) {
         [subscriptionsMap
-         setObject:[[ADJAttributionInternalCallback alloc]
-                    initWithWebViewCallback:self.webViewCallback
-                    attributionSubscriberCallbackId:attributionSubscriberIdResult.value
+         setObject:[self.webViewCallback
+                    attributionSubscriberInternalCallbackWithId:
+                        attributionSubscriberIdResult.value
                     instanceIdString:instanceIdString]
          forKey:ADJInternalAttributionSubscriberV5000Key];
     }
@@ -1257,6 +1059,36 @@
     }
 
     return subscriptionsMap;
+}
+
+- (void)getAttributionAsyncWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+                           instanceIdString:(id)instanceIdString
+{
+    ADJResult<NSString *> *_Nonnull attributionGetterIdResult =
+        [self functionIdWithJsParameters:jsParameters
+                                     key:ADJWBAdjustAttributionAsyncGetterCallbackKey];
+    if (attributionGetterIdResult.wasInputNil) {
+        [self.logger
+         debugDev:@"Could not find JS field for attribution getter callback id"
+         issueType:ADJIssueNonNativeIntegration];
+       return;
+    }
+
+    if (attributionGetterIdResult.fail != nil) {
+         [self.logger
+          debugDev:@"Could not parse JS field for attribution getter callback id"
+          resultFail:attributionGetterIdResult.fail
+          issueType:ADJIssueNonNativeIntegration];
+        return;
+    }
+
+    id<ADJInternalCallback> attributionGetterInternalCallback =
+        [self.webViewCallback
+         attributionGetterAsyncInternalCallbackWithId:attributionGetterIdResult.value
+         instanceIdString:instanceIdString];
+
+    [ADJAdjustInternal adjustAttributionWithClientId:instanceIdString
+                                    internalCallback:attributionGetterInternalCallback];
 }
 
 @end

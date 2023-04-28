@@ -31,9 +31,6 @@
     id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
 
     // [INDEPENDENT] Independent objects initialization section.
-    _clientCallbacksController =
-        [[ADJClientCallbacksController alloc] initWithLoggerFactory:loggerFactory];
-
     _clientReturnExecutor =
         (sdkConfig.clientReturnExecutorOverwrite) ? : instanceRootBag.threadController;
 
@@ -64,6 +61,10 @@
                                initWithLoggerFactory:loggerFactory
                                clientActionStorage:_storageRoot.clientActionStorage
                                clock:instanceRootBag.clock];
+
+    _clientCallbacksController =
+        [[ADJClientCallbacksController alloc] initWithLoggerFactory:loggerFactory
+                                               clientReturnExecutor:_clientReturnExecutor];
 
     _deviceController = [[ADJDeviceController alloc]
                          initWithLoggerFactory:loggerFactory

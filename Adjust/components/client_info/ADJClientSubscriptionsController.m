@@ -162,7 +162,7 @@
     if (internalAttributionCallback != nil) {
         ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
             [attributionData
-             buildInternalCallbackDataWithMethodName:ADJDidReadAttributionMethodName];
+             buildInternalCallbackDataWithMethodName:ADJReadAttributionMethodName];
         for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {
             [self.logger debugDev:@"Issue while building read attribution internal callback"
                        resultFail:optFail
@@ -202,7 +202,7 @@
     if (internalAttributionCallback != nil) {
         ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
             [attributionData
-             buildInternalCallbackDataWithMethodName:ADJDidChangeAttributionMethodName];
+             buildInternalCallbackDataWithMethodName:ADJChangedAttributionMethodName];
         for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {
             [self.logger debugDev:@"Issue while building changed attribution internal callback"
                        resultFail:optFail

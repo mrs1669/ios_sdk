@@ -27,9 +27,11 @@
 
 // public api
 - (void)
-    initSdkInternalWithConfig:(nonnull ADJAdjustConfig *)adjustConfig
+    initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig
     internalConfigSubscriptions:
         (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions;
+
+- (void)adjustAttributionWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 

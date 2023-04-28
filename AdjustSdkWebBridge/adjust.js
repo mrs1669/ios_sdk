@@ -82,17 +82,22 @@ AdjustInstance.prototype._postMessage = function(methodName, parameters) {
 
 AdjustInstance.prototype.adjust_clientSubscription =
 function(callbackId, methodName, callbackParameter) {
-    /*
-    console.log("TORMV adjust_clientSubscription");
-    console.log("" + callbackId);
-    console.log("" + methodName);
-    console.log("" + JSON.stringify(callbackParameter));
-     */
+    this.adjust_clientCallback(false, "Could not find valid client subscription callback function",
+                               callbackId, methodName, callbackParameter);
+}
+AdjustInstance.prototype.adjust_clientGetterAsync =
+function(callbackId, methodName, callbackParameter) {
+    this.adjust_clientCallback(true, "Could not find valid client getter async callback function",
+                               callbackId, methodName, callbackParameter);
+}
+AdjustInstance.prototype.adjust_clientCallback =
+function(deleteAfter, errMessage, callbackId, methodName, callbackParameter) {
     const callbackFunction = this._callbackMap.get(callbackId);
+    if (deleteAfter) {
+        this._callbackMap.delete(callbackId);
+    }
+
     if (! callbackFunction) {
-        const errMessage = "Could not find valid client subscription callback function";
-        //console.log("TORMV " + errMessage);
-        //console.log("" + JSON.stringify(Array.from(this._callbackMap.keys())));
         this._postMessage("jsFail",
                           JSON.stringify({
             _message: errMessage,
@@ -110,18 +115,6 @@ function(callbackId, methodName, callbackParameter) {
     callbackFunction(methodName, callbackParameter);
 }
 
-/*
-
- AdjustInstance.prototype.adjust_clientGetterAsync =
- function(callbackId, methodName, callbackParameter) {
-     const callbackFunction = this.callbacksMap.get(callbackId);
-     this.callbacksMap.delete(callbackId);
-
-     if (! callbackFunction) { return; }
-
-     callbackFunction(methodName, callbackParameter)
- }
- */
 
 AdjustInstance.prototype.initSdk = function(adjustConfig) {
     // save permanent callbacks
@@ -193,6 +186,23 @@ AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
 AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
     this._postMessage("clearGlobalPartnerParameters"); }
 
+AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionCallback) {
+    const callbackIdWithRandomPrefix =
+        this._callbackIdWithRandomPrefix('getAdjustAttributionAsync');
+
+    this._callbackMap.set(callbackIdWithRandomPrefix, adjustAttributionCallback);
+
+    this._postMessage("getAdjustAttributionAsync", JSON.stringify({
+        _adjustAttributionAsyncGetterCallbackId: callbackIdWithRandomPrefix,
+        _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback}));
+}
+
+AdjustInstance.prototype._callbackIdWithRandomPrefix = function(suffix) {
+    // taken from https://stackoverflow.com/a/8084248
+    //  not ideal for "true" randomness, but for the purpose it should be ok
+    const randomString = (Math.random() + 1).toString(36).substring(7);
+    return suffix + '_' + randomString;
+}
 
 function AdjustConfig(appToken, environment) {
     this._appToken = appToken;
