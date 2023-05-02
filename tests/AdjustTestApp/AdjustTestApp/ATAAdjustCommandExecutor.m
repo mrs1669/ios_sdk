@@ -7,18 +7,17 @@
 
 #import "ATAAdjustCommandExecutor.h"
 
-#import "ATAAdjustCommandExecutor.h"
 #import "ATOAdjustTestOptions.h"
 #import "ATAAdjustAttributionDeferredDeeplinkSubscriber.h"
 #import "ATAAdjustAttributionSendAllSubscriber.h"
-#import "ADJAdjustConfig.h"
 #import "ADJAdjust.h"
+#import "ADJAdjustConfig.h"
+#import "ADJAdjustInstance.h"
 #import "ADJAdjustEvent.h"
 #import "ADJAdjustPushToken.h"
 #import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
-#import "ADJAdjustInstance.h"
 #import "ATAAdjustLaunchedDeeplinkCallback.h"
 
 @interface ATAAdjustCommandExecutor ()
@@ -328,6 +327,13 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     [[ADJAdjust instance] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
+- (void)getLastDeeplink {
+    [[ADJAdjust instance]
+     adjustLaunchedDeeplinkWithCallback:[[ATAAdjustLaunchedDeeplinkCallback alloc]
+                                         initWithTestLibrary:self.testLibrary
+                                         extraPath:self.extraPathTestOptions]];
+}
+
 - (void)gdprForgetMe {
     [[ADJAdjust instance] gdprForgetDevice];
 }
@@ -446,12 +452,6 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
             [[ADJAdjust instance] inactivateMeasurementConsent];
         }
     }
-}
-
-- (void)getLastDeeplink {
-    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:[[ATAAdjustLaunchedDeeplinkCallback alloc]
-                                                              initWithTestLibrary:self.testLibrary
-                                                              extraPath:self.extraPathTestOptions]];
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {
