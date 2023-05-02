@@ -19,10 +19,9 @@
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
 #import "ADJAdjustInstance.h"
-#import "ADJAdjustLaunchedDeeplinkCallback.h"
-#import "ADJAdjustCallback.h"
+#import "ATAAdjustDeeplinkCallback.h"
 
-@interface ATAAdjustCommandExecutor ()<ADJAdjustLaunchedDeeplinkCallback>
+@interface ATAAdjustCommandExecutor ()
 
 @property (nonnull, readonly, nonatomic, strong) NSString *url;
 @property (nonnull, readonly, nonatomic, strong) ATLTestLibrary *testLibrary;
@@ -450,7 +449,9 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)getLastDeeplink {
-    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:self];
+    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:[[ATAAdjustDeeplinkCallback alloc]
+                                                              initWithTestLibrary:self.testLibrary
+                                                              extraPath:self.extraPathTestOptions]];
 }
 
 - (BOOL)containsKey:(nonnull NSString *)key {
@@ -627,16 +628,6 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (BOOL)isNull:(nullable id)value {
     return value == nil || value == [NSNull null];
-}
-
-- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSURL *)adjustLaunchedDeeplink {
-    [self.testLibrary addInfoToSend:@"last_deeplink" value:adjustLaunchedDeeplink.description];
-    [self.testLibrary sendInfoToServer:self.extraPathTestOptions];
-}
-
-- (void)didFailWithAdjustCallbackMessage:(NSString *)message {
-    [self.testLibrary addInfoToSend:@"last_deeplink" value:@""];
-    [self.testLibrary sendInfoToServer:self.extraPathTestOptions];
 }
 
 @end

@@ -47,7 +47,7 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
                                       testLibrary:self.testLibrary];
     
     self.testLibrary.dictionaryParametersDelegate = self.adjustCommandExecutor;
-    
+
     [self.testLibrary addTestDirectory:@"deeplink"];
     [self.testLibrary addTestDirectory:@"deeplink-getter"];
     [self.testLibrary addTestDirectory:@"ad-revenue"];
@@ -73,7 +73,7 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     [self.testLibrary addTestDirectory:@"stop-restart"];
     [self.testLibrary addTestDirectory:@"third-party-sharing"];
     [self.testLibrary addTestDirectory:@"external-device-id"];
-    
+
 }
 
 - (IBAction)onBtnStartTestSessionPressDidReceive:(UIButton *)sender {
