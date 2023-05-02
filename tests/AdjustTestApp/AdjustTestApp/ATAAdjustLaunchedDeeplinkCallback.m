@@ -6,16 +6,16 @@
 //  Copyright © 2023 Adjust GmbH. All rights reserved.
 //
 
-#import "ATAAdjustDeeplinkCallback.h"
+#import "ATAAdjustLaunchedDeeplinkCallback.h"
 
-@interface ATAAdjustDeeplinkCallback ()
+@interface ATAAdjustLaunchedDeeplinkCallback ()
 
 @property (nullable, readonly, weak, nonatomic) ATLTestLibrary *testLibraryWeak;
 @property (nonnull, readonly, strong, nonatomic) NSString *extraPath;
 
 @end
 
-@implementation ATAAdjustDeeplinkCallback
+@implementation ATAAdjustLaunchedDeeplinkCallback
 #pragma mark Instantiation
 - (nonnull instancetype)initWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
                                   extraPath:(nonnull NSString *)extraPath

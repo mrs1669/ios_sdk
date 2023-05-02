@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "ADJAdjustLaunchedDeeplinkCallback.h"
 #import "ADJAdjustCallback.h"
 #import "ATLTestLibrary.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ATAAdjustDeeplinkCallback : NSObject<ADJAdjustLaunchedDeeplinkCallback, ADJAdjustCallback>
+@interface ATAAdjustLaunchedDeeplinkCallback : NSObject<ADJAdjustLaunchedDeeplinkCallback,
+                                                                        ADJAdjustCallback>
 
 - (nonnull instancetype)initWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
                                   extraPath:(nonnull NSString *)extraPath;
@@ -21,3 +23,4 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+

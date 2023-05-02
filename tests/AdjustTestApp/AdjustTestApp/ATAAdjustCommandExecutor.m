@@ -19,7 +19,7 @@
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
 #import "ADJAdjustInstance.h"
-#import "ATAAdjustDeeplinkCallback.h"
+#import "ATAAdjustLaunchedDeeplinkCallback.h"
 
 @interface ATAAdjustCommandExecutor ()
 
@@ -449,7 +449,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)getLastDeeplink {
-    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:[[ATAAdjustDeeplinkCallback alloc]
+    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:[[ATAAdjustLaunchedDeeplinkCallback alloc]
                                                               initWithTestLibrary:self.testLibrary
                                                               extraPath:self.extraPathTestOptions]];
 }
