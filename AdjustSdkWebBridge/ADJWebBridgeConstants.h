@@ -50,6 +50,7 @@ FOUNDATION_EXPORT NSString *const ADJWBJsBooleanType;
 FOUNDATION_EXPORT NSString *const ADJWBJsUndefinedType;
 FOUNDATION_EXPORT NSString *const ADJWBJsFunctionType;
 
+FOUNDATION_EXPORT NSString *const ADJWBAdjustConfigSource;
 FOUNDATION_EXPORT NSString *const ADJWBAppTokenConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBEnvironmentConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBDefaultTrackerConfigKey;
@@ -64,5 +65,17 @@ FOUNDATION_EXPORT NSString *const ADJWBDoNotReadAppleSearchAdsAttributionConfigK
 FOUNDATION_EXPORT NSString *const ADJWBEventIdDeduplicationMaxCapacityConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionSubscriberCallbackConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBAdjustLogSubscriberCallbackConfigKey;
+
+FOUNDATION_EXPORT NSString *const ADJWBAdjustEventSource;
+FOUNDATION_EXPORT NSString *const ADJWBEventTokenEventKey;
+FOUNDATION_EXPORT NSString *const ADJWBRevenueAmountDoubleEventKey;
+FOUNDATION_EXPORT NSString *const ADJWBCurrencyEventKey;
+FOUNDATION_EXPORT NSString *const ADJWBCallbackParametersEventKey;
+FOUNDATION_EXPORT NSString *const ADJWBPartnerParametersEventKey;
+FOUNDATION_EXPORT NSString *const ADJWBDeduplicationIdEventKey;
+
+
+FOUNDATION_EXPORT NSString *const ADJWBKvKeyKey;
+FOUNDATION_EXPORT NSString *const ADJWBKvValueKey;
 
 NS_ASSUME_NONNULL_END

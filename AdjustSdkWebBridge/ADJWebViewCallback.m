@@ -53,6 +53,12 @@
 
 @end
 
+@interface ADJWebViewCallback ()
+
+@property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
+
+@end
+
 @implementation ADJWebViewCallback
 - (nonnull instancetype)initWithWebView:(nonnull WKWebView *)webView
                                  logger:(nonnull ADJLogger *)logger

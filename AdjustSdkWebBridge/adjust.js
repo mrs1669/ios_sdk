@@ -115,7 +115,6 @@ function(deleteAfter, errMessage, callbackId, methodName, callbackParameter) {
     callbackFunction(methodName, callbackParameter);
 }
 
-
 AdjustInstance.prototype.initSdk = function(adjustConfig) {
     // save permanent callbacks
     if (adjustConfig._adjustAttributionSubscriberCallbackId) {
@@ -156,6 +155,32 @@ AdjustInstance.prototype.switchToOfflineMode = function() {
 AdjustInstance.prototype.switchBackToOnlineMode = function() {
     this._postMessage("switchBackToOnlineMode"); }
 
+AdjustInstance.prototype.getAdjustDeviceIdsAsync = function(adjustDeviceIdsCallback) {
+    const callbackIdWithRandomPrefix =
+        this._callbackIdWithRandomPrefix('getAdjustDeviceIdsAsync');
+
+    this._callbackMap.set(callbackIdWithRandomPrefix, adjustDeviceIdsCallback);
+
+    this._postMessage("getAdjustDeviceIdsAsync", JSON.stringify({
+        _adjustDeviceIdsAsyncGetterCallbackId: callbackIdWithRandomPrefix,
+        _adjustDeviceIdsAsyncGetterCallbackType: typeof adjustDeviceIdsCallback}));
+}
+
+AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionCallback) {
+    const callbackIdWithRandomPrefix =
+        this._callbackIdWithRandomPrefix('getAdjustAttributionAsync');
+
+    this._callbackMap.set(callbackIdWithRandomPrefix, adjustAttributionCallback);
+
+    this._postMessage("getAdjustAttributionAsync", JSON.stringify({
+        _adjustAttributionAsyncGetterCallbackId: callbackIdWithRandomPrefix,
+        _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback}));
+}
+
+AdjustInstance.prototype.trackEvent = function(adjustEvent) {
+    this._postMessage("trackEvent", JSON.stringify(adjustEvent)); };
+
+
 AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
     this._postMessage("trackLaunchedDeeplink",
                       JSON.stringify({_url: url, _urlType: typeof url})); }
@@ -186,27 +211,7 @@ AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
 AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
     this._postMessage("clearGlobalPartnerParameters"); }
 
-AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionCallback) {
-    const callbackIdWithRandomPrefix =
-        this._callbackIdWithRandomPrefix('getAdjustAttributionAsync');
 
-    this._callbackMap.set(callbackIdWithRandomPrefix, adjustAttributionCallback);
-
-    this._postMessage("getAdjustAttributionAsync", JSON.stringify({
-        _adjustAttributionAsyncGetterCallbackId: callbackIdWithRandomPrefix,
-        _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback}));
-}
-
-AdjustInstance.prototype.getAdjustDeviceIdsAsync = function(adjustDeviceIdsCallback) {
-    const callbackIdWithRandomPrefix =
-        this._callbackIdWithRandomPrefix('getAdjustDeviceIdsAsync');
-
-    this._callbackMap.set(callbackIdWithRandomPrefix, adjustDeviceIdsCallback);
-
-    this._postMessage("getAdjustDeviceIdsAsync", JSON.stringify({
-        _adjustDeviceIdsAsyncGetterCallbackId: callbackIdWithRandomPrefix,
-        _adjustDeviceIdsAsyncGetterCallbackType: typeof adjustDeviceIdsCallback}));
-}
 
 AdjustInstance.prototype._callbackIdWithRandomPrefix = function(suffix) {
     // taken from https://stackoverflow.com/a/8084248
@@ -295,6 +300,44 @@ AdjustConfig.prototype.setAdjustLogSubscriber = function(adjustLogSubscriber) {
     this.adjustLogSubscriberCallback =  adjustLogSubscriberCallback;
 };
 
+function AdjustEvent(eventToken) {
+    this._eventToken = eventToken;
+    this._revenueAmountDouble = null;
+    this._currency = null;
+    this._callbackParameters = [];
+    this._partnerParameters = [];
+    this._deduplicationId = null;
+}
+
+AdjustEvent.prototype.setRevenueDouble = function(revenueAmountDouble, currency) {
+    this._revenueAmountDouble = revenueAmountDouble;
+    this._revenueAmountDoubleType = typeof revenueAmountDouble
+    this._currency = currency;
+    this._currencyType = typeof currency;
+};
+
+AdjustEvent.prototype.addCallbackParameter = function(key, value) {
+    this._callbackParameters.push({
+        _key = key;
+        _keyType = typeof key;
+        _value = value;
+        _valueType = typeof value;
+    });
+};
+
+AdjustEvent.prototype.addPartnerParameter = function(key, value) {
+    this._partnerParameters.push({
+        _key = key;
+        _keyType = typeof key;
+        _value = value;
+        _valueType = typeof value;
+    });
+};
+
+AdjustEvent.prototype.setDeduplicationId = function(deduplicationId) {
+    this._deduplicationId = deduplicationId;
+    this._deduplicationIdType = typeof deduplicationId;
+};
  /*
 var Adjust = {
 instance: function(instanceId = "") {

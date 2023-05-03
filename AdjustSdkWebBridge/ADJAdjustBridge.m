@@ -21,16 +21,19 @@
 #import "ADJAdjustAttributionSubscriber.h"
 
 #import "ADJAdjust.h"
-#import "ADJResult.h"
-#import "ADJConstants.h"
 #import "ADJWebBridgeConstants.h"
+#import "ADJWebViewCallback.h"
+#import "ADJSdkApiHelper.h"
+
+#import "ADJConstants.h"
+#import "ADJResult.h"
 #import "ADJInputLogMessageData.h"
 #import "ADJConsoleLogger.h"
 #import "ADJUtilConv.h"
 #import "ADJBooleanWrapper.h"
 #import "ADJInstanceRoot.h"
 #import "ADJUtilF.h"
-#import "ADJWebViewCallback.h"
+#import "ADJOptionalFailsNL.h"
 
 #pragma mark Fields
 @interface ADJAdjustBridge() <
@@ -39,8 +42,9 @@
     WKScriptMessageHandler>
 
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> logSubscriber;
-@property (nonnull, readonly, strong, nonatomic) ADJWebViewCallback *webViewCallback;
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
+@property (nonnull, readonly, strong, nonatomic) ADJWebViewCallback *webViewCallback;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkApiHelper *sdkApiHelper;
 
 @end
 
@@ -109,11 +113,12 @@
                            logCollector:self
                              instanceId:[[ADJInstanceIdData alloc] initNonFirstWithClientId:nil]];
 
-
-    _webViewCallback = [[ADJWebViewCallback alloc] initWithWebView:webView
-                                                            logger:logger];
     _logSubscriber = adjustLogSubscriber;
     _logger = logger;
+    _webViewCallback = [[ADJWebViewCallback alloc] initWithWebView:webView
+                                                            logger:logger];
+    _sdkApiHelper = [[ADJSdkApiHelper alloc] initWithLogger:logger
+                                            webViewCallback:_webViewCallback];
 
     return self;
 }
@@ -256,10 +261,10 @@
 
     if ([ADJWBInitSdkMethodName isEqualToString:methodName]) {
         ADJAdjustConfig *_Nonnull adjustConfig =
-            [self adjustConfigWithParametersJsonDictionary:jsParameters];
+            [self.sdkApiHelper adjustConfigWithParametersJsonDictionary:jsParameters];
 
         NSDictionary<NSString *, id<ADJInternalCallback>> *_Nullable internalConfigSubscriptions =
-            [self
+            [self.sdkApiHelper
              extractInternalConfigSubscriptionsWithJsParameters:jsParameters
              instanceIdString:instanceIdString];
 
@@ -270,13 +275,23 @@
         return;
     }
     if ([ADJWBGetAdjustAttributionAsyncMethodName isEqualToString:methodName]) {
-        [self getAttributionAsyncWithJsParameters:jsParameters
-                                 instanceIdString:instanceIdString];
+        id<ADJInternalCallback> _Nullable attributionGetterInternalCallback =
+            [self.sdkApiHelper attributionGetterInternalCallbackWithJsParameters:jsParameters
+                                                                instanceIdString:instanceIdString];
+        if (attributionGetterInternalCallback != nil) {
+            [ADJAdjustInternal adjustAttributionWithClientId:instanceIdString
+                                            internalCallback:attributionGetterInternalCallback];
+        }
         return;
     }
     if ([ADJWBGetAdjustDeviceIdsAsyncMethodName isEqualToString:methodName]) {
-        [self getDeviceIdsAsyncWithJsParameters:jsParameters
-                               instanceIdString:instanceIdString];
+        id<ADJInternalCallback> _Nullable deviceIdsGetterInternalCallback =
+            [self.sdkApiHelper deviceIdsGetterInternalCallbackWithJsParameters:jsParameters
+                                                              instanceIdString:instanceIdString];
+        if (deviceIdsGetterInternalCallback != nil) {
+            [ADJAdjustInternal adjustDeviceIdsWithClientId:instanceIdString
+                                          internalCallback:deviceIdsGetterInternalCallback];
+        }
         return;
     }
 
@@ -299,7 +314,7 @@
     // TODO add activateMeasurementConsent and inactivateMeasurementConsent
     // TODO add deviceIdsWithCallback and adjustAttributionWithCallback
     } else if ([ADJWBTrackEventMethodName isEqualToString:methodName]) {
-        [adjustInstance trackEvent:[self adjustEventWithJsParameters:jsParameters]];
+        [adjustInstance trackEvent:[self.sdkApiHelper adjustEventWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
         [adjustInstance trackLaunchedDeeplink:
          [self adjustLaunchedDeeplinkWithJsParameters:jsParameters]];
@@ -338,122 +353,7 @@
     }
 }
 
-- (nonnull ADJAdjustConfig *)adjustConfigWithParametersJsonDictionary:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters
-{
-    NSString *_Nullable appTokenResult =
-        [self stringConfigWithJsParameters:jsParameters key:ADJWBAppTokenConfigKey];
 
-    NSString *_Nullable environmentResult =
-        [self stringConfigWithJsParameters:jsParameters key:ADJWBEnvironmentConfigKey];
-
-
-    ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc]
-                                              initWithAppToken:appTokenResult
-                                              environment:environmentResult];
-
-    NSString *_Nullable defaultTracker =
-        [self stringConfigWithJsParameters:jsParameters key:ADJWBDefaultTrackerConfigKey];
-    if (defaultTracker != nil) {
-        [adjustConfig setDefaultTracker:defaultTracker];
-    }
-
-    if ([self trueConfigWithJsParameters:jsParameters key:ADJWBDoLogAllConfigKey]) {
-        [adjustConfig doLogAll];
-    }
-
-    if ([self trueConfigWithJsParameters:jsParameters key:ADJWBDoNotLogAnyConfigKey]) {
-        [adjustConfig doNotLogAny];
-    }
-
-    NSString *_Nullable urlStrategy =
-        [self stringConfigWithJsParameters:jsParameters key:ADJWBUrlStrategyConfigKey];
-    if (urlStrategy != nil) {
-        [adjustConfig setDefaultTracker:urlStrategy];
-    }
-
-    NSString *_Nullable customEndpoint =
-        [self stringConfigWithJsParameters:jsParameters key:ADJWBCustomEndpointUrlConfigKey];
-    NSString *_Nullable customEndpointPublicKeyHash =
-        [self stringConfigWithJsParameters:jsParameters
-                                       key:ADJWBCustomEndpointPublicKeyHashConfigKey];
-    if (customEndpoint != nil || customEndpointPublicKeyHash != nil) {
-        [adjustConfig setCustomEndpointWithUrl:customEndpoint
-                      optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
-    }
-
-    if ([self trueConfigWithJsParameters:jsParameters
-                                     key:ADJWBDoNotOpenDeferredDeeplinkConfigKey])
-    {
-        [adjustConfig preventOpenDeferredDeeplink];
-    }
-
-    if ([self trueConfigWithJsParameters:jsParameters
-                                     key:ADJWBDoNotReadAppleSearchAdsAttributionConfigKey])
-    {
-        [adjustConfig doNotReadAppleSearchAdsAttribution];
-    }
-
-    if ([self trueConfigWithJsParameters:jsParameters
-                                     key:ADJWBCanSendInBackgroundConfigKey])
-    {
-        [adjustConfig allowSendingFromBackground];
-    }
-
-    ADJResult<NSNumber *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
-        [self intWithJsParameters:jsParameters key:ADJWBEventIdDeduplicationMaxCapacityConfigKey];
-    if (eventIdDeduplicationMaxCapacityResult.failNonNilInput != nil) {
-        [self.logger debugDev:@"Could not parse JS field for adjust config"
-                          key:@"field name"
-                  stringValue:ADJWBEventIdDeduplicationMaxCapacityConfigKey
-                   resultFail:eventIdDeduplicationMaxCapacityResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-    if (eventIdDeduplicationMaxCapacityResult.value != nil) {
-        [adjustConfig setEventIdDeduplicationMaxCapacity:
-         eventIdDeduplicationMaxCapacityResult.value.intValue];
-    }
-
-    return adjustConfig;
-}
-- (nullable NSString *)
-    stringConfigWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key
-{
-    ADJResult<NSString *> *_Nonnull stringResult =
-        [self stringWithJsParameters:jsParameters key:key];
-    if (stringResult.failNonNilInput != nil) {
-        [self.logger debugDev:@"Could not parse JS field for adjust config"
-                          key:@"field name"
-                  stringValue:key
-                   resultFail:stringResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-
-    return stringResult.value;
-}
-- (BOOL)trueConfigWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-                               key:(nonnull NSString *)key
-{
-    ADJResult<ADJBooleanWrapper *> *_Nonnull trueResult =
-        [self trueWithJsParameters:jsParameters key:key];
-    if (trueResult.failNonNilInput != nil) {
-        [self.logger debugDev:@"Could not parse boolean JS field for adjust config"
-                          key:@"boolean field name"
-                  stringValue:key
-                   resultFail:trueResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-
-    return trueResult.value != nil;
-}
-
-
-- (nonnull ADJAdjustEvent *)adjustEventWithJsParameters:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters
-{
-    return nil;
-}
 - (nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplinkWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
@@ -848,103 +748,7 @@
     }
 }
 
-
 #pragma mark - Adjust Internal methods
-- (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)
-    extractInternalConfigSubscriptionsWithJsParameters:
-        (nonnull NSDictionary<NSString *, id> *)jsParameters
-    instanceIdString:(nonnull NSString *)instanceIdString
-{
-    NSMutableDictionary<NSString *, id<ADJInternalCallback>> *_Nonnull subscriptionsMap =
-        [[NSMutableDictionary alloc] init];
-
-    ADJResult<NSString *> *_Nonnull attributionSubscriberIdResult =
-        [self functionIdWithJsParameters:jsParameters
-                                     key:ADJWBAdjustAttributionSubscriberCallbackConfigKey];
-    if (attributionSubscriberIdResult.failNonNilInput != nil) {
-         [self.logger
-          debugDev:
-              @"Could not parse JS field for adjust config attribution subscription callback id"
-          resultFail:attributionSubscriberIdResult.fail
-          issueType:ADJIssueNonNativeIntegration];
-    }
-    [self.logger debugDev:@"TORMV extractInternalConfigSubscriptionsWithJsParameters"
-                     key:@"attributionSubscriberIdResult.value != nil"
-             stringValue:[ADJUtilF boolFormat:attributionSubscriberIdResult.value != nil]];
-
-    if (attributionSubscriberIdResult.value != nil) {
-        [subscriptionsMap
-         setObject:[self.webViewCallback
-                    attributionSubscriberInternalCallbackWithId:
-                        attributionSubscriberIdResult.value
-                    instanceIdString:instanceIdString]
-         forKey:ADJInternalAttributionSubscriberV5000Key];
-    }
-
-    if (subscriptionsMap.count == 0) {
-        return nil;
-    }
-
-    return subscriptionsMap;
-}
-
-- (void)getAttributionAsyncWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-                           instanceIdString:(id)instanceIdString
-{
-    ADJResult<NSString *> *_Nonnull attributionGetterIdResult =
-        [self functionIdWithJsParameters:jsParameters
-                                     key:ADJWBAdjustAttributionAsyncGetterCallbackKey];
-    if (attributionGetterIdResult.wasInputNil) {
-        [self.logger
-         debugDev:@"Could not find JS field for attribution getter callback id"
-         issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-    if (attributionGetterIdResult.fail != nil) {
-         [self.logger
-          debugDev:@"Could not parse JS field for attribution getter callback id"
-          resultFail:attributionGetterIdResult.fail
-          issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-
-    id<ADJInternalCallback> attributionGetterInternalCallback =
-        [self.webViewCallback
-         attributionGetterInternalCallbackWithId:attributionGetterIdResult.value
-         instanceIdString:instanceIdString];
-
-    [ADJAdjustInternal adjustAttributionWithClientId:instanceIdString
-                                    internalCallback:attributionGetterInternalCallback];
-}
-
-- (void)getDeviceIdsAsyncWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-                         instanceIdString:(id)instanceIdString
-{
-    ADJResult<NSString *> *_Nonnull deviceIdsGetterIdResult =
-        [self functionIdWithJsParameters:jsParameters
-                                     key:ADJWBAdjustDeviceIdsAsyncGetterCallbackKey];
-    if (deviceIdsGetterIdResult.wasInputNil) {
-        [self.logger
-         debugDev:@"Could not find JS field for device ids getter callback id"
-         issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-    if (deviceIdsGetterIdResult.fail != nil) {
-        [self.logger
-         debugDev:@"Could not parse JS field for device ids getter callback id"
-         resultFail:deviceIdsGetterIdResult.fail
-         issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-
-    id<ADJInternalCallback> deviceIdsGetterInternalCallback =
-        [self.webViewCallback
-         deviceIdsGetterInternalCallbackWithId:deviceIdsGetterIdResult.value
-         instanceIdString:instanceIdString];
-
-    [ADJAdjustInternal adjustDeviceIdsWithClientId:instanceIdString
-                                  internalCallback:deviceIdsGetterInternalCallback];
-}
 
 #pragma mark - Helper methods
 - (BOOL)isFieldValid:(NSObject *)field {
@@ -965,155 +769,6 @@
         return YES;
     }
     return NO;
-}
-
-- (nonnull ADJResult<NSString *> *)
-    functionIdWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key
-{
-    id _Nullable typeObject =
-        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
-
-    ADJResult<ADJNonEmptyString *> *_Nonnull typeResult =
-        [ADJNonEmptyString instanceFromObject:typeObject];
-
-    if (typeResult.wasInputNil) {
-        return [ADJResult nilInputWithMessage:@"Cannot find JS type"];
-    }
-    if (typeResult.failNonNilInput != nil) {
-        return [ADJResult failWithMessage:@"Invalid JS type"
-                                      key:@"js type fail"
-                                otherFail:typeResult.fail];
-    }
-
-    if (! [typeResult.value.stringValue isEqualToString:ADJWBJsFunctionType]) {
-        return [ADJResult failWithMessage:@"Expected function JS type"
-                                      key:ADJLogActualKey
-                              stringValue:typeResult.value.stringValue];
-    }
-
-    id _Nullable functionIdObject =
-        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Id", key]];
-
-    ADJResult<ADJNonEmptyString *> *_Nonnull functionIdResult =
-        [ADJNonEmptyString instanceFromObject:functionIdObject];
-    if (functionIdResult.fail != nil) {
-        return [ADJResult failWithMessage:@"Invalid JS string value for function id"
-                                      key:@"js string fail"
-                                otherFail:functionIdResult.fail];
-    }
-
-    return [ADJResult okWithValue:functionIdResult.value.stringValue];
-}
-
-- (nonnull ADJResult<NSString *> *)
-    stringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key
-{
-    id _Nullable typeObject =
-        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
-
-    ADJResult<ADJNonEmptyString *> *_Nonnull typeResult =
-        [ADJNonEmptyString instanceFromObject:typeObject];
-
-    if (typeResult.wasInputNil) {
-        return [ADJResult nilInputWithMessage:
-                @"Cannot convert nil type object to string"];
-    }
-
-    if (typeResult.fail != nil) {
-        return [ADJResult failWithMessage:@"Invalid JS type"
-                                      key:@"js type fail"
-                                otherFail:typeResult.fail];
-    }
-
-    if (! [typeResult.value.stringValue isEqualToString:ADJWBJsStringType]) {
-        return [ADJResult failWithMessage:@"Expected string JS type"
-                                      key:ADJLogActualKey
-                              stringValue:typeResult.value.stringValue];
-    }
-
-    id _Nullable stringObject = [jsParameters objectForKey:key];
-
-    ADJResult<ADJNonEmptyString *> *_Nonnull valueResult =
-        [ADJNonEmptyString instanceFromObject:stringObject];
-    if (valueResult.fail != nil) {
-        return [ADJResult failWithMessage:@"Invalid JS string value"
-                                      key:@"js string fail"
-                                otherFail:valueResult.fail];
-    }
-
-    return [ADJResult okWithValue:valueResult.value.stringValue];
-}
-
-- (nonnull ADJResult<NSNumber *> *)
-    intWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key
-{
-    id _Nullable typeObject =
-        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
-
-    ADJResult<ADJNonEmptyString *> *_Nonnull typeResult =
-        [ADJNonEmptyString instanceFromObject:typeObject];
-
-    if (typeResult.wasInputNil) {
-        return [ADJResult nilInputWithMessage:
-                @"Cannot convert nil type object to string"];
-    }
-
-    if (typeResult.fail != nil) {
-        return [ADJResult failWithMessage:@"Invalid JS type"
-                                      key:@"js type fail"
-                                otherFail:typeResult.fail];
-    }
-
-    if (! [typeResult.value.stringValue isEqualToString:ADJWBJsNumberType]) {
-        return [ADJResult failWithMessage:@"Expected number JS type"
-                                      key:ADJLogActualKey
-                              stringValue:typeResult.value.stringValue];
-    }
-
-    id _Nullable intObject = [jsParameters objectForKey:key];
-
-    ADJResult<ADJNonNegativeInt *> *_Nonnull valueResult =
-        [ADJNonNegativeInt instanceFromObject:intObject];
-    if (valueResult.fail != nil) {
-        return [ADJResult failWithMessage:@"Invalid JS int value"
-                                      key:@"js int fail"
-                                otherFail:valueResult.fail];
-    }
-
-    return [ADJResult okWithValue:@(valueResult.value.uIntegerValue)];
-}
-
-- (nonnull ADJResult<ADJBooleanWrapper *> *)
-    trueWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key
- {
-     id _Nullable valueObject = [jsParameters objectForKey:key];
-
-     if (valueObject == nil) {
-         return [ADJResult failWithMessage:@"Boolean field could not be found in parameters."
-                 " Was expecetd to be initialised to 'null'"];
-     }
-
-     if ([valueObject isKindOfClass:[NSNull class]]) {
-         return [ADJResult nilInputWithMessage:@"Cannot use NSNull field as true"];
-     }
-
-     ADJResult<ADJBooleanWrapper *> *_Nonnull valueResult =
-        [ADJBooleanWrapper instanceFromObject:valueObject];
-     if (valueResult.failNonNilInput != nil) {
-         return [ADJResult failWithMessage:@"Invalid JS boolean value"
-                                       key:@"js boolean fail"
-                                 otherFail:valueResult.fail];
-     }
-
-     if (! valueResult.value.boolValue) {
-         return [ADJResult failWithMessage:@"JS boolean field was not expected to be false"];
-     }
-
-     return valueResult;
 }
 
 @end

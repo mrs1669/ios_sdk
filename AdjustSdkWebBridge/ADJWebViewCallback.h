@@ -35,6 +35,5 @@
     instanceIdString:(nonnull NSString *)instanceIdString;
 
 @property (nonnull, readonly, strong, nonatomic) WKWebView *webView;
-@property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
 
 @end
