@@ -12,6 +12,7 @@
 
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustPushToken.h"
 
 #import "ADJResult.h"
@@ -45,7 +46,10 @@
 - (nonnull ADJAdjustEvent *)adjustEventWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
 
-- (nonnull ADJAdjustPushToken *)adjustPushTokenStringWithJsParameters:
+- (nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplinkWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters;
+
+- (nonnull ADJAdjustPushToken *)adjustPushTokenWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
 
 + (nullable ADJResultFail *)

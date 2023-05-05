@@ -179,12 +179,12 @@ AdjustInstance.prototype.trackEvent = function(adjustEvent) {
     this._postMessage("trackEvent", adjustEvent); };
 
 
-AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
+AdjustInstance.prototype.trackLaunchedDeeplink = function(urlString) {
     this._postMessage("trackLaunchedDeeplink",
-                      {_url: url, _urlType: typeof url}); }
+                      {_urlString: urlString, _urlStringType: typeof urlString}); }
 
-AdjustInstance.prototype.trackPushTokenString = function(pushTokenString) {
-    this._postMessage("trackPushTokenString", {
+AdjustInstance.prototype.trackPushToken = function(pushTokenString) {
+    this._postMessage("trackPushToken", {
         _pushTokenString: pushTokenString,
         _pushTokenStringType: typeof pushTokenString}); }
 

@@ -337,10 +337,10 @@
         [adjustInstance trackEvent:[self.sdkApiHelper adjustEventWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
         [adjustInstance trackLaunchedDeeplink:
-         [self adjustLaunchedDeeplinkWithJsParameters:jsParameters]];
-    } else if ([ADJWBTrackPushTokenStringMethodName isEqualToString:methodName]) {
+         [self.sdkApiHelper adjustLaunchedDeeplinkWithJsParameters:jsParameters]];
+    } else if ([ADJWBTrackPushTokenMethodName isEqualToString:methodName]) {
         [adjustInstance trackPushToken:
-         [self.sdkApiHelper adjustPushTokenStringWithJsParameters:jsParameters]];
+         [self.sdkApiHelper adjustPushTokenWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackThirdPartySharingMethodName isEqualToString:methodName]) {
         [adjustInstance trackThirdPartySharing:
          [self adjustThirdPartySharingWithJsParameters:jsParameters]];
@@ -375,16 +375,6 @@
 }
 
 
-- (nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplinkWithJsParameters:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters
-{
-    return nil;
-}
-- (nonnull ADJAdjustPushToken *)adjustPushTokenWithJsParameters:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters
-{
-    return nil;
-}
 - (nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharingWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {

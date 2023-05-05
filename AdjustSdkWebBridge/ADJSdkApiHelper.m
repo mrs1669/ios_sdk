@@ -310,7 +310,21 @@
     return adjustEvent;
 }
 
-- (nonnull ADJAdjustPushToken *)adjustPushTokenStringWithJsParameters:
+- (nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplinkWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    ADJResult<NSString *> *_Nonnull urlStringResult =
+        [ADJSdkApiHelper stringWithJsParameters:jsParameters key:ADJWBUrlStringKey];
+    if (urlStringResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Could not parse lauched deeplink url string field"
+                   resultFail:urlStringResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+
+    return [[ADJAdjustLaunchedDeeplink alloc] initWithString:urlStringResult.value];
+}
+
+- (nonnull ADJAdjustPushToken *)adjustPushTokenWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
     ADJResult<NSString *> *_Nonnull pushTokenStringResult =
