@@ -29,7 +29,7 @@ var Adjust = {
     },
 
     // TODO inject undefined instanceId and handle that on the native side
-    _postMessage(methodName, instanceId = "", parameters = "{}", errSubscriber) {
+    _postMessage(methodName, instanceId = "", parameters = {}, errSubscriber) {
         if (! this._adjustMessageHandler) {
             function canSend(okCheck, errReason) {
                 if (! okCheck) { if (errSubscriber) {
@@ -56,7 +56,7 @@ var Adjust = {
         this._adjustMessageHandler.postMessage({
             methodName: methodName,
             instanceId: instanceId,
-            parameters: parameters
+            parameters: JSON.stringify(parameters)
         });
     },
 
@@ -98,8 +98,7 @@ function(deleteAfter, errMessage, callbackId, methodName, callbackParameter) {
     }
 
     if (! callbackFunction) {
-        this._postMessage("jsFail",
-                          JSON.stringify({
+        this._postMessage("jsFail", {
             _message: errMessage,
             _callbackId: callbackId,
             _callbackIdType: typeof callbackId,
@@ -107,8 +106,7 @@ function(deleteAfter, errMessage, callbackId, methodName, callbackParameter) {
             _methodNameType: typeof methodName,
             _callbackParameter: callbackParameter,
             _callbackParameterType: typeof callbackParameter,
-            _callbackMapKeys: Array.from(this._callbackMap.keys())
-        }));
+            _callbackMapKeys: Array.from(this._callbackMap.keys())});
         return;
     }
 
@@ -135,7 +133,7 @@ AdjustInstance.prototype.initSdk = function(adjustConfig) {
     }
      */
 
-    this._postMessage("initSdk", JSON.stringify(adjustConfig)); };
+    this._postMessage("initSdk", adjustConfig); };
 
 AdjustInstance.prototype.inactivateSdk = function() {
     this._postMessage("inactivateSdk"); }
@@ -157,57 +155,55 @@ AdjustInstance.prototype.switchBackToOnlineMode = function() {
 
 AdjustInstance.prototype.getAdjustDeviceIdsAsync = function(adjustDeviceIdsCallback) {
     const callbackIdWithRandomPrefix =
-        this._callbackIdWithRandomPrefix('getAdjustDeviceIdsAsync');
+        this._callbackIdWithRandomPrefix("getAdjustDeviceIdsAsync");
 
     this._callbackMap.set(callbackIdWithRandomPrefix, adjustDeviceIdsCallback);
 
-    this._postMessage("getAdjustDeviceIdsAsync", JSON.stringify({
+    this._postMessage("getAdjustDeviceIdsAsync", {
         _adjustDeviceIdsAsyncGetterCallbackId: callbackIdWithRandomPrefix,
-        _adjustDeviceIdsAsyncGetterCallbackType: typeof adjustDeviceIdsCallback}));
+        _adjustDeviceIdsAsyncGetterCallbackType: typeof adjustDeviceIdsCallback});
 }
 
 AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionCallback) {
     const callbackIdWithRandomPrefix =
-        this._callbackIdWithRandomPrefix('getAdjustAttributionAsync');
+        this._callbackIdWithRandomPrefix("getAdjustAttributionAsync");
 
     this._callbackMap.set(callbackIdWithRandomPrefix, adjustAttributionCallback);
 
-    this._postMessage("getAdjustAttributionAsync", JSON.stringify({
+    this._postMessage("getAdjustAttributionAsync", {
         _adjustAttributionAsyncGetterCallbackId: callbackIdWithRandomPrefix,
-        _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback}));
+        _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback});
 }
 
 AdjustInstance.prototype.trackEvent = function(adjustEvent) {
-    this._postMessage("trackEvent", JSON.stringify(adjustEvent)); };
+    this._postMessage("trackEvent", adjustEvent); };
 
 
 AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
     this._postMessage("trackLaunchedDeeplink",
-                      JSON.stringify({_url: url, _urlType: typeof url})); }
+                      {_url: url, _urlType: typeof url}); }
 
 AdjustInstance.prototype.trackPushToken = function(pushToken) {
     this._postMessage("trackPushToken",
-                      JSON.stringify({_pushToken: pushToken, _pushTokenType: typeof pushToken})); }
+                      {_pushToken: pushToken, _pushTokenType: typeof pushToken}); }
 
 AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
-    this._postMessage("addGlobalCallbackParameter",
-                      JSON.stringify({
+    this._postMessage("addGlobalCallbackParameter", {
         _key: key, _keyType: typeof key,
-        _value: value, _valueType: typeof value})); }
+        _value: value, _valueType: typeof value}); }
 AdjustInstance.prototype.removeGlobalCallbackParameter = function(key) {
-    this._postMessage("removeGlobalCallbackParameter", JSON.stringify({
-        _key: key, _keyType: typeof key})); }
+    this._postMessage("removeGlobalCallbackParameter", {
+        _key: key, _keyType: typeof key}); }
 AdjustInstance.prototype.clearGlobalCallbackParameters = function() {
     this._postMessage("clearGlobalCallbackParameters"); }
 
 AdjustInstance.prototype.addGlobalPartnerParameter = function(key, value) {
-    this._postMessage("addGlobalPartnerParameter",
-                      JSON.stringify({
+    this._postMessage("addGlobalPartnerParameter", {
         _key: key, _keyType: typeof key,
-        _value: value, _valueType: typeof value})); }
+        _value: value, _valueType: typeof value}); }
 AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
-    this._postMessage("removeGlobalPartnerParameter", JSON.stringify({
-        _key: key, _keyType: typeof key})); }
+    this._postMessage("removeGlobalPartnerParameter", {
+        _key: key, _keyType: typeof key}); }
 AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
     this._postMessage("clearGlobalPartnerParameters"); }
 
@@ -217,7 +213,7 @@ AdjustInstance.prototype._callbackIdWithRandomPrefix = function(suffix) {
     // taken from https://stackoverflow.com/a/8084248
     //  not ideal for "true" randomness, but for the purpose it should be ok
     const randomString = (Math.random() + 1).toString(36).substring(7);
-    return suffix + '_' + randomString;
+    return suffix + "_" + randomString;
 }
 
 function AdjustConfig(appToken, environment) {
