@@ -68,7 +68,7 @@
 
     BOOL isSandboxEnvironment = [environment.stringValue isEqualToString:ADJEnvironmentSandbox];
     BOOL isProductionEnvironment =
-    [environment.stringValue isEqualToString:ADJEnvironmentProduction];
+        [environment.stringValue isEqualToString:ADJEnvironmentProduction];
 
     if (! isSandboxEnvironment && ! isProductionEnvironment) {
         [logger errorClient:@"Cannot create config with unexpected environment value"
@@ -79,12 +79,12 @@
     }
 
     BOOL doNotLogAny =
-    adjustConfig.doNotLogAnyNumberBool != nil
-    && adjustConfig.doNotLogAnyNumberBool.boolValue;
+        adjustConfig.doNotLogAnyNumberBool != nil
+        && adjustConfig.doNotLogAnyNumberBool.boolValue;
 
     BOOL doLogAll =
-    adjustConfig.doLogAllNumberBool != nil
-    && adjustConfig.doLogAllNumberBool.boolValue;
+        adjustConfig.doLogAllNumberBool != nil
+        && adjustConfig.doLogAllNumberBool.boolValue;
 
     ADJNonEmptyString *_Nullable urlStrategyDomain =
     [ADJNonEmptyString instanceFromOptionalString:adjustConfig.urlStrategyDomain
@@ -145,26 +145,17 @@
                                                                       publicKeyHash:customEndpointPublicKeyHash];
     }
 
-    ADJNonEmptyString *_Nullable externalDeviceId = nil;
-    if (adjustConfig.externalDeviceId != nil) {
-        externalDeviceId = [[ADJNonEmptyString alloc]
-                            initWithConstStringValue:adjustConfig.externalDeviceId];
-    } else {
-        [logger noticeClient:@"Cannot set external device id"
-         " without a valid value assigned"];
-    }
-
     BOOL doNotOpenDeferredDeeplink =
-    adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
-    && adjustConfig.doNotOpenDeferredDeeplinkNumberBool.boolValue;
+        adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
+        && adjustConfig.doNotOpenDeferredDeeplinkNumberBool.boolValue;
 
     BOOL doNotReadAsaAttribution =
-    adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool != nil
-    && adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool.boolValue;
+        adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool != nil
+        && adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool.boolValue;
 
     BOOL canSendInBackground =
-    adjustConfig.canSendInBackgroundNumberBool != nil
-    && adjustConfig.canSendInBackgroundNumberBool.boolValue;
+        adjustConfig.canSendInBackgroundNumberBool != nil
+        && adjustConfig.canSendInBackgroundNumberBool.boolValue;
 
     ADJNonNegativeInt *_Nullable eventIdDeduplicationMaxCapacity =
     [ADJNonNegativeInt instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt
