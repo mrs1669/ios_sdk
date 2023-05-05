@@ -31,7 +31,7 @@ NSString *const ADJWBAdjustDeviceIdsAsyncGetterCallbackKey =
 
 NSString *const ADJWBTrackEventMethodName = @"trackEvent";
 NSString *const ADJWBTrackLaunchedDeeplinkMethodName = @"trackLaunchedDeeplink";
-NSString *const ADJWBTrackPushTokenMethodName = @"trackPushToken";
+NSString *const ADJWBTrackPushTokenStringMethodName = @"trackPushTokenString";
 NSString *const ADJWBTrackThirdPartySharingMethodName = @"trackThirdPartySharing";
 NSString *const ADJWBTrackAdRevenueMethodName = @"trackAdRevenue";
 
@@ -77,6 +77,7 @@ NSString *const ADJWBCallbackParametersEventKey = @"_callbackParameters";
 NSString *const ADJWBPartnerParametersEventKey = @"_partnerParameters";
 NSString *const ADJWBDeduplicationIdEventKey = @"_deduplicationId";
 
+NSString *const ADJWBPushTokenStringKey = @"_pushTokenString";
 
 NSString *const ADJWBObjectNameKey = @"_objectName";
 

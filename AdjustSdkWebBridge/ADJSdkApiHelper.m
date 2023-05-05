@@ -310,6 +310,20 @@
     return adjustEvent;
 }
 
+- (nonnull ADJAdjustPushToken *)adjustPushTokenStringWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    ADJResult<NSString *> *_Nonnull pushTokenStringResult =
+        [ADJSdkApiHelper stringWithJsParameters:jsParameters key:ADJWBPushTokenStringKey];
+    if (pushTokenStringResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Could not parse push token string field"
+                   resultFail:pushTokenStringResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+
+    return [[ADJAdjustPushToken alloc] initWithStringPushToken:pushTokenStringResult.value];
+}
+
 + (nullable ADJResultFail *)
     objectMatchesWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     expectedName:(nonnull NSString *)expectedName

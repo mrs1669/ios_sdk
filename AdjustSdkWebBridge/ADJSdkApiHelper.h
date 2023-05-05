@@ -12,6 +12,7 @@
 
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustEvent.h"
+#import "ADJAdjustPushToken.h"
 
 #import "ADJResult.h"
 #import "ADJBooleanWrapper.h"
@@ -42,6 +43,9 @@
     instanceIdString:(nonnull NSString *)instanceIdString;
 
 - (nonnull ADJAdjustEvent *)adjustEventWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters;
+
+- (nonnull ADJAdjustPushToken *)adjustPushTokenStringWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
 
 + (nullable ADJResultFail *)

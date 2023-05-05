@@ -338,8 +338,9 @@
     } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
         [adjustInstance trackLaunchedDeeplink:
          [self adjustLaunchedDeeplinkWithJsParameters:jsParameters]];
-    } else if ([ADJWBTrackPushTokenMethodName isEqualToString:methodName]) {
-        [adjustInstance trackPushToken:[self adjustPushTokenWithJsParameters:jsParameters]];
+    } else if ([ADJWBTrackPushTokenStringMethodName isEqualToString:methodName]) {
+        [adjustInstance trackPushToken:
+         [self.sdkApiHelper adjustPushTokenStringWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackThirdPartySharingMethodName isEqualToString:methodName]) {
         [adjustInstance trackThirdPartySharing:
          [self adjustThirdPartySharingWithJsParameters:jsParameters]];

@@ -31,7 +31,7 @@ FOUNDATION_EXPORT NSString *const ADJWBAdjustDeviceIdsAsyncGetterCallbackKey;
 
 FOUNDATION_EXPORT NSString *const ADJWBTrackEventMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBTrackLaunchedDeeplinkMethodName;
-FOUNDATION_EXPORT NSString *const ADJWBTrackPushTokenMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBTrackPushTokenStringMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBTrackThirdPartySharingMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBTrackAdRevenueMethodName;
 
@@ -74,6 +74,7 @@ FOUNDATION_EXPORT NSString *const ADJWBCallbackParametersEventKey;
 FOUNDATION_EXPORT NSString *const ADJWBPartnerParametersEventKey;
 FOUNDATION_EXPORT NSString *const ADJWBDeduplicationIdEventKey;
 
+FOUNDATION_EXPORT NSString *const ADJWBPushTokenStringKey;
 
 FOUNDATION_EXPORT NSString *const ADJWBObjectNameKey;
 

@@ -61,7 +61,7 @@ var Adjust = {
     },
 
     getSdkVersion: function() {
-        Adjust.postMessage("getSdkVersion");
+        //Adjust.postMessage("getSdkVersion"); TODO:
     },
 
     teardown: function() {
@@ -183,9 +183,10 @@ AdjustInstance.prototype.trackLaunchedDeeplink = function(url) {
     this._postMessage("trackLaunchedDeeplink",
                       {_url: url, _urlType: typeof url}); }
 
-AdjustInstance.prototype.trackPushToken = function(pushToken) {
-    this._postMessage("trackPushToken",
-                      {_pushToken: pushToken, _pushTokenType: typeof pushToken}); }
+AdjustInstance.prototype.trackPushTokenString = function(pushTokenString) {
+    this._postMessage("trackPushTokenString", {
+        _pushTokenString: pushTokenString,
+        _pushTokenStringType: typeof pushTokenString}); }
 
 AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
     this._postMessage("addGlobalCallbackParameter", {
