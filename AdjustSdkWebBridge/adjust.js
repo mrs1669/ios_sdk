@@ -217,6 +217,7 @@ AdjustInstance.prototype._callbackIdWithRandomPrefix = function(suffix) {
 }
 
 function AdjustConfig(appToken, environment) {
+    this._objectName = "AdjustConfig";
     this._appToken = appToken;
     this._appTokenType = typeof appToken;
 
@@ -297,6 +298,7 @@ AdjustConfig.prototype.setAdjustLogSubscriber = function(adjustLogSubscriber) {
 };
 
 function AdjustEvent(eventToken) {
+    this._objectName = "AdjustEvent";
     this._eventToken = eventToken;
     this._revenueAmountDouble = null;
     this._currency = null;

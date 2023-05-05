@@ -45,12 +45,12 @@
     NSString *_Nullable appToken =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBAppTokenConfigKey
-                                      from:ADJWBAdjustConfigSource];
+                                      from:ADJWBAdjustConfigName];
 
     NSString *_Nullable environment =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBEnvironmentConfigKey
-                                      from:ADJWBAdjustConfigSource];
+                                      from:ADJWBAdjustConfigName];
 
     ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc]
                                               initWithAppToken:appToken
@@ -59,21 +59,21 @@
     NSString *_Nullable defaultTracker =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBDefaultTrackerConfigKey
-                                      from:ADJWBAdjustConfigSource];
+                                      from:ADJWBAdjustConfigName];
     if (defaultTracker != nil) {
         [adjustConfig setDefaultTracker:defaultTracker];
     }
 
     if ([self trueLoggedWithJsParameters:jsParameters
                                      key:ADJWBDoLogAllConfigKey
-                                    from:ADJWBAdjustConfigSource])
+                                    from:ADJWBAdjustConfigName])
     {
         [adjustConfig doLogAll];
     }
 
     if ([self trueLoggedWithJsParameters:jsParameters
                                      key:ADJWBDoNotLogAnyConfigKey
-                                    from:ADJWBAdjustConfigSource])
+                                    from:ADJWBAdjustConfigName])
     {
         [adjustConfig doNotLogAny];
     }
@@ -81,7 +81,7 @@
     NSString *_Nullable urlStrategy =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBUrlStrategyConfigKey
-                                      from:ADJWBAdjustConfigSource];
+                                      from:ADJWBAdjustConfigName];
     if (urlStrategy != nil) {
         [adjustConfig setDefaultTracker:urlStrategy];
     }
@@ -89,11 +89,11 @@
     NSString *_Nullable customEndpoint =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBCustomEndpointUrlConfigKey
-                                      from:ADJWBAdjustConfigSource];
+                                      from:ADJWBAdjustConfigName];
     NSString *_Nullable customEndpointPublicKeyHash =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBCustomEndpointPublicKeyHashConfigKey
-                                      from:ADJWBAdjustConfigSource];
+                                      from:ADJWBAdjustConfigName];
     if (customEndpoint != nil || customEndpointPublicKeyHash != nil) {
         [adjustConfig setCustomEndpointWithUrl:customEndpoint
                       optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
@@ -101,21 +101,21 @@
 
     if ([self trueLoggedWithJsParameters:jsParameters
                                      key:ADJWBDoNotOpenDeferredDeeplinkConfigKey
-                                    from:ADJWBAdjustConfigSource])
+                                    from:ADJWBAdjustConfigName])
     {
         [adjustConfig preventOpenDeferredDeeplink];
     }
 
     if ([self trueLoggedWithJsParameters:jsParameters
                                      key:ADJWBDoNotReadAppleSearchAdsAttributionConfigKey
-                                    from:ADJWBAdjustConfigSource])
+                                    from:ADJWBAdjustConfigName])
     {
         [adjustConfig doNotReadAppleSearchAdsAttribution];
     }
 
     if ([self trueLoggedWithJsParameters:jsParameters
                                      key:ADJWBCanSendInBackgroundConfigKey
-                                    from:ADJWBAdjustConfigSource])
+                                    from:ADJWBAdjustConfigName])
     {
         [adjustConfig allowSendingFromBackground];
     }
@@ -235,14 +235,14 @@
 {
     NSString *_Nullable eventToken = [self stringLoggedWithJsParameters:jsParameters
                                                                     key:ADJWBEventTokenEventKey
-                                                                   from:ADJWBAdjustEventSource];
+                                                                   from:ADJWBAdjustEventName];
 
     __block ADJAdjustEvent *_Nonnull adjustEvent =
         [[ADJAdjustEvent alloc] initWithEventToken:eventToken];
 
     NSString *_Nullable currency = [self stringLoggedWithJsParameters:jsParameters
                                                                   key:ADJWBCurrencyEventKey
-                                                                 from:ADJWBAdjustEventSource];
+                                                                 from:ADJWBAdjustEventName];
 
     ADJResult<NSNumber *> *_Nonnull revenueAmountDoubleResult =
         [ADJSdkApiHelper numberWithJsParameters:jsParameters
@@ -253,7 +253,7 @@
             [logBuilder withKey:@"field name"
                     stringValue:ADJWBRevenueAmountDoubleEventKey];
             [logBuilder withKey:ADJLogFromKey
-                    stringValue:ADJWBAdjustEventSource];
+                    stringValue:ADJWBAdjustEventName];
             [logBuilder withFail:revenueAmountDoubleResult.fail
                            issue:ADJIssueNonNativeIntegration];
         }];
@@ -266,7 +266,7 @@
     NSString *_Nullable deduplicationId =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBDeduplicationIdEventKey
-                                      from:ADJWBAdjustEventSource];
+                                      from:ADJWBAdjustEventName];
     if (deduplicationId != nil) {
         [adjustEvent setDeduplicationId:deduplicationId];
     }
@@ -310,6 +310,27 @@
     return adjustEvent;
 }
 
++ (nullable ADJResultFail *)
+    objectMatchesWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    expectedName:(nonnull NSString *)expectedName
+{
+    id _Nullable objectNameObject = [jsParameters objectForKey:ADJWBObjectNameKey];
+    ADJResult<ADJNonEmptyString *> *_Nonnull objectNameResult =
+        [ADJNonEmptyString instanceFromObject:objectNameObject];
+    if (objectNameResult.fail != nil) {
+        return objectNameResult.fail;
+    }
+
+    if (! [expectedName isEqualToString:objectNameResult.value.stringValue]) {
+        ADJResultFailBuilder *_Nonnull failBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:@"Object name does not match expected"];
+        [failBuilder withKey:ADJLogActualKey stringValue:objectNameResult.value.stringValue];
+        [failBuilder withKey:ADJLogExpectedKey stringValue:expectedName];
+        return [failBuilder build];
+    }
+
+    return nil;
+}
 
 + (nonnull ADJResult<NSString *> *)
     stringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters

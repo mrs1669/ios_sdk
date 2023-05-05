@@ -50,7 +50,7 @@ NSString *const ADJWBJsBooleanType = @"boolean";
 NSString *const ADJWBJsUndefinedType = @"undefined";
 NSString *const ADJWBJsFunctionType = @"function";
 
-NSString *const ADJWBAdjustConfigSource = @"adjust config";
+NSString *const ADJWBAdjustConfigName = @"AdjustConfig";
 NSString *const ADJWBAppTokenConfigKey = @"_appToken";
 NSString *const ADJWBEnvironmentConfigKey = @"_environment";
 NSString *const ADJWBDefaultTrackerConfigKey = @"_defaultTracker";
@@ -69,7 +69,7 @@ NSString *const ADJWBAdjustAttributionSubscriberCallbackConfigKey =
     @"_adjustAttributionSubscriberCallback";
 NSString *const ADJWBAdjustLogSubscriberCallbackConfigKey = @"_adjustLogSubscriberCallback";
 
-NSString *const ADJWBAdjustEventSource = @"adjust event";
+NSString *const ADJWBAdjustEventName = @"AdjustEvent";
 NSString *const ADJWBEventTokenEventKey = @"_eventToken";
 NSString *const ADJWBRevenueAmountDoubleEventKey = @"_revenueAmountDouble";
 NSString *const ADJWBCurrencyEventKey = @"_currency";
@@ -77,6 +77,8 @@ NSString *const ADJWBCallbackParametersEventKey = @"_callbackParameters";
 NSString *const ADJWBPartnerParametersEventKey = @"_partnerParameters";
 NSString *const ADJWBDeduplicationIdEventKey = @"_deduplicationId";
 
+
+NSString *const ADJWBObjectNameKey = @"_objectName";
 
 NSString *const ADJWBKvKeyKey = @"_key";
 NSString *const ADJWBKvValueKey = @"_value";

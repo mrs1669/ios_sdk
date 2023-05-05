@@ -260,6 +260,16 @@
         parametersJsonDictionaryResult.value;
 
     if ([ADJWBInitSdkMethodName isEqualToString:methodName]) {
+        ADJResultFail *_Nullable objectMatchFail =
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustConfigName];
+        if (objectMatchFail != nil) {
+            [self.logger debugDev:@"Cannot init sdk with non Adjust Config parameter"
+                       resultFail:objectMatchFail
+                        issueType:ADJIssueNonNativeIntegration];
+            return;
+        }
+
         ADJAdjustConfig *_Nonnull adjustConfig =
             [self.sdkApiHelper adjustConfigWithParametersJsonDictionary:jsParameters];
 
@@ -314,6 +324,16 @@
     // TODO add activateMeasurementConsent and inactivateMeasurementConsent
     // TODO add deviceIdsWithCallback and adjustAttributionWithCallback
     } else if ([ADJWBTrackEventMethodName isEqualToString:methodName]) {
+        ADJResultFail *_Nullable objectMatchFail =
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustEventName];
+        if (objectMatchFail != nil) {
+            [self.logger debugDev:@"Cannot track event with non Adjust Event parameter"
+                       resultFail:objectMatchFail
+                        issueType:ADJIssueNonNativeIntegration];
+            return;
+        }
+
         [adjustInstance trackEvent:[self.sdkApiHelper adjustEventWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
         [adjustInstance trackLaunchedDeeplink:

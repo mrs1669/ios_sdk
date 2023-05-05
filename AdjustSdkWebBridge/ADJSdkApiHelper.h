@@ -44,6 +44,9 @@
 - (nonnull ADJAdjustEvent *)adjustEventWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
 
++ (nullable ADJResultFail *)
+    objectMatchesWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    expectedName:(nonnull NSString *)expectedName;
 
 + (nonnull ADJResult<NSString *> *)
     stringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
