@@ -13,7 +13,8 @@
 #import "ADJAdjustLaunchedDeeplinkCallback.h"
 #import "ADJAdjustCallback.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, ADJAdjustAttributionSubscriber, ADJAdjustLaunchedDeeplinkCallback>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,
+    ADJAdjustAttributionSubscriber, ADJAdjustLaunchedDeeplinkCallback>
 
 @property (strong, nonatomic) UIWindow *window;
 
