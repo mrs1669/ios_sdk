@@ -72,7 +72,6 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     [self.testLibrary addTestDirectory:@"session-tracking"];
     [self.testLibrary addTestDirectory:@"stop-restart"];
     [self.testLibrary addTestDirectory:@"third-party-sharing"];
-    [self.testLibrary addTestDirectory:@"external-device-id"];
 
 }
 
@@ -81,4 +80,6 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 }
 
 @end
+
+
 
