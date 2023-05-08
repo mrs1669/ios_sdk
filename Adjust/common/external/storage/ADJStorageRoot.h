@@ -31,10 +31,9 @@
 
 @interface ADJStorageRoot : NSObject<ADJTeardownFinalizer>
 // instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-    instanceId:(nonnull ADJInstanceIdData *)instanceId
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+                                   instanceId:(nonnull ADJInstanceIdData *)instanceId
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
@@ -63,4 +62,5 @@ NS_DESIGNATED_INITIALIZER;
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end
+
 

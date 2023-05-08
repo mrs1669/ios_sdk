@@ -14,8 +14,7 @@
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJKeychainStorage *keychainStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJSQLiteController *sqliteController;
-
- @property (nonnull, readonly, strong, nonatomic)ADJAttributionStateStorage *attributionStateStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJAttributionStateStorage *attributionStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionStateStorage *asaAttributionStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *clientActionStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJDeviceIdsStorage *deviceIdsStorage;
@@ -41,17 +40,15 @@
 @implementation ADJStorageRoot
 #pragma mark Instantiation
 #define buildAndInjectStorage(varName, classType)       \
-_ ## varName = [[classType alloc]                   \
-initWithLoggerFactory:loggerFactory             \
-storageExecutor:self.storageExecutor            \
-sqliteController:self.sqliteController];        \
-[self.sqliteController addSqlStorage:self.varName]  \
+    _ ## varName = [[classType alloc]                   \
+        initWithLoggerFactory:loggerFactory             \
+        storageExecutor:self.storageExecutor            \
+        sqliteController:self.sqliteController];        \
+    [self.sqliteController addSqlStorage:self.varName]  \
 
-- (nonnull instancetype)
-initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-instanceId:(nonnull ADJInstanceIdData *)instanceId
-{
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+                                   instanceId:(nonnull ADJInstanceIdData *)instanceId {
     self = [super init];
 
     _storageExecutor =
@@ -120,4 +117,5 @@ instanceId:(nonnull ADJInstanceIdData *)instanceId
 }
 
 @end
+
 

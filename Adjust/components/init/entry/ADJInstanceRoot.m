@@ -41,9 +41,9 @@
                                   entryRootBag:(nonnull id<ADJEntryRootBag>)entryRootBag
 {
     ADJInstanceRoot *_Nonnull instanceRoot =
-        [[ADJInstanceRoot alloc] initWithConfigData:configData
-                                         instanceId:instanceId
-                                       entryRootBag:entryRootBag];
+    [[ADJInstanceRoot alloc] initWithConfigData:configData
+                                     instanceId:instanceId
+                                   entryRootBag:entryRootBag];
 
     [instanceRoot createSdkInitRootInClientContext];
 
@@ -139,7 +139,7 @@
 #pragma mark - ADJAdjustInstance
 - (void)initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig {
     [self ccExecuteWithPreAndSelfBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot,
-                                          ADJInstanceRoot *_Nonnull instanceRoot)
+                                         ADJInstanceRoot *_Nonnull instanceRoot)
      {
         ADJClientConfigData *_Nullable clientConfig = [ADJClientConfigData
                                                        instanceFromClientWithAdjustConfig:adjustConfig
@@ -211,11 +211,11 @@
     } clientSource:@"switchToOfflineMode"];
 }
 
- - (void)switchBackToOnlineMode {
-     [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
-         [preSdkInitRoot.offlineController ccPutSdkOnline];
-     } clientSource:@"switchBackToOnlineMode"];
- }
+- (void)switchBackToOnlineMode {
+    [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
+        [preSdkInitRoot.offlineController ccPutSdkOnline];
+    } clientSource:@"switchBackToOnlineMode"];
+}
 
 - (void)activateMeasurementConsent {
     [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
@@ -264,7 +264,7 @@
 }
 
 - (void)adjustLaunchedDeeplinkWithCallback:
-(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
+    (nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
 {
     [self ccWithAdjustCallback:adjustLaunchedDeeplinkCallback
                       preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
@@ -281,8 +281,8 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientEventData *_Nullable clientData =
-            [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
-                                                           logger:logger];
+        [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
+                                                       logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackEventWithClientData:clientData];
@@ -294,9 +294,9 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientLaunchedDeeplinkData *_Nullable clientData =
-            [ADJClientLaunchedDeeplinkData
-             instanceFromClientWithAdjustLaunchedDeeplink:adjustLaunchedDeeplink
-             logger:logger];
+        [ADJClientLaunchedDeeplinkData
+         instanceFromClientWithAdjustLaunchedDeeplink:adjustLaunchedDeeplink
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackLaunchedDeeplinkWithClientData:clientData];
@@ -308,9 +308,9 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientPushTokenData *_Nullable clientData =
-            [ADJClientPushTokenData
-             instanceFromClientWithAdjustPushToken:adjustPushToken
-             logger:logger];
+        [ADJClientPushTokenData
+         instanceFromClientWithAdjustPushToken:adjustPushToken
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackPushTokenWithClientData:clientData];
@@ -322,9 +322,9 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientThirdPartySharingData *_Nullable clientData =
-            [ADJClientThirdPartySharingData
-             instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
-             logger:logger];
+        [ADJClientThirdPartySharingData
+         instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackThirdPartySharingWithClientData:clientData];
@@ -336,9 +336,9 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientAdRevenueData *_Nullable clientData =
-            [ADJClientAdRevenueData
-             instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
-             logger:logger];
+        [ADJClientAdRevenueData
+         instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackAdRevenueWithClientData:clientData];
@@ -350,9 +350,9 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientBillingSubscriptionData *_Nullable clientData =
-            [ADJClientBillingSubscriptionData
-             instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
-             logger:logger];
+        [ADJClientBillingSubscriptionData
+         instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackBillingSubscriptionWithClientData:clientData];
@@ -364,34 +364,36 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientAddGlobalParameterData *_Nullable clientData =
-            [ADJClientAddGlobalParameterData
-             instanceFromClientWithAdjustConfigWithKeyToAdd:key
-             valueToAdd:value
-             logger:logger];
+        [ADJClientAddGlobalParameterData
+         instanceFromClientWithAdjustConfigWithKeyToAdd:key
+         valueToAdd:value
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccAddGlobalCallbackParameterWithClientData:clientData];
     } clientSource:@"addGlobalCallbackParameter"];
 }
+
 - (void)removeGlobalCallbackParameterByKey:(nonnull NSString *)key {
     [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientRemoveGlobalParameterData *_Nullable clientData =
-            [ADJClientRemoveGlobalParameterData
-             instanceFromClientWithAdjustConfigWithKeyToRemove:key
-             logger:logger];
+        [ADJClientRemoveGlobalParameterData
+         instanceFromClientWithAdjustConfigWithKeyToRemove:key
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccRemoveGlobalCallbackParameterWithClientData:clientData];
     } clientSource:@"removeGlobalCallbackParameter"];
 }
+
 - (void)clearAllGlobalCallbackParameters {
     [self ccExecuteWithClientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientClearGlobalParametersData *_Nonnull clientData =
-            [[ADJClientClearGlobalParametersData alloc] init];
+        [[ADJClientClearGlobalParametersData alloc] init];
 
         [clientActionsAPI ccClearGlobalCallbackParametersWithClientData:clientData];
     } clientSource:@"clearAllGlobalCallbackParameters"];
@@ -402,10 +404,10 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientAddGlobalParameterData *_Nullable clientData =
-            [ADJClientAddGlobalParameterData
-             instanceFromClientWithAdjustConfigWithKeyToAdd:key
-             valueToAdd:value
-             logger:logger];
+        [ADJClientAddGlobalParameterData
+         instanceFromClientWithAdjustConfigWithKeyToAdd:key
+         valueToAdd:value
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccAddGlobalPartnerParameterWithClientData:clientData];
@@ -417,9 +419,9 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientRemoveGlobalParameterData *_Nullable clientData =
-            [ADJClientRemoveGlobalParameterData
-             instanceFromClientWithAdjustConfigWithKeyToRemove:key
-             logger:logger];
+        [ADJClientRemoveGlobalParameterData
+         instanceFromClientWithAdjustConfigWithKeyToRemove:key
+         logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccRemoveGlobalPartnerParameterWithClientData:clientData];
@@ -431,30 +433,32 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientClearGlobalParametersData *_Nonnull clientData =
-            [[ADJClientClearGlobalParametersData alloc] init];
+        [[ADJClientClearGlobalParametersData alloc] init];
 
         [clientActionsAPI ccClearGlobalPartnerParametersWithClientData:clientData];
     } clientSource:@"clearAllGlobalPartnerParameters"];
 }
 
 #pragma mark Internal methods
+
 - (void)
-     ccExecuteWithPreBlock:
-         (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
-     source:(nonnull NSString *)source
- {
-     [self ccExecuteWithPreAndSelfBlock:
-      ^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot, ADJInstanceRoot *_Nonnull instanceRoot) {
-         preBlock(preSdkInitRoot);
-     } source:source];
+    ccExecuteWithPreBlock:
+    (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
+    source:(nonnull NSString *)source
+{
+    [self ccExecuteWithPreAndSelfBlock:
+     ^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot, ADJInstanceRoot *_Nonnull instanceRoot) {
+        preBlock(preSdkInitRoot);
+    } source:source];
 }
+
 - (void)
-     ccExecuteWithPreAndSelfBlock:
-     (void (^_Nonnull)
-      (ADJPreSdkInitRoot *_Nonnull preSdkInitRoot,
-       ADJInstanceRoot *_Nonnull instanceRoot))preAndSelfBlock
-     source:(nonnull NSString *)source
- {
+    ccExecuteWithPreAndSelfBlock:
+    (void (^_Nonnull)
+     (ADJPreSdkInitRoot *_Nonnull preSdkInitRoot,
+      ADJInstanceRoot *_Nonnull instanceRoot))preAndSelfBlock
+    source:(nonnull NSString *)source
+{
     __typeof(self) __weak weakSelf = self;
     [self.clientExecutor executeInSequenceWithBlock:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
@@ -481,21 +485,20 @@
     } source:clientSource];
 }
 
-- (void)
-    ccWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
-    preBlock:(void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
-    clientSource:(nonnull NSString *)clientSource
+- (void)ccWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
+                    preBlock:(void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
+                clientSource:(nonnull NSString *)clientSource
 {
     [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
         if (adjustCallback == nil) {
             [preSdkInitRoot.logger errorClient:@"Cannot use invalid callback"
-                                               from:clientSource];
+                                          from:clientSource];
             return;
         }
 
         NSString *_Nullable cannotPerformMessage =
-            [preSdkInitRoot.sdkActiveController
-             ccCanPerformActionOrElseMessageWithClientSource:clientSource];
+        [preSdkInitRoot.sdkActiveController
+         ccCanPerformActionOrElseMessageWithClientSource:clientSource];
 
         if (cannotPerformMessage != nil) {
             [preSdkInitRoot.clientCallbacksController
@@ -511,8 +514,8 @@
 
 - (void)
     ccExecuteWithClientActionsBlock:
-        (void (^_Nonnull)(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
-                          ADJLogger *_Nonnull logger))clientActionsBlock
+    (void (^_Nonnull)(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
+                      ADJLogger *_Nonnull logger))clientActionsBlock
     clientSource:(nonnull NSString *)clientSource
 {
     [self ccWhenActiveWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
@@ -526,3 +529,5 @@
 }
 
 @end
+
+

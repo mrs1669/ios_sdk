@@ -12,7 +12,6 @@
 #import "ADJUtilF.h"
 #import "ADJConsoleLogger.h"
 #import "ADJAdjustLogMessageData.h"
-
 #import "ADJClientLaunchedDeeplinkData.h"
 
 @interface ADJClientCallbacksController ()
@@ -37,11 +36,9 @@
     }];
 }
 
-- (void)
-ccAttributionWithCallback:
-(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
-clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
+- (void)ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
+             clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+          attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
 {
     ADJAttributionStateData *_Nonnull attributionStateData =
     [attributionStateStorage readOnlyStoredDataValue];
@@ -76,10 +73,9 @@ attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateSt
     }
 }
 
-- (void)
-ccLaunchedDeepLinkWithCallback:(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
-clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage
+- (void)ccLaunchedDeepLinkWithCallback:(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
+                  clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+          LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage
 {
     ADJLaunchedDeeplinkStateData *_Nonnull launchedDeeplinkStateData =
     [launchedDeeplinkStateStorage readOnlyStoredDataValue];
@@ -129,4 +125,5 @@ LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launched
 }
 
 @end
+
 

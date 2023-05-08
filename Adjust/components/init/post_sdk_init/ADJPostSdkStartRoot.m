@@ -17,35 +17,34 @@
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJBillingSubscriptionController *billingSubscriptionController;
+ ADJBillingSubscriptionController *billingSubscriptionController;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJLaunchedDeeplinkController *launchedDeeplinkController;
+ ADJLaunchedDeeplinkController *launchedDeeplinkController;
  @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
  @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJThirdPartySharingController *thirdPartySharingController;
+ ADJThirdPartySharingController *thirdPartySharingController;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJGlobalCallbackParametersController *globalCallbackParametersController;
+ ADJGlobalCallbackParametersController *globalCallbackParametersController;
  @property (nonnull, readonly, strong, nonatomic)
-     ADJGlobalPartnerParametersController *globalPartnerParametersController;
+ ADJGlobalPartnerParametersController *globalPartnerParametersController;
  */
 
 @interface ADJPostSdkStartRoot ()
 #pragma mark - Injected dependencies
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic)
-    NSDictionary<NSString *, id<ADJClientActionHandler>> *clientHandlerMapById;
+NSDictionary<NSString *, id<ADJClientActionHandler>> *clientHandlerMapById;
 @end
 
 @implementation ADJPostSdkStartRoot
 #pragma mark Instantiation
 
-- (nonnull instancetype)
-    initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
-    instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-    preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+- (nonnull instancetype)initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
+                                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+                               preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
+                               sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                             mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
 {
     self = [super init];
 
@@ -93,29 +92,29 @@
                                     mainQueueController:mainQueueController];
 
     _globalCallbackParametersController =
-        [[ADJGlobalCallbackParametersController alloc]
-         initWithLoggerFactory:loggerFactory
-         storage:storageRoot.globalCallbackParametersStorage];
+    [[ADJGlobalCallbackParametersController alloc]
+     initWithLoggerFactory:loggerFactory
+     storage:storageRoot.globalCallbackParametersStorage];
 
     _globalPartnerParametersController =
-        [[ADJGlobalPartnerParametersController alloc]
-         initWithLoggerFactory:loggerFactory
-         storage:storageRoot.globalPartnerParametersStorage];
+    [[ADJGlobalPartnerParametersController alloc]
+     initWithLoggerFactory:loggerFactory
+     storage:storageRoot.globalPartnerParametersStorage];
 
     _clientHandlerMapById =
-        [[NSDictionary alloc] initWithObjectsAndKeys:
-         _adRevenueController, ADJAdRevenueControllerClientActionHandlerId,
-         _billingSubscriptionController, ADJBillingSubscriptionControllerClientActionHandlerId,
-         _eventController, ADJEventControllerClientActionHandlerId,
-         _globalCallbackParametersController,
-            ADJGlobalCallbackParametersControllerClientActionHandlerId,
-         _globalPartnerParametersController,
-            ADJGlobalPartnerParametersControllerClientActionHandlerId,
-         _launchedDeeplinkController, ADJLaunchedDeeplinkClientActionHandlerId,
-         _pushTokenController, ADJPushTokenControllerClientActionHandlerId,
-         _thirdPartySharingController, ADJThirdPartySharingControllerClientActionHandlerId,
-         _measurementConsentController, ADJMeasurementConsentControllerClientActionHandlerId,
-         nil];
+    [[NSDictionary alloc] initWithObjectsAndKeys:
+     _adRevenueController, ADJAdRevenueControllerClientActionHandlerId,
+     _billingSubscriptionController, ADJBillingSubscriptionControllerClientActionHandlerId,
+     _eventController, ADJEventControllerClientActionHandlerId,
+     _globalCallbackParametersController,
+     ADJGlobalCallbackParametersControllerClientActionHandlerId,
+     _globalPartnerParametersController,
+     ADJGlobalPartnerParametersControllerClientActionHandlerId,
+     _launchedDeeplinkController, ADJLaunchedDeeplinkClientActionHandlerId,
+     _pushTokenController, ADJPushTokenControllerClientActionHandlerId,
+     _thirdPartySharingController, ADJThirdPartySharingControllerClientActionHandlerId,
+     _measurementConsentController, ADJMeasurementConsentControllerClientActionHandlerId,
+     nil];
 
     return self;
 }
@@ -164,45 +163,45 @@
 }
 
 - (void)ccAddGlobalCallbackParameterWithClientData:
-(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData {
-
+    (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalCallbackParameterActionData
+{
     [self.globalCallbackParametersController
      ccAddGlobalCallbackParameterWithClientData:clientAddGlobalCallbackParameterActionData];
 }
 
 - (void)ccRemoveGlobalCallbackParameterWithClientData:
-(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData {
-
+    (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalCallbackParameterActionData
+{
     [self.globalCallbackParametersController
      ccRemoveGlobalCallbackParameterWithClientData:
          clientRemoveGlobalCallbackParameterActionData];
 }
 
 - (void)ccClearGlobalCallbackParametersWithClientData:
-(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData {
-
+    (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalCallbackParametersActionData
+{
     [self.globalCallbackParametersController
      ccClearGlobalCallbackParameterWithClientData:
          clientClearGlobalCallbackParametersActionData];
 }
 
 - (void)ccAddGlobalPartnerParameterWithClientData:
-(nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData {
-
+    (nonnull ADJClientAddGlobalParameterData *)clientAddGlobalPartnerParameterActionData
+{
     [self.globalPartnerParametersController
      ccAddGlobalPartnerParameterWithClientData:clientAddGlobalPartnerParameterActionData];
 }
 
 - (void)ccRemoveGlobalPartnerParameterWithClientData:
-(nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData {
-
+    (nonnull ADJClientRemoveGlobalParameterData *)clientRemoveGlobalPartnerParameterActionData
+{
     [self.globalPartnerParametersController
      ccRemoveGlobalPartnerParameterWithClientData:clientRemoveGlobalPartnerParameterActionData];
 }
 
 - (void)ccClearGlobalPartnerParametersWithClientData:
-(nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData {
-
+    (nonnull ADJClientClearGlobalParametersData *)clientClearGlobalPartnerParametersActionData
+{
     [self.globalPartnerParametersController
      ccClearGlobalPartnerParameterWithClientData:clientClearGlobalPartnerParametersActionData];
 }
@@ -212,3 +211,4 @@
 }
 
 @end
+
