@@ -321,6 +321,72 @@
     return [[ADJAdjustPushToken alloc] initWithStringPushToken:pushTokenStringResult.value];
 }
 
+- (nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharingWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    ADJAdjustThirdPartySharing *_Nonnull adjustTPS = [[ADJAdjustThirdPartySharing alloc] init];
+
+    NSNumber *_Nullable enabledOrElseDisabledSharingNumberBool =
+        [self booleanLoggedWithJsParameters:jsParameters
+                                        key:ADJWBEnabledOrElseDisabledSharingTPSKey
+                                       from:ADJWBAdjustThirdPartySharingName];
+
+    if (enabledOrElseDisabledSharingNumberBool != nil) {
+        if (enabledOrElseDisabledSharingNumberBool.boolValue) {
+            [adjustTPS enableThirdPartySharing];
+        } else {
+            [adjustTPS disableThirdPartySharing];
+        }
+    }
+
+    return adjustTPS;
+}
+
+- (nullable NSArray *)tpsGranulaOptionsByNameArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    ADJOptionalFailsNL<ADJResult<NSArray *> *> *_Nonnull granularResultOptFails =
+        [ADJSdkApiHelper arrayWtihArrayObject:
+         [jsParameters objectForKey:ADJWBGranularOptionsByNameTPSKey]];
+    for (ADJResultFail *_Nonnull granularOptFail in granularResultOptFails.optionalFails) {
+        [self.logger debugDev:
+         @"Issue while parsing third party sharing granular options parameters"
+                   resultFail:granularOptFail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+    ADJResult<NSArray *> *_Nonnull granularResult = granularResultOptFails.value;
+    if (granularResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Could not use third party sharing granular options"
+                   resultFail:granularResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+
+    return granularResult.value;
+}
+
+- (nullable NSArray *)tpsPartnerSharingSettingsByNameArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    ADJOptionalFailsNL<ADJResult<NSArray *> *> *_Nonnull partnerSharingResultOptFails =
+        [ADJSdkApiHelper arrayWtihArrayObject:
+         [jsParameters objectForKey:ADJWBPartnerSharingSettingsByNameTPSKey]];
+    for (ADJResultFail *_Nonnull partnerSharingFail in partnerSharingResultOptFails.optionalFails)
+    {
+        [self.logger debugDev:
+         @"Issue while parsing third party sharing partner sharing settins parameters"
+                   resultFail:partnerSharingFail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+    ADJResult<NSArray *> *_Nonnull partnerSharingResult = partnerSharingResultOptFails.value;
+    if (partnerSharingResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Could not use third party sharing partner sharing settings"
+                   resultFail:partnerSharingResult.fail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+
+    return partnerSharingResult.value;
+}
+
 + (nullable ADJResultFail *)
     objectMatchesWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     expectedName:(nonnull NSString *)expectedName
@@ -341,6 +407,31 @@
     }
 
     return nil;
+}
+
++ (nullable ADJResultFail *)
+    elementTypeValidationWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    id _Nullable elementTypeObject =
+        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", ADJWBElementKey]];
+
+    ADJResult<ADJNonEmptyString *> *_Nonnull elementTypeResult =
+        [ADJNonEmptyString instanceFromObject:elementTypeObject];
+    if (elementTypeResult.fail != nil) {
+        return [[ADJResultFail alloc] initWithMessage:@"Invalid JS type for element field"
+                                                  key:@"js type fail"
+                                            otherFail:elementTypeResult.fail];
+    }
+
+    if ([elementTypeResult.value.stringValue isEqualToString:ADJWBJsStringType]
+        || [elementTypeResult.value.stringValue isEqualToString:ADJWBJsBooleanType])
+    {
+        return nil;
+    }
+
+    return [[ADJResultFail alloc] initWithMessage:@"Unexpected JS type for element"
+                                              key:ADJLogActualKey
+                                      stringValue:elementTypeResult.value.stringValue];
 }
 
 + (nonnull ADJResult<NSString *> *)
@@ -495,6 +586,61 @@
     }
 
     return [ADJResult okWithValue:functionIdResult.value.stringValue];
+}
+
++ (ADJOptionalFailsNL<ADJResult<NSArray *> *> *)arrayWtihArrayObject:(nullable id)arrayObject {
+    if (arrayObject == nil) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:nil
+                value:[ADJResult failWithMessage:@"Array unexpectedly not initialised"]];
+    }
+
+    if (! [arrayObject isKindOfClass:[NSArray class]]) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:nil
+                value:[ADJResult
+                       failWithMessage:@"Cannot process non-array"
+                                               key:ADJLogActualKey
+                                       stringValue:NSStringFromClass([arrayObject class])]];
+    }
+
+    NSArray *_Nonnull arraySource = (NSArray *)arrayObject;
+
+    if (arraySource.count == 0) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+    }
+
+    NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut =
+        [[NSMutableArray alloc] initWithCapacity:arraySource.count];
+    NSMutableArray *_Nonnull arrayTargetMut =
+        [[NSMutableArray alloc] initWithCapacity:arraySource.count];
+
+    for (NSUInteger i = 0; i < arraySource.count; i = i + 1) {
+        id _Nonnull elementJsParameters = [arraySource objectAtIndex:i];
+
+        ADJResultFail *_Nullable elementTypeFail =
+            [self elementTypeValidationWithJsParameters:elementJsParameters];
+        if (elementTypeFail != nil) {
+            ADJResultFailBuilder *_Nonnull failBuilder =
+                [[ADJResultFailBuilder alloc]
+                 initWithMessage:@"Invalid JS type for element"];
+            [failBuilder withKey:@"array index" stringValue:[ADJUtilF uIntegerFormat:i]];
+            [failBuilder withKey:@"element type fail" otherFail:elementTypeFail];
+            [optFailsMut addObject:[failBuilder build]];
+        }
+
+        id _Nullable elementObject = [elementJsParameters objectForKey:ADJWBElementKey];
+        if (elementObject == nil) {
+            [optFailsMut addObject:[[ADJResultFail alloc]
+                                    initWithMessage:@"Element field not found"
+                                    key:@"array index"
+                                    stringValue:[ADJUtilF uIntegerFormat:i]]];
+        }
+
+        [arrayTargetMut addObject:[ADJUtilObj idOrNsNull:elementObject]];
+    }
+
+    return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optFailsMut value:arrayTargetMut];
 }
 
 + (ADJOptionalFailsNL<ADJResultFail *> *)

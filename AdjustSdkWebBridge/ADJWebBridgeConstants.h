@@ -78,8 +78,17 @@ FOUNDATION_EXPORT NSString *const ADJWBUrlStringKey;
 
 FOUNDATION_EXPORT NSString *const ADJWBPushTokenStringKey;
 
+FOUNDATION_EXPORT NSString *const ADJWBAdjustThirdPartySharingName;
+FOUNDATION_EXPORT NSString *const ADJWBEnabledOrElseDisabledSharingTPSKey;
+FOUNDATION_EXPORT NSString *const ADJWBGranularOptionsByNameTPSKey;
+FOUNDATION_EXPORT NSString *const ADJWBPartnerSharingSettingsByNameTPSKey;
+
+
 FOUNDATION_EXPORT NSString *const ADJWBObjectNameKey;
 
+FOUNDATION_EXPORT NSString *const ADJWBElementKey;
+
+FOUNDATION_EXPORT NSString *const ADJWBKvPartnerNameKey;
 FOUNDATION_EXPORT NSString *const ADJWBKvKeyKey;
 FOUNDATION_EXPORT NSString *const ADJWBKvValueKey;
 

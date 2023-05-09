@@ -187,6 +187,9 @@ AdjustInstance.prototype.trackPushToken = function(pushTokenString) {
         _pushTokenString: pushTokenString,
         _pushTokenStringType: typeof pushTokenString}); }
 
+AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartySharing) {
+    this._postMessage("trackThirdPartySharing", adjustThirdPartySharing); };
+
 AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
     this._postMessage("addGlobalCallbackParameter", {
         _key: key, _keyType: typeof key,
@@ -336,6 +339,75 @@ AdjustEvent.prototype.setDeduplicationId = function(deduplicationId) {
     this._deduplicationId = deduplicationId;
     this._deduplicationIdType = typeof deduplicationId;
 };
+
+
+function AdjustThirdPartySharing() {
+    this._objectName = "AdjustThirdPartySharing";
+    this._enabledOrElseDisabledSharing = null;
+    this._granularOptionsByName = [];
+    this._partnerSharingSettingsByName = [];
+}
+
+AdjustThirdPartySharing.prototype.enableThirdPartySharing = function() {
+    this._enabledOrElseDisabledSharing = true;
+};
+
+AdjustThirdPartySharing.prototype.disableThirdPartySharing = function() {
+    this._enabledOrElseDisabledSharing = false;
+};
+
+AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key, value) {
+    this._granularOptionsByNameArray.push({
+        _element = partnerName;
+        _elementType = typeof partnerName;
+    });
+    this._granularOptionsByNameArray.push({
+        _element = key;
+        _elementType = typeof key;
+    });
+    this._granularOptionsByNameArray.push({
+        _element = value;
+        _elementType = typeof value;
+    });
+};
+AdjustThirdPartySharing.prototype.addPartnerSharingSetting = function(partnerName, key, value) {
+    this._partnerSharingSettingsByNameArray.push({
+        _element = partnerName;
+        _elementType = typeof partnerName;
+    });
+    this._partnerSharingSettingsByNameArray.push({
+        _element = key;
+        _elementType = typeof key;
+    });
+    this._partnerSharingSettingsByNameArray.push({
+        _element = value;
+        _elementType = typeof value;
+    });
+};
+
+/*
+AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key, value) {
+    this._granularOptionsByNameArray.push({
+        _partnerName = partnerName;
+        _partnerNameType = typeof partnerName;
+        _key = key;
+        _keyType = typeof key;
+        _value = value;
+        _valueType = typeof value;
+    });
+};
+
+AdjustThirdPartySharing.prototype.addPartnerSharingSetting = function(partnerName, key, value) {
+    this._partnerSharingSettingsByNameArray.push({
+        _partnerName = partnerName;
+        _partnerNameType = typeof partnerName;
+        _key = key;
+        _keyType = typeof key;
+        _value = value;
+        _valueType = typeof value;
+    });
+};
+*/
  /*
 var Adjust = {
 instance: function(instanceId = "") {

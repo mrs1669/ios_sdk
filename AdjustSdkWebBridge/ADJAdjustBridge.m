@@ -305,6 +305,34 @@
         return;
     }
 
+    if ([ADJWBTrackThirdPartySharingMethodName isEqualToString:methodName]) {
+        ADJResultFail *_Nullable objectMatchFail =
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustThirdPartySharingName];
+        if (objectMatchFail != nil) {
+            [self.logger debugDev:
+             @"Cannot track third party sharing with non Adjust Third Party Sharing parameter"
+                       resultFail:objectMatchFail
+                        issueType:ADJIssueNonNativeIntegration];
+            return;
+        }
+
+        ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
+            [self.sdkApiHelper adjustThirdPartySharingWithJsParameters:jsParameters];
+        NSArray *_Nullable granularOptionsByNameArray =
+            [self.sdkApiHelper tpsGranulaOptionsByNameArrayWithJsParameters:jsParameters];
+        NSArray *_Nullable partnerSharingSettingsByNameArray =
+            [self.sdkApiHelper tpsPartnerSharingSettingsByNameArrayWithJsParameters:jsParameters];
+/* Will be added in 'Refac: tps bridge' commit
+        [ADJAdjustInternal trackThirdPartySharingForClientId:instanceIdString
+                                     adjustThirdPartySharing:adjustThirdPartySharing
+                                  granularOptionsByNameArray:granularOptionsByNameArray
+                           partnerSharingSettingsByNameArray:partnerSharingSettingsByNameArray];
+ */
+        return;
+    }
+
+
     id<ADJAdjustInstance> _Nonnull adjustInstance = [ADJAdjust instanceForId:instanceIdString];
 
     if ([ADJWBInactivateSdkMethodName isEqualToString:methodName]) {
@@ -341,9 +369,6 @@
     } else if ([ADJWBTrackPushTokenMethodName isEqualToString:methodName]) {
         [adjustInstance trackPushToken:
          [self.sdkApiHelper adjustPushTokenWithJsParameters:jsParameters]];
-    } else if ([ADJWBTrackThirdPartySharingMethodName isEqualToString:methodName]) {
-        [adjustInstance trackThirdPartySharing:
-         [self adjustThirdPartySharingWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackAdRevenueMethodName isEqualToString:methodName]) {
         [adjustInstance trackAdRevenue:[self adRevenueWithJsParameters:jsParameters]];
     // TODO add trackBillingSubscription
@@ -375,11 +400,6 @@
 }
 
 
-- (nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharingWithJsParameters:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters
-{
-    return nil;
-}
 - (nonnull ADJAdjustAdRevenue *)adRevenueWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
