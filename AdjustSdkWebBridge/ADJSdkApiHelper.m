@@ -13,6 +13,7 @@
 #import "ADJNonEmptyString.h"
 #import "ADJConstants.h"
 #import "ADJUtilF.h"
+#import "ADJUtilObj.h"
 #import "ADJOptionalFailsNL.h"
 
 @interface ADJSdkApiHelper ()
@@ -120,19 +121,12 @@
         [adjustConfig allowSendingFromBackground];
     }
 
-    ADJResult<NSNumber *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
-        [ADJSdkApiHelper numberWithJsParameters:jsParameters
-                                            key:ADJWBEventIdDeduplicationMaxCapacityConfigKey];
-    if (eventIdDeduplicationMaxCapacityResult.failNonNilInput != nil) {
-        [self.logger debugDev:@"Could not parse JS field for adjust config"
-                          key:@"field name"
-                  stringValue:ADJWBEventIdDeduplicationMaxCapacityConfigKey
-                   resultFail:eventIdDeduplicationMaxCapacityResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-    if (eventIdDeduplicationMaxCapacityResult.value != nil) {
-        [adjustConfig setEventIdDeduplicationMaxCapacity:
-         eventIdDeduplicationMaxCapacityResult.value.intValue];
+    NSNumber *_Nullable eventIdDeduplicationMaxCapacity =
+        [self numberLoggedWithJsParameters:jsParameters
+                                       key:ADJWBEventIdDeduplicationMaxCapacityConfigKey
+                                      from:ADJWBAdjustConfigName];
+    if (eventIdDeduplicationMaxCapacity != nil) {
+        [adjustConfig setEventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacity.intValue];
     }
 
     return adjustConfig;
@@ -243,26 +237,15 @@
     NSString *_Nullable currency = [self stringLoggedWithJsParameters:jsParameters
                                                                   key:ADJWBCurrencyEventKey
                                                                  from:ADJWBAdjustEventName];
-
-    ADJResult<NSNumber *> *_Nonnull revenueAmountDoubleResult =
-        [ADJSdkApiHelper numberWithJsParameters:jsParameters
-                                            key:ADJWBRevenueAmountDoubleEventKey];
-    if (revenueAmountDoubleResult.failNonNilInput != nil) {
-        [self.logger debugWithMessage:@"Could not parse number JS field"
-                         builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"field name"
-                    stringValue:ADJWBRevenueAmountDoubleEventKey];
-            [logBuilder withKey:ADJLogFromKey
-                    stringValue:ADJWBAdjustEventName];
-            [logBuilder withFail:revenueAmountDoubleResult.fail
-                           issue:ADJIssueNonNativeIntegration];
-        }];
-    }
-    NSNumber *_Nonnull revenueAmountDouble = revenueAmountDoubleResult.value;
+    NSNumber *_Nullable revenueAmountDouble =
+        [self numberLoggedWithJsParameters:jsParameters
+                                       key:ADJWBRevenueAmountDoubleEventKey
+                                      from:ADJWBAdjustEventName];
     if (currency != nil || revenueAmountDouble != nil) {
         [adjustEvent setRevenueWithDoubleNumber:revenueAmountDouble
                                        currency:currency];
     }
+
     NSString *_Nullable deduplicationId =
         [self stringLoggedWithJsParameters:jsParameters
                                        key:ADJWBDeduplicationIdEventKey
@@ -398,35 +381,41 @@
     return [ADJResult okWithValue:stringResult.value.stringValue];
 }
 
-+ (nonnull ADJResult<ADJBooleanWrapper *> *)
-    trueWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key
++ (nonnull ADJResult<ADJBooleanWrapper *> *)booleanWithJsValue:(nullable id)valueObject {
+    if (valueObject == nil) {
+        return [ADJResult failWithMessage:@"Boolean field unexpectedly not present"];
+    }
+
+    if ([valueObject isKindOfClass:[NSNull class]]) {
+        return [ADJResult nilInputWithMessage:@"Boolean field found to be NSNull"];
+    }
+
+    ADJResult<ADJBooleanWrapper *> *_Nonnull booleanResult =
+       [ADJBooleanWrapper instanceFromObject:valueObject];
+
+    if (booleanResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Invalid JS boolean value"
+                                      key:@"js boolean fail"
+                                otherFail:booleanResult.fail];
+    }
+
+    return [ADJResult okWithValue:booleanResult.value];
+}
+
++ (nonnull ADJResult<ADJBooleanWrapper *> *)trueWithJsValue:(nullable id)jsValue
+                                                        key:(nonnull NSString *)key
  {
-     id _Nullable valueObject = [jsParameters objectForKey:key];
-
-     if (valueObject == nil) {
-         return [ADJResult failWithMessage:
-                 @"Boolean field could not be found in parameters. Was expecetd to be initialised to 'null'"];
-     }
-
-     if ([valueObject isKindOfClass:[NSNull class]]) {
-         return [ADJResult nilInputWithMessage:@"Boolean field found to be NSNull"];
-     }
-
      ADJResult<ADJBooleanWrapper *> *_Nonnull booleanResult =
-        [ADJBooleanWrapper instanceFromObject:valueObject];
-
+        [ADJSdkApiHelper booleanWithJsValue:jsValue];
      if (booleanResult.fail != nil) {
-         return [ADJResult failWithMessage:@"Invalid JS boolean value"
-                                       key:@"js boolean fail"
-                                 otherFail:booleanResult.fail];
+         return booleanResult;
      }
 
      if (! booleanResult.value.boolValue) {
          return [ADJResult failWithMessage:@"JS boolean field was not expected to be false"];
      }
 
-     return [ADJResult okWithValue:booleanResult.value];
+     return booleanResult;
 }
 
 + (nonnull ADJResult<NSNumber *> *)
@@ -449,12 +438,15 @@
     }
 
     if (! [typeResult.value.stringValue isEqualToString:ADJWBJsNumberType]) {
-        return [ADJResult failWithMessage:@"Expected number JS type"
+        return [ADJResult failWithMessage:@"Expected number JS type for number field"
                                       key:ADJLogActualKey
                               stringValue:typeResult.value.stringValue];
     }
 
     id _Nullable numberObject = [jsParameters objectForKey:key];
+    if (numberObject == nil) {
+        return [ADJResult failWithMessage:@"Number field unexpectedly not present"];
+    }
 
     if (! [numberObject isKindOfClass:[NSNumber class]]) {
         return [ADJResult
@@ -600,18 +592,26 @@
     ADJResult<NSString *> *_Nonnull stringResult =
         [ADJSdkApiHelper stringWithJsParameters:jsParameters key:key];
     if (stringResult.failNonNilInput != nil) {
-        [self.logger debugWithMessage:@"Could not parse string JS field"
-                         builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"field name"
-                    stringValue:key];
-            [logBuilder withKey:ADJLogFromKey
-                    stringValue:from];
-            [logBuilder withFail:stringResult.fail
-                           issue:ADJIssueNonNativeIntegration];
-        }];
+        [self logMissingFieldWithMessage:@"Could not parse string JS field"
+                                    fail:stringResult.fail key:key from:from];
     }
 
     return stringResult.value;
+}
+
+- (nullable NSNumber *)
+    numberLoggedWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    key:(nonnull NSString *)key
+    from:(nonnull NSString *)from
+{
+    ADJResult<NSNumber *> *_Nonnull numberResult =
+        [ADJSdkApiHelper numberWithJsParameters:jsParameters key:key];
+    if (numberResult.failNonNilInput != nil) {
+        [self logMissingFieldWithMessage:@"Could not parse number JS field"
+                                    fail:numberResult.fail key:key from:from];
+    }
+
+    return numberResult.value;
 }
 
 - (BOOL)trueLoggedWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
@@ -621,18 +621,42 @@
     ADJResult<ADJBooleanWrapper *> *_Nonnull trueResult =
         [ADJSdkApiHelper trueWithJsParameters:jsParameters key:key];
     if (trueResult.failNonNilInput != nil) {
-        [self.logger debugWithMessage:@"Could not parse boolean JS field"
-                         builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"boolean field name"
-                    stringValue:key];
-            [logBuilder withKey:ADJLogFromKey
-                    stringValue:from];
-            [logBuilder withFail:trueResult.fail
-                           issue:ADJIssueNonNativeIntegration];
-        }];
+        [self logMissingFieldWithMessage:@"Could not parse true boolean JS field"
+                                    fail:trueResult.fail key:key from:from];
     }
 
     return trueResult.value != nil;
+}
+
+- (nullable NSNumber *)
+    booleanLoggedWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    key:(nonnull NSString *)key
+    from:(nonnull NSString *)from
+{
+    ADJResult<ADJBooleanWrapper *> *_Nonnull booleanResult =
+        [ADJSdkApiHelper booleanWithJsValue:[jsParameters objectForKey:key]];
+    if (booleanResult.failNonNilInput != nil) {
+        [self logMissingFieldWithMessage:@"Could not parse boolean JS field"
+                                    fail:booleanResult.fail key:key from:from];
+    }
+
+    return booleanResult.value != nil ? @(booleanResult.value.boolValue) : nil;
+}
+
+- (void)logMissingFieldWithMessage:(nonnull NSString *)message
+                              fail:(nonnull ADJResultFail *)fail
+                               key:(nonnull NSString *)key
+                              from:(nonnull NSString *)from
+{
+    [self.logger debugWithMessage:message
+                     builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+        [logBuilder withKey:@"field name"
+                stringValue:key];
+        [logBuilder withKey:ADJLogFromKey
+                stringValue:from];
+        [logBuilder withFail:fail
+                       issue:ADJIssueNonNativeIntegration];
+    }];
 }
 
 @end

@@ -178,7 +178,6 @@ AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionC
 AdjustInstance.prototype.trackEvent = function(adjustEvent) {
     this._postMessage("trackEvent", adjustEvent); };
 
-
 AdjustInstance.prototype.trackLaunchedDeeplink = function(urlString) {
     this._postMessage("trackLaunchedDeeplink",
                       {_urlString: urlString, _urlStringType: typeof urlString}); }
