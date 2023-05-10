@@ -38,6 +38,8 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
 + (nullable instancetype)
     instanceFromClientWithAdjustThirdPartySharing:
         (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray
     logger:(nonnull ADJLogger *)logger
 {
     if (adjustThirdPartySharing == nil) {
@@ -55,13 +57,14 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
     ADJNonEmptyString *_Nullable granularOptionsByNameJsonString =
         [self
          granularOptionsByNameJsonStringWithArray:
-             adjustThirdPartySharing.granularOptionsByNameArray
+             granularOptionsByNameArray ?: adjustThirdPartySharing.granularOptionsByNameArray
          logger:logger];
 
     ADJNonEmptyString *_Nullable partnerSharingSettingsByNameJsonString =
         [self
          partnerSharingSettingsByNameJsonStringWithArray:
-             adjustThirdPartySharing.partnerSharingSettingsByNameArray
+             partnerSharingSettingsByNameArray ?:
+            adjustThirdPartySharing.partnerSharingSettingsByNameArray
          logger:logger];
 
     return [[ADJClientThirdPartySharingData alloc]
@@ -71,12 +74,12 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
 }
 + (nullable ADJNonEmptyString *)
     granularOptionsByNameJsonStringWithArray:
-        (nullable NSArray<NSString *> *)granularOptionsByNameArray
+        (nullable NSArray *)granularOptionsByNameArray
     logger:(nonnull ADJLogger *)logger
 {
     ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *_Nonnull
-        granularOptionsByNameJsonStringOptFails =
-            [ADJUtilConv jsonStringFromNameKeyValueArray:granularOptionsByNameArray];
+    granularOptionsByNameJsonStringOptFails =
+        [ADJUtilConv jsonStringFromNameKeyStringValueArray:granularOptionsByNameArray];
 
     for (ADJResultFail *_Nonnull optionalFail in
          granularOptionsByNameJsonStringOptFails.optionalFails)
@@ -102,8 +105,8 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
     logger:(nonnull ADJLogger *)logger
 {
     ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *_Nonnull
-        partnerSharingSettingsByNameJsonStringOptFails =
-            [ADJUtilConv jsonStringFromNameKeyValueArray:partnerSharingSettingsByNameArray];
+    partnerSharingSettingsByNameJsonStringOptFails =
+        [ADJUtilConv jsonStringFromNameKeyBooleanValueArray:partnerSharingSettingsByNameArray];
 
     for (ADJResultFail *_Nonnull optionalFail in
          partnerSharingSettingsByNameJsonStringOptFails.optionalFails)

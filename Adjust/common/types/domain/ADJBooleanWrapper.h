@@ -45,4 +45,3 @@ NS_ASSUME_NONNULL_END
 @property (nonnull, readonly, strong, nonatomic) NSString *jsonString;
 
 @end
-

@@ -10,6 +10,7 @@
 
 @class ADJSdkConfigData;
 @class ADJAdjustConfig;
+@class ADJAdjustThirdPartySharing;
 @protocol ADJAdjustInstance;
 
 @protocol ADJInternalCallback <NSObject>
@@ -58,6 +59,12 @@ NS_ASSUME_NONNULL_END
                      internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 + (void)adjustDeviceIdsWithClientId:(nullable NSString *)clientId
                    internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
+
++ (void)
+    trackThirdPartySharingForClientId:(nullable NSString *)clientId
+    adjustThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;
 
 + (nonnull NSString *)sdkVersion;
 

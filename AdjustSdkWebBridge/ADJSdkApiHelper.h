@@ -69,9 +69,7 @@
     stringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     key:(nonnull NSString *)key;
 
-+ (nonnull ADJResult<ADJBooleanWrapper *> *)
-    trueWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key;
++ (nonnull ADJResult<ADJBooleanWrapper *> *)trueWithJsValue:(nullable id)jsValue;
 
 + (nonnull ADJResult<NSNumber *> *)
     numberWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters

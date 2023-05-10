@@ -34,6 +34,10 @@
 - (void)adjustAttributionWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 - (void)adjustDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 
+- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;
+
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end

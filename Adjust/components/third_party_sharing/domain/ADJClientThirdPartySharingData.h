@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_END
 + (nullable instancetype)
     instanceFromClientWithAdjustThirdPartySharing:
         (nullable ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray
     logger:(nonnull ADJLogger *)logger;
 
 + (nullable instancetype)

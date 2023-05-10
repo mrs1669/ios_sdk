@@ -83,8 +83,9 @@ NSString *const ADJWBPushTokenStringKey = @"_pushTokenString";
 
 NSString *const ADJWBAdjustThirdPartySharingName = @"AdjustThirdPartySharing";
 NSString *const ADJWBEnabledOrElseDisabledSharingTPSKey = @"_enabledOrElseDisabledSharing";
-NSString *const ADJWBGranularOptionsByNameTPSKey = @"_granularOptionsByName";
-NSString *const ADJWBPartnerSharingSettingsByNameTPSKey = @"_partnerSharingSettingsByName";
+NSString *const ADJWBGranularOptionsByNameArrayTPSKey = @"_granularOptionsByNameArray";
+NSString *const ADJWBPartnerSharingSettingsByNameArrayTPSKey
+    = @"_partnerSharingSettingsByNameArray";
 
 
 NSString *const ADJWBObjectNameKey = @"_objectName";

@@ -345,46 +345,51 @@
 - (nullable NSArray *)tpsGranulaOptionsByNameArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
-    ADJOptionalFailsNL<ADJResult<NSArray *> *> *_Nonnull granularResultOptFails =
-        [ADJSdkApiHelper arrayWtihArrayObject:
-         [jsParameters objectForKey:ADJWBGranularOptionsByNameTPSKey]];
-    for (ADJResultFail *_Nonnull granularOptFail in granularResultOptFails.optionalFails) {
+    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull granularResult =
+        [ADJSdkApiHelper arrayWithObject:
+         [jsParameters objectForKey:ADJWBGranularOptionsByNameArrayTPSKey]];
+
+    if (granularResult.value == nil) {
+        if (granularResult.failNonNilInput != nil) {
+            [self.logger debugDev:@"Could not use third party sharing granular options"
+                       resultFail:granularResult.fail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+        return nil;
+    }
+
+    for (ADJResultFail *_Nonnull granularOptFail in granularResult.value.optionalFails) {
         [self.logger debugDev:
          @"Issue while parsing third party sharing granular options parameters"
                    resultFail:granularOptFail
                     issueType:ADJIssueNonNativeIntegration];
     }
-    ADJResult<NSArray *> *_Nonnull granularResult = granularResultOptFails.value;
-    if (granularResult.failNonNilInput != nil) {
-        [self.logger debugDev:@"Could not use third party sharing granular options"
-                   resultFail:granularResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-
-    return granularResult.value;
+    return granularResult.value.value;
 }
 
 - (nullable NSArray *)tpsPartnerSharingSettingsByNameArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
-    ADJOptionalFailsNL<ADJResult<NSArray *> *> *_Nonnull partnerSharingResultOptFails =
-        [ADJSdkApiHelper arrayWtihArrayObject:
-         [jsParameters objectForKey:ADJWBPartnerSharingSettingsByNameTPSKey]];
-    for (ADJResultFail *_Nonnull partnerSharingFail in partnerSharingResultOptFails.optionalFails)
-    {
-        [self.logger debugDev:
-         @"Issue while parsing third party sharing partner sharing settins parameters"
-                   resultFail:partnerSharingFail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-    ADJResult<NSArray *> *_Nonnull partnerSharingResult = partnerSharingResultOptFails.value;
-    if (partnerSharingResult.failNonNilInput != nil) {
-        [self.logger debugDev:@"Could not use third party sharing partner sharing settings"
-                   resultFail:partnerSharingResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
+    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull partnerSharingResult =
+        [ADJSdkApiHelper arrayWithObject:
+         [jsParameters objectForKey:ADJWBPartnerSharingSettingsByNameArrayTPSKey]];
+
+    if (partnerSharingResult.value == nil) {
+        if (partnerSharingResult.failNonNilInput != nil) {
+            [self.logger debugDev:@"Could not use third party sharing partner sharing settings"
+                       resultFail:partnerSharingResult.fail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+        return nil;
     }
 
-    return partnerSharingResult.value;
+    for (ADJResultFail *_Nonnull partnerSharingOptFail in partnerSharingResult.value.optionalFails) {
+        [self.logger debugDev:
+         @"Issue while parsing third party sharing partner sharing settings parameters"
+                   resultFail:partnerSharingOptFail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+    return partnerSharingResult.value.value;
 }
 
 + (nullable ADJResultFail *)
@@ -493,20 +498,18 @@
     return [ADJResult okWithValue:booleanResult.value];
 }
 
-+ (nonnull ADJResult<ADJBooleanWrapper *> *)trueWithJsValue:(nullable id)jsValue
-                                                        key:(nonnull NSString *)key
- {
-     ADJResult<ADJBooleanWrapper *> *_Nonnull booleanResult =
++ (nonnull ADJResult<ADJBooleanWrapper *> *)trueWithJsValue:(nullable id)jsValue {
+    ADJResult<ADJBooleanWrapper *> *_Nonnull booleanResult =
         [ADJSdkApiHelper booleanWithJsValue:jsValue];
-     if (booleanResult.fail != nil) {
-         return booleanResult;
-     }
+    if (booleanResult.fail != nil) {
+        return booleanResult;
+    }
 
-     if (! booleanResult.value.boolValue) {
-         return [ADJResult failWithMessage:@"JS boolean field was not expected to be false"];
-     }
+    if (! booleanResult.value.boolValue) {
+        return [ADJResult failWithMessage:@"JS boolean field was not expected to be false"];
+    }
 
-     return booleanResult;
+    return booleanResult;
 }
 
 + (nonnull ADJResult<NSNumber *> *)
@@ -588,26 +591,23 @@
     return [ADJResult okWithValue:functionIdResult.value.stringValue];
 }
 
-+ (ADJOptionalFailsNL<ADJResult<NSArray *> *> *)arrayWtihArrayObject:(nullable id)arrayObject {
++ (nonnull ADJResult<ADJOptionalFailsNN<NSArray *> *> *)
+    arrayWithObject:(nullable id)arrayObject
+{
     if (arrayObject == nil) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:nil
-                value:[ADJResult failWithMessage:@"Array unexpectedly not initialised"]];
+        return [ADJResult failWithMessage:@"Array unexpectedly not initialised"];
     }
 
     if (! [arrayObject isKindOfClass:[NSArray class]]) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:nil
-                value:[ADJResult
-                       failWithMessage:@"Cannot process non-array"
-                                               key:ADJLogActualKey
-                                       stringValue:NSStringFromClass([arrayObject class])]];
+        return [ADJResult failWithMessage:@"Cannot process non-array"
+                                      key:ADJLogActualKey
+                              stringValue:NSStringFromClass([arrayObject class])];
     }
 
     NSArray *_Nonnull arraySource = (NSArray *)arrayObject;
 
     if (arraySource.count == 0) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+        return [ADJResult nilInputWithMessage:@"Array does not contain elements"];
     }
 
     NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut =
@@ -640,7 +640,9 @@
         [arrayTargetMut addObject:[ADJUtilObj idOrNsNull:elementObject]];
     }
 
-    return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optFailsMut value:arrayTargetMut];
+    return [ADJResult okWithValue:[[ADJOptionalFailsNN alloc]
+                                   initWithOptionalFails:optFailsMut
+                                   value:arrayTargetMut]];
 }
 
 + (ADJOptionalFailsNL<ADJResultFail *> *)
@@ -765,7 +767,7 @@
                               from:(nonnull NSString *)from
 {
     ADJResult<ADJBooleanWrapper *> *_Nonnull trueResult =
-        [ADJSdkApiHelper trueWithJsParameters:jsParameters key:key];
+        [ADJSdkApiHelper trueWithJsValue:[jsParameters objectForKey:key]];
     if (trueResult.failNonNilInput != nil) {
         [self logMissingFieldWithMessage:@"Could not parse true boolean JS field"
                                     fail:trueResult.fail key:key from:from];

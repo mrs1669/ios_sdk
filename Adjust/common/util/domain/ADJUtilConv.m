@@ -197,8 +197,23 @@
                    [[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder]]];
 }
 + (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
+    jsonStringFromNameKeyStringValueArray:
+    (nullable NSArray<NSString *> *)nameKeyStringValueArray
+{
+    return [ADJUtilConv jsonStringFromNameKeyValueArray:nameKeyStringValueArray
+                               stringOrElseBooleanValue:YES];
+}
++ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
+    jsonStringFromNameKeyBooleanValueArray:
+    (nullable NSArray<NSString *> *)nameKeyBooleanValueArray
+{
+    return [ADJUtilConv jsonStringFromNameKeyValueArray:nameKeyBooleanValueArray
+                               stringOrElseBooleanValue:NO];
+}
++ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
     jsonStringFromNameKeyValueArray:
         (nullable NSArray<NSString *> *)nameKeyValueArray
+    stringOrElseBooleanValue:(BOOL)stringOrElseBooleanValue
 {
     if (nameKeyValueArray == nil) {
         return [[ADJOptionalFailsNN alloc]
@@ -222,6 +237,7 @@
 
     NSDictionary<NSString *, NSDictionary<NSString *, id> *> *_Nonnull jsonDictionary =
         [ADJUtilConv jsonDictionaryFromNameKeyValueArray:nameKeyValueArray
+                                stringOrElseBooleanValue:stringOrElseBooleanValue
                                         optionalFailsMut:optionalFailsMut];
     if (jsonDictionary.count == 0) {
         return [[ADJOptionalFailsNN alloc]
@@ -249,9 +265,9 @@
             initWithOptionalFails:optionalFailsMut
             value:[ADJResult okWithValue:jsonStringResult.value]];
 }
-
 + (nonnull NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)
     jsonDictionaryFromNameKeyValueArray:(nonnull NSArray<NSString *> *)nameKeyValueArray
+    stringOrElseBooleanValue:(BOOL)stringOrElseBooleanValue
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nonnull
@@ -274,7 +290,8 @@
         }
 
         ADJResult<ADJNonEmptyString *> *_Nonnull keyResult =
-            [ADJUtilConv extractNsNullableStringWithObject:[nameKeyValueArray objectAtIndex:i + 1]];
+            [ADJUtilConv extractNsNullableStringWithObject:
+             [nameKeyValueArray objectAtIndex:i + 1]];
         if (keyResult.fail != nil) {
             ADJResultFailBuilder *_Nonnull resultFailBuilder =
                 [[ADJResultFailBuilder alloc] initWithMessage:
@@ -296,9 +313,24 @@
               key:@"nameKeyValueArray index"
               stringValue:[ADJUtilF uIntegerFormat:i + 2]]];
             continue;
-        } else if ([value isKindOfClass:[NSNumber class]]) {
+        }
+        if (stringOrElseBooleanValue) {
+            ADJResult<ADJNonEmptyString *> *_Nonnull stringResult =
+                [ADJNonEmptyString instanceFromObject:value];
+            if (stringResult.fail != nil) {
+                ADJResultFailBuilder *_Nonnull resultFailBuilder =
+                    [[ADJResultFailBuilder alloc] initWithMessage:
+                     @"Cannot add to map collection with invalid string value"];
+                [resultFailBuilder withKey:@"string value parsing fail"
+                                 otherFail:stringResult.fail];
+                [resultFailBuilder withKey:@"nameKeyValueArray index"
+                               stringValue:[ADJUtilF uIntegerFormat:i + 2]];
+                [optionalFailsMut addObject:[resultFailBuilder build]];
+                continue;
+            }
+        } else {
             ADJResult<ADJBooleanWrapper *> *_Nonnull booleanResult =
-                [ADJBooleanWrapper instanceFromNumberBoolean:(NSNumber *)value];
+                [ADJBooleanWrapper instanceFromObject:value];
             if (booleanResult.fail != nil) {
                 ADJResultFailBuilder *_Nonnull resultFailBuilder =
                     [[ADJResultFailBuilder alloc] initWithMessage:
@@ -310,30 +342,6 @@
                 [optionalFailsMut addObject:[resultFailBuilder build]];
                 continue;
             }
-        } else if ([value isKindOfClass:[NSString class]]) {
-            ADJResult<ADJNonEmptyString *> *_Nonnull stringResult =
-                [ADJNonEmptyString instanceFromString:(NSString *) value];
-            if (stringResult.fail != nil) {
-                ADJResultFailBuilder *_Nonnull resultFailBuilder =
-                    [[ADJResultFailBuilder alloc] initWithMessage:
-                     @"Cannot add to map collection with string value"];
-                [resultFailBuilder withKey:@"string parsing fail"
-                                 otherFail:stringResult.fail];
-                [resultFailBuilder withKey:@"nameKeyValueArray index"
-                               stringValue:[ADJUtilF uIntegerFormat:i + 2]];
-                [optionalFailsMut addObject:[resultFailBuilder build]];
-                continue;
-            }
-        } else {
-            ADJResultFailBuilder *_Nonnull resultFailBuilder =
-                [[ADJResultFailBuilder alloc] initWithMessage:
-                 @"Cannot add to map collection with unexpected type of value"];
-            [resultFailBuilder withKey:ADJLogActualKey
-                           stringValue:NSStringFromClass([value class])];
-            [resultFailBuilder withKey:@"nameKeyValueArray index"
-                           stringValue:[ADJUtilF uIntegerFormat:i + 2]];
-            [optionalFailsMut addObject:[resultFailBuilder build]];
-            continue;
         }
 
         NSString *_Nonnull name = nameResult.value.stringValue;

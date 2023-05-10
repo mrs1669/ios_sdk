@@ -80,8 +80,8 @@ FOUNDATION_EXPORT NSString *const ADJWBPushTokenStringKey;
 
 FOUNDATION_EXPORT NSString *const ADJWBAdjustThirdPartySharingName;
 FOUNDATION_EXPORT NSString *const ADJWBEnabledOrElseDisabledSharingTPSKey;
-FOUNDATION_EXPORT NSString *const ADJWBGranularOptionsByNameTPSKey;
-FOUNDATION_EXPORT NSString *const ADJWBPartnerSharingSettingsByNameTPSKey;
+FOUNDATION_EXPORT NSString *const ADJWBGranularOptionsByNameArrayTPSKey;
+FOUNDATION_EXPORT NSString *const ADJWBPartnerSharingSettingsByNameArrayTPSKey;
 
 
 FOUNDATION_EXPORT NSString *const ADJWBObjectNameKey;

@@ -378,14 +378,25 @@
 }
 
 - (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing {
+    [self
+     trackThirdPartySharing:adjustThirdPartySharing
+     granularOptionsByNameArray:nil
+     partnerSharingSettingsByNameArray:nil];
+}
+- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray
+{
     [self ccExecuteFrom:@"trackThirdPartySharing"
      clientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                           ADJLogger *_Nonnull logger)
      {
         ADJClientThirdPartySharingData *_Nullable clientData =
-        [ADJClientThirdPartySharingData
-         instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
-         logger:logger];
+            [ADJClientThirdPartySharingData
+             instanceFromClientWithAdjustThirdPartySharing:adjustThirdPartySharing
+             granularOptionsByNameArray:granularOptionsByNameArray
+             partnerSharingSettingsByNameArray:partnerSharingSettingsByNameArray
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackThirdPartySharingWithClientData:clientData];

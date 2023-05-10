@@ -34,9 +34,13 @@
     convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
 
 // nameKeyValueArray maps [name, key, value] to <name, <key, value>>
-//  value can be either string or boolean
+// name, key and value need to be string
 + (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
-    jsonStringFromNameKeyValueArray:
-    (nullable NSArray<NSString *> *)nameKeyValueArray;
+    jsonStringFromNameKeyStringValueArray:
+    (nullable NSArray<NSString *> *)nameKeyStringValueArray;
+// name and key need to be string, value needs to boolean
++ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
+    jsonStringFromNameKeyBooleanValueArray:
+    (nullable NSArray<NSString *> *)nameKeyBooleanValueArray;
 
 @end

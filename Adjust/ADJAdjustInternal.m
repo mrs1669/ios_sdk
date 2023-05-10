@@ -92,6 +92,20 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
     [instanceRoot adjustDeviceIdsWithInternalCallback:internalCallback];
 }
 
++ (void)
+    trackThirdPartySharingForClientId:(nullable NSString *)clientId
+    adjustThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot trackThirdPartySharing:adjustThirdPartySharing
+              granularOptionsByNameArray:granularOptionsByNameArray
+       partnerSharingSettingsByNameArray:partnerSharingSettingsByNameArray];
+}
+
 + (nonnull NSString *)sdkVersion {
     return ADJClientSdk;
 }

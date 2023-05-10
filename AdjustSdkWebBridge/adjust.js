@@ -312,26 +312,22 @@ function AdjustEvent(eventToken) {
 
 AdjustEvent.prototype.setRevenueDouble = function(revenueAmountDouble, currency) {
     this._revenueAmountDouble = revenueAmountDouble;
-    this._revenueAmountDoubleType = typeof revenueAmountDouble
+    this._revenueAmountDoubleType = typeof revenueAmountDouble;
     this._currency = currency;
     this._currencyType = typeof currency;
 };
 
 AdjustEvent.prototype.addCallbackParameter = function(key, value) {
     this._callbackParameters.push({
-        _key = key;
-        _keyType = typeof key;
-        _value = value;
-        _valueType = typeof value;
+        _key: key, _keyType: typeof key,
+        _value: value, _valueType: typeof value
     });
 };
 
 AdjustEvent.prototype.addPartnerParameter = function(key, value) {
     this._partnerParameters.push({
-        _key = key;
-        _keyType = typeof key;
-        _value = value;
-        _valueType = typeof value;
+        _key: key, _keyType: typeof key,
+        _value: value, _valueType: typeof value
     });
 };
 
@@ -344,8 +340,8 @@ AdjustEvent.prototype.setDeduplicationId = function(deduplicationId) {
 function AdjustThirdPartySharing() {
     this._objectName = "AdjustThirdPartySharing";
     this._enabledOrElseDisabledSharing = null;
-    this._granularOptionsByName = [];
-    this._partnerSharingSettingsByName = [];
+    this._granularOptionsByNameArray = [];
+    this._partnerSharingSettingsByNameArray = [];
 }
 
 AdjustThirdPartySharing.prototype.enableThirdPartySharing = function() {
@@ -358,56 +354,21 @@ AdjustThirdPartySharing.prototype.disableThirdPartySharing = function() {
 
 AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key, value) {
     this._granularOptionsByNameArray.push({
-        _element = partnerName;
-        _elementType = typeof partnerName;
-    });
+        _element: partnerName, _elementType: typeof partnerName});
     this._granularOptionsByNameArray.push({
-        _element = key;
-        _elementType = typeof key;
-    });
+        _element: key, _elementType: typeof key});
     this._granularOptionsByNameArray.push({
-        _element = value;
-        _elementType = typeof value;
-    });
+        _element: value, _elementType: typeof value});
 };
 AdjustThirdPartySharing.prototype.addPartnerSharingSetting = function(partnerName, key, value) {
     this._partnerSharingSettingsByNameArray.push({
-        _element = partnerName;
-        _elementType = typeof partnerName;
-    });
+        _element: partnerName, _elementType: typeof partnerName});
     this._partnerSharingSettingsByNameArray.push({
-        _element = key;
-        _elementType = typeof key;
-    });
+        _element: key, _elementType: typeof key});
     this._partnerSharingSettingsByNameArray.push({
-        _element = value;
-        _elementType = typeof value;
-    });
+        _element: value, _elementType: typeof value});
 };
 
-/*
-AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key, value) {
-    this._granularOptionsByNameArray.push({
-        _partnerName = partnerName;
-        _partnerNameType = typeof partnerName;
-        _key = key;
-        _keyType = typeof key;
-        _value = value;
-        _valueType = typeof value;
-    });
-};
-
-AdjustThirdPartySharing.prototype.addPartnerSharingSetting = function(partnerName, key, value) {
-    this._partnerSharingSettingsByNameArray.push({
-        _partnerName = partnerName;
-        _partnerNameType = typeof partnerName;
-        _key = key;
-        _keyType = typeof key;
-        _value = value;
-        _valueType = typeof value;
-    });
-};
-*/
  /*
 var Adjust = {
 instance: function(instanceId = "") {
@@ -437,7 +398,7 @@ teardown: function() {
     this._instanceMap = undefined;
     // TODO reset js interface?
 },
-    
+
 };
 
 function AdjustInstance(instanceId) {
@@ -817,11 +778,5 @@ AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key,
     this.granularOptions.push(partnerName);
     this.granularOptions.push(key);
     this.granularOptions.push(value);
-};
-
-AdjustThirdPartySharing.prototype.addPartnerSharingSettings = function(partnerName, key, value) {
-    this.partnerSharingSettings.push(partnerName);
-    this.partnerSharingSettings.push(key);
-    this.partnerSharingSettings.push(value);
 };
 */
