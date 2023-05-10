@@ -186,7 +186,7 @@
                           defaultTracker:(nullable ADJNonEmptyString *)defaultTracker
                                 doLogAll:(BOOL)doLogAll
                              doNotLogAny:(BOOL)doNotLogAny
-                   urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategybaseDomain
+                   urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
                            dataResidency:(nullable AdjustDataResidency)dataResidency
                 clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
                doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
@@ -203,7 +203,7 @@
     _defaultTracker = defaultTracker;
     _doLogAll = doLogAll;
     _doNotLogAny = doNotLogAny;
-    _urlStrategyBaseDomain = urlStrategybaseDomain;
+    _urlStrategyBaseDomain = urlStrategyBaseDomain;
     _dataResidency = dataResidency;
     _clientCustomEndpointData = clientCustomEndpointData;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;
