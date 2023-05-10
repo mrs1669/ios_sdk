@@ -52,7 +52,7 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
         return nil;
     }
 
-    NSError *error = NULL;
+    NSError *error = nil;
     NSRegularExpression *_Nullable excludedRegex =
     [self excludedRegexWithError:&error];
 

@@ -23,9 +23,25 @@ static NSString *const kBaseUrlIndia = @"https://app.adjust.net.in";
 static NSString *const kGdprUrlIndia = @"https://gdpr.adjust.net.in";
 static NSString *const kSubscriptionUrlIndia = @"https://subscription.adjust.net.in";
 
-static NSString *const kBaseUrlChina = @"https://app.adjust.world";
-static NSString *const kGdprUrlChina = @"https://gdpr.adjust.world";
-static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.world";
+static NSString *const kBaseUrlWorld = @"https://app.adjust.world";
+static NSString *const kGdprUrlWorld = @"https://gdpr.adjust.world";
+static NSString *const kSubscriptionUrlWorld = @"https://subscription.adjust.world";
+
+static NSString *const kBaseUrlStrategy = @"https://app.%@";
+static NSString *const kGdprUrlStrategy = @"https://gdpr.%@";
+static NSString *const kSubscriptionUrlStrategy = @"https://subscription.%@";
+
+static NSString *const kBaseUrlEU = @"https://app.eu.adjust.com";
+static NSString *const kGdprUrlEU = @"https://gdpr.eu.adjust.com";
+static NSString *const kSubscriptionUrlEU = @"https://subscription.eu.adjust.com";
+
+static NSString *const kBaseUrlTR = @"https://app.tr.adjust.com";
+static NSString *const kGdprUrlTR = @"https://gdpr.tr.adjust.com";
+static NSString *const kSubscriptionUrlTR = @"https://subscription.tr.adjust.com";
+
+static NSString *const kBaseUrlUS = @"https://app.us.adjust.com";
+static NSString *const kGdprUrlUS = @"https://gdpr.us.adjust.com";
+static NSString *const kSubscriptionUrlUS = @"https://subscription.us.adjust.com";
 
 @interface ADJSdkPackageUrlBuilder ()
 #pragma mark - Injected dependencies
@@ -47,23 +63,28 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
 #pragma mark Instantiation
 - (nonnull instancetype)initWithUrlOverwrite:(nullable NSString *)urlOverwrite
                                    extraPath:(nullable NSString *)extraPath
-                           adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+                       urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+                               dataResidency:(nullable AdjustDataResidency)dataResidency
                      clientCustomEndpointUrl:(nullable ADJNonEmptyString *)clientCustomEndpointUrl {
+
     self = [super init];
+
     _urlOverwrite = urlOverwrite;
     _extraPath = extraPath;
     
-    NSString *_Nullable adjustUrlStrategyString =
-    adjustUrlStrategy != nil ? adjustUrlStrategy.stringValue : nil;
+    NSString *_Nullable urlStrategyDomain =
+    urlStrategyBaseDomain != nil ? urlStrategyBaseDomain.stringValue : nil;
+
+    _baseUrlChoicesArray = [[self class] baseUrlChoicesWithUrlStrategy:urlStrategyDomain
+                                                         dataResidency:dataResidency];
     
-    _baseUrlChoicesArray =
-    [[self class] baseUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
+    _gdprUrlChoicesArray = [[self class] gdprUrlChoicesWithUrlStrategy:urlStrategyDomain
+                                                         dataResidency:dataResidency];
     
-    _gdprUrlChoicesArray =
-    [[self class] gdprUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
-    
-    _subscriptionUrlChoicesArray =
-    [[self class] subscriptionUrlChoicesWithUrlStrategy:adjustUrlStrategyString];
+    _subscriptionUrlChoicesArray = [[self class] subscriptionUrlChoicesWithUrlStrategy:urlStrategyDomain
+                                                                         dataResidency:dataResidency];
+
+    _clientCustomEndpointUrl = clientCustomEndpointUrl;
     
     //_wasLastAttemptSuccess = NO;
     
@@ -75,40 +96,73 @@ static NSString *const kSubscriptionUrlChina = @"https://subscription.adjust.wor
 }
 
 #pragma mark - Private constructors
-+ (nonnull NSArray<NSString *> *)baseUrlChoicesWithUrlStrategy:(nullable NSString *)adjustUrlStrategy {
-    if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
-        return @[kBaseUrlIndia, kBaseUrl];
++ (nonnull NSArray<NSString *> *)baseUrlChoicesWithUrlStrategy:(nullable NSString *)urlStrategyDomain
+                                                 dataResidency:(nullable AdjustDataResidency)dataResidency {
+
+    if ([AdjustDataResidencyEU isEqual:dataResidency]) {
+        return @[kBaseUrlEU];
     }
-    
-    if ([ADJUrlStategyChina isEqual:adjustUrlStrategy]) {
-        return @[kBaseUrlChina, kBaseUrl];
+
+    if ([AdjustDataResidencyTR isEqual:dataResidency]) {
+        return @[kBaseUrlTR];
     }
-    
-    return @[kBaseUrl, kBaseUrlIndia, kBaseUrlChina];
+
+    if ([AdjustDataResidencyUS isEqual:dataResidency]) {
+        return @[kBaseUrlUS];
+    }
+
+    if (urlStrategyDomain != nil) {
+        NSString *baseUrlStrategy = [NSString stringWithFormat:kBaseUrlStrategy, urlStrategyDomain];
+        return @[baseUrlStrategy, kBaseUrl];
+    }
+
+    return @[kBaseUrl, kBaseUrlWorld, kBaseUrlIndia];
 }
 
-+ (nonnull NSArray<NSString *> *)gdprUrlChoicesWithUrlStrategy:(nullable NSString *)adjustUrlStrategy {
-    if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
-        return @[kGdprUrlIndia, kGdprUrl];
++ (nonnull NSArray<NSString *> *)gdprUrlChoicesWithUrlStrategy:(nullable NSString *)urlStrategyDomain
+                                                 dataResidency:(nullable AdjustDataResidency)dataResidency {
+
+    if ([AdjustDataResidencyEU isEqual:dataResidency]) {
+        return @[kGdprUrlEU];
     }
-    
-    if ([ADJUrlStategyChina isEqual:adjustUrlStrategy]) {
-        return @[kGdprUrlChina, kGdprUrl];
+
+    if ([AdjustDataResidencyTR isEqual:dataResidency]) {
+        return @[kGdprUrlTR];
     }
-    
-    return @[kGdprUrl, kGdprUrlIndia, kGdprUrlChina];
+
+    if ([AdjustDataResidencyUS isEqual:dataResidency]) {
+        return @[kGdprUrlUS];
+    }
+
+    if (urlStrategyDomain != nil) {
+        NSString *gdprUrlStrategy = [NSString stringWithFormat:kGdprUrlStrategy, urlStrategyDomain];
+        return @[gdprUrlStrategy, kGdprUrl];
+    }
+
+    return @[kGdprUrl, kGdprUrlWorld, kGdprUrlIndia];
 }
 
-+ (nonnull NSArray<NSString *> *)subscriptionUrlChoicesWithUrlStrategy:(nullable NSString *)adjustUrlStrategy {
-    if ([ADJUrlStategyIndia isEqual:adjustUrlStrategy]) {
-        return @[kSubscriptionUrlIndia, kSubscriptionUrl];
++ (nonnull NSArray<NSString *> *)subscriptionUrlChoicesWithUrlStrategy:(nullable NSString *)urlStrategyDomain
+                                                         dataResidency:(nullable AdjustDataResidency)dataResidency {
+
+    if ([AdjustDataResidencyEU isEqual:dataResidency]) {
+        return @[kSubscriptionUrlEU];
     }
-    
-    if ([ADJUrlStategyChina isEqual:adjustUrlStrategy]) {
-        return @[kSubscriptionUrlChina, kSubscriptionUrl];
+
+    if ([AdjustDataResidencyTR isEqual:dataResidency]) {
+        return @[kSubscriptionUrlTR];
     }
-    
-    return @[kSubscriptionUrl, kSubscriptionUrlIndia, kSubscriptionUrlChina];
+
+    if ([AdjustDataResidencyUS isEqual:dataResidency]) {
+        return @[kSubscriptionUrlUS];
+    }
+
+    if (urlStrategyDomain != nil) {
+        NSString *subUrlStrategy = [NSString stringWithFormat:kSubscriptionUrlStrategy, urlStrategyDomain];
+        return @[subUrlStrategy, kSubscriptionUrl];
+    }
+
+    return @[kSubscriptionUrl, kSubscriptionUrlWorld, kSubscriptionUrlIndia];
 }
 
 #pragma mark Public API

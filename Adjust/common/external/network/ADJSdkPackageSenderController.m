@@ -24,9 +24,9 @@
 @interface ADJSdkPackageSenderController ()
 #pragma mark - Injected dependencies
 @property (nonnull, readonly, strong, nonatomic) ADJNetworkEndpointData *networkEndpointData;
-@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *adjustUrlStrategy;
-// TODO data residency
-@property (nonnull, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
+@property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
+@property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
 
 #pragma mark - Internal variables
 @end
@@ -36,20 +36,21 @@
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-    adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+    urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+    dataResidency:(nullable AdjustDataResidency)dataResidency
     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"SdkPackageSenderController"];
     _networkEndpointData = networkEndpointData;
-    _adjustUrlStrategy = adjustUrlStrategy;
+    _urlStrategyBaseDomain = urlStrategyBaseDomain;
+    _dataResidency = dataResidency;
     _clientCustomEndpointData = clientCustomEndpointData;
 
-    _sdkPackageSendingPublisher =
-        [[ADJSdkPackageSendingPublisher alloc]
-         initWithSubscriberProtocol:@protocol(ADJSdkPackageSendingSubscriber)
-         controller:publisherController];
+    _sdkPackageSendingPublisher = [[ADJSdkPackageSendingPublisher alloc]
+                                   initWithSubscriberProtocol:@protocol(ADJSdkPackageSendingSubscriber)
+                                   controller:publisherController];
 
     _sdkResponsePublisher = [[ADJSdkResponsePublisher alloc]
                              initWithSubscriberProtocol:@protocol(ADJSdkResponseSubscriber)
@@ -69,7 +70,8 @@
                                    sdkPackageSendingCollector:self
                                          sdkResponseCollector:self
                                           networkEndpointData:self.networkEndpointData
-                                            adjustUrlStrategy:self.adjustUrlStrategy
+                                        urlStrategyBaseDomain:self.urlStrategyBaseDomain
+                                                dataResidency:self.dataResidency
                                      clientCustomEndpointData:self.clientCustomEndpointData];
 }
 

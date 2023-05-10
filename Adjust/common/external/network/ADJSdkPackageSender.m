@@ -40,7 +40,8 @@
                    sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
                          sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
                           networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-                            adjustUrlStrategy:(nullable ADJNonEmptyString *)adjustUrlStrategy
+                        urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+                                dataResidency:(nullable AdjustDataResidency)dataResidency
                      clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
 
     self = [super initWithLoggerFactory:loggerFactory
@@ -55,7 +56,8 @@
     _sdkPackageUrlBuilder = [[ADJSdkPackageUrlBuilder alloc]
                              initWithUrlOverwrite:networkEndpointData.urlOverwrite
                              extraPath:networkEndpointData.extraPath
-                             adjustUrlStrategy:adjustUrlStrategy
+                             urlStrategyBaseDomain:urlStrategyBaseDomain
+                             dataResidency:dataResidency
                              clientCustomEndpointUrl:clientCustomEndpointData != nil ? clientCustomEndpointData.url : nil];
 
     NSURLSessionConfiguration *_Nonnull sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];

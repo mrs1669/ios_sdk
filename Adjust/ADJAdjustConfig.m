@@ -19,7 +19,8 @@
  @property (nullable, readonly, strong, nonatomic) NSString *appToken;
  @property (nullable, readonly, strong, nonatomic) NSString *environment;
  @property (nullable, readonly, strong, nonatomic) NSString *defaultTracker;
- @property (nullable, readonly, strong, nonatomic) NSString *urlStrategy;
+ @property (nullable, readonly, strong, nonatomic) NSString *urlStrategyDomain;
+ @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
@@ -35,8 +36,9 @@
 #pragma mark - Public constants
 NSString *const ADJEnvironmentSandbox = @"sandbox";
 NSString *const ADJEnvironmentProduction = @"production";
-NSString *const ADJUrlStategyChina = @"CHINA";
-NSString *const ADJUrlStategyIndia = @"INDIA";
+AdjustDataResidency const AdjustDataResidencyEU = @"DataResidencyEU";
+AdjustDataResidency const AdjustDataResidencyTR = @"DataResidencyTR";
+AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
 
 @implementation ADJAdjustConfig
 
@@ -67,8 +69,12 @@ NSString *const ADJUrlStategyIndia = @"INDIA";
     _doNotLogAnyNumberBool = @(YES);
 }
 
-- (void)setUrlStrategy:(nonnull NSString *)urlStrategy {
-    _urlStrategy = [ADJUtilObj copyStringWithInput:urlStrategy];
+- (void)setUrlStrategyBaseDomain:(nonnull NSString *)urlStrategyBaseDomain {
+    _urlStrategyDomain = [ADJUtilObj copyStringWithInput:urlStrategyBaseDomain];
+}
+
+- (void)setDataResidency:(nonnull AdjustDataResidency)dataResidency {
+    _dataResidency = [ADJUtilObj copyStringWithInput:dataResidency];
 }
 
 - (void)setCustomEndpointWithUrl:(nonnull NSString *)customEndpointUrl

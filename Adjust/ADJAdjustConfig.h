@@ -15,8 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJEnvironmentSandbox;
 FOUNDATION_EXPORT NSString *const ADJEnvironmentProduction;
-FOUNDATION_EXPORT NSString *const ADJUrlStategyChina;
-FOUNDATION_EXPORT NSString *const ADJUrlStategyIndia;
+
+// TODO: Check the ObjC->Swift enum conversion naming capabilities (to use ADJ prefix).
+typedef NSString *AdjustDataResidency NS_TYPED_ENUM;
+FOUNDATION_EXPORT AdjustDataResidency const AdjustDataResidencyEU;
+FOUNDATION_EXPORT AdjustDataResidency const AdjustDataResidencyTR;
+FOUNDATION_EXPORT AdjustDataResidency const AdjustDataResidencyUS;
 
 NS_ASSUME_NONNULL_END
 
@@ -31,7 +35,8 @@ NS_DESIGNATED_INITIALIZER;
 - (void)setDefaultTracker:(nonnull NSString *)defaultTracker;
 - (void)doLogAll;
 - (void)doNotLogAny;
-- (void)setUrlStrategy:(nonnull NSString *)urlStrategy;
+- (void)setUrlStrategyBaseDomain:(nonnull NSString *)urlStrategyBaseDomain;
+- (void)setDataResidency:(nonnull AdjustDataResidency)dataResidency;
 - (void)setCustomEndpointWithUrl:(nonnull NSString *)customEndpointUrl
         optionalPublicKeyKeyHash:(nullable NSString *)optionalPublicKeyKeyHash;
 - (void)preventOpenDeferredDeeplink;
@@ -45,7 +50,8 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSString *appToken;
 @property (nullable, readonly, strong, nonatomic) NSString *environment;
 @property (nullable, readonly, strong, nonatomic) NSString *defaultTracker;
-@property (nullable, readonly, strong, nonatomic) NSString *urlStrategy;
+@property (nullable, readonly, strong, nonatomic) NSString *urlStrategyDomain;
+@property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;

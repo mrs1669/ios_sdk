@@ -9,6 +9,7 @@
 #import "ADJClientConfigData.h"
 
 #import "ADJAdjustLogMessageData.h"
+#import "ADJUtilF.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -18,7 +19,8 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *defaultTracker;
  @property (readonly, assign, nonatomic) BOOL doLogAll;
  @property (readonly, assign, nonatomic) BOOL doNotLogAny;
- @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategy;
+ @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
+ @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
  @property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
  @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
@@ -82,19 +84,46 @@
         adjustConfig.doLogAllNumberBool != nil
         && adjustConfig.doLogAllNumberBool.boolValue;
     
-    ADJNonEmptyString *_Nullable urlStrategy = nil;
-    if (adjustConfig.urlStrategy != nil) {
-        if ([ADJUrlStategyChina isEqualToString:adjustConfig.urlStrategy]
-            || [ADJUrlStategyIndia isEqualToString:adjustConfig.urlStrategy]) {
-
-            urlStrategy = [[ADJNonEmptyString alloc] initWithConstStringValue:adjustConfig.urlStrategy];
+    ADJNonEmptyString *_Nullable urlStrategyDomain =
+    [ADJNonEmptyString instanceFromOptionalString:adjustConfig.urlStrategyDomain
+                                sourceDescription:@"url strategy domain"
+                                           logger:logger];
+    if (urlStrategyDomain != nil) {
+        NSString *domainValidationRegexString = @"^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}";
+        NSError *error = nil;
+        NSRegularExpression *domainValidationRegex =
+        [NSRegularExpression regularExpressionWithPattern:domainValidationRegexString
+                                                  options:NSRegularExpressionCaseInsensitive
+                                                    error:&error];
+        if (domainValidationRegex == nil) {
+            [logger debugDev:@"Cannot create domain validation regex"
+                     nserror:error
+                   issueType:ADJIssueLogicError];
+            urlStrategyDomain = nil;
         } else {
-            [logger noticeClient:@"Cannot set unknown url strategy"
-                             key:@"value" value:adjustConfig.urlStrategy];
+            if (! [ADJUtilF matchesWithString:urlStrategyDomain.stringValue
+                                        regex:domainValidationRegex])  {
+                [logger errorClient:@"Cannot use URL strategy domain that does not match expected pattern"
+                                key:@"url strategy domain"
+                              value:adjustConfig.urlStrategyDomain];
+                urlStrategyDomain = nil;
+            }
         }
     }
-    
-    
+
+    AdjustDataResidency _Nullable dataResidency = nil;
+    if (adjustConfig.dataResidency != nil && adjustConfig.dataResidency.length > 0) {
+
+        if ([AdjustDataResidencyEU isEqualToString:adjustConfig.dataResidency]
+            || [AdjustDataResidencyTR isEqualToString:adjustConfig.dataResidency]
+            || [AdjustDataResidencyUS isEqualToString:adjustConfig.dataResidency]) {
+            dataResidency = adjustConfig.dataResidency;
+        } else {
+            [logger noticeClient:@"Cannot set unknown data residency"
+                             key:@"value" value:adjustConfig.dataResidency];
+        }
+    }
+
     ADJNonEmptyString *_Nullable customEndpointUrl =
     [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointUrl
                                 sourceDescription:@"custom endpoint url"
@@ -135,7 +164,8 @@
                            defaultTracker:defaultTracker
                                  doLogAll:doLogAll
                               doNotLogAny:doNotLogAny
-                              urlStrategy:urlStrategy
+                    urlStrategyBaseDomain:urlStrategyDomain
+                            dataResidency:dataResidency
                  clientCustomEndpointData:clientCustomEndpointData
                 doNotOpenDeferredDeeplink:doNotOpenDeferredDeeplink
                   doNotReadAsaAttribution:doNotReadAsaAttribution
@@ -156,7 +186,8 @@
                           defaultTracker:(nullable ADJNonEmptyString *)defaultTracker
                                 doLogAll:(BOOL)doLogAll
                              doNotLogAny:(BOOL)doNotLogAny
-                             urlStrategy:(nullable ADJNonEmptyString *)urlStrategy
+                   urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+                           dataResidency:(nullable AdjustDataResidency)dataResidency
                 clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
                doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
                  doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
@@ -172,7 +203,8 @@
     _defaultTracker = defaultTracker;
     _doLogAll = doLogAll;
     _doNotLogAny = doNotLogAny;
-    _urlStrategy = urlStrategy;
+    _urlStrategyBaseDomain = urlStrategyBaseDomain;
+    _dataResidency = dataResidency;
     _clientCustomEndpointData = clientCustomEndpointData;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;
     _doNotReadAsaAttribution = doNotReadAsaAttribution;
