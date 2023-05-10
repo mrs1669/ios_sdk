@@ -100,9 +100,9 @@
         } else {
             if (! [ADJUtilF matchesWithString:adjustConfig.urlStrategyDomain
                                         regex:domainValidationRegex])  {
-                NSString * errMessage = [NSString stringWithFormat:@"Invalid URL strategy domain: [%@]",
-                                         adjustConfig.urlStrategyDomain];
-                [logger errorClient:errMessage];
+                [logger errorClient:@"Cannot use URL strategy domain that does not match expected pattern"
+                                key:@"url strategy domain"
+                              value:adjustConfig.urlStrategyDomain];
             } else {
                 urlStrategyDomain = [[ADJNonEmptyString alloc]
                                      initWithConstStringValue:adjustConfig.urlStrategyDomain];
