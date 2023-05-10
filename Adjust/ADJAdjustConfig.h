@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const ADJEnvironmentSandbox;
 FOUNDATION_EXPORT NSString *const ADJEnvironmentProduction;
 
+// TODO: Check the ObjC->Swift enum conversion naming capabilities (to use ADJ prefix).
 typedef NSString *AdjustDataResidency NS_TYPED_ENUM;
 FOUNDATION_EXPORT AdjustDataResidency const AdjustDataResidencyEU;
 FOUNDATION_EXPORT AdjustDataResidency const AdjustDataResidencyTR;

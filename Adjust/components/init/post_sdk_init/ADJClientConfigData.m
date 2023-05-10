@@ -84,9 +84,11 @@
         adjustConfig.doLogAllNumberBool != nil
         && adjustConfig.doLogAllNumberBool.boolValue;
     
-    ADJNonEmptyString *_Nullable urlStrategyDomain = nil;
-    if (adjustConfig.urlStrategyDomain != nil && adjustConfig.urlStrategyDomain.length > 0) {
-
+    ADJNonEmptyString *_Nullable urlStrategyDomain =
+    [ADJNonEmptyString instanceFromOptionalString:adjustConfig.urlStrategyDomain
+                                sourceDescription:@"url strategy domain"
+                                           logger:logger];
+    if (urlStrategyDomain != nil) {
         NSString *domainValidationRegexString = @"^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}";
         NSError *error = nil;
         NSRegularExpression *domainValidationRegex =
@@ -97,15 +99,14 @@
             [logger debugDev:@"Cannot create domain validation regex"
                      nserror:error
                    issueType:ADJIssueLogicError];
+            urlStrategyDomain = nil;
         } else {
-            if (! [ADJUtilF matchesWithString:adjustConfig.urlStrategyDomain
+            if (! [ADJUtilF matchesWithString:urlStrategyDomain.stringValue
                                         regex:domainValidationRegex])  {
                 [logger errorClient:@"Cannot use URL strategy domain that does not match expected pattern"
                                 key:@"url strategy domain"
                               value:adjustConfig.urlStrategyDomain];
-            } else {
-                urlStrategyDomain = [[ADJNonEmptyString alloc]
-                                     initWithConstStringValue:adjustConfig.urlStrategyDomain];
+                urlStrategyDomain = nil;
             }
         }
     }
