@@ -304,6 +304,30 @@
         }
         return;
     }
+    if ([ADJWBTrackEventMethodName isEqualToString:methodName]) {
+        ADJResultFail *_Nullable objectMatchFail =
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustEventName];
+        if (objectMatchFail != nil) {
+            [self.logger debugDev:@"Cannot track event with non Adjust Event parameter"
+                       resultFail:objectMatchFail
+                        issueType:ADJIssueNonNativeIntegration];
+            return;
+        }
+
+        ADJAdjustEvent *_Nonnull adjustEvent =
+            [self.sdkApiHelper adjustEventWithJsParameters:jsParameters];
+        NSArray *_Nullable callbackParameterKeyValueArray =
+            [self.sdkApiHelper eventCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
+        NSArray *_Nullable partnerParameterKeyValueArray =
+            [self.sdkApiHelper eventPartnerParameterKeyValueArrayWithJsParameters:jsParameters];
+
+        [ADJAdjustInternal trackEventForClientId:instanceIdString
+                                     adjustEvent:adjustEvent
+                 callbackParameterKeyValueArray:callbackParameterKeyValueArray
+                   partnerParameterKeyValueArray:partnerParameterKeyValueArray];
+        return;
+    }
 
     if ([ADJWBTrackThirdPartySharingMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =

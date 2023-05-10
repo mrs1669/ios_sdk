@@ -254,44 +254,57 @@
         [adjustEvent setDeduplicationId:deduplicationId];
     }
 
-    ADJOptionalFailsNL<ADJResultFail *> *_Nonnull callbackOptFails =
-        [ADJSdkApiHelper
-         iterateKVArrayWithKvArrayObject:
-             [jsParameters objectForKey:ADJWBCallbackParametersEventKey]
-         iterator:^(NSString *_Nonnull key, NSString *_Nonnull value) {
-            [adjustEvent addCallbackParameterWithKey:key value:value];
-        }];
-    for (ADJResultFail *_Nonnull optFail in callbackOptFails.optionalFails) {
-        [self.logger debugDev:@"Issue while parsing event callback key/value parameters"
-                   resultFail:optFail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-    if (callbackOptFails.value != nil) {
-        [self.logger debugDev:@"Cannot add event callback parameters"
-                   resultFail:callbackOptFails.value
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-
-    ADJOptionalFailsNL<ADJResultFail *> *_Nonnull partnerOptFails =
-        [ADJSdkApiHelper
-         iterateKVArrayWithKvArrayObject:
-             [jsParameters objectForKey:ADJWBPartnerParametersEventKey]
-         iterator:^(NSString *_Nonnull key, NSString *_Nonnull value) {
-            [adjustEvent addPartnerParameterWithKey:key value:value];
-        }];
-    for (ADJResultFail *_Nonnull optFail in partnerOptFails.optionalFails) {
-        [self.logger debugDev:@"Issue while parsing event partner key/value parameters"
-                   resultFail:optFail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-    if (partnerOptFails.value != nil) {
-        [self.logger debugDev:@"Cannot add event partner parameters"
-                   resultFail:partnerOptFails.value
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-
     return adjustEvent;
 }
+- (nullable NSArray *)eventCallbackParameterKeyValueArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull callbackParametersResult =
+        [ADJSdkApiHelper arrayWithObject:
+         [jsParameters objectForKey:ADJWBCallbackParameterKeyValueArrayEventKey]];
+
+    if (callbackParametersResult.value == nil) {
+        if (callbackParametersResult.failNonNilInput != nil) {
+            [self.logger debugDev:@"Could not use event callback parameters"
+                       resultFail:callbackParametersResult.fail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+        return nil;
+    }
+
+    for (ADJResultFail *_Nonnull optFail in callbackParametersResult.value.optionalFails) {
+        [self.logger debugDev:@"Issue while parsing event callback parameters"
+                   resultFail:optFail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+
+    return callbackParametersResult.value.value;
+}
+- (nullable NSArray *)eventPartnerParameterKeyValueArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull partnerParametersResult =
+        [ADJSdkApiHelper arrayWithObject:
+         [jsParameters objectForKey:ADJWBPartnerParameterKeyValueArrayEventKey]];
+
+    if (partnerParametersResult.value == nil) {
+        if (partnerParametersResult.fail != nil) {
+            [self.logger debugDev:@"Could not use event partner parameters"
+                       resultFail:partnerParametersResult.fail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+        return nil;
+    }
+
+    for (ADJResultFail *_Nonnull optFail in partnerParametersResult.value.optionalFails) {
+        [self.logger debugDev:@"Issue while parsing event partner parameters"
+                   resultFail:optFail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+
+    return partnerParametersResult.value.value;
+}
+
 
 - (nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplinkWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
@@ -643,92 +656,6 @@
     return [ADJResult okWithValue:[[ADJOptionalFailsNN alloc]
                                    initWithOptionalFails:optFailsMut
                                    value:arrayTargetMut]];
-}
-
-+ (ADJOptionalFailsNL<ADJResultFail *> *)
-    iterateKVArrayWithKvArrayObject:
-        (nullable id)kvArrayObject
-    iterator:(void (^)(NSString *_Nonnull key, NSString *_Nonnull value))iterator
-{
-    if (kvArrayObject == nil) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
-    }
-
-    if (! [kvArrayObject isKindOfClass:[NSArray class]]) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:nil
-                value:[[ADJResultFail alloc]
-                       initWithMessage:@"Cannot iterate non-array"
-                       key:ADJLogActualKey
-                       stringValue:NSStringFromClass([kvArrayObject class])]];
-    }
-    NSArray *_Nonnull kvArray = (NSArray *)kvArrayObject;
-
-    if (kvArray.count == 0) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
-    }
-
-    NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut =
-        [[NSMutableArray alloc] initWithCapacity:kvArray.count];
-    for (NSUInteger i = 0; i < kvArray.count; i = i + 1) {
-        id _Nonnull kvElement = [kvArray objectAtIndex:i];
-
-        if (! [kvElement isKindOfClass:[NSDictionary class]]) {
-            ADJResultFailBuilder *_Nonnull failBuilder =
-                [[ADJResultFailBuilder alloc] initWithMessage:
-                 @"Cannot iterate on array element that does not map to a Json dictionary"];
-            [failBuilder withKey:ADJLogActualKey stringValue:NSStringFromClass([kvElement class])];
-            [failBuilder withKey:@"array index" stringValue:[ADJUtilF uIntegerFormat:i]];
-            [optFailsMut addObject:[failBuilder build]];
-            continue;
-        }
-        ADJResult<NSString *> *_Nonnull keyResult =
-            [self stringWithJsParameters:kvElement key:ADJWBKvKeyKey];
-        if (keyResult.wasInputNil) {
-            [optFailsMut addObject:
-             [[ADJResultFail alloc]
-              initWithMessage:@"Cannot use unexpectedly non-existing key of array element"
-              key:@"array index" stringValue:[ADJUtilF uIntegerFormat:i]]];
-            continue;
-        }
-        if (keyResult.fail != nil) {
-            ADJResultFailBuilder *_Nonnull failBuilder =
-                [[ADJResultFailBuilder alloc] initWithMessage:@"Cannot get key of array element"];
-            [failBuilder withKey:@"string extraction fail" otherFail:keyResult.fail];
-            [failBuilder withKey:@"array index" stringValue:[ADJUtilF uIntegerFormat:i]];
-            [optFailsMut addObject:[failBuilder build]];
-            continue;
-        }
-
-        ADJResult<NSString *> *_Nonnull valueResult =
-            [self stringWithJsParameters:kvElement key:ADJWBKvValueKey];
-        if (valueResult.wasInputNil) {
-            [optFailsMut addObject:
-             [[ADJResultFail alloc]
-              initWithMessage:@"Cannot use unexpectedly non-existing value of array element"
-              key:@"array index" stringValue:[ADJUtilF uIntegerFormat:i]]];
-            continue;
-        }
-        if (valueResult.fail != nil) {
-            ADJResultFailBuilder *_Nonnull failBuilder =
-                [[ADJResultFailBuilder alloc] initWithMessage:@"Cannot get value of array element"];
-            [failBuilder withKey:@"string extraction fail" otherFail:valueResult.fail];
-            [failBuilder withKey:@"array index" stringValue:[ADJUtilF uIntegerFormat:i]];
-            [optFailsMut addObject:[failBuilder build]];
-            continue;
-        }
-
-        iterator(keyResult.value, valueResult.value);
-    }
-
-    if (optFailsMut.count == kvArray.count) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:optFailsMut
-                value:[[ADJResultFail alloc]
-                       initWithMessage:@"Could not use any of the key-values"]];
-    }
-
-    return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optFailsMut value:nil];
 }
 
 #pragma mark Internal Methods

@@ -334,13 +334,25 @@
 }
 
 - (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
+    [self
+     trackEvent:adjustEvent
+     callbackParameterKeyValueArray:nil
+     partnerParameterKeyValueArray:nil];
+}
+- (void)
+    trackEvent:(nonnull ADJAdjustEvent *)adjustEvent
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
+{
     [self ccExecuteFrom:@"trackEvent"
      clientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                           ADJLogger *_Nonnull logger)
      {
         ADJClientEventData *_Nullable clientData =
-        [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
-                                                       logger:logger];
+            [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
+                                   callbackParameterKeyValueArray:callbackParameterKeyValueArray
+                                    partnerParameterKeyValueArray:partnerParameterKeyValueArray
+                                                           logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackEventWithClientData:clientData];

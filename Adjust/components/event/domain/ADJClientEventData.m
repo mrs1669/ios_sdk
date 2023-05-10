@@ -37,8 +37,11 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
 @implementation ADJClientEventData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustEvent:(nullable ADJAdjustEvent *)adjustEvent
-                                                    logger:(nonnull ADJLogger *)logger
++ (nullable instancetype)
+    instanceFromClientWithAdjustEvent:(nullable ADJAdjustEvent *)adjustEvent
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
+    logger:(nonnull ADJLogger *)logger
 {
     if (adjustEvent == nil) {
         [logger errorClient:@"Cannot create event with nil adjust event value"];
@@ -68,7 +71,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
-         adjustEvent.callbackParameterKeyValueArray];
+         callbackParameterKeyValueArray ?: adjustEvent.callbackParameterKeyValueArray];
 
     for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
         [logger noticeClient:@"Issue while adding to event callback parameters"
@@ -92,7 +95,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
-         adjustEvent.partnerParameterKeyValueArray];
+         partnerParameterKeyValueArray ?: adjustEvent.partnerParameterKeyValueArray];
 
     for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
         [logger noticeClient:@"Issue while adding to event partner parameters"
@@ -168,6 +171,8 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     }
     
     return [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
+                                  callbackParameterKeyValueArray:nil
+                                   partnerParameterKeyValueArray:nil
                                                           logger:logger];
 }
 

@@ -305,8 +305,8 @@ function AdjustEvent(eventToken) {
     this._eventToken = eventToken;
     this._revenueAmountDouble = null;
     this._currency = null;
-    this._callbackParameters = [];
-    this._partnerParameters = [];
+    this._callbackParameterKeyValueArray = [];
+    this._partnerParameterKeyValueArray = [];
     this._deduplicationId = null;
 }
 
@@ -318,17 +318,17 @@ AdjustEvent.prototype.setRevenueDouble = function(revenueAmountDouble, currency)
 };
 
 AdjustEvent.prototype.addCallbackParameter = function(key, value) {
-    this._callbackParameters.push({
-        _key: key, _keyType: typeof key,
-        _value: value, _valueType: typeof value
-    });
+    this._callbackParameterKeyValueArray.push({
+        _element: key, _elementType: typeof key});
+    this._callbackParameterKeyValueArray.push({
+        _element: value, _elementType: typeof value});
 };
 
 AdjustEvent.prototype.addPartnerParameter = function(key, value) {
-    this._partnerParameters.push({
-        _key: key, _keyType: typeof key,
-        _value: value, _valueType: typeof value
-    });
+    this._partnerParameterKeyValueArray.push({
+        _element: key, _elementType: typeof key});
+    this._partnerParameterKeyValueArray.push({
+        _element: value, _elementType: typeof value});
 };
 
 AdjustEvent.prototype.setDeduplicationId = function(deduplicationId) {

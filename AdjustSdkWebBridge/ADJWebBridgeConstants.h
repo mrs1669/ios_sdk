@@ -70,8 +70,8 @@ FOUNDATION_EXPORT NSString *const ADJWBAdjustEventName;
 FOUNDATION_EXPORT NSString *const ADJWBEventTokenEventKey;
 FOUNDATION_EXPORT NSString *const ADJWBRevenueAmountDoubleEventKey;
 FOUNDATION_EXPORT NSString *const ADJWBCurrencyEventKey;
-FOUNDATION_EXPORT NSString *const ADJWBCallbackParametersEventKey;
-FOUNDATION_EXPORT NSString *const ADJWBPartnerParametersEventKey;
+FOUNDATION_EXPORT NSString *const ADJWBCallbackParameterKeyValueArrayEventKey;
+FOUNDATION_EXPORT NSString *const ADJWBPartnerParameterKeyValueArrayEventKey;
 FOUNDATION_EXPORT NSString *const ADJWBDeduplicationIdEventKey;
 
 FOUNDATION_EXPORT NSString *const ADJWBUrlStringKey;

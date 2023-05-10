@@ -10,6 +10,7 @@
 
 @class ADJSdkConfigData;
 @class ADJAdjustConfig;
+@class ADJAdjustEvent;
 @class ADJAdjustThirdPartySharing;
 @protocol ADJAdjustInstance;
 
@@ -59,6 +60,12 @@ NS_ASSUME_NONNULL_END
                      internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 + (void)adjustDeviceIdsWithClientId:(nullable NSString *)clientId
                    internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
+
++ (void)
+    trackEventForClientId:(nullable NSString *)clientId
+    adjustEvent:(nonnull ADJAdjustEvent *)adjustEvent
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
 
 + (void)
     trackThirdPartySharingForClientId:(nullable NSString *)clientId

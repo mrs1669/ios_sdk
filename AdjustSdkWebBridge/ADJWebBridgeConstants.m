@@ -73,8 +73,8 @@ NSString *const ADJWBAdjustEventName = @"AdjustEvent";
 NSString *const ADJWBEventTokenEventKey = @"_eventToken";
 NSString *const ADJWBRevenueAmountDoubleEventKey = @"_revenueAmountDouble";
 NSString *const ADJWBCurrencyEventKey = @"_currency";
-NSString *const ADJWBCallbackParametersEventKey = @"_callbackParameters";
-NSString *const ADJWBPartnerParametersEventKey = @"_partnerParameters";
+NSString *const ADJWBCallbackParameterKeyValueArrayEventKey = @"_callbackParameterKeyValueArray";
+NSString *const ADJWBPartnerParameterKeyValueArrayEventKey = @"_partnerParameterKeyValueArray";
 NSString *const ADJWBDeduplicationIdEventKey = @"_deduplicationId";
 
 NSString *const ADJWBUrlStringKey = @"_urlString";

@@ -34,6 +34,11 @@
 - (void)adjustAttributionWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 - (void)adjustDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 
+- (void)
+    trackEvent:(nonnull ADJAdjustEvent *)adjustEvent
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
+
 - (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
     granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
     partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;

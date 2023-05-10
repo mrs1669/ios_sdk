@@ -46,6 +46,10 @@
 
 - (nonnull ADJAdjustEvent *)adjustEventWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
+- (nullable NSArray *)eventCallbackParameterKeyValueArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters;
+- (nullable NSArray *)eventPartnerParameterKeyValueArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters;
 
 - (nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplinkWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
