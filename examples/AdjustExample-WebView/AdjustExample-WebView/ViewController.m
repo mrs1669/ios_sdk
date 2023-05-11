@@ -49,7 +49,7 @@
 - (void)didLogMessagesPreInitWithArray:
     (nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray
 {
-    NSLog(@"didLogMessagesPreInitWithArray count %@", preInitLogMessageArray.count);
+    NSLog(@"didLogMessagesPreInitWithArray count %@", @(preInitLogMessageArray.count));
 }
 
 @end

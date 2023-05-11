@@ -15,6 +15,7 @@
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustPushToken.h"
 #import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustAdRevenue.h"
 
 #import "ADJResult.h"
 #import "ADJBooleanWrapper.h"
@@ -62,6 +63,13 @@
 - (nullable NSArray *)tpsGranulaOptionsByNameArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
 - (nullable NSArray *)tpsPartnerSharingSettingsByNameArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters;
+
+- (nonnull ADJAdjustAdRevenue *)adjustAdRevenueWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters;
+- (nullable NSArray *)adRevenueCallbackParameterKeyValueArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters;
+- (nullable NSArray *)adRevenuePartnerParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
 
 

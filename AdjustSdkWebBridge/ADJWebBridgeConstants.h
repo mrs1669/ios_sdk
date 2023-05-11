@@ -83,6 +83,17 @@ FOUNDATION_EXPORT NSString *const ADJWBEnabledOrElseDisabledSharingTPSKey;
 FOUNDATION_EXPORT NSString *const ADJWBGranularOptionsByNameArrayTPSKey;
 FOUNDATION_EXPORT NSString *const ADJWBPartnerSharingSettingsByNameArrayTPSKey;
 
+FOUNDATION_EXPORT NSString *const ADJWBAdjustAdRevenueName;
+FOUNDATION_EXPORT NSString *const ADJWBSourceAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBRevenueAmountDoubleAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBCurrencyAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBAdImpressionsCountAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBNetworkAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBUnitAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBPlacementAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBCallbackParameterKeyValueArrayAdRevenueKey;
+FOUNDATION_EXPORT NSString *const ADJWBPartnerParameterKeyValueArrayAdRevenueKey;
+
 
 FOUNDATION_EXPORT NSString *const ADJWBObjectNameKey;
 

@@ -123,7 +123,7 @@
 }
 
 + (nonnull ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *)
-    convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
+    convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray;
 {
     if (keyValueArray == nil) {
         return [[ADJOptionalFailsNN alloc]

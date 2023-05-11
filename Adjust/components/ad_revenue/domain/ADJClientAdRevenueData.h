@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nullable instancetype)
     instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
     logger:(nonnull ADJLogger *)logger;
 
 + (nullable instancetype)

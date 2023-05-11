@@ -416,14 +416,26 @@
 }
 
 - (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue {
+    [self
+     trackAdRevenue:adjustAdRevenue
+     callbackParameterKeyValueArray:nil
+     partnerParameterKeyValueArray:nil];
+}
+- (void)
+    trackAdRevenue:(ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
+{
     [self ccExecuteFrom:@"trackAdRevenue"
      clientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                           ADJLogger *_Nonnull logger)
      {
         ADJClientAdRevenueData *_Nullable clientData =
-        [ADJClientAdRevenueData
-         instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
-         logger:logger];
+            [ADJClientAdRevenueData
+             instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
+             callbackParameterKeyValueArray:callbackParameterKeyValueArray
+             partnerParameterKeyValueArray:partnerParameterKeyValueArray
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackAdRevenueWithClientData:clientData];

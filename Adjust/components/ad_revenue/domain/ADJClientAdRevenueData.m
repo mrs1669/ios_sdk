@@ -57,6 +57,8 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 #pragma mark Instantiation
 + (nullable instancetype)
     instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
     logger:(nonnull ADJLogger *)logger
 {
     if (adjustAdRevenue == nil) {
@@ -138,7 +140,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
     ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
-         adjustAdRevenue.callbackParameterKeyValueArray];
+         callbackParameterKeyValueArray ?: adjustAdRevenue.callbackParameterKeyValueArray];
 
     for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
         [logger noticeClient:@"Issue while adding to ad revenue callback parameters"
@@ -162,7 +164,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
     ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
-         adjustAdRevenue.partnerParameterKeyValueArray];
+         partnerParameterKeyValueArray ?: adjustAdRevenue.partnerParameterKeyValueArray];
 
     for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
         [logger noticeClient:@"Issue while adding to ad revenue partner parameters"
@@ -276,6 +278,8 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     }
 
     return [self instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
+                        callbackParameterKeyValueArray:nil
+                         partnerParameterKeyValueArray:nil
                                                 logger:logger];
 }
 

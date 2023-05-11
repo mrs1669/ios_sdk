@@ -120,6 +120,21 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
        partnerSharingSettingsByNameArray:partnerSharingSettingsByNameArray];
 }
 
++ (void)
+    trackAdRevenuetForClientId:(nullable NSString *)clientId
+    adjustAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot
+     trackAdRevenue:adjustAdRevenue
+     callbackParameterKeyValueArray:callbackParameterKeyValueArray
+     partnerParameterKeyValueArray:partnerParameterKeyValueArray];
+}
+
 + (nonnull NSString *)sdkVersion {
     return ADJClientSdk;
 }

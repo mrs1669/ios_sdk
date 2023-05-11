@@ -303,6 +303,8 @@ AdjustConfig.prototype.setAdjustLogSubscriber = function(adjustLogSubscriber) {
 function AdjustEvent(eventToken) {
     this._objectName = "AdjustEvent";
     this._eventToken = eventToken;
+    this._eventTokenType = typeof eventToken;
+
     this._revenueAmountDouble = null;
     this._currency = null;
     this._callbackParameterKeyValueArray = [];
@@ -366,6 +368,63 @@ AdjustThirdPartySharing.prototype.addPartnerSharingSetting = function(partnerNam
     this._partnerSharingSettingsByNameArray.push({
         _element: key, _elementType: typeof key});
     this._partnerSharingSettingsByNameArray.push({
+        _element: value, _elementType: typeof value});
+};
+
+
+function AdjustAdRevenue(source) {
+    this._objectName = "AdjustAdRevenue";
+    this._source = source;
+    this._sourceType = typeof source;
+
+    this._revenueAmountDouble = null;
+    this._currency = null;
+    this._adImpressionsCount = null;
+    this._network = null;
+    this._unit = null;
+    this._placement = null;
+    this._callbackParameterKeyValueArray = [];
+    this._partnerParameterKeyValueArray = [];
+}
+
+AdjustAdRevenue.prototype.setRevenueDouble = function(revenueAmountDouble, currency) {
+    this._revenueAmountDouble = revenueAmountDouble;
+    this._revenueAmountDoubleType = typeof revenueAmountDouble;
+    this._currency = currency;
+    this._currencyType = typeof currency;
+};
+
+AdjustAdRevenue.prototype.setAdImpressionsCount = function(adImpressionsCount) {
+    this._adImpressionsCount = adImpressionsCount;
+    this._adImpressionsCountType = typeof adImpressionsCount;
+};
+
+AdjustAdRevenue.prototype.setNetwork = function(network) {
+    this._network = network;
+    this._networkType = typeof network;
+};
+
+AdjustAdRevenue.prototype.setUnit = function(unit) {
+    this._unit = unit;
+    this._unitType = typeof unit;
+};
+
+AdjustAdRevenue.prototype.setPlacement = function(placement) {
+    this._placement = placement;
+    this._placementType = typeof placement;
+};
+
+AdjustAdRevenue.prototype.addCallbackParameter = function(key, value) {
+    this._callbackParameterKeyValueArray.push({
+        _element: key, _elementType: typeof key});
+    this._callbackParameterKeyValueArray.push({
+        _element: value, _elementType: typeof value});
+};
+
+AdjustAdRevenue.prototype.addPartnerParameter = function(key, value) {
+    this._partnerParameterKeyValueArray.push({
+        _element: key, _elementType: typeof key});
+    this._partnerParameterKeyValueArray.push({
         _element: value, _elementType: typeof value});
 };
 

@@ -356,6 +356,32 @@
         return;
     }
 
+    if ([ADJWBTrackAdRevenueMethodName isEqualToString:methodName]) {
+        ADJResultFail *_Nullable objectMatchFail =
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustAdRevenueName];
+        if (objectMatchFail != nil) {
+            [self.logger debugDev:
+             @"Cannot track ad revenue with non Adjust Ad Revenue parameter"
+                       resultFail:objectMatchFail
+                        issueType:ADJIssueNonNativeIntegration];
+            return;
+        }
+
+        ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
+            [self.sdkApiHelper adjustAdRevenueWithJsParameters:jsParameters];
+        NSArray *_Nullable callbackParameterKeyValueArray =
+            [self.sdkApiHelper adRevenueCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
+        NSArray *_Nullable partnerParameterKeyValueArray =
+            [self.sdkApiHelper adRevenuePartnerParameterKeyValueArrayWithJsParameters:jsParameters];
+
+        [ADJAdjustInternal trackAdRevenuetForClientId:instanceIdString
+                                      adjustAdRevenue:adjustAdRevenue
+                       callbackParameterKeyValueArray:callbackParameterKeyValueArray
+                        partnerParameterKeyValueArray:partnerParameterKeyValueArray];
+        return;
+    }
+
 
     id<ADJAdjustInstance> _Nonnull adjustInstance = [ADJAdjust instanceForId:instanceIdString];
 
@@ -375,26 +401,12 @@
         [adjustInstance switchBackToOnlineMode];
     // TODO add activateMeasurementConsent and inactivateMeasurementConsent
     // TODO add deviceIdsWithCallback and adjustAttributionWithCallback
-    } else if ([ADJWBTrackEventMethodName isEqualToString:methodName]) {
-        ADJResultFail *_Nullable objectMatchFail =
-            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
-                                              expectedName:ADJWBAdjustEventName];
-        if (objectMatchFail != nil) {
-            [self.logger debugDev:@"Cannot track event with non Adjust Event parameter"
-                       resultFail:objectMatchFail
-                        issueType:ADJIssueNonNativeIntegration];
-            return;
-        }
-
-        [adjustInstance trackEvent:[self.sdkApiHelper adjustEventWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
         [adjustInstance trackLaunchedDeeplink:
          [self.sdkApiHelper adjustLaunchedDeeplinkWithJsParameters:jsParameters]];
     } else if ([ADJWBTrackPushTokenMethodName isEqualToString:methodName]) {
         [adjustInstance trackPushToken:
          [self.sdkApiHelper adjustPushTokenWithJsParameters:jsParameters]];
-    } else if ([ADJWBTrackAdRevenueMethodName isEqualToString:methodName]) {
-        [adjustInstance trackAdRevenue:[self adRevenueWithJsParameters:jsParameters]];
     // TODO add trackBillingSubscription
     } else if ([ADJWBAddGlobalCallbackParameterMethodName isEqualToString:methodName]) {
         [adjustInstance
@@ -424,11 +436,6 @@
 }
 
 
-- (nonnull ADJAdjustAdRevenue *)adRevenueWithJsParameters:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters
-{
-    return nil;
-}
 - (nullable NSString *)keyWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {

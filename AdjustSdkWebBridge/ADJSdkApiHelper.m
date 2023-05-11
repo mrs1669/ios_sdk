@@ -231,7 +231,7 @@
                                                                     key:ADJWBEventTokenEventKey
                                                                    from:ADJWBAdjustEventName];
 
-    __block ADJAdjustEvent *_Nonnull adjustEvent =
+    ADJAdjustEvent *_Nonnull adjustEvent =
         [[ADJAdjustEvent alloc] initWithEventToken:eventToken];
 
     NSString *_Nullable currency = [self stringLoggedWithJsParameters:jsParameters
@@ -259,52 +259,19 @@
 - (nullable NSArray *)eventCallbackParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
-    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull callbackParametersResult =
-        [ADJSdkApiHelper arrayWithObject:
-         [jsParameters objectForKey:ADJWBCallbackParameterKeyValueArrayEventKey]];
-
-    if (callbackParametersResult.value == nil) {
-        if (callbackParametersResult.failNonNilInput != nil) {
-            [self.logger debugDev:@"Could not use event callback parameters"
-                       resultFail:callbackParametersResult.fail
-                        issueType:ADJIssueNonNativeIntegration];
-        }
-        return nil;
-    }
-
-    for (ADJResultFail *_Nonnull optFail in callbackParametersResult.value.optionalFails) {
-        [self.logger debugDev:@"Issue while parsing event callback parameters"
-                   resultFail:optFail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-
-    return callbackParametersResult.value.value;
+    return [self
+            arrayWithObject:[jsParameters objectForKey:ADJWBCallbackParameterKeyValueArrayEventKey]
+            failMessage:@"Could not use event callback parameters"
+            optFailMessage:@"Issue while parsing event callback parameters"];
 }
 - (nullable NSArray *)eventPartnerParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
-    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull partnerParametersResult =
-        [ADJSdkApiHelper arrayWithObject:
-         [jsParameters objectForKey:ADJWBPartnerParameterKeyValueArrayEventKey]];
-
-    if (partnerParametersResult.value == nil) {
-        if (partnerParametersResult.fail != nil) {
-            [self.logger debugDev:@"Could not use event partner parameters"
-                       resultFail:partnerParametersResult.fail
-                        issueType:ADJIssueNonNativeIntegration];
-        }
-        return nil;
-    }
-
-    for (ADJResultFail *_Nonnull optFail in partnerParametersResult.value.optionalFails) {
-        [self.logger debugDev:@"Issue while parsing event partner parameters"
-                   resultFail:optFail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-
-    return partnerParametersResult.value.value;
+    return [self
+            arrayWithObject:[jsParameters objectForKey:ADJWBPartnerParameterKeyValueArrayEventKey]
+            failMessage:@"Could not use event partner parameters"
+            optFailMessage:@"Issue while parsing event partner parameters"];
 }
-
 
 - (nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplinkWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
@@ -358,52 +325,97 @@
 - (nullable NSArray *)tpsGranulaOptionsByNameArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
-    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull granularResult =
-        [ADJSdkApiHelper arrayWithObject:
-         [jsParameters objectForKey:ADJWBGranularOptionsByNameArrayTPSKey]];
-
-    if (granularResult.value == nil) {
-        if (granularResult.failNonNilInput != nil) {
-            [self.logger debugDev:@"Could not use third party sharing granular options"
-                       resultFail:granularResult.fail
-                        issueType:ADJIssueNonNativeIntegration];
-        }
-        return nil;
-    }
-
-    for (ADJResultFail *_Nonnull granularOptFail in granularResult.value.optionalFails) {
-        [self.logger debugDev:
-         @"Issue while parsing third party sharing granular options parameters"
-                   resultFail:granularOptFail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-    return granularResult.value.value;
+    return [self
+            arrayWithObject:[jsParameters objectForKey:ADJWBGranularOptionsByNameArrayTPSKey]
+            failMessage:@"Could not use third party sharing granular options"
+            optFailMessage:@"Issue while parsing third party sharing granular options parameters"];
 }
 
 - (nullable NSArray *)tpsPartnerSharingSettingsByNameArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
-    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull partnerSharingResult =
-        [ADJSdkApiHelper arrayWithObject:
-         [jsParameters objectForKey:ADJWBPartnerSharingSettingsByNameArrayTPSKey]];
-
-    if (partnerSharingResult.value == nil) {
-        if (partnerSharingResult.failNonNilInput != nil) {
-            [self.logger debugDev:@"Could not use third party sharing partner sharing settings"
-                       resultFail:partnerSharingResult.fail
-                        issueType:ADJIssueNonNativeIntegration];
-        }
-        return nil;
-    }
-
-    for (ADJResultFail *_Nonnull partnerSharingOptFail in partnerSharingResult.value.optionalFails) {
-        [self.logger debugDev:
-         @"Issue while parsing third party sharing partner sharing settings parameters"
-                   resultFail:partnerSharingOptFail
-                    issueType:ADJIssueNonNativeIntegration];
-    }
-    return partnerSharingResult.value.value;
+    return [self
+            arrayWithObject:[jsParameters objectForKey:ADJWBPartnerSharingSettingsByNameArrayTPSKey]
+            failMessage:@"Could not use third party sharing partner sharing settings"
+            optFailMessage:
+                @"Issue while parsing third party sharing partner sharing settings parameters"];
 }
+
+- (nonnull ADJAdjustAdRevenue *)adjustAdRevenueWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    NSString *_Nullable source = [self stringLoggedWithJsParameters:jsParameters
+                                                                key:ADJWBSourceAdRevenueKey
+                                                               from:ADJWBAdjustAdRevenueName];
+
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
+        [[ADJAdjustAdRevenue alloc] initWithSource:source];
+
+    NSString *_Nullable currency = [self stringLoggedWithJsParameters:jsParameters
+                                                                  key:ADJWBCurrencyAdRevenueKey
+                                                                 from:ADJWBAdjustAdRevenueName];
+    NSNumber *_Nullable revenueAmountDouble =
+        [self numberLoggedWithJsParameters:jsParameters
+                                       key:ADJWBRevenueAmountDoubleAdRevenueKey
+                                      from:ADJWBAdjustAdRevenueName];
+    if (currency != nil || revenueAmountDouble != nil) {
+        [adjustAdRevenue setRevenueWithDoubleNumber:revenueAmountDouble
+                                           currency:currency];
+    }
+
+    NSNumber *_Nullable adImpressionsCount =
+        [self numberLoggedWithJsParameters:jsParameters
+                                       key:ADJWBAdImpressionsCountAdRevenueKey
+                                      from:ADJWBAdjustAdRevenueName];
+    if (adImpressionsCount != nil) {
+        [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCount];
+    }
+
+    NSString *_Nullable network =
+        [self stringLoggedWithJsParameters:jsParameters
+                                       key:ADJWBNetworkAdRevenueKey
+                                      from:ADJWBAdjustAdRevenueName];
+    if (network != nil) {
+        [adjustAdRevenue setNetwork:network];
+    }
+
+    NSString *_Nullable unit =
+        [self stringLoggedWithJsParameters:jsParameters
+                                       key:ADJWBUnitAdRevenueKey
+                                      from:ADJWBAdjustAdRevenueName];
+    if (unit != nil) {
+        [adjustAdRevenue setUnit:unit];
+    }
+
+    NSString *_Nullable placement =
+        [self stringLoggedWithJsParameters:jsParameters
+                                       key:ADJWBPlacementAdRevenueKey
+                                      from:ADJWBAdjustAdRevenueName];
+    if (placement != nil) {
+        [adjustAdRevenue setPlacement:placement];
+    }
+
+    return adjustAdRevenue;
+}
+- (nullable NSArray *)adRevenueCallbackParameterKeyValueArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    return [self
+            arrayWithObject:
+                [jsParameters objectForKey:ADJWBCallbackParameterKeyValueArrayAdRevenueKey]
+            failMessage:@"Could not use ad revenue callback parameters"
+            optFailMessage:@"Issue while parsing ad revenue callback parameters"];
+}
+- (nullable NSArray *)adRevenuePartnerParameterKeyValueArrayWithJsParameters:
+    (nonnull NSDictionary<NSString *, id> *)jsParameters
+{
+    return [self
+            arrayWithObject:
+                [jsParameters objectForKey:ADJWBPartnerParameterKeyValueArrayAdRevenueKey]
+            failMessage:@"Could not use ad revenue partner parameters"
+            optFailMessage:@"Issue while parsing ad revenue partner parameters"];
+}
+
 
 + (nullable ADJResultFail *)
     objectMatchesWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
@@ -732,6 +744,32 @@
         [logBuilder withFail:fail
                        issue:ADJIssueNonNativeIntegration];
     }];
+}
+
+- (nullable NSArray *)
+    arrayWithObject:(nullable NSArray *)arrayObject
+    failMessage:(nonnull NSString *)failMessage
+    optFailMessage:(nonnull NSString *)optFailMessage
+{
+    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull arrayResult =
+        [ADJSdkApiHelper arrayWithObject:arrayObject];
+
+    if (arrayResult.value == nil) {
+        if (arrayResult.failNonNilInput != nil) {
+            [self.logger debugDev:failMessage
+                       resultFail:arrayResult.fail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+        return nil;
+    }
+
+    for (ADJResultFail *_Nonnull optFail in arrayResult.value.optionalFails) {
+        [self.logger debugDev:optFailMessage
+                   resultFail:optFail
+                    issueType:ADJIssueNonNativeIntegration];
+    }
+
+    return arrayResult.value.value;
 }
 
 @end

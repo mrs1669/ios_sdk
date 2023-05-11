@@ -31,7 +31,7 @@
 
 // string map convertions
 + (nonnull ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *)
-    convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
+    convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray;
 
 // nameKeyValueArray maps [name, key, value] to <name, <key, value>>
 // name, key and value need to be string

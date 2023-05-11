@@ -87,6 +87,18 @@ NSString *const ADJWBGranularOptionsByNameArrayTPSKey = @"_granularOptionsByName
 NSString *const ADJWBPartnerSharingSettingsByNameArrayTPSKey
     = @"_partnerSharingSettingsByNameArray";
 
+NSString *const ADJWBAdjustAdRevenueName = @"AdjustAdRevenue";
+NSString *const ADJWBSourceAdRevenueKey = @"_source";
+NSString *const ADJWBRevenueAmountDoubleAdRevenueKey = @"_revenueAmountDouble";
+NSString *const ADJWBCurrencyAdRevenueKey = @"_currency";
+NSString *const ADJWBAdImpressionsCountAdRevenueKey = @"_adImpressionsCount";
+NSString *const ADJWBNetworkAdRevenueKey = @"_network";
+NSString *const ADJWBUnitAdRevenueKey = @"_unit";
+NSString *const ADJWBPlacementAdRevenueKey = @"_placement";
+NSString *const ADJWBCallbackParameterKeyValueArrayAdRevenueKey =
+    @"_callbackParameterKeyValueArray";
+NSString *const ADJWBPartnerParameterKeyValueArrayAdRevenueKey = @"_partnerParameterKeyValueArray";
+
 
 NSString *const ADJWBObjectNameKey = @"_objectName";
 

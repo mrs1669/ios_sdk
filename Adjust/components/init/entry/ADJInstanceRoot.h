@@ -43,6 +43,11 @@
     granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
     partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;
 
+- (void)
+    trackAdRevenue:(ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
+
 - (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
 
 @end

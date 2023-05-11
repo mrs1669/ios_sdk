@@ -12,6 +12,7 @@
 @class ADJAdjustConfig;
 @class ADJAdjustEvent;
 @class ADJAdjustThirdPartySharing;
+@class ADJAdjustAdRevenue;
 @protocol ADJAdjustInstance;
 
 @protocol ADJInternalCallback <NSObject>
@@ -72,6 +73,12 @@ NS_ASSUME_NONNULL_END
     adjustThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
     granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
     partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;
+
++ (void)
+    trackAdRevenuetForClientId:(nullable NSString *)clientId
+    adjustAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
 
 + (nonnull NSString *)sdkVersion;
 
