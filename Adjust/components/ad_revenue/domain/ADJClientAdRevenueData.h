@@ -27,10 +27,16 @@ NS_ASSUME_NONNULL_END
 @interface ADJClientAdRevenueData : NSObject<ADJClientActionIoDataInjectable>
 // instantiation
 + (nullable instancetype)
-    instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
-    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
-    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
-    logger:(nonnull ADJLogger *)logger;
+    instanceFromClientWithLogger:(nonnull ADJLogger *)logger
+    adjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
+    externalCallbackParameterKeyValueArray:
+        (nullable NSArray *)externalCallbackParameterKeyValueArray
+    externalPartnerParameterKeyValueArray:
+        (nullable NSArray *)externalPartnerParameterKeyValueArray
+    externalCallbackParametersStringMap:
+        (nullable ADJStringMap *)externalCallbackParametersStringMap
+    externalPartnerParametersStringMap:(nullable ADJStringMap *)externalPartnerParametersStringMap
+externalRevenue:(nullable ADJMoney *)externalRevenue;
 
 + (nullable instancetype)
     instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData

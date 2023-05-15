@@ -375,10 +375,10 @@
         NSArray *_Nullable partnerParameterKeyValueArray =
             [self.sdkApiHelper adRevenuePartnerParameterKeyValueArrayWithJsParameters:jsParameters];
 
-        [ADJAdjustInternal trackAdRevenuetForClientId:instanceIdString
-                                      adjustAdRevenue:adjustAdRevenue
-                       callbackParameterKeyValueArray:callbackParameterKeyValueArray
-                        partnerParameterKeyValueArray:partnerParameterKeyValueArray];
+        [ADJAdjustInternal trackAdRevenueForClientId:instanceIdString
+                                     adjustAdRevenue:adjustAdRevenue
+                      callbackParameterKeyValueArray:callbackParameterKeyValueArray
+                       partnerParameterKeyValueArray:partnerParameterKeyValueArray];
         return;
     }
 

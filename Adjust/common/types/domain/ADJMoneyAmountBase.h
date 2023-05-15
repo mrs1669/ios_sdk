@@ -13,7 +13,6 @@
 #import "ADJNonEmptyString.h"
 
 @interface ADJMoneyAmountBase : NSObject<
-    NSCopying,
     ADJPackageParamValueSerializable,
     ADJIoValueSerializable
 >
@@ -23,9 +22,4 @@
 
 - (nonnull instancetype)init;
 
-// public properties
-@property (nonnull, readonly, strong, nonatomic) NSNumber *numberValue;
-@property (readonly, assign, nonatomic) double doubleValue;
-
 @end
-

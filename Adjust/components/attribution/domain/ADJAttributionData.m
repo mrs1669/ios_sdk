@@ -58,23 +58,11 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 + (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
-    ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
-    ADJResult<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
-        [ADJMoneyAmountBase instanceFromIoValue:costAmountIoValue];
-
-    NSArray<ADJResultFail *> *optionalFails = nil;
-
-    if (costAmountResult.failNonNilInput != nil) {
-        optionalFails = [NSArray arrayWithObject:
-                         [[ADJResultFail alloc]
-                          initWithMessage:@"Cannot use invalid cost amount in attribution data"
-                            " from io data map"
-                          key:@"costAmount fail"
-                          otherFail:costAmountResult.fail]];
-    }
+    ADJOptionalFailsNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountOptFails =
+        [self extractCostAmountWithIoValue:[ioDataMap pairValueWithKey:kCostAmountKey]];
 
     return [[ADJOptionalFailsNN alloc]
-            initWithOptionalFails:optionalFails
+            initWithOptionalFails:costAmountOptFails.optionalFails
             value:[[ADJAttributionData alloc]
                    initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
                    trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
@@ -88,7 +76,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
                    state:[ioDataMap pairValueWithKey:kStateKey]
                    costType:[ioDataMap pairValueWithKey:kCostTypeKey]
-                   costAmount:costAmountResult.value
+                   costAmount:costAmountOptFails.value
                    costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]]];
 }
 
@@ -233,7 +221,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                                     deeplink:(nullable ADJNonEmptyString *)deeplink
                                        state:(nullable ADJNonEmptyString *)state
                                     costType:(nullable ADJNonEmptyString *)costType
-                                  costAmount:(nullable ADJMoneyAmountBase *)costAmount
+                                  costAmount:(nullable ADJMoneyDoubleAmount *)costAmount
                                 costCurrency:(nullable ADJNonEmptyString *)costCurrency
 {
     self = [super init];
@@ -272,7 +260,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     adjustAttribution.deeplink = [ADJUtilF stringValueOrNil:self.deeplink];
     adjustAttribution.state = [ADJUtilF stringValueOrNil:self.state];
     adjustAttribution.costType = [ADJUtilF stringValueOrNil:self.costType];
-    adjustAttribution.costAmount = self.costAmount != nil ? self.costAmount.numberValue : nil;
+    adjustAttribution.costAmount = self.costAmount != nil ? self.costAmount.doubleNumberValue : nil;
     adjustAttribution.costCurrency = [ADJUtilF stringValueOrNil:self.costCurrency];
     
     return adjustAttribution;
@@ -477,6 +465,45 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     }
 
     return stringResult.value;
+}
+
++ (nonnull ADJOptionalFailsNL<ADJMoneyDoubleAmount *> *)
+    extractCostAmountWithIoValue:(nullable ADJNonEmptyString *)ioValue
+{
+    if (ioValue == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+    }
+
+    NSString *_Nullable ioMoneyDoubleAmountSubValue =
+        [ADJMoneyDoubleAmount ioMoneyDoubleAmountSubValueWithIoValue:ioValue];
+
+    if (ioMoneyDoubleAmountSubValue == nil) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:
+                    [NSArray arrayWithObject:
+                     [[ADJResultFail alloc]
+                      initWithMessage:@"Cost amount did not match expected double sub type"
+                      key:ADJLogActualKey
+                      stringValue:ioValue.stringValue]]
+                value:nil];
+    }
+
+    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull moneyDoubleAmountResult =
+        [ADJMoneyDoubleAmount instanceFromIoMoneyDoubleAmountSubValue:ioMoneyDoubleAmountSubValue];
+
+    if (moneyDoubleAmountResult.fail != nil) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:
+                    [NSArray arrayWithObject:
+                     [[ADJResultFail alloc]
+                      initWithMessage:@"Cannot create cost amount from io sub value"
+                      key:@"io sub value fail"
+                      otherFail:moneyDoubleAmountResult.fail]]
+                value:nil];
+    } else {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil
+                                                           value:moneyDoubleAmountResult.value];
+    }
 }
 
 @end

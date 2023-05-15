@@ -16,10 +16,13 @@
 @interface ADJMoneyDecimalAmount : ADJMoneyAmountBase
 // instantiation
 + (nonnull ADJResult<ADJMoneyDecimalAmount *> *)
-    instanceFromIoDecValue:(nonnull NSString *)ioDecValue;
+    instanceFromIoMoneyDecimalAmountSubValue:(nonnull NSString *)ioMoneyDecimalAmountSubValue;
 
 + (nonnull ADJResult<ADJMoneyDecimalAmount *> *)instanceFromDecimalNumberValue:
     (nullable NSDecimalNumber *)decimalNumberValue;
+
++ (nullable NSString *)ioMoneyDecimalAmountSubValueWithIoValue:
+    (nonnull ADJNonEmptyString *)ioValue;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSDecimalNumber *decimalNumberValue;

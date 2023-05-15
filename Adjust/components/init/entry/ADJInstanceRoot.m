@@ -349,10 +349,13 @@
                           ADJLogger *_Nonnull logger)
      {
         ADJClientEventData *_Nullable clientData =
-            [ADJClientEventData instanceFromClientWithAdjustEvent:adjustEvent
-                                   callbackParameterKeyValueArray:callbackParameterKeyValueArray
-                                    partnerParameterKeyValueArray:partnerParameterKeyValueArray
-                                                           logger:logger];
+            [ADJClientEventData instanceFromClientWithLogger:logger
+                                                 adjustEvent:adjustEvent
+                      externalCallbackParameterKeyValueArray:callbackParameterKeyValueArray
+                       externalPartnerParameterKeyValueArray:partnerParameterKeyValueArray
+                         externalCallbackParametersStringMap:nil
+                          externalPartnerParametersStringMap:nil
+                                             externalRevenue:nil];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackEventWithClientData:clientData];
@@ -432,10 +435,13 @@
      {
         ADJClientAdRevenueData *_Nullable clientData =
             [ADJClientAdRevenueData
-             instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
-             callbackParameterKeyValueArray:callbackParameterKeyValueArray
-             partnerParameterKeyValueArray:partnerParameterKeyValueArray
-             logger:logger];
+             instanceFromClientWithLogger:logger
+             adjustAdRevenue:adjustAdRevenue
+             externalCallbackParameterKeyValueArray:callbackParameterKeyValueArray
+             externalPartnerParameterKeyValueArray:partnerParameterKeyValueArray
+             externalCallbackParametersStringMap:nil
+             externalPartnerParametersStringMap:nil
+             externalRevenue:nil];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackAdRevenueWithClientData:clientData];
@@ -450,9 +456,11 @@
                           ADJLogger *_Nonnull logger)
      {
         ADJClientBillingSubscriptionData *_Nullable clientData =
-        [ADJClientBillingSubscriptionData
-         instanceFromClientWithAdjustBillingSubscription:adjustBillingSubscription
-         logger:logger];
+            [ADJClientBillingSubscriptionData
+             instanceFromClientWithLogger:logger
+             adjustBillingSubscription:adjustBillingSubscription
+             externalCallbackParameterKeyValueArray:nil
+             externalPartnerParameterKeyValueArray:nil];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccTrackBillingSubscriptionWithClientData:clientData];

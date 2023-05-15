@@ -12,6 +12,7 @@
 #import "ADJConstants.h"
 #import "ADJMoneyDoubleAmount.h"
 #import "ADJMoneyDecimalAmount.h"
+#import "ADJUtilF.h"
 
 //#import "ADJResultFail.h"
 
@@ -38,8 +39,7 @@
                                 otherFail:moneyDoubleAmountResult.fail];
     }
 
-    return [ADJMoney instanceFromMoneyAmount:moneyDoubleAmountResult.value
-                                    currency:currency];
+    return [ADJMoney instanceFromAmount:moneyDoubleAmountResult.value currency:currency];
 }
 
 + (nonnull ADJResult<ADJMoney *> *)
@@ -56,8 +56,54 @@
                                 otherFail:moneyDecimalAmountResult.fail];
     }
 
-    return [ADJMoney instanceFromMoneyAmount:moneyDecimalAmountResult.value
-                                    currency:currency];
+    return [ADJMoney instanceFromAmount:moneyDecimalAmountResult.value
+                               currency:currency];
+}
+
++ (nonnull ADJResult<ADJMoney *> *)
+    instanceFromAmount:(nullable ADJMoneyAmountBase *)amount
+    currency:(nullable NSString *)currency
+{
+    ADJResult<ADJNonEmptyString *> *_Nonnull currencyResult =
+        [ADJNonEmptyString instanceFromString:currency];
+
+    if (currencyResult.failNonNilInput != nil) {
+        return [ADJResult failWithMessage:@"Cannot create money instance with invalid currency"
+                                      key:@"currency fail"
+                                otherFail:currencyResult.fail];
+    }
+
+    if (currencyResult.wasInputNil && amount == nil) {
+        return [ADJResult nilInputWithMessage:
+                @"Cannot create money instance without currency and amount"];
+    }
+    if (currencyResult.wasInputNil) {
+        return [ADJResult failWithMessage:@"Cannot create money instance without currency"];
+    }
+    if (amount == nil) {
+        return [ADJResult failWithMessage:@"Cannot create money instance without amount"];
+    }
+
+    return [ADJResult okWithValue:
+            [[ADJMoney alloc] initWithAmount:amount currency:currencyResult.value]];
+}
+
++ (nonnull ADJResult<ADJMoney *> *)
+    instanceFromAmountIoValue:(nullable ADJNonEmptyString *)amountIoValue
+    currencyIoValue:(nullable ADJNonEmptyString *)currencyIoValue
+{
+    ADJResult<ADJMoneyAmountBase *> *_Nonnull moneyAmountResult =
+        [ADJMoneyAmountBase instanceFromIoValue:amountIoValue];
+
+    if (moneyAmountResult.failNonNilInput != nil) {
+        return [ADJResult failWithMessage:
+                @"Cannot create money instance with invalid io value amount"
+                                      key:@"amount fail"
+                                otherFail:moneyAmountResult.fail];
+    }
+
+    return [ADJMoney instanceFromAmount:moneyAmountResult.value
+                               currency:[ADJUtilF stringValueOrNil:currencyIoValue]];
 }
 
 - (nonnull instancetype)initWithAmount:(nonnull ADJMoneyAmountBase *)amount
@@ -75,34 +121,6 @@
     return nil;
 }
 
-#pragma mark - Private constructors
-+ (nonnull ADJResult<ADJMoney *> *)
-    instanceFromMoneyAmount:(nullable ADJMoneyAmountBase *)moneyAmount
-    currency:(nullable NSString *)currency
-{
-    ADJResult<ADJNonEmptyString *> *_Nonnull currencyResult =
-        [ADJNonEmptyString instanceFromString:currency];
-
-    if (currencyResult.failNonNilInput != nil) {
-        return [ADJResult failWithMessage:@"Cannot create money instance with invalid currency"
-                                      key:@"currency fail"
-                                otherFail:currencyResult.fail];
-    }
-
-    if (currencyResult.wasInputNil && moneyAmount == nil) {
-        return [ADJResult nilInputWithMessage:
-                @"Cannot create money instance without currency and amount"];
-    }
-    if (currencyResult.wasInputNil) {
-        return [ADJResult failWithMessage:@"Cannot create money instance without currency"];
-    }
-    if (moneyAmount == nil) {
-        return [ADJResult failWithMessage:@"Cannot create money instance without amount"];
-    }
-
-    return [ADJResult okWithValue:
-            [[ADJMoney alloc] initWithAmount:moneyAmount currency:currencyResult.value]];
-}
 
 #pragma mark Public API
 #pragma mark - NSObject
@@ -131,7 +149,7 @@
 
     ADJMoney *other = (ADJMoney *)object;
     return [ADJUtilObj objectEquals:self.amount other:other.amount]
-    && [ADJUtilObj objectEquals:self.currency other:other.currency];
+        && [ADJUtilObj objectEquals:self.currency other:other.currency];
 }
 
 @end

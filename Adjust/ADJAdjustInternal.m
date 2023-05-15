@@ -121,7 +121,7 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
 }
 
 + (void)
-    trackAdRevenuetForClientId:(nullable NSString *)clientId
+    trackAdRevenueForClientId:(nullable NSString *)clientId
     adjustAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray

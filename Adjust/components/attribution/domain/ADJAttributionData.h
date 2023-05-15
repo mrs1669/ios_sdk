@@ -10,7 +10,7 @@
 
 #import "ADJIoDataMapBuilderInjectable.h"
 #import "ADJNonEmptyString.h"
-#import "ADJMoneyAmountBase.h"
+#import "ADJMoneyDoubleAmount.h"
 #import "ADJAdjustAttribution.h"
 #import "ADJOptionalFailsNN.h"
 #import "ADJOptionalFailsNL.h"
@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *deeplink;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *state;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *costType;
-@property (nullable, readonly, strong, nonatomic) ADJMoneyAmountBase *costAmount;
+@property (nullable, readonly, strong, nonatomic) ADJMoneyDoubleAmount *costAmount;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *costCurrency;
 
 // public api

@@ -8,6 +8,7 @@
 
 #import "ADJClientAdRevenueData.h"
 
+#import "ADJMoneyDoubleAmount.h"
 #import "ADJUtilF.h"
 #import "ADJUtilConv.h"
 #import "ADJUtilObj.h"
@@ -56,10 +57,16 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 @implementation ADJClientAdRevenueData
 #pragma mark Instantiation
 + (nullable instancetype)
-    instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
-    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
-    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
-    logger:(nonnull ADJLogger *)logger
+    instanceFromClientWithLogger:(nonnull ADJLogger *)logger
+    adjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
+    externalCallbackParameterKeyValueArray:
+        (nullable NSArray *)externalCallbackParameterKeyValueArray
+    externalPartnerParameterKeyValueArray:
+        (nullable NSArray *)externalPartnerParameterKeyValueArray
+    externalCallbackParametersStringMap:
+        (nullable ADJStringMap *)externalCallbackParametersStringMap
+    externalPartnerParametersStringMap:(nullable ADJStringMap *)externalPartnerParametersStringMap
+    externalRevenue:(nullable ADJMoney *)externalRevenue
 {
     if (adjustAdRevenue == nil) {
         [logger errorClient:@"Cannot create ad revenue with nil adjust ad revenue value"];
@@ -95,18 +102,18 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     }
 
     ADJMoney *_Nullable revenue = nil;
-    if (adjustAdRevenue.revenueAmountDoubleNumber != nil
-        || adjustAdRevenue.revenueCurrency != nil)
-    {
+    if (externalRevenue != nil) {
+        revenue = externalRevenue;
+    } else {
         ADJResult<ADJMoney *> *_Nonnull revenueResult =
-            [ADJMoney instanceFromAmountDoubleNumber:adjustAdRevenue.revenueAmountDoubleNumber
-                                            currency:adjustAdRevenue.revenueCurrency];
-        if (revenueResult.fail != nil) {
+            [ADJMoney
+             instanceFromAmountDoubleNumber:adjustAdRevenue.revenueAmountDoubleNumber
+             currency:adjustAdRevenue.revenueCurrency];
+        if (revenueResult.failNonNilInput != nil) {
             [logger noticeClient:@"Cannot use invalid revenue in ad revenue"
                       resultFail:revenueResult.fail];
-        } else {
-            revenue = revenueResult.value;
         }
+        revenue = revenueResult.value;
     }
 
     ADJResult<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
@@ -138,52 +145,34 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
                  resultFail:unitResult.fail];
     }
 
-    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
-        [ADJUtilConv convertToStringMapWithKeyValueArray:
-         callbackParameterKeyValueArray ?: adjustAdRevenue.callbackParameterKeyValueArray];
-
-    for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
-        [logger noticeClient:@"Issue while adding to ad revenue callback parameters"
-                  resultFail:optionalFail];
-    }
-
     ADJStringMap *_Nullable callbackParameters = nil;
-
-    ADJResult<ADJStringMap *> *_Nonnull callbackParametersResult =
-        callbackParametersOptFails.value;
-    if (callbackParametersResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot use ad revenue callback parameters"
-                  resultFail:callbackParametersResult.fail];
-    } else if (callbackParametersResult.value != nil) {
-        if ([callbackParametersResult.value isEmpty]) {
-            [logger noticeClient:@"Could not use any valid ad revenue callback parameter"];
-        } else {
-            callbackParameters = callbackParametersResult.value;
-        }
-    }
-
-    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
-        [ADJUtilConv convertToStringMapWithKeyValueArray:
-         partnerParameterKeyValueArray ?: adjustAdRevenue.partnerParameterKeyValueArray];
-
-    for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
-        [logger noticeClient:@"Issue while adding to ad revenue partner parameters"
-                  resultFail:optionalFail];
+    if (externalCallbackParametersStringMap != nil) {
+        callbackParameters = externalCallbackParametersStringMap;
+    } else {
+        callbackParameters =
+            [ADJUtilConv
+             clientStringMapWithKeyValueArray:
+                 externalCallbackParameterKeyValueArray
+                ?: adjustAdRevenue.callbackParameterKeyValueArray
+             logger:logger
+             processingFailMessage:@"Cannot use ad revenue callback parameters"
+             addingFailMessage:@"Issue while adding to ad revenue callback parameters"
+             emptyFailMessage:@"Could not use any valid ad revenue callback parameter"];
     }
 
     ADJStringMap *_Nullable partnerParameters = nil;
-
-    ADJResult<ADJStringMap *> *_Nonnull partnerParametersResult =
-        partnerParametersOptFails.value;
-    if (partnerParametersResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot use ad revenue partner parameters"
-                  resultFail:partnerParametersResult.fail];
-    } else if (partnerParametersResult.value != nil) {
-        if ([partnerParametersResult.value isEmpty]) {
-            [logger noticeClient:@"Could not use any valid ad revenue partner parameter"];
-        } else {
-            partnerParameters = partnerParametersResult.value;
-        }
+    if (externalPartnerParametersStringMap != nil) {
+        partnerParameters = externalPartnerParametersStringMap;
+    } else {
+        partnerParameters =
+            [ADJUtilConv
+             clientStringMapWithKeyValueArray:
+                 externalPartnerParameterKeyValueArray ?:
+                adjustAdRevenue.partnerParameterKeyValueArray
+             logger:logger
+             processingFailMessage:@"Cannot use ad revenue partner parameters"
+             addingFailMessage:@"Issue while adding to ad revenue partner parameters"
+             emptyFailMessage:@"Could not use any valid ad revenue partner parameter"];
     }
 
     return [[ADJClientAdRevenueData alloc] initWithSource:sourceResult.value
@@ -207,24 +196,14 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
         [[ADJAdjustAdRevenue alloc] initWithSource:source != nil ? source.stringValue : nil];
 
-    ADJNonEmptyString *_Nullable revenueAmountIoValue =
-        [propertiesMap pairValueWithKey:kRevenueAmountKey];
-
-    ADJResult<ADJMoneyAmountBase *> *_Nonnull revenueAmountResult =
-        [ADJMoneyAmountBase instanceFromIoValue:revenueAmountIoValue];
-    if (revenueAmountResult.failNonNilInput != nil) {
-        [logger debugDev:@"Invalid revenue amount from client action injected io data"
-             resultFail:revenueAmountResult.fail
-               issueType:ADJIssueInvalidInput];
-    }
-    ADJMoneyAmountBase *_Nullable revenueAmount = revenueAmountResult.value;
-
-    ADJNonEmptyString *_Nullable revenueCurrency =
-        [propertiesMap pairValueWithKey:kRevenueCurrencyKey];
-    if (revenueAmount != nil || revenueCurrency != nil) {
-        [adjustAdRevenue
-         setRevenueWithDoubleNumber:revenueAmount != nil? revenueAmount.numberValue : nil
-         currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
+    ADJResult<ADJMoney *> *_Nonnull revenueResult =
+        [ADJMoney
+         instanceFromAmountIoValue:[propertiesMap pairValueWithKey:kRevenueAmountKey]
+         currencyIoValue:[propertiesMap pairValueWithKey:kRevenueCurrencyKey]];
+    if (revenueResult.failNonNilInput != nil) {
+        [logger debugDev:@"Invalid revenue money from client action injected io data"
+              resultFail:revenueResult.fail
+               issueType:ADJIssueStorageIo];
     }
 
     ADJResult<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
@@ -258,29 +237,16 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     ADJStringMap *_Nullable callbackParametersMap =
         [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
 
-    if (callbackParametersMap != nil) {
-        for (NSString *_Nonnull callbackParameterKey in callbackParametersMap.map) {
-            [adjustAdRevenue
-             addCallbackParameterWithKey:callbackParameterKey
-             value:[callbackParametersMap.map objectForKey:callbackParameterKey].stringValue];
-        }
-    }
-
     ADJStringMap *_Nullable partnerParametersMap =
         [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
 
-    if (partnerParametersMap != nil) {
-        for (NSString *_Nonnull partnerParameterKey in partnerParametersMap.map) {
-            [adjustAdRevenue
-             addPartnerParameterWithKey:partnerParameterKey
-             value:[partnerParametersMap.map objectForKey:partnerParameterKey].stringValue];
-        }
-    }
-
-    return [self instanceFromClientWithAdjustAdRevenue:adjustAdRevenue
-                        callbackParameterKeyValueArray:nil
-                         partnerParameterKeyValueArray:nil
-                                                logger:logger];
+    return [self instanceFromClientWithLogger:logger
+                              adjustAdRevenue:adjustAdRevenue
+       externalCallbackParameterKeyValueArray:nil
+        externalPartnerParameterKeyValueArray:nil
+          externalCallbackParametersStringMap:callbackParametersMap
+           externalPartnerParametersStringMap:partnerParametersMap
+                              externalRevenue:revenueResult.value];
 }
 
 - (nullable instancetype)init {

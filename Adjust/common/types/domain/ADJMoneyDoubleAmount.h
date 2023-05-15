@@ -16,10 +16,12 @@
 @interface ADJMoneyDoubleAmount : ADJMoneyAmountBase
 // instantiation
 + (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
-    instanceFromIoLlfValue:(nonnull NSString *)ioLlfValue;
+    instanceFromIoMoneyDoubleAmountSubValue:(nonnull NSString *)ioMoneyDoubleAmountSubValue;
 
 + (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
     instanceFromDoubleNumberValue:(nullable NSNumber *)doubleNumberValue;
+
++ (nullable NSString *)ioMoneyDoubleAmountSubValueWithIoValue:(nonnull ADJNonEmptyString *)ioValue;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSNumber *doubleNumberValue;

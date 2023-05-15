@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_END
     partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;
 
 + (void)
-    trackAdRevenuetForClientId:(nullable NSString *)clientId
+    trackAdRevenueForClientId:(nullable NSString *)clientId
     adjustAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;

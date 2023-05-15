@@ -122,24 +122,47 @@
                                                options:0];
 }
 
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *)
++ (nullable ADJStringMap *)
+    clientStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
+    logger:(nonnull ADJLogger *)logger
+    processingFailMessage:(nonnull NSString *)processingFailMessage
+    addingFailMessage:(nonnull NSString *)addingFailMessage
+    emptyFailMessage:(nonnull NSString *)emptyFailMessage
+{
+    ADJResult<ADJOptionalFailsNN<ADJStringMap *> *> *_Nonnull parametersResult =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:keyValueArray];
+
+    if (parametersResult.value == nil) {
+        if (parametersResult.failNonNilInput != nil) {
+            [logger errorClient:processingFailMessage resultFail:parametersResult.fail];
+        }
+        return nil;
+    }
+
+    for (ADJResultFail *_Nonnull optionalFail in parametersResult.value.optionalFails) {
+        [logger noticeClient:addingFailMessage resultFail:optionalFail];
+    }
+
+    if ([parametersResult.value.value isEmpty]) {
+        [logger noticeClient:emptyFailMessage];
+        return nil;
+    }
+
+    return parametersResult.value.value;
+}
++ (nonnull ADJResult<ADJOptionalFailsNN<ADJStringMap *> *> *)
     convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray;
 {
     if (keyValueArray == nil) {
-        return [[ADJOptionalFailsNN alloc]
-                initWithOptionalFails:nil
-                value:[ADJResult nilInputWithMessage:
-                       @"Cannot convert string map with nil key value array"]];
+        return [ADJResult nilInputWithMessage:
+                @"Cannot convert to string map with nil key value array"];
     }
 
     if (keyValueArray.count % 2 != 0) {
-        return [[ADJOptionalFailsNN alloc]
-                initWithOptionalFails:nil
-                value:[ADJResult
-                       failWithMessage:
-                           @"Cannot convert key value array with non-multiple of 2 elements"
-                       key:@"keyValueArray count"
-                       stringValue:[ADJUtilF uIntegerFormat:keyValueArray.count]]];
+        return [ADJResult failWithMessage:
+                @"Cannot convert key value array with non-multiple of 2 elements"
+                                      key:@"keyValueArray count"
+                              stringValue:[ADJUtilF uIntegerFormat:keyValueArray.count]];
     }
 
     ADJStringMapBuilder *_Nonnull stringMapBuilder =
@@ -191,11 +214,13 @@
         }
     }
 
-    return [[ADJOptionalFailsNN alloc]
-            initWithOptionalFails:optionalFailsMut
-            value:[ADJResult okWithValue:
-                   [[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder]]];
+    return [ADJResult okWithValue:
+            [[ADJOptionalFailsNN alloc]
+             initWithOptionalFails:optionalFailsMut
+             value:[[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder]]];
 }
+
+
 + (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
     jsonStringFromNameKeyStringValueArray:
     (nullable NSArray<NSString *> *)nameKeyStringValueArray

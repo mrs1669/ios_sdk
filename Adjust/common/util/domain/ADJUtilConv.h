@@ -30,8 +30,12 @@
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
 // string map convertions
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *)
-    convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray;
++ (nullable ADJStringMap *)
+    clientStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
+    logger:(nonnull ADJLogger *)logger
+    processingFailMessage:(nonnull NSString *)processingFailMessage
+    addingFailMessage:(nonnull NSString *)addingFailMessage
+    emptyFailMessage:(nonnull NSString *)emptyFailMessage;
 
 // nameKeyValueArray maps [name, key, value] to <name, <key, value>>
 // name, key and value need to be string

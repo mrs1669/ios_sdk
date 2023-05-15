@@ -22,6 +22,14 @@
     instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
     currency:(nullable NSString *)currency;
 
++ (nonnull ADJResult<ADJMoney *> *)
+    instanceFromAmount:(nullable ADJMoneyAmountBase *)amount
+    currency:(nullable NSString *)currency;
+
++ (nonnull ADJResult<ADJMoney *> *)
+    instanceFromAmountIoValue:(nullable ADJNonEmptyString *)amountIoValue
+    currencyIoValue:(nullable ADJNonEmptyString *)currencyIoValue;
+
 - (nonnull instancetype)initWithAmount:(nonnull ADJMoneyAmountBase *)amount
                               currency:(nonnull ADJNonEmptyString *)currency
 NS_DESIGNATED_INITIALIZER;

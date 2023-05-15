@@ -14,12 +14,6 @@
 #import "ADJMoneyDecimalAmount.h"
 
 #pragma mark Fields
-#pragma mark - Public properties
-/* .h
- @property (nonnull, readonly, strong, nonatomic) NSNumber *numberValue;
- @property (readonly, assign, nonatomic) double doubleValue;
- */
-
 @implementation ADJMoneyAmountBase
 #pragma mark Instantiation
 + (nonnull ADJResult<ADJMoneyAmountBase *> *)
@@ -28,23 +22,24 @@
     if (ioValue == nil) {
         return [ADJResult nilInputWithMessage:@"Cannot create money amount with nil string value"];
     }
-
-    if ([ioValue.stringValue hasPrefix:@"llf"]) {
-        ADJResult<ADJMoneyDoubleAmount *> *_Nonnull llfDoubleResult =
-            [ADJMoneyDoubleAmount instanceFromIoLlfValue:
-             [ioValue.stringValue substringFromIndex:3]];
-        // cast to result of parent class, should be safe, just not supported directly in obj-c
-        return (ADJResult<ADJMoneyAmountBase *> *)llfDoubleResult;
+    {
+        NSString *_Nullable ioMoneyDoubleAmountSubValue =
+            [ADJMoneyDoubleAmount ioMoneyDoubleAmountSubValueWithIoValue:ioValue];
+        if (ioMoneyDoubleAmountSubValue != nil) {
+            return (ADJResult<ADJMoneyAmountBase *> *)
+            [ADJMoneyDoubleAmount
+             instanceFromIoMoneyDoubleAmountSubValue:ioMoneyDoubleAmountSubValue];
+        }
     }
-
-    if ([ioValue.stringValue hasPrefix:@"dec"]) {
-        ADJResult<ADJMoneyDecimalAmount *> *_Nonnull decDecimalResult =
-            [ADJMoneyDecimalAmount instanceFromIoDecValue:
-             [ioValue.stringValue substringFromIndex:3]];
-        // cast to result of parent class, should be safe, just not supported directly in obj-c
-        return (ADJResult<ADJMoneyAmountBase *> *)decDecimalResult;
+    {
+        NSString *_Nullable ioMoneyDecimalAmountSubValue =
+            [ADJMoneyDecimalAmount ioMoneyDecimalAmountSubValueWithIoValue:ioValue];
+        if (ioMoneyDecimalAmountSubValue != nil) {
+            return (ADJResult<ADJMoneyAmountBase *> *)
+            [ADJMoneyDecimalAmount
+             instanceFromIoMoneyDecimalAmountSubValue:ioMoneyDecimalAmountSubValue];
+        }
     }
-
     return [ADJResult failWithMessage:
             [NSString stringWithFormat:
                  @"Cannot create money amount without a valid io data value prefix: %@",
