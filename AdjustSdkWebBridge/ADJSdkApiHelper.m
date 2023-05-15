@@ -416,6 +416,20 @@
             optFailMessage:@"Issue while parsing ad revenue partner parameters"];
 }
 
+- (nullable NSString *)
+    stringLoggedWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    key:(nonnull NSString *)key
+    from:(nonnull NSString *)from
+{
+    ADJResult<NSString *> *_Nonnull stringResult =
+        [ADJSdkApiHelper stringWithJsParameters:jsParameters key:key];
+    if (stringResult.failNonNilInput != nil) {
+        [self logMissingFieldWithMessage:@"Could not parse string JS field"
+                                    fail:stringResult.fail key:key from:from];
+    }
+
+    return stringResult.value;
+}
 
 + (nullable ADJResultFail *)
     objectMatchesWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
@@ -671,21 +685,6 @@
 }
 
 #pragma mark Internal Methods
-- (nullable NSString *)
-    stringLoggedWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key
-    from:(nonnull NSString *)from
-{
-    ADJResult<NSString *> *_Nonnull stringResult =
-        [ADJSdkApiHelper stringWithJsParameters:jsParameters key:key];
-    if (stringResult.failNonNilInput != nil) {
-        [self logMissingFieldWithMessage:@"Could not parse string JS field"
-                                    fail:stringResult.fail key:key from:from];
-    }
-
-    return stringResult.value;
-}
-
 - (nullable NSNumber *)
     numberLoggedWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     key:(nonnull NSString *)key

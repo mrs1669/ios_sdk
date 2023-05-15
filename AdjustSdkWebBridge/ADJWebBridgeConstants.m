@@ -104,6 +104,5 @@ NSString *const ADJWBObjectNameKey = @"_objectName";
 
 NSString *const ADJWBElementKey = @"_element";
 
-NSString *const ADJWBKvPartnerNameKey = @"_partnerName";
 NSString *const ADJWBKvKeyKey = @"_key";
 NSString *const ADJWBKvValueKey = @"_value";

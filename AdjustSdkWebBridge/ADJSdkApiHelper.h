@@ -72,6 +72,10 @@
 - (nullable NSArray *)adRevenuePartnerParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters;
 
+- (nullable NSString *)
+    stringLoggedWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    key:(nonnull NSString *)key
+    from:(nonnull NSString *)from;
 
 + (nullable ADJResultFail *)
     objectMatchesWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters

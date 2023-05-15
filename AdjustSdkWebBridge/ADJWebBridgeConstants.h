@@ -99,7 +99,6 @@ FOUNDATION_EXPORT NSString *const ADJWBObjectNameKey;
 
 FOUNDATION_EXPORT NSString *const ADJWBElementKey;
 
-FOUNDATION_EXPORT NSString *const ADJWBKvPartnerNameKey;
 FOUNDATION_EXPORT NSString *const ADJWBKvKeyKey;
 FOUNDATION_EXPORT NSString *const ADJWBKvValueKey;
 
