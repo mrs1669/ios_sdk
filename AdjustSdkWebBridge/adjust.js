@@ -37,16 +37,16 @@ var Adjust = {
                 return okCheck;
             }
             const canSendSendToNative =
-            canSend(window, "without valid: 'window'") &&
-            canSend(window.webkit, "without valid: 'window.webkit'") &&
-            canSend(window.webkit.messageHandlers,
-                    "without valid: 'window.webkit.messageHandlers'") &&
-            canSend(window.webkit.messageHandlers.adjust,
-                    "without valid: 'window.webkit.messageHandlers.adjust'") &&
-            canSend(window.webkit.messageHandlers.adjust.postMessage,
-                    "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
-            canSend(typeof window.webkit.messageHandlers.adjust.postMessage === "function",
-                    "when 'window.webkit.messageHandlers.adjust.postMessage' is not a function");
+                canSend(window, "without valid: 'window'") &&
+                canSend(window.webkit, "without valid: 'window.webkit'") &&
+                canSend(window.webkit.messageHandlers,
+                        "without valid: 'window.webkit.messageHandlers'") &&
+                canSend(window.webkit.messageHandlers.adjust,
+                        "without valid: 'window.webkit.messageHandlers.adjust'") &&
+                canSend(window.webkit.messageHandlers.adjust.postMessage,
+                        "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
+                canSend(typeof window.webkit.messageHandlers.adjust.postMessage === "function",
+                        "when 'window.webkit.messageHandlers.adjust.postMessage' is not a function");
 
             if (! canSendSendToNative) { return; }
 
@@ -184,13 +184,12 @@ AdjustInstance.prototype.trackEvent = function(adjustEvent) {
     this._postMessage("trackEvent", adjustEvent); };
 
 AdjustInstance.prototype.trackLaunchedDeeplink = function(urlString) {
-    this._postMessage("trackLaunchedDeeplink",
-                      {_urlString: urlString, _urlStringType: typeof urlString}); }
+    this._postMessage("trackLaunchedDeeplink", {
+        _urlString: urlString, _urlStringType: typeof urlString}); }
 
 AdjustInstance.prototype.trackPushToken = function(pushTokenString) {
     this._postMessage("trackPushToken", {
-        _pushTokenString: pushTokenString,
-        _pushTokenStringType: typeof pushTokenString}); }
+        _pushTokenString: pushTokenString, _pushTokenStringType: typeof pushTokenString}); }
 
 AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartySharing) {
     this._postMessage("trackThirdPartySharing", adjustThirdPartySharing); };
@@ -200,8 +199,7 @@ AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
         _key: key, _keyType: typeof key,
         _value: value, _valueType: typeof value}); }
 AdjustInstance.prototype.removeGlobalCallbackParameter = function(key) {
-    this._postMessage("removeGlobalCallbackParameter", {
-        _key: key, _keyType: typeof key}); }
+    this._postMessage("removeGlobalCallbackParameter", {_key: key, _keyType: typeof key}); }
 AdjustInstance.prototype.clearGlobalCallbackParameters = function() {
     this._postMessage("clearGlobalCallbackParameters"); }
 
@@ -210,8 +208,7 @@ AdjustInstance.prototype.addGlobalPartnerParameter = function(key, value) {
         _key: key, _keyType: typeof key,
         _value: value, _valueType: typeof value}); }
 AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
-    this._postMessage("removeGlobalPartnerParameter", {
-        _key: key, _keyType: typeof key}); }
+    this._postMessage("removeGlobalPartnerParameter", {_key: key, _keyType: typeof key}); }
 AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
     this._postMessage("clearGlobalPartnerParameters"); }
 
@@ -325,17 +322,13 @@ AdjustEvent.prototype.setRevenueDouble = function(revenueAmountDouble, currency)
 };
 
 AdjustEvent.prototype.addCallbackParameter = function(key, value) {
-    this._callbackParameterKeyValueArray.push({
-        _element: key, _elementType: typeof key});
-    this._callbackParameterKeyValueArray.push({
-        _element: value, _elementType: typeof value});
+    this._callbackParameterKeyValueArray.push({_element: key, _elementType: typeof key});
+    this._callbackParameterKeyValueArray.push({_element: value, _elementType: typeof value});
 };
 
 AdjustEvent.prototype.addPartnerParameter = function(key, value) {
-    this._partnerParameterKeyValueArray.push({
-        _element: key, _elementType: typeof key});
-    this._partnerParameterKeyValueArray.push({
-        _element: value, _elementType: typeof value});
+    this._partnerParameterKeyValueArray.push({_element: key, _elementType: typeof key});
+    this._partnerParameterKeyValueArray.push({_element: value, _elementType: typeof value});
 };
 
 AdjustEvent.prototype.setDeduplicationId = function(deduplicationId) {
@@ -362,18 +355,14 @@ AdjustThirdPartySharing.prototype.disableThirdPartySharing = function() {
 AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key, value) {
     this._granularOptionsByNameArray.push({
         _element: partnerName, _elementType: typeof partnerName});
-    this._granularOptionsByNameArray.push({
-        _element: key, _elementType: typeof key});
-    this._granularOptionsByNameArray.push({
-        _element: value, _elementType: typeof value});
+    this._granularOptionsByNameArray.push({_element: key, _elementType: typeof key});
+    this._granularOptionsByNameArray.push({_element: value, _elementType: typeof value});
 };
 AdjustThirdPartySharing.prototype.addPartnerSharingSetting = function(partnerName, key, value) {
     this._partnerSharingSettingsByNameArray.push({
         _element: partnerName, _elementType: typeof partnerName});
-    this._partnerSharingSettingsByNameArray.push({
-        _element: key, _elementType: typeof key});
-    this._partnerSharingSettingsByNameArray.push({
-        _element: value, _elementType: typeof value});
+    this._partnerSharingSettingsByNameArray.push({_element: key, _elementType: typeof key});
+    this._partnerSharingSettingsByNameArray.push({_element: value, _elementType: typeof value});
 };
 
 
@@ -420,15 +409,11 @@ AdjustAdRevenue.prototype.setPlacement = function(placement) {
 };
 
 AdjustAdRevenue.prototype.addCallbackParameter = function(key, value) {
-    this._callbackParameterKeyValueArray.push({
-        _element: key, _elementType: typeof key});
-    this._callbackParameterKeyValueArray.push({
-        _element: value, _elementType: typeof value});
+    this._callbackParameterKeyValueArray.push({_element: key, _elementType: typeof key});
+    this._callbackParameterKeyValueArray.push({_element: value, _elementType: typeof value});
 };
 
 AdjustAdRevenue.prototype.addPartnerParameter = function(key, value) {
-    this._partnerParameterKeyValueArray.push({
-        _element: key, _elementType: typeof key});
-    this._partnerParameterKeyValueArray.push({
-        _element: value, _elementType: typeof value});
+    this._partnerParameterKeyValueArray.push({_element: key, _elementType: typeof key});
+    this._partnerParameterKeyValueArray.push({_element: value, _elementType: typeof value});
 };

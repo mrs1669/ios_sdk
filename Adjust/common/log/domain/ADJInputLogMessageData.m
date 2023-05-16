@@ -203,7 +203,7 @@ ADJIssue const ADJIssueWeakReference = @"weak_reference";
 - (void)fail:(nonnull ADJResultFail *)resultFail {
     self.resultFail = resultFail;
 }
-- (void)sdkPackageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams {
+- (void)packageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams {
     self.sdkPackageParams = sdkPackageParams;
 }
 

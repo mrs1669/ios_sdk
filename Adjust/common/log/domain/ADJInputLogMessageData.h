@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_END
 - (void)subject:(nonnull NSString *)subject;
 - (void)why:(nonnull NSString *)why;
 - (void)fail:(nonnull ADJResultFail *)resultFail;
-- (void)sdkPackageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams;
+- (void)packageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams;
 
 - (void)withExpected:(nonnull NSString *)expectedValue
    actualStringValue:(nullable NSString *)actualStringValue;

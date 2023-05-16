@@ -56,7 +56,7 @@
     [self.logger debugWithMessage:@"Added package"
                      builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
         [logBuilder withKey:@"queue count" stringValue:queueSdkPackageCount.description];
-        [logBuilder sdkPackageParams:[logPackageDataToAdd foundationStringMap]];
+        [logBuilder packageParams:[logPackageDataToAdd foundationStringMap]];
     }];
 
     if (queueSdkPackageCount.uIntegerValue == 1) {
