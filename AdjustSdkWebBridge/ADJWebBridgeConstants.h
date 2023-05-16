@@ -22,6 +22,8 @@ FOUNDATION_EXPORT NSString *const ADJWBAppWentToTheForegroundManualCallMethodNam
 FOUNDATION_EXPORT NSString *const ADJWBAppWentToTheBackgroundManualCallMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBOfflineModeMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBOnlineModeMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBActivateMeasurementConsentMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBInactivateMeasurementConsentMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJWBGetAdjustAttributionAsyncMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionAsyncGetterCallbackKey;

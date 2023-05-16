@@ -370,9 +370,11 @@
         ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
             [self.sdkApiHelper adjustAdRevenueWithJsParameters:jsParameters];
         NSArray *_Nullable callbackParameterKeyValueArray =
-            [self.sdkApiHelper adRevenueCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper
+             adRevenueCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
         NSArray *_Nullable partnerParameterKeyValueArray =
-            [self.sdkApiHelper adRevenuePartnerParameterKeyValueArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper
+             adRevenuePartnerParameterKeyValueArrayWithJsParameters:jsParameters];
 
         [ADJAdjustInternal trackAdRevenueForClientId:instanceIdString
                                      adjustAdRevenue:adjustAdRevenue
@@ -406,8 +408,10 @@
         [adjustInstance switchToOfflineMode];
     } else if ([ADJWBOnlineModeMethodName isEqualToString:methodName]) {
         [adjustInstance switchBackToOnlineMode];
-    // TODO add activateMeasurementConsent and inactivateMeasurementConsent
-    // TODO add deviceIdsWithCallback and adjustAttributionWithCallback
+    } else if ([ADJWBActivateMeasurementConsentMethodName isEqualToString:methodName]) {
+        [adjustInstance activateMeasurementConsent];
+    } else if ([ADJWBInactivateMeasurementConsentMethodName isEqualToString:methodName]) {
+        [adjustInstance inactivateMeasurementConsent];
     } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
         [adjustInstance trackLaunchedDeeplink:
          [self.sdkApiHelper adjustLaunchedDeeplinkWithJsParameters:jsParameters]];

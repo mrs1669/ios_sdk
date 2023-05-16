@@ -20,6 +20,8 @@ NSString *const ADJWBAppWentToTheForegroundManualCallMethodName = @"appWentToThe
 NSString *const ADJWBAppWentToTheBackgroundManualCallMethodName = @"appWentToTheBackgroundManualCall";
 NSString *const ADJWBOfflineModeMethodName = @"switchToOfflineMode";
 NSString *const ADJWBOnlineModeMethodName = @"switchBackToOnlineMode";
+NSString *const ADJWBActivateMeasurementConsentMethodName = @"activateMeasurementConsent";
+NSString *const ADJWBInactivateMeasurementConsentMethodName = @"inactivateMeasurementConsent";
 
 NSString *const ADJWBGetAdjustAttributionAsyncMethodName = @"getAdjustAttributionAsync";
 NSString *const ADJWBAdjustAttributionAsyncGetterCallbackKey =
