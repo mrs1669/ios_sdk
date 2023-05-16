@@ -36,6 +36,9 @@
 #import "ADJOptionalFailsNL.h"
 
 #pragma mark Fields
+#pragma mark - Private constants
+static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
+
 @interface ADJAdjustBridge() <
     ADJAdjustAttributionSubscriber,
     ADJLogCollector,
@@ -259,6 +262,24 @@
     NSDictionary<NSString *, id> *_Nonnull jsParameters =
         parametersJsonDictionaryResult.value;
 
+    if ([methodName isEqualToString:ADJWBGetSdkVersionAsyncMethodName]) {
+        ADJResult<NSString *> *_Nonnull sdkVersionGetterIdResult =
+            [ADJSdkApiHelper functionIdWithJsParameters:jsParameters
+                                                    key:ADJWBGetSdkVersionAsyncGetterCallbackKey];
+        if (sdkVersionGetterIdResult.fail != nil) {
+            [self.logger
+             debugDev:@"Could not parse JS field for sdk version getter callback id"
+             resultFail:sdkVersionGetterIdResult.fail
+             issueType:ADJIssueNonNativeIntegration];
+            return;
+        }
+
+        [self.webViewCallback
+         execJsTopLevelCallbackWithId:sdkVersionGetterIdResult.value
+         stringParam:[ADJAdjustInternal sdkVersionWithSdkPrefix:kWebBridgeSdkPrefix]];
+        return;
+    }
+
     if ([ADJWBInitSdkMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
             [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
@@ -454,6 +475,11 @@
           from:ADJWBRemoveGlobalPartnerParameterByKeyMethodName]];
     } else if ([ADJWBClearGlobalPartnerParametersMethodName isEqualToString:methodName]) {
         [adjustInstance clearGlobalPartnerParameters];
+    } else if ([ADJWBJsFailMethodName isEqualToString:methodName]) {
+        [self.logger debugDev:@"Failure from javascript"
+                          key:@"js fail json parameters"
+                  stringValue:parametersJsonStringResult.value.stringValue
+                    issueType:ADJIssueNonNativeIntegration];
     } else {
         [self.logger debugDev:@"Could not map method name with any of the possible values"
                          key1:@"method name"

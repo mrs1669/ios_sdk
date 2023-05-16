@@ -44,7 +44,10 @@ NSString *const ADJWBAddGlobalPartnerParameterMethodName = @"addGlobalPartnerPar
 NSString *const ADJWBRemoveGlobalPartnerParameterByKeyMethodName = @"removeGlobalPartnerParameterByKey";
 NSString *const ADJWBClearGlobalPartnerParametersMethodName = @"clearGlobalPartnerParameters";
 
-NSString *const ADJWBSdkVersionMethodName = @"getSdkVersion";
+NSString *const ADJWBGetSdkVersionAsyncMethodName = @"getSdkVersionAsync";
+NSString *const ADJWBGetSdkVersionAsyncGetterCallbackKey = @"_getSdkVersionCallback";
+
+NSString *const ADJWBJsFailMethodName = @"jsFail";
 
 NSString *const ADJWBJsStringType = @"string";
 NSString *const ADJWBJsNumberType = @"number";

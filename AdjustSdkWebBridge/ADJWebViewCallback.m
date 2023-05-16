@@ -108,6 +108,13 @@
             instanceIdString:instanceIdString];
 }
 
+- (void)execJsTopLevelCallbackWithId:(nonnull NSString *)callbackId
+                         stringParam:(nonnull NSString *)stringParam
+{
+    [self execJsWithExecCommand:
+     [NSString stringWithFormat:@"Adjust.%@(\"%@\");", callbackId, stringParam]];
+}
+
 #pragma mark Internal Methods
 - (void)
     execJsCallbackSubscriberWithInstanceIdString:(nonnull NSString *)instanceIdString
@@ -184,6 +191,10 @@
                 stringValue:jsExecCommand];
     }];
 
+    [self execJsWithExecCommand:jsExecCommand];
+}
+
+- (void)execJsWithExecCommand:(nonnull NSString *)jsExecCommand {
     __typeof(self) __weak weakSelf = self;
     [self.webView evaluateJavaScript:jsExecCommand
                    completionHandler:^(id _Nullable jsonReturnValue,
@@ -200,16 +211,8 @@
                                       initWithMessage:@"evaluateJavaScript completionHandler error"
                                       error:error]
                                issue:ADJIssueNonNativeIntegration];
-                [logBuilder withKey:@"instanceIdString" stringValue:instanceIdString];
-                [logBuilder withKey:@"callbackId" stringValue:callbackId];
-                [logBuilder withKey:@"methodName" stringValue:methodName];
-                [logBuilder withKey:@"jsonParameter" stringValue:jsonParameter];
-                [logBuilder withKey:@"subscriberOrElseGetter"
-                        stringValue:[ADJUtilF boolFormat:subscriberOrElseGetter]];
-                if (jsonReturnValue != nil) {
-                    [logBuilder withKey:@"jsonReturnValue"
-                            stringValue:[jsonReturnValue description]];
-                }
+                [logBuilder withKey:@"jsExecCommand" stringValue:jsExecCommand];
+                [logBuilder withKey:@"jsonReturnValue" stringValue:jsonReturnValue];
             }];
         }
     }];

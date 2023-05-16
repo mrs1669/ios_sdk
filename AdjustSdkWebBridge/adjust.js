@@ -60,8 +60,12 @@ var Adjust = {
         });
     },
 
-    getSdkVersion: function() {
-        //Adjust.postMessage("getSdkVersion"); TODO:
+    getSdkVersionAsync: function(getSdkVersionCallback) {
+        this._getSdkVersionCallback = getSdkVersionCallback;
+
+        this._postMessage("getSdkVersionAsync", "", {
+            _getSdkVersionCallbackId: "_getSdkVersionCallback",
+            _getSdkVersionCallbackType: typeof getSdkVersionCallback});
     },
 
     teardown: function() {

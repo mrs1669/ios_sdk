@@ -82,13 +82,7 @@
     expectedName:(nonnull NSString *)expectedName;
 
 + (nonnull ADJResult<NSString *> *)
-    stringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
-    key:(nonnull NSString *)key;
-
-+ (nonnull ADJResult<ADJBooleanWrapper *> *)trueWithJsValue:(nullable id)jsValue;
-
-+ (nonnull ADJResult<NSNumber *> *)
-    numberWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    functionIdWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
     key:(nonnull NSString *)key;
 
 @end

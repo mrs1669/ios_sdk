@@ -34,6 +34,9 @@
         (nonnull NSString *)deviceIdsGetterCallbackId
     instanceIdString:(nonnull NSString *)instanceIdString;
 
+- (void)execJsTopLevelCallbackWithId:(nonnull NSString *)callbackId
+                         stringParam:(nonnull NSString *)stringParam;
+
 @property (nonnull, readonly, strong, nonatomic) WKWebView *webView;
 
 @end

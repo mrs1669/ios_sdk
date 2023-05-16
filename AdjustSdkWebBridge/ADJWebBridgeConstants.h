@@ -44,7 +44,10 @@ FOUNDATION_EXPORT NSString *const ADJWBAddGlobalPartnerParameterMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBRemoveGlobalPartnerParameterByKeyMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBClearGlobalPartnerParametersMethodName;
 
-FOUNDATION_EXPORT NSString *const ADJWBSdkVersionMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBGetSdkVersionAsyncMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBGetSdkVersionAsyncGetterCallbackKey;
+
+FOUNDATION_EXPORT NSString *const ADJWBJsFailMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJWBJsStringType;
 FOUNDATION_EXPORT NSString *const ADJWBJsNumberType;
