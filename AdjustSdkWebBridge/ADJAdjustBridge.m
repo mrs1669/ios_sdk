@@ -34,6 +34,7 @@
 #import "ADJInstanceRoot.h"
 #import "ADJUtilF.h"
 #import "ADJOptionalFailsNL.h"
+#import "ADJUtilJson.h"
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -61,11 +62,19 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
     adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber
 {
     if (! [webView isKindOfClass:WKWebView.class]) {
+        if (adjustJsLogSubscriber != nil) {
+            [adjustJsLogSubscriber
+             didLogWithMessage:
+                 [NSString stringWithFormat:@"Cannot use non WKWebView instance: %@",
+                  NSStringFromClass([webView class])]
+             logLevel:ADJAdjustLogLevelError];
+        }
         return nil;
     }
 
     ADJResult<NSString *> *_Nonnull scriptSourceResult =
         [ADJAdjustBridge getAdjustWebBridgeScript];
+    NSLog(@"adjust bridge scriptSourceResult %@", scriptSourceResult.value);
     if (scriptSourceResult.fail != nil) {
         if (adjustJsLogSubscriber != nil) {
             [adjustJsLogSubscriber

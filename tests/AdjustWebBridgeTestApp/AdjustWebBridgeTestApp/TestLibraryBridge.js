@@ -5,6 +5,48 @@ var localGdprUrl = 'http://127.0.0.1:8080';
 // var localBaseUrl = 'http://192.168.86.65:8080';
 // var localGdprUrl = 'http://192.168.86.65:8080';
 
+var TestLibrary = {
+_postMessage(methodName, parameters = {}) {
+    if (! this._testLibraryMessageHandler) {
+        function canSend(okCheck, errReason) {
+            if (! okCheck) { if (this._errSubscriber) {
+                this._errSubscriber("Cannot send message to native sdk ".concat(errReason)); }}
+            return okCheck;
+        }
+        const canSendSendToNative =
+            canSend(window, "without valid: 'window'") &&
+            canSend(window.webkit, "without valid: 'window.webkit'") &&
+            canSend(window.webkit.messageHandlers,
+                    "without valid: 'window.webkit.messageHandlers'") &&
+            canSend(window.webkit.messageHandlers.adjust,
+                    "without valid: 'window.webkit.messageHandlers.adjust'") &&
+            canSend(window.webkit.messageHandlers.adjust.postMessage,
+                    "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
+            canSend(typeof window.webkit.messageHandlers.testLibrary.postMessage === "function",
+                    "when 'window.webkit.messageHandlers.testLibrary.postMessage' is not a function");
+
+        if (! canSendSendToNative) { return; }
+
+        this._testLibraryMessageHandler = window.webkit.messageHandlers.testLibrary;
+    }
+
+    this._testLibraryMessageHandler.postMessage({
+        _methodName: methodName,
+        _parameters: JSON.stringify(parameters)
+    });
+},
+addTestDirectory: function(directoryName) {
+    this._postMessage("addTestDirectory", {
+        _directoryName: directoryName, _directoryNameType: typeof directoryName});
+},
+startTestSession: function(sdkVersion) {
+    this._postMessage("startTestSession", {
+        _sdkVersion: sdkVersion, _sdkVersionType: typeof sdkVersion});
+},
+//callback_saveArrayOfCommands: function()
+//callback_execCommandInPosition: function()
+};
+
 // local reference of the command executor
 // originally it was this.adjustCommandExecutor of TestLibraryBridge var
 // but for some reason, "this" on "startTestSession" was different in "adjustCommandExecutor"

@@ -15,6 +15,7 @@
 #import "ADJMoneyDoubleAmount.h"
 #import "ADJAdjustInternal.h"
 #import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 
 #pragma mark Fields
 #pragma mark - Public properties

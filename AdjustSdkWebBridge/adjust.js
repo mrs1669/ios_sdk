@@ -54,13 +54,13 @@ var Adjust = {
         }
 
         this._adjustMessageHandler.postMessage({
-            methodName: methodName,
-            instanceId: instanceId,
-            parameters: JSON.stringify(parameters)
+            _methodName: methodName,
+            _instanceId: instanceId,
+            _parameters: JSON.stringify(parameters)
         });
     },
 
-    getSdkVersionAsync: function(getSdkVersionCallback) {
+    _getSdkVersionAsync: function(getSdkVersionCallback) {
         this._getSdkVersionCallback = getSdkVersionCallback;
 
         this._postMessage("getSdkVersionAsync", "", {
@@ -68,7 +68,7 @@ var Adjust = {
             _getSdkVersionCallbackType: typeof getSdkVersionCallback});
     },
 
-    teardown: function() {
+    _teardown: function() {
         this._instanceMap = undefined;
         // TODO reset js interface?
     },

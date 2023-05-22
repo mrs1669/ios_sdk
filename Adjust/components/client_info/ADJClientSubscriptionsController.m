@@ -54,6 +54,10 @@
     _internalConfigSubscriptions = internalConfigSubscriptions;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;
 
+    [self.logger debugDev:@"TORMV init"
+                     key:@"internalConfigSubscriptions == nil"
+             stringValue:[ADJUtilF boolFormat:internalConfigSubscriptions == nil]];
+
     _cachedAttributionData = nil;
 
     return self;
@@ -71,10 +75,17 @@
 //  If it should be possible, then it should be replaced for something that can guarantee it,
 //  like SubscribingGateSubscriber.ccAllowedToReceiveEvents'
 - (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData {
+    [self.logger debugDev:@"TORMV attributionWithStateData received"
+                      key:@"attributionStateData"
+              stringValue:attributionStateData.description];
     // we're only notifying to the client with non null updates of the attribution data
     if (attributionStateData.attributionData == nil) {
         return;
     }
+
+    [self.logger debugDev:@"TORMV attributionWithStateData compared"
+                      key:@"self.cachedAttributionData"
+              stringValue:self.cachedAttributionData.description];
 
     if ([attributionStateData.attributionData isEqual:self.cachedAttributionData]) {
         return;
@@ -183,6 +194,12 @@
     __block id<ADJInternalCallback> _Nullable internalAttributionCallback =
         self.internalConfigSubscriptions == nil ? nil :
         [self.internalConfigSubscriptions objectForKey:ADJInternalAttributionSubscriberV5000Key];
+
+    [self.logger debugDev:@"TORMV notifyClientWithChangedAttribution"
+                      key1:@"localAdjustAttributionSubscriber == nil"
+             stringValue1:[ADJUtilF boolFormat:localAdjustAttributionSubscriber == nil]
+                     key2:@"internalAttributionCallback == nil"
+             stringValue2:[ADJUtilF boolFormat:internalAttributionCallback == nil]];
 
     if (localAdjustAttributionSubscriber == nil && internalAttributionCallback == nil) {
         return;

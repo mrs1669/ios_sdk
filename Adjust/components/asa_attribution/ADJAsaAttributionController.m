@@ -16,6 +16,7 @@
 #import "ADJUtilR.h"
 #import "ADJUtilObj.h"
 #import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
 

@@ -9,6 +9,7 @@
 #import "ADJWebViewCallback.h"
 
 #import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 
 @interface ADJAttributionSubscriberInternalCallback : NSObject<ADJInternalCallback>
 

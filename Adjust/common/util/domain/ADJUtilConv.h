@@ -10,8 +10,7 @@
 
 #import "ADJStringMap.h"
 #import "ADJOptionalFailsNN.h"
-#import "ADJInputLogMessageData.h"
-#import "ADJUtilMap.h"
+#import "ADJLogger.h"
 
 @interface ADJUtilConv : NSObject
 

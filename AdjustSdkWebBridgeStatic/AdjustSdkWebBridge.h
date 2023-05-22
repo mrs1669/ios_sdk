@@ -6,7 +6,6 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
-#import <AdjustSdkWebBridge/ADJAdjust.h>
 #import <AdjustSdkWebBridge/ADJAdjustBridge.h>
 #import <AdjustSdkWebBridge/ADJAdjust.h>
 #import <AdjustSdkWebBridge/ADJAdjustEvent.h>

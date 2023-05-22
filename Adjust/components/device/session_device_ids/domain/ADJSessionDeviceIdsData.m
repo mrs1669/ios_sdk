@@ -11,6 +11,7 @@
 #import "ADJUtilF.h"
 #import "ADJAdjustInternal.h"
 #import "ADJUtilObj.h"
+#import "ADJUtilJson.h"
 
 #pragma mark Fields
 #pragma mark - Public properties

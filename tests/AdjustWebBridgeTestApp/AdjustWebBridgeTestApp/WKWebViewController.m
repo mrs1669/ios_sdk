@@ -34,8 +34,8 @@
 
     self.adjustBridge = [ADJAdjustBridge instanceWithWKWebView:webView];
 
-    self.testLibraryBridge = [[TestLibraryBridge alloc]
-                              initWithAdjustBridgeRegister:self.adjustBridge];
+    self.testLibraryBridge = nil;// [[TestLibraryBridge alloc]
+                              //initWithAdjustBridgeRegister:self.adjustBridge];
 
     NSString *htmlPath = [[NSBundle mainBundle]
                           pathForResource:@"AdjustTestApp-WebView" ofType:@"html"];
@@ -44,5 +44,28 @@
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
     [webView loadHTMLString:appHtml baseURL:baseURL];
 }
+/* Current state
+    Test app web view.html
+1    - calls TestLibraryBridge.addTestDirectory* + startTestSession .js
+    Test app TestLibraryBridge.js
+    - addTestDirectory
+2        calls adjustTLB_addTestDirectory in TestLibraryBridge.m
+    - startTestSession
+3        stores locally new AdjustCommandExecutor
+4       calls Adjust.getSdkVersion() .js
+    - getSdkVersion()
+7        calls adjustTLB_startTestSession in TestLibraryBridge.m
+    Test app TestLibraryBridge.m
+    - adjustTLB_startTestSession
+8        calls testLibrary.startTestSession
+
+    Adjust.js
+    - getSdkVersion()
+5        calls adjust_getSdkVersion in ADJAdjustBridge.m
+    ADJAdjustBridge.m
+    - adjust_getSdkVersion
+6       calls TestLibraryBridge.getSdkVersion({sdkVersion}) in js
+
+ */
 
 @end

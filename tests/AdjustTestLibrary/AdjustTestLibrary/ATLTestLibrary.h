@@ -10,6 +10,7 @@
 #import "ATLUtilNetworking.h"
 #import "ATLBlockingQueue.h"
 
+// TODO remove multiple optional command handling methods to multiple command handlers
 @protocol AdjustCommandDelegate <NSObject>
 @optional
 - (void)executeCommand:(NSString *)className
@@ -33,13 +34,24 @@
 
 @end
 
+@protocol AdjustCommandBulkJsonParametersDelegate <NSObject>
+
+- (void)saveArrayOfCommandsJson:(nonnull NSString *)arrayOfCommandsJson;
+
+- (void)executeCommandInArrayPosition:(NSUInteger)arrayPosition;
+
+@end
+
+
 @interface ATLTestLibrary : NSObject
 
 - (nonnull instancetype)initWithBaseUrl:(nonnull NSString *)baseUrl
                              controlUrl:(NSString *)controlUrl;
 
 @property (nullable, readwrite, weak, nonatomic)
-    NSObject<AdjustCommandDictionaryParametersDelegate> *dictionaryParametersDelegate;
+    id<AdjustCommandDictionaryParametersDelegate> dictionaryParametersDelegateWeak;
+@property (nullable, readwrite, weak, nonatomic)
+    id<AdjustCommandBulkJsonParametersDelegate> jsonBulkDelegateWeak;
 
 - (ATLBlockingQueue *)waitControlQueue;
 

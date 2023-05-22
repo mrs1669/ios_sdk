@@ -10,6 +10,7 @@
 
 #import "ADJSessionDeviceIdsData.h"
 #import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 #import "ADJConsoleLogger.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJClientLaunchedDeeplinkData.h"

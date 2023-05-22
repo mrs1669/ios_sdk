@@ -16,7 +16,7 @@
 @interface ATLTestLibrary()
 
 @property (nonatomic, strong) ATLControlWebSocketClient *controlClient;
-@property (nonatomic, weak, nullable) NSObject<AdjustCommandDelegate> *commandDelegate;
+@property (nonatomic, weak, nullable) id<AdjustCommandDelegate> commandDelegate;
 @property (nonatomic, strong) ATLBlockingQueue *waitControlQueue;
 @property (nonnull, readonly, strong, nonatomic) ATLSingleThreadExecutor *singleThreadExecutor;
 @property (nonatomic, copy) NSString *currentExtraPath;
@@ -47,7 +47,7 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
 }
 
 - (nonnull instancetype)initWithBaseUrl:(nonnull NSString *)baseUrl
-                             controlUrl:(NSString *)controlUrl
+                             controlUrl:(nonnull NSString *)controlUrl
 {
     return [self initWithBaseUrl:baseUrl
                    andControlUrl:controlUrl
@@ -221,48 +221,81 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
     NSArray *_Nonnull jsonArray = (NSArray *)httpResponse.jsonFoundation;
 
     __typeof(self) __weak weakSelf = self;
-    for (NSDictionary *testCommand in jsonArray) {
+
+    __block id<AdjustCommandBulkJsonParametersDelegate> _Nullable jsonBulkDelegate =
+        self.jsonBulkDelegateWeak;
+    if (jsonBulkDelegate != nil) {
         [self.singleThreadExecutor executeInSequenceWithBlock:^{
             __typeof(weakSelf) __strong strongSelf = weakSelf;
             if (strongSelf == nil) { return; }
 
-            [strongSelf executeCommandWithTestCommandI:testCommand];
+            [jsonBulkDelegate saveArrayOfCommandsJson:httpResponse.responseString];
+        }];
+    }
+
+    for (NSUInteger i = 0; jsonArray.count < i; i = i + 1) {
+        [self.singleThreadExecutor executeInSequenceWithBlock:^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
+
+            NSDate *timeBefore = [NSDate date];
+            [ATLUtil debug:@"time before %@", [ATLUtil formatDate:timeBefore]];
+
+            [strongSelf executeCommandWithTestCommandI:[jsonArray objectAtIndex:i]
+                                                 index:i];
+
+            NSDate *timeAfter = [NSDate date];
+            [ATLUtil logDebug:@"time after %@", [ATLUtil formatDate:timeAfter]];
+
+            NSTimeInterval timeElapsedSeconds = [timeAfter timeIntervalSinceDate:timeBefore];
+            [ATLUtil logDebug:@"seconds elapsed %f", timeElapsedSeconds];
         }];
     }
 }
 
-- (void)executeCommandWithTestCommandI:(nonnull NSDictionary *)testCommand {
+- (void)executeCommandWithTestCommandI:(nonnull NSDictionary *)testCommand
+                                 index:(NSUInteger)index
+{
     NSString *className = [testCommand objectForKey:@"className"];
     NSString *functionName = [testCommand objectForKey:@"functionName"];
     NSDictionary *params = [testCommand objectForKey:@"params"];
     [ATLUtil debug:@"className: %@, functionName: %@, params: %@",
         className, functionName, params];
 
-    NSDate *timeBefore = [NSDate date];
-    [ATLUtil debug:@"time before %@", [ATLUtil formatDate:timeBefore]];
-
-    NSObject<AdjustCommandDelegate> *localV4CommandDelegate = self.commandDelegate;
-
     if ([className isEqualToString:TEST_LIBRARY_CLASSNAME]) {
         [self execTestLibraryCommandI:functionName params:params];
+        return;
+    }
 
-    } else if (localV4CommandDelegate != nil) {
+    id<AdjustCommandBulkJsonParametersDelegate> _Nullable jsonBulkDelegate =
+        self.jsonBulkDelegateWeak;
+    if (jsonBulkDelegate != nil) {
+        [jsonBulkDelegate executeCommandInArrayPosition:index];
+        return;
+    }
+
+
+    NSObject<AdjustCommandDelegate> *_Nullable localV4CommandDelegate = self.commandDelegate;
+    if (localV4CommandDelegate != nil) {
         [self executeCommandInV4Delegate:localV4CommandDelegate
                                className:className
                             functionName:functionName
                                   params:params
                              testCommand:testCommand];
-    } else {
-        [self executeCommandInV5DelegateWithClassName:className
-                                           methodName:functionName
-                                 dictionaryParameters:params];
+        return;
     }
 
-    NSDate *timeAfter = [NSDate date];
-    [ATLUtil logDebug:@"time after %@", [ATLUtil formatDate:timeAfter]];
+    id<AdjustCommandDictionaryParametersDelegate> _Nullable dictionaryParametersDelegate =
+        self.dictionaryParametersDelegateWeak;
+    if (dictionaryParametersDelegate != nil) {
+        [dictionaryParametersDelegate executeCommandWithDictionaryParameters:params
+                                                                   className:className
+                                                                  methodName:functionName];
+        return;
+    }
 
-    NSTimeInterval timeElapsedSeconds = [timeAfter timeIntervalSinceDate:timeBefore];
-    [ATLUtil logDebug:@"seconds elapsed %f", timeElapsedSeconds];
+
+    [ATLUtil logError:@"Could not find delegate for command"];
 }
 
 - (void)executeCommandInV4Delegate:(nonnull NSObject<AdjustCommandDelegate> *)v4CommandDelegate
@@ -299,26 +332,6 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
     }
 
     [ATLUtil logError:@"Could not find selector for v4 command delegate"];
-}
-
-- (void)
-    executeCommandInV5DelegateWithClassName:(nonnull NSString *)className
-    methodName:(nonnull NSString *)methodName
-    dictionaryParameters:
-        (nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters
-{
-    NSObject<AdjustCommandDictionaryParametersDelegate> *_Nullable
-        localDictionaryParametersDelegate = self.dictionaryParametersDelegate;
-    if (localDictionaryParametersDelegate != nil) {
-        [localDictionaryParametersDelegate
-            executeCommandWithDictionaryParameters:dictionaryParameters
-            className:className
-            methodName:methodName];
-
-        return;
-    }
-
-    [ATLUtil logError:@"Could not find v5 command delegate"];
 }
 
 - (void)execTestLibraryCommandI:(NSString *)functionName

@@ -40,3 +40,44 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *currency;
 
 @end
+
+/*
+ attribution
+    double number
+ event
+    double number
+    decimal number
+    string
+ ad revenue
+    double
+    decimal number
+ billing subscription
+    decimal number
+    string
+
+
+ ADJMoneyAmountBase
+    number value
+    - client ad revenue
+        from io value to adjustAdRevenue
+    - attribution data
+        to adjust attribution
+
+    double value
+    - client event
+        from io value to adjust revenue
+        (also reads decimal number when casted)
+
+Money.amount
+    [x description]
+    inject io value serializable
+    inject param value serializable
+
+
+Change:
+    Replace Money Amount Base with Money Amount protocol
+        still implement ADJPackageParamValueSerializable and ADJIoValueSerializable
+    Use and inject id<MoneyAmount> when reading from io data/value
+    Use double amount directly in Attribution
+    Add string money amount
+ */

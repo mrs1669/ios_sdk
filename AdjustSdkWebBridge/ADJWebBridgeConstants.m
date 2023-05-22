@@ -8,9 +8,9 @@
 
 #import "ADJWebBridgeConstants.h"
 
-NSString *const ADJWBMethodNameKey = @"methodName";
-NSString *const ADJWBInstanceIdKey = @"instanceId";
-NSString *const ADJWBParametersKey = @"parameters";
+NSString *const ADJWBMethodNameKey = @"_methodName";
+NSString *const ADJWBInstanceIdKey = @"_instanceId";
+NSString *const ADJWBParametersKey = @"_parameters";
 
 NSString *const ADJWBInitSdkMethodName = @"initSdk";
 NSString *const ADJWBInactivateSdkMethodName = @"inactivateSdk";

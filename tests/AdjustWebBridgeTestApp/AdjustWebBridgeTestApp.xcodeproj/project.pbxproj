@@ -114,6 +114,13 @@
 			remoteGlobalIDString = 0AB7AFB62892AEAA00FE60CF;
 			remoteInfo = AdjustTestOptionsLibrary;
 		};
+		6F3BA9422A1512D600D545F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 075B05D4293652F500BBCDED /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 073D9ECD29B62C6900C755F7;
+			remoteInfo = AdjustSdkWebBridgeStatic;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -179,6 +186,7 @@
 				075B05EA293652F500BBCDED /* libAdjustSdkTv.a */,
 				075B05EC293652F500BBCDED /* libAdjustSdkIm.a */,
 				075B05EE293652F500BBCDED /* AdjustSdkWebBridge.framework */,
+				6F3BA9432A1512D600D545F3 /* libAdjustSdkWebBridge.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -385,6 +393,13 @@
 			fileType = archive.ar;
 			path = libAdjustTestOptionsLibrary.a;
 			remoteRef = 075B067B29377C4E00BBCDED /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6F3BA9432A1512D600D545F3 /* libAdjustSdkWebBridge.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkWebBridge.a;
+			remoteRef = 6F3BA9422A1512D600D545F3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

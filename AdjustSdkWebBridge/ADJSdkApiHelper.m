@@ -14,7 +14,7 @@
 #import "ADJConstants.h"
 #import "ADJUtilF.h"
 #import "ADJUtilObj.h"
-#import "ADJOptionalFailsNL.h"
+#import "ADJOptionalFailsNN.h"
 
 @interface ADJSdkApiHelper ()
 

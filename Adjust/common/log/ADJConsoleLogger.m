@@ -14,6 +14,7 @@
 #import "ADJConstants.h"
 #import "ADJUtilObj.h"
 #import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 
 #pragma mark Fields
 @interface ADJConsoleLogger ()
