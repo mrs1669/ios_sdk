@@ -18,8 +18,7 @@
 @implementation ATAAdjustAttributionSendAllSubscriber
 #pragma mark Instantiation
 - (nonnull instancetype)initWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
-                                  extraPath:(nonnull NSString *)extraPath
-{
+                                  extraPath:(nonnull NSString *)extraPath {
     self = [super init];
 
     _testLibraryWeak = testLibrary;
@@ -91,3 +90,4 @@ if (adjustAttribution.valueName.length > 0) {                               \
 }
 
 @end
+

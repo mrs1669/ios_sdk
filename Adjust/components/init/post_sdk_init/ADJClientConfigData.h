@@ -44,6 +44,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (readonly, assign, nonatomic) BOOL doNotLogAny;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
 @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *externalDeviceId;
 @property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
 @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;

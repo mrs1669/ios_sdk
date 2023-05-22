@@ -624,15 +624,9 @@
                                                    key:ADJParamDefaultTrackerKey
                          packageParamValueSerializable:self.clientConfigData.defaultTracker];
 
-    /* TODO: 
-     UtilMap.injectIntoPackageParameters(packageParametersBuilder,
-     ConstantsParam.DEFAULT_TRACKER_KEY,
-     clientConfigData.defaultTracker);
-
-     UtilMap.injectIntoPackageParameters(packageParametersBuilder,
-     ConstantsParam.EXTERNAL_DEVICE_ID_KEY,
-     clientConfigData.externalDeviceId);
-     */
+    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                   key:ADJParamExternalDeviceIdKey
+                         packageParamValueSerializable:self.clientConfigData.externalDeviceId];
 }
 
 - (void)injectEventStateFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

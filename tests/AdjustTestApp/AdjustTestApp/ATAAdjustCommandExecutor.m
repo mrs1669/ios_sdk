@@ -25,8 +25,8 @@
 @property (nonnull, readonly, nonatomic, strong) NSString *url;
 @property (nonnull, readonly, nonatomic, strong) ATLTestLibrary *testLibrary;
 //@property (nonnull, readonly, nonatomic, strong) ATAAdjustCommandExecutor *adjustV4CommandExecutor;
-
-@property (nullable, readwrite, nonatomic, strong) NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
+@property (nullable, readwrite, nonatomic, strong)
+NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
 @property (nullable, readwrite, nonatomic, strong) NSString *extraPathTestOptions;
 
 @end
@@ -79,7 +79,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 } else                                                  \
 
 - (void)executeAdjustCommandWithMethodName:(NSString *)methodName
-                      dictionaryParameters:(nonnull NSDictionary<NSString *, NSArray<NSString *> *> *)dictionaryParameters {
+                      dictionaryParameters:(nonnull NSDictionary<NSString *,
+                                            NSArray<NSString *> *> *)dictionaryParameters {
     self.commandParameters = dictionaryParameters;
 
     adjustCommand(start)
@@ -118,6 +119,10 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     if ([self isValueTrueWithKey:@"sendInBackground"]) {
         [adjustConfig allowSendingFromBackground];
+    }
+
+    if ([self containsKey:@"externalDeviceId"]) {
+        [adjustConfig setExternalDeviceId: [self firstParameterValueWithKey:@"externalDeviceId"]];
     }
 
     if ([self containsKey:@"deferredDeeplinkCallback"]) {
@@ -177,12 +182,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
 }
-/*
- if (parameters.containsKey("defaultTracker")) {
- val defaultTracker = getFirstParameterValue("defaultTracker")
- adjustConfig.setDefaultTracker(defaultTracker.orEmpty())
- }
- */
+
 - (void)resume {
     [[ADJAdjust instance] appWentToTheForegroundManualCall];
 }
@@ -322,7 +322,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 - (void)openDeeplink {
     NSString *_Nullable openDeeplink = [self firstParameterValueWithKey:@"deeplink"];
 
-    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithString:openDeeplink];
+    ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc]
+                                                                  initWithString:openDeeplink];
 
     [[ADJAdjust instance] trackLaunchedDeeplink:adjustLaunchedDeeplink];
 }
@@ -335,7 +336,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
     NSString *_Nullable adRevenueSource = [self firstParameterValueWithKey:@"adRevenueSource"];
 
-    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc] initWithSource:adRevenueSource];
+    ADJAdjustAdRevenue *_Nonnull adjustAdRevenue = [[ADJAdjustAdRevenue alloc]
+                                                    initWithSource:adRevenueSource];
 
     if ([self containsKey:@"currencyAndRevenue"]) {
         NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"
@@ -349,13 +351,16 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     }
 
     if ([self containsKey:@"adImpressionsCount"]) {
-        NSString *_Nullable adImpressionsCountString = [self firstParameterValueWithKey:@"adImpressionsCount"];
-        NSNumber *_Nullable adImpressionsCountIntNumber = [self strictParseNumberIntWithString:adImpressionsCountString];
+        NSString *_Nullable adImpressionsCountString =
+        [self firstParameterValueWithKey:@"adImpressionsCount"];
+        NSNumber *_Nullable adImpressionsCountIntNumber =
+        [self strictParseNumberIntWithString:adImpressionsCountString];
 
         if (adImpressionsCountIntNumber != nil) {
             [adjustAdRevenue setAdImpressionsCountWithIntegerNumber:adImpressionsCountIntNumber];
         } else {
-            [self logError:@"Could not parse adImpressionsCount value: %@", adImpressionsCountString];
+            [self logError:@"Could not parse adImpressionsCount value: %@",
+             adImpressionsCountString];
         }
     }
 
@@ -368,7 +373,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     }
 
     if ([self containsKey:@"adRevenuePlacement"]) {
-        [adjustAdRevenue setAdRevenuePlacement:[self firstParameterValueWithKey:@"adRevenuePlacement"]];
+        [adjustAdRevenue setAdRevenuePlacement:
+         [self firstParameterValueWithKey:@"adRevenuePlacement"]];
     }
 
     [self iterateWithKey:@"callbackParams"
@@ -390,7 +396,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)thirdPartySharing {
 
-    ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing = [[ADJAdjustThirdPartySharing alloc] init];
+    ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
+    [[ADJAdjustThirdPartySharing alloc] init];
 
     NSNumber *_Nullable sharingEnabledNumberBool = [self strictParseNumberBoolWithKey:@"isEnabled"];
 
@@ -419,8 +426,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [self iterateWithKey:@"partnerSharingSettings"
                       source:@"third party partner sharing settings"
            nameKeyValueBlock:^(NSString * _Nonnull name,
-           NSString * _Nonnull key,
-           NSString * _Nonnull value) {
+                               NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
             [adjustThirdPartySharing
              addPartnerSharingSettingWithPartnerName:name key:key value:value];
         }];
@@ -430,7 +437,8 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)measurementConsent {
-    NSNumber *_Nullable measurementConsentEnabledNumberBool = [self strictParseNumberBoolWithKey:@"isEnabled"];
+    NSNumber *_Nullable measurementConsentEnabledNumberBool =
+    [self strictParseNumberBoolWithKey:@"isEnabled"];
     if (measurementConsentEnabledNumberBool != nil) {
         if (measurementConsentEnabledNumberBool.boolValue) {
             [[ADJAdjust instance] activateMeasurementConsent];
@@ -617,6 +625,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 @end
+
 
 
 
