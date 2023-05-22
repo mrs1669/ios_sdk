@@ -127,7 +127,7 @@
     }
 
     ADJNonEmptyString *_Nullable externalDeviceId =
-    [ADJNonEmptyString instanceFromString:adjustConfig.externalDeviceId
+    [ADJNonEmptyString instanceFromOptionalString:adjustConfig.externalDeviceId
                         sourceDescription:@"external device id"
                                    logger:logger];
 
