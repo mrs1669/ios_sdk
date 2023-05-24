@@ -34,8 +34,7 @@
 
     self.adjustBridge = [ADJAdjustBridge instanceWithWKWebView:webView];
 
-    self.testLibraryBridge = nil;// [[TestLibraryBridge alloc]
-                              //initWithAdjustBridgeRegister:self.adjustBridge];
+    self.testLibraryBridge = [TestLibraryBridge instanceWithWKWebView:webView];
 
     NSString *htmlPath = [[NSBundle mainBundle]
                           pathForResource:@"AdjustTestApp-WebView" ofType:@"html"];

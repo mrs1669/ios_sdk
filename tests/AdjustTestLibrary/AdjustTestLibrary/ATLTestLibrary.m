@@ -233,7 +233,7 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
         }];
     }
 
-    for (NSUInteger i = 0; jsonArray.count < i; i = i + 1) {
+    for (NSUInteger i = 0; jsonArray.count > i; i = i + 1) {
         [self.singleThreadExecutor executeInSequenceWithBlock:^{
             __typeof(weakSelf) __strong strongSelf = weakSelf;
             if (strongSelf == nil) { return; }

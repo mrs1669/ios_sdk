@@ -70,7 +70,8 @@ var Adjust = {
 
     _teardown: function() {
         this._instanceMap = undefined;
-        // TODO reset js interface?
+        this._adjustMessageHandler = undefined;
+        this._getSdkVersionCallback = undefined;
     },
 
 };

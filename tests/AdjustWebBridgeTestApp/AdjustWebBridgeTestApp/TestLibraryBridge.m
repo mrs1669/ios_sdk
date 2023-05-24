@@ -9,37 +9,24 @@
 #import "TestLibraryBridge.h"
 #import "ATOAdjustTestOptions.h"
 
-#import "ADJResultNN.h"
-#import "ADJConsoleLogger.h"
-#import "ADJUtilF.h"
-#import "ADJUtilJson.h"
+#import "ADJResult.h"
 
 @interface TestLibraryBridge () <
     AdjustCommandBulkJsonParametersDelegate,
-    ADJLogCollector,
     WKScriptMessageHandler>
 
-@property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> logSubscriber;
-@property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
 @property (nonnull, readonly, strong, nonatomic) ATLTestLibrary *testLibrary;
 @property (nonnull, readonly, strong, nonatomic) WKWebView *webView;
+@property (nullable, readwrite, nonatomic, strong) NSString *extraPathTestOptions;
 
 @end
 
 @implementation TestLibraryBridge
-
 + (nullable TestLibraryBridge *)
     instanceWithWKWebView:(nonnull WKWebView *)webView
-    adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber
 {
     if (! [webView isKindOfClass:WKWebView.class]) {
-        if (adjustJsLogSubscriber != nil) {
-            [adjustJsLogSubscriber
-             didLogWithMessage:
-                 [NSString stringWithFormat:@"Cannot use non WKWebView instance: %@",
-                  NSStringFromClass([webView class])]
-             logLevel:ADJAdjustLogLevelError];
-        }
+        NSLog(@"Cannot use non WKWebView instance: %@", NSStringFromClass([webView class]));
         return nil;
     }
 
@@ -47,24 +34,13 @@
         [TestLibraryBridge getTestLibraryWebBridgeScript];
     NSLog(@"test library scriptSourceResult %@", scriptSourceResult.value);
     if (scriptSourceResult.fail != nil) {
-        if (adjustJsLogSubscriber != nil) {
-            [adjustJsLogSubscriber
-             didLogWithMessage:
-                 [ADJConsoleLogger clientCallbackFormatMessageWithLog:
-                  [[ADJInputLogMessageData alloc]
-                   initWithMessage:@"Cannot generate script for test libray web bridge"
-                   level:ADJAdjustLogLevelError
-                   issueType:nil
-                   resultFail:scriptSourceResult.fail
-                   messageParams:nil]]
-             logLevel:ADJAdjustLogLevelError];
-        }
+        NSString *_Nullable failString =
+            [self toStringWithJsonDictionary:scriptSourceResult.fail.toJsonDictionary];
+        NSLog(@"Cannot generate script for test libray web bridge: %@", failString);
         return nil;
     }
 
-    TestLibraryBridge *_Nonnull bridge =
-        [[TestLibraryBridge alloc] initWithWithWKWebView:webView
-                                     adjustLogSubscriber:adjustJsLogSubscriber];
+    TestLibraryBridge *_Nonnull bridge = [[TestLibraryBridge alloc] initWithWithWKWebView:webView];
     bridge.testLibrary.jsonBulkDelegateWeak = bridge;
 
     WKUserContentController *controller = webView.configuration.userContentController;
@@ -76,7 +52,6 @@
 
     return bridge;
 }
-
 + (nonnull ADJResultNN<NSString *> *)getTestLibraryWebBridgeScript {
     NSBundle *_Nonnull sourceBundle = [NSBundle bundleForClass:self.class];
     // requires that the file 'TestLibraryBridge.js' is in the same location/folder
@@ -106,102 +81,28 @@
 
 - (nonnull instancetype)
     initWithWithWKWebView:(nonnull WKWebView *)webView
-    adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
 {
     self = [super init];
-    ADJLogger *_Nonnull logger =
-        [[ADJLogger alloc] initWithName:@"TestLibraryBridge"
-                           logCollector:self
-                             instanceId:[[ADJInstanceIdData alloc] initNonFirstWithClientId:nil]];
-
-    _logSubscriber = adjustLogSubscriber;
-    _logger = logger;
     _webView = webView;
 
-    _testLibrary = [[ATLTestLibrary alloc] initWithBaseUrl:baseUrl
-                                                controlUrl:controlUrl];
+    _testLibrary = [[ATLTestLibrary alloc] initWithBaseUrl:baseUrl controlUrl:controlUrl];
+
+    _extraPathTestOptions = nil;
 
     return self;
 }
 
-#pragma mark - ADJLogCollector
-- (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData {
-    if (self.logSubscriber == nil) {
-        NSLog(@"TORMV test library bridge logSubscriber = nil");
-        return;
-    }
-
-    [self.logSubscriber didLogWithMessage:
-     [ADJConsoleLogger clientCallbackFormatMessageWithLog:logMessageData.inputData]
-                                 logLevel:logMessageData.inputData.level];
-}
-
 #pragma mark - AdjustCommandBulkJsonParametersDelegate
 - (void)saveArrayOfCommandsJson:(nonnull NSString *)arrayOfCommandsJson {
-    [self execJsCallbackWithCallbackMethodName:@"saveArrayOfCommands"
-                         jsonParameter:arrayOfCommandsJson];
+    [self
+     execJsCallbackWithCallbackMethodName:@"saveArrayOfCommands"
+     jsonParameter:[NSString stringWithFormat:@"'%@'", arrayOfCommandsJson]];
 }
 
 - (void)executeCommandInArrayPosition:(NSUInteger)arrayPosition {
     [self execJsCallbackWithCallbackMethodName:@"execCommandInPosition"
-                         jsonParameter:[ADJUtilF uIntegerFormat:arrayPosition]];
-}
-
-#pragma mark - WKScriptMessageHandler
-- (void)userContentController:(nonnull WKUserContentController *)userContentController
-      didReceiveScriptMessage:(nonnull WKScriptMessage *)message
-{
-    if (! [message.body isKindOfClass:[NSDictionary class]]) {
-        [self.logger debugDev:@"Cannot handle test library script message with non-dictionary body"
-                    issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-
-    NSDictionary<NSString *, id> *_Nonnull body = (NSDictionary<NSString *, id> *)message.body;
-
-    [self.logger debugDev:@"TORMV test library userContentController"
-                      key:@"js body"
-              stringValue:[[ADJUtilJson toStringFromDictionary:body] value]];
-
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull methodNameResult =
-        [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBMethodNameKey]];
-    if (methodNameResult.fail != nil) {
-        [self.logger debugDev:@"Cannot obtain methodName field from script body"
-                      resultFail:methodNameResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-    NSString *_Nonnull methodName = methodNameResult.value.stringValue;
-
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull parametersJsonStringResult =
-        [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBParametersKey]];
-    if (parametersJsonStringResult.fail != nil) {
-        [self.logger debugDev:@"Cannot obtain parameters field from script body"
-                          key:@"method name"
-                  stringValue:methodName
-                   resultFail:parametersJsonStringResult.fail
-                    issueType:ADJIssueNonNativeIntegration];
-        return;
-    }
-
-    ADJResultNN<NSDictionary<NSString *, id> *> *_Nonnull parametersJsonDictionaryResult =
-        [ADJUtilJson toDictionaryFromString:parametersJsonStringResult.value.stringValue];
-    if (parametersJsonDictionaryResult.fail != nil) {
-         [self.logger debugWithMessage:
-          @"Cannot convert json string from parameters field to dictionary"
-                          builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-             [logBuilder withKey:@"method name" stringValue:methodName];
-             [logBuilder withKey:@"json string"
-                     stringValue:parametersJsonStringResult.value.stringValue];
-             [logBuilder withFail:parametersJsonDictionaryResult.fail
-                            issue:ADJIssueNonNativeIntegration];
-         }];
-        return;
-    }
-
-    NSDictionary<NSString *, id> *_Nonnull jsParameters =
-        parametersJsonDictionaryResult.value;
-
+                         jsonParameter:
+     [NSString stringWithFormat:@"%lu", (unsigned long)arrayPosition]];
 }
 
 - (void)
@@ -216,28 +117,254 @@
 }
 
 - (void)execJsWithExecCommand:(nonnull NSString *)jsExecCommand {
-    __typeof(self) __weak weakSelf = self;
-    [self.webView evaluateJavaScript:jsExecCommand
-                   completionHandler:^(id _Nullable jsonReturnValue,
-                                       NSError *_Nullable error)
-     {
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        if (error != nil) {
-            [strongSelf.logger
-             debugWithMessage:@"Cannot evaluate test library bridge javascript"
-             builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-                [logBuilder withFail:[[ADJResultFail alloc]
-                                      initWithMessage:@"evaluateJavaScript completionHandler error"
-                                      error:error]
-                               issue:ADJIssueNonNativeIntegration];
-                [logBuilder withKey:@"jsExecCommand" stringValue:jsExecCommand];
-                [logBuilder withKey:@"jsonReturnValue" stringValue:jsonReturnValue];
-            }];
-        }
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.webView evaluateJavaScript:jsExecCommand
+                       completionHandler:^(id _Nullable jsonReturnValue,
+                                           NSError *_Nullable error)
+         {
+            if (error != nil) {
+                NSLog(@"Cannot evaluate test library bridge javascript");
+                NSLog(@"with jsExecCommand %@", jsExecCommand);
+                NSLog(@"with jsonReturnValue %@", jsonReturnValue);
+                NSLog(@"with error %@", error);
+            } else {
+                NSLog(@"TORMV Evaluated test library bridge javascript");
+                NSLog(@"TORMV with jsExecCommand %@", jsExecCommand);
+            }
+        }];
+    });
 }
+
+#pragma mark - WKScriptMessageHandler
+- (void)userContentController:(nonnull WKUserContentController *)userContentController
+      didReceiveScriptMessage:(nonnull WKScriptMessage *)message
+{
+    if (! [message.body isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"Cannot handle test library script message with non-dictionary body");
+        return;
+    }
+
+    NSDictionary<NSString *, id> *_Nonnull body = (NSDictionary<NSString *, id> *)message.body;
+
+    NSLog(@"TORMV test library userContentController: %@",
+          [TestLibraryBridge toStringWithJsonDictionary:body]);
+
+    id _Nullable methodNameObject = [body objectForKey:@"_methodName"];
+    if (methodNameObject == nil || ! [methodNameObject isKindOfClass:[NSString class]]) {
+        NSLog(@"Could not obtain method name");
+        return;
+    }
+    NSString *_Nonnull methodName = (NSString *)methodNameObject;
+
+    id _Nullable parametersObject = [body objectForKey:@"_parameters"];
+    if (parametersObject == nil || ! [parametersObject isKindOfClass:[NSString class]]) {
+        NSLog(@"Could not obtain parameters of method: %@", methodName);
+        return;
+    }
+    NSString *_Nonnull parametersString = (NSString *)parametersObject;
+
+    NSDictionary<NSString *, id> *_Nullable jsParameters =
+        [TestLibraryBridge toDictionaryFromJsonString:parametersString];
+    if (jsParameters == nil) {
+        NSLog(@"Could not convert parameters to dictionary from method %@", methodName);
+        return;
+    }
+
+    if ([methodName isEqualToString:@"TORMV"]) {
+        [self execJsCallbackWithCallbackMethodName:@"TORMV"
+                                     jsonParameter:@"\"TORMV data\""];
+        return;
+    }
+
+    if ([methodName isEqualToString:@"addTestDirectory"]) {
+        NSString *_Nullable directoryName =
+            [TestLibraryBridge stringWithJsParameters:jsParameters
+                                                  key:@"_directoryName"];
+        if (directoryName == nil) {
+            NSLog(@"Could not get 'directoryName' from 'addTestDirectory'");
+            return;
+        }
+        [self.testLibrary addTestDirectory:directoryName];
+    } else if ([methodName isEqualToString:@"addTest"]) {
+        NSString *_Nullable testName =
+            [TestLibraryBridge stringWithJsParameters:jsParameters
+                                                  key:@"_testName"];
+        if (testName == nil) {
+            NSLog(@"Could not get 'testName' from 'addTest'");
+            return;
+        }
+        [self.testLibrary addTest:testName];
+    } else if ([methodName isEqualToString:@"startTestSession"]) {
+        NSString *_Nullable sdkVersion =
+            [TestLibraryBridge stringWithJsParameters:jsParameters
+                                                  key:@"_sdkVersion"];
+        if (sdkVersion == nil) {
+            NSLog(@"Could not get 'sdkVersion' from 'startTestSession'");
+            return;
+        }
+        [self.testLibrary startTestSession:sdkVersion];
+    } else if ([methodName isEqualToString:@"teardown"]) {
+        NSString *_Nullable testOptionsParametersString =
+            [TestLibraryBridge jsonStringWithJsParameters:jsParameters
+                                                      key:@"_testOptionsParameters"];
+        if (testOptionsParametersString == nil) {
+            NSLog(@"Could not get 'testOptionsParameters' from 'teardown'");
+            return;
+        }
+
+        NSDictionary<NSString *, id> *_Nullable testOptionsParameters =
+            [TestLibraryBridge toDictionaryFromJsonString:testOptionsParametersString];
+        if (testOptionsParameters == nil) {
+            NSLog(@"Could not convert test options parameters to dictionary");
+            return;
+        }
+
+        self.extraPathTestOptions =
+            [ATOAdjustTestOptions
+             teardownAndExecuteTestOptionsCommandWithUrlOverwrite:baseUrl
+             commandParameters:testOptionsParameters];
+    } else if ([methodName isEqualToString:@"jsFail"]) {
+        NSLog(@"Js failed: %@", parametersString);
+    } else {
+        NSLog(@"Could not match method name to any expected value: %@, %@",
+              methodName, parametersString);
+    }
+}
+
+
+#pragma mark Internal Methods
++ (nullable NSString *)
+    toStringWithJsonDictionary:(nonnull NSDictionary<NSString *, id> *)jsonDictionary
+{
+    @try {
+        NSError *_Nullable errorPtr = nil;
+        // If the object will not produce valid JSON then an exception will be thrown
+        NSData *_Nullable jsonData =
+            [NSJSONSerialization dataWithJSONObject:jsonDictionary
+                                            options:0
+                                              error:&errorPtr];
+
+        if (jsonData == nil) {
+            NSLog(@"Could not convert json dictionary to data (%@)",
+                  [errorPtr localizedDescription]);
+            return nil;
+        }
+
+        NSString *_Nullable jsonString =
+            [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        if (jsonString == nil) {
+            NSLog(@"Could not convert json data to string");
+        }
+        return jsonString;
+    } @catch (NSException *exception) {
+        NSLog(@"Exception while converting json dictionary to string (%@)",
+              [exception description]);
+        return nil;
+    }
+}
+
++ (nullable NSDictionary<NSString *, id> *)toDictionaryFromJsonString:
+    (nonnull NSString *)jsonString
+{
+    NSData *_Nullable jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    if (jsonData == nil) {
+        NSLog(@"Cannot convert json string to data, %@", jsonString);
+        return nil;
+    }
+
+    NSError *_Nullable errorPtr = nil;
+
+    id _Nullable jsonObject =
+        [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&errorPtr];
+
+    if (jsonObject == nil) {
+        NSLog(@"Cannot convert json data to object, %@ (%@)",
+              jsonString, [errorPtr localizedDescription]);
+        return nil;
+    }
+
+    if (! [jsonObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"Converted Json object is not a dictionary, %@, %@",
+              jsonString, NSStringFromClass([jsonObject class]));
+        return nil;
+    }
+
+    return (NSDictionary *)jsonObject;
+}
+
++ (nullable NSString *)
+    stringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    key:(nonnull NSString *)key
+{
+    id _Nullable typeObject =
+        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
+
+    if (typeObject == nil) {
+        NSLog(@"Type of expected string field is nil");
+        return nil;
+    }
+    if (! [typeObject isKindOfClass:[NSString class]]) {
+        NSLog(@"Type field of expected string field is not string, instead: %@",
+              NSStringFromClass([typeObject class]));
+        return nil;
+    }
+    if (! [@"string" isEqualToString:(NSString *)typeObject]) {
+        NSLog(@"Type of expected string field is not string, instead: %@", typeObject);
+        return nil;
+    }
+
+    id _Nullable stringObject = [jsParameters objectForKey:key];
+
+    if (stringObject == nil) {
+        NSLog(@"Expected string field is nil");
+        return nil;
+    }
+    if (! [stringObject isKindOfClass:[NSString class]]) {
+        NSLog(@"Expected string field is not string, instead: %@",
+              NSStringFromClass([stringObject class]));
+        return nil;
+    }
+
+    return (NSString *)stringObject;
+}
+
++ (nullable NSString *)
+    jsonStringWithJsParameters:(nonnull NSDictionary<NSString *, id> *)jsParameters
+    key:(nonnull NSString *)key
+{
+    id _Nullable typeObject =
+        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
+
+    if (typeObject == nil) {
+        NSLog(@"Type of expected json string field is nil");
+        return nil;
+    }
+    if (! [typeObject isKindOfClass:[NSString class]]) {
+        NSLog(@"Type field of expected json string field is not string, instead: %@",
+              NSStringFromClass([typeObject class]));
+        return nil;
+    }
+    if (! [@"object" isEqualToString:(NSString *)typeObject]) {
+        NSLog(@"Type of expected json string field is not object, instead: %@", typeObject);
+        return nil;
+    }
+
+    id _Nullable stringObject = [jsParameters objectForKey:key];
+
+    if (stringObject == nil) {
+        NSLog(@"Expected json string field is nil");
+        return nil;
+    }
+    if (! [stringObject isKindOfClass:[NSString class]]) {
+        NSLog(@"Expected json string field is not string, instead: %@",
+              NSStringFromClass([stringObject class]));
+        return nil;
+    }
+
+    return (NSString *)stringObject;
+}
+
+
 
 /*
 - (id)initWithAdjustBridgeRegister:(ADJAdjustBridge *)adjustBridge {
