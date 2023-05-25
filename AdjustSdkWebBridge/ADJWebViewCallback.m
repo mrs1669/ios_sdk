@@ -113,7 +113,7 @@
                          stringParam:(nonnull NSString *)stringParam
 {
     [self execJsWithExecCommand:
-     [NSString stringWithFormat:@"Adjust.%@(\"%@\");", callbackId, stringParam]];
+     [NSString stringWithFormat:@"Adjust.%@('%@');", callbackId, stringParam]];
 }
 
 #pragma mark Internal Methods
@@ -139,7 +139,7 @@
      execJsCallbackWithInstanceIdString:instanceIdString
      callbackId:callbackId
      methodName:methodName
-     jsonParameter:[NSString stringWithFormat:@"\"%@\"", jsonStringParameter]
+     jsonParameter:[NSString stringWithFormat:@"'%@'", jsonStringParameter]
      subscriberOrElseGetter:YES];
 }
 - (void)
@@ -164,7 +164,7 @@
      execJsCallbackWithInstanceIdString:instanceIdString
      callbackId:callbackId
      methodName:methodName
-     jsonParameter:[NSString stringWithFormat:@"\"%@\"", jsonStringParameter]
+     jsonParameter:[NSString stringWithFormat:@"'%@'", jsonStringParameter]
      subscriberOrElseGetter:NO];
 }
 
@@ -175,10 +175,9 @@
     jsonParameter:(nonnull NSString *)jsonParameter
     subscriberOrElseGetter:(BOOL)subscriberOrElseGetter
 {
-    NSString *_Nonnull jsonInstanceId = [NSString stringWithFormat:@"\"%@\"", instanceIdString];
     NSString *_Nonnull jsExecCommand =
-        [NSString stringWithFormat:@"Adjust.instance(%@).adjust_client%@(\"%@\", \"%@\", %@);",
-         jsonInstanceId,
+        [NSString stringWithFormat:@"Adjust.instance('%@').adjust_client%@('%@', '%@', %@);",
+         instanceIdString,
          subscriberOrElseGetter ? @"Subscriber" : @"Getter",
          callbackId, methodName, jsonParameter];
 

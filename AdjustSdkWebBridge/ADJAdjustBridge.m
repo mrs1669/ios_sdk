@@ -74,7 +74,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     ADJResult<NSString *> *_Nonnull scriptSourceResult =
         [ADJAdjustBridge getAdjustWebBridgeScript];
-    NSLog(@"adjust bridge scriptSourceResult %@", scriptSourceResult.value);
+    //NSLog(@"adjust bridge scriptSourceResult %@", scriptSourceResult.value);
+
     if (scriptSourceResult.fail != nil) {
         if (adjustJsLogSubscriber != nil) {
             [adjustJsLogSubscriber

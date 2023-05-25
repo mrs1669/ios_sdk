@@ -12,7 +12,7 @@
 #import "TestLibraryBridge.h"
 #import <AdjustSdkWebBridge/AdjustSdkWebBridge.h>
 
-@interface WKWebViewController ()
+@interface WKWebViewController () <ADJAdjustLogSubscriber>
 
 @property ADJAdjustBridge *adjustBridge;
 @property TestLibraryBridge *testLibraryBridge;
@@ -32,7 +32,8 @@
     WKWebView *webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:webView];
 
-    self.adjustBridge = [ADJAdjustBridge instanceWithWKWebView:webView];
+    self.adjustBridge = [ADJAdjustBridge instanceWithWKWebView:webView
+                                         adjustJsLogSubscriber:self];
 
     self.testLibraryBridge = [TestLibraryBridge instanceWithWKWebView:webView];
 
@@ -66,5 +67,19 @@
 6       calls TestLibraryBridge.getSdkVersion({sdkVersion}) in js
 
  */
+
+- (void)didLogWithMessage:(nonnull NSString *)logMessage
+                 logLevel:(nonnull ADJAdjustLogLevel)logLevel
+{
+    NSLog(@"WKWebViewController didLogWithMessage logLevel %@, %@",
+          logLevel, logMessage);
+}
+
+- (void)didLogMessagesPreInitWithArray:
+    (nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray
+{
+    NSLog(@"WKWebViewController didLogMessagesPreInitWithArray preInitLogMessageArray count %@",
+          @(preInitLogMessageArray.count));
+}
 
 @end

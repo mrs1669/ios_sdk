@@ -745,6 +745,7 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
 
     // always use test connection
     //CACHED_ADJUST_TEST_OPTIONS.useTestConnection = true;
+    // do not use current lifecycle status, test usually provides foreground call
     cachedTestOptions.doNotReadCurrentLifecycleStatus = YES;
     // do not initiate attribution request from SDK by default
     cachedTestOptions.doNotInitiateAttributionFromSdk = YES;

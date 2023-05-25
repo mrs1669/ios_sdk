@@ -32,7 +32,7 @@
 
     ADJResultNN<NSString *> *_Nonnull scriptSourceResult =
         [TestLibraryBridge getTestLibraryWebBridgeScript];
-    NSLog(@"test library scriptSourceResult %@", scriptSourceResult.value);
+    //NSLog(@"test library scriptSourceResult %@", scriptSourceResult.value);
     if (scriptSourceResult.fail != nil) {
         NSString *_Nullable failString =
             [self toStringWithJsonDictionary:scriptSourceResult.fail.toJsonDictionary];
@@ -172,7 +172,7 @@
 
     if ([methodName isEqualToString:@"TORMV"]) {
         [self execJsCallbackWithCallbackMethodName:@"TORMV"
-                                     jsonParameter:@"\"TORMV data\""];
+                                     jsonParameter:@"'TORMV data'"];
         return;
     }
 
@@ -194,6 +194,22 @@
             return;
         }
         [self.testLibrary addTest:testName];
+    } else if ([methodName isEqualToString:@"addInfoToSend"]) {
+        NSString *_Nullable key =
+            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_key"];
+        if (key == nil) {
+            NSLog(@"Could not get 'key' from 'addInfoToSend'");
+            return;
+        }
+        NSString *_Nullable value =
+            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_value"];
+        if (value == nil) {
+            NSLog(@"Could not get 'value' from 'addInfoToSend'");
+            return;
+        }
+        [self.testLibrary addInfoToSend:key value:value];
+    } else if ([methodName isEqualToString:@"sendInfoToServer"]) {
+        [self.testLibrary sendInfoToServer:self.extraPathTestOptions];
     } else if ([methodName isEqualToString:@"startTestSession"]) {
         NSString *_Nullable sdkVersion =
             [TestLibraryBridge stringWithJsParameters:jsParameters
