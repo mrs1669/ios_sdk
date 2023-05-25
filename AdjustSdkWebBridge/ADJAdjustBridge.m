@@ -101,6 +101,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
                                forMainFrameOnly:NO]];
     [controller addScriptMessageHandler:bridge name:@"adjust"];
 
+    [ADJAdjustInternal setSdkPrefix:kWebBridgeSdkPrefix];
+
     return bridge;
 }
 
@@ -285,7 +287,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
         [self.webViewCallback
          execJsTopLevelCallbackWithId:sdkVersionGetterIdResult.value
-         stringParam:[ADJAdjustInternal sdkVersionWithSdkPrefix:kWebBridgeSdkPrefix]];
+         stringParam:[ADJAdjustInternal currentSdkVersion]];
         return;
     }
 

@@ -21,9 +21,10 @@
 // public api
 - (nonnull ADJInstanceRoot *)instanceForClientId:(nullable NSString *)clientId;
 
-- (void)setSdkPrefix:(nullable NSString *)sdkPrefix;
-
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;
+
++ (void)setSdkPrefix:(nullable NSString *)sdkPrefix;
++ (nullable NSString *)sdkPrefix;
 
 @end
 

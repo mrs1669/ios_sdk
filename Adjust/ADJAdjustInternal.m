@@ -134,20 +134,21 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
      callbackParameterKeyValueArray:callbackParameterKeyValueArray
      partnerParameterKeyValueArray:partnerParameterKeyValueArray];
 }
-
-+ (nonnull NSString *)sdkVersion {
+/*
++ (nonnull NSString *)nativeSdkVersion {
     return ADJClientSdk;
 }
 
-+ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
++ (nonnull NSString *)generateSdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
     return [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
 }
+*/
++ (nonnull NSString *)currentSdkVersion {
+    return [ADJUtilSys clientSdkWithPrefix:[ADJEntryRoot sdkPrefix]];
+}
 
-+ (void)
-    setSdkPrefix:(nullable NSString *)sdkPrefix
-    fromInstanceWithClientId:(nullable NSString *)clientId
-{
-    [[ADJAdjustInternal entryRootForClientId:clientId] setSdkPrefix:sdkPrefix];
++ (void)setSdkPrefix:(nullable NSString *)sdkPrefix {
+    [ADJEntryRoot setSdkPrefix:sdkPrefix];
 }
 
 // Resets the sdk state, as if it was not initialized or used before.

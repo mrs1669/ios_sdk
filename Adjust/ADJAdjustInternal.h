@@ -80,13 +80,13 @@ NS_ASSUME_NONNULL_END
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
 
-+ (nonnull NSString *)sdkVersion;
+/*
++ (nonnull NSString *)nativeSdkVersion;
++ (nonnull NSString *)generateSdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix;
+ */
++ (nonnull NSString *)currentSdkVersion;
 
-+ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix;
-
-+ (void)
-    setSdkPrefix:(nullable NSString *)sdkPrefix
-    fromInstanceWithClientId:(nullable NSString *)clientId;
++ (void)setSdkPrefix:(nullable NSString *)sdkPrefix;
 
 + (nonnull NSString *)teardownWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
                              shouldClearStorage:(BOOL)shouldClearStorage;
