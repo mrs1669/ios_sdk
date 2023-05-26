@@ -69,6 +69,33 @@ _getFirstParam: function(params, key) {
     }
     return undefined;
 },
+_firstParam: function(params, key, callback) {
+    const value = TestLibrary._getFirstParam(params, key);
+    if (value) { callback(value); }
+},
+_firstTwoParam: function(params, key, callback) {
+    if (key in params && params[key] && params[key].length && params[key].length >= 2) {
+        callback(params[key][0], params[key][1]); }
+},
+_iterateKvParam: function(params, key, kvCallback) {
+    if (key in params && params[key] && params[key].length && params[key].length >= 2) {
+        for (var i = 0; i < params[key].length; i = i + 2) {
+            kvCallback(params[key][i], params[key][i + 1]); } }
+},
+_iterateNkvParam: function(params, key, nkvCallback) {
+    if (key in params && params[key] && params[key].length && params[key].length >= 3) {
+        for (var i = 0; i < params[key].length; i = i + 3) {
+            nkvCallback(params[key][i], params[key][i + 1], params[key][i + 2]); } }
+},
+_boolFirstParam: function(params, key, boolCallback) {
+    TestLibrary._firstParam(params, key, function(value) {
+        if (value  === "true") { boolCallback(true); }
+        if (value  === "false") { boolCallback(false); } });
+},
+_trueFirstParam: function(params, key, boolCallback) {
+    TestLibrary._boolFirstParam(params, key, function(boolValue) {
+        if (boolValue) { boolCallback(true); } });
+},
 TORMV: function() {
     TestLibrary._postMessage("TORMV");
 },
@@ -355,27 +382,110 @@ AdjustCommandExecutor.prototype.setOfflineMode = function(params) {
     }
 }
 AdjustCommandExecutor.prototype.addGlobalCallbackParameter = function(params) {
+    if (! ("keyValuePairs" in params)) {
+        TestLibrary._postMessage("jsFail", {
+            _message: "'addGlobalCallbackParameter' does not contain 'keyValuePairs'",
+            _params: params
+        });
+        return;
+    }
+    const keyValuePairs = params["keyValuePairs"];
+    for (var i = 0; i < keyValuePairs.length; i = i + 2) {
+        const key = keyValuePairs[i];
+        const value = keyValuePairs[i + 1];
+        TestLibrary._adjustDefaultInstance().addGlobalCallbackParameter(key, value);
+    }
 }
 AdjustCommandExecutor.prototype.addGlobalPartnerParameter = function(params) {
+    if (! ("keyValuePairs" in params)) {
+        TestLibrary._postMessage("jsFail", {
+            _message: "'addGlobalPartnerParameter' does not contain 'keyValuePairs'",
+            _params: params
+        });
+        return;
+    }
+    const keyValuePairs = params["keyValuePairs"];
+    for (var i = 0; i < keyValuePairs.length; i = i + 2) {
+        const key = keyValuePairs[i];
+        const value = keyValuePairs[i + 1];
+        TestLibrary._adjustDefaultInstance().addGlobalPartnerParameter(key, value);
+    }
 }
 AdjustCommandExecutor.prototype.removeGlobalCallbackParameter = function(params) {
+    if (! ("key" in params)) {
+        TestLibrary._postMessage("jsFail", {
+            _message: "'removeGlobalCallbackParameter' does not contain 'key'",
+            _params: params
+        });
+        return;
+    }
+    const keys = params["key"];
+    for (var i = 0; i < keys.length; i = i + 1) {
+        const key = keys[i];
+        TestLibrary._adjustDefaultInstance().removeGlobalCallbackParameter(key);
+    }
 }
 AdjustCommandExecutor.prototype.removeGlobalPartnerParameter = function(params) {
+    if (! ("key" in params)) {
+        TestLibrary._postMessage("jsFail", {
+            _message: "'removeGlobalPartnerParameter' does not contain 'key'",
+            _params: params
+        });
+        return;
+    }
+    const keys = params["key"];
+    for (var i = 0; i < keys.length; i = i + 1) {
+        const key = keys[i];
+        TestLibrary._adjustDefaultInstance().removeGlobalPartnerParameter(key);
+    }
 }
 AdjustCommandExecutor.prototype.clearGlobalCallbackParameters = function(params) {
+    TestLibrary._adjustDefaultInstance().clearGlobalCallbackParameters();
 }
 AdjustCommandExecutor.prototype.clearGlobalPartnerParameters = function(params) {
+    TestLibrary._adjustDefaultInstance().clearGlobalPartnerParameters();
 }
 AdjustCommandExecutor.prototype.setPushToken = function(params) {
+    const pushToken = TestLibrary._getFirstParam(params, "pushToken");
+    TestLibrary._adjustDefaultInstance().trackPushToken(pushToken);
 }
 AdjustCommandExecutor.prototype.openDeeplink = function(params) {
+    const deeplink = TestLibrary._getFirstParam(params, "deeplink");
+    TestLibrary._adjustDefaultInstance().trackLaunchedDeeplink(deeplink);
 }
 AdjustCommandExecutor.prototype.gdprForgetMe = function(params) {
     TestLibrary._adjustDefaultInstance().gdprForgetDevice();
 }
 AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
-}
-AdjustCommandExecutor.prototype.disableThirdPartySharing = function(params) {
+    const adRevenueSource = TestLibrary._getFirstParam(params, "adRevenueSource");
+
+    const adjustAdRevenue = new AdjustAdRevenue(adRevenueSource);
+
+    TestLibrary._firstTwoParam(params, "currencyAndRevenue", function(currency, revenueString){
+        adjustAdRevenue.setRevenueDouble(parseFloat(revenueString), currency);});
+
+    TestLibrary._firstParam(params, "adImpressionsCount", function(adImpressionsCount){
+        adjustAdRevenue.setAdImpressionsCount(parseInt(adImpressionsCount));});
+
+    TestLibrary._firstParam(params, "adRevenueNetwork", function(adRevenueNetwork){
+        adjustAdRevenue.setNetwork(adRevenueNetwork);});
+
+    TestLibrary._firstParam(params, "adRevenueUnit", function(adRevenueUnit){
+        adjustAdRevenue.setUnit(adRevenueUnit);});
+
+    TestLibrary._firstParam(params, "adRevenuePlacement", function(adRevenuePlacement){
+        adjustAdRevenue.setPlacement(adRevenuePlacement);});
+
+    TestLibrary._iterateKvParam(params, "callbackParams", function(key, value){
+        adjustAdRevenue.addCallbackParameter(key, value);});
+
+    TestLibrary._iterateKvParam(params, "partnerParams", function(key, value){
+        adjustAdRevenue.addPartnerParameter(key, value);});
+
+    TestLibrary._firstParam(params, "deduplicationId", function(deduplicationId){
+        adjustAdRevenue.setDeduplicationId(deduplicationId);});
+
+    TestLibrary._adjustDefaultInstance().trackAdRevenue(adjustAdRevenue);
 }
 AdjustCommandExecutor.prototype.resume = function(params) {
     TestLibrary._adjustDefaultInstance().appWentToTheForegroundManualCall();
@@ -384,8 +494,24 @@ AdjustCommandExecutor.prototype.pause = function(params) {
     TestLibrary._adjustDefaultInstance().appWentToTheBackgroundManualCall();
 }
 AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
+    const adjustThirdPartySharing = new AdjustThirdPartySharing();
+
+    TestLibrary._boolFirstParam(params, "isEnabled", function(isEnabled){
+        isEnabled ? adjustThirdPartySharing.enableThirdPartySharing()
+            : adjustThirdPartySharing.disableThirdPartySharing();});
+
+    TestLibrary._iterateNkvParam(params, "granularOptions", function(name, key, value){
+        adjustThirdPartySharing.addGranularOption(name, key, value);});
+
+    TestLibrary._iterateNkvParam(params, "partnerSharingSettings", function(name, key, value){
+        adjustThirdPartySharing.addPartnerSharingSetting(name, key, value);});
+
+    TestLibrary._adjustDefaultInstance().trackThirdPartySharing(adjustThirdPartySharing);
 }
 AdjustCommandExecutor.prototype.measurementConsent = function(params) {
+    TestLibrary._boolFirstParam(params, "isEnabled", function(isEnabled){
+        isEnabled ? TestLibrary._adjustDefaultInstance().activateMeasurementConsent()
+            : TestLibrary._adjustDefaultInstance().inactivateMeasurementConsent();});
 }
 
 /*

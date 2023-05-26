@@ -199,6 +199,9 @@ AdjustInstance.prototype.trackPushToken = function(pushTokenString) {
 AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartySharing) {
     this._postMessage("trackThirdPartySharing", adjustThirdPartySharing); };
 
+AdjustInstance.prototype.trackAdRevenue = function(adjustAdRevenue) {
+    this._postMessage("trackAdRevenue", adjustAdRevenue); };
+
 AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
     this._postMessage("addGlobalCallbackParameter", {
         _key: key, _keyType: typeof key,
