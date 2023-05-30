@@ -31,7 +31,7 @@
 #pragma mark Public API
 #pragma mark - ADJAdjustLaunchedDeeplinkCallback
 
-- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSURL *)adjustLaunchedDeeplink {
+- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSString *)adjustLaunchedDeeplink {
     [self.testLibraryWeak addInfoToSend:@"last_deeplink" value:adjustLaunchedDeeplink.description];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }

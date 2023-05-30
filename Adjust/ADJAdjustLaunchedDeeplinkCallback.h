@@ -11,7 +11,7 @@
 
 @protocol ADJAdjustLaunchedDeeplinkCallback <ADJAdjustCallback>
 
-- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSURL *)adjustLaunchedDeeplink;
+- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSString *)adjustLaunchedDeeplink;
 
 @end
 

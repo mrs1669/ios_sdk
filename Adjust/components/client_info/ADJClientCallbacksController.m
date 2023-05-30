@@ -84,8 +84,8 @@
         [self.logger debugDev:@"Returning launched deeplink data to client in callback"];
 
         [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustLaunchedDeeplinkCallback didReadWithAdjustLaunchedDeeplink:
-             [NSURL URLWithString:launchedDeeplinkStateData.launchedDeeplink.stringValue]];
+            [adjustLaunchedDeeplinkCallback
+             didReadWithAdjustLaunchedDeeplink:launchedDeeplinkStateData.launchedDeeplink.stringValue];
         }];
     } else {
 
