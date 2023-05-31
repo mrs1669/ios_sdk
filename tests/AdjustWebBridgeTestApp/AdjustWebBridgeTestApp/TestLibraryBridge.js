@@ -77,6 +77,11 @@ _firstTwoParam: function(params, key, callback) {
     if (key in params && params[key] && params[key].length && params[key].length >= 2) {
         callback(params[key][0], params[key][1]); }
 },
+_iterateVParam: function(params, key, vCallback) {
+    if (key in params && params[key] && params[key].length && params[key].length >= 1) {
+        for (var i = 0; i < params[key].length; i = i + 1) {
+            vCallback(params[key][i]); } }
+},
 _iterateKvParam: function(params, key, kvCallback) {
     if (key in params && params[key] && params[key].length && params[key].length >= 2) {
         for (var i = 0; i < params[key].length; i = i + 2) {
@@ -92,9 +97,9 @@ _boolFirstParam: function(params, key, boolCallback) {
         if (value  === "true") { boolCallback(true); }
         if (value  === "false") { boolCallback(false); } });
 },
-_trueFirstParam: function(params, key, boolCallback) {
+_trueFirstParam: function(params, key, voidCallback) {
     TestLibrary._boolFirstParam(params, key, function(boolValue) {
-        if (boolValue) { boolCallback(true); } });
+        if (boolValue) { voidCallback(); } });
 },
 TORMV: function() {
     TestLibrary._postMessage("TORMV");
@@ -245,44 +250,17 @@ AdjustCommandExecutor.prototype.start = function(params) {
     const appToken = TestLibrary._getFirstParam(params, "appToken");
     const environment = TestLibrary._getFirstParam(params, "environment");
 
-    TestLibrary._postMessage("start called", {
-        _params: params,
-        _appToken: appToken
-    });
-
-    TestLibrary._postMessage("key in params", {_key_in_params: "appToken" in params});
-    TestLibrary._postMessage("params[key]", {_params_appToken: params["appToken"]});
-    TestLibrary._postMessage("params[key].length", {
-        _params_appToken_length: params["appToken"].length});
-    TestLibrary._postMessage("params[key].length >= 1", {
-        _params_appToken_length_1: params["appToken"].length >= 1});
-
     const adjustConfig = new AdjustConfig(appToken, environment);
     adjustConfig.doLogAll();
 
-    if ("defaultTracker" in params) {
-        const defaultTracker = TestLibrary._getFirstParam(params, "defaultTracker");
-        adjustConfig.setDefaultTracker(defaultTracker);
-    }
+    TestLibrary._firstParam(params, "defaultTracker", function(defaultTracker) {
+        adjustConfig.setDefaultTracker(defaultTracker); });
 
-    if ("sendInBackground" in params) {
-        var sendInBackground = TestLibrary._getFirstParam(params, "sendInBackground");
-        if (sendInBackground === "true") {
-            adjustConfig.allowSendingFromBackground();
-        } else {
-            TestLibrary._postMessage("jsFail", {
-                _message: "'sendInBackground' does not contain 'true' value",
-                _sendInBackground: sendInBackground,
-                _sendInBackgroundType: typeof sendInBackground,
-                _params: params
-            });
-        }
-    }
+    TestLibrary._trueFirstParam(params, "sendInBackground", function() {
+        adjustConfig.allowSendingFromBackground(); });
 
-    if ("configureEventDeduplication" in params) {
-        const maxCapacity = TestLibrary._getFirstParam(params, "configureEventDeduplication");
-        adjustConfig.setEventIdDeduplicationMaxCapacity(maxCapacity);
-    }
+    TestLibrary._firstParam(params, "configureEventDeduplication", function(maxCapacity) {
+        adjustConfig.setEventIdDeduplicationMaxCapacity(parseInt(maxCapacity)); });
 
     if ("customEndpointUrl" in params
         || "customEndpointPublicKeyHash" in params
@@ -302,20 +280,22 @@ AdjustCommandExecutor.prototype.start = function(params) {
     }
 
     if ("attributionCallbackSendAll" in params) {
-        adjustConfig.setAdjustAttributionSubscriber(function(attribution) {
-            TestLibrary.addInfoToSend("trackerToken", attribution.trackerToken);
-            TestLibrary.addInfoToSend("trackerName", attribution.trackerName);
+        adjustConfig.setAdjustAttributionSubscriber(function(methodName, attribution) {
+            TestLibrary.addInfoToSend("tracker_token", attribution.trackerToken);
+            TestLibrary.addInfoToSend("tracker_name", attribution.trackerName);
             TestLibrary.addInfoToSend("network", attribution.network);
             TestLibrary.addInfoToSend("campaign", attribution.campaign);
             TestLibrary.addInfoToSend("adgroup", attribution.adgroup);
             TestLibrary.addInfoToSend("creative", attribution.creative);
-            TestLibrary.addInfoToSend("clickLabel", attribution.clickLabel);
+            TestLibrary.addInfoToSend("click_label", attribution.clickLabel);
             TestLibrary.addInfoToSend("adid", attribution.adid);
             TestLibrary.addInfoToSend("deeplink", attribution.deeplink);
             TestLibrary.addInfoToSend("state", attribution.state);
-            TestLibrary.addInfoToSend("costType", attribution.costType);
-            TestLibrary.addInfoToSend("costAmount", attribution.costAmount);
-            TestLibrary.addInfoToSend("costCurrency", attribution.costCurrency);
+            TestLibrary.addInfoToSend("cost_type", attribution.costType);
+            if (attribution.costAmount !== undefined && attribution.costAmount !== null) {
+                TestLibrary.addInfoToSend("cost_amount", attribution.costAmount.toString());
+            }
+            TestLibrary.addInfoToSend("cost_currency", attribution.costCurrency);
 
             TestLibrary.sendInfoToServer();
         });
@@ -328,35 +308,17 @@ AdjustCommandExecutor.prototype.trackEvent = function(params) {
 
     const adjustEvent = new AdjustEvent(eventToken);
 
-    if ("currencyAndRevenue" in params) {
-        const currencyAndRevenue = params["currencyAndRevenue"];
-        const currency = currencyAndRevenue[0];
-        const revenueString = currencyAndRevenue[1];
-        adjustEvent.setRevenueDouble(parseFloat(revenueString), currency);
-    }
+    TestLibrary._firstTwoParam(params, "currencyAndRevenue", function(currency, revenueString){
+        adjustEvent.setRevenueDouble(parseFloat(revenueString), currency); });
 
-    if ("callbackParams" in params) {
-        const callbackParams = params["callbackParams"];
-        for (var i = 0; i < callbackParams.length; i = i + 2) {
-            const key = callbackParams[i];
-            const value = callbackParams[i + 1];
-            adjustEvent.addCallbackParameter(key, value);
-        }
-    }
+    TestLibrary._iterateKvParam(params, "callbackParams", function(key, value){
+        adjustEvent.addCallbackParameter(key, value); });
 
-    if ("partnerParams" in params) {
-        const partnerParams = params["partnerParams"];
-        for (var i = 0; i < partnerParams.length; i = i + 2) {
-            const key = partnerParams[i];
-            const value = partnerParams[i + 1];
-            adjustEvent.addPartnerParameter(key, value);
-        }
-    }
+    TestLibrary._iterateKvParam(params, "partnerParams", function(key, value){
+        adjustEvent.addPartnerParameter(key, value); });
 
-    if ("deduplicationId" in params) {
-        deduplicationId = TestLibrary._getFirstParam(params, "deduplicationId");
-        adjustEvent.setDeduplicationId(deduplicationId);
-    }
+    TestLibrary._firstParam(params, "deduplicationId", function(deduplicationId){
+        adjustEvent.setDeduplicationId(deduplicationId); });
 
     TestLibrary._adjustDefaultInstance().trackEvent(adjustEvent);
 }
@@ -367,77 +329,25 @@ AdjustCommandExecutor.prototype.restart = function() {
     TestLibrary._adjustDefaultInstance().reactivateSdk();
 }
 AdjustCommandExecutor.prototype.setOfflineMode = function(params) {
-    var offlineEnabled = TestLibrary._getFirstParam(params, "enabled");
-    if (offlineEnabled === "true") {
-        TestLibrary._adjustDefaultInstance().switchToOfflineMode();
-    } else if (offlineEnabled === "false") {
-        TestLibrary._adjustDefaultInstance().switchBackToOnlineMode();
-    } else {
-        TestLibrary._postMessage("jsFail", {
-            _message: "'setOfflineMode' does not contain 'true' or 'false' value",
-            _offlineEnabled: offlineEnabled,
-            _offlineEnabledType: typeof offlineEnabled,
-            _params: params
-        });
-    }
+    TestLibrary._boolFirstParam(params, "enabled", function(isEnabled){
+        isEnabled ? TestLibrary._adjustDefaultInstance().switchToOfflineMode()
+            : TestLibrary._adjustDefaultInstance().switchBackToOnlineMode(); });
 }
 AdjustCommandExecutor.prototype.addGlobalCallbackParameter = function(params) {
-    if (! ("keyValuePairs" in params)) {
-        TestLibrary._postMessage("jsFail", {
-            _message: "'addGlobalCallbackParameter' does not contain 'keyValuePairs'",
-            _params: params
-        });
-        return;
-    }
-    const keyValuePairs = params["keyValuePairs"];
-    for (var i = 0; i < keyValuePairs.length; i = i + 2) {
-        const key = keyValuePairs[i];
-        const value = keyValuePairs[i + 1];
-        TestLibrary._adjustDefaultInstance().addGlobalCallbackParameter(key, value);
-    }
+    TestLibrary._iterateKvParam(params, "keyValuePairs", function(key, value){
+        TestLibrary._adjustDefaultInstance().addGlobalCallbackParameter(key, value); });
 }
 AdjustCommandExecutor.prototype.addGlobalPartnerParameter = function(params) {
-    if (! ("keyValuePairs" in params)) {
-        TestLibrary._postMessage("jsFail", {
-            _message: "'addGlobalPartnerParameter' does not contain 'keyValuePairs'",
-            _params: params
-        });
-        return;
-    }
-    const keyValuePairs = params["keyValuePairs"];
-    for (var i = 0; i < keyValuePairs.length; i = i + 2) {
-        const key = keyValuePairs[i];
-        const value = keyValuePairs[i + 1];
-        TestLibrary._adjustDefaultInstance().addGlobalPartnerParameter(key, value);
-    }
+    TestLibrary._iterateKvParam(params, "keyValuePairs", function(key, value){
+        TestLibrary._adjustDefaultInstance().addGlobalPartnerParameter(key, value); });
 }
 AdjustCommandExecutor.prototype.removeGlobalCallbackParameter = function(params) {
-    if (! ("key" in params)) {
-        TestLibrary._postMessage("jsFail", {
-            _message: "'removeGlobalCallbackParameter' does not contain 'key'",
-            _params: params
-        });
-        return;
-    }
-    const keys = params["key"];
-    for (var i = 0; i < keys.length; i = i + 1) {
-        const key = keys[i];
-        TestLibrary._adjustDefaultInstance().removeGlobalCallbackParameter(key);
-    }
+    TestLibrary._iterateVParam(params, "key", function(value){
+        TestLibrary._adjustDefaultInstance().removeGlobalCallbackParameter(value); });
 }
 AdjustCommandExecutor.prototype.removeGlobalPartnerParameter = function(params) {
-    if (! ("key" in params)) {
-        TestLibrary._postMessage("jsFail", {
-            _message: "'removeGlobalPartnerParameter' does not contain 'key'",
-            _params: params
-        });
-        return;
-    }
-    const keys = params["key"];
-    for (var i = 0; i < keys.length; i = i + 1) {
-        const key = keys[i];
-        TestLibrary._adjustDefaultInstance().removeGlobalPartnerParameter(key);
-    }
+    TestLibrary._iterateVParam(params, "key", function(value){
+        TestLibrary._adjustDefaultInstance().removeGlobalPartnerParameter(value); });
 }
 AdjustCommandExecutor.prototype.clearGlobalCallbackParameters = function(params) {
     TestLibrary._adjustDefaultInstance().clearGlobalCallbackParameters();
@@ -504,7 +414,10 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
         adjustThirdPartySharing.addGranularOption(name, key, value);});
 
     TestLibrary._iterateNkvParam(params, "partnerSharingSettings", function(name, key, value){
-        adjustThirdPartySharing.addPartnerSharingSetting(name, key, value);});
+        let boolValue = null;
+        if (value === "true") { boolValue = true; }
+        if (value === "false") { boolValue = false; }
+        adjustThirdPartySharing.addPartnerSharingSetting(name, key, boolValue);});
 
     TestLibrary._adjustDefaultInstance().trackThirdPartySharing(adjustThirdPartySharing);
 }
