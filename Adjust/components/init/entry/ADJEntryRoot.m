@@ -102,7 +102,10 @@ static NSString *sdkPrefixGlobal = nil;
             ADJInstanceRoot * instanceRoot = (ADJInstanceRoot *)obj;
             [instanceRoot finalizeAtTeardownWithBlock:closeStorageBlock];
         }];
-        sdkPrefixGlobal = nil;
+        // Not reseting sdk prefix to make it easier for testing non-native sdk
+        // If at some point, somehow, changing prefixes between teardown and start, would
+        //  make sense, then some alternative solution for those integrations would be needed
+        //sdkPrefixGlobal = nil;
     }
 }
 

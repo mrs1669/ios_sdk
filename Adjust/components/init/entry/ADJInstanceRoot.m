@@ -156,15 +156,16 @@
         preAndSelfBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot,
                           ADJInstanceRoot *_Nonnull instanceRoot)
      {
+        if (! [preSdkInitRoot.sdkActiveController ccTrySdkInit]) {
+            return;
+        }
+
         ADJClientConfigData *_Nullable clientConfig =
             [ADJClientConfigData
              instanceFromClientWithAdjustConfig:adjustConfig
              internalConfigSubscriptions:internalConfigSubscriptions
              logger:preSdkInitRoot.logger];
-
-        if (! [preSdkInitRoot.sdkActiveController ccTrySdkInit]) {
-            return;
-        }
+        if (clientConfig == nil) { return; }
 
         // Initialize PostSdkInitRoot instance
         instanceRoot.postSdkInitRoot =
@@ -289,7 +290,7 @@
                           ADJLogger *_Nonnull logger)
      {
         ADJClientMeasurementConsentData *_Nullable consentData =
-        [ADJClientMeasurementConsentData instanceWithInactivateConsent];
+            [ADJClientMeasurementConsentData instanceWithInactivateConsent];
         if (consentData == nil) { return; }
 
         [clientActionsAPI ccTrackMeasurementConsent:consentData];

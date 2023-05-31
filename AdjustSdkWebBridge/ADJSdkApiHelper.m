@@ -485,6 +485,7 @@
     id _Nullable typeObject =
         [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
 
+    // possible TODO: replace ADJNonEmptyString with less strict check to let native log it
     ADJResult<ADJNonEmptyString *> *_Nonnull typeResult =
         [ADJNonEmptyString instanceFromObject:typeObject];
     if (typeResult.wasInputNil) {
