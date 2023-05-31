@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: ADJAdjustLaunchedDeeplinkCallback {
 
-    func didRead(withAdjustLaunchedDeeplink adjustLaunchedDeeplink: URL) {
+    func didRead(withAdjustLaunchedDeeplink adjustLaunchedDeeplink: String) {
         print("Adjust Launched Deeplink:\(adjustLaunchedDeeplink)")
     }
 

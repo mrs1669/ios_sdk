@@ -42,7 +42,7 @@
     NSLog(@"Adjust Attribution Changed: %@", adjustAttribution);
 }
 
-- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSURL *)adjustLaunchedDeeplink {
+- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSString *)adjustLaunchedDeeplink {
     NSLog(@"Adjust Launched Deeplink: %@", adjustLaunchedDeeplink);
 }
 
@@ -51,6 +51,5 @@
 }
 
 @end
-
 
 
