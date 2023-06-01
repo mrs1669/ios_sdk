@@ -94,18 +94,18 @@ static NSString *const kDomainValidationRegexString =
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
         [ADJClientConfigData dataResidencyWithClientData:adjustConfig.dataResidency];
-    if (dataResidencyResult.failMessage != nil) {
+    if (dataResidencyResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid data residency"
-                 failMessage:dataResidencyResult.failMessage];
+                  resultFail:dataResidencyResult.fail];
     }
     AdjustDataResidency _Nullable dataResidency =
         dataResidencyResult != nil ? dataResidencyResult.value.stringValue : nil;
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull externalDeviceIdResult =
         [ADJNonEmptyString instanceFromOptionalString:adjustConfig.externalDeviceId];
-    if (externalDeviceIdResult.failMessage != nil) {
+    if (externalDeviceIdResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid external device id"
-                 failMessage:externalDeviceIdResult.failMessage];
+                  resultFail:externalDeviceIdResult.fail];
     }
 
     ADJResultNL<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
@@ -154,15 +154,6 @@ static NSString *const kDomainValidationRegexString =
         [logger noticeClient:@"Cannot configure invalid max deduplication event capacity"
                   resultFail:eventIdDeduplicationMaxCapacityResult.fail];
     }
-/* TODO: add at later commit
-     ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
-         [ADJNonNegativeInt
-          instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt];
-    if (eventIdDeduplicationMaxCapacityResult.fail != nil) {
-        [logger noticeClient:@"Cannot configure invalid max deduplication event capacity"];
-                  resultFail:eventIdDeduplicationMaxCapacityResult.fail];
-    }
-*/
     return [[ADJClientConfigData alloc]
             initWithAppToken:appTokenResult.value
             isSandboxEnvironmentOrElseProduction:isSandboxEnvironment
@@ -270,8 +261,8 @@ static NSString *const kDomainValidationRegexString =
         } else {
             result = [ADJResultNN failWithMessage:
                       @"NSRegularExpression regularExpression with excluded deeplinks pattern"
-                      " returned nil"];
-                                            // TODO: add at later commit: error:error];
+                      " returned nil"
+                      error:error];
         }
     });
 
@@ -291,9 +282,9 @@ static NSString *const kDomainValidationRegexString =
     ADJResultNL<ADJNonEmptyString *> *_Nonnull urlStrategyDomainResult =
         [ADJNonEmptyString instanceFromOptionalString:urlStrategyDomain];
 
-    if (urlStrategyDomainResult.failMessage != nil) {
+    if (urlStrategyDomainResult.fail != nil) {
         [logger noticeClient:@"Cannot set invalid URL strategy domain"
-                 failMessage:urlStrategyDomainResult.failMessage];
+                  resultFail:urlStrategyDomainResult.fail];
         return nil;
     }
     if (urlStrategyDomainResult.value == nil) {
@@ -303,10 +294,12 @@ static NSString *const kDomainValidationRegexString =
     ADJResultNN<NSRegularExpression *> *_Nonnull domainValidationRegexResult =
         [ADJClientConfigData domainValidationRegex];
 
-    if (domainValidationRegexResult.failMessage != nil) {
+    if (domainValidationRegexResult.fail != nil) {
         [logger noticeClient:@"Cannot validate URL strategy domain with invalid regex"
-                 failMessage:domainValidationRegexResult.failMessage];
-                 // TODO add fail object and issue at a later commit
+                 resultFail:domainValidationRegexResult.fail];
+        [logger debugDev:@"Could not create domain validation regex"
+              resultFail:domainValidationRegexResult.fail
+               issueType:ADJIssueLogicError];
         return nil;
     }
 
@@ -327,7 +320,7 @@ static NSString *const kDomainValidationRegexString =
 {
     ADJResultNL<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
         [ADJNonEmptyString instanceFromOptionalString:dataResidency];
-    if (dataResidencyResult.failMessage != nil || dataResidencyResult.value == nil) {
+    if (dataResidencyResult.fail != nil || dataResidencyResult.value == nil) {
         return dataResidencyResult;
     }
 
@@ -338,8 +331,9 @@ static NSString *const kDomainValidationRegexString =
         return dataResidencyResult;
     }
 
-    return [ADJResultNL failWithMessage:@"Cannot use data residency that is not expected"];
-    // TODO: add key/value with received value
+    return [ADJResultNL failWithMessage:@"Cannot use data residency that is not expected"
+                                    key:@"data residency"
+                            stringValue:dataResidencyResult.value.stringValue];
 }
 
 @end
