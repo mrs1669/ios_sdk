@@ -164,8 +164,8 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
     ADJNonEmptyString *_Nullable enabledOrElseDisabledSharingIoValue =
         [propertiesMap pairValueWithKey:kEnabledOrElseDisabledSharingKey];
 
-    ADJResultNL<ADJBooleanWrapper *> *_Nonnull enabledOrElseDisabledSharingResult =
-        [ADJBooleanWrapper instanceFromOptionalIoValue:enabledOrElseDisabledSharingIoValue];
+    ADJResult<ADJBooleanWrapper *> *_Nonnull enabledOrElseDisabledSharingResult =
+        [ADJBooleanWrapper instanceFromIoValue:enabledOrElseDisabledSharingIoValue];
     if (enabledOrElseDisabledSharingResult.fail != nil) {
         [logger debugDev:@"Cannot use invalid enabledOrElseDisabledSharing value"
          " from client action injected io data"

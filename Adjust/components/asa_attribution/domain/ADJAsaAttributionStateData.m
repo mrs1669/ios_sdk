@@ -49,7 +49,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
                        otherFail:unexpectedMetadataTypeValueFail]];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedValidAsaClickResponseResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull hasReceivedValidAsaClickResponseResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]];
     if (hasReceivedValidAsaClickResponseResult.fail != nil) {
@@ -61,7 +61,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
                        otherFail:hasReceivedValidAsaClickResponseResult.fail]];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedAdjustAttributionResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull hasReceivedAdjustAttributionResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedAdjustAttributionKey]];
     if (hasReceivedAdjustAttributionResult.fail != nil) {

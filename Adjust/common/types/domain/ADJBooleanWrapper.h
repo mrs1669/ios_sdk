@@ -29,9 +29,7 @@ NS_ASSUME_NONNULL_END
 
 + (nullable instancetype)instanceFromNumberBoolean:(nullable NSNumber *)numberBooleanValue;
 
-+ (nonnull ADJResultNN<ADJBooleanWrapper *> *)instanceFromIoValue:
-    (nullable ADJNonEmptyString *)ioValue;
-+ (nonnull ADJResultNL<ADJBooleanWrapper *> *)instanceFromOptionalIoValue:
++ (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromIoValue:
     (nullable ADJNonEmptyString *)ioValue;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

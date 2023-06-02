@@ -36,7 +36,7 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
                                   otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull isSdkActiveResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull isSdkActiveResult =
         [ADJBooleanWrapper
             instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]];
 

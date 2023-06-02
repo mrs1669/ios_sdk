@@ -37,7 +37,7 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
                                   otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull forgottenByBackendResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull forgottenByBackendResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kForgottenByBackendKey]];
     if (forgottenByBackendResult.fail != nil) {
@@ -47,7 +47,7 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
                 otherFail:forgottenByBackendResult.fail];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull askedToForgetBySdkResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull askedToForgetBySdkResult =
         [ADJBooleanWrapper
          instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]];
     if (askedToForgetBySdkResult.fail != nil) {

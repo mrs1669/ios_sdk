@@ -13,6 +13,7 @@
 #import "ADJLogger.h"
 #import "ADJResultNN.h"
 #import "ADJResultNL.h"
+#import "ADJResult.h"
 
 @interface ADJNonEmptyString : NSObject<
     NSCopying,

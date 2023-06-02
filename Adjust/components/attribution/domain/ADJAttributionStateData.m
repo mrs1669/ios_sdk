@@ -53,7 +53,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                        otherFail:unexpectedMetadataTypeValueFail]];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull installSessionTrackedResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull installSessionTrackedResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kInstallSessionTrackedKey]];
     if (installSessionTrackedResult.fail != nil) {
@@ -65,7 +65,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                        otherFail:installSessionTrackedResult.fail]];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull unavailableAttributionResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull unavailableAttributionResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kUnavailableAttributionKey]];
     if (unavailableAttributionResult.fail != nil) {
@@ -77,7 +77,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
                        otherFail:unavailableAttributionResult.fail]];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull isAskingResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull isAskingResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kIsAskingKey]];
     if (isAskingResult.fail != nil) {
