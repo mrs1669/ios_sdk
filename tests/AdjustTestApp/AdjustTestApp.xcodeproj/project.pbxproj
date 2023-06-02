@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0742D41729F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 0742D41629F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m */; };
 		0A530ED02891524E00FD7EFB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530ECF2891524E00FD7EFB /* AppDelegate.m */; };
 		0A530ED62891524E00FD7EFB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530ED52891524E00FD7EFB /* ViewController.m */; };
 		0A530ED92891524E00FD7EFB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A530ED72891524E00FD7EFB /* Main.storyboard */; };
@@ -22,6 +23,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0742D41E29F92ED70096482F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF8EF28F6040F00852E17;
+			remoteInfo = AdjustSdkStatic;
+		};
+		0742D42029F92ED70096482F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BF9CC28F606AC00852E17;
+			remoteInfo = AdjustSdkTvStatic;
+		};
+		0742D42229F92ED70096482F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0A2BFAAB28F608EE00852E17;
+			remoteInfo = AdjustSdkImStatic;
+		};
 		0A530EEB2891526800FD7EFB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A530EE72891526800FD7EFB /* AdjustTestLibrary.xcodeproj */;
@@ -88,6 +110,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0742D41529F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATAAdjustLaunchedDeeplinkCallback.h; sourceTree = "<group>"; };
+		0742D41629F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustLaunchedDeeplinkCallback.m; sourceTree = "<group>"; };
 		0A530ECB2891524E00FD7EFB /* AdjustTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdjustTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A530ECE2891524E00FD7EFB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0A530ECF2891524E00FD7EFB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -150,6 +174,8 @@
 				0A7ED6F02892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */,
 				0A7ED6F32892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.h */,
 				0A7ED6EE2892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m */,
+				0742D41529F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.h */,
+				0742D41629F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m */,
 				0A7ED6EF2892B07F00CC20DE /* ATAAdjustCommandExecutor.h */,
 				0A7ED6F22892B07F00CC20DE /* ATAAdjustCommandExecutor.m */,
 				0A530ECE2891524E00FD7EFB /* AppDelegate.h */,
@@ -180,6 +206,9 @@
 				0A530F00289152A000FD7EFB /* AdjustSdk.framework */,
 				0A530F02289152A000FD7EFB /* AdjustSdkTv.framework */,
 				0A530F04289152A000FD7EFB /* AdjustSdkIm.framework */,
+				0742D41F29F92ED70096482F /* libAdjustSdk.a */,
+				0742D42129F92ED70096482F /* libAdjustSdkTv.a */,
+				0742D42329F92ED70096482F /* libAdjustSdkIm.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -271,6 +300,27 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		0742D41F29F92ED70096482F /* libAdjustSdk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdk.a;
+			remoteRef = 0742D41E29F92ED70096482F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0742D42129F92ED70096482F /* libAdjustSdkTv.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkTv.a;
+			remoteRef = 0742D42029F92ED70096482F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0742D42329F92ED70096482F /* libAdjustSdkIm.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkIm.a;
+			remoteRef = 0742D42229F92ED70096482F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		0A530EEC2891526800FD7EFB /* libAdjustTestLibrary.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -356,6 +406,7 @@
 				0A7ED6F62892B07F00CC20DE /* ATAAdjustCommandExecutor.m in Sources */,
 				0A530ED62891524E00FD7EFB /* ViewController.m in Sources */,
 				0A7ED6F52892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m in Sources */,
+				0742D41729F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m in Sources */,
 				0A530ED02891524E00FD7EFB /* AppDelegate.m in Sources */,
 				0A530EE12891524F00FD7EFB /* main.m in Sources */,
 				0A7ED6F42892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m in Sources */,

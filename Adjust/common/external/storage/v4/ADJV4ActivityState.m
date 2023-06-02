@@ -29,6 +29,7 @@ static NSString *const kTimeSpentKey = @"timeSpent";
 static NSString *const kLastActivityKey = @"lastActivity";
 static NSString *const kSessionLengthKey = @"sessionLength";
 static NSString *const kTransactionIdsKey = @"transactionIds";
+static NSString *const kLaunchedDeeplinkKey = @"launchedDeeplink";
 
 #pragma mark - Public properties
 /* .h
@@ -66,6 +67,8 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
  @property (nullable, readonly, strong, nonatomic) NSNumber *sessionLengthNumberDouble;
  //@property (nonatomic, strong) NSMutableArray *transactionIds;
  @property (nullable, readonly, strong, nonatomic) NSMutableArray *transactionIds;
+ //@property (nonatomic, copy) NSString *launchedDeeplink;
+ @property (nullable, readonly, strong, nonatomic) NSString *launchedDeeplink;
  */
 
 @implementation ADJV4ActivityState
@@ -147,6 +150,9 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
     if ([decoder containsValueForKey:kAttributionDetailsKey]) {
         _attributionDetails = [decoder decodeObjectForKey:kAttributionDetailsKey];
     }
+    if ([decoder containsValueForKey:kLaunchedDeeplinkKey]) {
+        _launchedDeeplink = [decoder decodeObjectForKey:kLaunchedDeeplinkKey];
+    }
 
     return self;
 }
@@ -177,6 +183,7 @@ static NSString *const kTransactionIdsKey = @"transactionIds";
             kLastActivityKey, self.lastActivityNumberDouble,
             kSessionLengthKey, self.sessionLengthNumberDouble,
             kTransactionIdsKey, self.transactionIds,
+            kLaunchedDeeplinkKey, self.launchedDeeplink,
             nil];
 }
 

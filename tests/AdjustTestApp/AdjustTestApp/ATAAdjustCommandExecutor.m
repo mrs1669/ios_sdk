@@ -7,18 +7,18 @@
 
 #import "ATAAdjustCommandExecutor.h"
 
-#import "ATAAdjustCommandExecutor.h"
 #import "ATOAdjustTestOptions.h"
 #import "ATAAdjustAttributionDeferredDeeplinkSubscriber.h"
 #import "ATAAdjustAttributionSendAllSubscriber.h"
-#import "ADJAdjustConfig.h"
 #import "ADJAdjust.h"
+#import "ADJAdjustConfig.h"
+#import "ADJAdjustInstance.h"
 #import "ADJAdjustEvent.h"
 #import "ADJAdjustPushToken.h"
 #import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
-#import "ADJAdjustInstance.h"
+#import "ATAAdjustLaunchedDeeplinkCallback.h"
 
 @interface ATAAdjustCommandExecutor ()
 
@@ -41,7 +41,6 @@ NSDictionary<NSString *, NSArray<NSString *> *> *commandParameters;
     _testLibrary = testLibrary;
     //_adjustV4CommandExecutor = [[ATAAdjustCommandExecutor alloc] initWithUrl:url];
     //[self.adjustV4CommandExecutor setTestLibrary:testLibrary];
-
     return self;
 }
 
@@ -102,6 +101,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     adjustCommand(trackAdRevenue)
     adjustCommand(thirdPartySharing)
     adjustCommand(measurementConsent)
+    adjustCommand(getLastDeeplink)
     [self logError:@"method name %@ not found", methodName];
 }
 
@@ -281,7 +281,6 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
      {
         [[ADJAdjust instance] addGlobalPartnerParameterWithKey:key value:value];
     }];
-
 }
 
 - (void)removeGlobalCallbackParameter {
@@ -326,6 +325,13 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                                                                   initWithString:openDeeplink];
 
     [[ADJAdjust instance] trackLaunchedDeeplink:adjustLaunchedDeeplink];
+}
+
+- (void)getLastDeeplink {
+    [[ADJAdjust instance]
+     adjustLaunchedDeeplinkWithCallback:[[ATAAdjustLaunchedDeeplinkCallback alloc]
+                                         initWithTestLibrary:self.testLibrary
+                                         extraPath:self.extraPathTestOptions]];
 }
 
 - (void)gdprForgetMe {
@@ -625,7 +631,5 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 @end
-
-
 
 

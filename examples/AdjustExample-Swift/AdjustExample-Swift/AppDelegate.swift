@@ -18,10 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let environment = ADJEnvironmentSandbox
         let adjustConfig = ADJAdjustConfig(appToken: appToken, environment: environment)
 
-        ADJAdjust.instance().initSdk(withConfiguration: adjustConfig)
+        ADJAdjust.instance().initSdk(with: adjustConfig)
 
         let event = ADJAdjustEvent.init(eventId: "d8bf3k")
         ADJAdjust.instance().trackEvent(event)
+
+        let launchedDeeplink = ADJAdjustLaunchedDeeplink(string: "https://github.com/")
+        ADJAdjust.instance().trackLaunchedDeeplink(launchedDeeplink)
+
         return true
     }
 
@@ -38,7 +42,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
-
 }
+
+extension AppDelegate: ADJAdjustLaunchedDeeplinkCallback {
+
+    func didRead(withAdjustLaunchedDeeplink adjustLaunchedDeeplink: String) {
+        print("Adjust Launched Deeplink:\(adjustLaunchedDeeplink)")
+    }
+
+    func didFail(withAdjustCallbackMessage message: String) {
+        print("Adjust Fail Message:\(message)")
+    }
+}
+
 

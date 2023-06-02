@@ -13,6 +13,7 @@
 #import "ADJSdkPackageBuilder.h"
 #import "ADJMainQueueController.h"
 #import "ADJClientLaunchedDeeplinkData.h"
+#import "ADJLaunchedDeeplinkStateStorage.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -25,9 +26,11 @@ NS_ASSUME_NONNULL_END
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                 launchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 // public api
 - (void)ccTrackLaunchedDeeplinkWithClientData:(nonnull ADJClientLaunchedDeeplinkData *)clientLaunchedDeeplinkData;
 
 @end
+

@@ -29,27 +29,26 @@
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenueController *adRevenueController;
 @property (nonnull, readonly, strong, nonatomic)
-    ADJBillingSubscriptionController *billingSubscriptionController;
+ADJBillingSubscriptionController *billingSubscriptionController;
 @property (nonnull, readonly, strong, nonatomic)
-    ADJLaunchedDeeplinkController *launchedDeeplinkController;
+ADJLaunchedDeeplinkController *launchedDeeplinkController;
 @property (nonnull, readonly, strong, nonatomic) ADJEventController *eventController;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenController *pushTokenController;
 @property (nonnull, readonly, strong, nonatomic)
-    ADJMeasurementConsentController *measurementConsentController;
+ADJMeasurementConsentController *measurementConsentController;
 @property (nonnull, readonly, strong, nonatomic)
-    ADJThirdPartySharingController *thirdPartySharingController;
+ADJThirdPartySharingController *thirdPartySharingController;
 @property (nonnull, readonly, strong, nonatomic)
-    ADJGlobalCallbackParametersController *globalCallbackParametersController;
+ADJGlobalCallbackParametersController *globalCallbackParametersController;
 @property (nonnull, readonly, strong, nonatomic)
-    ADJGlobalPartnerParametersController *globalPartnerParametersController;
+ADJGlobalPartnerParametersController *globalPartnerParametersController;
 
 // instantiation
-- (nonnull instancetype)
-    initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
-    instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
-    preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
-    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
+- (nonnull instancetype)initWithClientConfigData:(nonnull ADJClientConfigData *)clientConfig
+                                 instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
+                               preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
+                               sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+                             mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

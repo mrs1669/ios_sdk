@@ -11,6 +11,8 @@
 #import "ADJClientReturnExecutor.h"
 #import "ADJAdjustAttributionCallback.h"
 #import "ADJAdjustDeviceIdsCallback.h"
+#import "ADJAdjustLaunchedDeeplinkCallback.h"
+#import "ADJLaunchedDeeplinkStateStorage.h"
 #import "ADJDeviceController.h"
 #import "ADJAdjustCallback.h"
 
@@ -24,13 +26,18 @@
           cannotPerformMessage:(nonnull NSString *)cannotPerformMessage;
 
 - (void)
-    ccAttributionWithCallback:
-        (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
-    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-    attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage;
+ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
+clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage;
 
 - (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
            clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
                deviceController:(nonnull ADJDeviceController *)deviceController;
 
+- (void)
+ccLaunchedDeepLinkWithCallback:(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
+clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage;
+
 @end
+

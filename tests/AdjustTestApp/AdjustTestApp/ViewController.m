@@ -34,20 +34,22 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    
     [self v5TestSession];
 }
 
 - (void)v5TestSession {
     self.testLibrary = [[ATLTestLibrary alloc] initWithBaseUrl:baseUrl
                                                     controlUrl:controlUrl];
-
+    
     self.adjustCommandExecutor =
     [[ATAAdjustCommandExecutor alloc] initWithUrl:baseUrl
                                       testLibrary:self.testLibrary];
-
+    
     self.testLibrary.dictionaryParametersDelegate = self.adjustCommandExecutor;
 
+    [self.testLibrary addTestDirectory:@"deeplink"];
+    [self.testLibrary addTestDirectory:@"deeplink-getter"];
     [self.testLibrary addTestDirectory:@"ad-revenue"];
     [self.testLibrary addTestDirectory:@"attribution"];
     [self.testLibrary addTestDirectory:@"attribution-callback"];

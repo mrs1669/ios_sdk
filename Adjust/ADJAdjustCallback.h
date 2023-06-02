@@ -10,6 +10,6 @@
 
 @protocol ADJAdjustCallback <NSObject>
 
-- (void)didFailWithMessage:(nonnull NSString *)message;
+- (void)didFailWithAdjustCallbackMessage:(nonnull NSString *)message;
 
 @end

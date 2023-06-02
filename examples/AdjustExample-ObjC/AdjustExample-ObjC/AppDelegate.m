@@ -10,6 +10,7 @@
 #import "ADJAdjust.h"
 #import "ADJAdjustInstance.h"
 #import "ADJAdjustConfig.h"
+#import "ADJAdjustLaunchedDeeplink.h"
 
 @interface AppDelegate ()
 
@@ -20,13 +21,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
-    ADJAdjustConfig *_Nonnull adjustConfig = [[ADJAdjustConfig alloc]
-                                              initWithAppToken:@"2fm9gkqubvpc"
-                                              environment:ADJEnvironmentSandbox];
+    ADJAdjustConfig *_Nonnull adjustConfig =
+    [[ADJAdjustConfig alloc] initWithAppToken:@"2fm9gkqubvpc"
+                                  environment:ADJEnvironmentSandbox];
     [adjustConfig doLogAll];
     [adjustConfig setAdjustAttributionSubscriber:self];
     [adjustConfig setExternalDeviceId:@"test-ext-device-id"];
     [[ADJAdjust instance] initSdkWithConfig:adjustConfig];
+    [[ADJAdjust instance] adjustLaunchedDeeplinkWithCallback:self];
+    [[ADJAdjust instance] trackLaunchedDeeplink:[[ADJAdjustLaunchedDeeplink alloc]
+                                                 initWithString:@"https://github.com/"]];
     return YES;
 }
 
@@ -38,5 +42,14 @@
     NSLog(@"Adjust Attribution Changed: %@", adjustAttribution);
 }
 
+- (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSString *)adjustLaunchedDeeplink {
+    NSLog(@"Adjust Launched Deeplink: %@", adjustLaunchedDeeplink);
+}
+
+- (void)didFailWithAdjustCallbackMessage:(NSString *)message {
+    NSLog(@"Adjust Fail Message: %@", message);
+}
 
 @end
+
+
