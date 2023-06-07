@@ -10,8 +10,9 @@
 
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
-#import "ADJLogger.h"
+#import "ADJOptionalFailsNN.h"
 #import "ADJMeasurementSessionData.h"
+#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -22,13 +23,11 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJMeasurementSessionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-+ (nullable instancetype)
-    instanceFromExternalWithMeasurementSessionData:
-        (nullable ADJMeasurementSessionData *)measurementSessionData
-    logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJMeasurementSessionStateData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState;
 
 - (nonnull instancetype)initWithIntialState;
 
@@ -39,7 +38,6 @@ NS_ASSUME_NONNULL_END
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nullable, readonly, strong, nonatomic)
-    ADJMeasurementSessionData *measurementSessionData;
+@property (nullable, readonly, strong, nonatomic) ADJMeasurementSessionData *measurementSessionData;
 
 @end

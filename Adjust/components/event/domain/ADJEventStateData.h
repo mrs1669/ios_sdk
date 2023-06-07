@@ -11,6 +11,8 @@
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
 #import "ADJTallyCounter.h"
+#import "ADJOptionalFailsNL.h"
+#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -21,11 +23,10 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJEventStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJEventStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-+ (nullable instancetype)instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt
-                                                              logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNL<ADJEventStateData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState;
 
 - (nonnull instancetype)initWithIntialState;
 

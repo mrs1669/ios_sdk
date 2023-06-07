@@ -12,7 +12,6 @@
 #import "ADJUtilObj.h"
 #import "ADJConstants.h"
 #import "ADJUtilMap.h"
-
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -28,52 +27,56 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 
 @implementation ADJClientLaunchedDeeplinkData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustLaunchedDeeplink:
-(nullable ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink
-                                                               logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustLaunchedDeeplink:
+        (nullable ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustLaunchedDeeplink == nil) {
         [logger errorClient:
          @"Cannot create launched deeplink with nil adjust launched deeplink value"];
         return nil;
     }
 
-    NSString *_Nullable stringLaunchedDeeplink = adjustLaunchedDeeplink.stringDeeplink;
-
+    NSString *_Nullable stringLaunchedDeeplink;
     if (adjustLaunchedDeeplink.urlDeeplink != nil) {
         stringLaunchedDeeplink = adjustLaunchedDeeplink.urlDeeplink.absoluteString;
+    } else {
+        stringLaunchedDeeplink = adjustLaunchedDeeplink.stringDeeplink;
     }
 
-    ADJNonEmptyString *_Nullable launchedDeeplink =
-    [ADJNonEmptyString instanceFromString:stringLaunchedDeeplink
-                        sourceDescription:@"launched deeplink"
-                                   logger:logger];
-    if (launchedDeeplink == nil) {
-        [logger errorClient:@"Cannot create launched deeplink with invalid value"];
+    ADJResultNN<ADJNonEmptyString *> *_Nullable launchedDeeplinkResult =
+        [ADJNonEmptyString instanceFromString:stringLaunchedDeeplink];
+    if (launchedDeeplinkResult.fail != nil) {
+        [logger errorClient:@"Cannot create launched deeplink with invalid value"
+                 resultFail:launchedDeeplinkResult.fail];
         return nil;
     }
 
-    NSError *error = nil;
-    NSRegularExpression *_Nullable excludedRegex =
-    [self excludedRegexWithError:&error];
+    ADJResultNN<NSRegularExpression *> *_Nonnull excludedRegexResult =
+        [ADJClientLaunchedDeeplinkData excludedRegex];
 
-    if (excludedRegex == nil) {
+    if (excludedRegexResult.fail != nil) {
         [logger errorClient:@"Cannot create launched deeplink without excludedRegex"
-                    nserror:error];
+                    resultFail:excludedRegexResult.fail];
         return nil;
     }
 
-    if ([ADJUtilF matchesWithString:launchedDeeplink.stringValue
-                              regex:excludedRegex])
+    if ([ADJUtilF matchesWithString:launchedDeeplinkResult.value.stringValue
+                              regex:excludedRegexResult.value])
     {
         [logger errorClient:@"Cannot create launched deeplink that matches excludedRegex"];
         return nil;
     }
 
-    return [[self alloc] initWithaLaunchedDeeplink:launchedDeeplink];
+    return [[ADJClientLaunchedDeeplinkData alloc]
+            initWithaLaunchedDeeplink:launchedDeeplinkResult.value];
 }
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger
+{
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
 
     ADJNonEmptyString *_Nullable launchedDeeplink =
@@ -137,26 +140,35 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 }
 
 #pragma mark Internal Methods
-+ (nullable NSRegularExpression *)excludedRegexWithError:(NSError **)errorPtr {
++ (nonnull ADJResultNN<NSRegularExpression *> *)excludedRegex {
     static dispatch_once_t onceExcludedRegexInstanceToken;
-    static NSRegularExpression* excludedRegexInstance;
-    __block NSError *parserError = nil;
+    static ADJResultNN<NSRegularExpression *> *result;
 
     dispatch_once(&onceExcludedRegexInstanceToken, ^{
-        NSRegularExpression *regex =
-        [NSRegularExpression regularExpressionWithPattern:kExcludedDeeplinksPattern
-                                                  options:NSRegularExpressionCaseInsensitive
-                                                    error:&parserError];
+        NSError *error = nil;
 
-        excludedRegexInstance = regex;
+        NSRegularExpression *_Nullable regex =
+            [NSRegularExpression regularExpressionWithPattern:kExcludedDeeplinksPattern
+                                                      options:NSRegularExpressionCaseInsensitive
+                                                        error:&error];
+
+        if (regex != nil) {
+            result = [ADJResultNN okWithValue:regex];
+        } else {
+            result = [ADJResultNN failWithMessage:
+                      @"NSRegularExpression regularExpression with excluded deeplinks pattern"
+                      " returned nil"
+                                            error:error];
+        }
     });
     
-    if (errorPtr && parserError) {
-        *errorPtr = parserError;
+    if (result == nil) {
+        return [ADJResultNN failWithMessage:
+                @"NSRegularExpression regularExpression with excluded deeplinks pattern"
+                " result was not set in dispatch_once"];
     }
 
-    return excludedRegexInstance;
+    return result;
 }
 
 @end
-

@@ -10,7 +10,7 @@
 
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
-#import "ADJLogger.h"
+#import "ADJNonEmptyString.h"
 
 @interface ADJMoneyAmountBase : NSObject<
     NSCopying,
@@ -18,11 +18,11 @@
     ADJIoValueSerializable
 >
 // instantiation
-+ (nullable instancetype)instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
-                                      logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMoneyAmountBase *> *)instanceFromIoValue:
+    (nullable ADJNonEmptyString *)ioValue;
 
-+ (nullable instancetype)instanceFromOptionalIoValue:(nullable ADJNonEmptyString *)ioValue
-                                              logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJMoneyAmountBase *> *)instanceFromOptionalIoValue:
+    (nullable ADJNonEmptyString *)ioValue;
 
 - (nonnull instancetype)init;
 

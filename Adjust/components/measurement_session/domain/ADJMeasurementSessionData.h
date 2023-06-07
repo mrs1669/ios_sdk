@@ -15,6 +15,7 @@
 #import "ADJTallyCounter.h"
 #import "ADJTimestampMilli.h"
 #import "ADJTimeLengthMilli.h"
+#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -25,17 +26,14 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJMeasurementSessionData : NSObject<ADJIoDataMapBuilderInjectable>
 // instantiation
-+ (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
-                                        logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
+    instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap;
 
-+ (nullable instancetype)instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
-                                      logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
+    instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder;
 
-+ (nullable instancetype)instanceFromExternalWithSessionCountNumberInt:(nullable NSNumber *)sessionCountNumberInt
-                              lastActivityTimestampNumberDoubleSeconds:(nullable NSNumber *)lastActivityTimestampNumberDoubleSeconds
-                                      sessionLengthNumberDoubleSeconds:(nullable NSNumber *)sessionLengthNumberDoubleSeconds
-                                          timeSpentNumberDoubleSeconds:(nullable NSNumber *)timeSpentNumberDoubleSeconds
-                                                                logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
+    instanceFromV4WithActivityState:(nonnull ADJV4ActivityState *)v4ActivityState;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

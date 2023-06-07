@@ -30,6 +30,6 @@ NS_ASSUME_NONNULL_END
 // public api
 - (nonnull ADJNonEmptyString *)generateShortDescription;
 
-- (nonnull ADJNonEmptyString *)generateExtendedDescription;
+- (nonnull NSDictionary<NSString *, NSString *> *)foundationStringMap;
 
 @end

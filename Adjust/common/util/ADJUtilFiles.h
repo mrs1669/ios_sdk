@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ADJResultNN.h"
 
 @interface ADJUtilFiles : NSObject
 
@@ -21,6 +22,6 @@
 
 + (nullable NSString *)adjustAppSupportDir;
 
-+ (BOOL)createDirWithPath:(nonnull NSString *)path
-                 errorPtr:(NSError * _Nullable * _Nonnull)errorPtr;
++ (nonnull ADJResultNN<NSNumber *> *)createDirWithPath:(nonnull NSString *)path;
+
 @end

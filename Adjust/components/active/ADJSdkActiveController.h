@@ -31,7 +31,7 @@
 - (BOOL)ccTrySdkInit;
 
 - (BOOL)ccCanPerformActionWithClientSource:(nonnull NSString *)clientSource;
-- (nullable NSString *)ccCanPerformActionOrElseMessageWithClientSource:
+- (nullable ADJInputLogMessageData *)ccCanPerformActionOrElseErrorLogWithClientSource:
     (nonnull NSString *)clientSource;
 
 - (void)ccInactivateSdk;

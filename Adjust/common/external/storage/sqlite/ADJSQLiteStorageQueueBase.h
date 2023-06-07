@@ -27,7 +27,7 @@
                             metadataTypeValue:(nonnull NSString *)metadataTypeValue;
 
 // protected abstract
-- (nullable E)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData;
+- (nonnull ADJResultNN<E> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull E)element;
 

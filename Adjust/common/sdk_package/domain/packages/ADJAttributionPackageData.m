@@ -28,7 +28,7 @@ NSString *const ADJAttributionPackageDataPath = @"attribution";
 - (nonnull instancetype)initWithClientSdk:(nonnull NSString *)clientSdk
                                parameters:(nonnull ADJStringMap *)parameters
                                    ioData:(nonnull ADJIoData *)ioData
-                                   logger:(nonnull ADJLogger *)logger {
+{
     // does not read ioData for further information
     return [self initWithClientSdk:clientSdk parameters:parameters];
 }

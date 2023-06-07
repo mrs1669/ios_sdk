@@ -24,8 +24,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJClientActionData : NSObject
 // instantiation
-+ (nullable instancetype)instanceWithIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJClientActionData *> *)instanceWithIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId
                                          nowTimestamp:(nonnull ADJTimestampMilli *)nowTimestamp

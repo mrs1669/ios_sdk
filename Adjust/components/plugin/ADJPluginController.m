@@ -16,6 +16,7 @@
 #import "ADJPluginLogger.h"
 #import "ADJAdjustPublishers.h"
 #import "ADJUtilF.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 @interface ADJPluginController ()
@@ -91,41 +92,46 @@
 #pragma mark - ADJSdkPackageSendingSubscriber
 - (void)willSendSdkPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData
                    parametersToAdd:(nonnull ADJStringMapBuilder *)parametersToAdd
-                      headersToAdd:(nonnull ADJStringMapBuilder *)headersToAdd {
-
+                      headersToAdd:(nonnull ADJStringMapBuilder *)headersToAdd
+{
     if (! [self.pluginPackageSendingPublisher.publisher hasSubscribers]) {
         return;
     }
 
-    NSDictionary<NSString *, NSString *> *_Nonnull parametersFoundationMap = [sdkPackageData.parameters foundationStringMap];
+    NSDictionary<NSString *, NSString *> *_Nonnull parametersFoundationMap =
+        [sdkPackageData.parameters foundationStringMap];
 
-    ADJStringMap *_Nonnull parametersToAddStringMap = [[ADJStringMap alloc] initWithStringMapBuilder:parametersToAdd];
+    ADJStringMap *_Nonnull parametersToAddStringMap =
+        [[ADJStringMap alloc] initWithStringMapBuilder:parametersToAdd];
 
     NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap =
-    [NSMutableDictionary dictionaryWithDictionary:[parametersToAddStringMap foundationStringMap]];
+        [NSMutableDictionary dictionaryWithDictionary:
+         [parametersToAddStringMap foundationStringMap]];
+
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap =
+        [[NSMutableDictionary alloc] init];
 
     [self.pluginPackageSendingPublisher.publisher notifySubscribersWithSubscriberBlock:
         ^(id<ADJAdjustPackageSendingSubscriber> _Nonnull subscriber)
      {
-        NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap =
-        [[NSMutableDictionary alloc] init];
 
         [subscriber willSendSdkPackageWithClientSdk:sdkPackageData.clientSdk
                                                path:sdkPackageData.path
                                  readOnlyParameters:parametersFoundationMap
                                     parametersToAdd:parametersToAddFoundationMutableMap
                                        headersToAdd:headersToAddFoundationMutableMap];
-
-        [ADJUtilF transferExternalParametersWithFoundationMapToRead:parametersToAddFoundationMutableMap
-                                                  parametersToWrite:parametersToAdd
-                                                             source:@"Plugin sending Sdk Package parameters"
-                                                             logger:self.logger];
-
-        [ADJUtilF transferExternalParametersWithFoundationMapToRead:headersToAddFoundationMutableMap
-                                                  parametersToWrite:headersToAdd
-                                                             source:@"Plugin sending Sdk Package headers"
-                                                             logger:self.logger];
     }];
+
+    [self
+     transferExternalParametersWithFoundationMapToRead:parametersToAddFoundationMutableMap
+     parametersToWrite:parametersToAdd
+     source:@"Plugin sending Sdk Package parameters"];
+
+    [self
+     transferExternalParametersWithFoundationMapToRead:headersToAddFoundationMutableMap
+     parametersToWrite:headersToAdd
+     source:@"Plugin sending Sdk Package headers"];
+
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -146,5 +152,48 @@
     // nothing to do
 }
 
-@end
+#pragma mark Internal Methods
+- (void)
+    transferExternalParametersWithFoundationMapToRead:
+        (nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
+    parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
+    source:(nonnull NSString *)source
+{
+    NSDictionary<NSString *, NSString *> *_Nonnull foundationMapToReadCopy =
+        [foundationMapToRead copy];
 
+    for (NSString *_Nonnull readKey in foundationMapToReadCopy) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToWriteResult =
+            [ADJNonEmptyString instanceFromString:readKey];
+
+        if (keyToWriteResult.fail != nil) {
+            [self.logger debugDev:@"Invalid key for parameter"
+                              key:ADJLogFromKey
+                            value:source
+                       resultFail:keyToWriteResult.fail
+                        issueType:ADJIssueInvalidInput];;
+
+            continue;
+        }
+
+        NSString *_Nonnull readValue = [foundationMapToReadCopy objectForKey:readKey];
+
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueToWriteResult =
+            [ADJNonEmptyString instanceFromString:readValue];
+
+        if (valueToWriteResult.fail != nil) {
+            [self.logger debugDev:@"Invalid value for parameter"
+                              key:ADJLogFromKey
+                            value:source
+                       resultFail:valueToWriteResult.fail
+                        issueType:ADJIssueInvalidInput];
+
+            continue;
+        }
+
+        [parametersToWrite addPairWithValue:valueToWriteResult.value
+                                        key:keyToWriteResult.value.stringValue];
+    }
+}
+
+@end

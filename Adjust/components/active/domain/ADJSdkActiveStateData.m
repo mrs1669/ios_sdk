@@ -27,27 +27,27 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 
 @implementation ADJSdkActiveStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger
-{
-    if (! [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue
-                                       logger:logger]) {
-        return nil;
++ (nonnull ADJResultNN<ADJSdkActiveStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJBooleanWrapper *_Nullable isSdkActive =
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull isSdkActiveResult =
         [ADJBooleanWrapper
-            instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]
-            logger:logger];
+            instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]];
 
-    if (isSdkActive == nil) {
-        [logger debugDev:@"Cannot create instance from io data without valid value"
-               valueName:kIsSdkActiveKey
-               issueType:ADJIssueStorageIo];
-        return nil;
+    if (isSdkActiveResult.fail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
+                                        key:@"isSdkActive fail"
+                                  otherFail:isSdkActiveResult.fail];
     }
 
-    return [[self alloc] initWithIsActiveSdk:isSdkActive.boolValue];
+    return [ADJResultNN okWithValue:
+            [[ADJSdkActiveStateData alloc] initWithIsActiveSdk:isSdkActiveResult.value.boolValue]];
 }
 
 - (nonnull instancetype)initWithInitialState {
@@ -60,6 +60,20 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 
 - (nonnull instancetype)initWithInactiveSdk {
     return [self initWithIsActiveSdk:NO];
+}
+
++ (nullable ADJSdkActiveStateData *)instanceFromV4WithActivityState:
+    (nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil || v4ActivityState.enableNumberBool == nil) {
+        return nil;
+    }
+
+    if (v4ActivityState.enableNumberBool.boolValue) {
+        return [[ADJSdkActiveStateData alloc] initWithActiveSdk];
+    } else {
+        return [[ADJSdkActiveStateData alloc] initWithInactiveSdk];
+    }
 }
 
 - (nullable instancetype)init {

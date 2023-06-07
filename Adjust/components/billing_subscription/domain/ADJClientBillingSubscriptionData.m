@@ -52,70 +52,102 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJMoney *_Nullable price =
+    ADJResultNN<ADJMoney *> *_Nonnull priceResult =
         [ADJMoney instanceFromAmountDecimalNumber:adjustBillingSubscription.priceDecimalNumber
-                                         currency:adjustBillingSubscription.currency
-                                           source:@"billing subscription price"
-                                           logger:logger];
-    if (price == nil) {
-        [logger errorClient:@"Cannot create billing subscription without a valid price"];
+                                         currency:adjustBillingSubscription.currency];
+    if (priceResult.fail != nil) {
+        [logger errorClient:@"Cannot create billing subscription with an invalid price"
+                 resultFail:priceResult.fail];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable transactionId =
-        [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId
-                            sourceDescription:@"transaction id"
-                                       logger:logger];
-    if (transactionId == nil) {
-        [logger errorClient:@"Cannot create billing subscription without a valid transaction id"];
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull transactionIdResult =
+        [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId];
+    if (transactionIdResult.fail != nil) {
+        [logger errorClient:@"Cannot create billing subscription with an invalid transaction id"
+                 resultFail:transactionIdResult.fail];
         return nil;
     }
 
-    ADJNonEmptyString *_Nullable receiptDataString =
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull receiptDataStringResult =
         [ADJNonEmptyString
             instanceFromString:[ADJUtilConv convertToBase64StringWithDataValue:
-                                adjustBillingSubscription.receiptData]
-            sourceDescription:@"billing subscription receipt data string"
-            logger:logger];
-
-    if (receiptDataString == nil) {
-        [logger errorClient:@"Cannot create billing subscription without a valid receiptData"];
+                                adjustBillingSubscription.receiptData]];
+    if (receiptDataStringResult.fail != nil) {
+        [logger errorClient:@"Cannot create billing subscription with an invalid receipt data"
+                 resultFail:receiptDataStringResult.fail];
         return nil;
     }
 
-    ADJTimestampMilli *_Nullable transactionTimestamp =
-        [ADJTimestampMilli instanceWithNSDateValue:adjustBillingSubscription.transactionDate
-                                            logger:logger];
-    if (transactionTimestamp == nil) {
-        [logger errorClient:
-            @"Cannot create billing subscription without a valid transaction timestamp"];
-        return nil;
+    ADJResultNL<ADJTimestampMilli *> *_Nonnull transactionTimestampResult =
+        [ADJTimestampMilli instanceWithOptionalNumberDoubleSecondsSince1970:
+         adjustBillingSubscription.transactionDate != nil
+         ? @(adjustBillingSubscription.transactionDate.timeIntervalSince1970) : nil];
+    if (transactionTimestampResult.fail != nil) {
+        [logger noticeClient:@"Cannot use invalid transaction date"
+                  resultFail:transactionTimestampResult.fail];
     }
 
-    ADJNonEmptyString *_Nullable salesRegion =
-    [ADJNonEmptyString instanceFromOptionalString:adjustBillingSubscription.salesRegion
-                                sourceDescription:@"billing subscription sales region"
-                                           logger:logger];
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull salesRegionResult =
+        [ADJNonEmptyString instanceFromOptionalString:adjustBillingSubscription.salesRegion];
+    if (salesRegionResult.fail != nil) {
+        [logger noticeClient:@"Cannot use invalid sales region in billing subscription"
+                  resultFail:salesRegionResult.fail];
+    }
 
-    ADJStringMap *_Nullable callbackParameters =
-    [ADJUtilConv
-     convertToStringMapWithKeyValueArray:
-         adjustBillingSubscription.callbackParameterKeyValueArray
-     sourceDescription:@"billing subscription callback parameters"
-     logger:logger];
+    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustBillingSubscription.callbackParameterKeyValueArray];
 
-    ADJStringMap *_Nullable partnerParameters =
-    [ADJUtilConv
-     convertToStringMapWithKeyValueArray:
-         adjustBillingSubscription.partnerParameterKeyValueArray
-     sourceDescription:@"billing subscription partner parameters"
-     logger:logger];
+    for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
+        [logger noticeClient:@"Issue while adding to billing subscription callback parameters"
+                  resultFail:optionalFail];
+    }
 
-    return [[self alloc] initWithPrice:price
-                         transactionId:transactionId
-                     receiptDataString:receiptDataString
-                  transactionTimestamp:transactionTimestamp
-                           salesRegion:salesRegion
+    ADJStringMap *_Nullable callbackParameters = nil;
+
+    ADJResultNL<ADJStringMap *> *_Nonnull callbackParametersResult =
+        callbackParametersOptFails.value;
+    if (callbackParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use billing subscription callback parameters"
+                  resultFail:callbackParametersResult.fail];
+    } else if (callbackParametersResult.value != nil) {
+        if ([callbackParametersResult.value isEmpty]) {
+            [logger noticeClient:
+             @"Could not use any valid billing subscription callback parameter"];
+        } else {
+            callbackParameters = callbackParametersResult.value;
+        }
+    }
+
+    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
+        [ADJUtilConv convertToStringMapWithKeyValueArray:
+         adjustBillingSubscription.partnerParameterKeyValueArray];
+
+    for (ADJResultFail *_Nonnull optionalFail in callbackParametersOptFails.optionalFails) {
+        [logger noticeClient:@"Issue while adding to billing subscription partner parameters"
+                  resultFail:optionalFail];
+    }
+
+    ADJStringMap *_Nullable partnerParameters = nil;
+
+    ADJResultNL<ADJStringMap *> *_Nonnull partnerParametersResult = partnerParametersOptFails.value;
+    if (callbackParametersResult.fail != nil) {
+        [logger noticeClient:@"Cannot use billing subscription partner parameters"
+                  resultFail:partnerParametersResult.fail];
+    } else if (partnerParametersResult.value != nil) {
+        if ([partnerParametersResult.value isEmpty]) {
+            [logger noticeClient:@"Could not use any valid billing subscription partner parameter"];
+        } else {
+            partnerParameters = partnerParametersResult.value;
+        }
+    }
+
+    return [[self alloc] initWithPrice:priceResult.value
+                         transactionId:transactionIdResult.value
+                     receiptDataString:receiptDataStringResult.value
+                  transactionTimestamp:transactionTimestampResult.value
+                           salesRegion:salesRegionResult.value
                     callbackParameters:callbackParameters
                      partnerParameters:partnerParameters];
 }
@@ -129,18 +161,16 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJNonEmptyString *_Nullable priceAmountIoValue =
         [propertiesMap pairValueWithKey:kPriceAmountKey];
-    ADJMoneyAmountBase *_Nullable priceAmount =
-        [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue
-                                         logger:logger];
-
-    if (priceAmount == nil) {
+    ADJResultNN<ADJMoneyAmountBase *> *_Nonnull priceAmountResult =
+        [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue];
+    if (priceAmountResult.fail != nil) {
         [logger debugDev:@"Cannot decode ClientBillingSubscriptionData without valid price amount"
+              resultFail:priceAmountResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }
 
     ADJNonEmptyString *_Nullable priceCurrency = [propertiesMap pairValueWithKey:kPriceCurrencyKey];
-
     if (priceCurrency == nil) {
         [logger debugDev:
             @"Cannot decode ClientBillingSubscriptionData without valid price currency"
@@ -158,7 +188,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     }
 
     ADJNonEmptyString *_Nullable receiptDataString =
-    [propertiesMap pairValueWithKey:kReceiptDataStringKey];
+        [propertiesMap pairValueWithKey:kReceiptDataStringKey];
 
     if (receiptDataString == nil) {
         [logger debugDev:
@@ -167,26 +197,26 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJTimestampMilli *_Nullable transactionTimestamp =
-    [ADJTimestampMilli
-     instanceFromOptionalIoDataValue:
-         [propertiesMap pairValueWithKey:kTransactionTimestampKey]
-     logger:logger];
+
+    ADJResultNL<ADJTimestampMilli *> *_Nonnull transactionTimestampResult =
+        [ADJTimestampMilli
+         instanceFromOptionalIoDataValue:
+             [propertiesMap pairValueWithKey:kTransactionTimestampKey]];
 
     ADJNonEmptyString *_Nullable salesRegion =
-    [propertiesMap pairValueWithKey:kSalesRegionKey];
+        [propertiesMap pairValueWithKey:kSalesRegionKey];
 
     ADJStringMap *_Nullable callbackParametersMap =
-    [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
+        [clientActionInjectedIoData mapWithName:kCallbackParametersMapName];
 
     ADJStringMap *_Nullable partnerParametersMap =
-    [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
+        [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
 
-    return [[self alloc] initWithPrice:[[ADJMoney alloc] initWithAmount:priceAmount
+    return [[self alloc] initWithPrice:[[ADJMoney alloc] initWithAmount:priceAmountResult.value
                                                                currency:priceCurrency]
                          transactionId:transactionId
                      receiptDataString:receiptDataString
-                  transactionTimestamp:transactionTimestamp
+                  transactionTimestamp:transactionTimestampResult.value
                            salesRegion:salesRegion
                     callbackParameters:callbackParametersMap
                      partnerParameters:partnerParametersMap];

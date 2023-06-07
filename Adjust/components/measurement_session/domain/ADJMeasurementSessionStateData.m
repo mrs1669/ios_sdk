@@ -26,28 +26,65 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
 
 @implementation ADJMeasurementSessionStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-            isExpectedMetadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
-            logger:logger]) {
-        return nil;
++ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [[ADJOptionalFailsNN alloc]
+                initWithOptionalFails:nil
+                value:[ADJResultNN
+                       failWithMessage:@"Cannot create measurement session state data from io data"
+                       key:@"unexpected metadata type value fail"
+                       otherFail:unexpectedMetadataTypeValueFail]];
     }
 
+    NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
     ADJMeasurementSessionData *_Nullable measurementSessionData = nil;
+    ADJStringMap *_Nullable measurementSessionDataMap =
+        [ioData mapWithName:kMeasurementSessionDataMapName];
 
-    ADJStringMap *_Nullable measurementSessionDataMap = [ioData mapWithName:kMeasurementSessionDataMapName];
     if (measurementSessionDataMap != nil) {
-        measurementSessionData = [ADJMeasurementSessionData instanceFromIoDataMap:measurementSessionDataMap
-                                                            logger:logger];
+        ADJResultNN<ADJMeasurementSessionData *> *_Nonnull measurementSessionDataResult =
+            [ADJMeasurementSessionData instanceFromIoDataMap:measurementSessionDataMap];
+        if (measurementSessionDataResult.fail != nil) {
+            optionalFails = [NSArray arrayWithObject:
+                             [[ADJResultFail alloc]
+                              initWithMessage:@"Cannot use invalid measurement session data in"
+                                " measurement session state data from io data"
+                              key:@"measurementSessionData fail"
+                              otherFail:measurementSessionDataResult.fail]];
+
+        } else {
+            measurementSessionData = measurementSessionDataResult.value;
+        }
     }
 
-    return [[self alloc] initWithMeasurementSessionData:measurementSessionData];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFails
+            value:[ADJResultNN okWithValue:
+                   [[ADJMeasurementSessionStateData alloc]
+                    initWithMeasurementSessionData:measurementSessionData]]];
 }
 
-+ (nullable instancetype)instanceFromExternalWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData
-    logger:(nonnull ADJLogger *)logger {
-    return [[self alloc] initWithMeasurementSessionData:measurementSessionData];
++ (nonnull ADJResultNL<ADJMeasurementSessionStateData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull sessionDataResult =
+        [ADJMeasurementSessionData instanceFromV4WithActivityState:v4ActivityState];
+    if (sessionDataResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Could not create session data from activity state"
+                                        key:@"session data fail"
+                                  otherFail:sessionDataResult.fail];
+    }
+
+    return [ADJResultNL okWithValue:[[ADJMeasurementSessionStateData alloc]
+                                     initWithMeasurementSessionData:sessionDataResult.value]];
 }
 
 - (nonnull instancetype)initWithIntialState {

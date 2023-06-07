@@ -30,6 +30,8 @@ NSUInteger const ADJHashCodeMultiplier = 37;
 
 NSUInteger const ADJDefaultMaxCapacityEventDeduplication = 10;
 
+NSString *const ADJIdForAdvertisersZeros = @"00000000-0000-0000-0000-000000000000";
+
 // IoData metadata
 NSString *const ADJMetadataVersionKey = @"METADATA_VERSION";
 NSString *const ADJMetadataVersionValue = @"5.0.0";
@@ -44,3 +46,29 @@ const BOOL ADJIsSdkActiveWhenStarting = YES;
 const BOOL ADJIsSdkForgottenWhenStarting = NO;
 const BOOL ADJIsSdkOfflineWhenStarting = NO;
 const BOOL ADJIsNetworkReachableWhenStarting = YES;
+
+// logging
+NSString *const ADJLogMessageKey = @"message";
+NSString *const ADJLogLevelKey = @"level";
+NSString *const ADJLogIssueKey = @"issue";
+NSString *const ADJLogParamsKey = @"params";
+NSString *const ADJLogSourceKey = @"source";
+NSString *const ADJLogCallerThreadIdKey = @"callerId";
+NSString *const ADJLogRunningThreadIdKey = @"runningId";
+NSString *const ADJLogCallerDescriptionKey = @"callerDescription";
+NSString *const ADJLogInstanceIdKey = @"instanceId";
+NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
+NSString *const ADJLogFailKey = @"fail";
+NSString *const ADJLogSdkPackageParamsKey = @"sdkPackage_params";
+
+NSString *const ADJLogWhereKey = @"where";
+NSString *const ADJLogSubjectKey = @"subject";
+NSString *const ADJLogWhyKey = @"why";
+NSString *const ADJLogExpectedKey = @"expected";
+NSString *const ADJLogActualKey = @"actual";
+NSString *const ADJLogValueKey = @"value";
+NSString *const ADJLogFromKey = @"from";
+NSString *const ADJLogValueNameKey = @"value_name";
+
+NSString *const ADJLogErrorKey = @"error";
+NSString *const ADJLogExceptionKey = @"exception";

@@ -20,30 +20,37 @@
  */
 
 #pragma mark - Public constants
-NSString *const ADJClientRemoveGlobalParameterDataMetadataTypeValue = @"ClientRemoveGlobalParameterData";
+NSString *const ADJClientRemoveGlobalParameterDataMetadataTypeValue =
+    @"ClientRemoveGlobalParameterData";
 
 #pragma mark - Private constants
 static NSString *const kKeyToRemoveKey = @"keyToRemove";
 
 @implementation ADJClientRemoveGlobalParameterData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToRemove:(nullable NSString *)keyToRemove
-    logger:(nonnull ADJLogger *)logger {
-    ADJNonEmptyString *_Nullable verifiedKeyToRemove =
-        [ADJNonEmptyString instanceFromString:keyToRemove
-                            sourceDescription:@"client remove global parameter key"
-                                       logger:logger];
-
-    if (verifiedKeyToRemove == nil) {
-        [logger errorClient:@"Invalid key to remove parameter"];
++ (nullable instancetype)
+    instanceFromClientWithAdjustConfigWithKeyToRemove:(nullable NSString *)keyToRemove
+    globalParameterType:(nonnull NSString *)globalParameterType
+    logger:(nonnull ADJLogger *)logger
+{
+    ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToRemoveResult =
+        [ADJNonEmptyString instanceFromString:keyToRemove];
+    if (keyToRemoveResult.fail != nil) {
+        [logger errorClient:@"Invalid key to remove parameter"
+                        key:@"gloabal parameter type"
+                      value:globalParameterType
+                 resultFail:keyToRemoveResult.fail];
         return nil;
     }
 
-    return [[self alloc] initWithKeyToRemove:verifiedKeyToRemove];
+    return [[self alloc] initWithKeyToRemove:keyToRemoveResult.value];
 }
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-    logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    globalParameterType:(nonnull NSString *)globalParameterType
+    logger:(nonnull ADJLogger *)logger
+{
     ADJNonEmptyString *_Nullable clientActionTypeValue =
         [clientActionInjectedIoData.metadataMap pairValueWithKey:ADJClientActionTypeKey];
     if (clientActionTypeValue == nil) {
@@ -71,6 +78,7 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
     return [self
                 instanceFromClientWithAdjustConfigWithKeyToRemove:
                     keyToRemove != nil ? keyToRemove.stringValue : nil
+                globalParameterType:globalParameterType
                 logger:logger];
 }
 

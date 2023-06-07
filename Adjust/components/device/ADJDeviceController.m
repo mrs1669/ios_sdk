@@ -84,15 +84,15 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
     return [deviceIdsStorage readOnlyStoredDataValue].uuid;
 }
 
-- (nonnull ADJSessionDeviceIdsData *)getSessionDeviceIdsSync {
+- (nonnull ADJResultNN<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync {
     return [self.sessionDeviceIdsController getSessionDeviceIdsSync];
 }
 
 #pragma mark - ADJLifecycleSubscriber
 - (void)ccDidForeground {
     if (self.deviceIdsConfigData.cacheValidityPeriod == nil) {
-        [self.logger debugDev:@"Lifecycle should not be subscribed without a cached timeLength"
-                    issueType:ADJIssueLogicError];
+        [self.logger debugDev:@"There is no cache lifecycle configured to handle at foreground"];
+
         return;
     }
 
@@ -141,8 +141,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 
 - (void)ccDidBackground {
     if (self.deviceIdsConfigData.cacheValidityPeriod == nil) {
-        [self.logger debugDev:@"Lifecycle should not be subscribed without a cached timeLength"
-                    issueType:ADJIssueLogicError];
+        [self.logger debugDev:@"There is no cache lifecycle configured to handle at background"];
         return;
     }
 

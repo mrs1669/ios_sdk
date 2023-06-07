@@ -10,7 +10,7 @@
 
 @interface ADJAdjustEvent : NSObject
 // instantiation
-- (nonnull instancetype)initWithEventId:(nonnull NSString *)eventId
+- (nonnull instancetype)initWithEventToken:(nonnull NSString *)eventToken
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
@@ -31,7 +31,7 @@ NS_DESIGNATED_INITIALIZER;
 - (void)setDeduplicationId:(nonnull NSString *)deduplicationId;
 
 // public properties
-@property (nullable, readonly, strong, nonatomic) NSString *eventId;
+@property (nullable, readonly, strong, nonatomic) NSString *eventToken;
 @property (nullable, readonly, strong, nonatomic) NSNumber *revenueAmountDoubleNumber;
 @property (nullable, readonly, strong, nonatomic) NSDecimalNumber *revenueAmountDecimalNumber;
 @property (nullable, readonly, strong, nonatomic) NSString *revenueCurrency;

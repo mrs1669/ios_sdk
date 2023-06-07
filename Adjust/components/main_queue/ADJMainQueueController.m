@@ -313,6 +313,12 @@
     ADJNonNegativeInt *_Nullable positionAtFront =
         [self positionOfPackageWithWithSourceResponsePackage:sourceResponsePackage];
 
+    if (positionAtFront == nil) {
+        [self.logger debugDev:@"Could not obtain position at front to remove package at front"
+                    issueType:ADJIssueStorageIo];
+        return;
+    }
+
     ADJSQLiteStorageActionBase *_Nullable updateMetadataSqliteStorageAction =
         [self.trackedPackages decrementTrackedCountWithPackageToRemove:sourceResponsePackage];
 
@@ -321,18 +327,16 @@
                           sqliteStorageAction:updateMetadataSqliteStorageAction];
 
     if (! [sourceResponsePackage isEqual:removedSdkPackage]) {
-        [self.logger debugDev:
-         @"Unexpected difference between packages from response and removed at position in front"
-                messageParams:
-         [[NSDictionary alloc] initWithObjectsAndKeys:
-          [ADJUtilF stringOrNsNull:sourceResponsePackage.description],
-            @"package from response",
-          [ADJUtilF stringOrNsNull:positionAtFront.description],
-            @"position at front",
-          [ADJUtilF stringOrNsNull:removedSdkPackage.description],
-            @"package removed at position at front",
-          nil]
-                    issueType:ADJIssueStorageIo];
+        [self.logger debugWithMessage:
+         @"Unexpected difference between package from response and removed at position in front"
+                         builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+            [logBuilder withKey:@"package from response" value:sourceResponsePackage.description];
+            [logBuilder withKey:@"position at front"
+                          value:positionAtFront.description];
+            [logBuilder withKey:@"element at position at front"
+                          value:removedSdkPackage != nil ? [removedSdkPackage description] : nil];
+            [logBuilder issue:ADJIssueStorageIo];
+        }];
         return;
     }
 
@@ -353,19 +357,19 @@
     }
 
     ADJNonNegativeInt *_Nullable positionAtFront = [self.storage positionAtFront];
-    if (! [sourceResponsePackage isEqual:[self.storage elementByPosition:positionAtFront]]) {
-        [self.logger debugDev:
-         @"Unexpected difference between packages from response and at position in front"
-                messageParams:
-         [[NSDictionary alloc] initWithObjectsAndKeys:
-          [ADJUtilF stringOrNsNull:sourceResponsePackage.description],
-            @"package from response",
-          [ADJUtilF stringOrNsNull:positionAtFront.description],
-            @"position at front",
-          [ADJUtilF stringOrNsNull:[self.storage elementByPosition:positionAtFront].description],
-            @"package at position at front",
-          nil]
-                    issueType:ADJIssueStorageIo];
+    id _Nullable elementAtFrontPosition = [self.storage elementByPosition:positionAtFront];
+    if (! [sourceResponsePackage isEqual:elementAtFrontPosition]) {
+        [self.logger debugWithMessage:
+         @"Unexpected difference between package from response and at position in front"
+                         builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+            [logBuilder withKey:@"package from response" value:sourceResponsePackage.description];
+            [logBuilder withKey:@"position at front"
+                          value:positionAtFront != nil ? positionAtFront.description : nil];
+            [logBuilder withKey:@"element at position at front"
+                          value:
+             elementAtFrontPosition != nil ? [elementAtFrontPosition description] : nil];
+            [logBuilder issue:ADJIssueStorageIo];
+        }];
         return nil;
     }
 
@@ -426,16 +430,6 @@
 - (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage {
     ADJStringMapBuilder *_Nonnull sendingParameters = [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
-    ADJClock *_Nullable clock = self.clockWeak;
-    if (clock != nil) {
-        [ADJSdkPackageBuilder
-         injectSentAtWithParametersBuilder:sendingParameters
-         sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
-    } else {
-        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
-                    issueType:ADJIssueWeakReference];
-    }
-
     [ADJSdkPackageBuilder
      injectAttemptsWithParametersBuilder:sendingParameters
      attempts:[self.mainQueueStateAndTracker retriesSinceLastSuccessSend]];
@@ -453,6 +447,24 @@
     } else {
         [self.logger debugDev:@"Cannot inject remaining queue size when its empty"
                     issueType:ADJIssueLogicError];
+    }
+
+    ADJClock *_Nullable clock = self.clockWeak;
+    if (clock == nil) {
+        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
+                    issueType:ADJIssueWeakReference];
+        return sendingParameters;
+    }
+
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    if (nowResult.fail != nil) {
+        [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
+                  resultFail:nowResult.fail
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJSdkPackageBuilder
+         injectSentAtWithParametersBuilder:sendingParameters
+         sentAtTimestamp:nowResult.value];
     }
 
     return sendingParameters;

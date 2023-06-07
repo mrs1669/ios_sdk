@@ -11,6 +11,8 @@
 #import "ADJUtilObj.h"
 #import "ADJConstants.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* ADJNonNegativeInt.h
@@ -27,7 +29,9 @@
     return [self oneInstance];
 }
 
-+ (nullable instancetype)instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt {
++ (nullable instancetype)
+    instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt
+{
     if (nonNegativeInt == nil) {
         return nil;
     }
@@ -35,18 +39,37 @@
     return [[self alloc] initWithCountValue:nonNegativeInt];
 }
 
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromOptionalNonNegativeInt:
-            [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
-                                                logger:logger]];
++ (nonnull ADJResultNN<ADJTallyCounter *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create tally counter instance"
+                                        key:@"nnInt io value fail"
+                                  otherFail:nnIntResult.fail];
+    }
+
+    return [ADJResultNN okWithValue:
+            [[ADJTallyCounter alloc] initWithCountValue:nnIntResult.value]];
 }
 
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromOptionalNonNegativeInt:
-            [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
-                                                        logger:logger]];
++ (nonnull ADJResultNL<ADJTallyCounter *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Cannot convert io value to tally counter"
+                                        key:@"io value to nnInt fail"
+                                  otherFail:nnIntResult.fail];
+    }
+    if (nnIntResult.value == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    return [ADJResultNL okWithValue:
+            [[ADJTallyCounter alloc] initWithCountValue:nnIntResult.value]];
 }
 
 - (nonnull instancetype)initWithCountValue:(nonnull ADJNonNegativeInt *)countValue {

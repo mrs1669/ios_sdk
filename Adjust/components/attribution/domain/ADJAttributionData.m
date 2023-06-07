@@ -52,96 +52,160 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
 @implementation ADJAttributionData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
-                                        logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
+    instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
+{
     ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
-    ADJMoneyAmountBase *_Nullable costAmount = [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue
-                                                                                        logger:logger];
-    
-    return [[self alloc] initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
-                                  trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
-                                      network:[ioDataMap pairValueWithKey:kNetworkKey]
-                                     campaign:[ioDataMap pairValueWithKey:kCampaignKey]
-                                      adgroup:[ioDataMap pairValueWithKey:kAdgroupKey]
-                                     creative:[ioDataMap pairValueWithKey:kCreativeKey]
-                                   clickLabel:[ioDataMap pairValueWithKey:kClickLabelKey]
-                                         adid:[ioDataMap pairValueWithKey:kAdidKey]
-                                     deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
-                                        state:[ioDataMap pairValueWithKey:kStateKey]
-                                     costType:[ioDataMap pairValueWithKey:kCostTypeKey]
-                                   costAmount:costAmount
-                                 costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]];
+    ADJResultNL<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
+        [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue];
+
+    NSArray<ADJResultFail *> *optionalFails = nil;
+
+    if (costAmountResult.fail != nil) {
+        optionalFails = [NSArray arrayWithObject:
+                         [[ADJResultFail alloc]
+                          initWithMessage:@"Cannot use invalid cost amount in attribution data"
+                            " from io data map"
+                          key:@"costAmount fail"
+                          otherFail:costAmountResult.fail]];
+    }
+
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFails
+            value:[[ADJAttributionData alloc]
+                   initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
+                   trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
+                   network:[ioDataMap pairValueWithKey:kNetworkKey]
+                   campaign:[ioDataMap pairValueWithKey:kCampaignKey]
+                   adgroup:[ioDataMap pairValueWithKey:kAdgroupKey]
+                   creative:[ioDataMap pairValueWithKey:kCreativeKey]
+                   clickLabel:[ioDataMap pairValueWithKey:kClickLabelKey]
+                   adid:[ioDataMap pairValueWithKey:kAdidKey]
+                   deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
+                   state:[ioDataMap pairValueWithKey:kStateKey]
+                   costType:[ioDataMap pairValueWithKey:kCostTypeKey]
+                   costAmount:costAmountResult.value
+                   costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]]];
 }
 
-#define stringConvertion(stringValue, sourceD)    \
-[ADJNonEmptyString                           \
-instanceFromOptionalString:(stringValue)  \
-sourceDescription:(sourceD)               \
-logger:logger]                            \
+#define convV4String(field) \
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull field ## Result =                \
+        [ADJNonEmptyString instanceFromOptionalString:v4Attribution.field];     \
+    if (field ## Result.fail != nil) {                                                  \
+        [optFailsMut addObject:[[ADJResultFail alloc]                                   \
+                                initWithMessage:@"Invalid value from v4 attribution"    \
+                                key:@"field fail"                                       \
+                                otherFail:field ## Result.fail]];                       \
+    }                                                                                   \
+    if (field ## Result.value != nil) {     \
+        hasAtLeastOneValidField = YES;      \
+    }                                       \
 
-- (nonnull instancetype)initFromExternalDataWithLogger:(nonnull ADJLogger *)logger
-                                    trackerTokenString:(nullable NSString *)trackerTokenString
-                                     trackerNameString:(nullable NSString *)trackerNameString
-                                         networkString:(nullable NSString *)networkString
-                                        campaignString:(nullable NSString *)campaignString
-                                         adgroupString:(nullable NSString *)adgroupString
-                                        creativeString:(nullable NSString *)creativeString
-                                      clickLabelString:(nullable NSString *)clickLabelString
-                                            adidString:(nullable NSString *)adidString
-                                        costTypeString:(nullable NSString *)costTypeString
-                                costAmountDoubleNumber:(nullable NSNumber *)costAmountDoubleNumber
-                                    costCurrencyString:(nullable NSString *)costCurrencyString {
-    ADJMoneyDoubleAmount *_Nullable costAmountDouble =
-    [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:costAmountDoubleNumber
-                                                 logger:logger];
-    
-    return [self initWithTrackerToken:stringConvertion(trackerTokenString, kTrackerTokenKey)
-                          trackerName:stringConvertion(trackerNameString, kTrackerNameKey)
-                              network:stringConvertion(networkString, kNetworkKey)
-                             campaign:stringConvertion(campaignString, kCampaignKey)
-                              adgroup:stringConvertion(adgroupString, kAdgroupKey)
-                             creative:stringConvertion(creativeString, kCreativeKey)
-                           clickLabel:stringConvertion(clickLabelString, kClickLabelKey)
-                                 adid:stringConvertion(adidString, kAdidKey)
-                             deeplink:nil
-                                state:nil
-                             costType:stringConvertion(costTypeString, kCostTypeKey)
-                           costAmount:costAmountDouble
-                         costCurrency:stringConvertion(costCurrencyString, kCostCurrencyKey)];
++ (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
+    instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut = [[NSMutableArray alloc] init];
+
+    BOOL hasAtLeastOneValidField = NO;
+
+    ADJResultNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:v4Attribution.costAmount];
+    if (costAmountDoubleResult.fail != nil) {
+        [optFailsMut addObject:[[ADJResultFail alloc]
+                                initWithMessage:@"Invalid value from v4 attribution"
+                                key:@"cost amount double fail"
+                                otherFail:costAmountDoubleResult.fail]];
+    }
+    if (costAmountDoubleResult.value != nil) {
+        hasAtLeastOneValidField = YES;
+    }
+
+    convV4String(trackerToken)
+    convV4String(trackerName)
+    convV4String(network)
+    convV4String(campaign)
+    convV4String(adgroup)
+    convV4String(creative)
+    convV4String(clickLabel)
+    convV4String(adid)
+    convV4String(costType)
+    convV4String(costCurrency)
+
+    if (! hasAtLeastOneValidField) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:optFailsMut
+                value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc]
+            initWithOptionalFails:optFailsMut
+            value:[[ADJAttributionData alloc]
+                   initWithTrackerToken:trackerTokenResult.value
+                   trackerName:trackerNameResult.value
+                   network:networkResult.value
+                   campaign:campaignResult.value
+                   adgroup:adgroupResult.value
+                   creative:creativeResult.value
+                   clickLabel:clickLabelResult.value
+                   adid:adidResult.value
+                   // deeplink and state not coming from v4
+                   // TODO: confirm that assumption is correct
+                   deeplink:nil
+                   state:nil
+                   costType:costTypeResult.value
+                   costAmount:costAmountDoubleResult.value
+                   costCurrency:costCurrencyResult.value]];
 }
 
-#define extractJson(paramKey, sourceD)                              \
-[ADJNonEmptyString                                             \
-instanceFromOptionalString:                                 \
-[ADJUtilMap                                            \
-extractStringValueWithDictionary:jsonDictionary     \
-key:(paramKey)]                                     \
-sourceDescription:(sourceD)                                 \
-logger:logger]                                              \
+#define extrJsonCall(dictKey) \
+    [ADJAttributionData extractStringWithDictionary:attributionJson     \
+                                                key:(dictKey)           \
+                                   optionalFailsMut:optionalFailsMut]   \
 
-- (nonnull instancetype)initFromJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
-                                              adid:(nonnull ADJNonEmptyString *)adid
-                                            logger:(nonnull ADJLogger *)logger {
-    NSNumber *_Nullable costAmountDoubleNumber =
-    [ADJUtilMap extractDoubleNumberWithDictionary:jsonDictionary
-                                              key:ADJParamAttributionCostAmountKey];
-    ADJMoneyAmountBase *_Nullable costAmount =
-    [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:costAmountDoubleNumber
-                                                 logger:logger];
-    
-    return [self  initWithTrackerToken:extractJson(ADJParamAttributionTrackerTokenKey, kTrackerTokenKey)
-                           trackerName:extractJson(ADJParamAttributionTrackerNameKey, kTrackerNameKey)
-                               network:extractJson(ADJParamAttributionNetworkKey, kNetworkKey)
-                              campaign:extractJson(ADJParamAttributionCampaignKey, kCampaignKey)
-                               adgroup:extractJson(ADJParamAttributionAdGroupKey, kAdgroupKey)
-                              creative:extractJson(ADJParamAttributionCreativeKey, kCreativeKey)
-                            clickLabel:extractJson(ADJParamAttributionClickLableKey, kClickLabelKey)
-                                  adid:adid
-                              deeplink:extractJson(ADJParamAttributionDeeplinkKey, kDeeplinkKey)
-                                 state:extractJson(ADJParamAttributionStateKey, kStateKey)
-                              costType:extractJson(ADJParamAttributionCostTypeKey, kCostTypeKey)
-                            costAmount:costAmount
-                          costCurrency:extractJson(ADJParamAttributionCostCurrencyKey, kCostCurrencyKey)];
+
++ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
+    instanceFromJson:(nonnull NSDictionary *)attributionJson
+    adid:(nonnull ADJNonEmptyString *)adid
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+
+    ADJResultNL<NSNumber *> *_Nonnull costAmountDoubleNumberResult =
+        [ADJUtilMap extractDoubleNumberWithDictionary:attributionJson
+                                                  key:ADJParamAttributionCostAmountKey];
+    if (costAmountDoubleNumberResult.fail != nil) {
+        [optionalFailsMut addObject:
+         [[ADJResultFail alloc]
+          initWithMessage:@"Cannot parse double value for cost amount from number"
+          key:@"double number fail"
+          otherFail:costAmountDoubleNumberResult.fail]];
+    }
+    ADJResultNL<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:
+         costAmountDoubleNumberResult.value];
+    if (costAmountDoubleResult.fail != nil) {
+        [optionalFailsMut addObject:
+         [[ADJResultFail alloc]
+          initWithMessage:@"Cannot parse money value for cost amount from double number"
+          key:@"money amount fail"
+          otherFail:costAmountDoubleResult.fail]];
+    }
+
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJAttributionData alloc]
+                   initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey)
+                   trackerName:extrJsonCall(ADJParamAttributionTrackerNameKey)
+                   network:extrJsonCall(ADJParamAttributionNetworkKey)
+                   campaign:extrJsonCall(ADJParamAttributionCampaignKey)
+                   adgroup:extrJsonCall(ADJParamAttributionAdGroupKey)
+                   creative:extrJsonCall(ADJParamAttributionCreativeKey)
+                   clickLabel:extrJsonCall(ADJParamAttributionClickLableKey)
+                   adid:adid
+                   deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey)
+                   state:extrJsonCall(ADJParamAttributionStateKey)
+                   costType:extrJsonCall(ADJParamAttributionCostTypeKey)
+                   costAmount:costAmountDoubleResult.value
+                   costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey)]];
 }
 
 - (nullable instancetype)init {
@@ -162,7 +226,8 @@ logger:logger]                                              \
                                        state:(nullable ADJNonEmptyString *)state
                                     costType:(nullable ADJNonEmptyString *)costType
                                   costAmount:(nullable ADJMoneyAmountBase *)costAmount
-                                costCurrency:(nullable ADJNonEmptyString *)costCurrency {
+                                costCurrency:(nullable ADJNonEmptyString *)costCurrency
+{
     self = [super init];
     
     _trackerToken = trackerToken;
@@ -297,6 +362,42 @@ ioValueSerializable:ioValue]            \
 #pragma mark Internal Methods
 + (nonnull NSString *)coallesceToEmptyStringWithValue:(nullable ADJNonEmptyString *)value {
     return value != nil ? value.stringValue : @"";
+}
+
++ (nullable ADJNonEmptyString *)
+    extractStringWithDictionary:(nonnull NSDictionary *)jsonDictionary
+    key:(nonnull NSString *)key
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    ADJResultNL<NSString *> *_Nonnull extractedNsStringResult =
+        [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
+                                                 key:key];
+
+    if (extractedNsStringResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull failBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot extract string value from json"];
+
+        [failBuilder withKey:@"extraction fail" otherFail:extractedNsStringResult.fail];
+        [failBuilder withKey:@"json key" stringValue:key];
+
+        [optionalFailsMut addObject:[failBuilder build]];
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
+        [ADJNonEmptyString instanceFromOptionalString:extractedNsStringResult.value];
+    if (stringResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull failBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot parse string from extracted json value"];
+
+        [failBuilder withKey:@"string parsing fail" otherFail:stringResult.fail];
+        [failBuilder withKey:@"json key" stringValue:key];
+
+        [optionalFailsMut addObject:[failBuilder build]];
+    }
+
+    return stringResult.value;
 }
 
 @end

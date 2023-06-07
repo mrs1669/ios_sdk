@@ -13,9 +13,16 @@
 
 @interface ADJThirdPartySharingResponseData : ADJSdkResponseBaseData
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-           thirdPartySharingPackageData:(nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
-                                 logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJThirdPartySharingResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    thirdPartySharingPackageData:
+        (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData;
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+ NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJThirdPartySharingPackageData *sourceThirdPartySharingPackageData;

@@ -9,5 +9,29 @@
 #import "ADJUnknownResponseData.h"
 
 @implementation ADJUnknownResponseData
+#pragma mark Instantiation
++ (nonnull ADJOptionalFailsNN<ADJUnknownResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    unknownPackageData:(nonnull id<ADJSdkPackageData>)unknownPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJUnknownResponseData alloc] initWithBuilder:sdkResponseDataBuilder
+                                               unknownPackageData:unknownPackageData
+                                                 optionalFailsMut:optionalFailsMut]];
+}
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    unknownPackageData:(nonnull id<ADJSdkPackageData>)unknownPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    self = [super initWithBuilder:sdkResponseDataBuilder
+                   sdkPackageData:unknownPackageData
+                 optionalFailsMut:optionalFailsMut];
+
+    return self;
+}
 
 @end

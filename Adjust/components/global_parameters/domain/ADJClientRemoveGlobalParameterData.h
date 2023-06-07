@@ -24,11 +24,15 @@ NS_ASSUME_NONNULL_END
    ADJClientActionIoDataInjectable
 >
 // instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustConfigWithKeyToRemove:(nullable NSString *)keyToRemove
-                                                                    logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientWithAdjustConfigWithKeyToRemove:(nullable NSString *)keyToRemove
+    globalParameterType:(nonnull NSString *)globalParameterType
+    logger:(nonnull ADJLogger *)logger;
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    globalParameterType:(nonnull NSString *)globalParameterType
+    logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

@@ -39,44 +39,105 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 
 @implementation ADJAttributionStateData
 #pragma mark Instantiation
-#define extractBoolean(varName, paramKey)                                                   \
-     ADJBooleanWrapper *_Nullable varName =                                                 \
-         [ADJBooleanWrapper                                                                 \
-            instanceFromIoValue:                                                            \
-                [ioData.propertiesMap pairValueWithKey:paramKey]                            \
-            logger:logger];                                                                 \
-    if (varName == nil) {                                                                   \
-        [logger debugDev:@"Cannot create instance from Io data with invalid valid io value" \
-               valueName:paramKey                                                           \
-               issueType:ADJIssueStorageIo];                                                \
-        return nil;                                                                         \
-    }                                                                                       \
-
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJAttributionStateDataMetadataTypeValue
-           logger:logger])
-    {
-        return nil;
++ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJAttributionStateData *> *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJAttributionStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [[ADJOptionalFailsNN alloc]
+                initWithOptionalFails:nil
+                value:[ADJResultNN
+                       failWithMessage:@"Cannot create attribution state data from io data"
+                       key:@"unexpected metadata type value fail"
+                       otherFail:unexpectedMetadataTypeValueFail]];
     }
 
-    extractBoolean(installSessionTracked, kInstallSessionTrackedKey)
-    extractBoolean(unavailableAttribution, kUnavailableAttributionKey)
-    extractBoolean(isAsking, kIsAskingKey)
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull installSessionTrackedResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kInstallSessionTrackedKey]];
+    if (installSessionTrackedResult.fail != nil) {
+        return [[ADJOptionalFailsNN alloc]
+                initWithOptionalFails:nil
+                value:[ADJResultNN
+                       failWithMessage:@"Cannot create attribution state data from io data"
+                       key:@"installSessionTracked fail"
+                       otherFail:installSessionTrackedResult.fail]];
+    }
+
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull unavailableAttributionResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kUnavailableAttributionKey]];
+    if (unavailableAttributionResult.fail != nil) {
+        return [[ADJOptionalFailsNN alloc]
+                initWithOptionalFails:nil
+                value:[ADJResultNN
+                       failWithMessage:@"Cannot create attribution state data from io data"
+                       key:@"unavailableAttribution fail"
+                       otherFail:unavailableAttributionResult.fail]];
+    }
+
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull isAskingResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kIsAskingKey]];
+    if (isAskingResult.fail != nil) {
+        return [[ADJOptionalFailsNN alloc]
+                initWithOptionalFails:nil
+                value:[ADJResultNN
+                       failWithMessage:@"Cannot create attribution state data from io data"
+                       key:@"isAsking fail"
+                       otherFail:isAskingResult.fail]];
+    }
 
     ADJAttributionData *_Nullable attributionData = nil;
+    NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
 
     ADJStringMap *_Nullable attributionDataMap = [ioData mapWithName:kAttributionDataMapName];
     if (attributionDataMap != nil) {
-        attributionData = [ADJAttributionData instanceFromIoDataMap:attributionDataMap
-                                                             logger:logger];
+        ADJOptionalFailsNN<ADJAttributionData *> *_Nonnull attributionDataOptFails =
+            [ADJAttributionData instanceFromIoDataMap:attributionDataMap];
+
+        optionalFails = attributionDataOptFails.optionalFails;
+        attributionData = attributionDataOptFails.value;
     }
 
-    return [[self alloc] initWithAttributionData:attributionData
-                           installSessionTracked:installSessionTracked.boolValue
-                          unavailableAttribution:unavailableAttribution.boolValue
-                                        isAsking:isAsking.boolValue];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFails
+            value:[ADJResultNN okWithValue:
+                   [[ADJAttributionStateData alloc]
+                    initWithAttributionData:attributionData
+                    installSessionTracked:installSessionTrackedResult.value.boolValue
+                    unavailableAttribution:unavailableAttributionResult.value.boolValue
+                    isAsking:isAskingResult.value.boolValue]]];
+}
+
++ (nonnull ADJOptionalFailsNL<ADJAttributionStateData *> *)
+    instanceFromV4WithAttribution:(nullable ADJV4Attribution *)v4Attribution
+{
+    if (v4Attribution == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+    }
+
+    ADJOptionalFailsNL<ADJAttributionData *> *_Nonnull attributionDataOptFails =
+        [ADJAttributionData instanceFromV4WithAttribution:v4Attribution];
+
+    if (attributionDataOptFails.value == nil) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:attributionDataOptFails.optionalFails
+                value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc]
+            initWithOptionalFails:attributionDataOptFails.optionalFails
+            value:[[ADJAttributionStateData alloc]
+                   initWithAttributionData:attributionDataOptFails.value
+                   // with attribution data, assume install session has been tracked
+                   installSessionTracked:YES
+                   // and that the attribution received is available
+                   //  otherwise it would be null from 'ADJAttributionData instanceFromV4'
+                   unavailableAttribution:NO
+                   // it starts by default by not asking, should be the same in 'initWithIntialState'
+                   isAsking:NO]];
 }
 
 - (nonnull instancetype)initWithIntialState {

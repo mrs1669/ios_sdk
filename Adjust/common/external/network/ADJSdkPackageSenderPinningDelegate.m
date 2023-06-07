@@ -45,7 +45,6 @@ static const unsigned char kEcDsaSecp384r1Asn1Header[] =
 
 @interface ADJSdkPackageSenderPinningDelegate ()
 #pragma mark - Injected dependencies
-@property (nullable, readwrite, strong, nonatomic) ADJSdkResponseDataBuilder *sdkResponseDataBuilderWeakRef;
 @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *publicKeyHash;
 @end
 
@@ -60,21 +59,13 @@ static const unsigned char kEcDsaSecp384r1Asn1Header[] =
     return self;
 }
 
-#pragma mark Public API
-- (void)setRequestDataWeakRefWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder {
-    self.sdkResponseDataBuilderWeakRef = sdkResponseDataBuilder;
-}
-
-- (void)clearRequestDataWeakRef {
-    self.sdkResponseDataBuilderWeakRef = nil;
-}
-
 #pragma mark - NSURLSessionDelegate
 - (void)URLSession:(nonnull NSURLSession *)session
 didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^_Nonnull)
                     (NSURLSessionAuthChallengeDisposition disposition,
-                     NSURLCredential * _Nullable credential))completionHandler {
+                     NSURLCredential * _Nullable credential))completionHandler
+{
     if (! [challenge.protectionSpace.authenticationMethod
            isEqualToString:NSURLAuthenticationMethodServerTrust])
     {
@@ -114,8 +105,8 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     SecCertificateRef _Nullable serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
 
     if (! serverCertificate) {
-        [self logErrorWithMessage:@"Cannot retrieve first server certificate"
-                          nsError:nil];
+        [self.logger debugDev:@"Cannot retrieve first server certificate"
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
@@ -123,8 +114,8 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     SecKeyRef _Nullable serverPublicKey = SecCertificateCopyPublicKey(serverCertificate);
 
     if (! serverPublicKey) {
-        [self logErrorWithMessage:@"Cannot retrieve public key from first server certificate"
-                          nsError:nil];
+        [self.logger debugDev:@"Cannot retrieve public key from first server certificate"
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
@@ -141,32 +132,35 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     // TODO: maybe use __bridge_transfer / CFBridgingRelease instead of CFRelease
     // TODO: see how it is done before iOS 10.0
     CFDataRef _Nullable serverPublicKeyData =
-    SecKeyCopyExternalRepresentation(serverPublicKey, &errorRef);
+        SecKeyCopyExternalRepresentation(serverPublicKey, &errorRef);
+
+    if (serverPublicKeyData) {
+        BOOL useCredential =
+            [self useCredentialWithServerPublicKeyData:(__bridge NSData *)serverPublicKeyData
+                                       serverPublicKey:serverPublicKey];
+
+        CFRelease(serverPublicKeyData);
+
+        return useCredential;
+    }
+
+    NSError *_Nonnull error = nil;
 
     if (errorRef) {
-        NSError *error = (__bridge NSError *)errorRef;
-
-        [self logErrorWithMessage:@"Cannot retrieve public key data with NSError"
-                          nsError:error];
-
-        CFRelease(errorRef);
-        return NO;
+        // according to https://stackoverflow.com/a/40885964
+        //  __bridge_transfer should mean that ARC now "owns" the reference/object and that
+        //  we can retain it and not worry about freeing CFErrorRef errorRef
+        error = (__bridge_transfer NSError *)errorRef;
     }
 
-    if (! serverPublicKeyData) {
-        [self logErrorWithMessage:@"Cannot retrieve public key data without NSError"
-                          nsError:nil];
-
-        return NO;
-    }
-
-    BOOL useCredential =
-    [self useCredentialWithServerPublicKeyData:(__bridge NSData *)serverPublicKeyData
-                               serverPublicKey:serverPublicKey];
-
-    CFRelease(serverPublicKeyData);
-
-    return useCredential;
+    [self.logger debugDev:@"Could not convert public key into data"
+               resultFail:[[ADJResultFail alloc]
+                           initWithMessage:@"from SecKeyCopyExternalRepresentation"
+                           params:nil
+                           error:error
+                           exception:nil]
+                issueType:ADJIssueNetworkRequest];
+    return NO;
 }
 
 - (BOOL)useCredentialWithServerPublicKeyData:(nonnull NSData *)serverPublicKeyNSData
@@ -176,8 +170,8 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     CFDictionaryRef _Nullable publicKeyAttributes = SecKeyCopyAttributes(serverPublicKey);
 
     if (! publicKeyAttributes) {
-        [self logErrorWithMessage:@"Cannot retrieve keychain attributes of the server public key"
-                          nsError:nil];
+        [self.logger debugDev:@"Cannot retrieve keychain attributes of the server public key"
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
@@ -195,15 +189,15 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     CFDictionaryGetValue(publicKeyAttributes, kSecAttrKeyType);
 
     if (publicKeyTypeRef == nil) {
-        [self logErrorWithMessage:@"Cannot retrieve public key type from keychain attributes"
-                          nsError:nil];
+        [self.logger debugDev:@"Cannot retrieve public key type from keychain attributes"
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
     if (CFGetTypeID(publicKeyTypeRef) != CFStringGetTypeID()) {
-        [self logErrorWithMessage:
+        [self.logger debugDev:
          @"Retrieved public key type from keychain attributes is not of string type"
-                          nsError:nil];
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
@@ -213,15 +207,15 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     CFDictionaryGetValue(publicKeyAttributes, kSecAttrKeySizeInBits);
 
     if (publicKeySizeRef == nil) {
-        [self logErrorWithMessage:@"Cannot retrieve public key size from keychain attributes"
-                          nsError:nil];
+        [self.logger debugDev:@"Cannot retrieve public key size from keychain attributes"
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
     if (CFGetTypeID(publicKeySizeRef) != CFNumberGetTypeID()) {
-        [self logErrorWithMessage:
+        [self.logger debugDev:
          @"Retrieved public key size from keychain attributes is not of number type"
-                          nsError:nil];
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
@@ -256,9 +250,8 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
     }
 
     if (asn1HeaderSize == 0 || ! asn1HeaderBytes) {
-        [self logErrorWithMessage:
-         @"Public key algorithm or length is not supported"
-                          nsError:nil];
+        [self.logger debugDev:@"Public key algorithm or length is not supported"
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
@@ -268,8 +261,8 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
                          asn1HeaderSize:asn1HeaderSize];
 
     if (! [serverPublicKeyHash isEqualToString:self.publicKeyHash.stringValue]) {
-        [self logErrorWithMessage:@"Server certificate public key hash does not match expected"
-                          nsError:nil];
+        [self.logger debugDev:@"Server certificate public key hash does not match expected"
+                    issueType:ADJIssueNetworkRequest];
         return NO;
     }
 
@@ -299,68 +292,40 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
 }
 
 - (BOOL)canEvaluateWithTrust:(nonnull SecTrustRef)trust {
-    SecTrustResultType result = kSecTrustResultInvalid;
-
     if (@available(iOS 12.0, macOS 10.14, tvOS 12.0, watchOS 5.0, macCatalyst 13.0, *)) {
         CFErrorRef errorRef;
         if (SecTrustEvaluateWithError(trust, &errorRef)) {
-            if (errorRef) {
-                NSError *error = (__bridge NSError *)errorRef;
-                [self logErrorWithMessage:
-                 @"Evaluated trust from SecTrustEvaluateWithError but had NSError"
-                                  nsError:error];
-                CFRelease(errorRef);
-                return NO;
-            }
-        } else {
-            if (errorRef) {
-                NSError *error = (__bridge NSError *)errorRef;
-                [self logErrorWithMessage:
-                 @"Cannot evaluate trust from SecTrustEvaluateWithError with NSError"
-                                  nsError:error];
-                CFRelease(errorRef);
-            } else {
-                [self logErrorWithMessage:
-                 @"Cannot evaluate trust from SecTrustEvaluateWithError without NSError"
-                                  nsError:nil];
-            }
-            return NO;
+            return YES;
         }
-    } else {
-        OSStatus evaluateReturn = SecTrustEvaluate(trust, &result);
-        if (evaluateReturn != errSecSuccess) {
-            [self logErrorWithMessage:
-             [NSString stringWithFormat:
-              @"Cannot evaluate trust from SecTrustEvaluate with OSStatus: %d",
-              (int)evaluateReturn]
-                              nsError:nil];
-            return NO;
+
+        NSError *_Nonnull error = nil;
+        if (errorRef) {
+            error = (__bridge_transfer NSError *)errorRef;
         }
-    }
 
-    if (result == kSecTrustResultUnspecified || result == kSecTrustResultProceed) {
-        return YES;
-    }
-
-    [self logErrorWithMessage:[NSString stringWithFormat:
-                               @"Cannot validate trust with result: %d", (int)result]
-                      nsError:nil];
-    return NO;
-}
-
-- (void)logErrorWithMessage:(nonnull NSString *)errorMessage
-                    nsError:(nullable NSError *)nsError
-{
-    ADJSdkResponseDataBuilder *sdkResponseDataBuilder = self.sdkResponseDataBuilderWeakRef;
-
-    if (sdkResponseDataBuilder != nil) {
-        [sdkResponseDataBuilder logErrorWithLogger:self.logger
-                                           nsError:nsError
-                                      errorMessage:errorMessage];
-    } else {
-        [self.logger debugDev:errorMessage
-                      nserror:nsError
+        [self.logger debugDev:@"Could not trust"
+                   resultFail:[[ADJResultFail alloc]
+                               initWithMessage:@"from SecTrustEvaluateWithError"
+                               params:nil
+                               error:error
+                               exception:nil]
                     issueType:ADJIssueNetworkRequest];
+
+        return NO;
+    } else {
+        SecTrustResultType resultType = kSecTrustResultInvalid;
+        OSStatus evaluateReturn = SecTrustEvaluate(trust, &resultType);
+        if (evaluateReturn == errSecSuccess) {
+            return YES;
+        }
+
+        [self.logger debugDev:@"Cannot evaluate trust from SecTrustEvaluate"
+                         key1:@"OSStatus"
+                       value1:[ADJUtilF intFormat:(int)evaluateReturn]
+                         key2:@"SecTrustResultType"
+                       value2:[ADJUtilF uIntFormat:(unsigned int)resultType]
+                    issueType:ADJIssueNetworkRequest];
+        return NO;
     }
 }
 

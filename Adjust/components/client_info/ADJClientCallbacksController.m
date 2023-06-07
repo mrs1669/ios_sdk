@@ -101,16 +101,16 @@
            clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
                deviceController:(nonnull ADJDeviceController *)deviceController
 {
-    ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
-    [deviceController getSessionDeviceIdsSync];
+    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+        [deviceController getSessionDeviceIdsSync];
 
-    if (sessionDeviceIdsData.failMessage != nil) {
+    if (sessionDeviceIdsDataResult.fail != nil) {
         ADJInputLogMessageData *_Nonnull inputLog =
-        [self.logger noticeClient:@"Cannot get device ids for callback"
-                              key:@"reason"
-                            value:sessionDeviceIdsData.failMessage];
+            [self.logger noticeClient:@"Cannot get device ids for callback"
+                           resultFail:sessionDeviceIdsDataResult.fail];
 
-        NSString *_Nonnull callbackFailMessage = [ADJUtilF logMessageAndParamsFormat:inputLog];
+        NSString *_Nonnull callbackFailMessage =
+            [ADJConsoleLogger clientCallbackFormatMessageWithLog:inputLog];
 
         [clientReturnExecutor executeClientReturnWithBlock:^{
             [adjustDeviceIdsCallback didFailWithAdjustCallbackMessage:callbackFailMessage];
@@ -118,12 +118,11 @@
         return;
     }
 
-    ADJAdjustDeviceIds *_Nonnull adjustDeviceIds = [sessionDeviceIdsData toAdjustDeviceIds];
+    ADJAdjustDeviceIds *_Nonnull adjustDeviceIds =
+        [sessionDeviceIdsDataResult.value toAdjustDeviceIds];
     [clientReturnExecutor executeClientReturnWithBlock:^{
         [adjustDeviceIdsCallback didReadWithAdjustDeviceIds:adjustDeviceIds];
     }];
 }
 
 @end
-
-

@@ -8,6 +8,7 @@
 #import "ADJAttributionState.h"
 
 #import "ADJAttributionTracker.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 /* .h
@@ -134,7 +135,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
                 startAsking:YES];
     }
 
-    [self updateWithReceivedAttribution:[self extractAttributionWithResponse:attributionResponse]];
+    [self updateWithReceivedAttributionWithResponse:attributionResponse];
 
     self.stateData = [self.stateData withNewIsAsking:NO];
 
@@ -172,69 +173,71 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 }
 
 #pragma mark Internal Methods
-- (nullable ADJAttributionData *)extractAttributionWithResponse:
+- (void)updateWithReceivedAttributionWithResponse:
     (nonnull ADJAttributionResponseData *)attributionResponseData
 {
-    NSDictionary *_Nullable attributionJson = attributionResponseData.attributionJson;
-    if (attributionJson == nil) { return nil; }
+   NSDictionary *_Nullable attributionJson = attributionResponseData.attributionJson;
+   if (attributionJson == nil) {
+       if (self.stateData.unavailableAttribution) {
+           [self.logger debugDev:@"Received attribution continues to be unavailable"];
+           return;
+       }
 
-    return [[ADJAttributionData alloc] initFromJsonWithDictionary:attributionJson
-                                                             adid:attributionResponseData.adid
-                                                           logger:self.logger];
-}
-- (void)updateWithReceivedAttribution:(nullable ADJAttributionData *)receivedAttribution {
-    if (receivedAttribution == nil) {
-        if (self.stateData.unavailableAttribution) {
-            [self.logger debugDev:@"Received attribution continues to be unavailable"];
-            return;
-        }
+       [self.logger debugDev:@"Received attribution is now unavailable"];
 
-        [self.logger debugDev:@"Received attribution is now unavailable"];
+       self.stateData = [self.stateData withUnavailableAttribution];
 
-        self.stateData = [self.stateData withUnavailableAttribution];
+       return;
+   }
 
-        return;
-    }
+   ADJOptionalFailsNN<ADJAttributionData *> *_Nonnull receivedAttributionOptFails =
+       [ADJAttributionData instanceFromJson:attributionJson
+                                       adid:attributionResponseData.adid];
+   for (ADJResultFail *_Nonnull optionalFail in receivedAttributionOptFails.optionalFails) {
+       [self.logger debugDev:@"Failed processing value in attribution json response"
+                  resultFail:optionalFail
+                   issueType:ADJIssueNetworkRequest];
+   }
 
-    if ([receivedAttribution isEqual:self.stateData.attributionData]) {
-        [self.logger debugDev:@"Received same attribution"];
-        return;
-    }
+   if ([receivedAttributionOptFails.value isEqual:self.stateData.attributionData]) {
+       [self.logger debugDev:@"Received same attribution"];
+       return;
+   }
 
-    [self.logger debugDev:@"Received attribution updates state data"];
+   [self.logger debugDev:@"Received attribution updates state data"];
 
-    self.stateData = [self.stateData withAvailableAttribution:receivedAttribution];
+   self.stateData = [self.stateData withAvailableAttribution:receivedAttributionOptFails.value];
 }
 
 - (BOOL)canStartAskingFromSdkWithSource:(nonnull NSString *)source {
     if (self.doNotInitiateAttributionFromSdk) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"it has been configured to not do so"];
+                                             why:@"it has been configured to not do so"];
     }
 
     if (! self.hasSdkStart) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"the sdk has not started yet"];
+                                             why:@"the sdk has not started yet"];
     }
 
     if ([self.stateData isAskingStatus]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"is already asking attribution"];
+                                                why:@"is already asking attribution"];
     }
 
     if ([self.stateData waitingForInstallSessionTrackingStatus]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"is waiting for install tracking"];
+                                                why:@"is waiting for install tracking"];
     }
 
     if ([self.stateData unavailableAttribution]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"the attribution is unavailable"];
+                                                why:@"the attribution is unavailable"];
     }
 
     if ([self.stateData hasAttributionStatus]) {
         return [self logCannotStartAskingWithSource:source
-                                             reason:@"it already has the attribution"];
+                                                why:@"it already has the attribution"];
     }
 
     if (! [self.stateData canAskStatus]) {
@@ -251,12 +254,12 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 }
 
 - (BOOL)logCannotStartAskingWithSource:(nonnull NSString *)source
-                                                        reason:(nonnull NSString *)reason
+                                   why:(nonnull NSString *)why
 {
     [self.logger debugDev:@"Cannot start asking"
                      from:source
-                      key:@"reason"
-                    value:reason];
+                      key:ADJLogWhyKey
+                    value:why];
     return NO;
 }
 

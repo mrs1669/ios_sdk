@@ -12,6 +12,9 @@
 #import "ADJNonEmptyString.h"
 #import "ADJMoneyAmountBase.h"
 #import "ADJAdjustAttribution.h"
+#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFailsNL.h"
+#import "ADJV4Attribution.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -22,25 +25,15 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAttributionData : NSObject<ADJIoDataMapBuilderInjectable>
 // instantiation
-+ (nullable instancetype)instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
-                                        logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
+    instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap;
 
-- (nonnull instancetype)initFromExternalDataWithLogger:(nonnull ADJLogger *)logger
-                                    trackerTokenString:(nullable NSString *)trackerTokenString
-                                     trackerNameString:(nullable NSString *)trackerNameString
-                                         networkString:(nullable NSString *)networkString
-                                        campaignString:(nullable NSString *)campaignString
-                                         adgroupString:(nullable NSString *)adgroupString
-                                        creativeString:(nullable NSString *)creativeString
-                                      clickLabelString:(nullable NSString *)clickLabelString
-                                            adidString:(nullable NSString *)adidString
-                                        costTypeString:(nullable NSString *)costTypeString
-                                costAmountDoubleNumber:(nullable NSNumber *)costAmountDoubleNumber
-                                    costCurrencyString:(nullable NSString *)costCurrencyString;
++ (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
+    instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution;
 
-- (nonnull instancetype)initFromJsonWithDictionary:(nonnull NSDictionary *)jsonDictionary
-                                              adid:(nonnull ADJNonEmptyString *)adid
-                                            logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
+    instanceFromJson:(nonnull NSDictionary *)attributionJson
+    adid:(nonnull ADJNonEmptyString *)adid;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

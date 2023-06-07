@@ -13,6 +13,8 @@
 #import "ADJUtilObj.h"
 #import "ADJConstants.h"
 
+//#import "ADJResultFail.h"
+
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -22,43 +24,95 @@
 @implementation ADJTimeLengthMilli
 #pragma mark Instantiation
 + (nonnull instancetype)instanceWithoutTimeSpan {
-    return [self zeroMilliInstance];
+    static dispatch_once_t zeroInstanceToken;
+    static id zeroInstance;
+    dispatch_once(&zeroInstanceToken, ^{
+        zeroInstance = [[self alloc] initWithMillisecondsSpan:[ADJNonNegativeInt instanceAtZero]];
+    });
+    return zeroInstance;
 }
 
 + (nonnull instancetype)instanceWithOneMilliSpan {
-    return [self oneMilliInstance];
+    static dispatch_once_t oneInstanceToken;
+    static id oneInstance;
+    dispatch_once(&oneInstanceToken, ^{
+        oneInstance = [[self alloc] initWithMillisecondsSpan:[ADJNonNegativeInt instanceAtOne]];
+    });
+    return oneInstance;
 }
 
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromOptionalNonNegativeInt:
-            [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue
-                                                        logger:logger]];
++ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
+
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Cannot convert from io value to time length"
+                                        key:@"io value to nnInt fail"
+                                  otherFail:nnIntResult.fail];
+    }
+    if (nnIntResult.value == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    return [ADJResultNL okWithValue:
+            [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:nnIntResult.value]];
 }
 
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromOptionalNonNegativeInt:
-            [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue
-                                                logger:logger]];
++ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
+{
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
+
+    if (nnIntResult.fail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create time length instance"
+                                        key:@"nnInt io value fail"
+                                  otherFail:nnIntResult.fail];
+    }
+
+    return [ADJResultNN okWithValue:
+            [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:nnIntResult.value]];
 }
 
-+ (nullable instancetype)instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
-                                                          logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
+    instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
+{
     if (numberDoubleSeconds == nil) {
-        return nil;
+        return [ADJResultNL okWithoutValue];
+    }
+
+    return [ADJResultNL instanceFromNN:^ADJResultNN *_Nonnull(NSNumber *_Nullable value) {
+        return [ADJTimeLengthMilli instanceWithNumberDoubleSeconds:value];
+    }
+                               nlValue:numberDoubleSeconds];
+}
+
++ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
+    instanceWithNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
+{
+    if (numberDoubleSeconds == nil) {
+        return [ADJResultNN failWithMessage:
+                @"Cannot create time length with nil number double seconds"];
+    }
+
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull millisecondsSpanResult =
+        [ADJNonNegativeInt
+         instanceFromIntegerNumber:
+             @(numberDoubleSeconds.doubleValue * ADJSecondToMilliDouble)];
+    if (millisecondsSpanResult.fail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create time length instance"
+                               builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:@"key convertion fail"
+                             otherFail:millisecondsSpanResult.fail];
+            [resultFailBuilder withKey:@"number double seconds"
+                           stringValue:[ADJUtilF usLocaleNumberFormat:numberDoubleSeconds]];
+        }];
     }
     
-    ADJNonNegativeInt *_Nullable millisecondsSpan =
-    [ADJNonNegativeInt
-     instanceFromIntegerNumber:@(numberDoubleSeconds.doubleValue * ADJSecondToMilliDouble)
-     logger:logger];
-    
-    if (millisecondsSpan == nil) {
-        return nil;
-    }
-    
-    return [[self alloc] initWithMillisecondsSpan:millisecondsSpan];
+    return [ADJResultNN okWithValue:
+            [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:millisecondsSpanResult.value]];
 }
 
 - (nonnull instancetype)initWithMillisecondsSpan:(nonnull ADJNonNegativeInt *)millisecondsSpan {
@@ -72,33 +126,6 @@
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
-}
-
-#pragma mark - Private constructors
-+ (nullable instancetype)instanceFromOptionalNonNegativeInt:(nullable ADJNonNegativeInt *)nonNegativeInt {
-    if (nonNegativeInt == nil) {
-        return nil;
-    }
-    
-    return [[self alloc] initWithMillisecondsSpan:nonNegativeInt];
-}
-
-+ (nonnull instancetype)zeroMilliInstance {
-    static dispatch_once_t zeroInstanceToken;
-    static id zeroInstance;
-    dispatch_once(&zeroInstanceToken, ^{
-        zeroInstance = [[self alloc] initWithMillisecondsSpan:[ADJNonNegativeInt instanceAtZero]];
-    });
-    return zeroInstance;
-}
-
-+ (nonnull instancetype)oneMilliInstance {
-    static dispatch_once_t oneInstanceToken;
-    static id oneInstance;
-    dispatch_once(&oneInstanceToken, ^{
-        oneInstance = [[self alloc] initWithMillisecondsSpan:[ADJNonNegativeInt instanceAtOne]];
-    });
-    return oneInstance;
 }
 
 #pragma mark Public API

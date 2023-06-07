@@ -32,9 +32,20 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJAttributionStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJAttributionStateData instanceFromIoData:ioData
-                                                logger:self.logger];
+- (nonnull ADJResultNN<ADJAttributionStateData *> *)concreteGenerateValueFromIoData:
+    (nonnull ADJIoData *)ioData
+{
+    ADJOptionalFailsNN<ADJResultNN<ADJAttributionStateData *> *> *_Nonnull
+    attributionStateDataOptFails = [ADJAttributionStateData instanceFromIoData:ioData];
+
+    for (ADJResultFail *_Nonnull optionalFail in attributionStateDataOptFails.optionalFails) {
+        [self.logger debugDev:@"Failed setting attribution state data optional field"
+         " when generating value from io data"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    return attributionStateDataOptFails.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJAttributionStateData *)dataValue {
@@ -49,38 +60,22 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4Attribution *_Nullable v4Attribution = [v4FilesData v4Attribution];
-    if (v4Attribution == nil) {
-        [self.logger debugDev:@"Attribution v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJOptionalFailsNL<ADJAttributionStateData *> *_Nonnull stateDataOptFails =
+        [ADJAttributionStateData instanceFromV4WithAttribution:[v4FilesData v4Attribution]];
+
+    for (ADJResultFail *_Nonnull optionalFail in stateDataOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 attribution"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (stateDataOptFails.value == nil) {
         return;
     }
 
-    [self.logger debugDev:@"Read v4 attribution"
-                      key:@"attribution"
-                    value:[v4Attribution description]];
-
-    ADJAttributionData *_Nonnull v4AttributionData =
-        [[ADJAttributionData alloc] initFromExternalDataWithLogger:self.logger
-                                                trackerTokenString:v4Attribution.trackerToken
-                                                 trackerNameString:v4Attribution.trackerName
-                                                     networkString:v4Attribution.network
-                                                    campaignString:v4Attribution.campaign
-                                                     adgroupString:v4Attribution.adgroup
-                                                    creativeString:v4Attribution.creative
-                                                  clickLabelString:v4Attribution.clickLabel
-                                                        adidString:v4Attribution.adid
-                                                    costTypeString:v4Attribution.costType
-                                            costAmountDoubleNumber:v4Attribution.costAmount
-                                                costCurrencyString:v4Attribution.costCurrency];
-
-    [self updateWithNewDataValue:
-         [[ADJAttributionStateData alloc]
-          initWithAttributionData:v4AttributionData
-          installSessionTracked:YES
-          unavailableAttribution:NO
-          isAsking:NO]];
+    [self updateWithNewDataValue:stateDataOptFails.value];
 }
 
 @end
-

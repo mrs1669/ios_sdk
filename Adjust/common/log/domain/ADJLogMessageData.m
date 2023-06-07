@@ -10,43 +10,33 @@
 
 #import "ADJUtilConv.h"
 #import "ADJUtilF.h"
+#import "ADJUtilObj.h"
+#import "ADJConstants.h"
+
+//#import "ADJResultFail.h"
 
 #pragma mark Fields
-#pragma mark - Public constants
-NSString *const ADJLogMessageKey = @"message";
-NSString *const ADJLogLevelKey = @"level";
-NSString *const ADJLogIssueKey = @"issue";
-NSString *const ADJLogErrorKey = @"error";
-NSString *const ADJLogExceptionKey = @"exception";
-NSString *const ADJLogParamsKey = @"params";
-NSString *const ADJLogSourceKey = @"source";
-NSString *const ADJLogCallerThreadIdKey = @"callerId";
-NSString *const ADJLogRunningThreadIdKey = @"runningId";
-NSString *const ADJLogCallerDescriptionKey = @"callerDescription";
-NSString *const ADJLogInstanceIdKey = @"instanceId";
-NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
-
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
  @property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
+ @property (nonnull, readonly, strong, nonatomic) NSString *idString;
  @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
- @property (nullable, readonly, strong, nonatomic) NSString *idString;
  */
 
 @implementation ADJLogMessageData
 // instantiation
 - (nonnull instancetype)initWithInputData:(nonnull ADJInputLogMessageData *)inputData
                         sourceDescription:(nonnull NSString *)sourceDescription
+                                 idString:(nonnull NSString *)idString
                           runningThreadId:(nullable NSString *)runningThreadId
-                                 idString:(nullable NSString *)idString
 {
     self = [super init];
 
     _inputData = inputData;
     _sourceDescription = sourceDescription;
-    _runningThreadId = runningThreadId;
     _idString = idString;
+    _runningThreadId = runningThreadId;
 
     return self;
 }
@@ -58,10 +48,12 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 
 - (nonnull NSMutableDictionary <NSString *, id>*)generateFoundationDictionary {
     NSMutableDictionary *_Nonnull foundationDictionary =
-    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-     self.inputData.message, ADJLogMessageKey,
-     self.inputData.level, ADJLogLevelKey,
-     self.sourceDescription, ADJLogSourceKey, nil];
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+         self.inputData.message, ADJLogMessageKey,
+         self.inputData.level, ADJLogLevelKey,
+         self.sourceDescription, ADJLogSourceKey,
+         self.idString, ADJLogInstanceIdKey,
+         nil];
 
     if (self.inputData.callerThreadId != nil) {
         [foundationDictionary setObject:self.inputData.callerThreadId
@@ -85,19 +77,9 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
                                  forKey:ADJLogIssueKey];
     }
 
-    if (self.inputData.nsError != nil) {
-        NSDictionary<NSString *, id> *_Nonnull errorFoundationDictionary =
-        [ADJLogMessageData generateFoundationDictionaryFromNsError:self.inputData.nsError];
-
-        [foundationDictionary setObject:errorFoundationDictionary forKey:ADJLogErrorKey];
-    }
-
-    if (self.inputData.nsException != nil) {
-        NSDictionary<NSString *, id> *_Nonnull exceptionFoundationDictionary =
-        [ADJLogMessageData generateFoundationDictionaryFromNsException:
-         self.inputData.nsException];
-
-        [foundationDictionary setObject:exceptionFoundationDictionary forKey:ADJLogExceptionKey];
+    if (self.inputData.resultFail != nil) {
+        [foundationDictionary setObject:[self.inputData.resultFail foundationDictionary]
+                                 forKey:ADJLogFailKey];
     }
 
     if (self.inputData.messageParams != nil) {
@@ -106,20 +88,45 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
                                  forKey:ADJLogParamsKey];
     }
 
-    if (self.idString != nil) {
-        [foundationDictionary setObject:self.idString forKey:ADJLogInstanceIdKey];
-    } else {
-        [foundationDictionary setObject:[NSNull null] forKey:ADJLogInstanceIdKey];
+    if (self.inputData.sdkPackageParams != nil) {
+        [foundationDictionary setObject:[ADJUtilConv convertToFoundationObject:
+                                         self.inputData.sdkPackageParams]
+                                 forKey:ADJLogSdkPackageParamsKey];
     }
 
     return foundationDictionary;
 }
+/*
++ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromResultFail:
+    (nonnull id<ADJResultFail>)resultFail
+{
+    NSMutableDictionary *_Nonnull resultFailDictionary =
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+         resultFail.message, ADJLogMessageKey,  nil];
+
+    if (resultFail.error != nil) {
+        [resultFailDictionary setObject:
+         [self generateFoundationDictionaryFromNsError:resultFail.error]
+                                 forKey:ADJLogErrorKey];
+    }
+    if (resultFail.exception != nil) {
+        [resultFailDictionary setObject:
+         [self generateFoundationDictionaryFromNsException:resultFail.exception]
+                                 forKey:ADJLogExceptionKey];
+    }
+    if (resultFail.params != nil) {
+        [resultFailDictionary setObject:resultFail.params
+                                 forKey:ADJLogParamsKey];
+    }
+
+    return resultFailDictionary;
+}
 
 + (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsError:(nonnull NSError *)nsError {
     NSMutableDictionary *_Nonnull errorFoundationDictionary =
-    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-     nsError.domain, @"domain",
-     @(nsError.code), @"code",  nil];
+        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+         nsError.domain, @"domain",
+         @(nsError.code), @"code",  nil];
 
     if (nsError.userInfo != nil) {
         [errorFoundationDictionary
@@ -130,7 +137,9 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
     return errorFoundationDictionary;
 }
 
-+ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsException:(nonnull NSException *)nsException {
++ (nonnull NSDictionary<NSString *, id> *)generateFoundationDictionaryFromNsException:
+    (nonnull NSException *)nsException
+{
     NSMutableDictionary *_Nonnull exceptionFoundationDictionary =
     [[NSMutableDictionary alloc] initWithObjectsAndKeys:
      nsException.name, @"name", nil];
@@ -148,37 +157,39 @@ NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 
     return exceptionFoundationDictionary;
 }
-
-
-+ (nonnull NSString *)generateJsonFromFoundationDictionary:(nonnull NSDictionary<NSString *, id> *)foundationDictionary {
-    NSError *error;
-
-    NSData *_Nullable jsonData =
-    [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationDictionary
-                                                 errorPtr:&error];
-
-    if (error != nil) {
+*/
++ (nonnull NSString *)generateJsonStringFromFoundationDictionary:
+    (nonnull NSDictionary<NSString *, id> *)foundationDictionary
+{
+    ADJResultNN<NSData *> *_Nonnull jsonDataResult =
+        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationDictionary];
+    if (jsonDataResult.fail != nil) {
         return [NSString stringWithFormat:
-                @"{\"errorJsonConv\": \"%@\", \"originalDictionary\": \"%@\"}",
-                error, foundationDictionary];
+                @"{ \"message\": \"Error converting dictionary to json data\", "
+                "\"fail\": \"%@\", "
+                "\"original_dictionary\": \"%@\" }",
+                [ADJUtilObj formatInlineKeyValuesWithName:@""
+                                      stringKeyDictionary:
+                 [jsonDataResult.fail foundationDictionary]],
+                [ADJUtilObj formatInlineKeyValuesWithName:@""
+                                      stringKeyDictionary:foundationDictionary]];
     }
 
-    if (jsonData == nil) {
+    ADJResultNN<NSString *> *_Nonnull jsonStringResult =
+        [ADJUtilF jsonDataFormat:jsonDataResult.value];
+    if (jsonStringResult.fail != nil) {
         return [NSString stringWithFormat:
-                @"{\"nullJsonData\": true, \"originalDictionary\": \"%@\"}",
-                foundationDictionary];
+                @"{ \"message\": \"Error converting json data to string\", "
+                "\"fail\": \"%@\", "
+                "\"original_dictionary\": \"%@\" }",
+                [ADJUtilObj formatInlineKeyValuesWithName:@""
+                                      stringKeyDictionary:
+                 [jsonStringResult.fail foundationDictionary]],
+                [ADJUtilObj formatInlineKeyValuesWithName:@""
+                                      stringKeyDictionary:foundationDictionary]];
     }
 
-    NSString *_Nullable jsonString = [ADJUtilF jsonDataFormat:jsonData];
-
-    if (jsonString == nil) {
-        return [NSString stringWithFormat:
-                @"{\"nullJsonString\": true, \"originalDictionary\": \"%@\"}",
-                foundationDictionary];
-    }
-
-    return jsonString;
+    return jsonStringResult.value;
 }
 
 @end
-

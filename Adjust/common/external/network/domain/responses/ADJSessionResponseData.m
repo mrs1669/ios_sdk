@@ -10,13 +10,27 @@
 
 @implementation ADJSessionResponseData
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                     sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
-                                 logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJOptionalFailsNN<ADJSessionResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJSessionResponseData alloc] initWithBuilder:sdkResponseDataBuilder
+                                               sessionPackageData:sessionPackageData
+                                                 optionalFailsMut:optionalFailsMut]];
+}
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sessionPackageData:(nonnull ADJSessionPackageData *)sessionPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:sessionPackageData
-                           logger:logger];
-    
+                 optionalFailsMut:optionalFailsMut];
+
     return self;
 }
 

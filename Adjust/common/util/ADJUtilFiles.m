@@ -33,7 +33,7 @@
     // TODO: figure out if this is the "right" way
     //  like for example using NSFileManager URLsForDirectory:inDomains:
     NSArray *_Nonnull paths =
-    NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     if (paths.count == 0) {
         return nil;
     }
@@ -60,12 +60,18 @@
     return [appSupportDirPathBase stringByAppendingPathComponent:path];
 }
 
-+ (BOOL)createDirWithPath:(nonnull NSString *)path
-                 errorPtr:(NSError * _Nullable * _Nonnull)errorPtr
-{
-    return [[NSFileManager defaultManager] createDirectoryAtPath:path
-                                     withIntermediateDirectories:YES
-                                                      attributes:nil
-                                                           error:errorPtr];
++ (nonnull ADJResultNN<NSNumber *> *)createDirWithPath:(nonnull NSString *)path {
+    NSError *_Nullable errorPtr = nil;
+    BOOL dirCreated = [[NSFileManager defaultManager] createDirectoryAtPath:path
+                                                withIntermediateDirectories:YES
+                                                                 attributes:nil
+                                                                      error:&errorPtr];
+    if (dirCreated) {
+        return [ADJResultNN okWithValue:@(dirCreated)];
+    }
+
+    return [ADJResultNN failWithMessage:@"NSFileManager createDirectory returned false"
+                                  error:errorPtr];
 }
+
 @end

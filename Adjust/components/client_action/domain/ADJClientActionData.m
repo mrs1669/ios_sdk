@@ -31,33 +31,31 @@ static NSString *const kIoDataKey = @"ioData";
 
 @implementation ADJClientActionData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceWithIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJResultNN<ADJClientActionData *> *)instanceWithIoData:(nonnull ADJIoData *)ioData {
     ADJStringMap *_Nonnull metadataMap = ioData.metadataMap;
     
     ADJNonEmptyString *_Nullable clientActionHandlerId =
-    [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
+        [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
     
     if (clientActionHandlerId == nil) {
-        [logger debugDev:@"Cannot create client action data without client action handler"
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                @"Cannot create client action data without client action handler"];
     }
     
-    ADJTimestampMilli *_Nullable apiTimestamp =
-        [ADJTimestampMilli
-            instanceFromIoDataValue:[metadataMap pairValueWithKey:kApiTimestampKey]
-            logger:logger];
-    
-    if (apiTimestamp == nil) {
-        [logger debugDev:@"Cannot create client action data without api timestamp"
-               issueType:ADJIssueStorageIo];
-        return nil;
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull apiTimestampResult =
+        [ADJTimestampMilli instanceFromIoDataValue:
+         [metadataMap pairValueWithKey:kApiTimestampKey]];
+    if (apiTimestampResult.fail != nil) {
+        return [ADJResultNN failWithMessage:
+                @"Cannot create client action data with invalid api timestamp"
+                                        key:@"apiTimestamp fail"
+                                  otherFail:apiTimestampResult.fail];
     }
-    
-    return [[self alloc] initWithClientActionHandlerId:clientActionHandlerId
-                                          apiTimestamp:apiTimestamp
-                                                ioData:ioData];
+
+    return [ADJResultNN okWithValue:[[ADJClientActionData alloc]
+                                     initWithClientActionHandlerId:clientActionHandlerId
+                                     apiTimestamp:apiTimestampResult.value
+                                     ioData:ioData]];
 }
 
 - (nonnull instancetype)initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId

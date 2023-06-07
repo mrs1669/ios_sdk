@@ -31,6 +31,7 @@
 #pragma mark Public API
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
+    // TODO: should it be injected some other way, instead of these "client" facing ones?
     [self migrateV4DeeplinkWithV4UserDefaultsData:v4UserDefaultsData];
 
     [self migrateV4PushTokenWithV4FilesData:v4FilesData
@@ -90,6 +91,3 @@
 }
 
 @end
-
-
-

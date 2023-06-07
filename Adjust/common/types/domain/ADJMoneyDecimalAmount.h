@@ -11,18 +11,15 @@
 #import "ADJMoneyAmountBase.h"
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
-#import "ADJLogger.h"
-#import "ADJNonEmptyString.h"
+#import "ADJResultNN.h"
 
 @interface ADJMoneyDecimalAmount : ADJMoneyAmountBase
 // instantiation
-+ (nullable instancetype)instanceFromIoDecValue:(nonnull NSString *)ioDecValue
-                                         logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)
+    instanceFromIoDecValue:(nonnull NSString *)ioDecValue;
 
-+ (nullable instancetype)instanceFromDecimalNumberValue:(nullable NSDecimalNumber *)decimalNumberValue
-                                                 logger:(nonnull ADJLogger *)logger;
-
-+ (nullable instancetype)instanceFromOptionalDecimalNumberValue:(nullable NSDecimalNumber *)decimalNumberValue logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)instanceFromDecimalNumberValue:
+    (nullable NSDecimalNumber *)decimalNumberValue;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSDecimalNumber *decimalNumberValue;

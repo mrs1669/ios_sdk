@@ -13,9 +13,15 @@
 
 @interface ADJAdRevenueResponseData : ADJSdkResponseBaseData
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                   adRevenuePackageData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
-                                 logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJAdRevenueResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    adRevenuePackageData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData;
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+ NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJAdRevenuePackageData *sourceAdRevenuePackageData;

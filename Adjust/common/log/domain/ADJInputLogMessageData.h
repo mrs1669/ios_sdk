@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJAdjustLogMessageData.h"
+#import "ADJResultFail.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,8 +55,7 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level
                               issueType:(nullable ADJIssue)issueType
-                                nsError:(nullable NSError *)nsError
-                            nsException:(nullable NSException *)nsException
+                             resultFail:(nullable ADJResultFail *)resultFail
                           messageParams:(nullable NSDictionary<NSString *, id> *)messageParams;
 
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
@@ -64,15 +64,16 @@ NS_ASSUME_NONNULL_END
                       callerDescription:(nullable NSString *)callerDescription
                         runningThreadId:(nullable NSString *)runningThreadId;
 
-- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
-                                  level:(nonnull ADJAdjustLogLevel)level
-                              issueType:(nullable ADJIssue)issueType
-                         callerThreadId:(nullable NSString *)callerThreadId
-                      callerDescription:(nullable NSString *)callerDescription
-                        runningThreadId:(nullable NSString *)runningThreadId
-                                nsError:(nullable NSError *)nsError
-                            nsException:(nullable NSException *)nsException
-                          messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+- (nonnull instancetype)
+    initWithMessage:(nonnull NSString *)message
+    level:(nonnull ADJAdjustLogLevel)level
+    issueType:(nullable ADJIssue)issueType
+    callerThreadId:(nullable NSString *)callerThreadId
+    callerDescription:(nullable NSString *)callerDescription
+    runningThreadId:(nullable NSString *)runningThreadId
+    resultFail:(nullable ADJResultFail *)resultFail
+    messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
+    sdkPackageParams:(nullable NSDictionary<NSString *, NSString *> *)sdkPackageParams
 NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
@@ -84,10 +85,41 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSString *callerDescription;
 @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
-@property (nullable, readonly, strong, nonatomic) NSError *nsError;
-@property (nullable, readonly, strong, nonatomic) NSException* nsException;
-@property (nullable, readonly, strong, nonatomic)
-NSDictionary<NSString *, id> *messageParams;
+@property (nullable, readonly, strong, nonatomic) ADJResultFail * resultFail;
+@property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *messageParams;
+@property (nullable, readwrite, strong, nonatomic)
+    NSDictionary<NSString *, NSString *> *sdkPackageParams;
 
 @end
 
+@interface ADJLogBuilder : NSObject
+// instantiation
+- (nonnull instancetype)initWithMessage:(nonnull NSString *)message
+                                  level:(nonnull ADJAdjustLogLevel)level;
+
+// public api
+- (nonnull ADJInputLogMessageData *)build;
+
+- (void)where:(nonnull NSString *)where;
+- (void)issue:(nonnull ADJIssue)issueType;
+- (void)subject:(nonnull NSString *)subject;
+- (void)why:(nonnull NSString *)why;
+- (void)fail:(nonnull ADJResultFail *)resultFail;
+- (void)sdkPackageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams;
+
+- (void)withExpected:(nonnull NSString *)expectedValue
+              actual:(nullable NSString *)actualValue;
+
+- (void)withFail:(nonnull ADJResultFail *)resultFail
+           issue:(nonnull ADJIssue)issueType;
+
+- (void)withSubject:(nonnull NSString *)subject
+              value:(nonnull NSString *)value;
+
+- (void)withSubject:(nonnull NSString *)subject
+                why:(nonnull NSString *)why;
+
+- (void)withKey:(nonnull NSString *)key
+          value:(nullable id)value;
+
+@end

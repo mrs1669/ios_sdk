@@ -10,6 +10,7 @@
 
 #import "ADJLogQueueStateAndTracker.h"
 #import "ADJSdkPackageBuilder.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 @interface ADJLogQueueController ()
@@ -259,7 +260,8 @@
                      source:(nonnull NSString *)source {
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package when it is nil"
-                         from:source
+                          key:ADJLogFromKey
+                        value:source
                     issueType:ADJIssueInvalidInput];
         return;
     }
@@ -282,16 +284,6 @@
     ADJStringMapBuilder *_Nonnull sendingParameters =
     [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
-    ADJClock *_Nullable clock = self.clockWeak;
-    if (clock != nil) {
-        [ADJSdkPackageBuilder
-         injectSentAtWithParametersBuilder:sendingParameters
-         sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
-    } else {
-        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
-                    issueType:ADJIssueWeakReference];
-    }
-
     [ADJSdkPackageBuilder
      injectAttemptsWithParametersBuilder:sendingParameters
      attempts:[self.logQueueStateAndTracker retriesSinceLastSuccessSend]];
@@ -311,9 +303,26 @@
                     issueType:ADJIssueLogicError];
     }
 
+    ADJClock *_Nullable clock = self.clockWeak;
+    if (clock == nil) {
+        [self.logger debugDev:@"Cannot inject sent at without a reference to clock"
+                    issueType:ADJIssueWeakReference];
+        return sendingParameters;
+    }
+
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    if (nowResult.fail != nil) {
+        [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
+                  resultFail:nowResult.fail
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJSdkPackageBuilder
+         injectSentAtWithParametersBuilder:sendingParameters
+         sentAtTimestamp:nowResult.value];
+
+    }
+
     return sendingParameters;
 }
 
 @end
-
-

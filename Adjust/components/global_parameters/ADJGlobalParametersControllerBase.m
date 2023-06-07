@@ -41,6 +41,54 @@
     return self;
 }
 
++ (nonnull ADJOptionalFailsNL<ADJStringMap *> *)
+    paramsInstanceFromV4WithSessionParameters:
+        (nullable NSDictionary<NSString *, NSString *> *)sessionParameters
+{
+    if (sessionParameters == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+    }
+
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    ADJStringMapBuilder *_Nonnull sessionParametersBuilder =
+        [[ADJStringMapBuilder alloc] initWithEmptyMap];
+
+    for (NSString *_Nonnull key in sessionParameters) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+            [ADJNonEmptyString instanceFromString:key];
+        if (keyResult.fail != nil) {
+            [optionalFailsMut addObject:[[ADJResultFail alloc]
+                                         initWithMessage:@"Invalid session parameter key"
+                                         key:@"key parsing fail"
+                                         otherFail:keyResult.fail]];
+            continue;
+        }
+
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+            [ADJNonEmptyString instanceFromString:[sessionParameters objectForKey:key]];
+        if (valueResult.fail != nil) {
+            [optionalFailsMut addObject:[[ADJResultFail alloc]
+                                         initWithMessage:@"Invalid session parameter value"
+                                         key:@"value parsing fail"
+                                         otherFail:valueResult.fail]];
+            continue;
+        }
+
+        [sessionParametersBuilder addPairWithValue:valueResult.value
+                                               key:keyResult.value.stringValue];
+    }
+
+    if ([sessionParametersBuilder countPairs] == 0) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:optionalFailsMut
+                value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJStringMap alloc] initWithStringMapBuilder:sessionParametersBuilder]];
+}
+
 #pragma mark Public API
 #pragma mark - ADJClientActionHandler
 - (BOOL)ccCanHandlePreFirstSessionClientAction {
@@ -175,9 +223,10 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientAddGlobalParameterData *_Nullable clientAddGlobalParameterData =
-        [ADJClientAddGlobalParameterData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientAddGlobalParameterData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             globalParameterType:self.globalParametersType
+             logger:self.logger];
         if (clientAddGlobalParameterData == nil) {
             return NO;
         }
@@ -191,9 +240,10 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientRemoveGlobalParameterData *_Nullable clientRemoveGlobalParameterData =
-        [ADJClientRemoveGlobalParameterData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             globalParameterType:self.globalParametersType
+             logger:self.logger];
         if (clientRemoveGlobalParameterData == nil) {
             return NO;
         }
@@ -207,9 +257,9 @@
          isEqualToString:clientActionType.stringValue])
     {
         ADJClientClearGlobalParametersData *_Nullable clientClearGlobalParametersData =
-        [ADJClientClearGlobalParametersData
-         instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
-         logger:self.logger];
+            [ADJClientClearGlobalParametersData
+             instanceFromClientActionInjectedIoDataWithData:clientActionIoInjectedData
+             logger:self.logger];
         if (clientClearGlobalParametersData == nil) {
             return NO;
         }

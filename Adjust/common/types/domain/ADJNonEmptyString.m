@@ -18,49 +18,61 @@
  */
 
 @implementation ADJNonEmptyString
-
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromString:(nullable NSString *)stringValue
-                          sourceDescription:(nonnull NSString *)sourceDescription
-                                     logger:(nonnull ADJLogger *)logger
++ (nonnull ADJResultNN<ADJNonEmptyString *> *)
+    instanceFromString:(nullable NSString *)stringValue
 {
-    return [ADJNonEmptyString instanceWithStringValue:stringValue
-                                    sourceDescription:sourceDescription
-                                               logger:logger
-                                           isOptional:NO];
-}
-
-+ (nullable instancetype)instanceFromOptionalString:(nullable NSString *)stringValue
-                                  sourceDescription:(nonnull NSString *)sourceDescription
-                                             logger:(nonnull ADJLogger *)logger {
-    return [ADJNonEmptyString instanceWithStringValue:stringValue
-                                    sourceDescription:sourceDescription
-                                               logger:logger
-                                           isOptional:YES];
-}
-
-+ (nullable instancetype)instanceWithStringValue:(nullable NSString *)stringValue
-                               sourceDescription:(nonnull NSString *)sourceDescription
-                                          logger:(nonnull ADJLogger *)logger
-                                      isOptional:(BOOL)isOptional {
     if (stringValue == nil) {
-        if (! isOptional) {
-            [logger debugDev:@"Cannot create NonEmptyString with nil value"
-                        from:sourceDescription
-                   issueType:ADJIssueUnexpectedInput];
-        }
-        
-        return nil;
+        return [ADJResultNN failWithMessage:@"Cannot create string with null"];
     }
-    
+
     if ([stringValue length] == 0) {
-        [logger debugDev:@"Cannot create NonEmptyString with empty value"
-                    from:sourceDescription
-               issueType:ADJIssueUnexpectedInput];
-        return nil;
+        return [ADJResultNN failWithMessage:@"Cannot create empty string"];
     }
-    
-    return [[ADJNonEmptyString alloc] initWithConstStringValue:stringValue];
+
+    return [ADJResultNN okWithValue:
+            [[ADJNonEmptyString alloc] initWithConstStringValue:stringValue]];
+}
++ (nonnull ADJResultNN<ADJNonEmptyString *> *)
+    instanceFromObject:(nullable id)objectValue
+{
+    if (objectValue == nil) {
+        return [ADJNonEmptyString instanceFromString:(NSString *)objectValue];
+    }
+
+    if (! [objectValue isKindOfClass:[NSString class]]) {
+        return [ADJResultNN failWithMessage:@"Cannot create string from non-string object"];
+    }
+
+    return [ADJNonEmptyString instanceFromString:(NSString *)objectValue];
+}
+
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)
+    instanceFromOptionalString:(nullable NSString *)stringValue
+{
+    if (stringValue == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    if ([stringValue length] == 0) {
+        return [ADJResultNL failWithMessage:@"Cannot create empty string"];
+    }
+
+    return [ADJResultNL okWithValue:
+            [[ADJNonEmptyString alloc] initWithConstStringValue:stringValue]];
+}
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)
+    instanceFromOptionalObject:(nullable id)objectValue
+{
+    if (objectValue == nil) {
+        return [ADJNonEmptyString instanceFromOptionalString:nil];
+    }
+
+    if (! [objectValue isKindOfClass:[NSString class]]) {
+        return [ADJResultNL failWithMessage:@"Cannot create string from non-string object"];
+    }
+
+    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)objectValue];
 }
 
 - (nonnull instancetype)initWithConstStringValue:(nonnull NSString *)constStringValue {

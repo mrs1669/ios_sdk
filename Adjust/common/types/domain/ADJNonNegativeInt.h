@@ -10,8 +10,9 @@
 
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
-#import "ADJLogger.h"
 #import "ADJNonEmptyString.h"
+#import "ADJResultNL.h"
+#import "ADJResultNN.h"
 
 @interface ADJNonNegativeInt : NSObject<
     NSCopying,
@@ -22,17 +23,17 @@
 + (nonnull instancetype)instanceAtZero;
 + (nonnull instancetype)instanceAtOne;
 
-+ (nullable instancetype)instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
-                                            logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
+    instanceFromIntegerNumber:(nullable NSNumber *)integerNumber;
 
-+ (nullable instancetype)instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber
-                                                    logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
+    instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber;
 
-+ (nullable instancetype)instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                          logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
+    instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
-+ (nullable instancetype)instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-                                                  logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
+    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
 - (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue
 NS_DESIGNATED_INITIALIZER;

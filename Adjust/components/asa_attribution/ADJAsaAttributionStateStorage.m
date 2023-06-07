@@ -30,8 +30,20 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJAsaAttributionStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJAsaAttributionStateData instanceFromIoData:ioData logger:self.logger];
+- (nonnull ADJResultNN<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
+    (nonnull ADJIoData *)ioData
+{
+    ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
+        [ADJAsaAttributionStateData instanceFromIoData:ioData];
+
+    for (ADJResultFail *_Nonnull optionalFail in resultOptFails.optionalFails) {
+        [self.logger debugDev:@"Failed setting asa attribution state data optional field"
+         " when generating value from io data"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    return resultOptFails.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJAsaAttributionStateData *)dataValue {
@@ -46,28 +58,19 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSNumber *_Nullable adServicesTrackedNumberBool = v4UserDefaultsData.adServicesTrackedNumberBool;
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJAsaAttributionStateData *_Nullable stateData =
+        [ADJAsaAttributionStateData instanceFromV4WithUserDefaults:v4UserDefaultsData];
 
-    if (adServicesTrackedNumberBool == nil || !adServicesTrackedNumberBool.boolValue) {
-        [self.logger debugDev:@"Asa attribution tracked not found in v4 shared preferences"];
+    if (stateData == nil) {
+        [self.logger debugDev:@"Asa attribution tracked not updated from v4 migration"];
         return;
     }
 
-    [self.logger debugDev:@"Asa attribution tracked found in v4 shared preferences"];
+    [self.logger debugDev:@"Asa attribution tracked updated from v4 migration"];
 
-    ADJAsaAttributionStateData *_Nonnull initialStateData =
-    [[ADJAsaAttributionStateData alloc] initWithIntialState];
-
-    [self updateWithNewDataValue:[[ADJAsaAttributionStateData alloc]
-                                  // overwrite only the received asa click flag
-                                  initWithHasReceivedValidAsaClickResponse:YES
-                                  hasReceivedAdjustAttribution:initialStateData.hasReceivedAdjustAttribution
-                                  cachedToken:initialStateData.cachedToken
-                                  cacheReadTimestamp:initialStateData.cacheReadTimestamp
-                                  errorReason:initialStateData.errorReason]];
+    [self updateWithNewDataValue:stateData];
 }
 
 @end
-
-

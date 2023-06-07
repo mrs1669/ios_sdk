@@ -26,26 +26,64 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
 
 @implementation ADJEventDeduplicationData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData isExpectedMetadataTypeValue:
-           ADJEventDeduplicationDataMetadataTypeValue
-                                       logger:logger])
-    {
-        return nil;
++ (nonnull ADJResultNN<ADJEventDeduplicationData *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJEventDeduplicationDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create event deduplication data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
-    
+
     ADJNonEmptyString *_Nullable deduplicationId =
-    [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
+        [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
     
     if (deduplicationId == nil) {
-        [logger debugDev:@"Cannot create instance from io data with invalid io value"
-               valueName:kDeduplicationIdKey
-               issueType:ADJIssueStorageIo];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                @"Cannot create event deduplication data from io data without its id"];
     }
-    
-    return [[self alloc] initWithDeduplicationId:deduplicationId];
+
+    return [ADJResultNN okWithValue:[[ADJEventDeduplicationData alloc]
+                                     initWithDeduplicationId:deduplicationId]];
+}
+
++ (nonnull ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *)
+    instanceArrayFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil || v4ActivityState.transactionIds == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+    }
+
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    NSMutableArray<ADJEventDeduplicationData *> *_Nonnull dedupsArrayMut =
+        [[NSMutableArray alloc] init];
+
+    for (id _Nonnull transactionIdObject in v4ActivityState.transactionIds) {
+        ADJResultNN<ADJNonEmptyString *> *_Nonnull transactionIdResult =
+            [ADJNonEmptyString instanceFromObject:transactionIdObject];
+
+        if (transactionIdResult.fail != nil) {
+            [optionalFailsMut addObject:
+             [[ADJResultFail alloc]
+              initWithMessage:@"Invalid value from v4 activity state transactionIds"
+              key:@"transaction id object fail"
+              otherFail:transactionIdResult.fail]];
+        } else {
+            [dedupsArrayMut addObject:[[ADJEventDeduplicationData alloc]
+                                       initWithDeduplicationId:transactionIdResult.value]];
+        }
+    }
+
+    if ([dedupsArrayMut count] == 0) {
+        return [[ADJOptionalFailsNL alloc]
+                initWithOptionalFails:optionalFailsMut
+                value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optionalFailsMut
+                                                       value:dedupsArrayMut];
 }
 
 - (nonnull instancetype)initWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {

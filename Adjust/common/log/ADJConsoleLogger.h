@@ -29,7 +29,7 @@
                                   doLogAll:(BOOL)doLogAll
                                doNotLogAny:(BOOL)doNotLogAny;
 
-+ (nonnull NSString *)clientFormatMessage:(nonnull ADJInputLogMessageData *)inputLogMessageData
-                             isPreSdkInit:(BOOL)isPreSdkInit;
++ (nonnull NSString *)clientCallbackFormatMessageWithLog:
+    (nonnull ADJInputLogMessageData *)inputLogMessageData;
 
 @end

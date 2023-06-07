@@ -10,8 +10,9 @@
 
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
-#import "ADJLogger.h"
 #import "ADJAttributionData.h"
+#import "ADJOptionalFailsNL.h"
+#import "ADJV4Attribution.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -29,8 +30,11 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAttributionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJAttributionStateData *> *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData;
+
++ (nonnull ADJOptionalFailsNL<ADJAttributionStateData *> *)
+    instanceFromV4WithAttribution:(nullable ADJV4Attribution *)v4Attribution;
 
 - (nonnull instancetype)initWithIntialState;
 

@@ -49,58 +49,140 @@ static NSString *const kStringPartnerSharingSettingsByNameKey = @"stringPartnerS
                adjustThirdPartySharing.enabledOrElseDisabledSharingNumberBool.boolValue]
             : nil;
 
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
-     granularOptionsByName =
-        [ADJUtilConv
-         convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-             adjustThirdPartySharing.granularOptionsByNameArray
-         sourceDescription:@"third party sharing granular options array parsing"
-         logger:logger];
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
-        [ADJNonEmptyString
-         instanceFromOptionalString:[ADJUtilF jsonFoundationValueFormat:granularOptionsByName]
-         sourceDescription:@"third party sharing granular options string parsing"
+        [self
+         stringWithGranularOptionsByNameArray:adjustThirdPartySharing.granularOptionsByNameArray
          logger:logger];
 
-    NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *_Nullable
-     partnerSharingSettingsByName =
-        [ADJUtilConv
-         convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
-             adjustThirdPartySharing.partnerSharingSettingsByNameArray
-         sourceDescription:@"third party sharing partner sharing settings array parsing"
-         logger:logger];
     ADJNonEmptyString *_Nullable stringPartnerSharingSettingsByName =
-        [ADJNonEmptyString
-         instanceFromOptionalString:
-             [ADJUtilF jsonFoundationValueFormat:partnerSharingSettingsByName]
-         sourceDescription:@"third party sharing partner sharing settings string parsing"
+        [self
+         stringWithPartnerSharingSettingsByNameArray:
+             adjustThirdPartySharing.partnerSharingSettingsByNameArray
          logger:logger];
 
     return [[self alloc] initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharing
                                   stringGranularOptionsByName:stringGranularOptionsByName
                            stringPartnerSharingSettingsByName:stringPartnerSharingSettingsByName];
 }
++ (nullable ADJNonEmptyString *)
+    stringWithGranularOptionsByNameArray:(nullable NSArray<NSString *> *)granularOptionsByNameArray
+    logger:(nonnull ADJLogger *)logger
+{
+    ADJOptionalFailsNN<ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *> *_Nonnull
+    granularOptionsByNameOptFails =
+        [ADJUtilConv
+         convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:granularOptionsByNameArray];
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger {
+    for (ADJResultFail *_Nonnull optionalFail in granularOptionsByNameOptFails.optionalFails) {
+        [logger noticeClient:@"Issue while adding granular option by name to third party sharing"
+                  resultFail:optionalFail];
+    }
+
+    ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *_Nonnull
+    granularOptionsByNameResult = granularOptionsByNameOptFails.value;
+
+    if (granularOptionsByNameResult.fail != nil) {
+        [logger noticeClient:
+         @"Could not parse granular options from map collection in third party sharing"
+                  resultFail:granularOptionsByNameResult.fail];
+        return nil;
+    }
+
+    if (granularOptionsByNameResult.value == nil) {
+        return nil;
+    }
+
+    if ([granularOptionsByNameResult.value count] == 0) {
+        [logger noticeClient:
+         @"Could not use any valid granular option by name to third party sharing"];
+        return nil;
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull granularOptionsByNameStringResult =
+        [ADJUtilF jsonFoundationValueFormat:granularOptionsByNameResult.value];
+    if (granularOptionsByNameStringResult.fail != nil) {
+        [logger noticeClient:@"Cannot use invalid granular options in third party sharing"
+                  resultFail:granularOptionsByNameStringResult.fail];
+    }
+
+    return granularOptionsByNameStringResult.value;
+}
++ (nullable ADJNonEmptyString *)
+    stringWithPartnerSharingSettingsByNameArray:
+        (nullable NSArray *)partnerSharingSettingsByNameArray
+    logger:(nonnull ADJLogger *)logger
+{
+    ADJOptionalFailsNN<ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *> *_Nonnull
+    partnerSharingSettingsByNameOptFails =
+        [ADJUtilConv
+         convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
+             partnerSharingSettingsByNameArray];
+
+    for (ADJResultFail *_Nonnull optionalFail in
+         partnerSharingSettingsByNameOptFails.optionalFails)
+    {
+        [logger noticeClient:@"Issue while partner sharing setting by name to third party sharing"
+                  resultFail:optionalFail];
+    }
+
+    ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *_Nonnull
+    partnerSharingSettingsByNameResult = partnerSharingSettingsByNameOptFails.value;
+
+    if (partnerSharingSettingsByNameResult.fail != nil) {
+        [logger noticeClient:
+         @"Could not parse partner sharing setting from map collection in third party sharing"
+                  resultFail:partnerSharingSettingsByNameResult.fail];
+        return nil;
+    }
+
+    if (partnerSharingSettingsByNameResult.value == nil) {
+        return nil;
+    }
+
+    if ([partnerSharingSettingsByNameResult.value count] == 0) {
+        [logger noticeClient:
+         @"Could not use any valid partner sharing setting by name to third party sharing"];
+        return nil;
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull partnerSharingSettingsStringResult =
+        [ADJUtilF jsonFoundationValueFormat:partnerSharingSettingsByNameResult.value];
+    if (partnerSharingSettingsStringResult.fail != nil) {
+        [logger noticeClient:@"Cannot use invalid partner sharing setting in third party sharing"
+                  resultFail:partnerSharingSettingsStringResult.fail];
+    }
+
+    return partnerSharingSettingsStringResult.value;
+}
+
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger
+{
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
 
     ADJNonEmptyString *_Nullable enabledOrElseDisabledSharingIoValue =
-    [propertiesMap pairValueWithKey:kEnabledOrElseDisabledSharingKey];
+        [propertiesMap pairValueWithKey:kEnabledOrElseDisabledSharingKey];
 
-    ADJBooleanWrapper *_Nullable enabledOrElseDisabledSharing =
-    [ADJBooleanWrapper instanceFromIoValue:enabledOrElseDisabledSharingIoValue
-                                    logger:logger];
+    ADJResultNL<ADJBooleanWrapper *> *_Nonnull enabledOrElseDisabledSharingResult =
+        [ADJBooleanWrapper instanceFromOptionalIoValue:enabledOrElseDisabledSharingIoValue];
+    if (enabledOrElseDisabledSharingResult.fail != nil) {
+        [logger debugDev:@"Cannot use invalid enabledOrElseDisabledSharing value"
+         " from client action injected io data"
+              resultFail:enabledOrElseDisabledSharingResult.fail
+               issueType:ADJIssueStorageIo];
+    }
 
     ADJNonEmptyString *_Nullable stringGranularOptionsByName =
-    [propertiesMap pairValueWithKey:kStringGranularOptionsByNameKey];
+        [propertiesMap pairValueWithKey:kStringGranularOptionsByNameKey];
 
     ADJNonEmptyString *_Nullable stringPartnerSharingSettingsByName =
-    [propertiesMap pairValueWithKey:kStringPartnerSharingSettingsByNameKey];
+        [propertiesMap pairValueWithKey:kStringPartnerSharingSettingsByNameKey];
 
-    return [[self alloc] initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharing
-                                  stringGranularOptionsByName:stringGranularOptionsByName
-                           stringPartnerSharingSettingsByName:stringPartnerSharingSettingsByName];
+    return [[ADJClientThirdPartySharingData alloc]
+            initWithEnabledOrElseDisabledSharing:enabledOrElseDisabledSharingResult.value
+            stringGranularOptionsByName:stringGranularOptionsByName
+            stringPartnerSharingSettingsByName:stringPartnerSharingSettingsByName];
 }
 
 - (nullable instancetype)init {

@@ -195,7 +195,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     NSString *_Nullable eventToken = [self firstParameterValueWithKey:@"eventToken"];
 
     ADJAdjustEvent *_Nonnull adjustEvent =
-    [[ADJAdjustEvent alloc] initWithEventId:eventToken];
+    [[ADJAdjustEvent alloc] initWithEventToken:eventToken];
 
     if ([self containsKey:@"currencyAndRevenue"]) {
         NSString *_Nullable currency = [self parameterValueWithKey:@"currencyAndRevenue"

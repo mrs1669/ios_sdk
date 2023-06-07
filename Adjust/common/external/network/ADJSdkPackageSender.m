@@ -45,7 +45,7 @@
                      clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
 
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:[NSString stringWithFormat:@"%@-SdkPackageSender",
+                                 source:[NSString stringWithFormat:@"%@-Sender",
                                          sourceDescription]];
     _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
                                                                  sourceDescription:self.source];
@@ -212,33 +212,30 @@
 
 - (void)injectUrlEncodedPairsWithParameters:(nonnull ADJStringMap *)parametersToInject
                           escapedPairsArray:(nonnull NSMutableArray<NSString *> *)escapedPairsArray
-                         sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
+                         sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
+{
     for (NSString *_Nonnull key in parametersToInject.map) {
         ADJNonEmptyString *_Nonnull value = [parametersToInject.map valueForKey:key];
 
         NSString *_Nullable escapedKey =
-        [ADJUtilF urlReservedEncodeWithSpaceAsPlus:key];
+            [ADJUtilF urlReservedEncodeWithSpaceAsPlus:key];
 
         if (escapedKey == nil) {
-            [sdkResponseBuilder
-             logErrorWithLogger:self.logger
-             nsError:nil
-             errorMessage:[NSString stringWithFormat:
-                           @"Could not inject url escaped key with key/value pair: %@, %@",
-                           key, value]];
+            [self.logger debugDev:@"Could not inject url escaped key"
+                              key:@"key"
+                            value:key
+                        issueType:ADJIssueNetworkRequest];
             continue;
         }
 
         NSString *_Nullable escapeValue =
-        [ADJUtilF urlReservedEncodeWithSpaceAsPlus:value.stringValue];
+            [ADJUtilF urlReservedEncodeWithSpaceAsPlus:value.stringValue];
 
         if (escapeValue == nil) {
-            [sdkResponseBuilder
-             logErrorWithLogger:self.logger
-             nsError:nil
-             errorMessage:[NSString stringWithFormat:
-                           @"Could not inject url escaped value with key/value pair: %@, %@",
-                           key, value]];
+            [self.logger debugDev:@"Could not inject url escaped key"
+                              key:@"value"
+                            value:value.stringValue
+                        issueType:ADJIssueNetworkRequest];
             continue;
         }
 
@@ -286,9 +283,9 @@
     [sessionDatatask resume];
 
     intptr_t waitResult =
-    dispatch_semaphore_wait
-    (semaphore,
-     [ADJUtilSys dispatchTimeWithMilli:self.timeoutMilli.millisecondsSpan.uIntegerValue]);
+        dispatch_semaphore_wait
+        (semaphore,
+         [ADJUtilSys dispatchTimeWithMilli:self.timeoutMilli.millisecondsSpan.uIntegerValue]);
 
     if ([finished testAndSetTrue]) {
         // after completion handler
@@ -297,69 +294,75 @@
 
     BOOL timedOut = waitResult != 0;
 
-    [sdkResponseBuilder logErrorWithLogger:self.logger
-                                   nsError:nil
-                              errorMessage:timedOut ? @"Request timeout" : @"Unexpected wait end"];
+    [self.logger debugDev:@"Did not succesfully ended waiting for response"
+                      key:@"did wait timeout"
+                    value:[ADJUtilF boolFormat:timedOut]
+                issueType:ADJIssueNetworkRequest];
 
     [self retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
+}
+
++ (nonnull ADJResultNN<NSData *> *)requestResultWithData:(nullable NSData *)data
+                                                   error:(nullable NSError *)error
+{
+    if (data != nil) {
+        return [ADJResultNN okWithValue:data];
+    }
+
+    return [ADJResultNN failWithMessage:@"dataTaskWithRequest error"
+                                  error:error];
 }
 
 - (void)handleRequestCallbackWithData:(nullable NSData *)data
                              response:(nullable NSURLResponse *)response
                                 error:(nullable NSError *)error
-                   sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
-    if (error != nil) {
-        [sdkResponseBuilder logErrorWithLogger:self.logger
-                                       nsError:error
-                                  errorMessage:@"Sending request error"];
+                   sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
+{
+    ADJResultNN<NSData *> *_Nonnull callbackDataResult =
+        [ADJSdkPackageSender requestResultWithData:data error:error];
+    if (callbackDataResult.fail) {
+        [self.logger debugDev:@"Cannot process request"
+                   resultFail:callbackDataResult.fail
+                    issueType:ADJIssueNetworkRequest];
         return;
     }
 
-    if (data == nil) {
-        [sdkResponseBuilder logErrorWithLogger:self.logger
-                                       nsError:nil
-                                  errorMessage:@"Cannot read data from request"];
-        return;
-    }
+    ADJResultNN<NSString *> *_Nonnull responseStringResult = [ADJUtilF jsonDataFormat:data];
 
-    NSString *_Nullable responseString = [ADJUtilF jsonDataFormat:data];
-
-    if (responseString != nil) {
+    if (responseStringResult.fail != nil) {
+        [self.logger debugDev:@"Server with response"
+                   resultFail:responseStringResult.fail
+                    issueType:ADJIssueNetworkRequest];
+    } else {
         [self.logger debugDev:@"Server with response"
                           key:@"raw response"
-                        value:responseString];
-    } else {
-        [self.logger debugDev:@"Without server response"];
+                        value:responseStringResult.value];
     }
 
-    [self injectJsonWithResponseData:data
+    [self injectJsonWithResponseData:callbackDataResult.value
                   sdkResponseBuilder:sdkResponseBuilder];
 }
 
 - (void)injectJsonWithResponseData:(nonnull NSData *)responseData
-                sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
-    NSError *jsonError = nil;
+                sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
+{
+    ADJResultNN<id> *_Nonnull responseJsonFoundationObjectResult =
+        [ADJUtilConv convertToJsonFoundationValueWithJsonData:responseData];
 
-    id _Nullable responseJsonFoundationObject =
-    [ADJUtilConv convertToJsonFoundationValueWithJsonData:responseData
-                                                 errorPtr:&jsonError];
-
-    if (jsonError != nil) {
-        [sdkResponseBuilder logErrorWithLogger:self.logger
-                                       nsError:jsonError
-                                  errorMessage:@"Parsing json response"];
+    if (responseJsonFoundationObjectResult.fail != nil) {
+        [self.logger debugDev:@"Cannot not parse json response data"
+                   resultFail:responseJsonFoundationObjectResult.fail
+                    issueType:ADJIssueNetworkRequest];
         return;
     }
 
-    if (responseJsonFoundationObject == nil
-        || ! [responseJsonFoundationObject isKindOfClass:[NSDictionary class]])
-    {
-        [sdkResponseBuilder
-         logErrorWithLogger:self.logger
-         nsError:nil
-         errorMessage:[NSString stringWithFormat:
-                       @"Parsed JSON Data is not of expected NSDictionary type, but of %@",
-                       NSStringFromClass([responseJsonFoundationObject class])]];
+    id _Nonnull responseJsonFoundationObject = responseJsonFoundationObjectResult.value;
+
+    if (! [responseJsonFoundationObject isKindOfClass:[NSDictionary class]]) {
+        [self.logger debugDev:@"Parsed json response is not of expected type dictionary"
+                          key:@"json response type"
+                        value:NSStringFromClass([responseJsonFoundationObject class])
+                    issueType:ADJIssueNetworkRequest];
         return;
     }
 
@@ -368,7 +371,7 @@
 
 - (void)retryOrReturnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
     BOOL retryToSend =
-    [self shouldRetryToSendWithResponseBuilder:sdkResponseBuilder];
+        [self shouldRetryToSendWithResponseBuilder:sdkResponseBuilder];
 
     if (retryToSend) {
         [sdkResponseBuilder incrementRetries];
@@ -379,52 +382,57 @@
 }
 
 - (void)returnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
-    id<ADJSdkResponseData> _Nonnull sdkResponseData =
-    [sdkResponseBuilder buildSdkResponseDataWithLogger:self.logger];
+    ADJOptionalFailsNN<id<ADJSdkResponseData>> *_Nonnull sdkResponseDataWithOptFails =
+        [sdkResponseBuilder buildSdkResponseData];
 
-    [sdkResponseBuilder.sourceCallback sdkResponseCallbackWithResponseData:sdkResponseData];
+    for (ADJResultFail *_Nonnull optionalFail in sdkResponseDataWithOptFails.optionalFails) {
+        [self.logger debugDev:
+         @"Failed with an optional value when building sdk response from builder"
+                   resultFail:optionalFail
+                    issueType:ADJIssueNetworkRequest];
+    }
+
+    [sdkResponseBuilder.sourceCallback
+     sdkResponseCallbackWithResponseData:sdkResponseDataWithOptFails.value];
 
     id<ADJSdkResponseSubscriber> _Nullable sdkResponseCollector = self.sdkResponseCollectorWeak;
     if (sdkResponseCollector != nil) {
-        [sdkResponseCollector didReceiveSdkResponseWithData:sdkResponseData];
+        [sdkResponseCollector didReceiveSdkResponseWithData:sdkResponseDataWithOptFails.value];
     }
 }
 
-- (BOOL)shouldRetryToSendWithResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
+- (BOOL)shouldRetryToSendWithResponseBuilder:
+    (nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
+{
     if ([sdkResponseBuilder didReceiveJsonResponse]) {
         [self.logger debugDev:@"Received network request with current url strategy"];
         [self.sdkPackageUrlBuilder resetAfterNetworkNotFailing];
         return NO;
     }
 
-    if ([sdkResponseBuilder retries] >
-        [self.sdkPackageUrlBuilder urlCountWithPath:sdkResponseBuilder.sourcePackage.path])
-    {
-        [sdkResponseBuilder
-         logErrorWithLogger:self.logger
-         nsError:nil
-         errorMessage:
-             @"Cannot retry a bigger number of times than the number of possible urls"];
-
+    // TODO: refac so that the check and the rotation of the urls are not separated
+    //  possibly with a domain state class
+    NSUInteger urlCount =
+        [self.sdkPackageUrlBuilder urlCountWithPath:sdkResponseBuilder.sourcePackage.path];
+    if ([sdkResponseBuilder retries] > urlCount) {
+        [self.logger debugDev:
+         @"Cannot retry a bigger number of times than the number of possible urls"
+                         key1:@"retries tried"
+                       value1:[ADJUtilF uIntegerFormat:[sdkResponseBuilder retries]]
+                         key2:@"url count"
+                       value2:[ADJUtilF uIntegerFormat:urlCount]];
         return NO;
     }
 
     if ([self.sdkPackageUrlBuilder shouldRetryAfterNetworkFailure]) {
-        [sdkResponseBuilder
-         logErrorWithLogger:self.logger
-         nsError:nil
-         errorMessage:@"Failed with current url strategy, but it will retry with new"];
+        [self.logger debugDev:@"Failed with current url strategy, but it will retry with new"];
         return YES;
     }
 
-    [sdkResponseBuilder
-     logErrorWithLogger:self.logger
-     nsError:nil
-     errorMessage:@"Failed with current url strategy and it will not retry"];
+    [self.logger debugDev:@"Failed with current url strategy and it will not retry"];
 
     //  Stop retrying with different type and return to caller
     return NO;
 }
 
 @end
-

@@ -14,6 +14,8 @@
 #import "ADJPostSdkInitRoot.h"
 #import "ADJPostSdkStartRoot.h"
 #import "ADJPublisherController.h"
+#import "ADJConstants.h"
+#import "ADJConsoleLogger.h"
 
 @interface ADJInstanceRoot ()
 #pragma mark - Internal variables
@@ -364,10 +366,11 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientAddGlobalParameterData *_Nullable clientData =
-        [ADJClientAddGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToAdd:key
-         valueToAdd:value
-         logger:logger];
+            [ADJClientAddGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToAdd:key
+             valueToAdd:value
+             globalParameterType:ADJGlobalParametersTypeCallback
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccAddGlobalCallbackParameterWithClientData:clientData];
@@ -379,9 +382,10 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientRemoveGlobalParameterData *_Nullable clientData =
-        [ADJClientRemoveGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToRemove:key
-         logger:logger];
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToRemove:key
+             globalParameterType:ADJGlobalParametersTypeCallback
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccRemoveGlobalCallbackParameterWithClientData:clientData];
@@ -404,10 +408,11 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientAddGlobalParameterData *_Nullable clientData =
-        [ADJClientAddGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToAdd:key
-         valueToAdd:value
-         logger:logger];
+            [ADJClientAddGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToAdd:key
+             valueToAdd:value
+             globalParameterType:ADJGlobalParametersTypePartner
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccAddGlobalPartnerParameterWithClientData:clientData];
@@ -419,9 +424,10 @@
                                             ADJLogger * _Nonnull logger)
      {
         ADJClientRemoveGlobalParameterData *_Nullable clientData =
-        [ADJClientRemoveGlobalParameterData
-         instanceFromClientWithAdjustConfigWithKeyToRemove:key
-         logger:logger];
+            [ADJClientRemoveGlobalParameterData
+             instanceFromClientWithAdjustConfigWithKeyToRemove:key
+             globalParameterType:ADJGlobalParametersTypePartner
+             logger:logger];
         if (clientData == nil) { return; }
 
         [clientActionsAPI ccRemoveGlobalPartnerParameterWithClientData:clientData];
@@ -466,8 +472,9 @@
 
         ADJPreSdkInitRoot *_Nullable preSdkInitRootLocal = strongSelf.preSdkInitRoot;
         if (preSdkInitRootLocal == nil) {
-            [strongSelf.logger debugDev:@"Unexpected invalid PreSdkInitRoot with self block"
-                                   from:source
+            [strongSelf.logger debugDev:@"Unexpected invalid PreSdkInitRoot"
+                                   key:ADJLogFromKey
+                                  value:source
                               issueType:ADJIssueLogicError];
             return;
         }
@@ -476,10 +483,15 @@
     } source:source];
 }
 
-- (void)ccWhenActiveWithPreBlock: (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
-                    clientSource:(nonnull NSString *)clientSource {
-    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
-        if ([preSdkInitRoot.sdkActiveController ccCanPerformActionWithClientSource:clientSource]) {
+- (void)
+    ccWhenActiveWithPreBlock:
+        (void (^_Nonnull)(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot))preBlock
+    clientSource:(nonnull NSString *)clientSource
+{
+    [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot) {
+        if ([preSdkInitRoot.sdkActiveController
+             ccCanPerformActionWithClientSource:clientSource])
+        {
             preBlock(preSdkInitRoot);
         }
     } source:clientSource];
@@ -492,19 +504,21 @@
     [self ccExecuteWithPreBlock:^(ADJPreSdkInitRoot * _Nonnull preSdkInitRoot) {
         if (adjustCallback == nil) {
             [preSdkInitRoot.logger errorClient:@"Cannot use invalid callback"
-                                          from:clientSource];
+                                           key:ADJLogFromKey
+                                         value:clientSource];
             return;
         }
 
-        NSString *_Nullable cannotPerformMessage =
-        [preSdkInitRoot.sdkActiveController
-         ccCanPerformActionOrElseMessageWithClientSource:clientSource];
+        ADJInputLogMessageData *_Nullable errorLog =
+            [preSdkInitRoot.sdkActiveController
+             ccCanPerformActionOrElseErrorLogWithClientSource:clientSource];
 
-        if (cannotPerformMessage != nil) {
+        if (errorLog != nil) {
             [preSdkInitRoot.clientCallbacksController
              failWithAdjustCallback:adjustCallback
              clientReturnExecutor:preSdkInitRoot.clientReturnExecutor
-             cannotPerformMessage:cannotPerformMessage];
+             cannotPerformMessage:
+                 [ADJConsoleLogger clientCallbackFormatMessageWithLog:errorLog]];
             return;
         }
 

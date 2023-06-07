@@ -9,6 +9,7 @@
 #import "ADJGlobalCallbackParametersStorage.h"
 
 #import "ADJStringMapBuilder.h"
+#import "ADJGlobalParametersControllerBase.h"
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -36,48 +37,23 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSDictionary<NSString *, NSString *> *_Nullable v4SessionCallbackParameters =
-        [v4FilesData v4SessionCallbackParameters];
-    if (v4SessionCallbackParameters == nil) {
-        [self.logger debugDev:@"Session Callback Parameters v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJOptionalFailsNL<ADJStringMap *> *_Nonnull callbackParamsOptFails =
+        [ADJGlobalParametersControllerBase paramsInstanceFromV4WithSessionParameters:
+         [v4FilesData v4SessionCallbackParameters]];
+    for (ADJResultFail *_Nonnull optionalFail in callbackParamsOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 session callback parameters migration"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (callbackParamsOptFails.value == nil) {
         return;
     }
 
-    ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
-
-    for (NSString *_Nullable key in v4SessionCallbackParameters) {
-        if (key == nil) {
-            continue;
-        }
-
-        NSString *_Nullable value = [v4SessionCallbackParameters objectForKey:key];
-        if (value == nil) {
-            continue;
-        }
-
-        ADJNonEmptyString *_Nullable verifiedKey =
-            [ADJNonEmptyString instanceFromOptionalString:key
-                                        sourceDescription:@"v4 Session Callback Parameter key"
-                                                   logger:self.logger];
-        if (verifiedKey == nil) {
-            continue;
-        }
-
-        ADJNonEmptyString *_Nullable verifiedValue =
-            [ADJNonEmptyString instanceFromOptionalString:value
-                                        sourceDescription:@"v4 Session Callback Parameter value"
-                                                   logger:self.logger];
-        if (verifiedValue == nil) {
-            continue;
-        }
-
-        [mapBuilder addPairWithValue:verifiedValue key:key];
-    }
-
-    [self replaceAllWithStringMap:[[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder]
+    [self replaceAllWithStringMap:callbackParamsOptFails.value
               sqliteStorageAction:nil];
 }
 
 @end
-

@@ -34,9 +34,10 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJDeviceIdsData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJDeviceIdsData instanceFromIoData:ioData
-                                         logger:self.logger];
+- (nonnull ADJResultNN<ADJDeviceIdsData *> *)concreteGenerateValueFromIoData:
+    (nonnull ADJIoData *)ioData
+{
+    return [ADJDeviceIdsData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJDeviceIdsData *)dataValue {
@@ -51,27 +52,23 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
-    if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJResultNL<ADJDeviceIdsData *> *_Nonnull deviceIdsDataResult =
+        [ADJDeviceIdsData instanceFromV4WithActivityState:[v4FilesData v4ActivityState]];
+    if (deviceIdsDataResult.fail != nil) {
+        [self.logger debugDev:@"Cannot migrate v4 device ids"
+                   resultFail:deviceIdsDataResult.fail
+                    issueType:ADJIssueStorageIo];
+
         return;
     }
 
-    [self.logger debugDev:@"Read v4 activity state"
-                      key:@"activity_state"
-                    value:[v4ActivityState description]];
+    if (deviceIdsDataResult.value == nil) {
+        return;
+    }
 
-    ADJNonEmptyString *_Nullable v4Uuid =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid
-                                    sourceDescription:@"v4 uuid"
-                                               logger:self.logger];
-
-    ADJDeviceIdsData *_Nonnull v4DeviceIdsData = [[ADJDeviceIdsData alloc] initWithUuid:v4Uuid];
-
-    [self updateWithNewDataValue:v4DeviceIdsData];
+    [self updateWithNewDataValue:deviceIdsDataResult.value];
 }
 
 @end
-
-

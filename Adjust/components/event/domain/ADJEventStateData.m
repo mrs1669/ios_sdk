@@ -26,44 +26,57 @@ static NSString *const kEventCountKey = @"eventCount";
 
 @implementation ADJEventStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJEventStateDataMetadataTypeValue
-           logger:logger])
-    {
-        return nil;
++ (nonnull ADJResultNN<ADJEventStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJEventStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create event state data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJTallyCounter *_Nullable eventCount =
-    [ADJTallyCounter instanceFromIoDataValue:
-     [ioData.propertiesMap pairValueWithKey:kEventCountKey]
-                                      logger:logger];
-
-    if (eventCount == nil) {
-        [logger debugDev:@"Cannot create instance from Io data invalid io value"
-               valueName:kEventCountKey
-               issueType:ADJIssueStorageIo];
-        return nil;
+    ADJResultNN<ADJTallyCounter *> *_Nonnull eventCountResult =
+        [ADJTallyCounter instanceFromIoDataValue:
+         [ioData.propertiesMap pairValueWithKey:kEventCountKey]];
+    if (eventCountResult.fail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create event state data from io data"
+                                        key:@"eventCount fail"
+                                  otherFail:eventCountResult.fail];
     }
 
-    return [[self alloc] initWithEventCount:eventCount];
+    return [ADJResultNN okWithValue:
+            [[ADJEventStateData alloc] initWithEventCount:eventCountResult.value]];
 }
 
-+ (nullable instancetype)
-    instanceFromExternalWithEventCountNumberInt:(nonnull NSNumber *)eventCountNumberInt    
-    logger:(nonnull ADJLogger *)logger
++ (nonnull ADJOptionalFailsNL<ADJEventStateData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
 {
-    ADJNonNegativeInt *_Nullable eventCountInt =
-    [ADJNonNegativeInt instanceFromOptionalIntegerNumber:eventCountNumberInt
-                                                  logger:logger];
-
-    if (eventCountInt == nil) {
-        return nil;
+    if (v4ActivityState == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
     }
 
-    return [[self alloc] initWithEventCount:
-            [[ADJTallyCounter alloc] initWithCountValue:eventCountInt]];
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
+        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:v4ActivityState.eventCountNumberInt];
+
+    NSArray<ADJResultFail *> *optionalFails = nil;
+    if (eventCountIntResult.fail != nil) {
+        optionalFails = [NSArray arrayWithObject:
+                         [[ADJResultFail alloc]
+                          initWithMessage:@"Invalid value from v4 activity state"
+                          key:@"event count integer number fail"
+                          otherFail:eventCountIntResult.fail]];
+    }
+
+    if (eventCountIntResult.value == nil) {
+        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optionalFails
+                                                           value:nil];
+    }
+
+    return [[ADJOptionalFailsNL alloc]
+            initWithOptionalFails:optionalFails
+            value:[[ADJEventStateData alloc]
+                   initWithEventCount:
+                       [[ADJTallyCounter alloc] initWithCountValue:eventCountIntResult.value]]];
 }
 
 - (nonnull instancetype)initWithIntialState {

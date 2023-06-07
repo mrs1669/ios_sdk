@@ -20,60 +20,41 @@
 
 @implementation ADJMoneyDecimalAmount
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoDecValue:(nonnull NSString *)ioDecValue
-                                         logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)instanceFromIoDecValue:
+    (nonnull NSString *)ioDecValue
+{
     NSDecimalNumber *_Nullable decimalNumberValue =
-    [self convertToDecimalNumberWithIoDecValue:ioDecValue];
+        [self convertToDecimalNumberWithIoDecValue:ioDecValue];
     
-    return [self instanceFromDecimalNumberValue:decimalNumberValue
-                                         logger:logger];
+    return [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:decimalNumberValue];
 }
 
-+ (nullable instancetype)instanceFromDecimalNumberValue:(nullable NSDecimalNumber *)decimalNumberValue
-                                                 logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromDecimalNumberValue:decimalNumberValue
-                                         logger:logger
-                                     isOptional:NO];
-}
-
-+ (nullable instancetype)instanceFromOptionalDecimalNumberValue:(nullable NSDecimalNumber *)decimalNumberValue
-                                                         logger:(nonnull ADJLogger *)logger {
-    return [self instanceFromDecimalNumberValue:decimalNumberValue
-                                         logger:logger
-                                     isOptional:YES];
-}
-
-#pragma mark - Private constructors
-+ (nullable instancetype)instanceFromDecimalNumberValue:(nullable NSDecimalNumber *)decimalNumberValue
-                                                 logger:(nonnull ADJLogger *)logger
-                                             isOptional:(BOOL)isOptional {
++ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)instanceFromDecimalNumberValue:
+    (nullable NSDecimalNumber *)decimalNumberValue
+{
     if (decimalNumberValue == nil) {
-        if (! isOptional) {
-            [logger debugDev:@"Cannot create money amount with nil decimal number value"
-                   issueType:ADJIssueInvalidInput];
-        }
-        return nil;
+        return [ADJResultNN failWithMessage:
+                @"Cannot create money amount with nil decimal number value"];
     }
     
     if ([ADJUtilF isNotANumber:decimalNumberValue]) {
-        [logger debugDev:@"Cannot create money amount with invalid decimal number"
-                     key:@"decimalNumberValue"
-                   value:decimalNumberValue.description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Cannot create money amount with NaN decimal number: %@",
+                 decimalNumberValue.description]];
     }
     
     BOOL isDecimalNegative =
         [decimalNumberValue compare:[NSDecimalNumber zero]] == NSOrderedAscending;
     if (isDecimalNegative) {
-        [logger debugDev:@"Cannot create money amount with negative"
-                     key:@"decimalNumberValue"
-                   value:decimalNumberValue.description
-               issueType:ADJIssueInvalidInput];
-        return nil;
+        return [ADJResultNN failWithMessage:
+                [NSString stringWithFormat:
+                 @"Cannot create money amount with negative decimal number: %@",
+                 decimalNumberValue.description]];
     }
     
-    return [[self alloc] initWithDecimalNumberValue:decimalNumberValue];
+    return [ADJResultNN okWithValue:
+            [[ADJMoneyDecimalAmount alloc] initWithDecimalNumberValue:decimalNumberValue]];
 }
 
 - (nonnull instancetype)initWithDecimalNumberValue:(nonnull NSDecimalNumber *)decimalNumberValue {
@@ -97,7 +78,7 @@
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
-            [self.decimalNumberValue descriptionWithLocale:[ADJUtilF usLocale]]];
+            [ADJUtilF usLocaleNumberFormat:self.decimalNumberValue]];
 }
 
 #pragma mark - ADJIoValueSerializable

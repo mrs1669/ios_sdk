@@ -11,7 +11,7 @@
 #import "ADJSdkPackageData.h"
 #import "ADJStringMapBuilder.h"
 #import "ADJSdkResponseData.h"
-#import "ADJLogger.h"
+#import "ADJOptionalFailsNN.h"
 #import "ADJSdkPackageSender.h"
 
 @interface ADJSdkResponseDataBuilder : NSObject
@@ -29,15 +29,11 @@
 // public api
 - (BOOL)didReceiveJsonResponse;
 
-- (void)logErrorWithLogger:(nullable ADJLogger *)logger
-                   nsError:(nullable NSError *)nsError
-              errorMessage:(nonnull NSString *)errorMessage;
-
 - (void)incrementRetries;
 
 - (NSUInteger)retries;
 
-- (nonnull id<ADJSdkResponseData>)buildSdkResponseDataWithLogger:(nullable ADJLogger *)logger;
+- (nonnull ADJOptionalFailsNN<id<ADJSdkResponseData>> *)buildSdkResponseData;
 
 @end
 

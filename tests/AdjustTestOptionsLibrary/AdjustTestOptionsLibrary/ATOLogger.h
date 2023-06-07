@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ADJLogger.h"
-#import "ADJLogCollector.h"
+@interface ATOLogger : NSObject
 
-@interface ATOLogger : ADJLogger<ADJLogCollector>
++ (void)log:(nonnull NSString *)message;
 
-+ (nonnull instancetype)sharedInstance;
++ (void)log:(nonnull NSString *)message
+        key:(nonnull NSString *)key
+      value:(nonnull NSString *)value;
+
++ (void)log:(nonnull NSString *)message
+   failDict:(nonnull NSDictionary<NSString *, id> *)failDict;
 
 @end

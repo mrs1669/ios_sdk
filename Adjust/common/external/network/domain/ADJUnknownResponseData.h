@@ -11,5 +11,16 @@
 #import "ADJSdkResponseBaseData.h"
 
 @interface ADJUnknownResponseData : ADJSdkResponseBaseData
+// instantiation
++ (nonnull ADJOptionalFailsNN<ADJUnknownResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    unknownPackageData:(nonnull id<ADJSdkPackageData>)unknownPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut;
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+ NS_UNAVAILABLE;
 
 @end

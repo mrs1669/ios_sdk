@@ -28,7 +28,7 @@
 // public api
 - (nullable ADJStringMap *)mapWithName:(nonnull NSString *)mapName;
 
-- (BOOL)isExpectedMetadataTypeValue:(nonnull NSString *)expectedMetadataTypeValue
-                             logger:(nonnull ADJLogger *)logger;
+- (nullable ADJResultFail *)
+    isExpectedMetadataTypeValue:(nonnull NSString *)expectedMetadataTypeValue;
 
 @end

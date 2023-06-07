@@ -31,23 +31,27 @@ static NSString *const kWasMeasurementConsentActivatedKey = @"wasMeasurementCons
             initWithActivateConsent:[ADJBooleanWrapper instanceFromBool:NO]];
 }
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger {
 
     ADJStringMap *_Nonnull propertiesMap = clientActionInjectedIoData.propertiesMap;
     ADJNonEmptyString *_Nullable ioValue = [propertiesMap
                                             pairValueWithKey:kWasMeasurementConsentActivatedKey];
-    ADJBooleanWrapper *_Nullable wasMeasurementConsentActivated =
-        [ADJBooleanWrapper instanceFromIoValue:ioValue logger:logger];
 
-    if (wasMeasurementConsentActivated == nil) {
-        [logger debugDev:@"Could not recreate ClientMeasurementConsentData from ClientAction. "
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull wasMeasurementConsentActivatedResult =
+        [ADJBooleanWrapper instanceFromIoValue:ioValue];
+    if (wasMeasurementConsentActivatedResult.fail != nil) {
+        [logger debugDev:
+         @"Could not decode ClientMeasurementConsentData"
+         " without valid wasMeasurementConsentActivated"
+               resultFail:wasMeasurementConsentActivatedResult.fail
                issueType:ADJIssueStorageIo];
         return nil;
     }
 
     return [[ADJClientMeasurementConsentData alloc]
-            initWithActivateConsent:wasMeasurementConsentActivated];
+            initWithActivateConsent:wasMeasurementConsentActivatedResult.value];
 }
 
 - (nullable instancetype)init {

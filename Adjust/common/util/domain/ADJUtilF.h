@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJTimestampMilli.h"
-//#import "ADJMoney.h"
-#import "ADJLogger.h"
+#import "ADJNonEmptyString.h"
 
 @interface ADJUtilF : NSObject
 
@@ -25,19 +24,20 @@
 + (nonnull NSString *)integerFormat:(NSInteger)integerValue;
 + (nonnull NSString *)uIntegerFormat:(NSUInteger)uIntegerFormat;
 + (nonnull NSString *)longLongFormat:(long long)longLongValue;
++ (nonnull NSString *)usLocaleNumberFormat:(nonnull NSNumber *)number;
 
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error;
 
-+ (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData;
-+ (nullable NSString *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue;
++ (nonnull ADJResultNN<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData;
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)jsonFoundationValueFormat:
+    (nullable id)jsonFoundationValue;
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber;
 
 + (nonnull NSString *)dateTimestampFormat:(nonnull ADJTimestampMilli *)timestamp;
 
-+ (nonnull NSString *)logMessageAndParamsFormat:
-    (nonnull ADJInputLogMessageData *)inputLogMessageData;
 + (nonnull id)stringOrNsNull:(nullable NSString *)string;
++ (nonnull id)idOrNsNull:(nullable id)idObject;
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex;
@@ -52,11 +52,4 @@
 
 + (nullable NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value;
 
-+ (void)transferExternalParametersWithFoundationMapToRead:(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
-                                        parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
-                                                   source:(nonnull NSString *)source
-                                                   logger:(nonnull ADJLogger *)logger;
-
 @end
-
-

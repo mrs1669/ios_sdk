@@ -10,12 +10,26 @@
 
 @implementation ADJGdprForgetResponseData
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                  gdprForgetPackageData:(nonnull ADJGdprForgetPackageData *)gdprForgetPackageData
-                                 logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJOptionalFailsNN<ADJGdprForgetResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    gdprForgetPackageData:(nonnull ADJGdprForgetPackageData *)gdprForgetPackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJGdprForgetResponseData alloc] initWithBuilder:sdkResponseDataBuilder
+                                               gdprForgetPackageData:gdprForgetPackageData
+                                                    optionalFailsMut:optionalFailsMut]];
+}
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    gdprForgetPackageData:(nonnull ADJGdprForgetPackageData *)gdprForgetPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:gdprForgetPackageData
-                           logger:logger];
+                 optionalFailsMut:optionalFailsMut];
     
     return self;
 }

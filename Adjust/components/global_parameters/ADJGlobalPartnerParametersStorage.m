@@ -9,6 +9,7 @@
 #import "ADJGlobalPartnerParametersStorage.h"
 
 #import "ADJStringMapBuilder.h"
+#import "ADJGlobalParametersControllerBase.h"
 
 #pragma mark Fields
 #pragma mark - Private constants
@@ -36,48 +37,23 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    NSDictionary<NSString *, NSString *> *_Nullable v4SessionPartnerParameters = [v4FilesData v4SessionPartnerParameters];
-    if (v4SessionPartnerParameters == nil) {
-        [self.logger debugDev:@"Session Partner Parameters v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJOptionalFailsNL<ADJStringMap *> *_Nonnull partnerParamsOptFails =
+        [ADJGlobalParametersControllerBase paramsInstanceFromV4WithSessionParameters:
+         [v4FilesData v4SessionPartnerParameters]];
+    for (ADJResultFail *_Nonnull optionalFail in partnerParamsOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 session partner parameters migration"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (partnerParamsOptFails.value == nil) {
         return;
     }
 
-    ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
-
-    for (NSString *_Nullable key in v4SessionPartnerParameters) {
-        if (key == nil) {
-            continue;
-        }
-
-        NSString *_Nullable value = [v4SessionPartnerParameters objectForKey:key];
-        if (value == nil) {
-            continue;
-        }
-
-        ADJNonEmptyString *_Nullable verifiedKey =
-        [ADJNonEmptyString instanceFromOptionalString:key
-                                    sourceDescription:@"v4 Session Partner Parameter key"
-                                               logger:self.logger];
-        if (verifiedKey == nil) {
-            continue;
-        }
-
-        ADJNonEmptyString *_Nullable verifiedValue =
-        [ADJNonEmptyString instanceFromOptionalString:value
-                                    sourceDescription:@"v4 Session Partner Parameter value"
-                                               logger:self.logger];
-        if (verifiedValue == nil) {
-            continue;
-        }
-
-        [mapBuilder addPairWithValue:verifiedValue
-                                 key:key];
-    }
-
-    [self replaceAllWithStringMap:[[ADJStringMap alloc] initWithStringMapBuilder:mapBuilder]
+    [self replaceAllWithStringMap:partnerParamsOptFails.value
               sqliteStorageAction:nil];
 }
 
 @end
-

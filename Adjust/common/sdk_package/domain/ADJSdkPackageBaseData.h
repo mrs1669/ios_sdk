@@ -10,6 +10,7 @@
 
 #import "ADJSdkPackageData.h"
 #import "ADJIoDataSerializable.h"
+#import "ADJOptionalFailsNL.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -20,8 +21,10 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJSdkPackageBaseData : NSObject<ADJSdkPackageData, ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJSdkPackageBaseData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
+
++ (nonnull ADJOptionalFailsNL<NSArray<id<ADJSdkPackageData>> *> *)
+    instanceArrayFromV4WithActivityPackageArray:(nullable NSArray *)v4ActivityPackageArray;
 
 - (nonnull instancetype)initWithPath:(nonnull NSString *)path
                            clientSdk:(nonnull NSString *)clientSdk

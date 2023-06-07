@@ -28,42 +28,62 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
 
 @implementation ADJGdprForgetStateData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJGdprForgetStateDataMetadataTypeValue
-           logger:logger])
++ (nonnull ADJResultNN<ADJGdprForgetStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJGdprForgetStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create gdpr forget state data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                  otherFail:unexpectedMetadataTypeValueFail];
+    }
+
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull forgottenByBackendResult =
+        [ADJBooleanWrapper instanceFromIoValue:
+         [ioData.propertiesMap pairValueWithKey:kForgottenByBackendKey]];
+    if (forgottenByBackendResult.fail != nil) {
+        return [ADJResultNN
+                failWithMessage:@"Cannot create gdpr forget state data from io data"
+                key:@"forgottenByBackend fail"
+                otherFail:forgottenByBackendResult.fail];
+    }
+
+    ADJResultNN<ADJBooleanWrapper *> *_Nonnull askedToForgetBySdkResult =
+        [ADJBooleanWrapper
+         instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]];
+    if (askedToForgetBySdkResult.fail != nil) {
+        return [ADJResultNN
+                failWithMessage:@"Cannot create gdpr forget state data from io data"
+                key:@"askedToForgetBySdk fail"
+                otherFail:askedToForgetBySdkResult.fail];
+    }
+
+    return [ADJResultNN okWithValue:
+            [[ADJGdprForgetStateData alloc]
+             initWithForgottenByBackend:forgottenByBackendResult.value.boolValue
+             askedToForgetBySdk:askedToForgetBySdkResult.value.boolValue]];
+}
+
++ (nullable ADJGdprForgetStateData *)instanceFromV4WithUserDefaults:
+    (nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    if (v4UserDefaultsData.gdprForgetMeNumberBool == nil
+        || ! v4UserDefaultsData.gdprForgetMeNumberBool)
     {
         return nil;
     }
 
-    ADJBooleanWrapper *_Nullable forgottenByBackend =
-    [ADJBooleanWrapper
-     instanceFromIoValue:
-         [ioData.propertiesMap pairValueWithKey:kForgottenByBackendKey]
-     logger:logger];
-
-    if (forgottenByBackend == nil) {
-        [logger debugDev:@"Cannot create instance from Io data without valid value"
-               valueName:kForgottenByBackendKey
-               issueType:ADJIssueStorageIo];
+    return [[ADJGdprForgetStateData alloc] initAskedButNotForgotten];
+}
++ (nullable ADJGdprForgetStateData *)instanceFromV4WithActivityState:
+    (nonnull ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState.isGdprForgottenNumberBool == nil ||
+        ! v4ActivityState.isGdprForgottenNumberBool)
+    {
         return nil;
     }
 
-    ADJBooleanWrapper *_Nullable askedToForgetBySdk =
-        [ADJBooleanWrapper
-         instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]
-         logger:logger];
-
-    if (askedToForgetBySdk == nil) {
-        [logger debugDev:@"Cannot create instance from Io data without valid value"
-               valueName:kAskedToForgetBySdkKey
-               issueType:ADJIssueStorageIo];
-        return nil;
-    }
-
-    return [[self alloc] initWithForgottenByBackend:forgottenByBackend.boolValue
-                                 askedToForgetBySdk:askedToForgetBySdk.boolValue];
+    return [[ADJGdprForgetStateData alloc] initAskedButNotForgotten];
 }
 
 - (nonnull instancetype)initWithInitialState {

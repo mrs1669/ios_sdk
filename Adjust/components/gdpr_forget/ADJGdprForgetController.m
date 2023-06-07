@@ -457,22 +457,30 @@
 - (nonnull ADJStringMapBuilder *)generateSendingParameters {
     ADJStringMapBuilder *_Nonnull sendingParameters =
     [[ADJStringMapBuilder alloc] initWithEmptyMap];
-    
-    ADJClock *_Nullable clock = self.clockWeak;
-    
-    if (clock == nil) {
-        [self.logger debugDev:@"Cannot inject sentAt without a reference to clock"
-                    issueType:ADJIssueWeakReference];
-    } else {
-        [ADJSdkPackageBuilder
-         injectSentAtWithParametersBuilder:sendingParameters
-         sentAtTimestamp:[clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
-    }
-    
+
     [ADJSdkPackageBuilder
      injectAttemptsWithParametersBuilder:sendingParameters
      attempts:self.gdprForgetTracker.retriesSinceLastSuccessSend.countValue];
-    
+
+    ADJClock *_Nullable clock = self.clockWeak;
+    if (clock == nil) {
+        [self.logger debugDev:@"Cannot inject sentAt without a reference to clock"
+                    issueType:ADJIssueWeakReference];
+
+        return sendingParameters;
+    }
+
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    if (nowResult.fail != nil) {
+        [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
+                   resultFail:nowResult.fail
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJSdkPackageBuilder
+         injectSentAtWithParametersBuilder:sendingParameters
+         sentAtTimestamp:nowResult.value];
+
+    }
     return sendingParameters;
 }
 

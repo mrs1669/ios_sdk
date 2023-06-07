@@ -14,6 +14,8 @@
 #import "ADJUtilConv.h"
 #import "ADJUtilObj.h"
 
+//#import "ADJResultFail.h"
+
 @interface ADJUtilF ()
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) NSLocale *usLocale;
@@ -156,41 +158,58 @@
     return [NSString stringWithFormat:@"%lld", longLongValue];
 }
 
++ (nonnull NSString *)usLocaleNumberFormat:(nonnull NSNumber *)number {
+    return [number descriptionWithLocale:[ADJUtilF usLocale]];
+}
+
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error {
     return [ADJUtilObj formatInlineKeyValuesWithName:@"NSError",
             @"domain", error.domain,
-            @"code", @(error.code),
-            @"localizedDescription", error.localizedDescription,
-            @"localizedFailureReason", error.localizedFailureReason,
-            @"localizedRecoverySuggestion", error.localizedRecoverySuggestion,
+            @"code", [ADJUtilF integerFormat:error.code],
+            @"userInfo", [ADJUtilObj formatInlineKeyValuesWithName:@""
+                                               stringKeyDictionary:error.userInfo],
             nil];
 }
 
-+ (nullable NSString *)jsonDataFormat:(nonnull NSData *)jsonData {
++ (nonnull ADJResultNN<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData {
     NSString *_Nullable converted =
-    [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
     if (converted == nil) {
-        return nil;
+        return [ADJResultNN failWithMessage:@"Could not convert init NSString with NSData"];
     }
 
-    return [converted stringByTrimmingCharactersInSet:
-            [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return [ADJResultNN okWithValue:converted];
+    // TODO: figure out if trimming is needed here
+    //return [converted stringByTrimmingCharactersInSet:
+    //        [NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-+ (nullable NSString *)jsonFoundationValueFormat:(nullable id)jsonFoundationValue {
-    if (jsonFoundationValue == nil) { return nil; }
-
-    NSError *error;
-    NSData *_Nullable jsonData =
-    [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue
-                                                 errorPtr:&error];
-
-    if (jsonData == nil) {
-        return nil;
++ (nonnull ADJResultNL<ADJNonEmptyString *> *)jsonFoundationValueFormat:
+    (nullable id)jsonFoundationValue
+{
+    if (jsonFoundationValue == nil) {
+        return [ADJResultNL okWithoutValue];
     }
 
-    return [ADJUtilF jsonDataFormat:jsonData];
+    ADJResultNN<NSData *> *_Nonnull jsonDataResult =
+        [ADJUtilConv convertToJsonDataWithJsonFoundationValue:jsonFoundationValue];
+
+    if (jsonDataResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Cannot convert json foundation value to string"
+                                        key:@"json foundation value to data fail"
+                                  otherFail:jsonDataResult.fail];
+    }
+
+    ADJResultNN<NSString *> *_Nonnull jsonStringResult =
+        [ADJUtilF jsonDataFormat:jsonDataResult.value];
+    if (jsonStringResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Cannot convert json foundation value to string"
+                                        key:@"json data to string fail"
+                                  otherFail:jsonStringResult.fail];
+    }
+
+    return [ADJNonEmptyString instanceFromOptionalString:jsonStringResult.value];
 }
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber {
@@ -206,21 +225,12 @@
               timestamp.millisecondsSince1970Int.uIntegerValue]]];
 }
 
-+ (nonnull NSString *)logMessageAndParamsFormat:
-    (nonnull ADJInputLogMessageData *)inputLogMessageData
-{
-    if (inputLogMessageData.messageParams == nil) {
-        return inputLogMessageData.message;
-    }
-
-    return [NSString stringWithFormat:@"%@ %@", inputLogMessageData.message,
-            [ADJLogMessageData generateJsonFromFoundationDictionary:
-             inputLogMessageData.messageParams]];
-}
 + (nonnull id)stringOrNsNull:(nullable NSString *)string {
     return string == nil ? [NSNull null] : string;
 }
-
++ (nonnull id)idOrNsNull:(nullable id)idObject {
+    return idObject == nil ? [NSNull null] : idObject;
+}
 
 + (BOOL)matchesWithString:(nonnull NSString *)stringValue
                     regex:(nonnull NSRegularExpression *)regex {
@@ -275,37 +285,6 @@
     }
 
     return value.stringValue;
-}
-
-+ (void)transferExternalParametersWithFoundationMapToRead:(nonnull NSDictionary<NSString *, NSString *> *)foundationMapToRead
-                                        parametersToWrite:(nonnull ADJStringMapBuilder *)parametersToWrite
-                                                   source:(nonnull NSString *)source
-                                                   logger:(nonnull ADJLogger *)logger {
-    NSDictionary<NSString *, NSString *> *_Nonnull foundationMapToReadCopy = [foundationMapToRead copy];
-
-    for (NSString *_Nonnull readKey in foundationMapToReadCopy) {
-        ADJNonEmptyString *_Nullable keyToWrite = [ADJNonEmptyString
-                                                   instanceFromString:readKey
-                                                   sourceDescription:[NSString stringWithFormat:@"Parameter %@ key to write", source]
-                                                   logger:logger];
-
-        if (keyToWrite == nil) {
-            continue;
-        }
-
-        NSString *_Nonnull readValue = [foundationMapToReadCopy objectForKey:readKey];
-
-        ADJNonEmptyString *_Nullable valueToWrite = [ADJNonEmptyString
-                                                     instanceFromString:readValue
-                                                     sourceDescription:[NSString stringWithFormat:@"Parameter %@ value to write", source]
-                                                     logger:logger];
-
-        if (valueToWrite == nil) {
-            continue;
-        }
-
-        [parametersToWrite addPairWithValue:valueToWrite key:keyToWrite.stringValue];
-    }
 }
 
 @end

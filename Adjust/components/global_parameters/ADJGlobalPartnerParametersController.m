@@ -11,6 +11,7 @@
 #pragma mark Fields
 #pragma mark - Public constants
 NSString *const ADJGlobalPartnerParametersControllerClientActionHandlerId = @"GlobalPartnerParametersController";
+NSString *const ADJGlobalParametersTypePartner = @"partner";
 
 @implementation ADJGlobalPartnerParametersController
 #pragma mark Instantiation
@@ -18,7 +19,7 @@ NSString *const ADJGlobalPartnerParametersControllerClientActionHandlerId = @"Gl
                                       storage:(nonnull ADJGlobalPartnerParametersStorage *)storage {
     self = [super initWithLoggerFactory:loggerFactory
                                  source:@"GlobalPartnerParametersController"
-                   globalParametersType:@"partner"
+                   globalParametersType:ADJGlobalParametersTypePartner
              sqliteStorageStringMapBase:storage];
 
     return self;

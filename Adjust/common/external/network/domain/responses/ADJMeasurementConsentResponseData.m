@@ -10,16 +10,35 @@
 
 @implementation ADJMeasurementConsentResponseData
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-          measurementConsentPackageData:(nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
-                                 logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJOptionalFailsNN<ADJMeasurementConsentResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    measurementConsentPackageData:
+        (nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJMeasurementConsentResponseData alloc]
+                   initWithBuilder:sdkResponseDataBuilder
+                   measurementConsentPackageData:measurementConsentPackageData
+                   optionalFailsMut:optionalFailsMut]];
+}
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    measurementConsentPackageData:
+        (nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:measurementConsentPackageData
-                           logger:logger];
+                 optionalFailsMut:optionalFailsMut];
+
     return self;
 }
 
 - (nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData {
     return (ADJMeasurementConsentPackageData *)self.sourcePackage;
 }
+
 @end

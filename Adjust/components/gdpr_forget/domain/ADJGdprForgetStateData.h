@@ -10,6 +10,8 @@
 
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
+#import "ADJV4UserDefaultsData.h"
+#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -20,8 +22,12 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJGdprForgetStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJResultNN<ADJGdprForgetStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
+
++ (nullable ADJGdprForgetStateData *)instanceFromV4WithUserDefaults:
+    (nonnull ADJV4UserDefaultsData *)v4UserDefaultsData;
++ (nullable ADJGdprForgetStateData *)instanceFromV4WithActivityState:
+    (nonnull ADJV4ActivityState *)v4ActivityState;
 
 - (nonnull instancetype)initWithInitialState;
 

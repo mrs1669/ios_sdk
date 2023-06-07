@@ -64,29 +64,25 @@
     return [self.mapCollectionByName objectForKey:mapName];
 }
 
-- (BOOL)isExpectedMetadataTypeValue:(nonnull NSString *)expectedMetadataTypeValue
-                             logger:(nonnull ADJLogger *)logger
+- (nullable ADJResultNL<NSNull *> *)
+    isExpectedMetadataTypeValue:(nonnull NSString *)expectedMetadataTypeValue
 {
     ADJNonEmptyString *_Nonnull typeValue =
         [self.metadataMap pairValueWithKey:ADJMetadataIoDataTypeKey];
 
     if (typeValue == nil) {
-        [logger debugDev:@"Cannot create instance from Io data without type value"
-               issueType:ADJIssueStorageIo];
-        return NO;
+        return [ADJResultNL failWithMessage:@"Cannot obtain type value from metadata map"];
     }
 
     if (! [typeValue.stringValue isEqualToString:expectedMetadataTypeValue]) {
-        [logger debugDev:
-            @"Cannot create instance from Io data with with different type value"
-           expectedValue:expectedMetadataTypeValue
-             actualValue:typeValue.stringValue
-               issueType:ADJIssueStorageIo];
-        return NO;
+        return [ADJResultNL failWithMessage:@"Actual type value different than expected"
+                               builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:ADJLogExpectedKey stringValue:expectedMetadataTypeValue];
+            [resultFailBuilder withKey:ADJLogActualKey stringValue:typeValue.stringValue];
+        }];
     }
 
-    return YES;
-
+    return nil;
 }
 
 #pragma mark - NSObject

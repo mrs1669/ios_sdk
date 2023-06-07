@@ -13,9 +13,15 @@
 
 @interface ADJClickResponseData : ADJSdkResponseBaseData
 // instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                       clickPackageData:(nonnull ADJClickPackageData *)clickPackageData
-                                 logger:(nonnull ADJLogger *)logger;
++ (nonnull ADJOptionalFailsNN<ADJClickResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    clickPackageData:(nonnull ADJClickPackageData *)clickPackageData;
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+ NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClickPackageData *sourceClickPackageData;

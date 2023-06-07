@@ -34,9 +34,10 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJPushTokenStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJPushTokenStateData instanceFromIoData:ioData
-                                              logger:self.logger];
+- (nonnull ADJResultNN<ADJPushTokenStateData *> *)
+    concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
+{
+    return [ADJPushTokenStateData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull ADJPushTokenStateData *)dataValue {
@@ -63,18 +64,20 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
                       key:@"activity_state"
                     value:[v4ActivityState description]];
 
-    ADJNonEmptyString *_Nullable v4PushToken =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken
-                                    sourceDescription:@"v4 push token"
-                                               logger:self.logger];
-    if (v4PushToken == nil) {
+    ADJOptionalFailsNL<ADJPushTokenStateData *> *_Nonnull stateDataOptFails =
+        [ADJPushTokenStateData instanceFromExternalWithPushTokenString:v4ActivityState.pushToken];
+    for (ADJResultFail *_Nonnull optionalFail in stateDataOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 push token"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (stateDataOptFails.value == nil) {
+        [self.logger debugDev:@"Did not find valid v4 push token to migrate"];
         return;
     }
 
-    ADJPushTokenStateData *_Nonnull v4PushTokenData =
-        [[ADJPushTokenStateData alloc] initWithLastPushTokenString:v4PushToken];
-
-    [self updateWithNewDataValue:v4PushTokenData];
+    [self updateWithNewDataValue:stateDataOptFails.value];
 }
 
 @end

@@ -29,8 +29,8 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nullable ADJEventDeduplicationData *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJEventDeduplicationData instanceFromIoData:ioData logger:self.logger];
+- (nonnull ADJResultNN<ADJEventDeduplicationData *> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+    return [ADJEventDeduplicationData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull ADJEventDeduplicationData *)element {
@@ -45,41 +45,25 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
-    if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *_Nonnull
+    eventDeduplicationArrayOptFails =
+        [ADJEventDeduplicationData instanceArrayFromV4WithActivityState:
+         [v4FilesData v4ActivityState]];
+    for (ADJResultFail *_Nonnull optionalFails in eventDeduplicationArrayOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse value for v4 event deduplication migration"
+                   resultFail:optionalFails
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (eventDeduplicationArrayOptFails.value == nil) {
         return;
     }
 
-    if (v4ActivityState.transactionIds == nil) {
-        [self.logger debugDev:@"Cannot find event deduplication list"
-         " in  v4 activity state file"];
-        return;
-    }
-
-    for (id _Nonnull transactionIdObject in v4ActivityState.transactionIds) {
-        if (! [transactionIdObject isKindOfClass:[NSString class]]) {
-            continue;
-        }
-
-        NSString *_Nonnull transactionId = (NSString *)transactionIdObject;
-
-        ADJNonEmptyString *_Nullable deduplicationId =
-        [ADJNonEmptyString instanceFromString:transactionId
-                            sourceDescription:@"v4 transaction id"
-                                       logger:self.logger];
-
-        if (deduplicationId == nil) {
-            continue;
-        }
-
-        [self enqueueElementToLast:
-         [[ADJEventDeduplicationData alloc] initWithDeduplicationId:deduplicationId]
-               sqliteStorageAction:nil];
+    for (ADJEventDeduplicationData *_Nonnull eventDedup in eventDeduplicationArrayOptFails.value) {
+        [self enqueueElementToLast:eventDedup sqliteStorageAction:nil];
     }
 }
 
 @end
-
-

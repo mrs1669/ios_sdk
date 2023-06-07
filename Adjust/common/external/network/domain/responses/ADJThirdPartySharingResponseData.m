@@ -10,12 +10,29 @@
 
 @implementation ADJThirdPartySharingResponseData
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-           thirdPartySharingPackageData: (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
-                                 logger:(nonnull ADJLogger *)logger {
++ (nonnull ADJOptionalFailsNN<ADJThirdPartySharingResponseData *> *)
+    instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    thirdPartySharingPackageData:
+        (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+{
+    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
+    return [[ADJOptionalFailsNN alloc]
+            initWithOptionalFails:optionalFailsMut
+            value:[[ADJThirdPartySharingResponseData alloc]
+                   initWithBuilder:sdkResponseDataBuilder
+                   thirdPartySharingPackageData:thirdPartySharingPackageData
+                   optionalFailsMut:optionalFailsMut]];
+}
+
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    thirdPartySharingPackageData:
+        (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
     self = [super initWithBuilder:sdkResponseDataBuilder
                    sdkPackageData:thirdPartySharingPackageData
-                           logger:logger];
+                 optionalFailsMut:optionalFailsMut];
 
     return self;
 }

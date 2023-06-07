@@ -60,10 +60,10 @@
                                 doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
                                             publisherController:publisherController];
 
-    ADJNonNegativeInt *_Nullable firstSessionCount =
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull firstSessionCountResult =
         [mainQueueTrackedPackages firstSessionCount];
-    BOOL hasTrackedInstallSession = firstSessionCount != nil
-        && firstSessionCount.uIntegerValue == 0;
+    BOOL hasTrackedInstallSession = firstSessionCountResult.value != nil
+        && firstSessionCountResult.value.uIntegerValue == 0;
 
     if (hasTrackedInstallSession) {
         [attributionController installSessionTrackedAtLoad];
@@ -395,10 +395,16 @@
 - (nonnull ADJStringMapBuilder *)generateSendingParameters {
     ADJStringMapBuilder *_Nonnull sendingParameters =
         [[ADJStringMapBuilder alloc] initWithEmptyMap];
-    
-    [ADJSdkPackageBuilder
-     injectSentAtWithParametersBuilder:sendingParameters
-     sentAtTimestamp:[self.clock nonMonotonicNowTimestampMilliWithLogger:self.logger]];
+
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    if (nowResult.fail != nil) {
+        [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
+                  resultFail:nowResult.fail
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJSdkPackageBuilder injectSentAtWithParametersBuilder:sendingParameters
+                                                sentAtTimestamp:nowResult.value];
+    }
     
     [ADJSdkPackageBuilder
      injectAttemptsWithParametersBuilder:sendingParameters

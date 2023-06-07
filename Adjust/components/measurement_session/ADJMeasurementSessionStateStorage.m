@@ -36,9 +36,20 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nullable ADJMeasurementSessionStateData *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJMeasurementSessionStateData instanceFromIoData:ioData
-                                                       logger:self.logger];
+- (nonnull ADJResultNN<ADJMeasurementSessionStateData *> *)
+    concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *_Nonnull
+    resultDataOptFails = [ADJMeasurementSessionStateData instanceFromIoData:ioData];
+
+    for (ADJResultFail *_Nonnull optionalFail in resultDataOptFails.optionalFails) {
+        [self.logger debugDev:@"Failed setting measurement session state data optional field"
+         " when generating value from io data"
+                   resultFail:optionalFail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    return resultDataOptFails.value;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue: (nonnull ADJMeasurementSessionStateData *)dataValue {
@@ -53,35 +64,24 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
-    ADJV4ActivityState *_Nullable v4ActivityState = [v4FilesData v4ActivityState];
-    if (v4ActivityState == nil) {
-        [self.logger debugDev:@"Activity state v4 file not found"];
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
+    ADJResultNL<ADJMeasurementSessionStateData *> *_Nonnull sessionStateDataResult =
+        [ADJMeasurementSessionStateData instanceFromV4WithActivityState:
+         [v4FilesData v4ActivityState]];
+
+    if (sessionStateDataResult.fail != nil) {
+        [self.logger debugDev:@"Cannot migrate measurement session from v4"
+                   resultFail:sessionStateDataResult.fail
+                    issueType:ADJIssueStorageIo];
         return;
     }
 
-    [self.logger debugDev:@"Read v4 activity state"
-                      key:@"activity_state"
-                    value:[v4ActivityState description]];
-
-    ADJMeasurementSessionData *_Nullable v4MeasurementSessionData =
-    [ADJMeasurementSessionData instanceFromExternalWithSessionCountNumberInt:v4ActivityState.sessionCountNumberInt
-                                    lastActivityTimestampNumberDoubleSeconds:v4ActivityState.lastActivityNumberDouble
-                                            sessionLengthNumberDoubleSeconds:v4ActivityState.sessionLengthNumberDouble
-                                                timeSpentNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble
-                                                                      logger:self.logger];
-
-    ADJMeasurementSessionStateData *_Nullable v4MeasurementSessionStateData =
-    [ADJMeasurementSessionStateData instanceFromExternalWithMeasurementSessionData:v4MeasurementSessionData
-                                                                            logger:self.logger];
-
-    if (v4MeasurementSessionStateData == nil) {
+    if (sessionStateDataResult.value == nil) {
         return;
     }
 
-    [self updateWithNewDataValue:v4MeasurementSessionStateData];
+    [self updateWithNewDataValue:sessionStateDataResult.value];
 }
 
 @end
-
-

@@ -29,8 +29,8 @@ static NSString *const kClientActionStorageTableName = @"client_action";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nullable ADJClientActionData *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJClientActionData instanceWithIoData:ioData logger:self.logger];
+- (nonnull ADJResultNN<ADJClientActionData *> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+    return [ADJClientActionData instanceWithIoData:ioData];
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull ADJClientActionData *)element {
@@ -45,7 +45,8 @@ static NSString *const kClientActionStorageTableName = @"client_action";
 }
 
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
-                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData {
+                  v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
+{
     // nothing to migrate from
 }
 

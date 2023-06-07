@@ -26,7 +26,7 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sourceDescription:(nonnull NSString *)sourceDescription {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:[NSString stringWithFormat:@"%@-SingleThreadExecutor",
+                                 source:[NSString stringWithFormat:@"%@-STE",
                                          sourceDescription]];
 
     _serialQueue = dispatch_queue_create(self.source.UTF8String,

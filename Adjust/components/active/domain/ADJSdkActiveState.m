@@ -9,6 +9,7 @@
 #import "ADJSdkActiveState.h"
 
 #import "ADJUtilF.h"
+#import "ADJConstants.h"
 
 #pragma mark Fields
 #pragma mark - Public constants
@@ -71,22 +72,22 @@ ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     return YES;
 }
 
-- (nullable NSString *)canPerformActionOrElseMessageWithClientSource:
+- (nullable ADJInputLogMessageData *)canPerformActionOrElseErrorLogWithClientSource:
     (nonnull NSString *)clientSource
 {
     ADJSdkActiveStatus _Nonnull sdkActiveStatus = [self sdkActiveStatus];
 
     if (ADJSdkActiveStatusForgotten == sdkActiveStatus) {
-        return [ADJUtilF logMessageAndParamsFormat:
-                [self.logger errorClient:@"Sdk cannot perform action."
-                 " Sdk was forgotten in accordance with GDPR law"
-                                    from:clientSource]];
+        return [self.logger errorClient:@"Sdk cannot perform action."
+                " Sdk was forgotten in accordance with GDPR law"
+                                   key:ADJLogFromKey
+                                  value:clientSource];
     }
 
     if (ADJSdkActiveStatusInactive == sdkActiveStatus) {
-        return [ADJUtilF logMessageAndParamsFormat:
-                [self.logger errorClient:@"Sdk cannot perform action. Sdk is currently inactive"
-                                    from:clientSource]];
+        return [self.logger errorClient:@"Sdk cannot perform action. Sdk is currently inactive"
+                                    key:ADJLogFromKey
+                                  value:clientSource];
     }
 
     return nil;

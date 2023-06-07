@@ -27,8 +27,8 @@
 - (nullable ADJSQLiteStorageActionBase *)decrementTrackedCountWithPackageToRemove:
     (nonnull id<ADJSdkPackageData>)sourceResponsePackage;
 
-- (nullable ADJNonNegativeInt *)firstSessionCount;
-- (nullable ADJNonNegativeInt *)asaClickCount;
+- (nonnull ADJResultNL<ADJNonNegativeInt *> *)firstSessionCount;
+- (nonnull ADJResultNL<ADJNonNegativeInt *> *)asaClickCount;
 
 + (BOOL)isAsaClickPackageWithData:(nonnull id<ADJSdkPackageData>)sdkPackageData;
 + (BOOL)isFirstSessionPackageWithData:(nullable id<ADJSdkPackageData>)sdkPackageData;

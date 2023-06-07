@@ -40,7 +40,7 @@
     [self beginTransaction];
 
     ADJSQLiteStatement *_Nullable queryStatement =
-    [self prepareStatementWithSqlString:@"PRAGMA user_version;"];
+        [self prepareStatementWithSqlString:@"PRAGMA user_version;"];
 
     if (queryStatement == nil) {
         [self.logger debugDev:@"Could not prepare statement to get db version"
@@ -59,11 +59,12 @@
     }
 
     NSNumber *dbVersionNsNumber = [queryStatement numberIntForColumnIndex:0];
-    ADJNonNegativeInt *_Nullable dbVersion =
-        [ADJNonNegativeInt instanceFromIntegerNumber:dbVersionNsNumber
-                                              logger:self.logger];
-    if (dbVersion == nil) {
-        [self.logger debugDev:@"Could not get number value from query to get db version"];
+    ADJResultNN<ADJNonNegativeInt *> *_Nonnull dbVersionResult =
+        [ADJNonNegativeInt instanceFromIntegerNumber:dbVersionNsNumber];
+    if (dbVersionResult.fail != nil) {
+        [self.logger debugDev:@"Invalid db version number from query"
+                   resultFail:dbVersionResult.fail
+                    issueType:ADJIssueStorageIo];
         [queryStatement closeStatement];
         [self rollback];
         return [ADJNonNegativeInt instanceAtZero];
@@ -72,7 +73,7 @@
     [queryStatement closeStatement];
     [self commit];
 
-    return dbVersion;
+    return dbVersionResult.value;
 }
 
 - (void)setDbVersion:(int)dbVersion {
@@ -195,12 +196,13 @@
     sqlite3_prepare_v2(localStrongSqlite3, sqlString.UTF8String, -1, &statement, 0);
 
     if (SQLITE_OK != returnCode) {
-        [self.logger debugDev:@"Cannot prepare statement"
-                messageParams:[NSDictionary dictionaryWithObjectsAndKeys:
-                               sqlString, @"sql",
-                               [ADJUtilF intFormat:returnCode], @"returnCode",
-                               [self lastErrorMessage], @"lastErrorMessage", nil]
-                    issueType:ADJIssueStorageIo];
+        [self.logger debugWithMessage:@"Cannot prepare statement"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+            [logBuilder withKey:@"sql string" value:sqlString];
+            [logBuilder withKey:@"return code" value:[ADJUtilF intFormat:returnCode]];
+            [logBuilder withKey:@"last error message" value:[self lastErrorMessage]];
+            [logBuilder issue:ADJIssueStorageIo];
+        }];
 
         sqlite3_finalize(statement);
         return nil;

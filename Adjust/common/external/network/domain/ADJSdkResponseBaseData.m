@@ -58,9 +58,11 @@
 @synthesize attributionJson = _attributionJson;
 
 #pragma mark Instantiation
-- (nonnull instancetype)initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
-                         sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
-                                 logger:(nonnull ADJLogger *)logger {
+- (nonnull instancetype)
+    initWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
+    sdkPackageData:(nonnull id<ADJSdkPackageData>)sdkPackageData
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSdkResponseBaseData class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -74,63 +76,50 @@
     //_errorMessages = [sdkResponseDataBuilder errorMessages];
     
     _jsonDictionary = sdkResponseDataBuilder.jsonDictionary;
-    
-    _serverMessage = [ADJNonEmptyString
-                      instanceFromOptionalString:
-                          [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                                   key:ADJParamMessageKey]
-                      sourceDescription:@"response message"
-                      logger:logger];
-    
-    _adid = [ADJNonEmptyString
-             instanceFromOptionalString:
-                 [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                          key:ADJParamAdidKey]
-             sourceDescription:@"response adid"
-             logger:logger];
-    
-    _trackingState =
-        [ADJNonEmptyString
-         instanceFromOptionalString:
-             [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                      key:ADJParamTrackingStateKey]
-         sourceDescription:@"response tracking state"
-         logger:logger];
-    
-    _timestampString =
-        [ADJNonEmptyString
-         instanceFromOptionalString:
-             [ADJUtilMap extractStringValueWithDictionary:_jsonDictionary
-                                                      key:ADJParamTimeSpentKey]
-         sourceDescription:@"response timestamp"
-         logger:logger];
-    
+
+    _serverMessage = [ADJSdkResponseBaseData
+                      extractOptionalStringWithResponseJson:_jsonDictionary
+                      key:ADJParamMessageKey
+                      optionalFailsMut:optionalFailsMut];
+
+    _adid = [ADJSdkResponseBaseData
+             extractOptionalStringWithResponseJson:_jsonDictionary
+             key:ADJParamAdidKey
+             optionalFailsMut:optionalFailsMut];
+
+    _trackingState = [ADJSdkResponseBaseData
+                      extractOptionalStringWithResponseJson:_jsonDictionary
+                      key:ADJParamTrackingStateKey
+                      optionalFailsMut:optionalFailsMut];
+
+    _timestampString = [ADJSdkResponseBaseData
+                        extractOptionalStringWithResponseJson:_jsonDictionary
+                        key:ADJParamTimeSpentKey
+                        optionalFailsMut:optionalFailsMut];
+
     _askInIntMilli =
-        [ADJNonNegativeInt
-         instanceFromOptionalIntegerNumber:
-             [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
-                                                        key:ADJParamAskInKey]
-         logger:logger];
+        [ADJSdkResponseBaseData
+         extractOptionalIntWithResponseJson:_jsonDictionary
+         key:ADJParamAskInKey
+         optionalFailsMut:optionalFailsMut];
     
     _askIn = _askInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_askInIntMilli] : nil;
     
     _continueInIntMilli =
-        [ADJNonNegativeInt
-         instanceFromOptionalIntegerNumber:
-             [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
-                                                        key:ADJParamContinueInKey]
-         logger:logger];
+        [ADJSdkResponseBaseData
+         extractOptionalIntWithResponseJson:_jsonDictionary
+         key:ADJParamContinueInKey
+         optionalFailsMut:optionalFailsMut];
     
     _continueIn = _continueInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_continueInIntMilli] : nil;
     
     _retryInIntMilli =
-        [ADJNonNegativeInt
-         instanceFromOptionalIntegerNumber:
-             [ADJUtilMap extractIntegerNumberWithDictionary:_jsonDictionary
-                                                        key:ADJParamRetryInKey]
-         logger:logger];
+        [ADJSdkResponseBaseData
+         extractOptionalIntWithResponseJson:_jsonDictionary
+         key:ADJParamRetryInKey
+         optionalFailsMut:optionalFailsMut];
     
     _retryIn = _retryInIntMilli != nil ?
         [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:_retryInIntMilli] : nil;
@@ -154,6 +143,73 @@
     }
     */
     return self;
+}
++ (nullable ADJNonEmptyString *)
+    extractOptionalStringWithResponseJson:(nullable NSDictionary *)responseJson
+    key:(nonnull NSString *)key
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    ADJResultNL<NSString *> *_Nonnull valueResult =
+        [ADJUtilMap extractStringValueWithDictionary:responseJson key:key];
+    if (valueResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot extract optional string field in response json"];
+        [resultFailBuilder withKey:@"value fail"
+                         otherFail:valueResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
+        [ADJNonEmptyString instanceFromOptionalString:valueResult.value];
+    if (stringResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot parse optional string field in response json"];
+        [resultFailBuilder withKey:@"string parse fail"
+                         otherFail:stringResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
+    }
+
+    return stringResult.value;
+}
++ (nullable ADJNonNegativeInt *)
+    extractOptionalIntWithResponseJson:(nullable NSDictionary *)responseJson
+    key:(nonnull NSString *)key
+    optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
+{
+    ADJResultNL<NSNumber *> *_Nonnull valueResult =
+        [ADJUtilMap extractIntegerNumberWithDictionary:responseJson
+                                                   key:key];
+    if (valueResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot extract optional int field in response json"];
+        [resultFailBuilder withKey:@"value fail"
+                         otherFail:valueResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
+    }
+
+    ADJResultNL<ADJNonNegativeInt *> *_Nonnull intResult =
+        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:valueResult.value];
+    if (intResult.fail != nil) {
+        ADJResultFailBuilder *_Nonnull resultFailBuilder =
+            [[ADJResultFailBuilder alloc] initWithMessage:
+             @"Cannot parse optional non negative int field in response json"];
+        [resultFailBuilder withKey:@"non negative int fail"
+                         otherFail:intResult.fail];
+        [resultFailBuilder withKey:@"key"
+                       stringValue:key];
+        [optionalFailsMut addObject:[resultFailBuilder build]];
+    }
+
+    return intResult.value;
 }
 
 - (nullable instancetype)init {

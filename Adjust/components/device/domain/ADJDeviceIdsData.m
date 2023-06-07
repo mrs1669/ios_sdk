@@ -25,20 +25,42 @@ static NSString *const kUuidKey = @"uuid";
 
 @implementation ADJDeviceIdsData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (! [ioData
-           isExpectedMetadataTypeValue:ADJDeviceIdsDataMetadataTypeValue
-           logger:logger])
-    {
-        return nil;
++ (nonnull ADJResultNN<ADJDeviceIdsData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJDeviceIdsDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN failWithMessage:@"Cannot create device ids data from io data"
+                                        key:@"unexpected metadata type value fail"
+                                  otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJNonEmptyString *_Nullable uuid =
-    [ioData.propertiesMap pairValueWithKey:kUuidKey];
+    ADJNonEmptyString *_Nullable uuid = [ioData.propertiesMap pairValueWithKey:kUuidKey];
 
-    return [[self alloc] initWithUuid:uuid];
+    return [ADJResultNN okWithValue:[[ADJDeviceIdsData alloc] initWithUuid:uuid]];
 }
+
++ (nonnull ADJResultNL<ADJDeviceIdsData *> *)
+    instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull v4UuidResult =
+         [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid];
+    if (v4UuidResult.fail != nil) {
+        return [ADJResultNL failWithMessage:@"Cannot parse uuid from v4 activity state"
+                                        key:@"uuid parse fail"
+                                  otherFail:v4UuidResult.fail];
+    }
+
+    if (v4UuidResult.value == nil) {
+        return [ADJResultNL okWithoutValue];
+    }
+
+    return [ADJResultNL okWithValue:v4UuidResult.value];
+}
+
 
 - (nonnull instancetype)initWithInitialState {
     return [self initWithUuid:nil];
@@ -101,6 +123,3 @@ static NSString *const kUuidKey = @"uuid";
 }
 
 @end
-
-
-

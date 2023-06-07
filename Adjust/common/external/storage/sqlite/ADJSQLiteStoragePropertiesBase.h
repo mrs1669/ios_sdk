@@ -34,7 +34,7 @@
                             newDataValue:(nonnull D)newDataValue;
 
 // protected abstract
-- (nullable D)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData;
+- (nonnull ADJResultNN<D> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull D)dataValue;
 

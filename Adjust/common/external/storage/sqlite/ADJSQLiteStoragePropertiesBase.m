@@ -149,20 +149,22 @@ static NSString *const kColumnValue = @"value";
     
     ADJIoData *_Nonnull ioData =
         [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
-    
-    _Nullable id valueFromIoData = [self concreteGenerateValueFromIoData:ioData];
-    
-    [self.logger debugDev:@"Data successfully read"
-                      key:@"valueFromIoData"
-                    value:[valueFromIoData description]];
-    
-    if (valueFromIoData != nil) {
-        _inMemoryDataValue = valueFromIoData;
+
+    ADJResultNN<id> *_Nonnull valueFromIoDataResult =
+        [self concreteGenerateValueFromIoData:ioData];
+
+    if (valueFromIoDataResult.fail != nil) {
+        [self.logger debugWithMessage:@"Cannot generate value from io data"
+                         builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+            [logBuilder withFail:valueFromIoDataResult.fail
+                           issue:ADJIssueStorageIo];
+            [logBuilder withKey:@"io data" value:[ioData description]];
+        }];
     } else {
-        [self.logger debugDev:@"Cannot set generated value from io data"];
+        _inMemoryDataValue = valueFromIoDataResult.value;
     }
-    
-    return valueFromIoData != nil;
+
+    return valueFromIoDataResult.fail != nil;
 }
 
 - (nonnull ADJNonEmptyString *)concreteGenerateSelectSqlWithTableName:
@@ -207,7 +209,7 @@ static int const kInsertValueFieldPosition = 3;
 }
 
 #pragma mark - Abstract
-- (nullable id)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResultNN<id> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }

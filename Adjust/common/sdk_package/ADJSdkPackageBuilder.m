@@ -15,6 +15,7 @@
 #import "ADJConstantsParam.h"
 #import "ADJTallyCounter.h"
 #import "ADJUtilSys.h"
+#import "ADJResultNN.h"
 
 #pragma mark Private class
 @implementation ADJSdkPackageCreatingPublisher @end
@@ -29,7 +30,7 @@
 #pragma mark Fields
 @interface ADJSdkPackageBuilder ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) ADJClock *clockWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJClock *clock;
 @property (nonnull, readonly, strong, nonatomic) NSString *clientSdk;
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfigData;
 @property (nullable, readonly, weak, nonatomic) ADJDeviceController *deviceControllerWeak;
@@ -58,7 +59,7 @@
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
     self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
-    _clockWeak = clock;
+    _clock = clock;
     _clientSdk = [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
     _clientConfigData = clientConfigData;
     _deviceControllerWeak = deviceController;
@@ -463,7 +464,6 @@
     ADJStringMapBuilder *_Nonnull parametersBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     [self injectTimestampsWithParametersBuilder:parametersBuilder
-                                           path:path
                                    apiTimestamp:apiTimestamp];
 
     [self injectDeviceWithParametersBuilder:parametersBuilder
@@ -491,35 +491,22 @@
 }
 
 - (void)injectTimestampsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
-                                         path:(nullable NSString *)path
-                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp {
+                                 apiTimestamp:(nullable ADJTimestampMilli *)apiTimestamp
+{
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamCalledAtKey
                          packageParamValueSerializable:apiTimestamp];
 
-    ADJClock *_Nullable clock = self.clockWeak;
-    if (clock == nil) {
-        [self.logger debugDev:@"Cannot inject created at for package without a reference to clock"
-                          key:@"path"
-                        value:path
-                    issueType:ADJIssueWeakReference];
-        return;
+    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    if (nowResult.fail != nil) {
+        [self.logger debugDev:@"Cannot inject created at sending parameter in package"
+                   resultFail:nowResult.fail
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
+                                                       key:ADJParamCreatedAtKey
+                             packageParamValueSerializable:nowResult.value];
     }
-
-    ADJTimestampMilli *_Nullable nowTimestamp =
-    [clock nonMonotonicNowTimestampMilliWithLogger:self.logger];
-
-    if (nowTimestamp == nil) {
-        [self.logger debugDev:@"Cannot inject created at for package without a now timestamp"
-                          key:@"path"
-                        value:path
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamCreatedAtKey
-                         packageParamValueSerializable:nowTimestamp];
 }
 
 - (void)injectDeviceWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder
@@ -544,16 +531,23 @@
                              packageParamValueSerializable:[deviceController nonKeychainUuid]];
     }
 
-    ADJSessionDeviceIdsData *_Nonnull sessionDeviceIdsData =
-    [deviceController getSessionDeviceIdsSync];
+    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+        [deviceController getSessionDeviceIdsSync];
+    if (sessionDeviceIdsDataResult.fail != nil) {
+        [self.logger debugDev:@"Could not obtain session device ids"
+                   resultFail:sessionDeviceIdsDataResult.fail
+                    issueType:ADJIssueExternalApi];
+    } else {
+        [ADJUtilMap
+         injectIntoPackageParametersWithBuilder:parametersBuilder
+         key:ADJParamIdfaKey
+         packageParamValueSerializable:sessionDeviceIdsDataResult.value.advertisingIdentifier];
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamIdfaKey
-                         packageParamValueSerializable:sessionDeviceIdsData.advertisingIdentifier];
-
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamIdfvKey
-                         packageParamValueSerializable:sessionDeviceIdsData.identifierForVendor];
+        [ADJUtilMap
+         injectIntoPackageParametersWithBuilder:parametersBuilder
+         key:ADJParamIdfvKey
+         packageParamValueSerializable:sessionDeviceIdsDataResult.value.identifierForVendor];
+    }
 
     ADJDeviceInfoData *_Nonnull deviceInfoData = deviceController.deviceInfoData;
 

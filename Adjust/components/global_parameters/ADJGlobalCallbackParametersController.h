@@ -18,6 +18,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const ADJGlobalCallbackParametersControllerClientActionHandlerId;
+FOUNDATION_EXPORT NSString *const ADJGlobalParametersTypeCallback;
 
 NS_ASSUME_NONNULL_END
 
