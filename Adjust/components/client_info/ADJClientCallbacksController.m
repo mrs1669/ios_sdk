@@ -101,7 +101,7 @@
            clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
                deviceController:(nonnull ADJDeviceController *)deviceController
 {
-    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+    ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
         [deviceController getSessionDeviceIdsSync];
 
     if (sessionDeviceIdsDataResult.fail != nil) {

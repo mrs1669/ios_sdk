@@ -59,7 +59,7 @@
     }
 
     NSNumber *dbVersionNsNumber = [queryStatement numberIntForColumnIndex:0];
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull dbVersionResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull dbVersionResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:dbVersionNsNumber];
     if (dbVersionResult.fail != nil) {
         [self.logger debugDev:@"Invalid db version number from query"

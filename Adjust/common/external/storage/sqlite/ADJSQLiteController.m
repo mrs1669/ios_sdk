@@ -95,7 +95,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
         return nil;
     }
 
-    ADJResultNN<NSNumber *> *_Nonnull dirCreatedResult =
+    ADJResult<NSNumber *> *_Nonnull dirCreatedResult =
         [ADJUtilFiles createDirWithPath:adjustAppSupportDirPath];
     if (dirCreatedResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot create dir"

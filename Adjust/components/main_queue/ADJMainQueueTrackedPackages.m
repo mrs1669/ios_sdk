@@ -38,18 +38,18 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
 }
 
 #pragma mark Public API
-- (nonnull ADJResultNL<ADJNonNegativeInt *> *)firstSessionCount {
+- (nonnull ADJResult<ADJNonNegativeInt *> *)firstSessionCount {
     ADJNonEmptyString *_Nullable firstSessionCountIoValue =
         [[self.storage metadataMap] pairValueWithKey:kFirstSessionCountKey];
 
-    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:firstSessionCountIoValue];
+    return [ADJNonNegativeInt instanceFromIoDataValue:firstSessionCountIoValue];
 }
 
-- (nonnull ADJResultNL<ADJNonNegativeInt *> *)asaClickCount {
+- (nonnull ADJResult<ADJNonNegativeInt *> *)asaClickCount {
     ADJNonEmptyString *_Nullable asaClickCountIoValue =
         [[self.storage metadataMap] pairValueWithKey:kAsaClickCountKey];
 
-    return [ADJNonNegativeInt instanceFromOptionalIoDataValue:asaClickCountIoValue];
+    return [ADJNonNegativeInt instanceFromIoDataValue:asaClickCountIoValue];
 }
 
 - (nullable ADJSQLiteStorageActionBase *)
@@ -142,7 +142,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
                     value:currentIoValue.stringValue
                 issueType:ADJIssueUnexpectedInput];
 
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
     if (currentFirstSessionCountResult.fail != nil) {
         [self.logger debugDev:@"Invalid current first session count"
@@ -203,7 +203,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
         return [ADJNonNegativeInt instanceAtZero];
     }
 
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull currentFirstSessionCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
     if (currentFirstSessionCountResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot decrement first session count"
@@ -278,7 +278,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
                     value:currentIoValue.stringValue
                 issueType:ADJIssueUnexpectedInput];
 
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
 
     if (currentAsaClickCountResult.fail != nil) {
@@ -341,7 +341,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
         return [ADJNonNegativeInt instanceAtZero];
     }
 
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull currentAsaClickCountResult =
         [ADJNonNegativeInt instanceFromIoDataValue:currentIoValue];
 
     if (currentAsaClickCountResult.fail != nil) {

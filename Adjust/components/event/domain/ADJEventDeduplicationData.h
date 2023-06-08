@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJEventDeduplicationData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJResultNN<ADJEventDeduplicationData *> *)
++ (nonnull ADJResult<ADJEventDeduplicationData *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 + (nonnull ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *)

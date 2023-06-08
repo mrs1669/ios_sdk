@@ -18,10 +18,7 @@
     ADJIoValueSerializable
 >
 // instantiation
-+ (nonnull ADJResultNN<ADJMoneyAmountBase *> *)instanceFromIoValue:
-    (nullable ADJNonEmptyString *)ioValue;
-
-+ (nonnull ADJResultNL<ADJMoneyAmountBase *> *)instanceFromOptionalIoValue:
++ (nonnull ADJResult<ADJMoneyAmountBase *> *)instanceFromIoValue:
     (nullable ADJNonEmptyString *)ioValue;
 
 - (nonnull instancetype)init;

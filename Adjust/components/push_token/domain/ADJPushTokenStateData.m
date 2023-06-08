@@ -25,30 +25,30 @@ static NSString *const kLastPushTokenKey = @"lastPushToken";
 
 @implementation ADJPushTokenStateData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJPushTokenStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
++ (nonnull ADJResult<ADJPushTokenStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJPushTokenStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create push token state data from io data"
-                                        key:@"unexpected metadata type value fail"
-                                  otherFail:unexpectedMetadataTypeValueFail];
+        return [ADJResult failWithMessage:@"Cannot create push token state data from io data"
+                                      key:@"unexpected metadata type value fail"
+                                otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJNonEmptyString *_Nullable lastPushToken =
         [ioData.propertiesMap pairValueWithKey:kLastPushTokenKey];
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJPushTokenStateData alloc] initWithLastPushTokenString:lastPushToken]];
 }
 
 + (nonnull ADJOptionalFailsNL<ADJPushTokenStateData *> *)
     instanceFromExternalWithPushTokenString:(nullable NSString *)pushTokenString
 {
-    ADJResultNL<ADJNonEmptyString *> *_Nullable pushTokenResult =
-        [ADJNonEmptyString instanceFromOptionalString:pushTokenString];
+    ADJResult<ADJNonEmptyString *> *_Nullable pushTokenResult =
+        [ADJNonEmptyString instanceFromString:pushTokenString];
 
     NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
-    if (pushTokenResult.fail != nil) {
+    if (pushTokenResult.failNonNilInput != nil) {
         optionalFails = [NSArray arrayWithObject:
                          [[ADJResultFail alloc]
                           initWithMessage:

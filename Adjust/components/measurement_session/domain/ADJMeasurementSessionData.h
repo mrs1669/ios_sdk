@@ -26,13 +26,13 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJMeasurementSessionData : NSObject<ADJIoDataMapBuilderInjectable>
 // instantiation
-+ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap;
 
-+ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionData *> *)
     instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder;
 
-+ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionData *> *)
     instanceFromV4WithActivityState:(nonnull ADJV4ActivityState *)v4ActivityState;
 
 - (nullable instancetype)init NS_UNAVAILABLE;

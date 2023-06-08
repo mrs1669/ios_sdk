@@ -75,7 +75,7 @@
 
     _isInDelay = NO;
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull asaClickCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull asaClickCountResult =
         [mainQueueController.trackedPackages asaClickCount];
     _mainQueueContainsAsaClickPackage = asaClickCountResult.value != nil
         && asaClickCountResult.value.uIntegerValue > 0;
@@ -269,7 +269,7 @@
 
     ADJAsaAttributionStateData *_Nonnull currentStateData = [self.storage readOnlyStoredDataValue];
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
         [self readAsaAttributionToken];
 
     if (asaAttributionTokenResult.fail != nil) {
@@ -294,7 +294,7 @@
     if (hasReadTokenUpdatedCacheOne) {
         tokenToWrite = asaAttributionTokenResult.value;
 
-        ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult =
+        ADJResult<ADJTimestampMilli *> *_Nonnull nowResult =
             [self.clock nonMonotonicNowTimestamp];
         if (nowResult.fail != nil) {
             [self.logger debugDev:@"Failed now timestamp when refreshing token"
@@ -345,32 +345,32 @@
 
 // TODO return Result
 //- (nullable ADJInputLogMessageData *)readAsaAttributionTokenWithWO:
-- (nonnull ADJResultNN<ADJNonEmptyString *> *)readAsaAttributionToken {
+- (nonnull ADJResult<ADJNonEmptyString *> *)readAsaAttributionToken {
     // any error that happens before trying to read the Asa Attribution Token
     //  won't change during the current app execution,
     //  so it can be assumed that the token can't be read
     if (self.asaAttributionConfig.timeoutPerAttempt == nil) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:@"Cannot attempt to read token without a timeout"];
+        return [ADJResult failWithMessage:@"Cannot attempt to read token without a timeout"];
     }
 
     Class _Nullable classFromName = NSClassFromString(@"AAAttribution");
     if (classFromName == nil) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:@"Could not detect AAAttribution class"];
+        return [ADJResult failWithMessage:@"Could not detect AAAttribution class"];
     }
 
     SEL _Nullable methodSelector = NSSelectorFromString(@"attributionTokenWithError:");
     if (! [classFromName respondsToSelector:methodSelector]) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:@"Could not detect attributionTokenWithError: method"];
+        return [ADJResult failWithMessage:@"Could not detect attributionTokenWithError: method"];
     }
 
     IMP _Nullable methodImplementation = [classFromName methodForSelector:methodSelector];
 
     if (! methodImplementation) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not detect attributionTokenWithError: method implementation"];
     }
 
@@ -389,15 +389,15 @@
     } source:@"read AAAttribution attributionTokenWithError with timeout"];
 
     if (! readAsaAttributionTokenFinishedSuccessfully) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"];
     }
 
     if (asaAttributionTokenString != nil) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
             [ADJNonEmptyString instanceFromString:asaAttributionTokenString];
         if (asaAttributionTokenResult.fail != nil) {
-            return [ADJResultNN
+            return [ADJResult
                     failWithMessage:@"Cannot parse asaAttributionToken"
                     key:@"neString fail"
                     otherFail:asaAttributionTokenResult.fail];
@@ -420,8 +420,8 @@
         }
     }
 
-    return [ADJResultNN failWithMessage:@"from [AAAttribution attributionTokenWithError:]"
-                                  error:error];
+    return [ADJResult failWithMessage:@"from [AAAttribution attributionTokenWithError:]"
+                                error:error];
 }
 
 - (void)retryWithAttemptsLeft:(nonnull ADJNonNegativeInt *)attemptsLeft {

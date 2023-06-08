@@ -11,8 +11,7 @@
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
 #import "ADJNonNegativeInt.h"
-#import "ADJResultNL.h"
-#import "ADJResultNN.h"
+#import "ADJResult.h"
 
 @interface ADJTallyCounter : NSObject<
     NSCopying,
@@ -27,11 +26,8 @@
 + (nullable instancetype)instanceFromOptionalNonNegativeInt:
     (nullable ADJNonNegativeInt *)nonNegativeInt;
 
-+ (nonnull ADJResultNN<ADJTallyCounter *> *)
++ (nonnull ADJResult<ADJTallyCounter *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
-
-+ (nonnull ADJResultNL<ADJTallyCounter *> *)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
 - (nonnull instancetype)initWithCountValue:(nonnull ADJNonNegativeInt *)countValue
 NS_DESIGNATED_INITIALIZER;

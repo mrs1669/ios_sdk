@@ -52,7 +52,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJResultNN<ADJMoney *> *_Nonnull priceResult =
+    ADJResult<ADJMoney *> *_Nonnull priceResult =
         [ADJMoney instanceFromAmountDecimalNumber:adjustBillingSubscription.priceDecimalNumber
                                          currency:adjustBillingSubscription.currency];
     if (priceResult.fail != nil) {
@@ -61,7 +61,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull transactionIdResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull transactionIdResult =
         [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId];
     if (transactionIdResult.fail != nil) {
         [logger errorClient:@"Cannot create billing subscription with an invalid transaction id"
@@ -69,7 +69,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull receiptDataStringResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull receiptDataStringResult =
         [ADJNonEmptyString
             instanceFromString:[ADJUtilConv convertToBase64StringWithDataValue:
                                 adjustBillingSubscription.receiptData]];
@@ -79,23 +79,23 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJResultNL<ADJTimestampMilli *> *_Nonnull transactionTimestampResult =
-        [ADJTimestampMilli instanceWithOptionalNumberDoubleSecondsSince1970:
+    ADJResult<ADJTimestampMilli *> *_Nonnull transactionTimestampResult =
+        [ADJTimestampMilli instanceWithNumberDoubleSecondsSince1970:
          adjustBillingSubscription.transactionDate != nil
          ? @(adjustBillingSubscription.transactionDate.timeIntervalSince1970) : nil];
-    if (transactionTimestampResult.fail != nil) {
+    if (transactionTimestampResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use invalid transaction date"
                   resultFail:transactionTimestampResult.fail];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull salesRegionResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustBillingSubscription.salesRegion];
-    if (salesRegionResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull salesRegionResult =
+        [ADJNonEmptyString instanceFromString:adjustBillingSubscription.salesRegion];
+    if (salesRegionResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use invalid sales region in billing subscription"
                   resultFail:salesRegionResult.fail];
     }
 
-    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
+    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
          adjustBillingSubscription.callbackParameterKeyValueArray];
 
@@ -106,9 +106,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJStringMap *_Nullable callbackParameters = nil;
 
-    ADJResultNL<ADJStringMap *> *_Nonnull callbackParametersResult =
+    ADJResult<ADJStringMap *> *_Nonnull callbackParametersResult =
         callbackParametersOptFails.value;
-    if (callbackParametersResult.fail != nil) {
+    if (callbackParametersResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use billing subscription callback parameters"
                   resultFail:callbackParametersResult.fail];
     } else if (callbackParametersResult.value != nil) {
@@ -120,7 +120,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         }
     }
 
-    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
+    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
          adjustBillingSubscription.partnerParameterKeyValueArray];
 
@@ -131,8 +131,8 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJStringMap *_Nullable partnerParameters = nil;
 
-    ADJResultNL<ADJStringMap *> *_Nonnull partnerParametersResult = partnerParametersOptFails.value;
-    if (callbackParametersResult.fail != nil) {
+    ADJResult<ADJStringMap *> *_Nonnull partnerParametersResult = partnerParametersOptFails.value;
+    if (partnerParametersResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use billing subscription partner parameters"
                   resultFail:partnerParametersResult.fail];
     } else if (partnerParametersResult.value != nil) {
@@ -161,7 +161,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJNonEmptyString *_Nullable priceAmountIoValue =
         [propertiesMap pairValueWithKey:kPriceAmountKey];
-    ADJResultNN<ADJMoneyAmountBase *> *_Nonnull priceAmountResult =
+    ADJResult<ADJMoneyAmountBase *> *_Nonnull priceAmountResult =
         [ADJMoneyAmountBase instanceFromIoValue:priceAmountIoValue];
     if (priceAmountResult.fail != nil) {
         [logger debugDev:@"Cannot decode ClientBillingSubscriptionData without valid price amount"
@@ -177,6 +177,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
             issueType:ADJIssueStorageIo];
         return nil;
     }
+
+    ADJMoney *_Nonnull price = [[ADJMoney alloc] initWithAmount:priceAmountResult.value
+                                                       currency:priceCurrency];
 
     ADJNonEmptyString *_Nullable transactionId =
         [propertiesMap pairValueWithKey:kTransactionIdKey];
@@ -198,10 +201,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     }
 
 
-    ADJResultNL<ADJTimestampMilli *> *_Nonnull transactionTimestampResult =
-        [ADJTimestampMilli
-         instanceFromOptionalIoDataValue:
-             [propertiesMap pairValueWithKey:kTransactionTimestampKey]];
+    ADJResult<ADJTimestampMilli *> *_Nonnull transactionTimestampResult =
+        [ADJTimestampMilli instanceFromIoDataValue:
+         [propertiesMap pairValueWithKey:kTransactionTimestampKey]];
 
     ADJNonEmptyString *_Nullable salesRegion =
         [propertiesMap pairValueWithKey:kSalesRegionKey];
@@ -212,14 +214,14 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     ADJStringMap *_Nullable partnerParametersMap =
         [clientActionInjectedIoData mapWithName:kPartnerParametersMapName];
 
-    return [[self alloc] initWithPrice:[[ADJMoney alloc] initWithAmount:priceAmountResult.value
-                                                               currency:priceCurrency]
-                         transactionId:transactionId
-                     receiptDataString:receiptDataString
-                  transactionTimestamp:transactionTimestampResult.value
-                           salesRegion:salesRegion
-                    callbackParameters:callbackParametersMap
-                     partnerParameters:partnerParametersMap];
+    return [[ADJClientBillingSubscriptionData alloc]
+            initWithPrice:price
+            transactionId:transactionId
+            receiptDataString:receiptDataString
+            transactionTimestamp:transactionTimestampResult.value
+            salesRegion:salesRegion
+            callbackParameters:callbackParametersMap
+            partnerParameters:partnerParametersMap];
 }
 
 - (nullable instancetype)init {

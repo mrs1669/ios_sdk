@@ -150,7 +150,7 @@ static NSString *const kColumnValue = @"value";
     ADJIoData *_Nonnull ioData =
         [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 
-    ADJResultNN<id> *_Nonnull valueFromIoDataResult =
+    ADJResult<id> *_Nonnull valueFromIoDataResult =
         [self concreteGenerateValueFromIoData:ioData];
 
     if (valueFromIoDataResult.fail != nil) {
@@ -209,7 +209,7 @@ static int const kInsertValueFieldPosition = 3;
 }
 
 #pragma mark - Abstract
-- (nonnull ADJResultNN<id> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResult<id> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }

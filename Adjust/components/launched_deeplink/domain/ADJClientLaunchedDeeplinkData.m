@@ -45,7 +45,7 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
         stringLaunchedDeeplink = adjustLaunchedDeeplink.stringDeeplink;
     }
 
-    ADJResultNN<ADJNonEmptyString *> *_Nullable launchedDeeplinkResult =
+    ADJResult<ADJNonEmptyString *> *_Nullable launchedDeeplinkResult =
         [ADJNonEmptyString instanceFromString:stringLaunchedDeeplink];
     if (launchedDeeplinkResult.fail != nil) {
         [logger errorClient:@"Cannot create launched deeplink with invalid value"
@@ -53,7 +53,7 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
         return nil;
     }
 
-    ADJResultNN<NSRegularExpression *> *_Nonnull excludedRegexResult =
+    ADJResult<NSRegularExpression *> *_Nonnull excludedRegexResult =
         [ADJClientLaunchedDeeplinkData excludedRegex];
 
     if (excludedRegexResult.fail != nil) {
@@ -140,9 +140,9 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
 }
 
 #pragma mark Internal Methods
-+ (nonnull ADJResultNN<NSRegularExpression *> *)excludedRegex {
++ (nonnull ADJResult<NSRegularExpression *> *)excludedRegex {
     static dispatch_once_t onceExcludedRegexInstanceToken;
-    static ADJResultNN<NSRegularExpression *> *result;
+    static ADJResult<NSRegularExpression *> *result;
 
     dispatch_once(&onceExcludedRegexInstanceToken, ^{
         NSError *error = nil;
@@ -153,17 +153,17 @@ static NSString *const kExcludedDeeplinksPattern = @"^(fb|vk)[0-9]{5,}[^:]*://au
                                                         error:&error];
 
         if (regex != nil) {
-            result = [ADJResultNN okWithValue:regex];
+            result = [ADJResult okWithValue:regex];
         } else {
-            result = [ADJResultNN failWithMessage:
+            result = [ADJResult failWithMessage:
                       @"NSRegularExpression regularExpression with excluded deeplinks pattern"
                       " returned nil"
-                                            error:error];
+                                          error:error];
         }
     });
     
     if (result == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"NSRegularExpression regularExpression with excluded deeplinks pattern"
                 " result was not set in dispatch_once"];
     }

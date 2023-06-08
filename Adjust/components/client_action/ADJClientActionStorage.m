@@ -29,7 +29,7 @@ static NSString *const kClientActionStorageTableName = @"client_action";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nonnull ADJResultNN<ADJClientActionData *> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResult<ADJClientActionData *> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
     return [ADJClientActionData instanceWithIoData:ioData];
 }
 

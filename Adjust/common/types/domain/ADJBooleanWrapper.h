@@ -32,10 +32,13 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromIoValue:
     (nullable ADJNonEmptyString *)ioValue;
 
++ (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromString:(nullable NSString *)stringValue;
+
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nonatomic, readonly, assign) BOOL boolValue;
+@property (readonly, assign, nonatomic) BOOL boolValue;
+@property (nonnull, readonly, strong, nonatomic) NSNumber *numberBoolValue;
 
 @end
 

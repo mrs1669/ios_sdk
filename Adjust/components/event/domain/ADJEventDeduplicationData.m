@@ -26,27 +26,27 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
 
 @implementation ADJEventDeduplicationData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJEventDeduplicationData *> *)
++ (nonnull ADJResult<ADJEventDeduplicationData *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData
 {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJEventDeduplicationDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create event deduplication data from io data"
-                                        key:@"unexpected metadata type value fail"
-                                  otherFail:unexpectedMetadataTypeValueFail];
+        return [ADJResult failWithMessage:@"Cannot create event deduplication data from io data"
+                                      key:@"unexpected metadata type value fail"
+                                otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJNonEmptyString *_Nullable deduplicationId =
         [ioData.propertiesMap pairValueWithKey:kDeduplicationIdKey];
     
     if (deduplicationId == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create event deduplication data from io data without its id"];
     }
 
-    return [ADJResultNN okWithValue:[[ADJEventDeduplicationData alloc]
-                                     initWithDeduplicationId:deduplicationId]];
+    return [ADJResult okWithValue:[[ADJEventDeduplicationData alloc]
+                                   initWithDeduplicationId:deduplicationId]];
 }
 
 + (nonnull ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *)
@@ -61,7 +61,7 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
         [[NSMutableArray alloc] init];
 
     for (id _Nonnull transactionIdObject in v4ActivityState.transactionIds) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull transactionIdResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull transactionIdResult =
             [ADJNonEmptyString instanceFromObject:transactionIdObject];
 
         if (transactionIdResult.fail != nil) {

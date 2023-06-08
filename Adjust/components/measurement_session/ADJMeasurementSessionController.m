@@ -154,7 +154,7 @@
 
 #pragma mark Internal Methods
 - (nullable ADJTimestampMilli *)ccNonMonotonicNowTimestampWithSource:(nonnull NSString *)source {
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot obtain a valid now timestamp"
                          key:ADJLogFromKey

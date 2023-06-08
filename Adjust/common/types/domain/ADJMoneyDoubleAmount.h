@@ -11,19 +11,15 @@
 #import "ADJMoneyAmountBase.h"
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
-#import "ADJResultNN.h"
-#import "ADJResultNL.h"
+#import "ADJResult.h"
 
 @interface ADJMoneyDoubleAmount : ADJMoneyAmountBase
 // instantiation
-+ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
     instanceFromIoLlfValue:(nonnull NSString *)ioLlfValue;
 
-+ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
     instanceFromDoubleNumberValue:(nullable NSNumber *)doubleNumberValue;
-
-+ (nonnull ADJResultNL<ADJMoneyDoubleAmount *> *)
-    instanceFromOptionalDoubleNumberValue:(nullable NSNumber *)doubleNumberValue;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSNumber *doubleNumberValue;

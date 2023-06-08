@@ -28,8 +28,8 @@
 
 + (nonnull NSString *)errorFormat:(nonnull NSError *)error;
 
-+ (nonnull ADJResultNN<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData;
-+ (nonnull ADJResultNL<ADJNonEmptyString *> *)jsonFoundationValueFormat:
++ (nonnull ADJResult<NSString *> *)jsonDataFormat:(nonnull NSData *)jsonData;
++ (nonnull ADJResult<ADJNonEmptyString *> *)jsonFoundationValueFormat:
     (nullable id)jsonFoundationValue;
 
 + (nonnull NSString *)secondsFormat:(nonnull NSNumber *)secondsNumber;

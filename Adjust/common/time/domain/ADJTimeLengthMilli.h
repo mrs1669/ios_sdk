@@ -12,8 +12,7 @@
 #import "ADJIoValueSerializable.h"
 #import "ADJNonEmptyString.h"
 #import "ADJNonNegativeInt.h"
-#import "ADJResultNL.h"
-#import "ADJResultNN.h"
+#import "ADJResult.h"
 
 @interface ADJTimeLengthMilli : NSObject<
     NSCopying,
@@ -24,15 +23,10 @@
 + (nonnull instancetype)instanceWithoutTimeSpan;
 + (nonnull instancetype)instanceWithOneMilliSpan;
 
-+ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
-
-+ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
++ (nonnull ADJResult<ADJTimeLengthMilli *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
-+ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
-    instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds;
-+ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
++ (nonnull ADJResult<ADJTimeLengthMilli *> *)
     instanceWithNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds;
 
 - (nonnull instancetype)initWithMillisecondsSpan:(nonnull ADJNonNegativeInt *)millisecondsSpan

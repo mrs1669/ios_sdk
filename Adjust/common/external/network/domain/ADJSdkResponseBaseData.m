@@ -149,9 +149,9 @@
     key:(nonnull NSString *)key
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
-    ADJResultNL<NSString *> *_Nonnull valueResult =
+    ADJResult<NSString *> *_Nonnull valueResult =
         [ADJUtilMap extractStringValueWithDictionary:responseJson key:key];
-    if (valueResult.fail != nil) {
+    if (valueResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull resultFailBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot extract optional string field in response json"];
@@ -162,9 +162,9 @@
         [optionalFailsMut addObject:[resultFailBuilder build]];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
-        [ADJNonEmptyString instanceFromOptionalString:valueResult.value];
-    if (stringResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull stringResult =
+        [ADJNonEmptyString instanceFromString:valueResult.value];
+    if (stringResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull resultFailBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot parse optional string field in response json"];
@@ -182,10 +182,10 @@
     key:(nonnull NSString *)key
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
-    ADJResultNL<NSNumber *> *_Nonnull valueResult =
+    ADJResult<NSNumber *> *_Nonnull valueResult =
         [ADJUtilMap extractIntegerNumberWithDictionary:responseJson
                                                    key:key];
-    if (valueResult.fail != nil) {
+    if (valueResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull resultFailBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot extract optional int field in response json"];
@@ -196,9 +196,9 @@
         [optionalFailsMut addObject:[resultFailBuilder build]];
     }
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull intResult =
-        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:valueResult.value];
-    if (intResult.fail != nil) {
+    ADJResult<ADJNonNegativeInt *> *_Nonnull intResult =
+        [ADJNonNegativeInt instanceFromIntegerNumber:valueResult.value];
+    if (intResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull resultFailBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot parse optional non negative int field in response json"];

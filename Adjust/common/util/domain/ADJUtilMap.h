@@ -36,19 +36,19 @@ typedef NSDictionary<NSString *, id> * ADJStringKeyDict;
 + (nullable ADJStringMap *)mergeMapsWithBaseMap:(nullable ADJStringMap *)baseMap
                                  overwritingMap:(nullable ADJStringMap *)overwritingMap;
 
-+ (nonnull ADJResultNL<NSString *> *)
++ (nonnull ADJResult<NSString *> *)
     extractStringValueWithDictionary:(nullable NSDictionary *)dictionary
     key:(nonnull NSString *)key;
 
-+ (nonnull ADJResultNL<NSNumber *> *)
++ (nonnull ADJResult<NSNumber *> *)
     extractIntegerNumberWithDictionary:(nullable NSDictionary *)dictionary
     key:(nonnull NSString *)key;
 
-+ (nonnull ADJResultNL<NSNumber *> *)
++ (nonnull ADJResult<NSNumber *> *)
     extractBooleanNumberWithDictionary:(nullable NSDictionary *)dictionary
     key:(nonnull NSString *)key;
 
-+ (nonnull ADJResultNL<NSNumber *> *)
++ (nonnull ADJResult<NSNumber *> *)
     extractDoubleNumberWithDictionary:(nullable NSDictionary *)dictionary
     key:(nonnull NSString *)key;
 

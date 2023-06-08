@@ -35,7 +35,7 @@ static NSString *const kValueToAddKey = @"valueToAdd";
     globalParameterType:(nonnull NSString *)globalParameterType
     logger:(nonnull ADJLogger *)logger;
 {
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToAddResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull keyToAddResult =
         [ADJNonEmptyString instanceFromString:keyToAdd];
     if (keyToAddResult.fail != nil) {
         [logger errorClient:@"Invalid add global parameter key"
@@ -45,7 +45,7 @@ static NSString *const kValueToAddKey = @"valueToAdd";
         return nil;
     }
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull valueToAddResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull valueToAddResult =
         [ADJNonEmptyString instanceFromString:valueToAdd];
     if (valueToAddResult.fail != nil) {
         [logger errorClient:@"Invalid add global parameter value"

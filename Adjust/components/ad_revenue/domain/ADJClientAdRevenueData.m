@@ -64,7 +64,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         return nil;
     }
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull sourceResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull sourceResult =
         [ADJNonEmptyString instanceFromString:adjustAdRevenue.source];
     if (sourceResult.fail != nil) {
         [logger errorClient:@"Cannot create ad revenue without ad revenue source"
@@ -96,7 +96,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     if (adjustAdRevenue.revenueAmountDoubleNumber != nil
         || adjustAdRevenue.revenueCurrency != nil)
     {
-        ADJResultNN<ADJMoney *> *_Nonnull revenueResult =
+        ADJResult<ADJMoney *> *_Nonnull revenueResult =
             [ADJMoney instanceFromAmountDoubleNumber:adjustAdRevenue.revenueAmountDoubleNumber
                                             currency:adjustAdRevenue.revenueCurrency];
         if (revenueResult.fail != nil) {
@@ -107,36 +107,36 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         }
     }
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
         [ADJNonNegativeInt
-            instanceFromOptionalIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber];
-    if (adImpressionsCountResult.fail != nil) {
+         instanceFromIntegerNumber:adjustAdRevenue.adImpressionsCountIntegerNumber];
+    if (adImpressionsCountResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use invalid ad impressions count"
                   resultFail:adImpressionsCountResult.fail];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull adRevenueNetworkResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueNetwork];
-    if (adRevenueNetworkResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull adRevenueNetworkResult =
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.adRevenueNetwork];
+    if (adRevenueNetworkResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use invalid ad revenue network"
                  resultFail:adRevenueNetworkResult.fail];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull adRevenueUnitResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenueUnit];
-    if (adRevenueUnitResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull adRevenueUnitResult =
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.adRevenueUnit];
+    if (adRevenueUnitResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use invalid ad revenue unit"
                  resultFail:adRevenueUnitResult.fail];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull adRevenuePlacementResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustAdRevenue.adRevenuePlacement];
-    if (adRevenueUnitResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull adRevenuePlacementResult =
+        [ADJNonEmptyString instanceFromString:adjustAdRevenue.adRevenuePlacement];
+    if (adRevenueUnitResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use invalid ad revenue placement"
                  resultFail:adRevenueUnitResult.fail];
     }
 
-    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
+    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
          adjustAdRevenue.callbackParameterKeyValueArray];
 
@@ -147,9 +147,9 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
     ADJStringMap *_Nullable callbackParameters = nil;
 
-    ADJResultNL<ADJStringMap *> *_Nonnull callbackParametersResult =
+    ADJResult<ADJStringMap *> *_Nonnull callbackParametersResult =
         callbackParametersOptFails.value;
-    if (callbackParametersResult.fail != nil) {
+    if (callbackParametersResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use ad revenue callback parameters"
                   resultFail:callbackParametersResult.fail];
     } else if (callbackParametersResult.value != nil) {
@@ -160,7 +160,7 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         }
     }
 
-    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
+    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
          adjustAdRevenue.partnerParameterKeyValueArray];
 
@@ -171,9 +171,9 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
 
     ADJStringMap *_Nullable partnerParameters = nil;
 
-    ADJResultNL<ADJStringMap *> *_Nonnull partnerParametersResult =
+    ADJResult<ADJStringMap *> *_Nonnull partnerParametersResult =
         partnerParametersOptFails.value;
-    if (callbackParametersResult.fail != nil) {
+    if (partnerParametersResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use ad revenue partner parameters"
                   resultFail:partnerParametersResult.fail];
     } else if (partnerParametersResult.value != nil) {
@@ -208,9 +208,9 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
     ADJNonEmptyString *_Nullable revenueAmountIoValue =
         [propertiesMap pairValueWithKey:kRevenueAmountKey];
 
-    ADJResultNL<ADJMoneyAmountBase *> *_Nonnull revenueAmountResult =
-        [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue];
-    if (revenueAmountResult.fail != nil) {
+    ADJResult<ADJMoneyAmountBase *> *_Nonnull revenueAmountResult =
+        [ADJMoneyAmountBase instanceFromIoValue:revenueAmountIoValue];
+    if (revenueAmountResult.failNonNilInput != nil) {
         [logger debugDev:@"Invalid revenue amount from client action injected io data"
              resultFail:revenueAmountResult.fail
                issueType:ADJIssueInvalidInput];
@@ -225,10 +225,10 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
          currency:revenueCurrency != nil ? revenueCurrency.stringValue : nil];
     }
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
-        [ADJNonNegativeInt instanceFromOptionalIoDataValue:
+    ADJResult<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
+        [ADJNonNegativeInt instanceFromIoDataValue:
          [propertiesMap pairValueWithKey:kAdImpressionsCountKey]];
-    if (adImpressionsCountResult.fail != nil) {
+    if (adImpressionsCountResult.failNonNilInput != nil) {
         [logger debugDev:@"Invalid ad impressions count from client action injected io data"
              resultFail:adImpressionsCountResult.fail
                issueType:ADJIssueInvalidInput];

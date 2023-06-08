@@ -15,7 +15,7 @@
 #import "ADJConstantsParam.h"
 #import "ADJTallyCounter.h"
 #import "ADJUtilSys.h"
-#import "ADJResultNN.h"
+#import "ADJResult.h"
 
 #pragma mark Private class
 @implementation ADJSdkPackageCreatingPublisher @end
@@ -497,7 +497,7 @@
                                                    key:ADJParamCalledAtKey
                          packageParamValueSerializable:apiTimestamp];
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot inject created at sending parameter in package"
                    resultFail:nowResult.fail
@@ -531,7 +531,7 @@
                              packageParamValueSerializable:[deviceController nonKeychainUuid]];
     }
 
-    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+    ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
         [deviceController getSessionDeviceIdsSync];
     if (sessionDeviceIdsDataResult.fail != nil) {
         [self.logger debugDev:@"Could not obtain session device ids"

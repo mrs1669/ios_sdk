@@ -161,7 +161,7 @@
 + (nonnull NSString *)generateJsonStringFromFoundationDictionary:
     (nonnull NSDictionary<NSString *, id> *)foundationDictionary
 {
-    ADJResultNN<NSData *> *_Nonnull jsonDataResult =
+    ADJResult<NSData *> *_Nonnull jsonDataResult =
         [ADJUtilConv convertToJsonDataWithJsonFoundationValue:foundationDictionary];
     if (jsonDataResult.fail != nil) {
         return [NSString stringWithFormat:
@@ -175,7 +175,7 @@
                                       stringKeyDictionary:foundationDictionary]];
     }
 
-    ADJResultNN<NSString *> *_Nonnull jsonStringResult =
+    ADJResult<NSString *> *_Nonnull jsonStringResult =
         [ADJUtilF jsonDataFormat:jsonDataResult.value];
     if (jsonStringResult.fail != nil) {
         return [NSString stringWithFormat:

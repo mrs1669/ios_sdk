@@ -55,6 +55,22 @@ NSString *const ADJBooleanFalseString = @"false";
                           stringValue:ioValue.stringValue];
 }
 
++ (nonnull ADJResult<ADJBooleanWrapper *> *)instanceFromString:(nullable NSString *)stringValue {
+    ADJResult<ADJNonEmptyString *> *_Nonnull booleanStringResult =
+        [ADJNonEmptyString instanceFromString:stringValue];
+
+    if (booleanStringResult.wasInputNil) {
+        return [ADJResult nilInputWithMessage:@"Cannot create boolean with nil string"];
+    }
+    if (booleanStringResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot create boolean with invalid string"
+                                      key:@"string fail"
+                                otherFail:booleanStringResult.fail];
+    }
+
+    return [ADJBooleanWrapper instanceFromIoValue:booleanStringResult.value];
+}
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -103,6 +119,7 @@ NSString *const ADJBooleanFalseString = @"false";
     self = [super init];
 
     _boolValue = boolValue;
+    _numberBoolValue = [NSNumber numberWithBool:boolValue];
 
     return self;
 }

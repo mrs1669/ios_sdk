@@ -60,7 +60,7 @@
                                 doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
                                             publisherController:publisherController];
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull firstSessionCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull firstSessionCountResult =
         [mainQueueTrackedPackages firstSessionCount];
     BOOL hasTrackedInstallSession = firstSessionCountResult.value != nil
         && firstSessionCountResult.value.uIntegerValue == 0;
@@ -396,7 +396,7 @@
     ADJStringMapBuilder *_Nonnull sendingParameters =
         [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
                   resultFail:nowResult.fail

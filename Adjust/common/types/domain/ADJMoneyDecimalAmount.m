@@ -20,25 +20,32 @@
 
 @implementation ADJMoneyDecimalAmount
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)instanceFromIoDecValue:
++ (nonnull ADJResult<ADJMoneyDecimalAmount *> *)instanceFromIoDecValue:
     (nonnull NSString *)ioDecValue
 {
-    NSDecimalNumber *_Nullable decimalNumberValue =
+    ADJResult<NSDecimalNumber *> *_Nonnull decimalNumberResult =
         [self convertToDecimalNumberWithIoDecValue:ioDecValue];
-    
-    return [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:decimalNumberValue];
+
+    if (decimalNumberResult.fail != nil) {
+        return [ADJResult failWithMessage:
+                @"Cannot create money amount from ioDecValue to decimal number conversion"
+                                      key:@"decimal number fail"
+                                otherFail:decimalNumberResult.fail];
+    }
+
+    return [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:decimalNumberResult.value];
 }
 
-+ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)instanceFromDecimalNumberValue:
++ (nonnull ADJResult<ADJMoneyDecimalAmount *> *)instanceFromDecimalNumberValue:
     (nullable NSDecimalNumber *)decimalNumberValue
 {
     if (decimalNumberValue == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult nilInputWithMessage:
                 @"Cannot create money amount with nil decimal number value"];
     }
     
     if ([ADJUtilF isNotANumber:decimalNumberValue]) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:
                  @"Cannot create money amount with NaN decimal number: %@",
                  decimalNumberValue.description]];
@@ -47,13 +54,13 @@
     BOOL isDecimalNegative =
         [decimalNumberValue compare:[NSDecimalNumber zero]] == NSOrderedAscending;
     if (isDecimalNegative) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:
                  @"Cannot create money amount with negative decimal number: %@",
                  decimalNumberValue.description]];
     }
     
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJMoneyDecimalAmount alloc] initWithDecimalNumberValue:decimalNumberValue]];
 }
 
@@ -143,38 +150,90 @@
 }
 
 #pragma mark Internal Methods
-
-#define scanIntWithName(name)                                               \
-int name;                                                               \
-if (! [scanner scanInt:&name] || name == INT_MAX || name == INT_MIN) {  \
-return nil;                                                         \
-}                                                                       \
-
-+ (nullable NSDecimalNumber *)convertToDecimalNumberWithIoDecValue:(nonnull NSString *)ioDecValue {
++ (nonnull ADJResult<NSDecimalNumber *> *)convertToDecimalNumberWithIoDecValue:
+    (nonnull NSString *)ioDecValue
+{
     NSScanner *_Nonnull scanner = [NSScanner scannerWithString:ioDecValue];
-    
-    scanIntWithName(exponent)
-    scanIntWithName(length)
-    scanIntWithName(isNegative)
-    scanIntWithName(isCompact)
-    scanIntWithName(reserved)
-    
-    unsigned long long longBits;
-    if (! [scanner scanUnsignedLongLong:&longBits] || longBits == ULLONG_MAX)
-    {
-        return nil;
+
+    ADJResult<NSNumber *> *_Nonnull exponentResult = [self scanIntWithScanner:scanner];
+    if (exponentResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot read 'exponent' for decimal number"
+                              wasInputNil:NO
+                             builderBlock:^(ADJResultFailBuilder *_Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:@"scan int fail" otherFail:exponentResult.fail];
+            [resultFailBuilder withKey:@"ioDecValue" stringValue:ioDecValue]; }];
     }
-    
+
+    ADJResult<NSNumber *> *_Nonnull lengthResult = [self scanIntWithScanner:scanner];
+    if (lengthResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot read 'length' for decimal number"
+                              wasInputNil:NO
+                             builderBlock:^(ADJResultFailBuilder *_Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:@"scan int fail" otherFail:lengthResult.fail];
+            [resultFailBuilder withKey:@"ioDecValue" stringValue:ioDecValue]; }];
+    }
+    ADJResult<NSNumber *> *_Nonnull isNegativeResult = [self scanIntWithScanner:scanner];
+    if (isNegativeResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot read 'isNegative' for decimal number"
+                              wasInputNil:NO
+                             builderBlock:^(ADJResultFailBuilder *_Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:@"scan int fail" otherFail:isNegativeResult.fail];
+            [resultFailBuilder withKey:@"ioDecValue" stringValue:ioDecValue]; }];
+    }
+    ADJResult<NSNumber *> *_Nonnull isCompactResult = [self scanIntWithScanner:scanner];
+    if (isCompactResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot read 'isCompact' for decimal number"
+                              wasInputNil:NO
+                             builderBlock:^(ADJResultFailBuilder *_Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:@"scan int fail" otherFail:isCompactResult.fail];
+            [resultFailBuilder withKey:@"ioDecValue" stringValue:ioDecValue]; }];
+    }
+    ADJResult<NSNumber *> *_Nonnull reservedResult = [self scanIntWithScanner:scanner];
+    if (reservedResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot read 'reserved' for decimal number"
+                              wasInputNil:NO
+                             builderBlock:^(ADJResultFailBuilder *_Nonnull resultFailBuilder) {
+            [resultFailBuilder withKey:@"scan int fail" otherFail:reservedResult.fail];
+            [resultFailBuilder withKey:@"ioDecValue" stringValue:ioDecValue]; }];
+    }
+
+    unsigned long long longBits;
+    if (! [scanner scanUnsignedLongLong:&longBits]) {
+        return [ADJResult failWithMessage:
+                @"Cannot scan valid ull representation of 'longBits' for decimal number"
+                                      key:@"ioDecValue"
+                              stringValue:ioDecValue];
+    }
+    if (longBits == ULLONG_MAX){
+        return [ADJResult failWithMessage:
+                @"Found overflow when scanning ull value of 'longBits' for decimal number"
+                                      key:@"ioDecValue"
+                              stringValue:ioDecValue];
+    }
+
     NSDecimal dec = {0};
     
-    dec._exponent = exponent;
-    dec._length = (unsigned int)length;
-    dec._isNegative = (unsigned int)isNegative;
-    dec._isCompact = (unsigned int)isCompact;
-    dec._reserved = (unsigned int)reserved;
+    dec._exponent = exponentResult.value.intValue;
+    dec._length = (unsigned int)lengthResult.value.intValue;
+    dec._isNegative = (unsigned int)isNegativeResult.value.intValue;
+    dec._isCompact = (unsigned int)isCompactResult.value.intValue;
+    dec._reserved = (unsigned int)reservedResult.value.intValue;
     memcpy(&(dec._mantissa), &longBits, sizeof(unsigned long long));
     
-    return [NSDecimalNumber decimalNumberWithDecimal:dec];
+    return [ADJResult okWithValue:[NSDecimalNumber decimalNumberWithDecimal:dec]];
+}
+
++ (nonnull ADJResult<NSNumber *> *)scanIntWithScanner:(nonnull NSScanner *)scanner {
+    int intValue;
+    if (! [scanner scanInt:&intValue]) {
+        return [ADJResult failWithMessage:@"Cannot scan valid int representation"];
+    }
+    // Contains INT_MAX or INT_MIN on overflow
+    if (intValue == INT_MAX || intValue == INT_MIN) {
+        return [ADJResult failWithMessage:@"Found overflow when scanning int value"];
+    }
+
+    return [ADJResult okWithValue:[NSNumber numberWithInt:intValue]];
 }
 
 @end

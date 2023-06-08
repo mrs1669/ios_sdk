@@ -88,6 +88,10 @@
                                        fail:[resultFailBuilder build]];
 }
 
+- (nullable ADJResultFail *)failNonNilInput {
+    return self.wasInputNil ? nil : self.fail;
+}
+
 #pragma mark - Private constructors
 - (nonnull instancetype)initWithValue:(nonnull id)value {
     return [self initWithValue:value wasInputNil:NO fail:nil];

@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJSdkPackageBaseData : NSObject<ADJSdkPackageData, ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJResultNN<ADJSdkPackageBaseData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
++ (nonnull ADJResult<ADJSdkPackageBaseData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 + (nonnull ADJOptionalFailsNL<NSArray<id<ADJSdkPackageData>> *> *)
     instanceArrayFromV4WithActivityPackageArray:(nullable NSArray *)v4ActivityPackageArray;

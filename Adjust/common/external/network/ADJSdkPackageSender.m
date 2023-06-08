@@ -302,15 +302,15 @@
     [self retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
 }
 
-+ (nonnull ADJResultNN<NSData *> *)requestResultWithData:(nullable NSData *)data
++ (nonnull ADJResult<NSData *> *)requestResultWithData:(nullable NSData *)data
                                                    error:(nullable NSError *)error
 {
     if (data != nil) {
-        return [ADJResultNN okWithValue:data];
+        return [ADJResult okWithValue:data];
     }
 
-    return [ADJResultNN failWithMessage:@"dataTaskWithRequest error"
-                                  error:error];
+    return [ADJResult failWithMessage:@"dataTaskWithRequest error"
+                                error:error];
 }
 
 - (void)handleRequestCallbackWithData:(nullable NSData *)data
@@ -318,7 +318,7 @@
                                 error:(nullable NSError *)error
                    sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
 {
-    ADJResultNN<NSData *> *_Nonnull callbackDataResult =
+    ADJResult<NSData *> *_Nonnull callbackDataResult =
         [ADJSdkPackageSender requestResultWithData:data error:error];
     if (callbackDataResult.fail) {
         [self.logger debugDev:@"Cannot process request"
@@ -327,7 +327,7 @@
         return;
     }
 
-    ADJResultNN<NSString *> *_Nonnull responseStringResult = [ADJUtilF jsonDataFormat:data];
+    ADJResult<NSString *> *_Nonnull responseStringResult = [ADJUtilF jsonDataFormat:data];
 
     if (responseStringResult.fail != nil) {
         [self.logger debugDev:@"Server with response"
@@ -346,7 +346,7 @@
 - (void)injectJsonWithResponseData:(nonnull NSData *)responseData
                 sdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder
 {
-    ADJResultNN<id> *_Nonnull responseJsonFoundationObjectResult =
+    ADJResult<id> *_Nonnull responseJsonFoundationObjectResult =
         [ADJUtilConv convertToJsonFoundationValueWithJsonData:responseData];
 
     if (responseJsonFoundationObjectResult.fail != nil) {

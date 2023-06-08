@@ -23,10 +23,10 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJMeasurementSessionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *)
++ (nonnull ADJOptionalFailsNN<ADJResult<ADJMeasurementSessionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-+ (nonnull ADJResultNL<ADJMeasurementSessionStateData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionStateData *> *)
     instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState;
 
 - (nonnull instancetype)initWithIntialState;

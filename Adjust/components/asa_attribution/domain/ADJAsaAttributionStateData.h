@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAsaAttributionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *)
++ (nonnull ADJOptionalFailsNN<ADJResult<ADJAsaAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 + (nullable ADJAsaAttributionStateData *)instanceFromV4WithUserDefaults:

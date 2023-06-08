@@ -22,37 +22,33 @@
 
 @implementation ADJMoneyAmountBase
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJMoneyAmountBase *> *)
++ (nonnull ADJResult<ADJMoneyAmountBase *> *)
     instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
 {
     if (ioValue == nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create money amount with nil string value"];
+        return [ADJResult nilInputWithMessage:@"Cannot create money amount with nil string value"];
     }
 
     if ([ioValue.stringValue hasPrefix:@"llf"]) {
-        return (ADJResultNN<ADJMoneyAmountBase *> *)
+        ADJResult<ADJMoneyDoubleAmount *> *_Nonnull llfDoubleResult =
             [ADJMoneyDoubleAmount instanceFromIoLlfValue:
              [ioValue.stringValue substringFromIndex:3]];
+        // cast to result of parent class, should be safe, just not supported directly in obj-c
+        return (ADJResult<ADJMoneyAmountBase *> *)llfDoubleResult;
     }
 
     if ([ioValue.stringValue hasPrefix:@"dec"]) {
-        return (ADJResultNN<ADJMoneyAmountBase *> *)
+        ADJResult<ADJMoneyDecimalAmount *> *_Nonnull decDecimalResult =
             [ADJMoneyDecimalAmount instanceFromIoDecValue:
              [ioValue.stringValue substringFromIndex:3]];
+        // cast to result of parent class, should be safe, just not supported directly in obj-c
+        return (ADJResult<ADJMoneyAmountBase *> *)decDecimalResult;
     }
 
-    return [ADJResultNN failWithMessage:
+    return [ADJResult failWithMessage:
             [NSString stringWithFormat:
                  @"Cannot create money amount without a valid io data value prefix: %@",
             ioValue.stringValue]];
-}
-
-+ (nonnull ADJResultNL<ADJMoneyAmountBase *> *)instanceFromOptionalIoValue:
-    (nullable ADJNonEmptyString *)ioValue
-{
-    return [ADJResultNL instanceFromNN:^ADJResultNN *_Nonnull(ADJNonEmptyString *_Nullable value) {
-        return [ADJMoneyAmountBase instanceFromIoValue:value];
-    } nlValue:ioValue];
 }
 
 - (nonnull instancetype)init {

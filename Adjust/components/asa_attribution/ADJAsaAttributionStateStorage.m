@@ -30,10 +30,10 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
+- (nonnull ADJResult<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
+    ADJOptionalFailsNN<ADJResult<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
         [ADJAsaAttributionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in resultOptFails.optionalFails) {

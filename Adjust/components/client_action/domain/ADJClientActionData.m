@@ -31,31 +31,31 @@ static NSString *const kIoDataKey = @"ioData";
 
 @implementation ADJClientActionData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJClientActionData *> *)instanceWithIoData:(nonnull ADJIoData *)ioData {
++ (nonnull ADJResult<ADJClientActionData *> *)instanceWithIoData:(nonnull ADJIoData *)ioData {
     ADJStringMap *_Nonnull metadataMap = ioData.metadataMap;
     
     ADJNonEmptyString *_Nullable clientActionHandlerId =
         [metadataMap pairValueWithKey:kClientActionHandlerIdKey];
     
     if (clientActionHandlerId == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create client action data without client action handler"];
     }
     
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull apiTimestampResult =
+    ADJResult<ADJTimestampMilli *> *_Nonnull apiTimestampResult =
         [ADJTimestampMilli instanceFromIoDataValue:
          [metadataMap pairValueWithKey:kApiTimestampKey]];
     if (apiTimestampResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create client action data with invalid api timestamp"
-                                        key:@"apiTimestamp fail"
-                                  otherFail:apiTimestampResult.fail];
+                                      key:@"apiTimestamp fail"
+                                otherFail:apiTimestampResult.fail];
     }
 
-    return [ADJResultNN okWithValue:[[ADJClientActionData alloc]
-                                     initWithClientActionHandlerId:clientActionHandlerId
-                                     apiTimestamp:apiTimestampResult.value
-                                     ioData:ioData]];
+    return [ADJResult okWithValue:[[ADJClientActionData alloc]
+                                   initWithClientActionHandlerId:clientActionHandlerId
+                                   apiTimestamp:apiTimestampResult.value
+                                   ioData:ioData]];
 }
 
 - (nonnull instancetype)initWithClientActionHandlerId:(nonnull ADJNonEmptyString *)clientActionHandlerId

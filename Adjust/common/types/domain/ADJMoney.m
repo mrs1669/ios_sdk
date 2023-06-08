@@ -24,40 +24,40 @@
 
 @implementation ADJMoney
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJMoney *> *)
++ (nonnull ADJResult<ADJMoney *> *)
     instanceFromAmountDoubleNumber:(nullable NSNumber *)amountDoubleNumber
     currency:(nullable NSString *)currency
 {
-    ADJResultNN<ADJMoneyDoubleAmount *> *_Nonnull moneyDoubleAmountResult =
+    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull moneyDoubleAmountResult =
         [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:amountDoubleNumber];
 
-    if (moneyDoubleAmountResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+    if (moneyDoubleAmountResult.failNonNilInput != nil) {
+        return [ADJResult failWithMessage:
                 @"Cannot create money instance without valid double amount"
-                                        key:@"double amount fail"
-                                  otherFail:moneyDoubleAmountResult.fail];
+                                      key:@"double amount fail"
+                                otherFail:moneyDoubleAmountResult.fail];
     }
 
     return [ADJMoney instanceFromMoneyAmount:moneyDoubleAmountResult.value
                                     currency:currency];
 }
 
-+ (nonnull ADJResultNN<ADJMoney *> *)
++ (nonnull ADJResult<ADJMoney *> *)
     instanceFromAmountDecimalNumber:(nullable NSDecimalNumber *)amountDecimalNumber
     currency:(nullable NSString *)currency
 {
-    ADJResultNN<ADJMoneyDecimalAmount *> *_Nonnull moneyDecimalAmountResult =
+    ADJResult<ADJMoneyDecimalAmount *> *_Nonnull moneyDecimalAmountResult =
         [ADJMoneyDecimalAmount instanceFromDecimalNumberValue:amountDecimalNumber];
 
-    if (moneyDecimalAmountResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+    if (moneyDecimalAmountResult.failNonNilInput != nil) {
+        return [ADJResult failWithMessage:
                 @"Cannot create money instance without valid decimal amount"
-                                        key:@"decimal amount fail"
-                                  otherFail:moneyDecimalAmountResult.fail];
+                                      key:@"decimal amount fail"
+                                otherFail:moneyDecimalAmountResult.fail];
     }
 
-    return [self instanceFromMoneyAmount:moneyDecimalAmountResult.value
-                                currency:currency];
+    return [ADJMoney instanceFromMoneyAmount:moneyDecimalAmountResult.value
+                                    currency:currency];
 }
 
 - (nonnull instancetype)initWithAmount:(nonnull ADJMoneyAmountBase *)amount
@@ -76,20 +76,31 @@
 }
 
 #pragma mark - Private constructors
-+ (nonnull ADJResultNN<ADJMoney *> *)
-    instanceFromMoneyAmount:(nonnull ADJMoneyAmountBase *)moneyAmount
++ (nonnull ADJResult<ADJMoney *> *)
+    instanceFromMoneyAmount:(nullable ADJMoneyAmountBase *)moneyAmount
     currency:(nullable NSString *)currency
 {
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull currencyResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull currencyResult =
         [ADJNonEmptyString instanceFromString:currency];
 
-    if (currencyResult.fail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create money instance with invalid currency"
-                                        key:@"currency fail"
-                                  otherFail:currencyResult.fail];
+    if (currencyResult.failNonNilInput != nil) {
+        return [ADJResult failWithMessage:@"Cannot create money instance with invalid currency"
+                                      key:@"currency fail"
+                                otherFail:currencyResult.fail];
     }
 
-    return [ADJResultNN okWithValue:
+    if (currencyResult.wasInputNil && moneyAmount == nil) {
+        return [ADJResult nilInputWithMessage:
+                @"Cannot create money instance without currency and amount"];
+    }
+    if (currencyResult.wasInputNil) {
+        return [ADJResult failWithMessage:@"Cannot create money instance without currency"];
+    }
+    if (moneyAmount == nil) {
+        return [ADJResult failWithMessage:@"Cannot create money instance without amount"];
+    }
+
+    return [ADJResult okWithValue:
             [[ADJMoney alloc] initWithAmount:moneyAmount currency:currencyResult.value]];
 }
 

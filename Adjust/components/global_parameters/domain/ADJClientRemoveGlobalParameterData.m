@@ -33,7 +33,7 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
     globalParameterType:(nonnull NSString *)globalParameterType
     logger:(nonnull ADJLogger *)logger
 {
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToRemoveResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull keyToRemoveResult =
         [ADJNonEmptyString instanceFromString:keyToRemove];
     if (keyToRemoveResult.fail != nil) {
         [logger errorClient:@"Invalid key to remove parameter"

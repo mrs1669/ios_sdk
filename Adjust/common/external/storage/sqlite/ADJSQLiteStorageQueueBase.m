@@ -406,7 +406,7 @@ static int const kInsertValueFieldPosition = 4;
 }
 
 #pragma mark - Abstract
-- (nonnull ADJResultNN<id> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResult<id> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -430,7 +430,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
     addReadDataToInMemoryQueueWithIoData:(nonnull ADJIoData *)readIoData
     currentElementPositionNumber:(nonnull NSNumber *)currentElementPositionNumber
 {
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull elementPositionToAddResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull elementPositionToAddResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber];
 
     if (elementPositionToAddResult.fail != nil) {
@@ -454,7 +454,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
          return elementPositionToAdd;
      }
 
-    ADJResultNN<id> *lastReadElementResult = [self concreteGenerateElementFromIoData:readIoData];
+    ADJResult<id> *lastReadElementResult = [self concreteGenerateElementFromIoData:readIoData];
     if (lastReadElementResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot add element to memory queue"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)

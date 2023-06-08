@@ -15,6 +15,7 @@
 @property (nonnull, readonly, strong, nonatomic) V value;
 @property (readonly, assign, nonatomic) BOOL wasInputNil;
 @property (nullable, readonly, strong, nonatomic) ADJResultFail *fail;
+@property (nullable, readonly, strong, nonatomic) ADJResultFail *failNonNilInput;
 
 // instantiation
 - (nullable instancetype)init NS_UNAVAILABLE;

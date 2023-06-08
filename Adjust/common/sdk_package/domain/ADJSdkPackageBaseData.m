@@ -51,40 +51,40 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
 
 #define pathToPackage(packageClass)                                         \
     if ([packageClass ## Path isEqualToString:path.stringValue]) {          \
-        return [ADJResultNN okWithValue:                                    \
+        return [ADJResult okWithValue:                                      \
             [[packageClass alloc] initWithClientSdk:clientSdk.stringValue   \
                                          parameters:parameters              \
                                              ioData:ioData]];               \
     }                                                                       \
 
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJSdkPackageBaseData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
++ (nonnull ADJResult<ADJSdkPackageBaseData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJSdkPackageDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create sdk package data from io data"
-                                        key:@"unexpected metadata type value fail"
-                                      otherFail:unexpectedMetadataTypeValueFail];
+        return [ADJResult failWithMessage:@"Cannot create sdk package data from io data"
+                                      key:@"unexpected metadata type value fail"
+                                otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJStringMap *_Nonnull propertiesMap = ioData.propertiesMap;
 
     ADJNonEmptyString *_Nullable path = [propertiesMap pairValueWithKey:kPathKey];
     if (path == nil) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Cannot create sdk package data from io data without path"];
     }
 
     ADJNonEmptyString *_Nullable clientSdk =
         [propertiesMap pairValueWithKey:kClientSdkKey];
     if (clientSdk == nil) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Cannot create sdk package data from io data without client sdk"];
     }
 
     ADJStringMap *_Nullable parameters = [ioData mapWithName:kParametersMapName];
     if (parameters == nil) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Cannot create sdk package data from io data without parameters"
                 key:@"parametersMapName"
                 stringValue:kParametersMapName];
@@ -102,7 +102,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     pathToPackage(ADJThirdPartySharingPackageData)
     pathToPackage(ADJMeasurementConsentPackageData)
 
-    return [ADJResultNN
+    return [ADJResult
             failWithMessage:@"Cannot create sdk package data from io data"
             " without matching path to valid package type"
             key:@""
@@ -241,7 +241,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     ADJV4ActivityPackage *_Nonnull v4ActivityPackage =
         (ADJV4ActivityPackage *)activityPackageObject;
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull v4ClientSdkResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull v4ClientSdkResult =
         [ADJNonEmptyString instanceFromString:v4ActivityPackage.clientSdk];
 
     if (v4ClientSdkResult.fail != nil) {
@@ -252,7 +252,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
         return nil;
     }
 
-    ADJResultNN<ADJStringMap *> * _Nonnull parametersResult =
+    ADJResult<ADJStringMap *> * _Nonnull parametersResult =
         [ADJSdkPackageBaseData convertV4ParametersWithV4ActivityPackage:v4ActivityPackage
                                                        optionalFailsMut:optionalFailsMut];
     if (parametersResult.fail != nil) {
@@ -261,7 +261,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
         return nil;
     }
 
-    ADJResultNN<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
+    ADJResult<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
         [ADJSdkPackageBaseData convertSdkPackageFromV4WithV4Path:v4ActivityPackage.path
                                                      v4ClientSdk:v4ClientSdkResult.value
                                                       parameters:parametersResult.value];
@@ -274,22 +274,22 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     return (id<ADJSdkPackageData>)sdkPackageDataResult.value;
 }
 
-+ (nonnull ADJResultNN<ADJStringMap *> *)
++ (nonnull ADJResult<ADJStringMap *> *)
     convertV4ParametersWithV4ActivityPackage:(nonnull ADJV4ActivityPackage *)v4ActivityPackage
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
     if (v4ActivityPackage.parameters == nil) {
-        return [ADJResultNN failWithMessage:@"Cannot use nil v4 activity package parameters"];
+        return [ADJResult failWithMessage:@"Cannot use nil v4 activity package parameters"];
     }
     if (v4ActivityPackage.parameters.count == 0) {
-        return [ADJResultNN failWithMessage:@"Cannot use empty v4 activity package parameters"];
+        return [ADJResult failWithMessage:@"Cannot use empty v4 activity package parameters"];
     }
 
     ADJStringMapBuilder *_Nonnull parametersBuilder =
         [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     for (NSString *key in v4ActivityPackage.parameters) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJNonEmptyString instanceFromString:key];
         if (keyResult.fail != nil) {
             [optionalFailsMut addObject:[[ADJResultFail alloc]
@@ -300,7 +300,7 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
             continue;
         }
 
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromString:
              [v4ActivityPackage.parameters objectForKey:keyResult.value.stringValue]];
         if (valueResult.fail != nil) {
@@ -316,24 +316,24 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
                                         key:keyResult.value.stringValue];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJStringMap alloc] initWithStringMapBuilder:parametersBuilder]];
 }
 
 #define v4PathToPackage(v4PathConst, packageClass)                                  \
     if ([v4Path isEqualToString:v4PathConst]) {                                     \
-        return [ADJResultNN okWithValue:                                            \
+        return [ADJResult okWithValue:                                              \
                 [[packageClass alloc] initWithClientSdk:v4ClientSdk.stringValue     \
                                              parameters:parameters]];               \
 }
 
-+ (nonnull ADJResultNN<ADJSdkPackageBaseData *> *)
++ (nonnull ADJResult<ADJSdkPackageBaseData *> *)
     convertSdkPackageFromV4WithV4Path:(nullable NSString *)v4Path
     v4ClientSdk:(nonnull ADJNonEmptyString *)v4ClientSdk
     parameters:(nonnull ADJStringMap *)parameters
 {
     if (v4Path == nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create package with nil v4 path"];
+        return [ADJResult failWithMessage:@"Cannot create package with nil v4 path"];
     }
 
     v4PathToPackage(ADJV4PurchasePath, ADJBillingSubscriptionPackageData)
@@ -347,15 +347,15 @@ static NSString *const kParametersMapName = @"PARAMETERS_MAP";
     // TODO: Add more package types, if they are added to v4
 
     if ([v4Path isEqualToString:ADJV4DisableThirdPartySharingPath]) {
-        return [ADJResultNN okWithValue:
+        return [ADJResult okWithValue:
                 [[ADJThirdPartySharingPackageData alloc]
                  initV4DisableThirdPartySharingMigratedWithClientSdk:v4ClientSdk.stringValue
                  parameters:parameters]];
     }
 
-    return [ADJResultNN failWithMessage:@"Cannot create package from unknown v4 path"
-                                    key:@"v4 path"
-                            stringValue:v4Path];
+    return [ADJResult failWithMessage:@"Cannot create package from unknown v4 path"
+                                  key:@"v4 path"
+                          stringValue:v4Path];
 }
 
 @end

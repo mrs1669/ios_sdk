@@ -56,12 +56,12 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
     ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
-    ADJResultNL<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
-        [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue];
+    ADJResult<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
+        [ADJMoneyAmountBase instanceFromIoValue:costAmountIoValue];
 
     NSArray<ADJResultFail *> *optionalFails = nil;
 
-    if (costAmountResult.fail != nil) {
+    if (costAmountResult.failNonNilInput != nil) {
         optionalFails = [NSArray arrayWithObject:
                          [[ADJResultFail alloc]
                           initWithMessage:@"Cannot use invalid cost amount in attribution data"
@@ -89,9 +89,9 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 }
 
 #define convV4String(field) \
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull field ## Result =                \
-        [ADJNonEmptyString instanceFromOptionalString:v4Attribution.field];     \
-    if (field ## Result.fail != nil) {                                                  \
+    ADJResult<ADJNonEmptyString *> *_Nonnull field ## Result =                \
+        [ADJNonEmptyString instanceFromString:v4Attribution.field];           \
+    if (field ## Result.failNonNilInput != nil) {                                       \
         [optFailsMut addObject:[[ADJResultFail alloc]                                   \
                                 initWithMessage:@"Invalid value from v4 attribution"    \
                                 key:@"field fail"                                       \
@@ -108,9 +108,9 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
     BOOL hasAtLeastOneValidField = NO;
 
-    ADJResultNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
-        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:v4Attribution.costAmount];
-    if (costAmountDoubleResult.fail != nil) {
+    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:v4Attribution.costAmount];
+    if (costAmountDoubleResult.failNonNilInput != nil) {
         [optFailsMut addObject:[[ADJResultFail alloc]
                                 initWithMessage:@"Invalid value from v4 attribution"
                                 key:@"cost amount double fail"
@@ -169,20 +169,19 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
 
-    ADJResultNL<NSNumber *> *_Nonnull costAmountDoubleNumberResult =
+    ADJResult<NSNumber *> *_Nonnull costAmountDoubleNumberResult =
         [ADJUtilMap extractDoubleNumberWithDictionary:attributionJson
                                                   key:ADJParamAttributionCostAmountKey];
-    if (costAmountDoubleNumberResult.fail != nil) {
+    if (costAmountDoubleNumberResult.failNonNilInput != nil) {
         [optionalFailsMut addObject:
          [[ADJResultFail alloc]
           initWithMessage:@"Cannot parse double value for cost amount from number"
           key:@"double number fail"
           otherFail:costAmountDoubleNumberResult.fail]];
     }
-    ADJResultNL<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
-        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:
-         costAmountDoubleNumberResult.value];
-    if (costAmountDoubleResult.fail != nil) {
+    ADJResult<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:costAmountDoubleNumberResult.value];
+    if (costAmountDoubleResult.failNonNilInput != nil) {
         [optionalFailsMut addObject:
          [[ADJResultFail alloc]
           initWithMessage:@"Cannot parse money value for cost amount from double number"
@@ -369,11 +368,11 @@ ioValueSerializable:ioValue]            \
     key:(nonnull NSString *)key
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
-    ADJResultNL<NSString *> *_Nonnull extractedNsStringResult =
+    ADJResult<NSString *> *_Nonnull extractedNsStringResult =
         [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
                                                  key:key];
 
-    if (extractedNsStringResult.fail != nil) {
+    if (extractedNsStringResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull failBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot extract string value from json"];
@@ -384,9 +383,9 @@ ioValueSerializable:ioValue]            \
         [optionalFailsMut addObject:[failBuilder build]];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
-        [ADJNonEmptyString instanceFromOptionalString:extractedNsStringResult.value];
-    if (stringResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull stringResult =
+        [ADJNonEmptyString instanceFromString:extractedNsStringResult.value];
+    if (stringResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull failBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot parse string from extracted json value"];

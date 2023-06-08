@@ -23,59 +23,51 @@
 
 @implementation ADJMoneyDoubleAmount
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
     instanceFromIoLlfValue:(nonnull NSString *)ioLlfValue
 {
-    ADJResultNN<NSNumber *> *_Nonnull doubleNumberValueResult =
+    ADJResult<NSNumber *> *_Nonnull doubleNumberValueResult =
         [self convertToDoubleNumberWithIoLlfValue:ioLlfValue];
 
     if (doubleNumberValueResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not obtain double number from llf string value"
-                                        key:@"convert to double from llf string value fail"
-                                  otherFail:doubleNumberValueResult.fail];
+                                      key:@"convert to double from llf string value fail"
+                                otherFail:doubleNumberValueResult.fail];
     }
     return [self instanceFromDoubleNumberValue:doubleNumberValueResult.value];
 }
 
-+ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
     instanceFromDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
 {
     if (doubleNumberValue == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult nilInputWithMessage:
                 @"Cannot create money amount with nil double number value"];
     }
 
     if ([ADJUtilF isNotANumber:doubleNumberValue]) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:@"Cannot create money amount with NaN double number: %@",
                  doubleNumberValue.description]];
     }
 
     if (doubleNumberValue.doubleValue != 0.0 && ! isnormal(doubleNumberValue.doubleValue)) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:@"Cannot create money amount with"
                  " double number that is not normal, while not being 0.0: %@",
                  doubleNumberValue.description]];
     }
 
     if (doubleNumberValue.doubleValue < 0.0) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:
                  @"Cannot create money amount with negative double number: %@",
                  doubleNumberValue.description]];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJMoneyDoubleAmount alloc] initWithDoubleNumberValue:doubleNumberValue]];
-}
-
-+ (nonnull ADJResultNL<ADJMoneyDoubleAmount *> *)
-    instanceFromOptionalDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
-{
-    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(NSNumber *_Nullable value) {
-        return [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:value];
-    } nlValue:doubleNumberValue];
 }
 
 - (nonnull instancetype)initWithDoubleNumberValue:(nonnull NSNumber *)doubleNumberValue {
@@ -146,16 +138,16 @@
 }
 
 #pragma mark Internal Methods
-+ (nonnull ADJResultNN<NSNumber *> *)convertToDoubleNumberWithIoLlfValue:
++ (nonnull ADJResult<NSNumber *> *)convertToDoubleNumberWithIoLlfValue:
     (nonnull NSString *)ioLlfValue
 {
-    ADJResultNN<NSNumber *> *_Nonnull llNumberResult =
+    ADJResult<NSNumber *> *_Nonnull llNumberResult =
         [ADJUtilConv convertToLLNumberWithStringValue:ioLlfValue];
     if (llNumberResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
-                    @"Could not convert first to ll number, before converting to double"
-                                        key:@"string to ll number fail"
-                                  otherFail:llNumberResult.fail];
+        return [ADJResult failWithMessage:
+                @"Could not convert first to ll number, before converting to double"
+                                      key:@"string to ll number fail"
+                                otherFail:llNumberResult.fail];
     }
     
     long long llValue = llNumberResult.value.longLongValue;
@@ -164,7 +156,7 @@
     
     double doubleValue = *(doublePtr);
     
-    return [ADJResultNN okWithValue:@(doubleValue)];
+    return [ADJResult okWithValue:@(doubleValue)];
 }
 
 + (BOOL)isDoubleValidWithValue:(double)doubleValue {

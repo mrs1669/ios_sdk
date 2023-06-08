@@ -170,7 +170,7 @@
         (nonnull id<ADJClientActionIoDataInjectable>)clientActionIoDataInjectable
     clientActionHandlerId:(nonnull NSString *)clientActionHandlerId
 {
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot enqueue client action without a valid now timestamp"
                    resultFail:nowResult.fail

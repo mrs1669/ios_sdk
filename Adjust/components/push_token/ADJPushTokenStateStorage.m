@@ -34,7 +34,7 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJPushTokenStateData *> *)
+- (nonnull ADJResult<ADJPushTokenStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
     return [ADJPushTokenStateData instanceFromIoData:ioData];

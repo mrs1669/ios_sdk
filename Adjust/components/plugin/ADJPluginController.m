@@ -163,7 +163,7 @@
         [foundationMapToRead copy];
 
     for (NSString *_Nonnull readKey in foundationMapToReadCopy) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToWriteResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull keyToWriteResult =
             [ADJNonEmptyString instanceFromString:readKey];
 
         if (keyToWriteResult.fail != nil) {
@@ -178,7 +178,7 @@
 
         NSString *_Nonnull readValue = [foundationMapToReadCopy objectForKey:readKey];
 
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueToWriteResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull valueToWriteResult =
             [ADJNonEmptyString instanceFromString:readValue];
 
         if (valueToWriteResult.fail != nil) {

@@ -37,7 +37,7 @@
 // public api
 - (nullable ADJNonEmptyString *)keychainUuid;
 - (nullable ADJNonEmptyString *)nonKeychainUuid;
-- (nonnull ADJResultNN<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync;
+- (nonnull ADJResult<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync;
 
 @end
 

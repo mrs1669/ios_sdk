@@ -11,14 +11,14 @@
 #import "ADJMoneyAmountBase.h"
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
-#import "ADJResultNN.h"
+#import "ADJResult.h"
 
 @interface ADJMoneyDecimalAmount : ADJMoneyAmountBase
 // instantiation
-+ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)
++ (nonnull ADJResult<ADJMoneyDecimalAmount *> *)
     instanceFromIoDecValue:(nonnull NSString *)ioDecValue;
 
-+ (nonnull ADJResultNN<ADJMoneyDecimalAmount *> *)instanceFromDecimalNumberValue:
++ (nonnull ADJResult<ADJMoneyDecimalAmount *> *)instanceFromDecimalNumberValue:
     (nullable NSDecimalNumber *)decimalNumberValue;
 
 // public properties

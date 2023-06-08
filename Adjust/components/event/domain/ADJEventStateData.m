@@ -26,25 +26,25 @@ static NSString *const kEventCountKey = @"eventCount";
 
 @implementation ADJEventStateData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJEventStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
++ (nonnull ADJResult<ADJEventStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJEventStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create event state data from io data"
-                                        key:@"unexpected metadata type value fail"
-                                  otherFail:unexpectedMetadataTypeValueFail];
+        return [ADJResult failWithMessage:@"Cannot create event state data from io data"
+                                      key:@"unexpected metadata type value fail"
+                                otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJResultNN<ADJTallyCounter *> *_Nonnull eventCountResult =
+    ADJResult<ADJTallyCounter *> *_Nonnull eventCountResult =
         [ADJTallyCounter instanceFromIoDataValue:
          [ioData.propertiesMap pairValueWithKey:kEventCountKey]];
     if (eventCountResult.fail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create event state data from io data"
-                                        key:@"eventCount fail"
-                                  otherFail:eventCountResult.fail];
+        return [ADJResult failWithMessage:@"Cannot create event state data from io data"
+                                      key:@"eventCount fail"
+                                otherFail:eventCountResult.fail];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJEventStateData alloc] initWithEventCount:eventCountResult.value]];
 }
 
@@ -55,11 +55,11 @@ static NSString *const kEventCountKey = @"eventCount";
         return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
     }
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
-        [ADJNonNegativeInt instanceFromOptionalIntegerNumber:v4ActivityState.eventCountNumberInt];
+    ADJResult<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
+        [ADJNonNegativeInt instanceFromIntegerNumber:v4ActivityState.eventCountNumberInt];
 
     NSArray<ADJResultFail *> *optionalFails = nil;
-    if (eventCountIntResult.fail != nil) {
+    if (eventCountIntResult.failNonNilInput != nil) {
         optionalFails = [NSArray arrayWithObject:
                          [[ADJResultFail alloc]
                           initWithMessage:@"Invalid value from v4 activity state"

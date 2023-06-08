@@ -45,7 +45,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
     
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull eventTokenResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull eventTokenResult =
         [ADJNonEmptyString instanceFromString:adjustEvent.eventToken];
     if (eventTokenResult.fail != nil) {
         [logger errorClient:@"Cannot create event with invalid event token"
@@ -53,20 +53,20 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         return nil;
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull deduplicationIdResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustEvent.deduplicationId];
-    if (deduplicationIdResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull deduplicationIdResult =
+        [ADJNonEmptyString instanceFromString:adjustEvent.deduplicationId];
+    if (deduplicationIdResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid deduplication id"
                   resultFail:deduplicationIdResult.fail];
     }
 
-    ADJResultNL<ADJMoney *> *_Nonnull revenueResult = [self revenueWithAdjustEvent:adjustEvent];
-    if (revenueResult.fail != nil) {
+    ADJResult<ADJMoney *> *_Nonnull revenueResult = [self revenueWithAdjustEvent:adjustEvent];
+    if (revenueResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid revenue"
                   resultFail:revenueResult.fail];
     }
 
-    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
+    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull callbackParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
          adjustEvent.callbackParameterKeyValueArray];
 
@@ -77,9 +77,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJStringMap *_Nullable callbackParameters = nil;
 
-    ADJResultNL<ADJStringMap *> *_Nonnull callbackParametersResult =
+    ADJResult<ADJStringMap *> *_Nonnull callbackParametersResult =
         callbackParametersOptFails.value;
-    if (callbackParametersResult.fail != nil) {
+    if (callbackParametersResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use event callback parameters"
                   resultFail:callbackParametersResult.fail];
     } else if (callbackParametersResult.value != nil) {
@@ -90,7 +90,7 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         }
     }
 
-    ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
+    ADJOptionalFailsNN<ADJResult<ADJStringMap *> *> *_Nonnull partnerParametersOptFails =
         [ADJUtilConv convertToStringMapWithKeyValueArray:
          adjustEvent.partnerParameterKeyValueArray];
 
@@ -101,9 +101,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 
     ADJStringMap *_Nullable partnerParameters = nil;
 
-    ADJResultNL<ADJStringMap *> *_Nonnull partnerParametersResult =
+    ADJResult<ADJStringMap *> *_Nonnull partnerParametersResult =
         partnerParametersOptFails.value;
-    if (callbackParametersResult.fail != nil) {
+    if (callbackParametersResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot use event partner parameters"
                   resultFail:partnerParametersResult.fail];
     } else if (partnerParametersResult.value != nil) {
@@ -114,11 +114,11 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
         }
     }
 
-    return [[self alloc] initWithEventId:eventTokenResult.value
-                         deduplicationId:deduplicationIdResult.value
-                                 revenue:revenueResult.value
-                      callbackParameters:callbackParameters
-                       partnerParameters:partnerParameters];
+    return [[ADJClientEventData alloc] initWithEventId:eventTokenResult.value
+                                       deduplicationId:deduplicationIdResult.value
+                                               revenue:revenueResult.value
+                                    callbackParameters:callbackParameters
+                                     partnerParameters:partnerParameters];
 }
 
 + (nullable instancetype)
@@ -287,29 +287,14 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 }
 
 #pragma mark Internal Methods
-+ (nonnull ADJResultNL<ADJMoney *> *)revenueWithAdjustEvent:(nonnull ADJAdjustEvent *)adjustEvent {
-    if (adjustEvent.revenueCurrency == nil
-        && adjustEvent.revenueAmountDoubleNumber == nil
-        && adjustEvent.revenueAmountDecimalNumber == nil)
-    {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    __block NSString *_Nullable blockRevenueCurrency = adjustEvent.revenueCurrency;
-
++ (nonnull ADJResult<ADJMoney *> *)revenueWithAdjustEvent:(nonnull ADJAdjustEvent *)adjustEvent {
     if (adjustEvent.revenueAmountDecimalNumber == nil) {
-        return [ADJResultNL instanceFromNN:
-                ^ADJResultNN *_Nonnull(NSNumber *_Nullable revenueAmountDoubleNumber) {
-            return [ADJMoney instanceFromAmountDoubleNumber:revenueAmountDoubleNumber
-                                                   currency:blockRevenueCurrency];
-        } nlValue:adjustEvent.revenueAmountDoubleNumber];
-    }
-
-    return [ADJResultNL instanceFromNN:
-            ^ADJResultNN *_Nonnull(NSDecimalNumber *_Nullable revenueAmountDecimalNumber) {
+        return [ADJMoney instanceFromAmountDoubleNumber:adjustEvent.revenueAmountDoubleNumber
+                                               currency:adjustEvent.revenueCurrency];
+    } else {
         return [ADJMoney instanceFromAmountDecimalNumber:adjustEvent.revenueAmountDecimalNumber
-                                                currency:blockRevenueCurrency];
-    } nlValue:adjustEvent.revenueAmountDecimalNumber];
+                                                currency:adjustEvent.revenueCurrency];
+    }
 }
 
 + (void)setRevenueWithAdjustEvent:(nonnull ADJAdjustEvent *)adjustEvent
@@ -318,9 +303,9 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
 {
     ADJNonEmptyString *_Nullable revenueAmountIoValue =
         [propertiesMap pairValueWithKey:kRevenueAmountKey];
-    ADJResultNL<ADJMoneyAmountBase *> *_Nonnull revenueAmountResult =
-        [ADJMoneyAmountBase instanceFromOptionalIoValue:revenueAmountIoValue];
-    if (revenueAmountResult.fail != nil) {
+    ADJResult<ADJMoneyAmountBase *> *_Nonnull revenueAmountResult =
+        [ADJMoneyAmountBase instanceFromIoValue:revenueAmountIoValue];
+    if (revenueAmountResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid revenue amount from adjust event"
                   resultFail:revenueAmountResult.fail];
     }

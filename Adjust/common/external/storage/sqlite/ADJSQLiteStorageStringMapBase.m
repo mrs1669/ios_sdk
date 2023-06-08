@@ -142,7 +142,7 @@ static NSString *const kColumnValue = @"value";
 
     ADJStringMapBuilder *_Nonnull mapBuilder = [[ADJStringMapBuilder alloc] initWithEmptyMap];
     do {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull pairKeyResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull pairKeyResult =
             [ADJNonEmptyString instanceFromString:
              [selectStatement stringForColumnIndex:kSelectKeyFieldIndex]];
 
@@ -153,7 +153,7 @@ static NSString *const kColumnValue = @"value";
             continue;
         }
 
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull pairValueResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull pairValueResult =
             [ADJNonEmptyString instanceFromString:
              [selectStatement stringForColumnIndex:kSelectValueFieldIndex]];
 

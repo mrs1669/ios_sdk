@@ -95,7 +95,7 @@
 {
     NSString *_Nullable fieldString = [selectStatement stringForColumnIndex:columnIndex];
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull fieldValueResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull fieldValueResult =
         [ADJNonEmptyString instanceFromString:fieldString];
 
     if (fieldValueResult.fail != nil) {

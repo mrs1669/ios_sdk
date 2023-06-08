@@ -158,7 +158,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
                                             nonMonotonicNowTimestamp:nonMonotonicNowTimestamp];
     }
 
-    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
+    ADJResult<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
         [ADJMeasurementSessionData instanceFromBuilder:sessionDataBuilder];
     if (newMeasurementSessionDataResult.fail != nil) {
         [self.logger debugDev:@"Cannot change to Active Session with invalid measurement session"
@@ -353,7 +353,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     [self increaseTimeSpentWithBuilder:measurementSessionDataBuilder
              intervalSinceLastActivity:intervalSinceLastActivity];
 
-    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
+    ADJResult<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
         [ADJMeasurementSessionData instanceFromBuilder:measurementSessionDataBuilder];
 
     if (newMeasurementSessionDataResult.fail != nil) {

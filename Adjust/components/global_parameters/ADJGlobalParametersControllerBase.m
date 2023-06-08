@@ -54,7 +54,7 @@
         [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     for (NSString *_Nonnull key in sessionParameters) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJNonEmptyString instanceFromString:key];
         if (keyResult.fail != nil) {
             [optionalFailsMut addObject:[[ADJResultFail alloc]
@@ -64,7 +64,7 @@
             continue;
         }
 
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromString:[sessionParameters objectForKey:key]];
         if (valueResult.fail != nil) {
             [optionalFailsMut addObject:[[ADJResultFail alloc]

@@ -310,7 +310,7 @@
         return sendingParameters;
     }
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
                   resultFail:nowResult.fail

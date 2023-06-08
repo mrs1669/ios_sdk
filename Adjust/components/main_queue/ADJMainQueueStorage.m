@@ -41,19 +41,19 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nonnull ADJResultNN<id<ADJSdkPackageData>> *)concreteGenerateElementFromIoData:
+- (nonnull ADJResult<id<ADJSdkPackageData>> *)concreteGenerateElementFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJResultNN<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
+    ADJResult<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
         [ADJSdkPackageBaseData instanceFromIoData:ioData];
     if (sdkPackageDataResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not parse sdk package data from io data for the main queue"
                                         key:@"sdkPackageData fail"
                                   otherFail:sdkPackageDataResult.fail];
     }
 
-    return (ADJResultNN<id<ADJSdkPackageData>> *)sdkPackageDataResult;
+    return (ADJResult<id<ADJSdkPackageData>> *)sdkPackageDataResult;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull id<ADJSdkPackageData>)element {

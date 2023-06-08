@@ -28,20 +28,20 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
 
 @implementation ADJGdprForgetStateData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJGdprForgetStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
++ (nonnull ADJResult<ADJGdprForgetStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJGdprForgetStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create gdpr forget state data from io data"
-                                        key:@"unexpected metadata type value fail"
-                                  otherFail:unexpectedMetadataTypeValueFail];
+        return [ADJResult failWithMessage:@"Cannot create gdpr forget state data from io data"
+                                      key:@"unexpected metadata type value fail"
+                                otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJResult<ADJBooleanWrapper *> *_Nonnull forgottenByBackendResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kForgottenByBackendKey]];
     if (forgottenByBackendResult.fail != nil) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Cannot create gdpr forget state data from io data"
                 key:@"forgottenByBackend fail"
                 otherFail:forgottenByBackendResult.fail];
@@ -51,13 +51,13 @@ static NSString *const kAskedToForgetBySdkKey = @"askedToForgetBySdk";
         [ADJBooleanWrapper
          instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kAskedToForgetBySdkKey]];
     if (askedToForgetBySdkResult.fail != nil) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Cannot create gdpr forget state data from io data"
                 key:@"askedToForgetBySdk fail"
                 otherFail:askedToForgetBySdkResult.fail];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJGdprForgetStateData alloc]
              initWithForgottenByBackend:forgottenByBackendResult.value.boolValue
              askedToForgetBySdk:askedToForgetBySdkResult.value.boolValue]];
