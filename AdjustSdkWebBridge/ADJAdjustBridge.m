@@ -305,7 +305,7 @@ NS_ASSUME_NONNULL_END
         [adjustConfig doNotLogAny];
     }
 
-    [adjustConfig setUrlStrategy:urlStrategy];
+    [adjustConfig setUrlStrategyBaseDomain:urlStrategy];
     [adjustConfig setDefaultTracker:defaultTracker];
     [adjustConfig setCustomEndpointWithUrl:customEndpointUrl
                   optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
@@ -352,7 +352,7 @@ NS_ASSUME_NONNULL_END
     NSArray *callbackParameters = [data objectForKey:@"callbackParameters"];
     NSArray *partnerParameters = [data objectForKey:@"partnerParameters"];
 
-    ADJAdjustEvent *_Nonnull adjustEvent = [[ADJAdjustEvent alloc] initWithEventId:eventToken];
+    ADJAdjustEvent *_Nonnull adjustEvent = [[ADJAdjustEvent alloc] initWithEventToken:eventToken];
     [adjustEvent setRevenueWithDoubleNumber:revenue currency:currency];
     [adjustEvent setDeduplicationId:deduplicationId];
 

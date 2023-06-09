@@ -24,20 +24,25 @@ NSString *const ADJLaunchedDeeplinkStateDataMetadataTypeValue = @"LaunchedDeepli
 static NSString *const kLaunchedDeeplinkKey = @"launchedDeeplink";
 
 @implementation ADJLaunchedDeeplinkStateData
-
 #pragma mark Instantiation
-
-+ (nullable instancetype)instanceFromIoData:(nonnull ADJIoData *)ioData
-                                     logger:(nonnull ADJLogger *)logger {
-    if (![ioData isExpectedMetadataTypeValue:ADJLaunchedDeeplinkStateDataMetadataTypeValue
-                                      logger:logger]) {
-        return nil;
++ (nonnull ADJResultNN<ADJLaunchedDeeplinkStateData *> *)
+    instanceFromIoData:(nonnull ADJIoData *)ioData
+{
+    ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
+        [ioData isExpectedMetadataTypeValue:ADJLaunchedDeeplinkStateDataMetadataTypeValue];
+    if (unexpectedMetadataTypeValueFail != nil) {
+        return [ADJResultNN
+                failWithMessage:@"Cannot create launched deeplink statedata from io data"
+                key:@"unexpected metadata type value fail"
+                otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJNonEmptyString *_Nullable launchedDeeplink =
-    [ioData.propertiesMap pairValueWithKey:kLaunchedDeeplinkKey];
 
-    return [[self alloc] initWithLaunchedDeeplink:launchedDeeplink];
+    ADJNonEmptyString *_Nullable launchedDeeplink =
+        [ioData.propertiesMap pairValueWithKey:kLaunchedDeeplinkKey];
+
+    return [ADJResultNN okWithValue:
+            [[ADJLaunchedDeeplinkStateData alloc] initWithLaunchedDeeplink:launchedDeeplink]];
 }
 
 - (nonnull instancetype)initWithInitialState {
