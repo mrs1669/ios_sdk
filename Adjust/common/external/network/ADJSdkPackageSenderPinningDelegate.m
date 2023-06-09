@@ -51,9 +51,10 @@ static const unsigned char kEcDsaSecp384r1Asn1Header[] =
 @implementation ADJSdkPackageSenderPinningDelegate
 #pragma mark Instantiation
 - (nonnull instancetype) initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                 publicKeyHash:(nonnull ADJNonEmptyString *)publicKeyHash {
+                                 publicKeyHash:(nonnull ADJNonEmptyString *)publicKeyHash
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"SdkPackageSenderPinningDelegate"];
+                             loggerName:@"SdkPackageSenderPinningDelegate"];
     _publicKeyHash = publicKeyHash;
 
     return self;

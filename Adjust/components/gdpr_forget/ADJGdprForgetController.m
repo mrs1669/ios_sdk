@@ -45,7 +45,7 @@
     gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"GdprForgetController"];
     _gdprForgetStateStorageWeak = gdprForgetStateStorage;
     _sdkPackageBuilderWeak = nil;
     _clockWeak = nil;
@@ -59,8 +59,9 @@
     _gdprForgetTracker = [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
                                                    gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
     
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
     
     _sender = nil;
     
@@ -80,7 +81,7 @@
     
     self.sender = [sdkPackageSenderFactory
                    createSdkPackageSenderWithLoggerFactory:loggerFactory
-                   sourceDescription:self.source
+                   sourceLoggerName:self.logger.name
                    threadExecutorFactory:threadExecutorFactory];
 }
 
@@ -108,7 +109,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf processForgetDevice];
-    } source:@"forget device"];
+    } from:@"forget device"];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
@@ -133,7 +134,7 @@
         [strongSelf processGdprForgetResponseInStateWithData:gdprForgetResponseData];
         
         [strongSelf processGdprForgetResponseInTrackerWithData:gdprForgetResponseData];
-    } source:@"received gdpr forget response"];
+    } from:@"received gdpr forget response"];
 }
 
 #pragma mark - ADJSdkInitSubscriber
@@ -144,7 +145,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf processSdkInit];
-    } source:@"sdk init"];
+    } from:@"sdk init"];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -155,7 +156,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf.gdprForgetState canStartPublish];
-    } source:@"allowed to publish notifications"];
+    } from:@"allowed to publish notifications"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -168,7 +169,7 @@
         [strongSelf processForegroundInState];
         
         [strongSelf processForegroundInTracker];
-    } source:@"foreground"];
+    } from:@"foreground"];
 }
 
 - (void)ccDidBackground {
@@ -180,7 +181,7 @@
         [strongSelf.gdprForgetState appWentToTheBackground];
         
         [strongSelf.gdprForgetTracker pauseTrackingWhenAppWentToBackground];
-    } source:@"background"];
+    } from:@"background"];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -196,7 +197,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf processOptOut];
-    } source:@"received opt out sdk response"];
+    } from:@"received opt out sdk response"];
 }
 
 #pragma mark Internal Methods
@@ -286,7 +287,7 @@
         }
     }
                                 delayTimeMilli:delayData.delay
-                                        source:@"send gdpr forget"];
+                                        from:@"send gdpr forget"];
 }
 
 - (void)processSdkInit {

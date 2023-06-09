@@ -21,10 +21,12 @@
 
 @implementation ADJGlobalParametersControllerBase
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
-                         globalParametersType:(nonnull NSString *)globalParametersType
-                   sqliteStorageStringMapBase:(nonnull ADJSQLiteStorageStringMapBase *)sqliteStorageStringMapBase {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    loggerName:(nonnull NSString *)loggerName
+    globalParametersType:(nonnull NSString *)globalParametersType
+    sqliteStorageStringMapBase:(nonnull ADJSQLiteStorageStringMapBase *)sqliteStorageStringMapBase
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJGlobalParametersControllerBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -32,7 +34,7 @@
     }
 
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:source];
+                             loggerName:loggerName];
 
     _sqliteStorageStringMapBaseWeak = sqliteStorageStringMapBase;
 

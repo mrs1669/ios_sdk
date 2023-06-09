@@ -24,11 +24,14 @@ NSString *const ADJLaunchedDeeplinkClientActionHandlerId = @"LaunchedDeeplinkCon
 
 @implementation ADJLaunchedDeeplinkController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                 launchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
-    self = [super initWithLoggerFactory:loggerFactory source:@"LaunchedDeeplinkController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    launchedDeeplinkStateStorage:
+        (nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"LaunchedDeeplinkController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
     _launchedDeeplinkStorageWeak = launchedDeeplinkStateStorage;

@@ -27,12 +27,13 @@
 @property (nonnull, readonly, strong, nonatomic) ADJDeviceInfoData *deviceInfoData;
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                                        clock:(nonnull ADJClock *)clock
-                             deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
-                              keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
-                          deviceIdsConfigData:(nonnull ADJExternalConfigData *)deviceIdsConfigData;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    clock:(nonnull ADJClock *)clock
+    deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
+    keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
+    deviceIdsConfigData:(nonnull ADJExternalConfigData *)deviceIdsConfigData;
 
 // public api
 - (nullable ADJNonEmptyString *)keychainUuid;

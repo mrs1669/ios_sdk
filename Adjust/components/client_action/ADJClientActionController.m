@@ -37,10 +37,9 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                           clientActionStorage:(nonnull ADJClientActionStorage *)clientActionStorage
-                                        clock:(nonnull ADJClock *)clock {
-
-    self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"ClientActionController"];
+                                        clock:(nonnull ADJClock *)clock
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ClientActionController"];
     _storage = clientActionStorage;
     _clock = clock;
     _clientActionsPostSdkStartWeak = nil;

@@ -68,17 +68,6 @@
 
     // save log message to process when SDK gets initialised
     [self.preSdkInitLogArray addObject:logMessageData];
-
-    // print error log, when it's in debug mode, even in production environment
-    /*
-     #ifdef DEBUG
-     if ([messageLogLevel isEqualToString:ADJAdjustLogLevelError]) {
-     [self printLogMessage:logMessage
-     source:source
-     messageLogLevel:messageLogLevel];
-     }
-     #endif
-     */
 }
 
 - (void)didSdkInitWithIsSandboxEnvironment:(BOOL)isSandboxEnvironment
@@ -246,7 +235,7 @@
     NSString *_Nonnull preInitFormat = !isPreSdkInit ? @"" : @"PreInit";
 
 
-    [foundationDictionary removeObjectForKey:ADJLogSourceKey];
+    [foundationDictionary removeObjectForKey:ADJLogLoggerNameKey];
     [foundationDictionary removeObjectForKey:ADJLogMessageKey];
     NSString *_Nonnull restFormat = [foundationDictionary count] == 0 ? @"" :
         [NSString stringWithFormat:@"rest:%@",
@@ -261,10 +250,10 @@
          paramsFormat, failResultFormat, restFormat, sdkPackageParamsFormat];
 
     /**
-     [source]{issue} message callerDescription {params}fail:{fail}rest:{rest} clientLevel_instanceId<threadId>PreInit
+     [loggerName]{issue} message callerDescription {params}fail:{fail}rest:{rest} clientLevel_instanceId<threadId>PreInit
      */
     return [NSString stringWithFormat:@"[%@]%@ %@%@%@ %@%@%@%@",
-            logMessageData.sourceDescription,
+            logMessageData.loggerName,
             issueFormat,
 
             logMessageData.inputData.message,

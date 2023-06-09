@@ -30,7 +30,7 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
 {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"MainQueueStorage"
+                             loggerName:@"MainQueueStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kMainQueueStorageTableName

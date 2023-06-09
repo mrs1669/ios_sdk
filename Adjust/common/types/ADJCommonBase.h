@@ -14,12 +14,11 @@
 @interface ADJCommonBase : NSObject
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
 NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nonnull, readonly, strong, nonatomic) NSString *source;
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
 
 @end

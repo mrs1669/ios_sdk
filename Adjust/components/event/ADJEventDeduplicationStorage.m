@@ -16,9 +16,10 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"EventDeduplicationStorage"
+                             loggerName:@"EventDeduplicationStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kEventDeduplicationStorageTableName

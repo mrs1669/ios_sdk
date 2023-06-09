@@ -40,13 +40,15 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 
 @implementation ADJDeviceController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                                        clock:(nonnull ADJClock *)clock
-                             deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
-                              keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
-                          deviceIdsConfigData:(nonnull ADJExternalConfigData *)deviceIdsConfigData {
-    self = [super initWithLoggerFactory:loggerFactory source:@"DeviceController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    clock:(nonnull ADJClock *)clock
+    deviceIdsStorage:(nonnull ADJDeviceIdsStorage *)deviceIdsStorage
+    keychainStorage:(nonnull ADJKeychainStorage *)keychainStorage
+    deviceIdsConfigData:(nonnull ADJExternalConfigData *)deviceIdsConfigData
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"DeviceController"];
     _clockWeak = clock;
     _deviceIdsStorageWeak = deviceIdsStorage;
     _deviceIdsConfigData = deviceIdsConfigData;

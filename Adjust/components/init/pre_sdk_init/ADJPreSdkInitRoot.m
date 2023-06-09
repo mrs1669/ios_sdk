@@ -24,7 +24,8 @@
 #pragma mark Instantiation
 - (nonnull instancetype)initWithInstanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag {
     
-    self = [super initWithLoggerFactory:instanceRootBag.logController source:@"PreSdkInitRoot"];
+    self = [super initWithLoggerFactory:instanceRootBag.logController
+                             loggerName:@"PreSdkInitRoot"];
 
     ADJSdkConfigData *_Nonnull sdkConfig = instanceRootBag.sdkConfigData;
     id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;

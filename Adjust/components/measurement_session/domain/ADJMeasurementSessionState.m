@@ -63,7 +63,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     minMeasurementSessionInterval:
         (nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionState"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MeasurementSessionState"];
     _stateData = initialMeasurementSessionStateData;
     _minMeasurementSessionInterval = minMeasurementSessionInterval;
     _overwriteFirstSdkSessionInterval = overwriteFirstSdkSessionInterval;
@@ -86,7 +86,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     }
 
     return [self changeToActiveSessionWithExternalNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                            source:@"sdk start"];
+                                                            from:@"sdk start"];
 }
 
 - (nullable ADJMeasurementSessionStateOutputData *)resumeMeasurementWithNowTimestamp:
@@ -101,7 +101,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     }
 
     return [self changeToActiveSessionWithExternalNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                                    source:@"resume measurement"];
+                                                                    from:@"resume measurement"];
 }
 
 - (nullable ADJMeasurementSessionStateOutputData *)pauseMeasurementWithNowTimestamp:
@@ -116,7 +116,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     }
 
     return [self changeToPauseSessionWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                           source:@"pause measurement"];
+                                                           from:@"pause measurement"];
 }
 
 - (nullable ADJMeasurementSessionStateOutputData *)keepAlivePingWithNonMonotonicNowTimestamp:
@@ -124,17 +124,17 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 {
     return
         [self updateIntevalsInActiveSessionWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                                 source:@"keep alive ping"];
+                                                                 from:@"keep alive ping"];
 }
 
 #pragma mark Internal Methods
 - (nullable ADJMeasurementSessionStateOutputData *)
     changeToActiveSessionWithExternalNonMonotonicNowTimestamp:
         (nonnull ADJTimestampMilli *)externalNonMonotonicNowTimestamp
-    source:(nonnull NSString *)source
+    from:(nonnull NSString *)from
 {
     [self.logger debugDev:@"Changing to ActiveState"
-                     from:source
+                     from:from
                       key:@"status"
                     value:self.measurementSessionStatus];
 
@@ -296,15 +296,15 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 - (nullable ADJMeasurementSessionStateOutputData *)
     changeToPauseSessionWithNonMonotonicNowTimestamp:
         (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp
-    source:(nonnull NSString *)source
+    from:(nonnull NSString *)from
 {
     ADJMeasurementSessionStateOutputData *_Nullable outputData =
         [self updateIntevalsInActiveSessionWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                                 source:source];
+                                                                 from:from];
     if (outputData == nil) { return nil; }
 
     [self.logger debugDev:@"Changing to pause session from active"
-                     from:source];
+                     from:from];
 
     self.measurementSessionStatus = kPausedSessionStatus;
 
@@ -314,11 +314,11 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 - (nullable ADJMeasurementSessionStateOutputData *)
     updateIntevalsInActiveSessionWithNonMonotonicNowTimestamp:
         (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp
-    source:(nonnull NSString *) source
+    from:(nonnull NSString *)from
 {
     if (self.measurementSessionStatus != kActiveSessionStatus) {
         [self.logger debugDev:@"Cannot update intervals in non-active session"
-                         from:source
+                         from:from
                           key:@"status"
                         value:self.measurementSessionStatus];
         return nil;

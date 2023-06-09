@@ -21,10 +21,11 @@
 
 @interface ADJGlobalParametersControllerBase : ADJCommonBase<ADJClientActionHandler>
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
-                         globalParametersType:(nonnull NSString *)globalParametersType
-                   sqliteStorageStringMapBase:(nonnull ADJSQLiteStorageStringMapBase *)sqliteStorageStringMapBase;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    loggerName:(nonnull NSString *)loggerName
+    globalParametersType:(nonnull NSString *)globalParametersType
+    sqliteStorageStringMapBase:(nonnull ADJSQLiteStorageStringMapBase *)sqliteStorageStringMapBase;
 
 + (nonnull ADJOptionalFailsNL<ADJStringMap *> *)
     paramsInstanceFromV4WithSessionParameters:

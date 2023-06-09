@@ -21,7 +21,7 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"GlobalPartnerParametersStorage"
+                             loggerName:@"GlobalPartnerParametersStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kGlobalPartnerParametersStorageTableName];

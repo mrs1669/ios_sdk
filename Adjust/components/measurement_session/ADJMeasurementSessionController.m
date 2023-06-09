@@ -51,7 +51,7 @@
     clientActionController:(nonnull ADJClientActionController *)clientActionController
     postSdkStart:(nonnull id<ADJClientActionsAPIPostSdkStart>)postSdkStart
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MeasurementSessionController"];
     _overwriteFirstMeasurementSessionInterval = overwriteFirstMeasurementSessionInterval;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
@@ -75,7 +75,7 @@
 #pragma mark Public API
 - (BOOL)ccTryStartSdk {
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestamp =
-        [self ccNonMonotonicNowTimestampWithSource:@"try start sdk"];
+        [self ccNonMonotonicNowTimestampWithFrom:@"try start sdk"];
     if (nonMonotonicNowTimestamp == nil) { return NO; }
 
     ADJClientActionController *_Nullable clientActionController = self.clientActionControllerWeak;
@@ -121,7 +121,7 @@
     if (isFirstMeasurement) { return; }
 
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestamp =
-        [self ccNonMonotonicNowTimestampWithSource:@"resume measurement"];
+        [self ccNonMonotonicNowTimestampWithFrom:@"resume measurement"];
     if (nonMonotonicNowTimestamp == nil) { return; }
 
     ADJMeasurementSessionStateOutputData *_Nullable measurementSessionOutput =
@@ -131,7 +131,7 @@
 }
 - (void)ccDidPauseMeasurement {
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestamp =
-        [self ccNonMonotonicNowTimestampWithSource:@"pause measurement"];
+        [self ccNonMonotonicNowTimestampWithFrom:@"pause measurement"];
     if (nonMonotonicNowTimestamp == nil) { return; }
 
     ADJMeasurementSessionStateOutputData *_Nullable measurementSessionOutput =
@@ -149,16 +149,16 @@
 
         [strongSelf ccKeepAlivePing];
 
-    } source:@"didPingKeepAliveInActiveSession"];
+    } from:@"didPingKeepAliveInActiveSession"];
 }
 
 #pragma mark Internal Methods
-- (nullable ADJTimestampMilli *)ccNonMonotonicNowTimestampWithSource:(nonnull NSString *)source {
+- (nullable ADJTimestampMilli *)ccNonMonotonicNowTimestampWithFrom:(nonnull NSString *)from {
     ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot obtain a valid now timestamp"
                          key:ADJLogFromKey
-                        value:source
+                        value:from
                    resultFail:nowResult.fail
                     issueType:ADJIssueExternalApi];
         return nil;
@@ -222,7 +222,7 @@
 
 - (void)ccKeepAlivePing {
     ADJTimestampMilli *_Nullable nonMonotonicNowTimestamp =
-        [self ccNonMonotonicNowTimestampWithSource:@"keep alive ping"];
+        [self ccNonMonotonicNowTimestampWithFrom:@"keep alive ping"];
     if (nonMonotonicNowTimestamp == nil) { return; }
 
     ADJMeasurementSessionStateOutputData *_Nullable measurementSessionOutput =

@@ -14,14 +14,14 @@
 
 @interface ADJLogger : NSObject
 // instantiation
-- (nonnull instancetype)initWithSource:(nonnull NSString *)source
-                          logCollector:(nonnull id<ADJLogCollector>)logCollector
-                            instanceId:(nonnull ADJInstanceIdData *)instanceId
+- (nonnull instancetype)initWithName:(nonnull NSString *)name
+                        logCollector:(nonnull id<ADJLogCollector>)logCollector
+                          instanceId:(nonnull ADJInstanceIdData *)instanceId
     NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
-@property (nonnull, readonly, strong, nonatomic) NSString *source;
+@property (nonnull, readonly, strong, nonatomic) NSString *name;
 
 // public API
 - (nonnull ADJInputLogMessageData *)

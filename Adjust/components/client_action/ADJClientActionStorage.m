@@ -18,7 +18,7 @@ static NSString *const kClientActionStorageTableName = @"client_action";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"ClientActionStorage"
+                             loggerName:@"ClientActionStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kClientActionStorageTableName

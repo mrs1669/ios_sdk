@@ -20,7 +20,7 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"AttributionStateStorage"
+                             loggerName:@"AttributionStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kAttributionStateStorageTableName

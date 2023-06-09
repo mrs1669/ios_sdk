@@ -41,8 +41,7 @@
     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"SdkPackageSenderController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SdkPackageSenderController"];
     _networkEndpointData = networkEndpointData;
     _urlStrategyBaseDomain = urlStrategyBaseDomain;
     _dataResidency = dataResidency;
@@ -61,11 +60,13 @@
 
 #pragma mark Public API
 #pragma mark - ADJSdkPackageSenderFactory
-- (nonnull ADJSdkPackageSender *)createSdkPackageSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                                       sourceDescription:(nonnull NSString *)sourceDescription
-                                                   threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory {
+- (nonnull ADJSdkPackageSender *)
+    createSdkPackageSenderWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sourceLoggerName:(nonnull NSString *)sourceLoggerName
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+{
     return [[ADJSdkPackageSender alloc] initWithLoggerFactory:loggerFactory
-                                            sourceDescription:sourceDescription
+                                             sourceLoggerName:sourceLoggerName
                                         threadExecutorFactory:threadExecutorFactory
                                    sdkPackageSendingCollector:self
                                          sdkResponseCollector:self

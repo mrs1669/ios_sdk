@@ -30,7 +30,7 @@
 @implementation ADJPluginController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"PluginController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"PluginController"];
 
     _pluginPackageSendingPublisher = [[ADJPluginPackageSendingPublisher alloc] init];
     _pluginForegroundPublisher = [[ADJPluginForegroundPublisher alloc] init];
@@ -72,7 +72,7 @@
 
         id<ADJAdjustPlugin> _Nonnull pluginInstance = (id<ADJAdjustPlugin>)objectInstance;
 
-        ADJLogger *_Nonnull loggerForPlugin = [loggerFactory createLoggerWithSource:[pluginInstance source]];
+        ADJLogger *_Nonnull loggerForPlugin = [loggerFactory createLoggerWithName:[pluginInstance name]];
 
         ADJPluginLogger *_Nonnull pluginLogger = [[ADJPluginLogger alloc] initWithLogger:loggerForPlugin];
 
@@ -84,7 +84,7 @@
                          key1:@"plugin class name"
                        value1:pluginClassName
                          key2:@"plugin name"
-                       value2:[pluginInstance source]];
+                       value2:[pluginInstance name]];
     }
 }
 

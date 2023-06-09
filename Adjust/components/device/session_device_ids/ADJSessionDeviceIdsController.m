@@ -38,9 +38,10 @@
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                             timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
                                  canCacheData:(BOOL)canCacheData {
-    self = [super initWithLoggerFactory:loggerFactory source:@"SessionDeviceIdsController"];
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SessionDeviceIdsController"];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
     _timeoutPerAttempt = timeoutPerAttempt;
     _canCacheData = canCacheData;
 
@@ -138,7 +139,7 @@
                  [ADJNonEmptyString instanceFromString:
                   [UIDevice.currentDevice.identifierForVendor UUIDString]]];
             }
-        } source:@"read system idfv with timeout"];
+        } from:@"read system idfv with timeout"];
 
     if (! readIdentifierForVendorFinishedSuccessfully) {
         return [ADJResult failWithMessage:
@@ -169,7 +170,7 @@
             ADJResult<ADJNonEmptyString *> *_Nonnull advertisingIdentifierResult =
                 [ADJSessionDeviceIdsController readAdvertisingIdentifier];
             [advertisingIdentifierResultWO setNewValue:advertisingIdentifierResult];
-        } source:@"read system idfa"];
+        } from:@"read system idfa"];
 
     if (! readAdvertisingIdentifierFinishedSuccessfully) {
         return [ADJResult failWithMessage:

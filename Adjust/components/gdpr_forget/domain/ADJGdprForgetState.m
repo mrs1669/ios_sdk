@@ -27,7 +27,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
 @implementation ADJGdprForgetState
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetState"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"GdprForgetState"];
 
     _isOnForeground = ADJIsSdkInForegroundWhenStarting;
 
@@ -113,8 +113,8 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
                                     changedGdprForgetStateDataWO:(nonnull ADJValueWO<ADJGdprForgetStateData *> *)changedGdprForgetStateDataWO
                                          gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO {
     BOOL canChangeToForgottenByBackend =
-    [self canChangeToForgottenByBackendWithCurrentStateData:currentGdprForgetStateData
-                                                     source:@"ReceivedOptOutInSdkResponse"];
+        [self canChangeToForgottenByBackendWithCurrentStateData:currentGdprForgetStateData
+                                                           from:@"ReceivedOptOutInSdkResponse"];
 
     if (! canChangeToForgottenByBackend) {
         // should still stop when received OptOut in SdkResponse
@@ -134,7 +134,7 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
                                                         gdprForgetStatusEventWO:(nonnull ADJValueWO<NSString *> *)gdprForgetStatusEventWO {
     if (! [self
            canChangeToForgottenByBackendWithCurrentStateData:currentGdprForgetStateData
-           source:@"ReceivedProcessedGdprResponse"])
+           from:@"ReceivedProcessedGdprResponse"])
     {
         // should still stop when received processed GdprResponse
         return YES;
@@ -243,19 +243,22 @@ NSString *const ADJGdprForgetStatusForgottenByBackend = @"ForgottenByBackend";
     [gdprForgetStatusEventWO setNewValue:gdprForgetStatusEvent];
 }
 
-- (BOOL)canChangeToForgottenByBackendWithCurrentStateData:(nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
-                                                   source:(nonnull NSString *)source {
+- (BOOL)
+    canChangeToForgottenByBackendWithCurrentStateData:
+        (nonnull ADJGdprForgetStateData *)currentGdprForgetStateData
+    from:(nonnull NSString *)from
+{
     if (! [currentGdprForgetStateData isForgotten]) {
         [self.logger debugDev:
          @"Changing to ForgottenByBackend while not previously asked by sdk"
-                         from:source];
+                         from:from];
 
         return YES;
     }
 
     if (! currentGdprForgetStateData.forgottenByBackend) {
         [self.logger debugDev:@"Changing to ForgottenByBackend"
-                         from:source];
+                         from:from];
 
         return YES;
     }

@@ -44,7 +44,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                    instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"SQLiteController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SQLiteController"];
     _instanceId = instanceId;
     _sqliteStorageAggregator = [[ADJSQLiteStorageAggregator alloc] initWithoutSubscriberProtocol];
     

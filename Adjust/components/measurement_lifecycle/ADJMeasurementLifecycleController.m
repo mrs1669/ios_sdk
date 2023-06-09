@@ -50,7 +50,7 @@
     resumedSessionTimerInterval:(nonnull ADJTimeLengthMilli *)resumedSessionTimerInterval
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementLifecycleController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MeasurementLifecycleController"];
     _clientExecutorWeak = clientExecutor;
     _measurementSessionControllerWeak = measurementSessionController;
     _resumedSessionTimerStart = resumedSessionTimerStart;

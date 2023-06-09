@@ -20,7 +20,7 @@
 @interface ADJSQLiteStorageQueueBase<E> : ADJSQLiteStorageBase
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName

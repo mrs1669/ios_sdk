@@ -14,7 +14,6 @@
 #import "ADJConstantsParam.h"
 #import "ADJUtilMap.h"
 #import "ADJUtilR.h"
-#import "ADJValueWO.h"
 #import "ADJUtilObj.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
@@ -55,7 +54,7 @@
     adjustAttributionStateStorage:
         (nonnull ADJAttributionStateStorage *)adjustAttributionStateStorage
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"AsaAttributionController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"AsaAttributionController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _logQueueControllerWeak = logQueueController;
     _mainQueueControllerWeak = mainQueueController;
@@ -63,8 +62,9 @@
     _clock = clock;
     _asaAttributionConfig = asaAttributionConfig;
 
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
 
     _canReadToken = [ADJAsaAttributionController
                      initialCanReadTokenWithClientConfig:clientConfigData
@@ -129,7 +129,7 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    } source:@"keep alive ping"];
+    } from:@"keep alive ping"];
 }
 
 #pragma mark - ADJSdkStartSubscriber
@@ -145,7 +145,7 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    } source:@"sdk start"];
+    } from:@"sdk start"];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -164,7 +164,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAsaClickPackage];
-    } source:@"received asa click response"];
+    } from:@"received asa click response"];
 }
 
 #pragma mark - ADJAttributionSubscriber
@@ -177,7 +177,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAdjustAttributionStateData:attributionStateData];
-    } source:@"handle adjust attribution"];
+    } from:@"handle adjust attribution"];
 }
 
 #pragma mark - ADJSdkPackageSendingSubscriber
@@ -386,7 +386,7 @@
      blockToExecute:^{
         // TODO: cache in a dispatch_once: methodImplementation, classFromName and methodSelector
         asaAttributionTokenString = func(classFromName, methodSelector, &error);
-    } source:@"read AAAttribution attributionTokenWithError with timeout"];
+    } from:@"read AAAttribution attributionTokenWithError with timeout"];
 
     if (! readAsaAttributionTokenFinishedSuccessfully) {
         return [ADJResult failWithMessage:
@@ -457,7 +457,7 @@
          [[ADJNonNegativeInt alloc] initWithUIntegerValue:nextNumberOfAttemptsLeft]];
     }
                                 delayTimeMilli:self.asaAttributionConfig.delayBetweenAttempts
-                                        source:@"retry asa attribution"];
+                                        from:@"retry asa attribution"];
 }
 
 - (void)trackAsaClickWithStateData:(nonnull ADJAsaAttributionStateData *)stateData {
@@ -517,7 +517,7 @@
     ADJLogPackageData *_Nonnull logPackage =
     [sdkPackageBuilder buildLogPackageWithMessage:errorMessage
                                          logLevel:ADJAdjustLogLevelError
-                                        logSource:self.source];
+                                        logSource:self.logger.name];
 
     [logQueueController addLogPackageDataToSendWithData:logPackage];
 }

@@ -28,8 +28,9 @@
 @implementation ADJPausingState
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                          canSendInBackground:(BOOL)canSendInBackground {
-    self = [super initWithLoggerFactory:loggerFactory source:@"PausingState"];
+                          canSendInBackground:(BOOL)canSendInBackground
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"PausingState"];
     _canSendInBackground = canSendInBackground;
 
     _canPublish = NO;

@@ -73,13 +73,13 @@
 
     _clientExecutor = [_threadController
                        createSingleThreadExecutorWithLoggerFactory:_logController
-                       sourceDescription:@"clientExecutor"];
+                       sourceLoggerName:@"clientExecutor"];
     _commonExecutor = [_threadController
                        createSingleThreadExecutorWithLoggerFactory:_logController
-                       sourceDescription:@"commonExecutor"];
+                       sourceLoggerName:@"commonExecutor"];
     [_logController injectDependeciesWithCommonExecutor:_commonExecutor];
 
-    _logger = [_logController createLoggerWithSource:@"InstanceRoot"];
+    _logger = [_logController createLoggerWithName:@"InstanceRoot"];
 
     return self;
 }
@@ -93,7 +93,7 @@
         }
 
         strongSelf.preSdkInitRoot = [[ADJPreSdkInitRoot alloc] initWithInstanceRootBag:strongSelf];
-    } source:@"ADJInstanceRoot init"];
+    } from:@"ADJInstanceRoot init"];
 }
 
 - (nullable instancetype)init {
@@ -131,7 +131,7 @@
         }
 
         [strongSelf.threadController finalizeAtTeardown];
-    } source:@"finalizeAtTeardownWithBlock"];
+    } from:@"finalizeAtTeardownWithBlock"];
 
     if (! canExecuteTask && closeStorageBlock != nil) {
         closeStorageBlock();
@@ -480,7 +480,7 @@
         }
 
         preAndSelfBlock(preSdkInitRootLocal, strongSelf);
-    } source:source];
+    } from:source];
 }
 
 - (void)

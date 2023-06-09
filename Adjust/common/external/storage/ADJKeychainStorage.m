@@ -13,11 +13,8 @@
 
 @implementation ADJKeychainStorage
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-{
-    self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"ADJKeychainStorage"];
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ADJKeychainStorage"];
 
     return self;
 }

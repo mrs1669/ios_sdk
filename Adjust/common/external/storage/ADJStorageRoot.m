@@ -51,10 +51,9 @@
                                    instanceId:(nonnull ADJInstanceIdData *)instanceId {
     self = [super init];
 
-    _storageExecutor =
-    [threadExecutorFactory
-     createSingleThreadExecutorWithLoggerFactory:loggerFactory
-     sourceDescription:@"storageExecutor"];
+    _storageExecutor = [threadExecutorFactory
+                        createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                        sourceLoggerName:@"Storage"];
 
     _keychainStorage = [[ADJKeychainStorage alloc] initWithLoggerFactory:loggerFactory];
 
@@ -103,7 +102,7 @@
 
         // prevent any other storage task from executing
         [strongSelf.storageExecutor finalizeAtTeardown];
-    } source:@"finalize at teardown"];
+    } from:@"finalize at teardown"];
 
     if (! canExecuteTask && closeStorageBlock != nil) {
         closeStorageBlock();

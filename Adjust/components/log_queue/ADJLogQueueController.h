@@ -27,12 +27,13 @@
 >
 
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                      storage:(nonnull ADJLogQueueStorage *)storage
-                             threadController:(nonnull ADJThreadController *)threadController
-                                        clock:(nonnull ADJClock *)clock
-                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    storage:(nonnull ADJLogQueueStorage *)storage
+    threadController:(nonnull ADJThreadController *)threadController
+    clock:(nonnull ADJClock *)clock
+    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory;
 
 - (void)addLogPackageDataToSendWithData:(nonnull ADJLogPackageData *)logPackageData;
 

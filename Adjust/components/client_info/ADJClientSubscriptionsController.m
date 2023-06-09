@@ -37,7 +37,7 @@
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
     doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"ClientSubscriptionsController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ClientSubscriptionsController"];
     _threadController = threadController;
     _clientReturnExecutor = clientReturnExecutor;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;

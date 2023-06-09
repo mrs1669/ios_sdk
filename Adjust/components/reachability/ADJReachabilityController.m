@@ -72,11 +72,11 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
                                targetEndpoint:(nonnull NSString *)targetEndpoint
                           publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"ReachabilityController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ReachabilityController"];
     _targetEndpoint = targetEndpoint;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                            sourceLoggerName:self.logger.name];
 
     _reachabilityPublisher = [[ADJReachabilityPublisher alloc]
                               initWithSubscriberProtocol:@protocol(ADJReachabilitySubscriber)
@@ -100,7 +100,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         // TODO: possibly use private queue
         [strongSelf startNetworkReachabilityWithDispatchQueue:
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
-    } source:@"sdk start"];
+    } from:@"sdk start"];
 }
 
 #pragma mark Internal Methods
@@ -329,7 +329,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         [strongSelf reachableNetworkWithFlags:flags];
 
         [strongSelf updateAndPublishWithReachability:reachableNetworkFromFlags];
-    } source:@"reachability changed"];
+    } from:@"reachability changed"];
 }
 
 - (void)stopNetworkReachability {

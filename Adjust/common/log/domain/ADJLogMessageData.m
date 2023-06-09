@@ -19,7 +19,7 @@
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
- @property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
+ @property (nonnull, readonly, strong, nonatomic) NSString *loggerName;
  @property (nonnull, readonly, strong, nonatomic) NSString *idString;
  @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
  */
@@ -27,14 +27,14 @@
 @implementation ADJLogMessageData
 // instantiation
 - (nonnull instancetype)initWithInputData:(nonnull ADJInputLogMessageData *)inputData
-                        sourceDescription:(nonnull NSString *)sourceDescription
+                               loggerName:(nonnull NSString *)loggerName
                                  idString:(nonnull NSString *)idString
                           runningThreadId:(nullable NSString *)runningThreadId
 {
     self = [super init];
 
     _inputData = inputData;
-    _sourceDescription = sourceDescription;
+    _loggerName = loggerName;
     _idString = idString;
     _runningThreadId = runningThreadId;
 
@@ -51,7 +51,7 @@
         [[NSMutableDictionary alloc] initWithObjectsAndKeys:
          self.inputData.message, ADJLogMessageKey,
          self.inputData.level, ADJLogLevelKey,
-         self.sourceDescription, ADJLogSourceKey,
+         self.loggerName, ADJLogLoggerNameKey,
          self.idString, ADJLogInstanceIdKey,
          nil];
 

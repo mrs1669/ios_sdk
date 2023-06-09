@@ -18,7 +18,7 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"LogQueueStorage"
+                             loggerName:@"LogQueueStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kLogQueueStorageTableName

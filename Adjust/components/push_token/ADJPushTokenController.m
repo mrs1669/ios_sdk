@@ -24,11 +24,13 @@ NSString *const ADJPushTokenControllerClientActionHandlerId = @"PushTokenControl
 
 @implementation ADJPushTokenController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                        pushTokenStateStorage:(nonnull ADJPushTokenStateStorage *)pushTokenStateStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
-    self = [super initWithLoggerFactory:loggerFactory source:@"PushTokenController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    pushTokenStateStorage:(nonnull ADJPushTokenStateStorage *)pushTokenStateStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"PushTokenController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _pushTokenStorageWeak = pushTokenStateStorage;
     _mainQueueControllerWeak = mainQueueController;

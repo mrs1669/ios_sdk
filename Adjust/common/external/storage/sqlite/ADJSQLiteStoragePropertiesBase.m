@@ -41,12 +41,13 @@ static NSString *const kColumnValue = @"value";
 @implementation ADJSQLiteStoragePropertiesBase
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName
                             metadataTypeValue:(nonnull NSString *)metadataTypeValue
-                      initialDefaultDataValue:(nonnull id)initialDefaultDataValue {
+                      initialDefaultDataValue:(nonnull id)initialDefaultDataValue
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSQLiteStoragePropertiesBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -54,7 +55,7 @@ static NSString *const kColumnValue = @"value";
     }
     
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:source
+                             loggerName:loggerName
                         storageExecutor:storageExecutor
                  sqliteDatabaseProvider:sqliteController
                               tableName:tableName
@@ -99,7 +100,7 @@ static NSString *const kColumnValue = @"value";
         
         [strongSelf updateInStorageSyncWithSqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        newDataValue:newDataValue];
-    } source:@"update in storage only"];
+    } from:@"update in storage only"];
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb

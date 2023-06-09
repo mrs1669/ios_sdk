@@ -54,7 +54,7 @@ FOUNDATION_EXPORT NSString *const ADJLogMessageKey;
 FOUNDATION_EXPORT NSString *const ADJLogLevelKey;
 FOUNDATION_EXPORT NSString *const ADJLogIssueKey;
 FOUNDATION_EXPORT NSString *const ADJLogParamsKey;
-FOUNDATION_EXPORT NSString *const ADJLogSourceKey;
+FOUNDATION_EXPORT NSString *const ADJLogLoggerNameKey;
 FOUNDATION_EXPORT NSString *const ADJLogCallerThreadIdKey;
 FOUNDATION_EXPORT NSString *const ADJLogRunningThreadIdKey;
 FOUNDATION_EXPORT NSString *const ADJLogCallerDescriptionKey;

@@ -27,21 +27,23 @@
 
 @implementation ADJLogQueueController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                      storage:(nonnull ADJLogQueueStorage *)storage
-                             threadController:(nonnull ADJThreadController *)threadController
-                                        clock:(nonnull ADJClock *)clock
-                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"LogQueueController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    storage:(nonnull ADJLogQueueStorage *)storage
+    threadController:(nonnull ADJThreadController *)threadController
+    clock:(nonnull ADJClock *)clock
+    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"LogQueueController"];
     _storageWeak = storage;
     _clockWeak = clock;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                             sourceLoggerName:self.logger.name];
 
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
-                                                             sourceDescription:self.source
+                                                              sourceLoggerName:self.logger.name
                                                          threadExecutorFactory:threadController];
 
     _logQueueStateAndTracker =
@@ -60,7 +62,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleLogPackageAddedToSendWithData:logPackageData];
-    } source:@"add log package"];
+    } from:@"add log package"];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
@@ -71,7 +73,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResponseWithData:sdkResponseData];
-    } source:@"received sdk response"];
+    } from:@"received sdk response"];
 }
 
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
@@ -81,7 +83,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleSdkInit];
-    } source:@"sdk init"];
+    } from:@"sdk init"];
 }
 
 #pragma mark - ADJPausingSubscriber
@@ -92,7 +94,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResumeSending];
-    } source:@"resume sending"];
+    } from:@"resume sending"];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
@@ -102,7 +104,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf.logQueueStateAndTracker pauseSending];
-    } source:@"pause sending"];
+    } from:@"pause sending"];
 }
 
 #pragma mark Internal Methods
@@ -124,13 +126,13 @@
                                                 packageQueueCount:[storage count]
                                                 hasPackageAtFront:packageAtFront != nil];
     if (sendPackageAtFront) {
-        NSString *_Nonnull source =
+        NSString *_Nonnull from =
         [NSString stringWithFormat:@"%@ added",
          [logPackageDataToAdd generateShortDescription]];
 
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:source];
+                           from:from];
     }
 }
 
@@ -150,7 +152,7 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"sdk init"];
+                           from:@"sdk init"];
     }
 }
 
@@ -172,7 +174,7 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"resume sending"];
+                           from:@"resume sending"];
     }
 }
 
@@ -205,7 +207,7 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"handle response"];
+                           from:@"handle response"];
     }
 }
 
@@ -226,14 +228,14 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf handleDelayEndWithSource:delayData.source];
+        [strongSelf handleDelayEndFrom:delayData.from];
     }
                                 delayTimeMilli:delayData.delay
-                                        source:@"delay end"];
+                                        from:@"delay end"];
 }
 
-- (void)handleDelayEndWithSource:(nonnull NSString *)source {
-    [self.logger debugDev:@"Delay ended" from:source];
+- (void)handleDelayEndFrom:(nonnull NSString *)from {
+    [self.logger debugDev:@"Delay ended" from:from];
 
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
@@ -251,23 +253,24 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"handle delay end"];
+                           from:@"handle delay end"];
     }
 }
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
                     storage:(nonnull ADJLogQueueStorage *)storage
-                     source:(nonnull NSString *)source {
+                       from:(nonnull NSString *)from
+{
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package when it is nil"
                           key:ADJLogFromKey
-                        value:source
+                        value:from
                     issueType:ADJIssueInvalidInput];
         return;
     }
 
     [self.logger debugDev:@"To send sdk package"
-                     from:source
+                     from:from
                       key:@"package"
                     value:[packageToSend generateShortDescription].stringValue];
 

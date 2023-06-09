@@ -46,15 +46,15 @@
     backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
     sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MainQueueController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MainQueueController"];
     _storage = mainQueueStorage;
     _clockWeak = clock;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                            sourceLoggerName:self.logger.name];
 
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
-                                                             sourceDescription:self.source
+                                                             sourceLoggerName:self.logger.name
                                                          threadExecutorFactory:threadController];
 
     _mainQueueStateAndTracker =
@@ -78,7 +78,7 @@
 
         [strongSelf addSdkPackageToSendWithData:adRevenuePackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add ad revenue package"];
+    } from:@"add ad revenue package"];
 }
 
 - (void)addBillingSubscriptionPackageToSendWithData:
@@ -91,7 +91,7 @@
 
         [strongSelf addSdkPackageToSendWithData:billingSubscriptionPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add billing subscription package"];
+    } from:@"add billing subscription package"];
 }
 
 - (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
@@ -103,7 +103,7 @@
 
         [strongSelf addSdkPackageToSendWithData:clickPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add click package"];
+    } from:@"add click package"];
 }
 
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
@@ -115,7 +115,7 @@
 
         [strongSelf addSdkPackageToSendWithData:eventPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add event package"];
+    } from:@"add event package"];
 }
 
 - (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
@@ -127,7 +127,7 @@
 
         [strongSelf addSdkPackageToSendWithData:infoPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add info package"];
+    } from:@"add info package"];
 }
 
 - (void)addMeasurementConsentPackageToSendWithData:(nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
@@ -139,7 +139,7 @@
 
         [strongSelf addSdkPackageToSendWithData:measurementConsentPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add measurement consent package"];
+    } from:@"add measurement consent package"];
 }
 
 
@@ -152,7 +152,7 @@
 
         [strongSelf addSdkPackageToSendWithData:sessionPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add session package"];
+    } from:@"add session package"];
 }
 
 - (void)addThirdPartySharingPackageToSendWithData:
@@ -165,7 +165,7 @@
 
         [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add third party sharing package"];
+    } from:@"add third party sharing package"];
 }
 
 - (nonnull NSString *)defaultTargetUrl {
@@ -180,7 +180,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResponseWithData:sdkResponseData];
-    } source:@"sdk response"];
+    } from:@"sdk response"];
 }
 
 #pragma mark - ADJSdkInitSubscriber
@@ -191,7 +191,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleSdkInit];
-    } source:@"sdk init"];
+    } from:@"sdk init"];
 }
 
 #pragma mark - ADJPausingSubscriber
@@ -202,7 +202,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResumeSending];
-    } source:@"resume sending"];
+    } from:@"resume sending"];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
@@ -212,7 +212,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf.mainQueueStateAndTracker pauseSending];
-    } source:@"pause sending"];
+    } from:@"pause sending"];
 }
 
 #pragma mark - ADJOfflineSubscriber
@@ -227,7 +227,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf.mainQueueStateAndTracker pauseSending];
-    } source:@"sdk become offline"];
+    } from:@"sdk become offline"];
 }
 
 #pragma mark Internal Methods
@@ -248,11 +248,11 @@
                                                      hasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
-        NSString *_Nonnull source = [NSString stringWithFormat:@"%@ added",
+        NSString *_Nonnull from = [NSString stringWithFormat:@"%@ added",
                                      [sdkPackageDataToAdd generateShortDescription]];
 
         [self sendPackageWithData:packageAtFront
-                           source:source];
+                           from:from];
     }
 }
 
@@ -265,7 +265,7 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"sdk init"];
+                           from:@"sdk init"];
     }
 }
 
@@ -278,7 +278,7 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"resume sending"];
+                           from:@"resume sending"];
     }
 }
 
@@ -303,7 +303,7 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"handle response"];
+                           from:@"handle response"];
     }
 }
 
@@ -383,15 +383,15 @@
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf handleDelayEndWithSource:delayData.source];
+        [strongSelf handleDelayEndWithSource:delayData.from];
     }
      delayTimeMilli:delayData.delay
-     source:@"delay end"];
+     from:@"delay end"];
 }
 
-- (void)handleDelayEndWithSource:(nonnull NSString *)source {
+- (void)handleDelayEndWithSource:(nonnull NSString *)from {
     [self.logger debugDev:@"Delay ended"
-                     from:source];
+                     from:from];
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [self.storage elementAtFront];
 
@@ -401,21 +401,21 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"handle delay end"];
+                           from:@"handle delay end"];
     }
 }
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
-                     source:(nonnull NSString *)source
+                       from:(nonnull NSString *)from
 {
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package it is nil"
-                         from:source];
+                         from:from];
         return;
     }
 
     [self.logger debugDev:@"To send sdk package"
-                     from:source
+                     from:from
                       key:@"package"
                     value:[packageToSend generateShortDescription].stringValue];
 

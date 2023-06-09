@@ -24,12 +24,12 @@
 @implementation ADJSingleThreadExecutor
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sourceDescription:(nonnull NSString *)sourceDescription {
+                             sourceLoggerName:(nonnull NSString *)sourceLoggerName
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:[NSString stringWithFormat:@"%@-STE",
-                                         sourceDescription]];
+                             loggerName:[NSString stringWithFormat:@"%@-STE", sourceLoggerName]];
 
-    _serialQueue = dispatch_queue_create(self.source.UTF8String,
+    _serialQueue = dispatch_queue_create(self.logger.name.UTF8String,
                                          dispatch_queue_attr_make_with_qos_class
                                          (DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0));
 
@@ -47,9 +47,10 @@
 #pragma mark Public API
 - (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
                      delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
-                             source:(nonnull NSString *)source {
+                             from:(nonnull NSString *)from
+{
     if (delayTimeMilli.millisecondsSpan.uIntegerValue == 0) {
-        return [self executeInSequenceWithBlock:blockToSchedule source:source];
+        return [self executeInSequenceWithBlock:blockToSchedule from:from];
     }
 
     if (self.hasFinalized) {
@@ -75,7 +76,7 @@
 
         [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                runningThreadId:runningLocalId
-                                             callerDescription:source];
+                                             callerDescription:from];
 
         blockToSchedule();
     });
@@ -85,27 +86,29 @@
 
 - (BOOL)executeInSequenceSkippingTraceWithBlock:(nonnull void (^)(void))blockToExecute {
     return [self executeInSequenceWithBlock:blockToExecute
-                                     source:@""
+                                       from:@""
                            skipTraceLocalId:YES];
 }
 
 - (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
-                            source:(nonnull NSString *)source {
+                            from:(nonnull NSString *)from
+{
     return [self executeInSequenceWithBlock:blockToExecute
-                                     source:source
+                                       from:from
                            skipTraceLocalId:NO];
 }
 
 - (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute
-                       source:(nonnull NSString *)source {
+                         from:(nonnull NSString *)from
+{
     if (self.hasFinalized) {
         return NO;
     }
 
     __block ADJLocalThreadController *_Nonnull localThreadController =
-    [ADJLocalThreadController instance];
+        [ADJLocalThreadController instance];
 
-    NSString *_Nonnull callerLocalId = [localThreadController localIdOrOutside];
+    __block NSString *_Nonnull callerLocalId = [localThreadController localIdOrOutside];
 
     __typeof(self) __weak weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -113,14 +116,14 @@
         if (strongSelf == nil) { return; }
 
         NSString *_Nonnull runningLocalId =
-        [localThreadController setNextLocalIdInConcurrentThread];
+            [localThreadController setNextLocalIdInConcurrentThread];
 
         // no need to check for skip trace local id,
         //  since there is no async executions downstream of the log collection.
         //  If/when that changes, it will be necessary to check here
         [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                runningThreadId:runningLocalId
-                                             callerDescription:source];
+                                             callerDescription:from];
 
         blockToExecute();
 
@@ -134,22 +137,23 @@
 
 - (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
                          blockToExecute:(nonnull void (^)(void))blockToExecute
-                                 source:(nonnull NSString *)source {
+                                   from:(nonnull NSString *)from
+{
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
     BOOL canExecuteTask = [self executeAsyncWithBlock:^{
         blockToExecute();
         dispatch_semaphore_signal(semaphore);
-    } source:source];
+    } from:from];
 
     if (! canExecuteTask) {
         return NO;
     }
 
     intptr_t waitResult =
-    dispatch_semaphore_wait(semaphore,
-                            [ADJUtilSys
-                             dispatchTimeWithMilli:timeout.millisecondsSpan.uIntegerValue]);
+        dispatch_semaphore_wait(semaphore,
+                                [ADJUtilSys
+                                 dispatchTimeWithMilli:timeout.millisecondsSpan.uIntegerValue]);
 
     BOOL timedOut = waitResult != 0;
 
@@ -171,9 +175,9 @@
 
 #pragma mark Internal Methods
 - (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
-                            source:(nonnull NSString *)source
-                  skipTraceLocalId:(BOOL)skipTraceLocalId {
-
+                              from:(nonnull NSString *)from
+                  skipTraceLocalId:(BOOL)skipTraceLocalId
+{
     if (self.hasFinalized) {
         return NO;
     }
@@ -198,7 +202,7 @@
 
             [strongSelf.logger traceThreadChangeWithCallerThreadId:callerLocalId
                                                    runningThreadId:runningLocalId
-                                                 callerDescription:source];
+                                                 callerDescription:from];
         }
 
         blockToExecute();

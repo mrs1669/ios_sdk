@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJLaunchedDeeplinkStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJResultNN<ADJLaunchedDeeplinkStateData *> *)
++ (nonnull ADJResult<ADJLaunchedDeeplinkStateData *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithInitialState;

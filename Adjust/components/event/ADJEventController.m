@@ -29,13 +29,15 @@ ADJMainQueueController *mainQueueControllerWeak;
 
 @implementation ADJEventController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication {
-    self = [super initWithLoggerFactory:loggerFactory source:@"EventController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"EventController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _eventStateStorageWeak = eventStateStorage;
     _mainQueueControllerWeak = mainQueueController;

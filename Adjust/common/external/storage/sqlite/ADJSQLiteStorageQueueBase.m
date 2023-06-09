@@ -34,7 +34,7 @@ static NSString *const kColumnValue = @"value";
 @implementation ADJSQLiteStorageQueueBase
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName
@@ -47,7 +47,7 @@ static NSString *const kColumnValue = @"value";
     }
 
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:source
+                             loggerName:loggerName
                         storageExecutor:storageExecutor
                  sqliteDatabaseProvider:sqliteController
                               tableName:tableName
@@ -215,7 +215,7 @@ static NSString *const kColumnValue = @"value";
         [strongSelf removeElementByPosition:elementPositionToRemove
                                    sqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                         sqliteStorageAction:sqliteStorageAction];
-    } source:@"remove element by position in storage only"];
+    } from:@"remove element by position in storage only"];
 }
 
 - (void)removeAllElements {
@@ -235,7 +235,7 @@ static NSString *const kColumnValue = @"value";
 
         ADJSQLiteDb *_Nonnull sqliteDb = [strongSelf.sqliteDatabaseProvider sqliteDb];
         [sqliteDb executeStatements:strongSelf.deleteAllSql.stringValue];
-    } source:@"remove all elements"];
+    } from:@"remove all elements"];
 }
 
 - (void)updateMetadataWithMap:(nonnull ADJStringMap *)newMetadataMap {
@@ -546,7 +546,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
                               newElement:newElement
                       newElementPosition:newElementPosition
                      sqliteStorageAction:sqliteStorageAction];
-    } source:@"add element to storage"];
+    } from:@"add element to storage"];
 }
 
 - (void)addElementToSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb

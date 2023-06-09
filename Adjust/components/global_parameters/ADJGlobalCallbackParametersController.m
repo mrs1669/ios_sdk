@@ -18,7 +18,7 @@ NSString *const ADJGlobalParametersTypeCallback = @"callback";
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                       storage:(nonnull ADJGlobalCallbackParametersStorage *)storage {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"GlobalCallbackParametersController"
+                             loggerName:@"GlobalCallbackParametersController"
                    globalParametersType:ADJGlobalParametersTypeCallback
              sqliteStorageStringMapBase:storage];
 

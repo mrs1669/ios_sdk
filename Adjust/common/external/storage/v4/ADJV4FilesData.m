@@ -197,6 +197,7 @@
 
         NSError *_Nullable convertDataError = nil;
         // TODO: check if it works with v4 written data.
+        //  If so, we can remove the deprecated version
         //  If not, we still need to use the deprecated version
         id _Nullable objectRead =
             [NSKeyedUnarchiver unarchivedObjectOfClass:classToRead

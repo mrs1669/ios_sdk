@@ -18,14 +18,16 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"MeasurementSessionStateStorage"
+                             loggerName:@"MeasurementSessionStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kMeasurementSessionStateStorageTableName
                       metadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
-                initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc] initWithIntialState]];
+                initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc]
+                                         initWithIntialState]];
     /*
      [[ADJMeasurementSessionStateData alloc] initWithIntialStateWithNewUuid:
      [[ADJNonEmptyString alloc] initWithValidatedStringValue:

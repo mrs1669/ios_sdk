@@ -28,7 +28,7 @@ static NSString *const kColumnValue = @"value";
 @implementation ADJSQLiteStorageStringMapBase
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName
@@ -40,7 +40,7 @@ static NSString *const kColumnValue = @"value";
     }
 
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:source
+                             loggerName:loggerName
                         storageExecutor:storageExecutor
                  sqliteDatabaseProvider:sqliteController
                               tableName:tableName
@@ -247,7 +247,7 @@ static int const kDeleteKeyFieldPosition = 1;
                                 value:value
                                   key:key
                   sqliteStorageAction:sqliteStorageAction];
-    } source:@"add pair to storage"];
+    } from:@"add pair to storage"];
 }
 
 - (void)addPairToDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -318,7 +318,7 @@ static int const kDeleteKeyFieldPosition = 1;
         [strongSelf removePairFromDatabase:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        key:key
                        sqliteStorageAction:sqliteStorageAction];
-    } source:@"remove pair from storage"];
+    } from:@"remove pair from storage"];
 }
 
 - (void)removePairFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb
@@ -377,7 +377,7 @@ static int const kDeleteKeyFieldPosition = 1;
         [strongSelf replaceAllFromDatabase:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                  stringMap:stringMap
                        sqliteStorageAction:sqliteStorageAction];
-    } source:@"replace all from storage"];
+    } from:@"replace all from storage"];
 }
 
 - (void)replaceAllFromDatabase:(nonnull ADJSQLiteDb *)sqliteDb

@@ -24,13 +24,13 @@
 
 @implementation ADJLogger
 #pragma mark Constructors
-- (nonnull instancetype)initWithSource:(nonnull NSString *)source
-                          logCollector:(nonnull id<ADJLogCollector>)logCollector
-                            instanceId:(nonnull ADJInstanceIdData *)instanceId
+- (nonnull instancetype)initWithName:(nonnull NSString *)name
+                        logCollector:(nonnull id<ADJLogCollector>)logCollector
+                          instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
     self = [super init];
     
-    _source = source;
+    _name = name;
     _logCollectorWeak = logCollector;
     _instanceId = instanceId;
     
@@ -328,7 +328,7 @@
 
     ADJLogMessageData *_Nonnull logMessageData = [[ADJLogMessageData alloc]
                                                   initWithInputData:inputLogMessageData
-                                                  sourceDescription:self.source
+                                                  loggerName:self.name
                                                   idString:self.instanceId.idString
                                                   runningThreadId:runningThreadId];
 

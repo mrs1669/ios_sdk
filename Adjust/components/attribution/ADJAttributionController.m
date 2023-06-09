@@ -82,7 +82,7 @@
     doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"AttributionController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"AttributionController"];
     _storage = attributionStateStorage;
     _clock = clock;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
@@ -92,10 +92,10 @@
                              controller:publisherController];
     
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                             sourceLoggerName:self.logger.name];
     
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
-                                                             sourceDescription:self.source
+                                                              sourceLoggerName:self.logger.name
                                                          threadExecutorFactory:threadController];
 
     ADJAttributionStateData *_Nonnull initialStateData =
@@ -139,7 +139,7 @@
         if (strongSelf == nil) { return; }
         
         [strongSelf attributionResponseWithData:attributionResponseData];
-    } source:@"received attribution response"];
+    } from:@"received attribution response"];
 }
 - (void)attributionResponseWithData:(nonnull ADJAttributionResponseData *)attributionResponse {
     ADJDelayData *_Nullable delay =
@@ -177,7 +177,7 @@
         [strongSelf handlePublishWithStateData:stateData
                            previousAttribution:stateData.attributionData
                                         source:@"allowed to publish"];
-    } source:@"allowed to publish"];
+    } from:@"allowed to publish"];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -198,7 +198,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAcceptedNonAttributionResponse:sdkResponseData];
-    } source:@"received sdk response"];
+    } from:@"received sdk response"];
 }
 /**
  The order checked here is important.
@@ -238,7 +238,7 @@
             [strongSelf.attributionState sdkStart];
 
         [strongSelf handleSideEffectsWithOutputData:outputData source:@"sdk start"];
-    } source:@"sdk start"];
+    } from:@"sdk start"];
 }
 
 #pragma mark - ADJPausingSubscriber
@@ -251,7 +251,7 @@
         if ([strongSelf.attributionTracker sendWhenSdkResumingSending]) {
             [strongSelf sendAttributionWithSource:@"ResumeSending"];
         }
-    } source:@"resume sending"];
+    } from:@"resume sending"];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
@@ -261,7 +261,7 @@
         if (strongSelf == nil) { return; }
 
         [strongSelf.attributionTracker pauseSending];
-    } source:@"pause sending"];
+    } from:@"pause sending"];
 }
 
 #pragma mark Internal Methods
@@ -276,7 +276,7 @@
 
         [strongSelf handleSideEffectsWithOutputData:outputData
                                              source:@"install session tracked at load"];
-    } source:@"install session tracked at load"];
+    } from:@"install session tracked at load"];
 }
 
 - (void)handleSideEffectsWithOutputData:(nullable ADJAttributionStateOutputData *)outputData
@@ -349,15 +349,15 @@
         [strongSelf handleDelayEndWithData:delayData source:source];
     }
                                 delayTimeMilli:delayData.delay
-                                        source:@"delay end"];
+                                        from:@"delay end"];
 }
 - (void)handleDelayEndWithData:(nonnull ADJDelayData *)delayData
                         source:(nonnull NSString *)source
 {
     [self.logger debugDev:@"Delay ended"
                      from:source
-                      key:@"delayReason"
-                    value:delayData.source];
+                      key:@"delay from"
+                    value:delayData.from];
 
     if ([self.attributionTracker sendWhenDelayEnded]) {
         [self sendAttributionWithSource:@"Delay ended"];

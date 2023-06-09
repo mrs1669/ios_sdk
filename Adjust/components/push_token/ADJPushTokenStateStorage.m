@@ -22,7 +22,7 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"PushTokenStateStorage"
+                             loggerName:@"PushTokenStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kPushTokenStateTableName

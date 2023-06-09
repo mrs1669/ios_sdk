@@ -16,9 +16,10 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"AsaAttributionStateStorage"
+                             loggerName:@"AsaAttributionStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kAsaAttributionStateStorageTableName

@@ -28,7 +28,7 @@
 
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"SQLiteDb"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SQLiteDb"];
 
     _openStatementValueSet = [[NSMutableSet alloc] init];
 

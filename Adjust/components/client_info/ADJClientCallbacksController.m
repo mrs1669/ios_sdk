@@ -19,9 +19,10 @@
 
 @implementation ADJClientCallbacksController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-
-    self = [super initWithLoggerFactory:loggerFactory source:@"ClientCallbacksController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ClientCallbacksController"];
 
     return self;
 }

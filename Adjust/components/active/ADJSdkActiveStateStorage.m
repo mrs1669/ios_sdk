@@ -19,7 +19,7 @@ static NSString *const kSdkActiveStateStorageTableName = @"sdk_active_state";
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
 {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"SdkActiveStateStorage"
+                             loggerName:@"SdkActiveStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kSdkActiveStateStorageTableName

@@ -58,7 +58,7 @@
         (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SdkPackageBuilder"];
     _clock = clock;
     _clientSdk = [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
     _clientConfigData = clientConfigData;

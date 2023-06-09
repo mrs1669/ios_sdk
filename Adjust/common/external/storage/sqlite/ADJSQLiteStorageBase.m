@@ -26,7 +26,7 @@
 #pragma mark Instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    source:(nonnull NSString *)source
+    loggerName:(nonnull NSString *)loggerName
     storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
     sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
     tableName:(nonnull NSString *)tableName
@@ -38,7 +38,7 @@
         return nil;
     }
 
-    self = [super initWithLoggerFactory:loggerFactory source:source];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:loggerName];
     _storageExecutor = storageExecutor;
     _sqliteDatabaseProvider = sqliteDatabaseProvider;
     _tableName = tableName;
@@ -142,7 +142,7 @@
 
 #pragma mark - NSObject
  - (nonnull NSString *)description {
-     return self.source;
+     return self.logger.name;
  }
 
 #pragma mark Internal Methods

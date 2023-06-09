@@ -88,8 +88,8 @@
 }
 
 #pragma mark - ADJLoggerFactory
-- (nonnull ADJLogger *)createLoggerWithSource:(nonnull NSString *)source {
-    return [[ADJLogger alloc] initWithSource:source
+- (nonnull ADJLogger *)createLoggerWithName:(nonnull NSString *)loggerName {
+    return [[ADJLogger alloc] initWithName:loggerName
                                 logCollector:self
                                   instanceId:self.instanceId];
 }
@@ -109,7 +109,7 @@
         [strongSelf.consoleLogger didSdkInitWithIsSandboxEnvironment:clientConfigData.isSandboxEnvironmentOrElseProduction
                                                             doLogAll:clientConfigData.doLogAll
                                                          doNotLogAny:clientConfigData.doNotLogAny];
-    } source:@"sdk init"];
+    } from:@"sdk init"];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -137,7 +137,7 @@
         
         // can flush memory stored logs
         [strongSelf.logMessageDataArray removeAllObjects];
-    } source:@"allowed to publish notifications"];
+    } from:@"allowed to publish notifications"];
 }
 
 @end

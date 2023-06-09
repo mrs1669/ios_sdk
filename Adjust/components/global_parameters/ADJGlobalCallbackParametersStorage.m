@@ -21,7 +21,7 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"GlobalCallbackParametersStorage"
+                             loggerName:@"GlobalCallbackParametersStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kGlobalCallbackParametersStorageTableName];

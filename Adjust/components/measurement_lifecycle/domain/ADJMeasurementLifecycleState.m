@@ -63,7 +63,7 @@
 #pragma mark Instantiation
 #pragma mark - Private constructors
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementLifecycleState"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MeasurementLifecycleState"];
 
     _isOnForeground = ADJIsSdkInForegroundWhenStarting;
     _isSdkActive = ADJIsSdkActiveWhenStarting;

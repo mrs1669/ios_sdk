@@ -25,12 +25,13 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJEventController : ADJCommonBase <ADJClientActionHandler>
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication;
 
 // public api
 - (void)ccTrackEventWithClientData:(nonnull ADJClientEventData *)clientEventData;

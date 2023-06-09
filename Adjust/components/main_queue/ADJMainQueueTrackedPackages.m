@@ -31,7 +31,7 @@ static NSString *const kAsaClickCountKey = @"asaClickCount";
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     mainQueueStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MainQueueTrackedPackages"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MainQueueTrackedPackages"];
     _storage = mainQueueStorage;
 
     return self;

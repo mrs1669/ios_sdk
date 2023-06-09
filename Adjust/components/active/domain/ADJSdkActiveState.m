@@ -30,7 +30,7 @@ ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
                            sdkActiveStateData:(nonnull ADJSdkActiveStateData *)sdkActiveStateData
                               isGdprForgotten:(BOOL)isGdprForgotten {
 
-    self = [super initWithLoggerFactory:loggerFactory source:@"SdkActiveState"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SdkActiveState"];
 
     _sdkActiveStateData = sdkActiveStateData;
     _isSdkForgotten = isGdprForgotten;

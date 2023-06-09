@@ -34,21 +34,22 @@
 
 @implementation ADJSdkPackageSender
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sourceDescription:(nonnull NSString *)sourceDescription
-                        threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                   sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
-                         sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
-                          networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
-                        urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
-                                dataResidency:(nullable AdjustDataResidency)dataResidency
-                     clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData {
-
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sourceLoggerName:(nonnull NSString *)sourceLoggerName
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageSendingCollector:(nonnull id<ADJSdkPackageSendingSubscriber>)sdkPackageSendingCollector
+    sdkResponseCollector:(nonnull id<ADJSdkResponseSubscriber>)sdkResponseCollector
+    networkEndpointData:(nonnull ADJNetworkEndpointData *)networkEndpointData
+    urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+    dataResidency:(nullable AdjustDataResidency)dataResidency
+    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:[NSString stringWithFormat:@"%@-Sender",
-                                         sourceDescription]];
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+                             loggerName:[NSString stringWithFormat:@"%@-Sender", sourceLoggerName]];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
     _sdkPackageSendingCollectorWeak = sdkPackageSendingCollector;
     _sdkResponseCollectorWeak = sdkResponseCollector;
     _timeoutMilli = networkEndpointData.timeoutMilli;
@@ -107,7 +108,7 @@
 
         [strongSelf sendWithUrlRequest:urlRequest
                     sdkResponseBuilder:sdkResponseDataBuilder];
-    } source:@"send sdk package"];
+    } from:@"send sdk package"];
 }
 
 - (nonnull NSURLRequest *)buildUrlRequestWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
@@ -278,7 +279,7 @@
                                    sdkResponseBuilder:sdkResponseBuilder];
 
             [strongSelf retryOrReturnWithSdkResponseBuilder:sdkResponseBuilder];
-        } source:@"request response"];
+        } from:@"request response"];
     }];
     [sessionDatatask resume];
 

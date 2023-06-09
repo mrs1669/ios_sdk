@@ -30,7 +30,7 @@
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MainQueueStateAndTracker"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MainQueueStateAndTracker"];
     _backoffStrategy = backoffStrategy;
 
     _retriesCounter = [ADJTallyCounter instanceStartingAtZero];
@@ -47,7 +47,7 @@
 #pragma mark Public API
 - (BOOL)sendWhenSdkInitWithHasPackageAtFront:(BOOL)hasPackageAtFront {
     return [self sendPackageAtFrontWithHasPackageAtFront:hasPackageAtFront
-                                                  source:@"when sdk init"];
+                                                  from:@"when sdk init"];
 }
 
 - (BOOL)sendWhenPackageAddedWithPackage:(nonnull id<ADJSdkPackageData>)sdkPackageAdded
@@ -65,14 +65,14 @@
     }
 
     return [self sendPackageAtFrontWithHasPackageAtFront:hasPackageAtFront
-                                                  source:@"when adding package"];
+                                                  from:@"when adding package"];
 }
 
 - (BOOL)sendWhenResumeSendingWithHasPackageAtFront:(BOOL)hasPackageAtFront {
     self.isPaused = NO;
 
     return [self sendPackageAtFrontWithHasPackageAtFront:hasPackageAtFront
-                                                  source:@"when resuming sending"];
+                                                  from:@"when resuming sending"];
 }
 
 - (void)pauseSending {
@@ -83,7 +83,7 @@
     self.isInDelay = NO;
 
     return [self sendPackageAtFrontWithHasPackageAtFront:hasPackageAtFront
-                                                  source:@"when delay ended"];
+                                                  from:@"when delay ended"];
 }
 
 - (nonnull ADJMainQueueResponseProcessingData *) processReceivedSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponse {
@@ -107,7 +107,7 @@
 
         [self.logger debugDev:
          @"Delaying try to send next package, when processing received sdk response"
-                         from:delayData.source];
+                         from:delayData.from];
     } else {
         [self.logger debugDev:
          @"Not delaying try to send next package when processing received sdk response"];
@@ -120,7 +120,7 @@
 
 - (BOOL)sendAfterProcessingSdkResponseWithHasPackageAtFront:(BOOL)hasPackageAtFront {
     return [self sendPackageAtFrontWithHasPackageAtFront:hasPackageAtFront
-                                                  source:@"after processing sdk response"];
+                                                    from:@"after processing sdk response"];
 }
 
 - (nonnull ADJNonNegativeInt *)retriesSinceLastSuccessSend {
@@ -129,16 +129,16 @@
 
 #pragma mark Internal Methods
 - (BOOL)sendPackageAtFrontWithHasPackageAtFront:(BOOL)hasPackageAtFront
-                                         source:(nonnull NSString *)source
+                                           from:(nonnull NSString *)from
 {
     if (! hasPackageAtFront) {
         [self.logger debugDev:@"There are no more packages to send"
-                         from: source];
+                         from: from];
         return NO;
     }
     
     [self.logger debugDev:@"There is at least one package to send"
-                     from:source];
+                     from:from];
 
     if (self.isInDelay) {
         [self.logger debugDev:@"Cannot send package at front because it's in delay"];
@@ -172,7 +172,7 @@
 
     if (sdkResponse.continueIn != nil) {
         return [[ADJDelayData alloc] initWithDelay:sdkResponse.continueIn
-                                             source:@"continue in"];
+                                              from:@"continue in"];
     }
 
     return nil;
@@ -183,7 +183,7 @@
 {
     if (sdkResponse.retryIn != nil) {
         return [[ADJDelayData alloc] initWithDelay:sdkResponse.retryIn
-                                             source:@"retry in"];
+                                              from:@"retry in"];
     }
 
     // increase the number of retries from the sdk side
@@ -193,7 +193,7 @@
         [self.backoffStrategy calculateBackoffTimeWithRetries:self.retriesCounter.countValue];
 
     return [[ADJDelayData alloc] initWithDelay:backoffDelay
-                                         source:@"backoff"];
+                                          from:@"backoff"];
 }
 
 @end

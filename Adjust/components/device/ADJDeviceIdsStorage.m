@@ -22,7 +22,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"DeviceIdsStorage"
+                             loggerName:@"DeviceIdsStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kDeviceIdsStorageTableName

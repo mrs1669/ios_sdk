@@ -30,9 +30,11 @@
 
 @implementation ADJGdprForgetTracker
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy {
-    self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetTracker"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"GdprForgetTracker"];
     _gdprForgetBackoffStrategy = gdprForgetBackoffStrategy;
 
     _isInDelay = NO;
@@ -121,7 +123,7 @@
 - (nonnull ADJDelayData *)delayWithRetryIn:(nullable ADJTimeLengthMilli *)retryIn {
     if (retryIn != nil) {
         return [[ADJDelayData alloc] initWithDelay:retryIn
-                                            source:@"retry_in"];
+                                              from:@"retry_in"];
     }
 
     self.retriesSinceLastSuccessSend =
@@ -132,7 +134,7 @@
      calculateBackoffTimeWithRetries:self.retriesSinceLastSuccessSend.countValue];
 
     return [[ADJDelayData alloc] initWithDelay:backoffDelay
-                                        source:@"backoff"];
+                                          from:@"backoff"];
 }
 
 @end

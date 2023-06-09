@@ -60,7 +60,8 @@
     instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
     preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
 {
-    self = [super initWithLoggerFactory:instanceRootBag.logController source:@"PostSdkInitRoot"];
+    self = [super initWithLoggerFactory:instanceRootBag.logController
+                             loggerName:@"PostSdkInitRoot"];
     _clientConfig = clientConfig;
 
     _subscribingGatePublisher = [[ADJSubscribingGatePublisher alloc]

@@ -16,9 +16,10 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"EventStateStorage"
+                             loggerName:@"EventStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kEventStateStorageTableName

@@ -26,8 +26,9 @@ NSString *const ADJAdRevenueControllerClientActionHandlerId = @"AdRevenueControl
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
-    self = [super initWithLoggerFactory:loggerFactory source:@"AdRevenueController"];
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"AdRevenueController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
 

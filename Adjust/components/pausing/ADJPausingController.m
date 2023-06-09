@@ -49,15 +49,16 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
 
-    self = [super initWithLoggerFactory:loggerFactory source:@"PausingController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"PausingController"];
     _canSendInBackground = canSendInBackground;
 
     _pausingPublisher = [[ADJPausingPublisher alloc]
                          initWithSubscriberProtocol:@protocol(ADJPausingSubscriber)
                          controller:publisherController];
 
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
 
     _pausingState = [[ADJPausingState alloc] initWithLoggerFactory:loggerFactory
                                                canSendInBackground:canSendInBackground];
@@ -81,7 +82,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         } else {
             [strongSelf publishResumeSendingWithSource:ADJFromCanPublish];
         }
-    } source:@"allowed to publish notifications"];
+    } from:@"allowed to publish notifications"];
 }
 
 #pragma mark - ADJOfflineSubscriber
@@ -97,7 +98,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkOnline];
         }
-    } source:@"sdk become online"];
+    } from:@"sdk become online"];
 }
 
 - (void)didSdkBecomeOffline {
@@ -112,7 +113,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromSdkOffline];
         }
-    } source:@"sdk become offline"];
+    } from:@"sdk become offline"];
 }
 
 #pragma mark - ADJReachabilitySubscriber
@@ -129,7 +130,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromNetworkReachable];
         }
-    } source:@"become reachable"];
+    } from:@"become reachable"];
 }
 
 - (void)didBecomeUnreachable {
@@ -145,7 +146,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromNetworkUnreachable];
         }
-    } source:@"become unreachable"];
+    } from:@"become unreachable"];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -166,7 +167,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromForeground];
         }
-    } source:@"foreground"];
+    } from:@"foreground"];
 }
 
 - (void)ccDidBackground {
@@ -186,7 +187,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromBackground];
         }
-    } source:@"background"];
+    } from:@"background"];
 }
 
 #pragma mark - ADJSdkStartSubscriber
@@ -203,7 +204,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkStart];
         }
-    } source:@"sdk start"];
+    } from:@"sdk start"];
 }
 
 #pragma mark - ADJSdkActiveSubscriber
@@ -230,7 +231,7 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
                 [self publishPauseSendingWithSource:ADJPauseFromSdkNotActive];
             }
         }
-    } source:@"sdk active"];
+    } from:@"sdk active"];
 }
 
 #pragma mark Internal Methods
