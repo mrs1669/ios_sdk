@@ -30,7 +30,7 @@
         return nil;
     }
 
-    ADJResultNN<NSString *> *_Nonnull scriptSourceResult =
+    ADJResult<NSString *> *_Nonnull scriptSourceResult =
         [TestLibraryBridge getTestLibraryWebBridgeScript];
     //NSLog(@"test library scriptSourceResult %@", scriptSourceResult.value);
     if (scriptSourceResult.fail != nil) {
@@ -52,13 +52,13 @@
 
     return bridge;
 }
-+ (nonnull ADJResultNN<NSString *> *)getTestLibraryWebBridgeScript {
++ (nonnull ADJResult<NSString *> *)getTestLibraryWebBridgeScript {
     NSBundle *_Nonnull sourceBundle = [NSBundle bundleForClass:self.class];
     // requires that the file 'TestLibraryBridge.js' is in the same location/folder
     NSString *_Nullable scriptPath = [sourceBundle pathForResource:@"TestLibraryBridge"
                                                                   ofType:@"js"];
     if  (scriptPath == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot obtain test library bridge js path from bundle"];
     }
 
@@ -67,7 +67,8 @@
                                                                  encoding:NSUTF8StringEncoding
                                                                     error:nil];
     if (adjustScript == nil) {
-        return [ADJResultNN failWithMessage:@"Cannot read test library bridge js file"
+        return [ADJResult failWithMessage:@"Cannot read test library bridge js file"
+                              wasInputNil:NO
                                builderBlock:
                 ^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
             [resultFailBuilder withError:error];
@@ -76,7 +77,7 @@
         }];
     }
 
-    return [ADJResultNN okWithValue:adjustScript];
+    return [ADJResult okWithValue:adjustScript];
 }
 
 - (nonnull instancetype)
