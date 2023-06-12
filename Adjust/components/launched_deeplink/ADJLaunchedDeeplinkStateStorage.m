@@ -36,11 +36,10 @@ static NSString *const kLaunchedDeeplinkStateTableName = @"launched_deeplink_sta
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-
-- (nullable ADJLaunchedDeeplinkStateData *)
-concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
-    return [ADJLaunchedDeeplinkStateData instanceFromIoData:ioData
-                                                     logger:self.logger];
+- (nonnull ADJResultNN<ADJLaunchedDeeplinkStateData *> *)
+    concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
+{
+    return [ADJLaunchedDeeplinkStateData instanceFromIoData:ioData];
 }
 
 - (nonnull ADJIoData *)
@@ -68,16 +67,21 @@ concreteGenerateIoDataFromValue:(nonnull ADJLaunchedDeeplinkStateData *)dataValu
                       key:@"activity_state"
                     value:[v4ActivityState description]];
 
-    ADJNonEmptyString *_Nullable v4LaunchedDeeplink =
-    [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.pushToken
-                                sourceDescription:@"v4 push token"
-                                           logger:self.logger];
-    if (v4LaunchedDeeplink == nil) {
+    ADJResultNL<ADJNonEmptyString *> *_Nonnull v4LaunchedDeeplinkResult =
+        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.launchedDeeplink];
+
+    if (v4LaunchedDeeplinkResult.fail != nil) {
+        [self.logger debugDev:@"Invalid v4 lauched deeplink detected"
+                   resultFail:v4LaunchedDeeplinkResult.fail
+                    issueType:ADJIssueStorageIo];
+    }
+    if (v4LaunchedDeeplinkResult.value == nil) {
         return;
     }
 
     ADJLaunchedDeeplinkStateData *_Nonnull v4LaunchedDeeplinkData =
-    [[ADJLaunchedDeeplinkStateData alloc] initWithLaunchedDeeplink:v4LaunchedDeeplink];
+        [[ADJLaunchedDeeplinkStateData alloc]
+         initWithLaunchedDeeplink:v4LaunchedDeeplinkResult.value];
 
     [self updateWithNewDataValue:v4LaunchedDeeplinkData];
 }
