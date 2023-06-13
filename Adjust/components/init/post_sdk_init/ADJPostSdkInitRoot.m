@@ -81,6 +81,12 @@
     id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
 
     // [INDEPENDENT] Independent objects initialization section.
+    _adidController = [[ADJAdidController alloc]
+                       initWithLoggerFactory:loggerFactory
+                       adidStateStorage:storageRoot.adidStateStorage
+                       threadController:instanceRootBag.threadController
+                       publisherController:instanceRootBag.publisherController];
+
     _clientSubscriptionsController =
         [[ADJClientSubscriptionsController alloc]
          initWithLoggerFactory:loggerFactory

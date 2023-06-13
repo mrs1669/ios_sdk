@@ -10,7 +10,6 @@
 
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
-#import "ADJV4ActivityState.h"
 
 // public constants
 NS_ASSUME_NONNULL_BEGIN
@@ -28,9 +27,6 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)initWithActiveSdk;
 
 - (nonnull instancetype)initWithInactiveSdk;
-
-+ (nullable ADJSdkActiveStateData *)instanceFromV4WithActivityState:
-    (nullable ADJV4ActivityState *)v4ActivityState;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

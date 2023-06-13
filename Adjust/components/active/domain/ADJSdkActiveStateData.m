@@ -62,20 +62,6 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
     return [self initWithIsActiveSdk:NO];
 }
 
-+ (nullable ADJSdkActiveStateData *)instanceFromV4WithActivityState:
-    (nullable ADJV4ActivityState *)v4ActivityState
-{
-    if (v4ActivityState == nil || v4ActivityState.enableNumberBool == nil) {
-        return nil;
-    }
-
-    if (v4ActivityState.enableNumberBool.boolValue) {
-        return [[ADJSdkActiveStateData alloc] initWithActiveSdk];
-    } else {
-        return [[ADJSdkActiveStateData alloc] initWithInactiveSdk];
-    }
-}
-
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

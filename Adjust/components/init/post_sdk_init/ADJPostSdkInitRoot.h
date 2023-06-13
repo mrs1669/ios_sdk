@@ -12,6 +12,7 @@
 #import "ADJInstanceRootBag.h"
 #import "ADJPreSdkInitRootBag.h"
 #import "ADJPostSdkInitRootBag.h"
+#import "ADJAdidController.h"
 #import "ADJClientSubscriptionsController.h"
 #import "ADJPausingController.h"
 #import "ADJLogQueueController.h"
@@ -26,6 +27,7 @@
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJClientConfigData *clientConfig;
+@property (nonnull, readonly, strong, nonatomic) ADJAdidController *adidController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJClientSubscriptionsController *clientSubscriptionsController;
 @property (nonnull, readonly, strong, nonatomic) ADJPausingController *pausingController;
