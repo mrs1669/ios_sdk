@@ -12,7 +12,7 @@
 
 @interface ADJUnknownResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJUnknownResponseData *> *)
++ (nonnull ADJOptionalFails<ADJUnknownResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     unknownPackageData:(nonnull id<ADJSdkPackageData>)unknownPackageData
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut;

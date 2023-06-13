@@ -130,7 +130,7 @@
     addingFailMessage:(nonnull NSString *)addingFailMessage
     emptyFailMessage:(nonnull NSString *)emptyFailMessage
 {
-    ADJResult<ADJOptionalFailsNN<ADJStringMap *> *> *_Nonnull parametersResult =
+    ADJResult<ADJOptionalFails<ADJStringMap *> *> *_Nonnull parametersResult =
         [ADJUtilConv convertToStringMapWithKeyValueArray:keyValueArray];
 
     if (parametersResult.value == nil) {
@@ -151,7 +151,7 @@
 
     return parametersResult.value.value;
 }
-+ (nonnull ADJResult<ADJOptionalFailsNN<ADJStringMap *> *> *)
++ (nonnull ADJResult<ADJOptionalFails<ADJStringMap *> *> *)
     convertToStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray;
 {
     if (keyValueArray == nil) {
@@ -216,40 +216,40 @@
     }
 
     return [ADJResult okWithValue:
-            [[ADJOptionalFailsNN alloc]
+            [[ADJOptionalFails alloc]
              initWithOptionalFails:optionalFailsMut
              value:[[ADJStringMap alloc] initWithStringMapBuilder:stringMapBuilder]]];
 }
 
 
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *)
     jsonStringFromNameKeyStringValueArray:
     (nullable NSArray<NSString *> *)nameKeyStringValueArray
 {
     return [ADJUtilConv jsonStringFromNameKeyValueArray:nameKeyStringValueArray
                                stringOrElseBooleanValue:YES];
 }
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *)
     jsonStringFromNameKeyBooleanValueArray:
     (nullable NSArray<NSString *> *)nameKeyBooleanValueArray
 {
     return [ADJUtilConv jsonStringFromNameKeyValueArray:nameKeyBooleanValueArray
                                stringOrElseBooleanValue:NO];
 }
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *)
     jsonStringFromNameKeyValueArray:
         (nullable NSArray<NSString *> *)nameKeyValueArray
     stringOrElseBooleanValue:(BOOL)stringOrElseBooleanValue
 {
     if (nameKeyValueArray == nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult nilInputWithMessage:
                        @"Cannot convert to map collection with nil name key value array"]];
     }
 
     if (nameKeyValueArray.count % 3 != 0) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:
@@ -266,20 +266,20 @@
                                 stringOrElseBooleanValue:stringOrElseBooleanValue
                                         optionalFailsMut:optionalFailsMut];
     if (jsonDictionary.count == 0) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:optionalFailsMut
                 value:[ADJResult
                        failWithMessage:@"Could not convert any valid entries"]];
     }
 
-    ADJOptionalFailsNN<NSString *> *_Nonnull jsonStringOptFails =
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
         [ADJUtilJson toStringFromDictionary:jsonDictionary];
     [optionalFailsMut addObjectsFromArray:jsonStringOptFails.optionalFails];
 
     ADJResult<ADJNonEmptyString *> *_Nonnull jsonStringResult =
         [ADJNonEmptyString instanceFromString:jsonStringOptFails.value];
     if (jsonStringResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:optionalFailsMut
                 value:[ADJResult
                        failWithMessage:@"Could not validate json string"
@@ -287,7 +287,7 @@
                        otherFail:jsonStringResult.fail]];
     }
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[ADJResult okWithValue:jsonStringResult.value]];
 }

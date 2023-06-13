@@ -213,7 +213,7 @@ NSString * const kAdjustPrimaryInstanceIdKey    = @"AdjustPrimaryInstanceId";
     BOOL isPrimaryInstance = [self isPrimaryInstance];
     if (! isPrimaryInstance) { return; }
 
-    ADJOptionalFailsNN<ADJV4FilesData *> *_Nonnull v4FilesDataWithOptFails =
+    ADJOptionalFails<ADJV4FilesData *> *_Nonnull v4FilesDataWithOptFails =
         [ADJV4FilesData readV4Files];
     for (ADJResultFail *_Nonnull optionalFail in v4FilesDataWithOptFails.optionalFails) {
         [self.logger debugDev:@"Failed with an optional value when reading v4 files"

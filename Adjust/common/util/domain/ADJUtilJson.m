@@ -44,36 +44,36 @@
     return [ADJResult okWithValue:converted];
 }
 
-+ (nonnull ADJOptionalFailsNN<NSString *> *)toStringFromDictionary:
++ (nonnull ADJOptionalFails<NSString *> *)toStringFromDictionary:
     (nonnull NSDictionary<NSString *, id> *)jsonDictionary
 {
     ADJResult<NSString *> *_Nonnull jsonStringResult =
         [ADJUtilJson toStringThroughNSJSONSerializationWithObject:jsonDictionary];
     if (jsonStringResult.fail == nil) {
-        return [[ADJOptionalFailsNN alloc] initWithOptionalFails:nil
+        return [[ADJOptionalFails alloc] initWithOptionalFails:nil
                                                            value:jsonStringResult.value];
     }
 
     NSMutableArray<ADJResultFail *> *optionalFailsMut =
         [[NSMutableArray alloc] initWithObjects:jsonStringResult.fail, nil];
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[ADJUtilJson toStringManuallyWithDictionary:jsonDictionary
                                              optionalFailsMut:optionalFailsMut]];
 }
-+ (nonnull ADJOptionalFailsNN<NSString *> *)toStringFromArray:(nonnull NSArray<id> *)jsonArray {
++ (nonnull ADJOptionalFails<NSString *> *)toStringFromArray:(nonnull NSArray<id> *)jsonArray {
     ADJResult<NSString *> *_Nonnull jsonStringResult =
         [ADJUtilJson toStringThroughNSJSONSerializationWithObject:jsonArray];
     if (jsonStringResult.fail == nil) {
-        return [[ADJOptionalFailsNN alloc] initWithOptionalFails:nil
+        return [[ADJOptionalFails alloc] initWithOptionalFails:nil
                                                            value:jsonStringResult.value];
     }
 
     NSMutableArray<ADJResultFail *> *optionalFailsMut =
         [[NSMutableArray alloc] initWithObjects:jsonStringResult.fail, nil];
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[ADJUtilJson toStringManuallyWithArray:jsonArray
                                              optionalFailsMut:optionalFailsMut]];
@@ -255,11 +255,11 @@
     return [ADJUtilJson toDictionaryFromData:data];
 }
 
-+ (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
++ (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
     toJsonDictionary:(nonnull NSDictionary *)dictionary
 {
     if ([NSJSONSerialization isValidJSONObject:dictionary]) {
-        return [[ADJOptionalFailsNN alloc] initWithOptionalFails:nil
+        return [[ADJOptionalFails alloc] initWithOptionalFails:nil
                                                            value:dictionary];
     }
 
@@ -268,7 +268,7 @@
          [[ADJResultFail alloc] initWithMessage:@"Dictionary is not valid Json to start with"]
          , nil];
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[ADJUtilJson toJsonDictionaryWithDictionary:dictionary
                                              optionalFailsMut:optionalFailsMut]];

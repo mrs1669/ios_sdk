@@ -13,7 +13,7 @@
 
 @interface ADJClickResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJClickResponseData *> *)
++ (nonnull ADJOptionalFails<ADJClickResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     clickPackageData:(nonnull ADJClickPackageData *)clickPackageData;
 

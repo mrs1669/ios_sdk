@@ -77,7 +77,7 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
         (nullable NSArray *)granularOptionsByNameArray
     logger:(nonnull ADJLogger *)logger
 {
-    ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *_Nonnull
+    ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *_Nonnull
     granularOptionsByNameJsonStringOptFails =
         [ADJUtilConv jsonStringFromNameKeyStringValueArray:granularOptionsByNameArray];
 
@@ -104,7 +104,7 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
         (nullable NSArray *)partnerSharingSettingsByNameArray
     logger:(nonnull ADJLogger *)logger
 {
-    ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *_Nonnull
+    ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *_Nonnull
     partnerSharingSettingsByNameJsonStringOptFails =
         [ADJUtilConv jsonStringFromNameKeyBooleanValueArray:partnerSharingSettingsByNameArray];
 

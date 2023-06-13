@@ -190,7 +190,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
        return;
    }
 
-   ADJOptionalFailsNN<ADJAttributionData *> *_Nonnull receivedAttributionOptFails =
+   ADJOptionalFails<ADJAttributionData *> *_Nonnull receivedAttributionOptFails =
        [ADJAttributionData instanceFromJson:attributionJson
                                        adid:attributionResponseData.adid];
    for (ADJResultFail *_Nonnull optionalFail in receivedAttributionOptFails.optionalFails) {

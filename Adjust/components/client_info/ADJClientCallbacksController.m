@@ -63,7 +63,7 @@
 - (nonnull NSString *)cannotPerformMessageWithFail:(nonnull ADJResultFail *)cannotPerformFail
                                               from:(nonnull NSString *)from
 {
-    ADJOptionalFailsNN<NSString *> *_Nonnull cannotPerformMessageOptFails =
+    ADJOptionalFails<NSString *> *_Nonnull cannotPerformMessageOptFails =
         [ADJUtilJson toStringFromDictionary:[cannotPerformFail toJsonDictionary]];
     for (ADJResultFail *_Nonnull optFail in cannotPerformMessageOptFails.optionalFails) {
         [self.logger debugDev:@"Could not parse json dictionary of fail"
@@ -118,7 +118,7 @@
         }
 
         if (internalCallback != nil) {
-            ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+            ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
                 [attributionData
                  buildInternalCallbackDataWithMethodName:ADJAttributionGetterReadMethodName];
             for (ADJResultFail *_Nonnull optionalFail in callbackDataOptFails.optionalFails) {
@@ -271,7 +271,7 @@
     }
 
     if (internalCallback != nil) {
-        ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+        ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
             [sessionDeviceIdsDataResult.value
              buildInternalCallbackDataWithMethodName:ADJDeviceIdsGetterReadMethodName];
         for (ADJResultFail *_Nonnull optionalFail in callbackDataOptFails.optionalFails) {

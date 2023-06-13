@@ -10,12 +10,12 @@
 
 @implementation ADJUnknownResponseData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJUnknownResponseData *> *)
++ (nonnull ADJOptionalFails<ADJUnknownResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     unknownPackageData:(nonnull id<ADJSdkPackageData>)unknownPackageData
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJUnknownResponseData alloc] initWithBuilder:sdkResponseDataBuilder
                                                unknownPackageData:unknownPackageData

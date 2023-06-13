@@ -10,7 +10,7 @@
 
 #import "ADJResult.h"
 #import "ADJNonEmptyString.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 
 /*
  Json Foundation objects are the Foundation Objects that have equivalence with Json
@@ -27,14 +27,14 @@
     toDictionaryFromData:(nonnull NSData *)jsonData;
 + (nonnull ADJResult<NSString *> *)toStringFromData:(nonnull NSData *)jsonData;
 
-+ (nonnull ADJOptionalFailsNN<NSString *> *)toStringFromDictionary:
++ (nonnull ADJOptionalFails<NSString *> *)toStringFromDictionary:
     (nonnull NSDictionary<NSString *, id> *)jsonDictionary;
-+ (nonnull ADJOptionalFailsNN<NSString *> *)toStringFromArray:(nonnull NSArray<id> *)jsonArray;
++ (nonnull ADJOptionalFails<NSString *> *)toStringFromArray:(nonnull NSArray<id> *)jsonArray;
 
 + (nonnull ADJResult<NSDictionary<NSString *, id> *> *)
     toDictionaryFromString:(nonnull NSString *)jsonString;
 
-+ (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
++ (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
     toJsonDictionary:(nonnull NSDictionary *)dictionary;
 
 @end

@@ -35,7 +35,7 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 - (nonnull ADJResult<ADJAttributionStateData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJOptionalFailsNN<ADJResult<ADJAttributionStateData *> *> *_Nonnull
+    ADJOptionalFails<ADJResult<ADJAttributionStateData *> *> *_Nonnull
     attributionStateDataOptFails = [ADJAttributionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in attributionStateDataOptFails.optionalFails) {

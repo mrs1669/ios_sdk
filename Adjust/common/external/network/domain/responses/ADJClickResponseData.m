@@ -10,12 +10,12 @@
 
 @implementation ADJClickResponseData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJClickResponseData *> *)
++ (nonnull ADJOptionalFails<ADJClickResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     clickPackageData:(nonnull ADJClickPackageData *)clickPackageData
 {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJClickResponseData alloc] initWithBuilder:sdkResponseDataBuilder
                                                clickPackageData:clickPackageData

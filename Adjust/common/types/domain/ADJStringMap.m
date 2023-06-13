@@ -172,7 +172,7 @@
         return self.cachedJsonString;
     }
 
-    ADJOptionalFailsNN<NSString *> *_Nonnull jsonStringOptFails =
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
         [ADJUtilJson toStringFromDictionary:[self jsonStringDictionary]];
 
     // optional fails are ignored, since we don't have logger when this is requsted

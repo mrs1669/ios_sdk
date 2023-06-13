@@ -14,7 +14,7 @@
 #import "ADJConstants.h"
 #import "ADJUtilF.h"
 #import "ADJUtilObj.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 
 @interface ADJSdkApiHelper ()
 
@@ -631,7 +631,7 @@
     return [ADJResult okWithValue:functionIdResult.value.stringValue];
 }
 
-+ (nonnull ADJResult<ADJOptionalFailsNN<NSArray *> *> *)
++ (nonnull ADJResult<ADJOptionalFails<NSArray *> *> *)
     arrayWithObject:(nullable id)arrayObject
 {
     if (arrayObject == nil) {
@@ -680,7 +680,7 @@
         [arrayTargetMut addObject:[ADJUtilObj idOrNsNull:elementObject]];
     }
 
-    return [ADJResult okWithValue:[[ADJOptionalFailsNN alloc]
+    return [ADJResult okWithValue:[[ADJOptionalFails alloc]
                                    initWithOptionalFails:optFailsMut
                                    value:arrayTargetMut]];
 }
@@ -751,7 +751,7 @@
     failMessage:(nonnull NSString *)failMessage
     optFailMessage:(nonnull NSString *)optFailMessage
 {
-    ADJResult<ADJOptionalFailsNN<NSArray *> *> *_Nonnull arrayResult =
+    ADJResult<ADJOptionalFails<NSArray *> *> *_Nonnull arrayResult =
         [ADJSdkApiHelper arrayWithObject:arrayObject];
 
     if (arrayResult.value == nil) {

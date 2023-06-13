@@ -12,7 +12,7 @@
 #import "ADJNonEmptyString.h"
 #import "ADJMoneyDoubleAmount.h"
 #import "ADJAdjustAttribution.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 #import "ADJOptionalFailsNL.h"
 #import "ADJV4Attribution.h"
 
@@ -25,11 +25,11 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAttributionData : NSObject<ADJIoDataMapBuilderInjectable>
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
++ (nonnull ADJOptionalFails<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap;
 
 // TODO: adid to be extracted from attribution
-+ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
++ (nonnull ADJOptionalFails<ADJAttributionData *> *)
     instanceFromJson:(nonnull NSDictionary *)attributionJson
     adid:(nonnull ADJNonEmptyString *)adid;
 
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_END
 // public api
 - (nonnull ADJAdjustAttribution *)toAdjustAttribution;
 
-- (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
+- (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
     buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName;
 
 + (nonnull NSDictionary<NSString *, id> *)toJsonDictionaryWithAdjustAttribution:

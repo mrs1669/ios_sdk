@@ -34,7 +34,7 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 - (nonnull ADJResult<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJOptionalFailsNN<ADJResult<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
+    ADJOptionalFails<ADJResult<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
         [ADJAsaAttributionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in resultOptFails.optionalFails) {

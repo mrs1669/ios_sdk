@@ -10,7 +10,7 @@
 
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 #import "ADJMeasurementSessionData.h"
 #import "ADJV4ActivityState.h"
 
@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJMeasurementSessionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJMeasurementSessionStateData *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJMeasurementSessionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 + (nonnull ADJResult<ADJMeasurementSessionStateData *> *)

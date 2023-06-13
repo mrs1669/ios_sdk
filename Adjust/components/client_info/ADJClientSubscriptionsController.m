@@ -171,7 +171,7 @@
     }
 
     if (internalAttributionCallback != nil) {
-        ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+        ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
             [attributionData
              buildInternalCallbackDataWithMethodName:ADJReadAttributionMethodName];
         for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {
@@ -217,7 +217,7 @@
     }
 
     if (internalAttributionCallback != nil) {
-        ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+        ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
             [attributionData
              buildInternalCallbackDataWithMethodName:ADJChangedAttributionMethodName];
         for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {

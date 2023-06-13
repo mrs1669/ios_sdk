@@ -15,7 +15,7 @@
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementConsentPackageData *measurementConsentPackageData;
 
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJMeasurementConsentResponseData *> *)
++ (nonnull ADJOptionalFails<ADJMeasurementConsentResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     measurementConsentPackageData:
         (nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData;

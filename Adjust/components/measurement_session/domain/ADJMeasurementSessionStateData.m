@@ -26,13 +26,13 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
 
 @implementation ADJMeasurementSessionStateData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJMeasurementSessionStateData *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJMeasurementSessionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData
 {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create measurement session state data from io data"
@@ -61,7 +61,7 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
         }
     }
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFails
             value:[ADJResult okWithValue:
                    [[ADJMeasurementSessionStateData alloc]

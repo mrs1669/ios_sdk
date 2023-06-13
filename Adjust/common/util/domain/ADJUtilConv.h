@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJStringMap.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 #import "ADJLogger.h"
 
 @interface ADJUtilConv : NSObject
@@ -38,11 +38,11 @@
 
 // nameKeyValueArray maps [name, key, value] to <name, <key, value>>
 // name, key and value need to be string
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *)
     jsonStringFromNameKeyStringValueArray:
     (nullable NSArray<NSString *> *)nameKeyStringValueArray;
 // name and key need to be string, value needs to boolean
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJNonEmptyString *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *)
     jsonStringFromNameKeyBooleanValueArray:
     (nullable NSArray<NSString *> *)nameKeyBooleanValueArray;
 

@@ -56,13 +56,13 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
 @implementation ADJAttributionData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
++ (nonnull ADJOptionalFails<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
     ADJResult<ADJMoneyDoubleAmount *> *_Nonnull costAmountResult =
         [self extractCostAmountWithIoValue:[ioDataMap pairValueWithKey:kCostAmountKey]];
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:
                 costAmountResult.failNonNilInput != nil
                 ? [NSArray arrayWithObject:costAmountResult.fail] : nil
@@ -90,7 +90,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
 
 // TODO: adid to be extracted from attribution
-+ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
++ (nonnull ADJOptionalFails<ADJAttributionData *> *)
     instanceFromJson:(nonnull NSDictionary *)attributionJson
     adid:(nonnull ADJNonEmptyString *)adid
 {
@@ -116,7 +116,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
           otherFail:costAmountDoubleResult.fail]];
     }
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJAttributionData alloc]
                    initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey)
@@ -197,7 +197,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     return adjustAttribution;
 }
 
-- (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
+- (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
     buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName
 {
     NSMutableDictionary<NSString *, id> *_Nonnull callbackDataMut =
@@ -214,13 +214,13 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                         forKey:[NSString stringWithFormat:@"%@%@",
                                 methodName, ADJInternalCallbackNsDictionarySuffix]];
 
-    ADJOptionalFailsNN<NSString *> *_Nonnull jsonStringOptFails =
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
         [ADJUtilJson toStringFromDictionary:jsonDictionary];
     [callbackDataMut setObject:jsonStringOptFails.value
                         forKey:[NSString stringWithFormat:@"%@%@",
                                 methodName, ADJInternalCallbackJsonStringSuffix]];
 
-    return [[ADJOptionalFailsNN alloc] initWithOptionalFails:jsonStringOptFails.optionalFails
+    return [[ADJOptionalFails alloc] initWithOptionalFails:jsonStringOptFails.optionalFails
                                                        value:callbackDataMut];
 }
 

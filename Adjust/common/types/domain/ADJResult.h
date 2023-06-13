@@ -12,7 +12,7 @@
 
 @interface ADJResult<V> : NSObject
 // public properties
-@property (nonnull, readonly, strong, nonatomic) V value;
+@property (nullable, readonly, strong, nonatomic) V value;
 @property (readonly, assign, nonatomic) BOOL wasInputNil;
 @property (nullable, readonly, strong, nonatomic) ADJResultFail *fail;
 @property (nullable, readonly, strong, nonatomic) ADJResultFail *failNonNilInput;

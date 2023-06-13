@@ -75,12 +75,12 @@
 
 #define tryBuildResponse(packageClassType, responseClassType, packageDataName)              \
     if ([self.sourcePackage isKindOfClass:[packageClassType class]]) {                      \
-        return (ADJOptionalFailsNN<id<ADJSdkResponseData>> *)                               \
+        return (ADJOptionalFails<id<ADJSdkResponseData>> *)                                 \
             [responseClassType instanceWithBuilder:self                                     \
                                    packageDataName:(packageClassType *)self.sourcePackage]; \
     }                                                                                       \
 
-- (nonnull ADJOptionalFailsNN<id<ADJSdkResponseData>> *)buildSdkResponseData {
+- (nonnull ADJOptionalFails<id<ADJSdkResponseData>> *)buildSdkResponseData {
     tryBuildResponse(ADJGdprForgetPackageData, ADJGdprForgetResponseData, gdprForgetPackageData)
     tryBuildResponse(ADJLogPackageData, ADJLogResponseData, logPackageData)
     tryBuildResponse(ADJClickPackageData, ADJClickResponseData, clickPackageData)
@@ -104,7 +104,7 @@
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut =
         [[NSMutableArray alloc] initWithObjects:[resultFailBuilder build], nil];
 
-    return (ADJOptionalFailsNN<id<ADJSdkResponseData>> *)
+    return (ADJOptionalFails<id<ADJSdkResponseData>> *)
         [ADJUnknownResponseData instanceWithBuilder:self
                                  unknownPackageData:self.sourcePackage
                                    optionalFailsMut:optionalFailsMut];

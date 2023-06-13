@@ -10,7 +10,7 @@
 
 #import "ADJAdjustDeviceIds.h"
 #import "ADJNonEmptyString.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 
 @interface ADJSessionDeviceIdsData : NSObject
 // instantiation
@@ -30,7 +30,7 @@
 // public API
 - (nonnull ADJAdjustDeviceIds *)toAdjustDeviceIds;
 
-- (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
+- (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
     buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName;
 
 @end

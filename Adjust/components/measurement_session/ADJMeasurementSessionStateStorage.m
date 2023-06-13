@@ -41,7 +41,7 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 - (nonnull ADJResult<ADJMeasurementSessionStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
-    ADJOptionalFailsNN<ADJResult<ADJMeasurementSessionStateData *> *> *_Nonnull
+    ADJOptionalFails<ADJResult<ADJMeasurementSessionStateData *> *> *_Nonnull
     resultDataOptFails = [ADJMeasurementSessionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in resultDataOptFails.optionalFails) {

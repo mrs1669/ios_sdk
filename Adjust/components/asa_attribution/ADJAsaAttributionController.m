@@ -353,7 +353,7 @@
     return YES;
 }
 - (nullable ADJNonEmptyString *)toJsonStringWithFail:(nonnull ADJResultFail *)resultFail {
-    ADJOptionalFailsNN<NSString *> *_Nonnull jsonStringOptFails =
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
         [ADJUtilJson toStringFromDictionary:[resultFail toJsonDictionary]];
     for (ADJResultFail *_Nonnull optFail in jsonStringOptFails.optionalFails) {
         [self.logger debugDev:@"Issue while converting fail to string"

@@ -11,7 +11,7 @@
 
 @interface ADJGdprForgetResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJGdprForgetResponseData *> *)
++ (nonnull ADJOptionalFails<ADJGdprForgetResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     gdprForgetPackageData:(nonnull ADJGdprForgetPackageData *)gdprForgetPackageData;
 

@@ -10,12 +10,12 @@
 
 @implementation ADJAdRevenueResponseData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJAdRevenueResponseData *> *)
++ (nonnull ADJOptionalFails<ADJAdRevenueResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     adRevenuePackageData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
 {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJAdRevenueResponseData alloc] initWithBuilder:sdkResponseDataBuilder
                                                adRevenuePackageData:adRevenuePackageData

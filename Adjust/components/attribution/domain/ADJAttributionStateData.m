@@ -39,13 +39,13 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 
 @implementation ADJAttributionStateData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJAttributionStateData *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData
 {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJAttributionStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create attribution state data from io data"
@@ -57,7 +57,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kInstallSessionTrackedKey]];
     if (installSessionTrackedResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create attribution state data from io data"
@@ -69,7 +69,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kUnavailableAttributionKey]];
     if (unavailableAttributionResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create attribution state data from io data"
@@ -81,7 +81,7 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kIsAskingKey]];
     if (isAskingResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create attribution state data from io data"
@@ -94,14 +94,14 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
 
     ADJStringMap *_Nullable attributionDataMap = [ioData mapWithName:kAttributionDataMapName];
     if (attributionDataMap != nil) {
-        ADJOptionalFailsNN<ADJAttributionData *> *_Nonnull attributionDataOptFails =
+        ADJOptionalFails<ADJAttributionData *> *_Nonnull attributionDataOptFails =
             [ADJAttributionData instanceFromIoDataMap:attributionDataMap];
 
         optionalFails = attributionDataOptFails.optionalFails;
         attributionData = attributionDataOptFails.value;
     }
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFails
             value:[ADJResult okWithValue:
                    [[ADJAttributionStateData alloc]

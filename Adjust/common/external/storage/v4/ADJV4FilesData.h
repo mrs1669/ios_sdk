@@ -12,11 +12,11 @@
 #import "ADJV4ActivityState.h"
 #import "ADJV4Attribution.h"
 #import "ADJV4ActivityPackage.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 
 @interface ADJV4FilesData : NSObject
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJV4FilesData *> *)readV4Files;
++ (nonnull ADJOptionalFails<ADJV4FilesData *> *)readV4Files;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

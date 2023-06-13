@@ -68,7 +68,7 @@ static NSString *const kIdentifierForVendorKey = @"identifierForVendor";
             identifierForVendor:[ADJUtilF stringValueOrNil:self.identifierForVendor]];
 }
 
-- (nonnull ADJOptionalFailsNN<NSDictionary<NSString *, id> *> *)
+- (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
     buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName
 {
     NSMutableDictionary<NSString *, id> *_Nonnull callbackDataMut =
@@ -85,13 +85,13 @@ static NSString *const kIdentifierForVendorKey = @"identifierForVendor";
                         forKey:[NSString stringWithFormat:@"%@%@",
                                 methodName, ADJInternalCallbackNsDictionarySuffix]];
 
-    ADJOptionalFailsNN<NSString *> *_Nonnull jsonStringOptFails =
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
         [ADJUtilJson toStringFromDictionary:jsonDictionary];
     [callbackDataMut setObject:jsonStringOptFails.value
                         forKey:[NSString stringWithFormat:@"%@%@",
                                 methodName, ADJInternalCallbackJsonStringSuffix]];
 
-    return [[ADJOptionalFailsNN alloc] initWithOptionalFails:jsonStringOptFails.optionalFails
+    return [[ADJOptionalFails alloc] initWithOptionalFails:jsonStringOptFails.optionalFails
                                                        value:callbackDataMut];
 }
 

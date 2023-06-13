@@ -1,12 +1,12 @@
 //
-//  ADJOptionalFailsNN.m
+//  ADJOptionalFails.m
 //  Adjust
 //
 //  Created by Pedro Silva on 14.03.23.
 //  Copyright © 2023 Adjust GmbH. All rights reserved.
 //
 
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -15,7 +15,7 @@
  @property (nonnull, readonly, strong, nonatomic) V value;
  */
 
-@implementation ADJOptionalFailsNN
+@implementation ADJOptionalFails
 #pragma mark Instantiation
 - (nonnull instancetype)initWithOptionalFails:(nullable NSArray<ADJResultFail *> *)optionalFails
                                         value:(nonnull id)value

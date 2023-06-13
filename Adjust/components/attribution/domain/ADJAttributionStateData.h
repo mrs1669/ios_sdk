@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJAttributionStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJAttributionStateData *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 + (nonnull ADJAttributionStateData *)

@@ -29,7 +29,7 @@
 @implementation ADJV4FilesData
 #pragma mark Instantiation
 
-+ (nonnull ADJOptionalFailsNN<ADJV4FilesData *> *)readV4Files {
++ (nonnull ADJOptionalFails<ADJV4FilesData *> *)readV4Files {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFails =  [[NSMutableArray alloc] init];
 
     [NSKeyedUnarchiver setClass:[ADJV4ActivityState class] forClassName:@"AIActivityState"];
@@ -60,7 +60,7 @@
                                          class:[NSDictionary class]
                                  optionalFails:optionalFails];
     
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFails
             value:[[ADJV4FilesData alloc] initWithV4ActivityState:v4ActivityState
                                                     v4Attribution:v4Attribution

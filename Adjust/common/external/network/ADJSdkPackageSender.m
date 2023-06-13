@@ -365,7 +365,7 @@
 }
 
 - (void)returnWithSdkResponseBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseBuilder {
-    ADJOptionalFailsNN<id<ADJSdkResponseData>> *_Nonnull sdkResponseDataWithOptFails =
+    ADJOptionalFails<id<ADJSdkResponseData>> *_Nonnull sdkResponseDataWithOptFails =
         [sdkResponseBuilder buildSdkResponseData];
 
     for (ADJResultFail *_Nonnull optionalFail in sdkResponseDataWithOptFails.optionalFails) {

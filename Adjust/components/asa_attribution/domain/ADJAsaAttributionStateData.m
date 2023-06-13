@@ -35,13 +35,13 @@ static NSString *const kErrorReasonKey = @"errorReason";
 
 @implementation ADJAsaAttributionStateData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResult<ADJAsaAttributionStateData *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJAsaAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData
 {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJAsaAttributionStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create asa attribution state data from io data"
@@ -53,7 +53,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]];
     if (hasReceivedValidAsaClickResponseResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create asa attribution state data from io data"
@@ -65,7 +65,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedAdjustAttributionKey]];
     if (hasReceivedAdjustAttributionResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
                 value:[ADJResult
                        failWithMessage:@"Cannot create asa attribution state data from io data"
@@ -94,7 +94,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
     ADJNonEmptyString *_Nullable errorReason =
         [ioData.propertiesMap pairValueWithKey:kErrorReasonKey];
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFails
             value:[ADJResult okWithValue:
                    [[ADJAsaAttributionStateData alloc]

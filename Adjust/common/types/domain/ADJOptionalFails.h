@@ -1,5 +1,5 @@
 //
-//  ADJOptionalFailsNN.h
+//  ADJOptionalFails.h
 //  Adjust
 //
 //  Created by Pedro Silva on 14.03.23.
@@ -10,7 +10,7 @@
 
 #import "ADJResultFail.h"
 
-@interface ADJOptionalFailsNN<V> : NSObject
+@interface ADJOptionalFails<V> : NSObject
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSArray<ADJResultFail *> *optionalFails;
 @property (nonnull, readonly, strong, nonatomic) V value;

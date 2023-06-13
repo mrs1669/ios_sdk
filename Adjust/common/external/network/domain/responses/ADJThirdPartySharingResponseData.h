@@ -13,7 +13,7 @@
 
 @interface ADJThirdPartySharingResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJThirdPartySharingResponseData *> *)
++ (nonnull ADJOptionalFails<ADJThirdPartySharingResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     thirdPartySharingPackageData:
         (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData;
