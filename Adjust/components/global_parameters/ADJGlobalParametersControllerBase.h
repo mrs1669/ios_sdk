@@ -17,7 +17,6 @@
 #import "ADJClientClearGlobalParametersData.h"
 #import "ADJTimestampMilli.h"
 #import "ADJStringMap.h"
-#import "ADJOptionalFailsNL.h"
 
 @interface ADJGlobalParametersControllerBase : ADJCommonBase<ADJClientActionHandler>
 // instantiation
@@ -27,9 +26,11 @@
     globalParametersType:(nonnull NSString *)globalParametersType
     sqliteStorageStringMapBase:(nonnull ADJSQLiteStorageStringMapBase *)sqliteStorageStringMapBase;
 
-+ (nonnull ADJOptionalFailsNL<ADJStringMap *> *)
++ (nullable ADJStringMap *)
     paramsInstanceFromV4WithSessionParameters:
-        (nullable NSDictionary<NSString *, NSString *> *)sessionParameters;
+        (nullable NSDictionary<NSString *, NSString *> *)sessionParameters
+    from:(nonnull NSString *)from
+    logger:(nonnull ADJLogger *)logger;
 
 // protected
 @property (nonnull, readonly, strong, nonatomic) ADJStringMap *cachedGlobalParameters;

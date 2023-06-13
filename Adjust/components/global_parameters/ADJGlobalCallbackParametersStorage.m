@@ -39,20 +39,17 @@ static NSString *const kGlobalCallbackParametersStorageTableName = @"global_call
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJOptionalFailsNL<ADJStringMap *> *_Nonnull callbackParamsOptFails =
-        [ADJGlobalParametersControllerBase paramsInstanceFromV4WithSessionParameters:
-         [v4FilesData v4SessionCallbackParameters]];
-    for (ADJResultFail *_Nonnull optionalFail in callbackParamsOptFails.optionalFails) {
-        [self.logger debugDev:@"Could not parse value for v4 session callback parameters migration"
-                   resultFail:optionalFail
-                    issueType:ADJIssueStorageIo];
-    }
+    ADJStringMap *_Nullable callbackParams =
+        [ADJGlobalParametersControllerBase
+         paramsInstanceFromV4WithSessionParameters:[v4FilesData v4SessionCallbackParameters]
+         from:@"global callback parameters"
+         logger:self.logger];
 
-    if (callbackParamsOptFails.value == nil) {
+    if (callbackParams == nil) {
         return;
     }
 
-    [self replaceAllWithStringMap:callbackParamsOptFails.value
+    [self replaceAllWithStringMap:callbackParams
               sqliteStorageAction:nil];
 }
 

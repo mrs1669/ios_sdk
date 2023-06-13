@@ -11,6 +11,7 @@
 #import "ADJUtilSys.h"
 #import "ADJClientActionData.h"
 #import "ADJUtilF.h"
+#import "ADJConstants.h"
 
 @interface ADJGlobalParametersControllerBase ()
 #pragma mark - Injected dependencies
@@ -43,15 +44,16 @@
     return self;
 }
 
-+ (nonnull ADJOptionalFailsNL<ADJStringMap *> *)
++ (nullable ADJStringMap *)
     paramsInstanceFromV4WithSessionParameters:
         (nullable NSDictionary<NSString *, NSString *> *)sessionParameters
+    from:(nonnull NSString *)from
+    logger:(nonnull ADJLogger *)logger
 {
     if (sessionParameters == nil) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+        return nil;
     }
 
-    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
     ADJStringMapBuilder *_Nonnull sessionParametersBuilder =
         [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
@@ -59,20 +61,24 @@
         ADJResult<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJNonEmptyString instanceFromString:key];
         if (keyResult.fail != nil) {
-            [optionalFailsMut addObject:[[ADJResultFail alloc]
-                                         initWithMessage:@"Invalid session parameter key"
-                                         key:@"key parsing fail"
-                                         otherFail:keyResult.fail]];
+            [logger debugWithMessage:@"Invalid session parameter key"
+                        builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+                [logBuilder withKey:ADJLogFromKey stringValue:from];
+                [logBuilder withFail:keyResult.fail issue:ADJIssueStorageIo];
+            }];
             continue;
         }
 
         ADJResult<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromString:[sessionParameters objectForKey:key]];
         if (valueResult.fail != nil) {
-            [optionalFailsMut addObject:[[ADJResultFail alloc]
-                                         initWithMessage:@"Invalid session parameter value"
-                                         key:@"value parsing fail"
-                                         otherFail:valueResult.fail]];
+            [logger debugWithMessage:@"Invalid session parameter value"
+                        builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+                [logBuilder withKey:ADJLogFromKey stringValue:from];
+                [logBuilder withKey:@"session parameter key"
+                        stringValue:keyResult.value.stringValue];
+                [logBuilder withFail:keyResult.fail issue:ADJIssueStorageIo];
+            }];
             continue;
         }
 
@@ -81,14 +87,10 @@
     }
 
     if ([sessionParametersBuilder countPairs] == 0) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:optionalFailsMut
-                value:nil];
+        return nil;
     }
 
-    return [[ADJOptionalFailsNL alloc]
-            initWithOptionalFails:optionalFailsMut
-            value:[[ADJStringMap alloc] initWithStringMapBuilder:sessionParametersBuilder]];
+    return [[ADJStringMap alloc] initWithStringMapBuilder:sessionParametersBuilder];
 }
 
 #pragma mark Public API
