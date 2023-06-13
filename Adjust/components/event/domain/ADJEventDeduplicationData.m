@@ -49,43 +49,6 @@ static NSString *const kDeduplicationIdKey = @"deduplicationId";
                                    initWithDeduplicationId:deduplicationId]];
 }
 
-+ (nonnull ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *)
-    instanceArrayFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
-{
-    if (v4ActivityState == nil || v4ActivityState.transactionIds == nil) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
-    }
-
-    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
-    NSMutableArray<ADJEventDeduplicationData *> *_Nonnull dedupsArrayMut =
-        [[NSMutableArray alloc] init];
-
-    for (id _Nonnull transactionIdObject in v4ActivityState.transactionIds) {
-        ADJResult<ADJNonEmptyString *> *_Nonnull transactionIdResult =
-            [ADJNonEmptyString instanceFromObject:transactionIdObject];
-
-        if (transactionIdResult.fail != nil) {
-            [optionalFailsMut addObject:
-             [[ADJResultFail alloc]
-              initWithMessage:@"Invalid value from v4 activity state transactionIds"
-              key:@"transaction id object fail"
-              otherFail:transactionIdResult.fail]];
-        } else {
-            [dedupsArrayMut addObject:[[ADJEventDeduplicationData alloc]
-                                       initWithDeduplicationId:transactionIdResult.value]];
-        }
-    }
-
-    if ([dedupsArrayMut count] == 0) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:optionalFailsMut
-                value:nil];
-    }
-
-    return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optionalFailsMut
-                                                       value:dedupsArrayMut];
-}
-
 - (nonnull instancetype)initWithDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId {
     self = [super init];
     

@@ -8,6 +8,8 @@
 
 #import "ADJEventDeduplicationStorage.h"
 
+#import "ADJUtilF.h"
+
 #pragma mark Fields
 #pragma mark - Private constants
 static NSString *const kEventDeduplicationStorageTableName = @"event_deduplication";
@@ -48,23 +50,50 @@ static NSString *const kEventDeduplicationStorageTableName = @"event_deduplicati
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJOptionalFailsNL<NSArray<ADJEventDeduplicationData *> *> *_Nonnull
-    eventDeduplicationArrayOptFails =
-        [ADJEventDeduplicationData instanceArrayFromV4WithActivityState:
-         [v4FilesData v4ActivityState]];
-    for (ADJResultFail *_Nonnull optionalFails in eventDeduplicationArrayOptFails.optionalFails) {
-        [self.logger debugDev:@"Could not parse value for v4 event deduplication migration"
-                   resultFail:optionalFails
-                    issueType:ADJIssueStorageIo];
-    }
+    NSArray<ADJEventDeduplicationData *> *_Nullable eventDeduplicationArray =
+        [self eventDeduplicationArrayFromV4:[v4FilesData v4ActivityState]];
 
-    if (eventDeduplicationArrayOptFails.value == nil) {
+    if (eventDeduplicationArray == nil) {
         return;
     }
 
-    for (ADJEventDeduplicationData *_Nonnull eventDedup in eventDeduplicationArrayOptFails.value) {
+    for (ADJEventDeduplicationData *_Nonnull eventDedup in eventDeduplicationArray) {
         [self enqueueElementToLast:eventDedup sqliteStorageAction:nil];
     }
+}
+
+- (nullable NSArray<ADJEventDeduplicationData *> *)
+    eventDeduplicationArrayFromV4:(nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil || v4ActivityState.transactionIds == nil) {
+        return nil;
+    }
+
+    NSMutableArray<ADJEventDeduplicationData *> *_Nonnull dedupsArrayMut =
+        [[NSMutableArray alloc] init];
+
+    for (NSUInteger i = 0; i < v4ActivityState.transactionIds.count; i = i + 1) {
+        ADJResult<ADJNonEmptyString *> *_Nonnull transactionIdResult =
+            [ADJNonEmptyString instanceFromObject:[v4ActivityState.transactionIds objectAtIndex:i]];
+
+        if (transactionIdResult.fail != nil) {
+            [self.logger debugDev:@"Invalid value from v4 activity state transactionIds"
+                              key:@"transactionIds index"
+                      stringValue:[ADJUtilF uIntegerFormat:i]
+                       resultFail:transactionIdResult.fail
+                        issueType:ADJIssueStorageIo];
+        } else {
+            [dedupsArrayMut addObject:[[ADJEventDeduplicationData alloc]
+                                       initWithDeduplicationId:transactionIdResult.value]];
+        }
+    }
+
+
+    if ([dedupsArrayMut count] == 0) {
+        return nil;
+    }
+
+    return dedupsArrayMut;
 }
 
 @end
