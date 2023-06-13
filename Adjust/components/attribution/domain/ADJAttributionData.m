@@ -59,11 +59,13 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 + (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
-    ADJOptionalFailsNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountOptFails =
+    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull costAmountResult =
         [self extractCostAmountWithIoValue:[ioDataMap pairValueWithKey:kCostAmountKey]];
 
     return [[ADJOptionalFailsNN alloc]
-            initWithOptionalFails:costAmountOptFails.optionalFails
+            initWithOptionalFails:
+                costAmountResult.failNonNilInput != nil
+                ? [NSArray arrayWithObject:costAmountResult.fail] : nil
             value:[[ADJAttributionData alloc]
                    initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
                    trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
@@ -77,79 +79,8 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
                    state:[ioDataMap pairValueWithKey:kStateKey]
                    costType:[ioDataMap pairValueWithKey:kCostTypeKey]
-                   costAmount:costAmountOptFails.value
+                   costAmount:costAmountResult.value
                    costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]]];
-}
-
-#define convV4String(field) \
-    ADJResult<ADJNonEmptyString *> *_Nonnull field ## Result =                \
-        [ADJNonEmptyString instanceFromString:v4Attribution.field];           \
-    if (field ## Result.failNonNilInput != nil) {                                       \
-        [optFailsMut addObject:[[ADJResultFail alloc]                                   \
-                                initWithMessage:@"Invalid value from v4 attribution"    \
-                                key:@"field fail"                                       \
-                                otherFail:field ## Result.fail]];                       \
-    }                                                                                   \
-    if (field ## Result.value != nil) {     \
-        hasAtLeastOneValidField = YES;      \
-    }                                       \
-
-+ (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
-    instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution
-{
-    NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut = [[NSMutableArray alloc] init];
-
-    BOOL hasAtLeastOneValidField = NO;
-
-    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
-        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:v4Attribution.costAmount];
-    if (costAmountDoubleResult.failNonNilInput != nil) {
-        [optFailsMut addObject:[[ADJResultFail alloc]
-                                initWithMessage:@"Invalid value from v4 attribution"
-                                key:@"cost amount double fail"
-                                otherFail:costAmountDoubleResult.fail]];
-    }
-    if (costAmountDoubleResult.value != nil) {
-        hasAtLeastOneValidField = YES;
-    }
-
-    convV4String(trackerToken)
-    convV4String(trackerName)
-    convV4String(network)
-    convV4String(campaign)
-    convV4String(adgroup)
-    convV4String(creative)
-    convV4String(clickLabel)
-    // TODO: adid to be extracted from attribution
-    convV4String(adid)
-    convV4String(costType)
-    convV4String(costCurrency)
-
-    if (! hasAtLeastOneValidField) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:optFailsMut
-                value:nil];
-    }
-
-    return [[ADJOptionalFailsNL alloc]
-            initWithOptionalFails:optFailsMut
-            value:[[ADJAttributionData alloc]
-                   initWithTrackerToken:trackerTokenResult.value
-                   trackerName:trackerNameResult.value
-                   network:networkResult.value
-                   campaign:campaignResult.value
-                   adgroup:adgroupResult.value
-                   creative:creativeResult.value
-                   clickLabel:clickLabelResult.value
-                   // TODO: adid to be extracted from attribution
-                   adid:adidResult.value
-                   // deeplink and state not coming from v4
-                   // TODO: confirm that assumption is correct
-                   deeplink:nil
-                   state:nil
-                   costType:costTypeResult.value
-                   costAmount:costAmountDoubleResult.value
-                   costCurrency:costCurrencyResult.value]];
 }
 
 #define extrJsonCall(dictKey) \
@@ -204,12 +135,6 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey)]];
 }
 
-- (nullable instancetype)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-#pragma mark - Private constructors
 - (nonnull instancetype)initWithTrackerToken:(nullable ADJNonEmptyString *)trackerToken
                                  trackerName:(nullable ADJNonEmptyString *)trackerName
                                      network:(nullable ADJNonEmptyString *)network
@@ -243,6 +168,11 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     _costCurrency = costCurrency;
     
     return self;
+}
+
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 #pragma mark Public API
@@ -468,43 +398,24 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     return stringResult.value;
 }
 
-+ (nonnull ADJOptionalFailsNL<ADJMoneyDoubleAmount *> *)
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
     extractCostAmountWithIoValue:(nullable ADJNonEmptyString *)ioValue
 {
     if (ioValue == nil) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+        return [ADJResult nilInputWithMessage:@"Cannot extract cost amount from nil io value"];
     }
 
     NSString *_Nullable ioMoneyDoubleAmountSubValue =
         [ADJMoneyDoubleAmount ioMoneyDoubleAmountSubValueWithIoValue:ioValue];
 
     if (ioMoneyDoubleAmountSubValue == nil) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:
-                    [NSArray arrayWithObject:
-                     [[ADJResultFail alloc]
-                      initWithMessage:@"Cost amount did not match expected double sub type"
-                      key:ADJLogActualKey
-                      stringValue:ioValue.stringValue]]
-                value:nil];
+        return [ADJResult failWithMessage:@"Cost amount did not match expected double sub type"
+                                      key:ADJLogActualKey
+                              stringValue:ioValue.stringValue];
     }
 
-    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull moneyDoubleAmountResult =
-        [ADJMoneyDoubleAmount instanceFromIoMoneyDoubleAmountSubValue:ioMoneyDoubleAmountSubValue];
-
-    if (moneyDoubleAmountResult.fail != nil) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:
-                    [NSArray arrayWithObject:
-                     [[ADJResultFail alloc]
-                      initWithMessage:@"Cannot create cost amount from io sub value"
-                      key:@"io sub value fail"
-                      otherFail:moneyDoubleAmountResult.fail]]
-                value:nil];
-    } else {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil
-                                                           value:moneyDoubleAmountResult.value];
-    }
+    return [ADJMoneyDoubleAmount
+            instanceFromIoMoneyDoubleAmountSubValue:ioMoneyDoubleAmountSubValue];;
 }
 
 @end

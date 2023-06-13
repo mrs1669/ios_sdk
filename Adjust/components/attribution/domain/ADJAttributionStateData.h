@@ -33,8 +33,8 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJOptionalFailsNN<ADJResult<ADJAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-+ (nonnull ADJOptionalFailsNL<ADJAttributionStateData *> *)
-    instanceFromV4WithAttribution:(nullable ADJV4Attribution *)v4Attribution;
++ (nonnull ADJAttributionStateData *)
+    instanceFromMigratedV4Attribution:(nonnull ADJAttributionData *)migratedAttribution;
 
 - (nonnull instancetype)initWithIntialState;
 

@@ -28,13 +28,25 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap;
 
-+ (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
-    instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution;
-
 // TODO: adid to be extracted from attribution
 + (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
     instanceFromJson:(nonnull NSDictionary *)attributionJson
     adid:(nonnull ADJNonEmptyString *)adid;
+
+- (nonnull instancetype)initWithTrackerToken:(nullable ADJNonEmptyString *)trackerToken
+                                 trackerName:(nullable ADJNonEmptyString *)trackerName
+                                     network:(nullable ADJNonEmptyString *)network
+                                    campaign:(nullable ADJNonEmptyString *)campaign
+                                     adgroup:(nullable ADJNonEmptyString *)adgroup
+                                    creative:(nullable ADJNonEmptyString *)creative
+                                  clickLabel:(nullable ADJNonEmptyString *)clickLabel
+// TODO: adid to be extracted from attribution
+                                        adid:(nullable ADJNonEmptyString *)adid
+                                    deeplink:(nullable ADJNonEmptyString *)deeplink
+                                       state:(nullable ADJNonEmptyString *)state
+                                    costType:(nullable ADJNonEmptyString *)costType
+                                  costAmount:(nullable ADJMoneyDoubleAmount *)costAmount
+                                costCurrency:(nullable ADJNonEmptyString *)costCurrency;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
