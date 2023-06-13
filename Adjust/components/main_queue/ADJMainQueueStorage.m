@@ -70,23 +70,43 @@ static NSString *const kMainQueueStorageTableName = @"main_queue";
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJOptionalFailsNL<NSArray<id<ADJSdkPackageData>> *> *_Nonnull packageArrayOptFails =
-        [ADJSdkPackageBaseData instanceArrayFromV4WithActivityPackageArray:
-         [v4FilesData v4ActivityPackageArray]];
+    NSArray<id<ADJSdkPackageData>> *_Nullable packageArray =
+        [self instanceArrayFromV4WithActivityPackageArray:[v4FilesData v4ActivityPackageArray]];
 
-    for (ADJResultFail *_Nonnull optionalFail in packageArrayOptFails.optionalFails) {
-        [self.logger debugDev:@"Could not parse value for v4 activity package migration"
-                   resultFail:optionalFail
-                    issueType:ADJIssueStorageIo];
-    }
+    if (packageArray == nil) { return; }
 
-    if (packageArrayOptFails.value == nil) {
-        return;
-    }
-
-    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in packageArrayOptFails.value) {
+    for (id<ADJSdkPackageData> _Nonnull sdkPackageData in packageArray) {
         [self enqueueElementToLast:sdkPackageData sqliteStorageAction:nil];
     }
+}
+
+- (nullable NSArray<id<ADJSdkPackageData>> *)
+    instanceArrayFromV4WithActivityPackageArray:(nullable NSArray *)v4ActivityPackageArray
+{
+    if (v4ActivityPackageArray == nil) {
+        return nil;
+    }
+
+    NSMutableArray<id<ADJSdkPackageData>> *_Nonnull activityPackageArryMut =
+        [[NSMutableArray alloc] init];
+
+    for (id _Nonnull activityPackageObject in v4ActivityPackageArray) {
+        ADJResult<id<ADJSdkPackageData>> *_Nonnull sdkPackageDataResult =
+            [ADJSdkPackageBaseData convertV4PackageWithActivityPackageObject:activityPackageObject];
+        if (sdkPackageDataResult.fail != nil) {
+            [self.logger debugDev:@"Could not read v4 activity package"
+                       resultFail:sdkPackageDataResult.fail
+                        issueType:ADJIssueStorageIo];
+        } else {
+            [activityPackageArryMut addObject:sdkPackageDataResult.value];
+        }
+    }
+
+    if (activityPackageArryMut.count == 0) {
+        return nil;
+    }
+
+    return activityPackageArryMut;
 }
 
 @end
