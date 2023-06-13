@@ -11,7 +11,6 @@
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
 #import "ADJAttributionData.h"
-#import "ADJOptionalFailsNL.h"
 #import "ADJV4Attribution.h"
 
 // public constants

@@ -33,7 +33,6 @@
 #import "ADJBooleanWrapper.h"
 #import "ADJInstanceRoot.h"
 #import "ADJUtilF.h"
-#import "ADJOptionalFailsNL.h"
 #import "ADJUtilJson.h"
 
 #pragma mark Fields

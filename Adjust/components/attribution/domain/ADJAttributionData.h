@@ -13,7 +13,6 @@
 #import "ADJMoneyDoubleAmount.h"
 #import "ADJAdjustAttribution.h"
 #import "ADJOptionalFails.h"
-#import "ADJOptionalFailsNL.h"
 #import "ADJV4Attribution.h"
 
 // public constants
