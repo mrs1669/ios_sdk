@@ -102,8 +102,6 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
     }                                       \
 
 - (nonnull ADJAttributionData *)attributionFromV4:(nonnull ADJV4Attribution *)v4Attribution {
-    NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut = [[NSMutableArray alloc] init];
-
     BOOL hasAtLeastOneValidField = NO;
 
     ADJResult<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =

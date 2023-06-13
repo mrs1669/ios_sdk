@@ -426,7 +426,7 @@
      partnerParameterKeyValueArray:nil];
 }
 - (void)
-    trackAdRevenue:(ADJAdjustAdRevenue *)adjustAdRevenue
+    trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
 {

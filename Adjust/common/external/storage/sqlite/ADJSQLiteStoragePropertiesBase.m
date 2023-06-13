@@ -164,7 +164,7 @@ static NSString *const kColumnValue = @"value";
             [logBuilder withKey:@"io data" stringValue:[ioData description]];
         }];
     } else {
-        _inMemoryDataValue = valueFromIoDataResult.value;
+        self.inMemoryDataValue = valueFromIoDataResult.value;
     }
 
     return valueFromIoDataResult.fail != nil;

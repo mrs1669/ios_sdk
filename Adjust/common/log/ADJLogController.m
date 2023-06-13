@@ -102,18 +102,17 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    ADJResultFail *_Nullable execFail =
-        [commonExecutor executeInSequenceFrom:@"sdk init"
-                                        block:^{
-            __typeof(weakSelf) __strong strongSelf = weakSelf;
-            if (strongSelf == nil) { return; }
+    [commonExecutor executeInSequenceFrom:@"sdk init"
+                                    block:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
-            [strongSelf.consoleLogger
-             didSdkInitWithIsSandboxEnvironment:
-                 clientConfigData.isSandboxEnvironmentOrElseProduction
-             doLogAll:clientConfigData.doLogAll
-             doNotLogAny:clientConfigData.doNotLogAny];
-        }];
+        [strongSelf.consoleLogger
+         didSdkInitWithIsSandboxEnvironment:
+             clientConfigData.isSandboxEnvironmentOrElseProduction
+         doLogAll:clientConfigData.doLogAll
+         doNotLogAny:clientConfigData.doNotLogAny];
+    }];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -124,26 +123,25 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    ADJResultFail *_Nullable execFail =
-        [commonExecutor executeInSequenceFrom:@"allowed to publish notifications"
-                                        block:^{
-            __typeof(weakSelf) __strong strongSelf = weakSelf;
-            if (strongSelf == nil) { return; }
+    [commonExecutor executeInSequenceFrom:@"allowed to publish notifications"
+                                    block:^{
+        __typeof(weakSelf) __strong strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
 
-            strongSelf.canPublish = YES;
+        strongSelf.canPublish = YES;
 
-            NSArray<ADJLogMessageData *> *_Nonnull preInitLogMessageArray =
-                [strongSelf.logMessageDataArray copy];
+        NSArray<ADJLogMessageData *> *_Nonnull preInitLogMessageArray =
+            [strongSelf.logMessageDataArray copy];
 
-            [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
-             ^(id<ADJLogSubscriber> _Nonnull subscriber)
-             {
-                [subscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
-            }];
-
-            // can flush memory stored logs
-            [strongSelf.logMessageDataArray removeAllObjects];
+        [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
+         ^(id<ADJLogSubscriber> _Nonnull subscriber)
+         {
+            [subscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
         }];
+
+        // can flush memory stored logs
+        [strongSelf.logMessageDataArray removeAllObjects];
+    }];
 }
 
 @end
