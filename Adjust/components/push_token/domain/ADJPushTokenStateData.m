@@ -41,32 +41,6 @@ static NSString *const kLastPushTokenKey = @"lastPushToken";
             [[ADJPushTokenStateData alloc] initWithLastPushTokenString:lastPushToken]];
 }
 
-+ (nonnull ADJOptionalFailsNL<ADJPushTokenStateData *> *)
-    instanceFromExternalWithPushTokenString:(nullable NSString *)pushTokenString
-{
-    ADJResult<ADJNonEmptyString *> *_Nullable pushTokenResult =
-        [ADJNonEmptyString instanceFromString:pushTokenString];
-
-    NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
-    if (pushTokenResult.failNonNilInput != nil) {
-        optionalFails = [NSArray arrayWithObject:
-                         [[ADJResultFail alloc]
-                          initWithMessage:
-                              @"Could not parse external value for push token state data"
-                          key:@"push token string fail"
-                          otherFail:pushTokenResult.fail]];
-    }
-
-    if (pushTokenResult.value == nil) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:optionalFails value:nil];
-    }
-
-    return [[ADJOptionalFailsNL alloc]
-            initWithOptionalFails:optionalFails
-            value:[[ADJPushTokenStateData alloc]
-                   initWithLastPushTokenString:pushTokenResult.value]];
-}
-
 - (nonnull instancetype)initWithInitialState {
     return [self initWithLastPushTokenString:nil];
 }
