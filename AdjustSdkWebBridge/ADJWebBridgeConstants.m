@@ -23,6 +23,9 @@ NSString *const ADJWBOnlineModeMethodName = @"switchBackToOnlineMode";
 NSString *const ADJWBActivateMeasurementConsentMethodName = @"activateMeasurementConsent";
 NSString *const ADJWBInactivateMeasurementConsentMethodName = @"inactivateMeasurementConsent";
 
+NSString *const ADJWBGetAdjustIdentifierAsyncMethodName = @"getAdjustIdentifierAsync";
+NSString *const ADJWBAdjustIdentifierAsyncGetterCallbackKey = @"_adjustIdentifierAsyncGetterCallback";
+
 NSString *const ADJWBGetAdjustAttributionAsyncMethodName = @"getAdjustAttributionAsync";
 NSString *const ADJWBAdjustAttributionAsyncGetterCallbackKey =
     @"_adjustAttributionAsyncGetterCallback";
@@ -70,6 +73,7 @@ NSString *const ADJWBDoNotReadAppleSearchAdsAttributionConfigKey =
     @"_doNotReadAppleSearchAdsAttribution";
 NSString *const ADJWBEventIdDeduplicationMaxCapacityConfigKey =
     @"_eventIdDeduplicationMaxCapacity";
+NSString *const ADJWBAdjustIdentifierSubscriberCallbackConfigKey = @"_adjustIdentifierSubscriberCallback";
 NSString *const ADJWBAdjustAttributionSubscriberCallbackConfigKey =
     @"_adjustAttributionSubscriberCallback";
 NSString *const ADJWBAdjustLogSubscriberCallbackConfigKey = @"_adjustLogSubscriberCallback";

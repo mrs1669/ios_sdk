@@ -40,8 +40,10 @@
     return nil;
 }
 
-- (nonnull ADJAdjustConfig *)adjustConfigWithParametersJsonDictionary:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters
+- (nonnull ADJAdjustConfig *)
+    adjustConfigWithParametersJsonDictionary:
+        (nonnull NSDictionary<NSString *, id> *)jsParameters
+    instanceIdString:(nonnull NSString *)instanceIdString
 {
     NSString *_Nullable appToken =
         [self stringLoggedWithJsParameters:jsParameters
@@ -129,6 +131,24 @@
         [adjustConfig setEventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacity.intValue];
     }
 
+    ADJResult<NSString *> *_Nonnull adjustIdentifierSubscriberIdResult =
+        [ADJSdkApiHelper
+         functionIdWithJsParameters:jsParameters
+         key:ADJWBAdjustIdentifierSubscriberCallbackConfigKey];
+    if (adjustIdentifierSubscriberIdResult.failNonNilInput != nil) {
+        [self.logger
+         debugDev:
+             @"Could not parse JS field for adjust config adjust identifier subscription callback id"
+         resultFail:adjustIdentifierSubscriberIdResult.fail
+         issueType:ADJIssueNonNativeIntegration];
+    }
+    if (adjustIdentifierSubscriberIdResult.value != nil) {
+        [adjustConfig setAdjustIdentifierSubscriber:
+            [self.webViewCallback
+             adjustIdentifierSubscriberCallbackWithId:adjustIdentifierSubscriberIdResult.value
+             instanceIdString:instanceIdString]];
+    }
+
     return adjustConfig;
 }
 
@@ -169,6 +189,33 @@
     }
 
     return subscriptionsMap;
+}
+
+- (nonnull id<ADJAdjustIdentifierCallback>)
+    adjustIdentifierGetterCallbackWithJsParameters:
+        (nonnull NSDictionary<NSString *, id> *)jsParameters
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    ADJResult<NSString *> *_Nonnull adjustIdentifierGetterIdResult =
+        [ADJSdkApiHelper functionIdWithJsParameters:jsParameters
+                                                key:ADJWBAdjustIdentifierAsyncGetterCallbackKey];
+    if (adjustIdentifierGetterIdResult.wasInputNil) {
+        [self.logger
+         debugDev:@"Could not find JS field for adjust identifier getter callback id"
+         issueType:ADJIssueNonNativeIntegration];
+       return nil;
+    }
+    if (adjustIdentifierGetterIdResult.fail != nil) {
+         [self.logger
+          debugDev:@"Could not parse JS field for adjust identifier getter callback id"
+          resultFail:adjustIdentifierGetterIdResult.fail
+          issueType:ADJIssueNonNativeIntegration];
+        return nil;
+    }
+
+    return [self.webViewCallback
+            adjustIdentifierGetterCallbackWithId:adjustIdentifierGetterIdResult.value
+            instanceIdString:instanceIdString];
 }
 
 - (nullable id<ADJInternalCallback>)

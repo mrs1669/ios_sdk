@@ -123,6 +123,11 @@ function(deleteAfter, errMessage, callbackId, methodName, callbackParameter) {
 
 AdjustInstance.prototype.initSdk = function(adjustConfig) {
     // save permanent callbacks
+    if (adjustConfig._adjustIdentifierSubscriberCallbackId) {
+        this._callbackMap.set(adjustConfig._adjustIdentifierSubscriberCallbackId,
+                              adjustConfig._adjustIdentifierSubscriberCallback);
+    }
+
     if (adjustConfig._adjustAttributionSubscriberCallbackId) {
         this._callbackMap.set(adjustConfig._adjustAttributionSubscriberCallbackId,
                               adjustConfig._adjustAttributionSubscriberCallback);
@@ -176,6 +181,17 @@ AdjustInstance.prototype.getAdjustDeviceIdsAsync = function(adjustDeviceIdsCallb
     this._postMessage("getAdjustDeviceIdsAsync", {
     _adjustDeviceIdsAsyncGetterCallbackId: callbackIdWithRandomPrefix,
         _adjustDeviceIdsAsyncGetterCallbackType: typeof adjustDeviceIdsCallback});
+}
+
+AdjustInstance.prototype.getAdjustIdentifierAsync = function(adjustIdentifierCallback) {
+    const callbackIdWithRandomPrefix =
+        this._callbackIdWithRandomPrefix("getAdjustIdentifierAsync");
+
+    this._callbackMap.set(callbackIdWithRandomPrefix, adjustIdentifierCallback);
+
+    this._postMessage("getAdjustIdentifierAsync", {
+        _adjustIdentifierAsyncGetterCallbackId: callbackIdWithRandomPrefix,
+        _adjustIdentifierAsyncGetterCallbackType: typeof adjustIdentifierCallback});
 }
 
 AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionCallback) {
@@ -265,6 +281,8 @@ function AdjustConfig(appToken, environment) {
     this._doNotOpenDeferredDeeplink = null;
     this._doNotReadAppleSearchAdsAttribution = null;
     this._eventIdDeduplicationMaxCapacity = null;
+    this._adjustIdentifierSubscriberCallbackId = null;
+    this._adjustIdentifierSubscriberCallback = null;
     this._adjustAttributionSubscriberCallbackId = null;
     this._adjustAttributionSubscriberCallback = null;
     this._adjustLogSubscriberCallbackId = null;
@@ -323,6 +341,12 @@ AdjustConfig.prototype.setEventIdDeduplicationMaxCapacity =
 function(eventIdDeduplicationMaxCapacity) {
     this._eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
     this._eventIdDeduplicationMaxCapacityType = typeof eventIdDeduplicationMaxCapacity;
+};
+
+AdjustConfig.prototype.setAdjustIdentifierSubscriber = function(adjustIdentifierSubscriber) {
+    this._adjustIdentifierSubscriberCallbackType = typeof adjustIdentifierSubscriber;
+    this._adjustIdentifierSubscriberCallbackId = "adjustIdentifierSubscriberCallback";
+    this._adjustIdentifierSubscriberCallback =  adjustIdentifierSubscriber;
 };
 
 AdjustConfig.prototype.setAdjustAttributionSubscriber = function(adjustAttributionSubscriber) {
