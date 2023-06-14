@@ -17,8 +17,6 @@
 @property (nullable, strong, nonatomic) NSString *adgroup;
 @property (nullable, strong, nonatomic) NSString *creative;
 @property (nullable, strong, nonatomic) NSString *clickLabel;
-// TODO: adid to be extracted from attribution
-@property (nullable, strong, nonatomic) NSString *adid;
 @property (nullable, strong, nonatomic) NSString *deeplink;
 @property (nullable, strong, nonatomic) NSString *state;
 @property (nullable, strong, nonatomic) NSString *costType;

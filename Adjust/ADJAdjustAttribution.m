@@ -24,7 +24,6 @@
                     @"adgroup", self.adgroup,
                     @"creative", self.creative,
                     @"clickLabel", self.clickLabel,
-                    @"adid", self.adid,
                     @"deeplink", self.deeplink,
                     @"state", self.state,
                     @"costType", self.costType,

@@ -122,8 +122,6 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
     convV4String(adgroup)
     convV4String(creative)
     convV4String(clickLabel)
-    // TODO: adid to be extracted from attribution
-    convV4String(adid)
     convV4String(costType)
     convV4String(costCurrency)
 
@@ -139,8 +137,6 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
             adgroup:adgroupResult.value
             creative:creativeResult.value
             clickLabel:clickLabelResult.value
-            // TODO: adid to be extracted from attribution
-            adid:adidResult.value
             // deeplink and state not coming from v4
             // TODO: confirm that assumption is correct
             deeplink:nil
