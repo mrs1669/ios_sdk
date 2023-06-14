@@ -91,8 +91,10 @@
         [[ADJClientSubscriptionsController alloc]
          initWithLoggerFactory:loggerFactory
          threadController:instanceRootBag.threadController
+         adidStateStorage:storageRoot.adidStateStorage
          attributionStateStorage:storageRoot.attributionStateStorage
          clientReturnExecutor:preSdkInitRootBag.clientReturnExecutor
+         adjustIdentifierSubscriber:clientConfig.adjustIdentifierSubscriber
          adjustAttributionSubscriber:clientConfig.adjustAttributionSubscriber
          adjustLogSubscriber:clientConfig.adjustLogSubscriber
          internalConfigSubscriptions:clientConfig.internalConfigSubscriptions

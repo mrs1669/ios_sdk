@@ -30,6 +30,8 @@
  @property (nullable, readonly, strong, nonatomic)
      ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
  @property (nullable, readonly, strong, nonatomic)
+     id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
      id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
  @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
  @property (nullable, readonly, strong, nonatomic)
@@ -175,6 +177,7 @@ static NSString *const kDomainValidationRegexString =
             doNotReadAsaAttribution:doNotReadAsaAttribution
             canSendInBackground:canSendInBackground
             eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
+            adjustIdentifierSubscriber:adjustConfig.adjustIdentifierSubscriber
             adjustAttributionSubscriber:adjustConfig.adjustAttributionSubscriber
             adjustLogSubscriber:adjustConfig.adjustLogSubscriber
             internalConfigSubscriptions:internalConfigSubscriptions];
@@ -200,6 +203,8 @@ static NSString *const kDomainValidationRegexString =
     doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
     canSendInBackground:(BOOL)canSendInBackground
     eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
+    adjustIdentifierSubscriber:
+        (nonnull id<ADJAdjustIdentifierSubscriber>)adjustIdentifierSubscriber
     adjustAttributionSubscriber:
         (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
@@ -221,6 +226,7 @@ static NSString *const kDomainValidationRegexString =
     _doNotReadAsaAttribution = doNotReadAsaAttribution;
     _canSendInBackground = canSendInBackground;
     _eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
+    _adjustIdentifierSubscriber = adjustIdentifierSubscriber;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
     _adjustLogSubscriber = adjustLogSubscriber;
     _internalConfigSubscriptions = internalConfigSubscriptions;

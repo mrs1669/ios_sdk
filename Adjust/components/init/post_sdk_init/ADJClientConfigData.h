@@ -12,6 +12,7 @@
 #import "ADJLogger.h"
 #import "ADJNonEmptyString.h"
 #import "ADJNonNegativeInt.h"
+#import "ADJAdjustIdentifierSubscriber.h"
 #import "ADJAdjustAttributionSubscriber.h"
 #import "ADJAdjustLogSubscriber.h"
 #import "ADJAdjustInternal.h"
@@ -56,6 +57,8 @@ NS_DESIGNATED_INITIALIZER;
 @property (readonly, assign, nonatomic) BOOL canSendInBackground;
 @property (nullable, readonly, strong, nonatomic)
     ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+@property (nullable, readonly, strong, nonatomic)
+    id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
 @property (nullable, readonly, strong, nonatomic)
     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;

@@ -23,13 +23,19 @@
  @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
+ @property (nullable, readonly, strong, nonatomic) NSString *externalDeviceId;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doNotLogAnyNumberBool;
- @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
  @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
- @property (nullable, readonly, strong, nonatomic) NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
- @property (nullable, readonly, strong, nonatomic) NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
- @property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
+     NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
+ @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
+ @property (nullable, readonly, strong, nonatomic)
+     NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
+ @property (nullable, readonly, strong, nonatomic)
+     id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
+     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
  @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
  */
 
@@ -103,7 +109,15 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
     _eventIdDeduplicationMaxCapacityNumberInt = @(eventIdDeduplicationMaxCapacity);
 }
 
-- (void)setAdjustAttributionSubscriber:(nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber {
+- (void)setAdjustIdentifierSubscriber:
+    (nonnull id<ADJAdjustIdentifierSubscriber>)adjustIdentifierSubscriber
+{
+    _adjustIdentifierSubscriber = adjustIdentifierSubscriber;
+}
+
+- (void)setAdjustAttributionSubscriber:
+    (nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
+{
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
 }
 
@@ -112,4 +126,3 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
 }
 
 @end
-

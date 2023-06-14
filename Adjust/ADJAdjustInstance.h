@@ -18,6 +18,7 @@
 @class ADJAdjustInstance;
 @protocol ADJAdjustAttributionCallback;
 @protocol ADJAdjustDeviceIdsCallback;
+@protocol ADJAdjustIdentifierCallback;
 @protocol ADJAdjustLaunchedDeeplinkCallback;
 
 @protocol ADJAdjustInstance <NSObject>
@@ -38,6 +39,8 @@
 - (void)activateMeasurementConsent;
 - (void)inactivateMeasurementConsent;
 
+- (void)adjustIdentifierWithCallback:
+    (nonnull id<ADJAdjustIdentifierCallback>)adjustIdentifierCallback;
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback;
 - (void)adjustAttributionWithCallback:
     (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback;
