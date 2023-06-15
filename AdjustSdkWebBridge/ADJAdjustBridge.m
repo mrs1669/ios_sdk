@@ -40,10 +40,7 @@
 
 static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
-@interface ADJAdjustBridge() <
-    ADJAdjustAttributionSubscriber,
-    ADJLogCollector,
-    WKScriptMessageHandler>
+@interface ADJAdjustBridge() <WKScriptMessageHandler>
 
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> logSubscriber;
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
@@ -174,35 +171,6 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
     }
 
     return [ADJResult okWithValue:adjustScript];
-}
-
-#pragma mark - ADJAdjustAttributionSubscriber
-
-- (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
-    NSString *adjustAttributionString = adjustAttribution.description;
-    NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')",
-                            adjustAttributionString];
-    [self.webView evaluateJavaScript:javaScript completionHandler:nil];
-}
-
-- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
-    NSString *adjustAttributionString = adjustAttribution.description;
-    NSString *javaScript = [NSString stringWithFormat:@"didChangeWithAdjustAttribution('%@')",
-                            adjustAttributionString];
-    [self.webView evaluateJavaScript:javaScript completionHandler:nil];
-}
-
-#pragma mark - ADJLogCollector
-
-- (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData {
-    if (self.logSubscriber == nil) {
-        NSLog(@"TORMV bridge logSubscriber = nil");
-        return;
-    }
-
-    [self.logSubscriber didLogWithMessage:
-     [ADJConsoleLogger clientCallbackFormatMessageWithLog:logMessageData.inputData]
-                                 logLevel:logMessageData.inputData.level];
 }
 
 #pragma mark - WKScriptMessageHandler
