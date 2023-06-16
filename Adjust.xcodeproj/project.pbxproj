@@ -4171,7 +4171,6 @@
 		6FAB5DE72A390411005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DE12A390411005E4F22 /* ADJAdjustIdentifierCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB5DE82A390411005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DE12A390411005E4F22 /* ADJAdjustIdentifierCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB5DE92A390411005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DE12A390411005E4F22 /* ADJAdjustIdentifierCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6FAB5DEA2A390411005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DE12A390411005E4F22 /* ADJAdjustIdentifierCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB5DEB2A390411005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DE12A390411005E4F22 /* ADJAdjustIdentifierCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB5DF72A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DF52A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB5DF82A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DF52A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -4182,6 +4181,7 @@
 		6FAB5DFD2A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DF52A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB5DFE2A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DF52A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAB5DFF2A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DF52A3905CF005E4F22 /* ADJAdjustIdentifierSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6FAB5E152A3C537D005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FAB5DE12A390411005E4F22 /* ADJAdjustIdentifierCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FAC56B4288FDFBD0070F564 /* ADJSessionPackageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC56B2288FDFBD0070F564 /* ADJSessionPackageData.m */; };
 		6FAC56B8288FDFF80070F564 /* ADJSdkPackageBaseData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC56B6288FDFF80070F564 /* ADJSdkPackageBaseData.m */; };
 		6FAC56C0288FE0B20070F564 /* ADJConstantsParam.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAC56BE288FE0B20070F564 /* ADJConstantsParam.m */; };
@@ -6829,7 +6829,6 @@
 				075586E329096A2000A3AD50 /* ADJAttributionPackageData.h in Headers */,
 				6F1223A02A28DED200FCD961 /* ADJResult.h in Headers */,
 				075586982909354E00A3AD50 /* ADJAdjustInternal.h in Headers */,
-				6FAB5DEA2A390411005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */,
 				0755881C29096C3200A3AD50 /* ADJLogQueueStorage.h in Headers */,
 				0755876F29096ABB00A3AD50 /* ADJAsaAttributionStateData.h in Headers */,
 				0755882029096C5E00A3AD50 /* ADJClientThirdPartySharingData.h in Headers */,
