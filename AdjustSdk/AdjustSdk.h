@@ -26,12 +26,14 @@ FOUNDATION_EXPORT const unsigned char AdjustSdkVersionString[];
 #import <AdjustSdk/ADJAdjustDeviceIdsCallback.h>
 #import <AdjustSdk/ADJAdjustEvent.h>
 #import <AdjustSdk/ADJAdjustForegroundSubscriber.h>
+#import <AdjustSdk/ADJAdjustIdentifierCallback.h>
+#import <AdjustSdk/ADJAdjustIdentifierSubscriber.h>
 #import <AdjustSdk/ADJAdjustInstance.h>
 #import <AdjustSdk/ADJAdjustInternal.h>
 #import <AdjustSdk/ADJAdjustLaunchedDeeplink.h>
-#import <AdjustSdk/ADJAdjustLogger.h>
 #import <AdjustSdk/ADJAdjustLogMessageData.h>
 #import <AdjustSdk/ADJAdjustLogSubscriber.h>
+#import <AdjustSdk/ADJAdjustLogger.h>
 #import <AdjustSdk/ADJAdjustPackageSendingSubscriber.h>
 #import <AdjustSdk/ADJAdjustPlugin.h>
 #import <AdjustSdk/ADJAdjustPublishers.h>

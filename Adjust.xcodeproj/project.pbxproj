@@ -6737,6 +6737,7 @@
 				075586E129096A2000A3AD50 /* ADJInfoPackageData.h in Headers */,
 				0755874429096A8F00A3AD50 /* ADJSQLiteController.h in Headers */,
 				075586A529093BDB00A3AD50 /* ADJAdjustBridge.h in Headers */,
+				6FAB5E152A3C537D005E4F22 /* ADJAdjustIdentifierCallback.h in Headers */,
 				075587B729096B2200A3AD50 /* ADJGlobalParametersControllerBase.h in Headers */,
 				075586EC29096A2700A3AD50 /* ADJSdkPackageBuilder.h in Headers */,
 				0755870529096A4A00A3AD50 /* ADJPublisherBase.h in Headers */,
