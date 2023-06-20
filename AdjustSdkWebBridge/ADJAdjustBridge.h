@@ -43,8 +43,8 @@ NS_ASSUME_NONNULL_END
 + (nullable ADJAdjustBridge *)instanceWithWKWebView:(nonnull WKWebView *)webView;
 
 + (nullable ADJAdjustBridge *)
-    instanceWithWKWebView:(nonnull WKWebView *)webView
-    adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber;
+instanceWithWKWebView:(nonnull WKWebView *)webView
+adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber;
 
 - (nonnull WKWebView *)webView;
 

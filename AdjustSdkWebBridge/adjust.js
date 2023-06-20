@@ -1,32 +1,32 @@
 
 var Adjust = {
-    instance: function(instanceId = "", errSubscriber) {
-        if (! this._instanceMap) {
-            this._instanceMap = new Map();
-        }
+instance: function(instanceId = "", errSubscriber) {
+    if (! this._instanceMap) {
+        this._instanceMap = new Map();
+    }
 
-        let instance = this._instanceMap.get(instanceId);
-        if (instance) {
-            return instance;
-        }
-
-        if (! (typeof errSubscriber === "function")) {
-            errSubscriber = undefined;
-        }
-
-        if (! (typeof instanceId === "string")) {
-            if (errSubscriber) {
-                errSubscriber("undefined or string expected for instance id."
-                              + " Instead received: " + typeof instanceId);
-            }
-            instanceId = "";
-        }
-
-        instance = new AdjustInstance(instanceId, errSubscriber);
-        this._instanceMap.set(instanceId, instance);
-
+    let instance = this._instanceMap.get(instanceId);
+    if (instance) {
         return instance;
-    },
+    }
+
+    if (! (typeof errSubscriber === "function")) {
+        errSubscriber = undefined;
+    }
+
+    if (! (typeof instanceId === "string")) {
+        if (errSubscriber) {
+            errSubscriber("undefined or string expected for instance id."
+                          + " Instead received: " + typeof instanceId);
+        }
+        instanceId = "";
+    }
+
+    instance = new AdjustInstance(instanceId, errSubscriber);
+    this._instanceMap.set(instanceId, instance);
+
+    return instance;
+},
 
     // TODO inject undefined instanceId and handle that on the native side
     _postMessage(methodName, instanceId = "", parameters = {}, errSubscriber) {
@@ -37,16 +37,16 @@ var Adjust = {
                 return okCheck;
             }
             const canSendSendToNative =
-                canSend(window, "without valid: 'window'") &&
-                canSend(window.webkit, "without valid: 'window.webkit'") &&
-                canSend(window.webkit.messageHandlers,
-                        "without valid: 'window.webkit.messageHandlers'") &&
-                canSend(window.webkit.messageHandlers.adjust,
-                        "without valid: 'window.webkit.messageHandlers.adjust'") &&
-                canSend(window.webkit.messageHandlers.adjust.postMessage,
-                        "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
-                canSend(typeof window.webkit.messageHandlers.adjust.postMessage === "function",
-                        "when 'window.webkit.messageHandlers.adjust.postMessage' is not a function");
+            canSend(window, "without valid: 'window'") &&
+            canSend(window.webkit, "without valid: 'window.webkit'") &&
+            canSend(window.webkit.messageHandlers,
+                    "without valid: 'window.webkit.messageHandlers'") &&
+            canSend(window.webkit.messageHandlers.adjust,
+                    "without valid: 'window.webkit.messageHandlers.adjust'") &&
+            canSend(window.webkit.messageHandlers.adjust.postMessage,
+                    "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
+            canSend(typeof window.webkit.messageHandlers.adjust.postMessage === "function",
+                    "when 'window.webkit.messageHandlers.adjust.postMessage' is not a function");
 
             if (! canSendSendToNative) { return; }
 
@@ -54,25 +54,25 @@ var Adjust = {
         }
 
         this._adjustMessageHandler.postMessage({
-            _methodName: methodName,
-            _instanceId: instanceId,
-            _parameters: JSON.stringify(parameters)
+        _methodName: methodName,
+        _instanceId: instanceId,
+        _parameters: JSON.stringify(parameters)
         });
     },
 
-    _getSdkVersionAsync: function(getSdkVersionCallback) {
-        this._getSdkVersionCallback = getSdkVersionCallback;
+_getSdkVersionAsync: function(getSdkVersionCallback) {
+    this._getSdkVersionCallback = getSdkVersionCallback;
 
-        this._postMessage("getSdkVersionAsync", "", {
-            _getSdkVersionCallbackId: "_getSdkVersionCallback",
-            _getSdkVersionCallbackType: typeof getSdkVersionCallback});
-    },
+    this._postMessage("getSdkVersionAsync", "", {
+    _getSdkVersionCallbackId: "_getSdkVersionCallback",
+        _getSdkVersionCallbackType: typeof getSdkVersionCallback});
+},
 
-    _teardown: function() {
-        this._instanceMap = undefined;
-        this._adjustMessageHandler = undefined;
-        this._getSdkVersionCallback = undefined;
-    },
+_teardown: function() {
+    this._instanceMap = undefined;
+    this._adjustMessageHandler = undefined;
+    this._getSdkVersionCallback = undefined;
+},
 
 };
 
@@ -83,7 +83,8 @@ function AdjustInstance(instanceId, errSubscriber) {
 };
 
 AdjustInstance.prototype._postMessage = function(methodName, parameters) {
-    Adjust._postMessage(methodName, this._instanceId, parameters, this._errSubscriber); }
+    Adjust._postMessage(methodName, this._instanceId, parameters, this._errSubscriber);
+}
 
 AdjustInstance.prototype.adjust_clientSubscriber =
 function(callbackId, methodName, callbackParameter) {
@@ -106,13 +107,13 @@ function(deleteAfter, errMessage, callbackId, methodName, callbackParameter) {
 
     if (! callbackFunction) {
         this._postMessage("jsFail", {
-            _message: errMessage,
-            _callbackId: callbackId,
-            _callbackIdType: typeof callbackId,
-            _methodName: methodName,
-            _methodNameType: typeof methodName,
-            _callbackParameter: callbackParameter,
-            _callbackParameterType: typeof callbackParameter,
+        _message: errMessage,
+        _callbackId: callbackId,
+        _callbackIdType: typeof callbackId,
+        _methodName: methodName,
+        _methodNameType: typeof methodName,
+        _callbackParameter: callbackParameter,
+        _callbackParameterType: typeof callbackParameter,
             _callbackMapKeys: Array.from(this._callbackMap.keys())});
         return;
     }
@@ -127,101 +128,129 @@ AdjustInstance.prototype.initSdk = function(adjustConfig) {
                               adjustConfig._adjustAttributionSubscriberCallback);
     }
     /*
-    if (adjustConfig.adjustIdentifierSubscriberCallbackId) {
-        this.callbacksMap.set(
-          adjustConfig.adjustIdentifierSubscriberCallbackId,
-          adjustConfig.adjustIdentifierSubscriberCallback);
-    }
+     if (adjustConfig.adjustIdentifierSubscriberCallbackId) {
+     this.callbacksMap.set(
+     adjustConfig.adjustIdentifierSubscriberCallbackId,
+     adjustConfig.adjustIdentifierSubscriberCallback);
+     }
 
-    if (adjustConfig.adjustLogSubscriberCallbackId) {
-        this.callbacksMap.set(
-          adjustConfig.adjustLogSubscriberCallbackId,
-          adjustConfig.adjustLogSubscriberCallback);
-    }
+     if (adjustConfig.adjustLogSubscriberCallbackId) {
+     this.callbacksMap.set(
+     adjustConfig.adjustLogSubscriberCallbackId,
+     adjustConfig.adjustLogSubscriberCallback);
+     }
      */
 
-    this._postMessage("initSdk", adjustConfig); };
+    this._postMessage("initSdk", adjustConfig);
+};
 
 AdjustInstance.prototype.inactivateSdk = function() {
-    this._postMessage("inactivateSdk"); }
+    this._postMessage("inactivateSdk");
+}
+
 AdjustInstance.prototype.reactivateSdk = function() {
-    this._postMessage("reactivateSdk"); }
+    this._postMessage("reactivateSdk");
+}
 
 AdjustInstance.prototype.gdprForgetDevice = function() {
-    this._postMessage("gdprForgetDevice"); }
+    this._postMessage("gdprForgetDevice");
+}
 
 AdjustInstance.prototype.appWentToTheBackgroundManualCall = function() {
-    this._postMessage("appWentToTheBackgroundManualCall"); }
+    this._postMessage("appWentToTheBackgroundManualCall");
+}
+
 AdjustInstance.prototype.appWentToTheForegroundManualCall = function() {
-    this._postMessage("appWentToTheForegroundManualCall"); }
+    this._postMessage("appWentToTheForegroundManualCall");
+}
 
 AdjustInstance.prototype.switchToOfflineMode = function() {
-    this._postMessage("switchToOfflineMode"); }
+    this._postMessage("switchToOfflineMode");
+}
+
 AdjustInstance.prototype.switchBackToOnlineMode = function() {
-    this._postMessage("switchBackToOnlineMode"); }
+    this._postMessage("switchBackToOnlineMode");
+}
 
 AdjustInstance.prototype.activateMeasurementConsent = function() {
-    this._postMessage("activateMeasurementConsent"); }
+    this._postMessage("activateMeasurementConsent");
+}
+
 AdjustInstance.prototype.inactivateMeasurementConsent = function() {
-    this._postMessage("inactivateMeasurementConsent"); }
+    this._postMessage("inactivateMeasurementConsent");
+}
 
 AdjustInstance.prototype.getAdjustDeviceIdsAsync = function(adjustDeviceIdsCallback) {
     const callbackIdWithRandomPrefix =
-        this._callbackIdWithRandomPrefix("getAdjustDeviceIdsAsync");
+    this._callbackIdWithRandomPrefix("getAdjustDeviceIdsAsync");
 
     this._callbackMap.set(callbackIdWithRandomPrefix, adjustDeviceIdsCallback);
 
     this._postMessage("getAdjustDeviceIdsAsync", {
-        _adjustDeviceIdsAsyncGetterCallbackId: callbackIdWithRandomPrefix,
+    _adjustDeviceIdsAsyncGetterCallbackId: callbackIdWithRandomPrefix,
         _adjustDeviceIdsAsyncGetterCallbackType: typeof adjustDeviceIdsCallback});
 }
 
 AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionCallback) {
     const callbackIdWithRandomPrefix =
-        this._callbackIdWithRandomPrefix("getAdjustAttributionAsync");
+    this._callbackIdWithRandomPrefix("getAdjustAttributionAsync");
 
     this._callbackMap.set(callbackIdWithRandomPrefix, adjustAttributionCallback);
 
     this._postMessage("getAdjustAttributionAsync", {
-        _adjustAttributionAsyncGetterCallbackId: callbackIdWithRandomPrefix,
+    _adjustAttributionAsyncGetterCallbackId: callbackIdWithRandomPrefix,
         _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback});
 }
 
 AdjustInstance.prototype.trackEvent = function(adjustEvent) {
-    this._postMessage("trackEvent", adjustEvent); };
+    this._postMessage("trackEvent", adjustEvent);
+};
 
 AdjustInstance.prototype.trackLaunchedDeeplink = function(urlString) {
     this._postMessage("trackLaunchedDeeplink", {
-        _urlString: urlString, _urlStringType: typeof urlString}); }
+        _urlString: urlString, _urlStringType: typeof urlString});
+}
 
 AdjustInstance.prototype.trackPushToken = function(pushTokenString) {
     this._postMessage("trackPushToken", {
-        _pushTokenString: pushTokenString, _pushTokenStringType: typeof pushTokenString}); }
+        _pushTokenString: pushTokenString, _pushTokenStringType: typeof pushTokenString});
+}
 
 AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartySharing) {
-    this._postMessage("trackThirdPartySharing", adjustThirdPartySharing); };
+    this._postMessage("trackThirdPartySharing", adjustThirdPartySharing);
+};
 
 AdjustInstance.prototype.trackAdRevenue = function(adjustAdRevenue) {
-    this._postMessage("trackAdRevenue", adjustAdRevenue); };
+    this._postMessage("trackAdRevenue", adjustAdRevenue);
+};
 
 AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {
     this._postMessage("addGlobalCallbackParameter", {
-        _key: key, _keyType: typeof key,
-        _value: value, _valueType: typeof value}); }
+    _key: key, _keyType: typeof key,
+        _value: value, _valueType: typeof value});
+}
+
 AdjustInstance.prototype.removeGlobalCallbackParameter = function(key) {
-    this._postMessage("removeGlobalCallbackParameter", {_key: key, _keyType: typeof key}); }
+    this._postMessage("removeGlobalCallbackParameter", {_key: key, _keyType: typeof key});
+}
+
 AdjustInstance.prototype.clearGlobalCallbackParameters = function() {
-    this._postMessage("clearGlobalCallbackParameters"); }
+    this._postMessage("clearGlobalCallbackParameters");
+}
 
 AdjustInstance.prototype.addGlobalPartnerParameter = function(key, value) {
     this._postMessage("addGlobalPartnerParameter", {
-        _key: key, _keyType: typeof key,
-        _value: value, _valueType: typeof value}); }
-AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
-    this._postMessage("removeGlobalPartnerParameter", {_key: key, _keyType: typeof key}); }
-AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
-    this._postMessage("clearGlobalPartnerParameters"); }
+    _key: key, _keyType: typeof key,
+        _value: value, _valueType: typeof value});
+}
 
+AdjustInstance.prototype.removeGlobalPartnerParameter = function(key) {
+    this._postMessage("removeGlobalPartnerParameter", {_key: key, _keyType: typeof key});
+}
+
+AdjustInstance.prototype.clearGlobalPartnerParameters = function() {
+    this._postMessage("clearGlobalPartnerParameters");
+}
 
 
 AdjustInstance.prototype._callbackIdWithRandomPrefix = function(suffix) {
@@ -268,37 +297,46 @@ AdjustConfig.DataResidencyUS = "US";
 
 AdjustConfig.prototype.setDefaultTracker = function(defaultTracker) {
     this._defaultTracker = defaultTracker;
-    this._defaultTrackerType = typeof defaultTracker; };
+    this._defaultTrackerType = typeof defaultTracker;
+};
 
 AdjustConfig.prototype.doLogAll = function() {
-    this._doLogAll = true; };
+    this._doLogAll = true;
+};
 
 AdjustConfig.prototype.doNotLogAny = function() {
-    this._doNotLogAny = true; };
+    this._doNotLogAny = true;
+};
 
 AdjustConfig.prototype.setUrlStrategy = function(urlStrategy) {
     this._urlStrategy = urlStrategy;
-    this._urlStrategyType = typeof urlStrategy };
+    this._urlStrategyType = typeof urlStrategy
+};
 
 AdjustConfig.prototype.setCustomEndpoint = function(customEndpointUrl, optionalPublicKeyKeyHash) {
     this._customEndpointUrl = customEndpointUrl;
     this._customEndpointUrlType = typeof customEndpointUrl;
     this._customEndpointPublicKeyHash = optionalPublicKeyKeyHash;
-    this._customEndpointPublicKeyHashType = typeof optionalPublicKeyKeyHash; };
+    this._customEndpointPublicKeyHashType = typeof optionalPublicKeyKeyHash;
+};
 
 AdjustConfig.prototype.preventOpenDeferredDeeplink = function() {
-    this._doNotOpenDeferredDeeplink = true; };
+    this._doNotOpenDeferredDeeplink = true;
+};
 
 AdjustConfig.prototype.doNotReadAppleSearchAdsAttribution = function() {
-    this._doNotReadAppleSearchAdsAttribution = true; };
+    this._doNotReadAppleSearchAdsAttribution = true;
+};
 
 AdjustConfig.prototype.allowSendingFromBackground = function() {
-    this._canSendInBackground = true; };
+    this._canSendInBackground = true;
+};
 
 AdjustConfig.prototype.setEventIdDeduplicationMaxCapacity =
-    function(eventIdDeduplicationMaxCapacity) {
-        this._eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
-        this._eventIdDeduplicationMaxCapacityType = typeof eventIdDeduplicationMaxCapacity; };
+function(eventIdDeduplicationMaxCapacity) {
+    this._eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
+    this._eventIdDeduplicationMaxCapacityType = typeof eventIdDeduplicationMaxCapacity;
+};
 
 AdjustConfig.prototype.setAdjustAttributionSubscriber = function(adjustAttributionSubscriber) {
     this._adjustAttributionSubscriberCallbackType = typeof adjustAttributionSubscriber;
@@ -428,3 +466,4 @@ AdjustAdRevenue.prototype.addPartnerParameter = function(key, value) {
     this._partnerParameterKeyValueArray.push({_element: key, _elementType: typeof key});
     this._partnerParameterKeyValueArray.push({_element: value, _elementType: typeof value});
 };
+
