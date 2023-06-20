@@ -52,10 +52,13 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 @end
 
 @implementation ADJAdjustBridge
+
 #pragma mark - Init Web View
+
 + (nullable ADJAdjustBridge *)instanceWithWKWebView:(nonnull WKWebView *)webView {
     return [ADJAdjustBridge instanceWithWKWebView:webView adjustJsLogSubscriber:nil];
 }
+
 + (nullable ADJAdjustBridge *)
     instanceWithWKWebView:(nonnull WKWebView *)webView
     adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber
@@ -136,6 +139,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -172,6 +176,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 }
 
 #pragma mark - ADJAdjustAttributionSubscriber
+
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     NSString *adjustAttributionString = adjustAttribution.description;
     NSString *javaScript = [NSString stringWithFormat:@"didReadWithAdjustAttribution('%@')",
@@ -187,6 +192,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 }
 
 #pragma mark - ADJLogCollector
+
 - (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData {
     if (self.logSubscriber == nil) {
         NSLog(@"TORMV bridge logSubscriber = nil");
@@ -199,6 +205,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 }
 
 #pragma mark - WKScriptMessageHandler
+
 - (void)userContentController:(nonnull WKUserContentController *)userContentController
       didReceiveScriptMessage:(nonnull WKScriptMessage *)message
 {
@@ -316,6 +323,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
         return;
     }
+
     if ([ADJWBGetAdjustAttributionAsyncMethodName isEqualToString:methodName]) {
         id<ADJInternalCallback> _Nullable attributionGetterInternalCallback =
             [self.sdkApiHelper attributionGetterInternalCallbackWithJsParameters:jsParameters
@@ -326,6 +334,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         }
         return;
     }
+
     if ([ADJWBGetAdjustDeviceIdsAsyncMethodName isEqualToString:methodName]) {
         id<ADJInternalCallback> _Nullable deviceIdsGetterInternalCallback =
             [self.sdkApiHelper deviceIdsGetterInternalCallbackWithJsParameters:jsParameters
@@ -336,6 +345,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         }
         return;
     }
+
     if ([ADJWBTrackEventMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
             [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters

@@ -99,7 +99,6 @@ FOUNDATION_EXPORT NSString *const ADJWBPlacementAdRevenueKey;
 FOUNDATION_EXPORT NSString *const ADJWBCallbackParameterKeyValueArrayAdRevenueKey;
 FOUNDATION_EXPORT NSString *const ADJWBPartnerParameterKeyValueArrayAdRevenueKey;
 
-
 FOUNDATION_EXPORT NSString *const ADJWBObjectNameKey;
 
 FOUNDATION_EXPORT NSString *const ADJWBElementKey;

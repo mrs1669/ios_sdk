@@ -131,6 +131,7 @@
 
     return adjustConfig;
 }
+
 - (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)
     extractInternalConfigSubscriptionsWithJsParameters:
         (nonnull NSDictionary<NSString *, id> *)jsParameters
@@ -256,6 +257,7 @@
 
     return adjustEvent;
 }
+
 - (nullable NSArray *)eventCallbackParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
@@ -264,6 +266,7 @@
             failMessage:@"Could not use event callback parameters"
             optFailMessage:@"Issue while parsing event callback parameters"];
 }
+
 - (nullable NSArray *)eventPartnerParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
@@ -397,6 +400,7 @@
 
     return adjustAdRevenue;
 }
+
 - (nullable NSArray *)adRevenueCallbackParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {
@@ -406,6 +410,7 @@
             failMessage:@"Could not use ad revenue callback parameters"
             optFailMessage:@"Issue while parsing ad revenue callback parameters"];
 }
+
 - (nullable NSArray *)adRevenuePartnerParameterKeyValueArrayWithJsParameters:
     (nonnull NSDictionary<NSString *, id> *)jsParameters
 {

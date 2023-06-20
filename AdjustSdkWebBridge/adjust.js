@@ -90,11 +90,13 @@ function(callbackId, methodName, callbackParameter) {
     this.adjust_clientCallback(false, "Could not find valid client subscriber callback function",
                                callbackId, methodName, callbackParameter);
 }
+
 AdjustInstance.prototype.adjust_clientGetter =
 function(callbackId, methodName, callbackParameter) {
     this.adjust_clientCallback(true, "Could not find valid client getter callback function",
                                callbackId, methodName, callbackParameter);
 }
+
 AdjustInstance.prototype.adjust_clientCallback =
 function(deleteAfter, errMessage, callbackId, methodName, callbackParameter) {
     const callbackFunction = this._callbackMap.get(callbackId);
@@ -366,6 +368,7 @@ AdjustThirdPartySharing.prototype.addGranularOption = function(partnerName, key,
     this._granularOptionsByNameArray.push({_element: key, _elementType: typeof key});
     this._granularOptionsByNameArray.push({_element: value, _elementType: typeof value});
 };
+
 AdjustThirdPartySharing.prototype.addPartnerSharingSetting = function(partnerName, key, value) {
     this._partnerSharingSettingsByNameArray.push({
         _element: partnerName, _elementType: typeof partnerName});

@@ -27,6 +27,7 @@
 @end
 
 @interface ADJAttributionGetterInternalCallback : NSObject<ADJInternalCallback>
+
 - (nonnull instancetype)
     initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
     attributionGetterCallbackId:(nonnull NSString *)attributionGetterCallbackId
@@ -41,6 +42,7 @@
 @end
 
 @interface ADJDeviceIdsGetterInternalCallback : NSObject<ADJInternalCallback>
+
 - (nonnull instancetype)
     initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
     deviceIdsGetterCallbackId:(nonnull NSString *)deviceIdsGetterCallbackId
@@ -61,6 +63,7 @@
 @end
 
 @implementation ADJWebViewCallback
+
 - (nonnull instancetype)initWithWebView:(nonnull WKWebView *)webView
                                  logger:(nonnull ADJLogger *)logger
 {
@@ -70,12 +73,14 @@
 
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-#pragma mark Public API
+#pragma mark - Public API
+
 - (nonnull id<ADJInternalCallback>)
     attributionSubscriberInternalCallbackWithId:
         (nonnull NSString *)attributionSubscriberCallbackId
@@ -117,6 +122,7 @@
 }
 
 #pragma mark Internal Methods
+
 - (void)
     execJsCallbackSubscriberWithInstanceIdString:(nonnull NSString *)instanceIdString
     callbackId:(nonnull NSString *)callbackId
@@ -129,6 +135,7 @@
                                jsonParameter:jsonNonStringParameter
                       subscriberOrElseGetter:YES];
 }
+
 - (void)
     execJsCallbackSubscriberWithInstanceIdString:(nonnull NSString *)instanceIdString
     callbackId:(nonnull NSString *)callbackId
@@ -142,6 +149,7 @@
      jsonParameter:[NSString stringWithFormat:@"'%@'", jsonStringParameter]
      subscriberOrElseGetter:YES];
 }
+
 - (void)
     execJsCallbackGetterWithInstanceIdString:(nonnull NSString *)instanceIdString
     callbackId:(nonnull NSString *)callbackId
@@ -154,6 +162,7 @@
                                jsonParameter:jsonNonStringParameter
                       subscriberOrElseGetter:NO];
 }
+
 - (void)
     execJsCallbackGetterWithInstanceIdString:(nonnull NSString *)instanceIdString
     callbackId:(nonnull NSString *)callbackId
@@ -221,7 +230,9 @@
 @end
 
 @implementation ADJAttributionSubscriberInternalCallback
+
 #pragma mark Instantiation
+
 - (nonnull instancetype)
     initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
     attributionSubscriberCallbackId:(nonnull NSString *)attributionSubscriberCallbackId
@@ -234,12 +245,15 @@
 
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
 #pragma mark Public API
 #pragma mark - ADJInternalCallback
+
 - (void)didInternalCallbackWithData:(nonnull NSDictionary<NSString *, id> *)data {
     ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
     NSLog(@"TORMV didInternalCallbackWithData webViewCallback == nil: %@",
@@ -301,7 +315,9 @@
 @end
 
 @implementation ADJAttributionGetterInternalCallback
+
 #pragma mark Instantiation
+
 - (nonnull instancetype)
     initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
     attributionGetterCallbackId:(nonnull NSString *)attributionGetterCallbackId
@@ -314,6 +330,7 @@
 
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -321,6 +338,7 @@
 
 #pragma mark Public API
 #pragma mark - ADJInternalCallback
+
 - (void)didInternalCallbackWithData:(nonnull NSDictionary<NSString *, id> *)data {
     ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
     NSLog(@"TORMV didInternalCallbackWithData webViewCallback == nil: %@",
@@ -380,8 +398,10 @@
 
 @end
 
-@implementation ADJDeviceIdsGetterInternalCallback
+@implementation ADJDeviceIdsGetterInternalCallback\
+
 #pragma mark Instantiation
+
 - (nonnull instancetype)
     initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
     deviceIdsGetterCallbackId:(nonnull NSString *)deviceIdsGetterCallbackId
@@ -394,6 +414,7 @@
 
     return self;
 }
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -401,6 +422,7 @@
 
 #pragma mark Public API
 #pragma mark - ADJInternalCallback
+
 - (void)didInternalCallbackWithData:(nonnull NSDictionary<NSString *, id> *)data {
     ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
     NSLog(@"TORMV didInternalCallbackWithData webViewCallback == nil: %@",

@@ -20,7 +20,6 @@
 #import "ADJResult.h"
 #import "ADJBooleanWrapper.h"
 
-
 @interface ADJSdkApiHelper : NSObject
 
 - (nonnull instancetype)initWithLogger:(nonnull ADJLogger *)logger
