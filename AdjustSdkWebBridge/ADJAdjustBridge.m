@@ -37,6 +37,7 @@
 
 #pragma mark Fields
 #pragma mark - Private constants
+
 static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
 @interface ADJAdjustBridge() <
@@ -59,9 +60,10 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
     return [ADJAdjustBridge instanceWithWKWebView:webView adjustJsLogSubscriber:nil];
 }
 
-+ (nullable ADJAdjustBridge *)instanceWithWKWebView:(nonnull WKWebView *)webView
-                adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber {
-
++ (nullable ADJAdjustBridge *)
+    instanceWithWKWebView:(nonnull WKWebView *)webView
+    adjustJsLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustJsLogSubscriber
+{
     if (! [webView isKindOfClass:WKWebView.class]) {
         if (adjustJsLogSubscriber != nil) {
             [adjustJsLogSubscriber
@@ -74,7 +76,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
     }
 
     ADJResult<NSString *> *_Nonnull scriptSourceResult =
-    [ADJAdjustBridge getAdjustWebBridgeScript];
+        [ADJAdjustBridge getAdjustWebBridgeScript];
     //NSLog(@"adjust bridge scriptSourceResult %@", scriptSourceResult.value);
 
     if (scriptSourceResult.fail != nil) {
@@ -109,8 +111,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 }
 
 + (nonnull ADJInputLogMessageData *)logWithMessage:(nonnull NSString *)message
-                                        resultFail:(nullable ADJResultFail *)resultFail {
-
+                                        resultFail:(nullable ADJResultFail *)resultFail
+{
     return  [[ADJInputLogMessageData alloc]
              initWithMessage:message
              level:ADJAdjustLogLevelDebug
@@ -119,14 +121,15 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
              messageParams:nil];
 }
 
-- (nonnull instancetype)initWithWithWKWebView:(nonnull WKWebView *)webView
-                    adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber {
-
+- (nonnull instancetype)
+    initWithWithWKWebView:(nonnull WKWebView *)webView
+    adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
+{
     self = [super init];
     ADJLogger *_Nonnull logger =
-    [[ADJLogger alloc] initWithName:@"AdjustBridge"
-                       logCollector:self
-                         instanceId:[[ADJInstanceIdData alloc] initNonFirstWithClientId:nil]];
+        [[ADJLogger alloc] initWithName:@"AdjustBridge"
+                           logCollector:self
+                             instanceId:[[ADJInstanceIdData alloc] initNonFirstWithClientId:nil]];
 
     _logSubscriber = adjustLogSubscriber;
     _logger = logger;
@@ -205,7 +208,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 #pragma mark - WKScriptMessageHandler
 
 - (void)userContentController:(nonnull WKUserContentController *)userContentController
-      didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
+      didReceiveScriptMessage:(nonnull WKScriptMessage *)message
+{
     if (! [message.body isKindOfClass:[NSDictionary class]]) {
         [self.logger debugDev:@"Cannot handle script message with non-dictionary body"
                     issueType:ADJIssueNonNativeIntegration];
@@ -213,23 +217,24 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
     }
 
     NSDictionary<NSString *, id> *_Nonnull body =
-    (NSDictionary<NSString *, id> *)message.body;
+        (NSDictionary<NSString *, id> *)message.body;
 
     [self.logger debugDev:@"TORMV userContentController"
                       key:@"js body"
               stringValue:[[ADJUtilJson toStringFromDictionary:body] value]];
 
     ADJResult<ADJNonEmptyString *> *_Nonnull methodNameResult =
-    [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBMethodNameKey]];
+        [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBMethodNameKey]];
     if (methodNameResult.fail != nil) {
         [self.logger debugDev:@"Cannot obtain methodName field from script body"
-                   resultFail:methodNameResult.fail
+                      resultFail:methodNameResult.fail
                     issueType:ADJIssueNonNativeIntegration];
         return;
     }
     NSString *_Nonnull methodName = methodNameResult.value.stringValue;
 
     id _Nullable instanceIdObject = [body objectForKey:ADJWBInstanceIdKey];
+
     if (instanceIdObject == nil) {
         [self.logger debugDev:@"Cannot obtain instanceId field from script body"
                           key:@"method name"
@@ -237,6 +242,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
                     issueType:ADJIssueNonNativeIntegration];
         return;
     }
+
     if (! [instanceIdObject isKindOfClass:[NSString class]]) {
         [self.logger debugDev:@"Cannot use non-string instanceId field from script body"
                          key1:@"method name"
@@ -246,10 +252,11 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
                     issueType:ADJIssueNonNativeIntegration];
         return;
     }
-    NSString *_Nonnull instanceIdString = (NSString *)instanceIdObject;
 
+    NSString *_Nonnull instanceIdString = (NSString *)instanceIdObject;
     ADJResult<ADJNonEmptyString *> *_Nonnull parametersJsonStringResult =
-    [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBParametersKey]];
+        [ADJNonEmptyString instanceFromObject:[body objectForKey:ADJWBParametersKey]];
+
     if (parametersJsonStringResult.fail != nil) {
         [self.logger debugDev:@"Cannot obtain parameters field from script body"
                           key:@"method name"
@@ -260,27 +267,28 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
     }
 
     ADJResult<NSDictionary<NSString *, id> *> *_Nonnull parametersJsonDictionaryResult =
-    [ADJUtilJson toDictionaryFromString:parametersJsonStringResult.value.stringValue];
+        [ADJUtilJson toDictionaryFromString:parametersJsonStringResult.value.stringValue];
+
     if (parametersJsonDictionaryResult.fail != nil) {
-        [self.logger debugWithMessage:
-         @"Cannot convert json string from parameters field to dictionary"
-                         builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"method name" stringValue:methodName];
-            [logBuilder withKey:@"json string"
-                    stringValue:parametersJsonStringResult.value.stringValue];
-            [logBuilder withFail:parametersJsonDictionaryResult.fail
-                           issue:ADJIssueNonNativeIntegration];
-        }];
+         [self.logger debugWithMessage:
+          @"Cannot convert json string from parameters field to dictionary"
+                          builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
+             [logBuilder withKey:@"method name" stringValue:methodName];
+             [logBuilder withKey:@"json string"
+                     stringValue:parametersJsonStringResult.value.stringValue];
+             [logBuilder withFail:parametersJsonDictionaryResult.fail
+                            issue:ADJIssueNonNativeIntegration];
+         }];
         return;
     }
 
     NSDictionary<NSString *, id> *_Nonnull jsParameters =
-    parametersJsonDictionaryResult.value;
+        parametersJsonDictionaryResult.value;
 
     if ([methodName isEqualToString:ADJWBGetSdkVersionAsyncMethodName]) {
         ADJResult<NSString *> *_Nonnull sdkVersionGetterIdResult =
-        [ADJSdkApiHelper functionIdWithJsParameters:jsParameters
-                                                key:ADJWBGetSdkVersionAsyncGetterCallbackKey];
+            [ADJSdkApiHelper functionIdWithJsParameters:jsParameters
+                                                    key:ADJWBGetSdkVersionAsyncGetterCallbackKey];
         if (sdkVersionGetterIdResult.fail != nil) {
             [self.logger
              debugDev:@"Could not parse JS field for sdk version getter callback id"
@@ -297,8 +305,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     if ([ADJWBInitSdkMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
-        [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
-                                          expectedName:ADJWBAdjustConfigName];
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustConfigName];
         if (objectMatchFail != nil) {
             [self.logger debugDev:@"Cannot init sdk with non Adjust Config parameter"
                        resultFail:objectMatchFail
@@ -307,12 +315,12 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         }
 
         ADJAdjustConfig *_Nonnull adjustConfig =
-        [self.sdkApiHelper adjustConfigWithParametersJsonDictionary:jsParameters];
+            [self.sdkApiHelper adjustConfigWithParametersJsonDictionary:jsParameters];
 
         NSDictionary<NSString *, id<ADJInternalCallback>> *_Nullable internalConfigSubscriptions =
-        [self.sdkApiHelper
-         extractInternalConfigSubscriptionsWithJsParameters:jsParameters
-         instanceIdString:instanceIdString];
+            [self.sdkApiHelper
+             extractInternalConfigSubscriptionsWithJsParameters:jsParameters
+             instanceIdString:instanceIdString];
 
         [ADJAdjustInternal initSdkForClientId:instanceIdString
                                  adjustConfig:adjustConfig
@@ -323,8 +331,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     if ([ADJWBGetAdjustAttributionAsyncMethodName isEqualToString:methodName]) {
         id<ADJInternalCallback> _Nullable attributionGetterInternalCallback =
-        [self.sdkApiHelper attributionGetterInternalCallbackWithJsParameters:jsParameters
-                                                            instanceIdString:instanceIdString];
+            [self.sdkApiHelper attributionGetterInternalCallbackWithJsParameters:jsParameters
+                                                                instanceIdString:instanceIdString];
         if (attributionGetterInternalCallback != nil) {
             [ADJAdjustInternal adjustAttributionWithClientId:instanceIdString
                                             internalCallback:attributionGetterInternalCallback];
@@ -334,8 +342,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     if ([ADJWBGetAdjustDeviceIdsAsyncMethodName isEqualToString:methodName]) {
         id<ADJInternalCallback> _Nullable deviceIdsGetterInternalCallback =
-        [self.sdkApiHelper deviceIdsGetterInternalCallbackWithJsParameters:jsParameters
-                                                          instanceIdString:instanceIdString];
+            [self.sdkApiHelper deviceIdsGetterInternalCallbackWithJsParameters:jsParameters
+                                                              instanceIdString:instanceIdString];
         if (deviceIdsGetterInternalCallback != nil) {
             [ADJAdjustInternal adjustDeviceIdsWithClientId:instanceIdString
                                           internalCallback:deviceIdsGetterInternalCallback];
@@ -345,8 +353,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     if ([ADJWBTrackEventMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
-        [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
-                                          expectedName:ADJWBAdjustEventName];
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustEventName];
         if (objectMatchFail != nil) {
             [self.logger debugDev:@"Cannot track event with non Adjust Event parameter"
                        resultFail:objectMatchFail
@@ -355,23 +363,23 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         }
 
         ADJAdjustEvent *_Nonnull adjustEvent =
-        [self.sdkApiHelper adjustEventWithJsParameters:jsParameters];
+            [self.sdkApiHelper adjustEventWithJsParameters:jsParameters];
         NSArray *_Nullable callbackParameterKeyValueArray =
-        [self.sdkApiHelper eventCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper eventCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
         NSArray *_Nullable partnerParameterKeyValueArray =
-        [self.sdkApiHelper eventPartnerParameterKeyValueArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper eventPartnerParameterKeyValueArrayWithJsParameters:jsParameters];
 
         [ADJAdjustInternal trackEventForClientId:instanceIdString
                                      adjustEvent:adjustEvent
-                  callbackParameterKeyValueArray:callbackParameterKeyValueArray
+                 callbackParameterKeyValueArray:callbackParameterKeyValueArray
                    partnerParameterKeyValueArray:partnerParameterKeyValueArray];
         return;
     }
 
     if ([ADJWBTrackThirdPartySharingMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
-        [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
-                                          expectedName:ADJWBAdjustThirdPartySharingName];
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustThirdPartySharingName];
         if (objectMatchFail != nil) {
             [self.logger debugDev:
              @"Cannot track third party sharing with non Adjust Third Party Sharing parameter"
@@ -381,11 +389,11 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         }
 
         ADJAdjustThirdPartySharing *_Nonnull adjustThirdPartySharing =
-        [self.sdkApiHelper adjustThirdPartySharingWithJsParameters:jsParameters];
+            [self.sdkApiHelper adjustThirdPartySharingWithJsParameters:jsParameters];
         NSArray *_Nullable granularOptionsByNameArray =
-        [self.sdkApiHelper tpsGranulaOptionsByNameArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper tpsGranulaOptionsByNameArrayWithJsParameters:jsParameters];
         NSArray *_Nullable partnerSharingSettingsByNameArray =
-        [self.sdkApiHelper tpsPartnerSharingSettingsByNameArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper tpsPartnerSharingSettingsByNameArrayWithJsParameters:jsParameters];
 
         [ADJAdjustInternal trackThirdPartySharingForClientId:instanceIdString
                                      adjustThirdPartySharing:adjustThirdPartySharing
@@ -396,8 +404,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     if ([ADJWBTrackAdRevenueMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
-        [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
-                                          expectedName:ADJWBAdjustAdRevenueName];
+            [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
+                                              expectedName:ADJWBAdjustAdRevenueName];
         if (objectMatchFail != nil) {
             [self.logger debugDev:
              @"Cannot track ad revenue with non Adjust Ad Revenue parameter"
@@ -407,13 +415,13 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         }
 
         ADJAdjustAdRevenue *_Nonnull adjustAdRevenue =
-        [self.sdkApiHelper adjustAdRevenueWithJsParameters:jsParameters];
+            [self.sdkApiHelper adjustAdRevenueWithJsParameters:jsParameters];
         NSArray *_Nullable callbackParameterKeyValueArray =
-        [self.sdkApiHelper
-         adRevenueCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper
+             adRevenueCallbackParameterKeyValueArrayWithJsParameters:jsParameters];
         NSArray *_Nullable partnerParameterKeyValueArray =
-        [self.sdkApiHelper
-         adRevenuePartnerParameterKeyValueArrayWithJsParameters:jsParameters];
+            [self.sdkApiHelper
+             adRevenuePartnerParameterKeyValueArrayWithJsParameters:jsParameters];
 
         [ADJAdjustInternal trackAdRevenueForClientId:instanceIdString
                                      adjustAdRevenue:adjustAdRevenue
@@ -424,11 +432,11 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
     }
     /**
      TODO: check what makes sense (if anything) for web view billing subscriptions
-     will it be using Apple Pay JS API https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api
-     witth string amount https://developer.apple.com/documentation/apple_pay_on_the_web/applepaylineitem/1916086-amount
-     that follows W3C valid decimal monetary value  https://www.w3.org/TR/payment-request/#dfn-valid-decimal-monetary-value
-     if so -> a new MoneyStringAmount should be added
-     or still using double or somehow the native decimal?
+        will it be using Apple Pay JS API https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api
+        witth string amount https://developer.apple.com/documentation/apple_pay_on_the_web/applepaylineitem/1916086-amount
+        that follows W3C valid decimal monetary value  https://www.w3.org/TR/payment-request/#dfn-valid-decimal-monetary-value
+            if so -> a new MoneyStringAmount should be added
+        or still using double or somehow the native decimal?
      */
 
     id<ADJAdjustInstance> _Nonnull adjustInstance = [ADJAdjust instanceForId:instanceIdString];
