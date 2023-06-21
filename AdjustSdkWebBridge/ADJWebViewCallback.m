@@ -459,7 +459,7 @@
     [webViewCallback
      execJsCallbackGetterWithInstanceIdString:self.instanceIdString
      callbackId:self.adjustIdentifierGetterCallbackId
-     methodName:ADJAttributionGetterFailedMethodName
+     methodName:ADJAdjustIdentifierGetterFailedMethodName
      jsonStringParameter:message];
 }
 

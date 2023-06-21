@@ -12,6 +12,7 @@
 
 #import "ADJLogger.h"
 #import "ADJAdjustInternal.h"
+#import "ADJAdjustCallback.h"
 #import "ADJAdjustIdentifierSubscriber.h"
 #import "ADJAdjustIdentifierCallback.h"
 

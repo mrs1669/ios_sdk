@@ -266,8 +266,7 @@
     [publisherController subscribeToPublisher:self.reachabilityController];
     [publisherController subscribeToPublisher:self.measurementSessionController];
     [publisherController subscribeToPublisher:self.measurementLifecycleController];
-    // Add when adid is merged
-    //[publisherController subscribeToPublisher:self.adidController];
+    [publisherController subscribeToPublisher:self.adidController];
 }
 
 @end
