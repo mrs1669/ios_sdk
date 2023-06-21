@@ -46,7 +46,7 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     [[ATAAdjustCommandExecutor alloc] initWithUrl:baseUrl
                                       testLibrary:self.testLibrary];
     
-    self.testLibrary.dictionaryParametersDelegate = self.adjustCommandExecutor;
+    self.testLibrary.dictionaryParametersDelegateWeak = self.adjustCommandExecutor;
 
     /*
     [self.testLibrary addTest:@"Test_AttributionCallback_reattribution"];
@@ -82,7 +82,7 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
 }
 
 - (IBAction)onBtnStartTestSessionPressDidReceive:(UIButton *)sender {
-    [self.testLibrary startTestSession:[ADJAdjustInternal sdkVersion]];
+    [self.testLibrary startTestSession:[ADJAdjustInternal currentSdkVersion]];
 }
 
 @end

@@ -61,7 +61,7 @@ if (adjustAttribution.valueName.length > 0) {                               \
 
     if (adjustAttribution.costAmount >= 0) {
         [testLibrary addInfoToSend:@"cost_amount"
-                             value:@(adjustAttribution.costAmount).description];
+                             value:adjustAttribution.costAmount.description];
     }
     addWhenValid(cost_currency, costCurrency)
 

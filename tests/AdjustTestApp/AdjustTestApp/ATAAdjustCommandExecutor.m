@@ -302,11 +302,11 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 }
 
 - (void)clearGlobalCallbackParameters {
-    [[ADJAdjust instance] clearAllGlobalCallbackParameters];
+    [[ADJAdjust instance] clearGlobalCallbackParameters];
 }
 
 - (void)clearGlobalPartnerParameters {
-    [[ADJAdjust instance] clearAllGlobalPartnerParameters];
+    [[ADJAdjust instance] clearGlobalPartnerParameters];
 }
 
 - (void)setPushToken {
