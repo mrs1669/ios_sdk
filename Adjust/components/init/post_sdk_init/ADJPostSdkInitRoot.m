@@ -258,6 +258,7 @@
     [publisherController subscribeToPublisher:self.reachabilityController];
     [publisherController subscribeToPublisher:self.measurementSessionController];
     [publisherController subscribeToPublisher:self.measurementLifecycleController];
+    [publisherController subscribeToPublisher:self.adidController];
 }
 
 @end

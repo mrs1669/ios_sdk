@@ -40,7 +40,7 @@
 
 static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
-@interface ADJAdjustBridge() <WKScriptMessageHandler>
+@interface ADJAdjustBridge() <ADJLogCollector, WKScriptMessageHandler>
 
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> logSubscriber;
 @property (nonnull, readonly, strong, nonatomic) ADJLogger *logger;
@@ -172,6 +172,18 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
 
     return [ADJResult okWithValue:adjustScript];
 }
+
+#pragma mark - ADJLogCollector
+ - (void)collectLogMessage:(nonnull ADJLogMessageData *)logMessageData {
+     if (self.logSubscriber == nil) {
+         NSLog(@"TORMV bridge logSubscriber = nil");
+         return;
+     }
+
+     [self.logSubscriber didLogWithMessage:
+      [ADJConsoleLogger clientCallbackFormatMessageWithLog:logMessageData.inputData]
+                                  logLevel:logMessageData.inputData.level];
+ }
 
 #pragma mark - WKScriptMessageHandler
 
