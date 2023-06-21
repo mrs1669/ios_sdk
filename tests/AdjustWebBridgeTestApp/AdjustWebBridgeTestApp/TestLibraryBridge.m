@@ -209,6 +209,20 @@
             return;
         }
         [self.testLibrary addInfoToSend:key value:value];
+    } else if ([methodName isEqualToString:@"addInfoHeaderToSend"]) {
+        NSString *_Nullable key =
+            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_key"];
+        if (key == nil) {
+            NSLog(@"Could not get 'key' from 'addInfoHeaderToSend'");
+            return;
+        }
+        NSString *_Nullable value =
+            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_value"];
+        if (value == nil) {
+            NSLog(@"Could not get 'value' from 'addInfoHeaderToSend'");
+            return;
+        }
+        [self.testLibrary addInfoHeaderToSend:key value:value];
     } else if ([methodName isEqualToString:@"sendInfoToServer"]) {
         [self.testLibrary sendInfoToServer:self.extraPathTestOptions];
     } else if ([methodName isEqualToString:@"startTestSession"]) {

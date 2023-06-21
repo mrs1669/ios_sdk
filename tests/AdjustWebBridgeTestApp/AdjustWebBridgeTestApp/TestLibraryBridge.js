@@ -44,6 +44,14 @@ addInfoToSend: function(key, value) {
         _valueType: typeof value
     });
 },
+addInfoHeaderToSend: function(key, value) {
+    TestLibrary._postMessage("addInfoHeaderToSend", {
+        _key: key,
+        _keyType: typeof key,
+        _value: value,
+        _valueType: typeof value
+    });
+},
 sendInfoToServer: function() {
     TestLibrary._postMessage("sendInfoToServer");
 },
@@ -277,6 +285,8 @@ AdjustCommandExecutor.prototype.start = function(params) {
 
     if ("attributionCallbackSendAll" in params) {
         adjustConfig.setAdjustAttributionSubscriber(function(methodName, attribution) {
+            TestLibrary.addInfoHeaderToSend("method_name", methodName);
+
             TestLibrary.addInfoToSend("tracker_token", attribution.trackerToken);
             TestLibrary.addInfoToSend("tracker_name", attribution.trackerName);
             TestLibrary.addInfoToSend("network", attribution.network);
@@ -292,6 +302,16 @@ AdjustCommandExecutor.prototype.start = function(params) {
                 TestLibrary.addInfoToSend("cost_amount", attribution.costAmount.toString());
             }
             TestLibrary.addInfoToSend("cost_currency", attribution.costCurrency);
+
+            TestLibrary.sendInfoToServer();
+        });
+    }
+
+    if ("adidSubscriptionSendAll" in params) {
+        adjustConfig.setAdjustIdentifierSubscriber(function(methodName, adid) {
+            TestLibrary.addInfoHeaderToSend("method_name", methodName);
+
+            TestLibrary.addInfoToSend("adid", adid);
 
             TestLibrary.sendInfoToServer();
         });
@@ -421,4 +441,14 @@ AdjustCommandExecutor.prototype.measurementConsent = function(params) {
     TestLibrary._boolFirstParam(params, "isEnabled", function(isEnabled){
         isEnabled ? TestLibrary._adjustDefaultInstance().activateMeasurementConsent()
             : TestLibrary._adjustDefaultInstance().inactivateMeasurementConsent();});
+}
+AdjustCommandExecutor.prototype.getAdid = function(params) {
+    TestLibrary._adjustDefaultInstance()
+    .getAdjustIdentifierAsync(function(methodName, value) {
+        TestLibrary.addInfoHeaderToSend("method_name", methodName);
+
+        TestLibrary.addInfoToSend("value", value);
+
+        TestLibrary.sendInfoToServer();
+    });
 }

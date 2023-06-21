@@ -24,6 +24,8 @@
 @property (nonatomic, strong) NSMutableString *testNames;
 @property (nonnull, readonly, strong, nonatomic)
     NSMutableDictionary<NSString *, NSString *> *infoToServer;
+@property (nonnull, readonly, strong, nonatomic)
+    NSMutableDictionary<NSString *, NSString *> *infoHeaderToServer;
 
 @end
 
@@ -67,6 +69,7 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
     _singleThreadExecutor = [[ATLSingleThreadExecutor alloc] init];
 
     _infoToServer = [[NSMutableDictionary alloc] init];
+    _infoHeaderToServer = [[NSMutableDictionary alloc] init];
     
     self.controlClient = [[ATLControlWebSocketClient alloc] init];
     [self.controlClient initializeWebSocketWithControlUrl:controlUrl andTestLibrary:self];
@@ -124,6 +127,7 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
     }
     self.waitControlQueue = nil;
     [self.infoToServer removeAllObjects];
+    [self.infoHeaderToServer removeAllObjects];
 }
 
 - (void) initTestLibrary {
@@ -144,6 +148,12 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
                 value:(nonnull NSString *)value
 {
     [self.infoToServer setObject:value forKey:key];
+}
+
+- (void)addInfoHeaderToSend:(NSString *)key
+                      value:(NSString *)value
+{
+    [self.infoHeaderToServer setObject:value forKey:key];
 }
 
 - (void)signalEndWaitWithReason:(NSString *)reason {
@@ -173,8 +183,18 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
 
     requestData.path = [ATLUtil appendBasePath:basePath path:TEST_INFO_PATH];
 
-    if (self.infoToServer) {
+    if (self.infoToServer.count > 0) {
         requestData.bodyString = [ATLUtil queryString:self.infoToServer];
+    }
+    if (self.infoHeaderToServer.count > 0) {
+        NSMutableDictionary *mergedHeaders =
+            [NSMutableDictionary dictionaryWithDictionary:self.infoHeaderToServer];
+
+        if (requestData.headerFields != nil) {
+            [mergedHeaders addEntriesFromDictionary:requestData.headerFields];
+        }
+
+        requestData.headerFields = mergedHeaders;
     }
 
     __typeof(self) __weak weakSelf = self;
@@ -185,6 +205,7 @@ static NSString * const TEST_INFO_PATH = @"/test_info";
         if (strongSelf == nil) { return; }
 
         [strongSelf.infoToServer removeAllObjects];
+        [strongSelf.infoHeaderToServer removeAllObjects];
         [strongSelf readResponse:httpResponse];
     }];
 }

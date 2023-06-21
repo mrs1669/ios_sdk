@@ -72,6 +72,9 @@
 - (void)addInfoToSend:(NSString *)key
                 value:(NSString *)value;
 
+- (void)addInfoHeaderToSend:(NSString *)key
+                      value:(NSString *)value;
+
 - (void)sendInfoToServer:(NSString *)basePath;
 
 - (void)signalEndWaitWithReason:(NSString *)reason;
