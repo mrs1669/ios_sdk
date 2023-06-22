@@ -40,6 +40,9 @@ FOUNDATION_EXPORT NSString *const ADJAttributionGetterFailedMethodName;
 FOUNDATION_EXPORT NSString *const ADJDeviceIdsGetterReadMethodName;
 FOUNDATION_EXPORT NSString *const ADJDeviceIdsGetterFailedMethodName;
 
+FOUNDATION_EXPORT NSString *const ADJLaunchedDeeplinkGetterReadMethodName;
+FOUNDATION_EXPORT NSString *const ADJLaunchedDeeplinkGetterFailedMethodName;
+
 FOUNDATION_EXPORT NSString *const ADJInternalCallbackStringSuffix;
 FOUNDATION_EXPORT NSString *const ADJInternalCallbackAdjustDataSuffix;
 FOUNDATION_EXPORT NSString *const ADJInternalCallbackNsDictionarySuffix;

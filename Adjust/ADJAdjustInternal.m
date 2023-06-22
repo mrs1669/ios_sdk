@@ -36,6 +36,9 @@ NSString *const ADJAttributionGetterFailedMethodName = @"getAttributionFailed";
 NSString *const ADJDeviceIdsGetterReadMethodName = @"getDeviceIdsRead";
 NSString *const ADJDeviceIdsGetterFailedMethodName = @"getDeviceIdsFailed";
 
+NSString *const ADJLaunchedDeeplinkGetterReadMethodName = @"getLaunchedDeeplinkRead";
+NSString *const ADJLaunchedDeeplinkGetterFailedMethodName = @"getLaunchedDeeplinkFailed";
+
 NSString *const ADJInternalCallbackStringSuffix = @"_string";
 NSString *const ADJInternalCallbackAdjustDataSuffix = @"_adjustData";
 NSString *const ADJInternalCallbackNsDictionarySuffix = @"_nsDictionary";

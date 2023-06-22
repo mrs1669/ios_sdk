@@ -8,8 +8,6 @@
 #import "ATAAdjustCommandExecutor.h"
 
 #import "ATOAdjustTestOptions.h"
-#import "ATAAdjustAttributionDeferredDeeplinkSubscriber.h"
-#import "ATAAdjustAttributionSendAllSubscriber.h"
 #import "ADJAdjust.h"
 #import "ADJAdjustConfig.h"
 #import "ADJAdjustInstance.h"
@@ -18,7 +16,8 @@
 #import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
-#import "ATAAdjustLaunchedDeeplinkCallback.h"
+
+#import "ATAAdjustCallbacks.h"
 
 @interface ATAAdjustCommandExecutor ()
 
@@ -131,15 +130,15 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         }
 
         [adjustConfig setAdjustAttributionSubscriber:
-         [[ATAAdjustAttributionDeferredDeeplinkSubscriber alloc]
-          initWithTestLibrary:self.testLibrary
+         [ATAAdjustCallbacks
+          adjustAttributionDeferredDeeplinkSubscriberWithTestLibrary:self.testLibrary
           extraPath:self.extraPathTestOptions]];
     }
 
     if ([self containsKey:@"attributionCallbackSendAll"]) {
         [adjustConfig setAdjustAttributionSubscriber:
-         [[ATAAdjustAttributionSendAllSubscriber alloc]
-          initWithTestLibrary:self.testLibrary
+         [ATAAdjustCallbacks
+          adjustAttributionSubscriberWithTestLibrary:self.testLibrary
           extraPath:self.extraPathTestOptions]];
     }
 
@@ -329,9 +328,10 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
 
 - (void)getLastDeeplink {
     [[ADJAdjust instance]
-     adjustLaunchedDeeplinkWithCallback:[[ATAAdjustLaunchedDeeplinkCallback alloc]
-                                         initWithTestLibrary:self.testLibrary
-                                         extraPath:self.extraPathTestOptions]];
+     adjustLaunchedDeeplinkWithCallback:
+         [ATAAdjustCallbacks
+          adjustLaunchedDeeplinkGetterWithTestLibrary:self.testLibrary
+          extraPath:self.extraPathTestOptions]];
 }
 
 - (void)gdprForgetMe {
