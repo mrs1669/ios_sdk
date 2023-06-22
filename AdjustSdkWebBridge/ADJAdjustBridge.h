@@ -11,31 +11,6 @@
 
 #import "ADJAdjustLogSubscriber.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageInitSdk;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageSdkVersion;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackEvent;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackAdRevenue;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackPushToken;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackDeeplink;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageTrackThirdPartySharing;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageInActivateSdk;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageReactiveSdk;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageOfflineMode;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageOnlineMode;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageGdprForgetMe;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageAddGlobalCallbackParameter;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageRemoveGlobalCallbackParameterByKey;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageClearAllGlobalCallbackParameters;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageAddGlobalPartnerParameter;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageRemoveGlobalPartnerParameterByKey;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageClearAllGlobalPartnerParameters;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageAppWentToTheBackgroundManualCall;
-FOUNDATION_EXPORT NSString *const ADJAdjustBridgeMessageAppWentToTheForegroundManualCall;
-
-NS_ASSUME_NONNULL_END
-
 @interface ADJAdjustBridge : NSObject
 
 - (nullable instancetype)init NS_UNAVAILABLE;

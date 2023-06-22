@@ -28,10 +28,6 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
                       metadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
                 initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc]
                                          initWithIntialState]];
-    /*
-     [[ADJMeasurementSessionStateData alloc] initWithIntialStateWithNewUuid:
-     [[ADJNonEmptyString alloc] initWithValidatedStringValue:
-     [ADJUtilSys generateUuid]]]];*/
 
     return self;
 }

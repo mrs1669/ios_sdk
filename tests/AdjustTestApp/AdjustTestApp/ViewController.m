@@ -49,10 +49,11 @@ static NSString * controlUrl = @"ws://127.0.0.1:1987";
     self.testLibrary.dictionaryParametersDelegateWeak = self.adjustCommandExecutor;
 
     /*
-    [self.testLibrary addTest:@"Test_AttributionCallback_reattribution"];
-    [self.testLibrary addTest:@"Test_AttributionCallback_empty_response"];
-    [self.testLibrary addTest:@"Test_Attribution_reattribution"];
-    [self.testLibrary addTest:@"Test_Attribution_empty_response"];
+    [self.testLibrary addTest:@Test_AttributionCallback_restart_before_ask_in"];
+    [self.testLibrary addTest:@Test_AttributionCallback_reattribution"];
+    [self.testLibrary addTest:@Test_AttributionCallback_no_ask_in"];
+    [self.testLibrary addTest:@Test_AttributionCallback_ask_in_once"];
+    [self.testLibrary addTest:@Test_AttributionCallback_ask_in_multiple"];
 */
 /*
     [self.testLibrary addTestDirectory:@"ad-revenue"];

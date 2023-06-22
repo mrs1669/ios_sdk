@@ -127,19 +127,6 @@ AdjustInstance.prototype.initSdk = function(adjustConfig) {
         this._callbackMap.set(adjustConfig._adjustAttributionSubscriberCallbackId,
                               adjustConfig._adjustAttributionSubscriberCallback);
     }
-    /*
-     if (adjustConfig.adjustIdentifierSubscriberCallbackId) {
-     this.callbacksMap.set(
-     adjustConfig.adjustIdentifierSubscriberCallbackId,
-     adjustConfig.adjustIdentifierSubscriberCallback);
-     }
-
-     if (adjustConfig.adjustLogSubscriberCallbackId) {
-     this.callbacksMap.set(
-     adjustConfig.adjustLogSubscriberCallbackId,
-     adjustConfig.adjustLogSubscriberCallback);
-     }
-     */
 
     this._postMessage("initSdk", adjustConfig);
 };

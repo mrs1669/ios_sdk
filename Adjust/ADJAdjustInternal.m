@@ -137,15 +137,7 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
      callbackParameterKeyValueArray:callbackParameterKeyValueArray
      partnerParameterKeyValueArray:partnerParameterKeyValueArray];
 }
-/*
-+ (nonnull NSString *)nativeSdkVersion {
-    return ADJClientSdk;
-}
 
-+ (nonnull NSString *)generateSdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
-    return [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
-}
-*/
 + (nonnull NSString *)currentSdkVersion {
     return [ADJUtilSys clientSdkWithPrefix:[ADJEntryRoot sdkPrefix]];
 }

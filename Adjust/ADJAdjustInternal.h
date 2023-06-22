@@ -83,10 +83,6 @@ NS_ASSUME_NONNULL_END
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
 
-/*
-+ (nonnull NSString *)nativeSdkVersion;
-+ (nonnull NSString *)generateSdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix;
- */
 + (nonnull NSString *)currentSdkVersion;
 
 + (void)setSdkPrefix:(nullable NSString *)sdkPrefix;

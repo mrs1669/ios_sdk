@@ -20,8 +20,6 @@
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
 
-//#import "ADJResultFail.h"
-
 #pragma mark Fields
 
 @interface ADJAsaAttributionController ()
@@ -374,8 +372,6 @@
     return jsonStringResult.value;
 }
 
-// TODO return Result
-//- (nullable ADJInputLogMessageData *)readAsaAttributionTokenWithWO:
 - (nonnull ADJResult<ADJNonEmptyString *> *)readAsaAttributionToken {
     // any error that happens before trying to read the Asa Attribution Token
     //  won't change during the current app execution,
