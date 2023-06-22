@@ -158,10 +158,6 @@
     }
 
     if ([value isKindOfClass:[NSNumber class]]) {
-        return [ADJResult okWithValue:
-                [ADJBooleanWrapper instanceFromNumberBoolean:(NSNumber *)value]];
-        /* TODO: refac when commit with number boolean check with result return is added
-         in later commit
         ADJResult<ADJBooleanWrapper *> *_Nonnull booleanNumberResult =
             [ADJBooleanWrapper instanceFromNumberBoolean:(NSNumber *)value];
         if (booleanNumberResult.fail != nil) {
@@ -170,7 +166,6 @@
                                     otherFail:booleanNumberResult.fail];
         }
         return [ADJResult okWithValue:booleanNumberResult.value.numberBoolValue];
-        */
     }
 
     return [ADJResult failWithMessage:@"Expected Bool from type String or Number"
