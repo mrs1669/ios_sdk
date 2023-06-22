@@ -26,8 +26,8 @@
 #import <AdjustSdk/ADJAdjustDeviceIdsCallback.h>
 #import <AdjustSdk/ADJAdjustEvent.h>
 #import <AdjustSdk/ADJAdjustForegroundSubscriber.h>
-#import <AdjustSdk/ADJAdjustIdentifierCallback.h>
-#import <AdjustSdk/ADJAdjustIdentifierSubscriber.h>
+//#import <AdjustSdk/ADJAdjustIdentifierCallback.h>
+//#import <AdjustSdk/ADJAdjustIdentifierSubscriber.h>
 #import <AdjustSdk/ADJAdjustInstance.h>
 #import <AdjustSdk/ADJAdjustInternal.h>
 #import <AdjustSdk/ADJAdjustLaunchedDeeplink.h>
