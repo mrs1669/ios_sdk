@@ -1,130 +1,149 @@
 const TestLibrary = {
-_postMessage(methodName, parameters = {}) {
-    if (! TestLibrary._testLibraryMessageHandler) {
-        function canSend(okCheck, errReason) {
-            if (! okCheck) { if (TestLibrary._errSubscriber) {
-                TestLibrary._errSubscriber("Cannot send message to native sdk ".concat(errReason));
-            }}
-            return okCheck;
+    _postMessage(methodName, parameters = {}) {
+        if (! TestLibrary._testLibraryMessageHandler) {
+            function canSend(okCheck, errReason) {
+                if (! okCheck) { if (TestLibrary._errSubscriber) {
+                    TestLibrary._errSubscriber("Cannot send message to native sdk ".concat(errReason));
+                }}
+                return okCheck;
+            }
+            const canSendSendToNative =
+            canSend(window, "without valid: 'window'") &&
+            canSend(window.webkit, "without valid: 'window.webkit'") &&
+            canSend(window.webkit.messageHandlers,
+                    "without valid: 'window.webkit.messageHandlers'") &&
+            canSend(window.webkit.messageHandlers.adjust,
+                    "without valid: 'window.webkit.messageHandlers.adjust'") &&
+            canSend(window.webkit.messageHandlers.adjust.postMessage,
+                    "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
+            canSend(typeof window.webkit.messageHandlers.testLibrary.postMessage === "function",
+                    "when 'window.webkit.messageHandlers.testLibrary.postMessage' is not a function");
+
+            if (! canSendSendToNative) { return; }
+
+            TestLibrary._testLibraryMessageHandler = window.webkit.messageHandlers.testLibrary;
         }
-        const canSendSendToNative =
-        canSend(window, "without valid: 'window'") &&
-        canSend(window.webkit, "without valid: 'window.webkit'") &&
-        canSend(window.webkit.messageHandlers,
-                "without valid: 'window.webkit.messageHandlers'") &&
-        canSend(window.webkit.messageHandlers.adjust,
-                "without valid: 'window.webkit.messageHandlers.adjust'") &&
-        canSend(window.webkit.messageHandlers.adjust.postMessage,
-                "without valid: 'window.webkit.messageHandlers.adjust.postMessage'") &&
-        canSend(typeof window.webkit.messageHandlers.testLibrary.postMessage === "function",
-                "when 'window.webkit.messageHandlers.testLibrary.postMessage' is not a function");
 
-        if (! canSendSendToNative) { return; }
-
-        TestLibrary._testLibraryMessageHandler = window.webkit.messageHandlers.testLibrary;
-    }
-
-    TestLibrary._testLibraryMessageHandler.postMessage({
+        TestLibrary._testLibraryMessageHandler.postMessage({
         _methodName: methodName,
         _parameters: JSON.stringify(parameters)
-    });
-},
+        });
+    },
+
 addTest: function(testName) {
     TestLibrary._postMessage("addTest", {_testName: testName, _testNameType: typeof testName});
 },
+
 addTestDirectory: function(directoryName) {
     TestLibrary._postMessage("addTestDirectory", {
         _directoryName: directoryName, _directoryNameType: typeof directoryName});
 },
+
 addInfoToSend: function(key, value) {
     TestLibrary._postMessage("addInfoToSend", {
-        _key: key,
-        _keyType: typeof key,
-        _value: value,
-        _valueType: typeof value
+    _key: key,
+    _keyType: typeof key,
+    _value: value,
+    _valueType: typeof value
     });
 },
+
 addInfoHeaderToSend: function(key, value) {
     TestLibrary._postMessage("addInfoHeaderToSend", {
-        _key: key,
-        _keyType: typeof key,
-        _value: value,
-        _valueType: typeof value
+    _key: key,
+    _keyType: typeof key,
+    _value: value,
+    _valueType: typeof value
     });
 },
+
 sendInfoToServer: function() {
     TestLibrary._postMessage("sendInfoToServer");
 },
+
 startTestSession: function(sdkVersion) {
     TestLibrary._adjustCommandExecutor = new AdjustCommandExecutor();
 
     TestLibrary._postMessage("startTestSession", {
         _sdkVersion: sdkVersion, _sdkVersionType: typeof sdkVersion});
 },
+
 _sdk_errSubscriber: function(errMessage) {
     TestLibrary._postMessage("jsFail", {
-        _message: "sdk errSubscriber message",
-        _errMessage: errMessage,
-        _errMessageType: typeof errMessage
+    _message: "sdk errSubscriber message",
+    _errMessage: errMessage,
+    _errMessageType: typeof errMessage
     });
 },
+
 _adjustDefaultInstance: function () {
     return Adjust.instance("", TestLibrary._sdk_errSubscriber);
 },
+
 _getFirstParam: function(params, key) {
     if (key in params && params[key] && params[key].length && params[key].length >= 1) {
         return params[key][0];
     }
     return undefined;
 },
+
 _firstParam: function(params, key, callback) {
     const value = TestLibrary._getFirstParam(params, key);
     if (value) { callback(value); }
 },
+
 _firstTwoParam: function(params, key, callback) {
     if (key in params && params[key] && params[key].length && params[key].length >= 2) {
         callback(params[key][0], params[key][1]); }
 },
+
 _iterateVParam: function(params, key, vCallback) {
     if (key in params && params[key] && params[key].length && params[key].length >= 1) {
         for (var i = 0; i < params[key].length; i = i + 1) {
             vCallback(params[key][i]); } }
 },
+
 _iterateKvParam: function(params, key, kvCallback) {
     if (key in params && params[key] && params[key].length && params[key].length >= 2) {
         for (var i = 0; i < params[key].length; i = i + 2) {
             kvCallback(params[key][i], params[key][i + 1]); } }
 },
+
 _iterateNkvParam: function(params, key, nkvCallback) {
     if (key in params && params[key] && params[key].length && params[key].length >= 3) {
         for (var i = 0; i < params[key].length; i = i + 3) {
             nkvCallback(params[key][i], params[key][i + 1], params[key][i + 2]); } }
 },
+
 _boolFirstParam: function(params, key, boolCallback) {
     TestLibrary._firstParam(params, key, function(value) {
         if (value  === "true") { boolCallback(true); }
         if (value  === "false") { boolCallback(false); } });
 },
+
 _trueFirstParam: function(params, key, voidCallback) {
     TestLibrary._boolFirstParam(params, key, function(boolValue) {
         if (boolValue) { voidCallback(); } });
 },
+
 TORMV: function() {
     TestLibrary._postMessage("TORMV");
 },
+
 callback_TORMV: function(data) {
     TestLibrary._postMessage("jsFail", {
-        _message: "callback_TORMV called",
-        _data: data,
-        _dataType: typeof data
+    _message: "callback_TORMV called",
+    _data: data,
+    _dataType: typeof data
     });
 },
+
 callback_saveArrayOfCommands: function(arrayOfCommandsJsonString) {
     if (! TestLibrary._adjustCommandExecutor) {
         TestLibrary._postMessage("jsFail", {
-            _message: "adjust command executor not present when save arrayOfCommands",
-            _arrayOfCommandsJsonString: arrayOfCommandsJsonString,
-            _arrayOfCommandsJsonStringType: typeof arrayOfCommandsJsonString
+        _message: "adjust command executor not present when save arrayOfCommands",
+        _arrayOfCommandsJsonString: arrayOfCommandsJsonString,
+        _arrayOfCommandsJsonStringType: typeof arrayOfCommandsJsonString
         });
         return;
     }
@@ -134,39 +153,40 @@ callback_saveArrayOfCommands: function(arrayOfCommandsJsonString) {
 
     if (! TestLibrary._arrayOfCommands) {
         TestLibrary._postMessage("jsFail", {
-            _message: "arrayOfCommands could not be parsed from json string",
-            _arrayOfCommandsJsonString: arrayOfCommandsJsonString,
-            _arrayOfCommandsJsonStringType: typeof arrayOfCommandsJsonString
+        _message: "arrayOfCommands could not be parsed from json string",
+        _arrayOfCommandsJsonString: arrayOfCommandsJsonString,
+        _arrayOfCommandsJsonStringType: typeof arrayOfCommandsJsonString
         });
         return;
     }
 },
+
 callback_execCommandInPosition: function(commandPosition) {
     if (! TestLibrary._adjustCommandExecutor) {
         TestLibrary._postMessage("jsFail", {
-            _message: "adjust command executor not present to execute command",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _cachePreviousPosition: TestLibrary._cachePreviousPosition
+        _message: "adjust command executor not present to execute command",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _cachePreviousPosition: TestLibrary._cachePreviousPosition
         });
         return;
     }
 
     if (! TestLibrary._arrayOfCommands) {
         TestLibrary._postMessage("jsFail", {
-            _message: "arrayOfCommands not present when expecting to excute command",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _cachePreviousPosition: TestLibrary._cachePreviousPosition
+        _message: "arrayOfCommands not present when expecting to excute command",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _cachePreviousPosition: TestLibrary._cachePreviousPosition
         });
         return;
     }
     if (TestLibrary._cachePreviousPosition >= commandPosition) {
         TestLibrary._postMessage("jsFail", {
-            _message: "received command position is equal or less than previous one",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _cachePreviousPosition: TestLibrary._cachePreviousPosition
+        _message: "received command position is equal or less than previous one",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _cachePreviousPosition: TestLibrary._cachePreviousPosition
         });
         return;
     }
@@ -175,11 +195,11 @@ callback_execCommandInPosition: function(commandPosition) {
 
     if (commandPosition >= TestLibrary._arrayOfCommands.length) {
         TestLibrary._postMessage("jsFail", {
-            _message: "received command position is equal or more than array of commands length",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _arrayOfCommandsLength: TestLibrary._arrayOfCommands.length,
-            _arrayOfCommandsLengthType: typeof TestLibrary._arrayOfCommands.length
+        _message: "received command position is equal or more than array of commands length",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _arrayOfCommandsLength: TestLibrary._arrayOfCommands.length,
+        _arrayOfCommandsLengthType: typeof TestLibrary._arrayOfCommands.length
         });
         return;
     }
@@ -187,19 +207,19 @@ callback_execCommandInPosition: function(commandPosition) {
     const command = TestLibrary._arrayOfCommands.at(commandPosition);
     if (! command.className) {
         TestLibrary._postMessage("jsFail", {
-            _message: "command does not contain class name",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _command: command
+        _message: "command does not contain class name",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _command: command
         });
         return;
     }
     if (! command.functionName) {
         TestLibrary._postMessage("jsFail", {
-            _message: "command does not contain function name",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _command: command
+        _message: "command does not contain function name",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _command: command
         });
         return;
     }
@@ -208,15 +228,15 @@ callback_execCommandInPosition: function(commandPosition) {
         if (command.functionName == "teardown") {
             Adjust._teardown();
             TestLibrary._postMessage("teardown", {
-                _testOptionsParameters: JSON.stringify(command.params),
-                _testOptionsParametersType: typeof command.params
+            _testOptionsParameters: JSON.stringify(command.params),
+            _testOptionsParametersType: typeof command.params
             });
         } else {
             TestLibrary._postMessage("jsFail", {
-                _message: "TestOptions only valid function is teardown",
-                _commandPosition: commandPosition,
-                _commandPositionType: typeof commandPosition,
-                _command: command
+            _message: "TestOptions only valid function is teardown",
+            _commandPosition: commandPosition,
+            _commandPositionType: typeof commandPosition,
+            _command: command
             });
         }
         return;
@@ -224,10 +244,10 @@ callback_execCommandInPosition: function(commandPosition) {
 
     if (command.className == "AdjustV4") {
         TestLibrary._postMessage("jsFail", {
-            _message: "Adjust v4 is not supported in test library bridge",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _command: command
+        _message: "Adjust v4 is not supported in test library bridge",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _command: command
         });
         return;
     }
@@ -235,10 +255,10 @@ callback_execCommandInPosition: function(commandPosition) {
     const executorFunction = TestLibrary._adjustCommandExecutor[command.functionName];
     if (! executorFunction) {
         TestLibrary._postMessage("jsFail", {
-            _message: "Adjust command executor does not contain function with the corresponding name",
-            _commandPosition: commandPosition,
-            _commandPositionType: typeof commandPosition,
-            _command: command
+        _message: "Adjust command executor does not contain function with the corresponding name",
+        _commandPosition: commandPosition,
+        _commandPositionType: typeof commandPosition,
+        _command: command
         });
         return;
     }
@@ -271,7 +291,7 @@ AdjustCommandExecutor.prototype.start = function(params) {
         || "testServerBaseUrlEndpointUrl" in params)
     {
         const customEndpointPublicKeyHash =
-            TestLibrary._getFirstParam(params, "customEndpointPublicKeyHash");
+        TestLibrary._getFirstParam(params, "customEndpointPublicKeyHash");
 
         let customEndpointUrl = null;
         if ("testServerBaseUrlEndpointUrl" in params) {
@@ -319,6 +339,7 @@ AdjustCommandExecutor.prototype.start = function(params) {
 
     TestLibrary._adjustDefaultInstance().initSdk(adjustConfig);
 }
+
 AdjustCommandExecutor.prototype.trackEvent = function(params) {
     const eventToken = TestLibrary._getFirstParam(params, "eventToken");
 
@@ -338,50 +359,63 @@ AdjustCommandExecutor.prototype.trackEvent = function(params) {
 
     TestLibrary._adjustDefaultInstance().trackEvent(adjustEvent);
 }
+
 AdjustCommandExecutor.prototype.stop = function() {
     TestLibrary._adjustDefaultInstance().inactivateSdk();
 }
+
 AdjustCommandExecutor.prototype.restart = function() {
     TestLibrary._adjustDefaultInstance().reactivateSdk();
 }
+
 AdjustCommandExecutor.prototype.setOfflineMode = function(params) {
     TestLibrary._boolFirstParam(params, "enabled", function(isEnabled){
         isEnabled ? TestLibrary._adjustDefaultInstance().switchToOfflineMode()
-            : TestLibrary._adjustDefaultInstance().switchBackToOnlineMode(); });
+        : TestLibrary._adjustDefaultInstance().switchBackToOnlineMode(); });
 }
+
 AdjustCommandExecutor.prototype.addGlobalCallbackParameter = function(params) {
     TestLibrary._iterateKvParam(params, "keyValuePairs", function(key, value){
         TestLibrary._adjustDefaultInstance().addGlobalCallbackParameter(key, value); });
 }
+
 AdjustCommandExecutor.prototype.addGlobalPartnerParameter = function(params) {
     TestLibrary._iterateKvParam(params, "keyValuePairs", function(key, value){
         TestLibrary._adjustDefaultInstance().addGlobalPartnerParameter(key, value); });
 }
+
 AdjustCommandExecutor.prototype.removeGlobalCallbackParameter = function(params) {
     TestLibrary._iterateVParam(params, "key", function(value){
         TestLibrary._adjustDefaultInstance().removeGlobalCallbackParameter(value); });
 }
+
 AdjustCommandExecutor.prototype.removeGlobalPartnerParameter = function(params) {
     TestLibrary._iterateVParam(params, "key", function(value){
         TestLibrary._adjustDefaultInstance().removeGlobalPartnerParameter(value); });
 }
+
 AdjustCommandExecutor.prototype.clearGlobalCallbackParameters = function(params) {
     TestLibrary._adjustDefaultInstance().clearGlobalCallbackParameters();
 }
+
 AdjustCommandExecutor.prototype.clearGlobalPartnerParameters = function(params) {
     TestLibrary._adjustDefaultInstance().clearGlobalPartnerParameters();
 }
+
 AdjustCommandExecutor.prototype.setPushToken = function(params) {
     const pushToken = TestLibrary._getFirstParam(params, "pushToken");
     TestLibrary._adjustDefaultInstance().trackPushToken(pushToken);
 }
+
 AdjustCommandExecutor.prototype.openDeeplink = function(params) {
     const deeplink = TestLibrary._getFirstParam(params, "deeplink");
     TestLibrary._adjustDefaultInstance().trackLaunchedDeeplink(deeplink);
 }
+
 AdjustCommandExecutor.prototype.gdprForgetMe = function(params) {
     TestLibrary._adjustDefaultInstance().gdprForgetDevice();
 }
+
 AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
     const adRevenueSource = TestLibrary._getFirstParam(params, "adRevenueSource");
 
@@ -413,18 +447,21 @@ AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
 
     TestLibrary._adjustDefaultInstance().trackAdRevenue(adjustAdRevenue);
 }
+
 AdjustCommandExecutor.prototype.resume = function(params) {
     TestLibrary._adjustDefaultInstance().appWentToTheForegroundManualCall();
 }
+
 AdjustCommandExecutor.prototype.pause = function(params) {
     TestLibrary._adjustDefaultInstance().appWentToTheBackgroundManualCall();
 }
+
 AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
     const adjustThirdPartySharing = new AdjustThirdPartySharing();
 
     TestLibrary._boolFirstParam(params, "isEnabled", function(isEnabled){
         isEnabled ? adjustThirdPartySharing.enableThirdPartySharing()
-            : adjustThirdPartySharing.disableThirdPartySharing();});
+        : adjustThirdPartySharing.disableThirdPartySharing();});
 
     TestLibrary._iterateNkvParam(params, "granularOptions", function(name, key, value){
         adjustThirdPartySharing.addGranularOption(name, key, value);});
@@ -437,11 +474,13 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
 
     TestLibrary._adjustDefaultInstance().trackThirdPartySharing(adjustThirdPartySharing);
 }
+
 AdjustCommandExecutor.prototype.measurementConsent = function(params) {
     TestLibrary._boolFirstParam(params, "isEnabled", function(isEnabled){
         isEnabled ? TestLibrary._adjustDefaultInstance().activateMeasurementConsent()
-            : TestLibrary._adjustDefaultInstance().inactivateMeasurementConsent();});
+        : TestLibrary._adjustDefaultInstance().inactivateMeasurementConsent();});
 }
+
 AdjustCommandExecutor.prototype.getAdid = function(params) {
     TestLibrary._adjustDefaultInstance()
     .getAdjustIdentifierAsync(function(methodName, value) {
