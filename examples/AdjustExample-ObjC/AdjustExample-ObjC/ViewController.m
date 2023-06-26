@@ -186,7 +186,7 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 }
 
 - (void)clearAllGlobalCallbackParameters {
-    [[ADJAdjust instance] clearAllGlobalCallbackParameters];
+    [[ADJAdjust instance] clearGlobalCallbackParameters];
 }
 
 - (void)addGlobalPartnerParameters {
@@ -198,7 +198,7 @@ NSString * _Nonnull cellReuseIdentifier = @"featureCell";
 }
 
 - (void)clearAllGlobalPartnerParameters {
-    [[ADJAdjust instance] clearAllGlobalPartnerParameters];
+    [[ADJAdjust instance] clearGlobalPartnerParameters];
 }
 
 - (void)trackPushToken {
