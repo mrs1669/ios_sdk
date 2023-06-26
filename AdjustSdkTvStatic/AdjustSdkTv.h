@@ -6,14 +6,14 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+/* TODO: Add to plist file if they are needed
+//! Project version number for AdjustSdkTv.
+FOUNDATION_EXPORT double AdjustSdkTvVersionNumber;
 
-
-
-
-
-
-
-
+//! Project version string for AdjustSdkTv.
+FOUNDATION_EXPORT const unsigned char AdjustSdkTvVersionString[];
+*/
 #import <AdjustSdkTv/ADJAdjust.h>
 #import <AdjustSdkTv/ADJAdjustAdRevenue.h>
 #import <AdjustSdkTv/ADJAdjustAttribution.h>

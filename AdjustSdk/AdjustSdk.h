@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
+/* TODO: Add to plist file if they are needed
 //! Project version number for AdjustSdk.
 FOUNDATION_EXPORT double AdjustSdkVersionNumber;
 
 //! Project version string for AdjustSdk.
 FOUNDATION_EXPORT const unsigned char AdjustSdkVersionString[];
-
+*/
 #import <AdjustSdk/ADJAdjust.h>
 #import <AdjustSdk/ADJAdjustAdRevenue.h>
 #import <AdjustSdk/ADJAdjustAttribution.h>

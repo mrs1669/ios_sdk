@@ -6,14 +6,14 @@
 //  Copyright © 2022 Adjust GmbH. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+/* TODO: Add to plist file if they are needed
+//! Project version number for AdjustSdkWebBridge.
+FOUNDATION_EXPORT double AdjustSdkWebBridgeVersionNumber;
 
-
-
-
-
-
-
-
+//! Project version string for AdjustSdkWebBridge.
+FOUNDATION_EXPORT const unsigned char AdjustSdkWebBridgeVersionString[];
+*/
 #import <AdjustSdkWebBridge/ADJAdjust.h>
 #import <AdjustSdkWebBridge/ADJAdjustAdRevenue.h>
 #import <AdjustSdkWebBridge/ADJAdjustAttribution.h>
@@ -39,3 +39,5 @@
 #import <AdjustSdkWebBridge/ADJAdjustPublishers.h>
 #import <AdjustSdkWebBridge/ADJAdjustPushToken.h>
 #import <AdjustSdkWebBridge/ADJAdjustThirdPartySharing.h>
+
+#import <AdjustSdkWebBridge/ADJAdjustBridge.h>

@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
+/* TODO: Add to plist file if they are needed
 //! Project version number for AdjustSdkWebBridge.
 FOUNDATION_EXPORT double AdjustSdkWebBridgeVersionNumber;
 
 //! Project version string for AdjustSdkWebBridge.
 FOUNDATION_EXPORT const unsigned char AdjustSdkWebBridgeVersionString[];
-
+*/
 #import <AdjustSdkWebBridge/ADJAdjust.h>
 #import <AdjustSdkWebBridge/ADJAdjustAdRevenue.h>
 #import <AdjustSdkWebBridge/ADJAdjustAttribution.h>
