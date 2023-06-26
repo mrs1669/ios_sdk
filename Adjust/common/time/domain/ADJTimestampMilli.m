@@ -14,8 +14,6 @@
 #import "ADJConstants.h"
 #import <math.h>
 
-//#import "ADJResultFail.h"
-
 #pragma mark Fields
 #pragma mark - Public properties
 /* .h
@@ -24,46 +22,31 @@
 
 @implementation ADJTimestampMilli
 #pragma mark Instantiation
-+ (nonnull ADJResultNL<ADJTimestampMilli *> *)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-{
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
-        [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
-
-    if (nnIntResult.fail != nil) {
-        return [ADJResultNL failWithMessage:@"Cannot create timestamp instance from io value"
-                                        key:@"nnInt from optional io value fail"
-                                      otherFail:nnIntResult.fail];
-    }
-    if (nnIntResult.value == nil) {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    return [ADJResultNL okWithValue:
-            [[ADJTimestampMilli alloc] initWithMillisecondsSince1970Int:nnIntResult.value]];
-}
-
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
++ (nonnull ADJResult<ADJTimestampMilli *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
 {
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull nnIntResult =
         [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
 
-    if (nnIntResult.fail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create timestamp instance from io value"
-                                        key:@"nnInt from io value fail"
-                                  otherFail:nnIntResult.fail];
+    if (nnIntResult.wasInputNil) {
+        return [ADJResult nilInputWithMessage:@"Cannot create timestamp with nil io value"];
     }
 
-    return [ADJResultNN okWithValue:
+    if (nnIntResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot create timestamp instance from io value"
+                                      key:@"nnInt from io value fail"
+                                otherFail:nnIntResult.fail];
+    }
+
+    return [ADJResult okWithValue:
             [[ADJTimestampMilli alloc] initWithMillisecondsSince1970Int:nnIntResult.value]];
 }
 
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
++ (nonnull ADJResult<ADJTimestampMilli *> *)
     instanceWithNumberDoubleSecondsSince1970:(nullable NSNumber *)numberDoubleSecondsSince1970
 {
     if (numberDoubleSecondsSince1970 == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult nilInputWithMessage:
                 @"Cannot create timestamp with nil number double seconds since 1970"];
     }
 
@@ -71,51 +54,27 @@
             numberDoubleSecondsSince1970.doubleValue];
 }
 
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
++ (nonnull ADJResult<ADJTimestampMilli *> *)
     instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970
 {
     NSNumber *_Nonnull milliSince1970Number =
         [NSNumber numberWithDouble:timeIntervalSecondsSince1970 * ADJSecondToMilliDouble];
     
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull milliSince1970IntResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull milliSince1970IntResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:milliSince1970Number];
 
     if (milliSince1970IntResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create timestamp from timeIntervalSecondsSince1970"
-                                        key:@"nnInt from integer number fail"
-                                  otherFail:milliSince1970IntResult.fail];
+                                      key:@"nnInt from integer number fail"
+                                otherFail:milliSince1970IntResult.fail];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJTimestampMilli alloc] initWithMillisecondsSince1970Int:
              milliSince1970IntResult.value]];
 }
 
-+ (nonnull ADJResultNL<ADJTimestampMilli *> *)
-    instanceWithOptionalNumberDoubleSecondsSince1970:
-        (nullable NSNumber *)numberDoubleSecondsSince1970
-{
-    if (numberDoubleSecondsSince1970 == nil) {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(NSNumber *_Nullable value) {
-        return [ADJTimestampMilli instanceWithTimeIntervalSecondsSince1970:value.doubleValue];
-    } nlValue:numberDoubleSecondsSince1970];
-}
-/*
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
-    instanceWithNSDateValue:(nullable NSDate *)nsDateValue
-{
-    if (nsDateValue == nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create timestamp with nil NSDate"];
-    }
-
-    return [ADJTimestampMilli
-            instanceWithTimeIntervalSecondsSince1970:nsDateValue.timeIntervalSince1970];
-}
-*/
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;

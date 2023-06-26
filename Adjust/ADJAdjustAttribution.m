@@ -13,6 +13,7 @@
 @implementation ADJAdjustAttribution
 
 #pragma mark - NSObject
+// TODO send self to AdjustInternal to return string or remove field
 - (nonnull NSString *)description {
     return [ADJUtilObj formatInlineKeyValuesWithName:
                 @"AdjustAttribution",
@@ -27,10 +28,9 @@
                     @"deeplink", self.deeplink,
                     @"state", self.state,
                     @"costType", self.costType,
-                    @"costAmount", @(self.costAmount),
+                    @"costAmount", self.costAmount,
                     @"costCurrency", self.costCurrency,
                 nil];
 }
 
 @end
-

@@ -11,30 +11,46 @@
 #import "ADJCommonBase.h"
 #import "ADJTimeLengthMilli.h"
 #import "ADJTeardownFinalizer.h"
+#import "ADJResultFail.h"
+#import "ADJLogger.h"
 
 @interface ADJSingleThreadExecutor : ADJCommonBase<ADJTeardownFinalizer>
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sourceDescription:(nonnull NSString *)sourceDescription;
+                             sourceLoggerName:(nonnull NSString *)sourceLoggerName;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (BOOL)scheduleInSequenceWithBlock:(nonnull void (^)(void))blockToSchedule
-                     delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
-                             source:(nonnull NSString *)source;
+- (nullable ADJResultFail *)scheduleInSequenceFrom:(nonnull NSString *)from
+                                    delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+                                             block:(nonnull void (^)(void))blockToSchedule;
+- (void)scheduleInSequenceWithLogger:(nonnull ADJLogger *)logger
+                                from:(nonnull NSString *)from
+                      delayTimeMilli:(nonnull ADJTimeLengthMilli *)delayTimeMilli
+                               block:(nonnull void (^)(void))blockToSchedule;
 
-- (BOOL)executeInSequenceWithBlock:(nonnull void (^)(void))blockToExecute
-                            source:(nonnull NSString *)source;
+- (nullable ADJResultFail *)executeInSequenceFrom:(nonnull NSString *)from
+                                            block:(nonnull void (^)(void))blockToExecute;
+- (void)executeInSequenceWithLogger:(nonnull ADJLogger *)logger
+                               from:(nonnull NSString *)from
+                              block:(nonnull void (^)(void))blockToExecute;
 
-- (BOOL)executeInSequenceSkippingTraceWithBlock:(nonnull void (^)(void))blockToExecute;
+- (nullable ADJResultFail *)
+    executeInSequenceSkippingTraceWithBlock:(nonnull void (^)(void))block;
 
-- (BOOL)executeAsyncWithBlock:(nonnull void (^)(void))blockToExecute
-                       source:(nonnull NSString *)source;
+- (nullable ADJResultFail *)executeAsyncFrom:(nonnull NSString *)from
+                                       block:(nonnull void (^)(void))blockToExecute;
+- (void)executeAsyncWithLogger:(nonnull ADJLogger *)logger
+                          from:(nonnull NSString *)from
+                         block:(nonnull void (^)(void))blockToExecute;
 
-- (BOOL)executeSynchronouslyWithTimeout:(nonnull ADJTimeLengthMilli *)timeout
-                         blockToExecute:(nonnull void (^)(void))blockToExecute
-                                 source:(nonnull NSString *)source;
+- (nullable ADJResultFail *)executeSynchronouslyFrom:(nonnull NSString *)from
+                                             timeout:(nonnull ADJTimeLengthMilli *)timeout
+                                               block:(nonnull void (^)(void))blockToExecute;
+- (void)executeSynchronouslyWithLogger:(nonnull ADJLogger *)logger
+                                  from:(nonnull NSString *)from
+                               timeout:(nonnull ADJTimeLengthMilli *)timeout
+                                 block:(nonnull void (^)(void))blockToExecute;
 
 @end
-

@@ -9,6 +9,9 @@
 #import "ADJSessionDeviceIdsData.h"
 
 #import "ADJUtilF.h"
+#import "ADJAdjustInternal.h"
+#import "ADJUtilObj.h"
+#import "ADJUtilJson.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -16,6 +19,10 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *advertisingIdentifier;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *identifierForVendor;
  */
+
+#pragma mark - Private constants
+static NSString *const kAdvertisingIdentifierKey = @"advertisingIdentifier";
+static NSString *const kIdentifierForVendorKey = @"identifierForVendor";
 
 @implementation ADJSessionDeviceIdsData
 #pragma mark Instantiation
@@ -59,6 +66,47 @@
     return [[ADJAdjustDeviceIds alloc]
             initWithAdvertisingIdentifier:[ADJUtilF stringValueOrNil:self.advertisingIdentifier]
             identifierForVendor:[ADJUtilF stringValueOrNil:self.identifierForVendor]];
+}
+
+- (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
+    buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName
+{
+    NSMutableDictionary<NSString *, id> *_Nonnull callbackDataMut =
+        [[NSMutableDictionary alloc] init];
+
+    ADJAdjustDeviceIds *_Nonnull adjustDeviceIds = [self toAdjustDeviceIds];
+    [callbackDataMut setObject:adjustDeviceIds
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackAdjustDataSuffix]];
+
+    NSDictionary<NSString *, id> *_Nonnull jsonDictionary =
+        [ADJSessionDeviceIdsData toJsonDictionaryWithAdjustDeviceIds:adjustDeviceIds];
+    [callbackDataMut setObject:jsonDictionary
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackNsDictionarySuffix]];
+
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
+        [ADJUtilJson toStringFromDictionary:jsonDictionary];
+    [callbackDataMut setObject:jsonStringOptFails.value
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackJsonStringSuffix]];
+
+    return [[ADJOptionalFails alloc] initWithOptionalFails:jsonStringOptFails.optionalFails
+                                                       value:callbackDataMut];
+}
+
++ (nonnull NSDictionary<NSString *, id> *)toJsonDictionaryWithAdjustDeviceIds:
+    (nonnull ADJAdjustDeviceIds *)adjustDeviceIds
+{
+    NSMutableDictionary<NSString *, id> *_Nonnull jsonDictionaryMut =
+        [[NSMutableDictionary alloc] initWithCapacity:2];
+
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustDeviceIds.advertisingIdentifier]
+                          forKey:kAdvertisingIdentifierKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustDeviceIds.identifierForVendor]
+                          forKey:kIdentifierForVendorKey];
+
+    return jsonDictionaryMut;
 }
 
 @end

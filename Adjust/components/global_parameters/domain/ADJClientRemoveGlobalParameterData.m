@@ -33,12 +33,12 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
     globalParameterType:(nonnull NSString *)globalParameterType
     logger:(nonnull ADJLogger *)logger
 {
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToRemoveResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull keyToRemoveResult =
         [ADJNonEmptyString instanceFromString:keyToRemove];
     if (keyToRemoveResult.fail != nil) {
         [logger errorClient:@"Invalid key to remove parameter"
                         key:@"gloabal parameter type"
-                      value:globalParameterType
+                stringValue:globalParameterType
                  resultFail:keyToRemoveResult.fail];
         return nil;
     }
@@ -67,7 +67,7 @@ static NSString *const kKeyToRemoveKey = @"keyToRemove";
          @"Cannot create ClientRemoveGlobalParameterData from client action io data"
          " with different client action type"
            expectedValue:ADJClientRemoveGlobalParameterDataMetadataTypeValue
-               actualValue:clientActionTypeValue.stringValue
+       actualStringValue:clientActionTypeValue.stringValue
                  issueType:ADJIssueStorageIo];
         return nil;
     }

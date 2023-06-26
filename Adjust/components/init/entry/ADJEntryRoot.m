@@ -20,7 +20,6 @@
 
 @interface ADJEntryRoot ()
 #pragma mark - Injected dependencies
-@property (nullable, readwrite, strong, nonatomic) NSString *sdkPrefix;
 @property (nonnull, readwrite, strong, nonatomic) ADJSdkConfigData *sdkConfigData;
 
 #pragma mark - Internal variables
@@ -28,6 +27,8 @@
     NSMutableDictionary<NSString *, ADJInstanceRoot *> *instanceMap;
 
 @end
+
+static NSString *sdkPrefixGlobal = nil;
 
 @implementation ADJEntryRoot
 #pragma mark Instantiation
@@ -52,7 +53,6 @@
 - (nonnull instancetype)initWithSdkConfigData:(nullable ADJSdkConfigData *)sdkConfigData
 {
     self = [super init];
-    _sdkPrefix = nil;
 
     _sdkConfigData = sdkConfigData ?: [[ADJSdkConfigData alloc] initWithDefaultValues];
 
@@ -102,7 +102,23 @@
             ADJInstanceRoot * instanceRoot = (ADJInstanceRoot *)obj;
             [instanceRoot finalizeAtTeardownWithBlock:closeStorageBlock];
         }];
+        // Not reseting sdk prefix to make it easier for testing non-native sdk
+        // If at some point, somehow, changing prefixes between teardown and start, would
+        //  make sense, then some alternative solution for those integrations would be needed
+        //sdkPrefixGlobal = nil;
     }
+}
+
++ (void)setSdkPrefix:(nullable NSString *)sdkPrefix {
+    sdkPrefixGlobal = sdkPrefix;
+}
+
++ (nullable NSString *)sdkPrefix {
+    return sdkPrefixGlobal;
+}
+
+- (nullable NSString *)sdkPrefix {
+    return [ADJEntryRoot sdkPrefix];
 }
 
 @end

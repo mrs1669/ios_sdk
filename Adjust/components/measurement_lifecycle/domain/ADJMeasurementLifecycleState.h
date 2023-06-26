@@ -9,11 +9,14 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJCommonBase.h"
+#import "ADJBooleanWrapper.h"
 
 @interface ADJMeasurementLifecycleStateOutputData : NSObject
 
+@property (readonly, assign, nonatomic) BOOL appStarted;
 @property (readonly, assign, nonatomic) BOOL sdkStarted;
-@property (readonly, assign, nonatomic) BOOL measurementPaused;
+@property (nullable, readonly, strong, nonatomic)
+    ADJBooleanWrapper *measurementResumedOrElsePaused;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

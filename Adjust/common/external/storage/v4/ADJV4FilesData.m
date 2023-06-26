@@ -10,7 +10,7 @@
 
 #import "ADJUtilFiles.h"
 #import "ADJAdjustLogMessageData.h"
-#import "ADJResultNL.h"
+#import "ADJResult.h"
 #import "ADJConstants.h"
 
 #pragma mark Fields
@@ -29,7 +29,7 @@
 @implementation ADJV4FilesData
 #pragma mark Instantiation
 
-+ (nonnull ADJOptionalFailsNN<ADJV4FilesData *> *)readV4Files {
++ (nonnull ADJOptionalFails<ADJV4FilesData *> *)readV4Files {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFails =  [[NSMutableArray alloc] init];
 
     [NSKeyedUnarchiver setClass:[ADJV4ActivityState class] forClassName:@"AIActivityState"];
@@ -60,7 +60,7 @@
                                          class:[NSDictionary class]
                                  optionalFails:optionalFails];
     
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFails
             value:[[ADJV4FilesData alloc] initWithV4ActivityState:v4ActivityState
                                                     v4Attribution:v4Attribution
@@ -94,7 +94,6 @@
 }
 
 #pragma mark Internal Methods
-//+ (ADJResultNL<id> *)
 + (nullable id)readObjectWithFileName:(nonnull NSString *)fileName
                                 class:(nonnull Class)classToRead
                         optionalFails:(nonnull NSMutableArray<ADJResultFail *> *)optionalFails
@@ -109,10 +108,17 @@
           key:@"file name"
           stringValue:fileName]];
     } else {
-        ADJResultNL<id> *_Nonnull appSupportReadObjectResult =
+        ADJResult<id> *_Nonnull appSupportReadObjectResult =
             [self readObjectWithFilePath:appSupportFilePath
                                    class:classToRead
                            optionalFails:optionalFails];
+
+        // result value is NSNull if the file does not exist
+        if (appSupportReadObjectResult.value != nil &&
+            ! [appSupportReadObjectResult.value isKindOfClass:[NSNull class]])
+        {
+            return appSupportReadObjectResult.value;
+        }
         if (appSupportReadObjectResult.fail != nil) {
             ADJResultFailBuilder *_Nonnull resultFailBuilder =
                 [[ADJResultFailBuilder alloc] initWithMessage:
@@ -124,8 +130,6 @@
             [resultFailBuilder withKey:@"read object fail"
                              otherFail:appSupportReadObjectResult.fail];
             [optionalFails addObject:[resultFailBuilder build]];
-        } else {
-            return appSupportReadObjectResult.value;
         }
     }
     
@@ -137,10 +141,18 @@
         return nil;
     }
 
-    ADJResultNL<id> *_Nonnull documentsReadObjectResult =
+    ADJResult<id> *_Nonnull documentsReadObjectResult =
         [self readObjectWithFilePath:documentsFilePath
                                class:classToRead
                        optionalFails:optionalFails];
+
+    // result value is NSNull if the file does not exist
+    if (documentsReadObjectResult.value != nil &&
+        ! [documentsReadObjectResult.value isKindOfClass:[NSNull class]])
+    {
+        return documentsReadObjectResult.value;
+    }
+
     if (documentsReadObjectResult.fail != nil) {
         ADJResultFailBuilder *_Nonnull resultFailBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
@@ -152,49 +164,54 @@
         [resultFailBuilder withKey:@"read object fail"
                          otherFail:documentsReadObjectResult.fail];
         [optionalFails addObject:[resultFailBuilder build]];
-        return nil;
     }
 
-    return documentsReadObjectResult.value;
+    return nil;
 }
 
-+ (nonnull ADJResultNL<id> *)
+// result value is NSNull if the file does not exist
++ (nonnull ADJResult<id> *)
     readObjectWithFilePath:(nonnull NSString *)filePath
     class:(nonnull Class)classToRead
     optionalFails:(nonnull NSMutableArray<ADJResultFail *> *)optionalFails
 {
     if (@available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *)) {
-        NSError *_Nullable error = nil;
+        NSError *_Nullable readDataError = nil;
         NSData *_Nullable readData = [NSData dataWithContentsOfFile:filePath
                                                             options:0
-                                                              error:&error];
+                                                              error:&readDataError];
 
         if (readData == nil) {
             if ([ADJUtilFiles fileExistsWithPath:filePath]) {
                 [optionalFails addObject:
                     [[ADJResultFail alloc] initWithMessage:
-                     @"Cannot read existing file using 'NSData dataWithContentsOfFile'"]];
+                     @"Cannot read existing file using 'NSData dataWithContentsOfFile'"
+                                                     error:readDataError]];
 
                 return [ADJV4FilesData readObjectUsingDeprecatedUnarchiveWithFilePath:filePath
                                                                                 class:classToRead];
             } else {
-                return [ADJResultNL okWithoutValue];
+                return [ADJResult okWithValue:[NSNull null]];
             }
         }
 
+        NSError *_Nullable convertDataError = nil;
         // TODO: check if it works with v4 written data.
+        //  If so, we can remove the deprecated version
         //  If not, we still need to use the deprecated version
         id _Nullable objectRead =
-            [NSKeyedUnarchiver unarchivedObjectOfClass:classToRead fromData:readData error:&error];
+            [NSKeyedUnarchiver unarchivedObjectOfClass:classToRead
+                                              fromData:readData
+                                                 error:&convertDataError];
 
         if (objectRead != nil) {
-            return [ADJResultNL okWithValue:objectRead];
+            return [ADJResult okWithValue:objectRead];
         }
 
         [optionalFails addObject:
          [[ADJResultFail alloc] initWithMessage:
           @"Cannot parse read NSData using 'unarchivedObjectOfClass'"
-                                          error:error]];
+                                          error:convertDataError]];
 
         // don't return, fallback to deprecated unarchive
     }
@@ -203,28 +220,28 @@
                                                                     class:classToRead];
 }
 
-+ (nonnull ADJResultNL<id> *)
++ (nonnull ADJResult<id> *)
     readObjectUsingDeprecatedUnarchiveWithFilePath:(nonnull NSString *)filePath
     class:(nonnull Class)classToRead
 {
     @try {
         id _Nullable objectRead = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
         if (objectRead == nil) {
-            return [ADJResultNL okWithoutValue];
+            return [ADJResult okWithValue:[NSNull null]];
         }
 
         if (! [objectRead isKindOfClass:classToRead]) {
-            return [ADJResultNL failWithMessage:
+            return [ADJResult failWithMessage:
                     @"Cannot cast read object using 'unarchiveObjectWithFile' to expected class"
-                                            key:ADJLogActualKey
-                                    stringValue:NSStringFromClass([objectRead class])];
+                                          key:ADJLogActualKey
+                                  stringValue:NSStringFromClass([objectRead class])];
         }
 
-        return [ADJResultNL okWithValue:objectRead];
+        return [ADJResult okWithValue:objectRead];
     } @catch (NSException *exception) {
-        return [ADJResultNL failWithMessage:
+        return [ADJResult failWithMessage:
                 @"NSKeyedUnarchiver unarchiveObjectWithFile exception"
-                                  exception:exception];
+                                exception:exception];
     }
 }
 

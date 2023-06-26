@@ -10,19 +10,20 @@
 
 @interface ADJAdjustAttribution : NSObject
 
-@property (nonnull, strong, nonatomic) NSString *trackerToken;
-@property (nonnull, strong, nonatomic) NSString *trackerName;
-@property (nonnull, strong, nonatomic) NSString *network;
-@property (nonnull, strong, nonatomic) NSString *campaign;
-@property (nonnull, strong, nonatomic) NSString *adgroup;
-@property (nonnull, strong, nonatomic) NSString *creative;
-@property (nonnull, strong, nonatomic) NSString *clickLabel;
-@property (nonnull, strong, nonatomic) NSString *adid;
-@property (nonnull, strong, nonatomic) NSString *deeplink;
-@property (nonnull, strong, nonatomic) NSString *state;
-@property (nonnull, strong, nonatomic) NSString *costType;
-@property (assign, nonatomic) double costAmount;
-@property (nonnull, strong, nonatomic) NSString *costCurrency;
+@property (nullable, strong, nonatomic) NSString *trackerToken;
+@property (nullable, strong, nonatomic) NSString *trackerName;
+@property (nullable, strong, nonatomic) NSString *network;
+@property (nullable, strong, nonatomic) NSString *campaign;
+@property (nullable, strong, nonatomic) NSString *adgroup;
+@property (nullable, strong, nonatomic) NSString *creative;
+@property (nullable, strong, nonatomic) NSString *clickLabel;
+// TODO: adid to be extracted from attribution
+@property (nullable, strong, nonatomic) NSString *adid;
+@property (nullable, strong, nonatomic) NSString *deeplink;
+@property (nullable, strong, nonatomic) NSString *state;
+@property (nullable, strong, nonatomic) NSString *costType;
+@property (nullable, strong, nonatomic) NSNumber *costAmount;
+@property (nullable, strong, nonatomic) NSString *costCurrency;
 
 @end
 

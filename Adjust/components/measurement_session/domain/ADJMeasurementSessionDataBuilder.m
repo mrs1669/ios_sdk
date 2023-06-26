@@ -72,7 +72,7 @@
     
     [logger debugDev:@"Session count incremented"
                  key:@"session count"
-               value:self.sessionCount.description];
+         stringValue:self.sessionCount.description];
 }
 
 - (void)setLastActivityTimestampMilli:(nonnull ADJTimestampMilli *)lastActivityTimestampMilli {

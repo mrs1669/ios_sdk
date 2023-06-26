@@ -18,7 +18,7 @@ static NSString *const kClientActionStorageTableName = @"client_action";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"ClientActionStorage"
+                             loggerName:@"ClientActionStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kClientActionStorageTableName
@@ -29,7 +29,7 @@ static NSString *const kClientActionStorageTableName = @"client_action";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nonnull ADJResultNN<ADJClientActionData *> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResult<ADJClientActionData *> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
     return [ADJClientActionData instanceWithIoData:ioData];
 }
 

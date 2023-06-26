@@ -19,7 +19,7 @@ static NSString *const kSdkActiveStateStorageTableName = @"sdk_active_state";
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
 {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"SdkActiveStateStorage"
+                             loggerName:@"SdkActiveStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kSdkActiveStateStorageTableName
@@ -32,7 +32,7 @@ static NSString *const kSdkActiveStateStorageTableName = @"sdk_active_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJSdkActiveStateData *> *)
+- (nonnull ADJResult<ADJSdkActiveStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
     return [ADJSdkActiveStateData instanceFromIoData:ioData];

@@ -15,7 +15,7 @@
 
 - (void)setPluginDependenciesWithLoggerFactory:(nonnull id<ADJAdjustLogger>)logger;
 
-- (nonnull NSString *)source;
+- (nonnull NSString *)name;
 
 - (void)subscribeWithPublishers:(nonnull ADJAdjustPublishers *)adjustPublishers;
 

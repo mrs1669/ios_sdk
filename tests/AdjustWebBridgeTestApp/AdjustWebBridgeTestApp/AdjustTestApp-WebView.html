@@ -9,64 +9,45 @@
         </style>
 </head><body>
     <h1>Adjust TestApp</h1>
-    <script type="text/javascript" src="TestLibraryBridge.js"></script>
 
     <script>
+        var TestAppUtil = {
+            errSubscriber: function errSubscriber(errMessage) {
+                console.log(errMessage);
+            },
+        };
         window.onerror = function(err) {
-
+            TestAppUtil.errSubscriber(err);
         }
 
-        function setupWebViewJavascriptBridge(callback) {
-            if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
-            if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
-            window.WVJBCallbacks = [callback];
-            var WVJBIframe = document.createElement('iframe');
-            WVJBIframe.style.display = 'none';
-            WVJBIframe.src = 'https://__bridge_loaded__';
-            document.documentElement.appendChild(WVJBIframe);
-            setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
-        }
+        window.onload = (event) => {
+            Adjust._getSdkVersionAsync(function(sdkVersion) {
+                TestAppUtil._sdkVersion = sdkVersion;
+            });
+        };
 
         function btnStartTestSession() {
-            console.log('btnStartTestSession');
-            TestLibraryBridge.addTestDirectory('deeplink');
-            TestLibraryBridge.addTestDirectory('stop-restart');
-            TestLibraryBridge.addTestDirectory('third-party-sharing');
-            TestLibraryBridge.addTestDirectory('session-tracking');
-            TestLibraryBridge.addTestDirectory('retry-in');
-            TestLibraryBridge.addTestDirectory('push-token');
-            TestLibraryBridge.addTestDirectory('offline-mode');
-            TestLibraryBridge.addTestDirectory('migration');
-            TestLibraryBridge.addTestDirectory('init-malformed');
-            TestLibraryBridge.addTestDirectory('global-parameters');
-            TestLibraryBridge.addTestDirectory('gdpr');
-            TestLibraryBridge.addTestDirectory('event-tracking');
-            TestLibraryBridge.addTestDirectory('default-tracker')
-            TestLibraryBridge.addTestDirectory('continue-in');
-            TestLibraryBridge.addTestDirectory('background-tracking');
-            TestLibraryBridge.addTestDirectory('attribution');
-            TestLibraryBridge.addTestDirectory('ad-revenue')
-            TestLibraryBridge.addTestDirectory('event-tracking');
-            TestLibraryBridge.startTestSession();
+            //console.log('btnStartTestSession');
+            //Adjust.instance(12, function(errMessage) {console.log(errMessage);});
+            TestLibrary._errSubscriber = TestAppUtil.errSubscriber;
+
+            //TestLibrary.addTest("Test_AdRevenue_valid_params");
+            //TestLibrary.TORMV();
+
+            if (! TestAppUtil._sdkVersion) {
+                Adjust._getSdkVersionAsync(function(sdkVersion) {
+                    TestAppUtil._sdkVersion = sdkVersion;
+                    TestLibrary.startTestSession(sdkVersion);
+                });
+            } else {
+                TestLibrary.startTestSession(TestAppUtil._sdkVersion);
+            }
         }
 
-        setupWebViewJavascriptBridge(function(bridge) {
-            var uniqueId = 1
-            function log(message, data) {
-                var log = document.getElementById('log')
-                var el = document.createElement('div')
-                el.className = 'logLine'
-                el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
-                if (log.children.length) { log.insertBefore(el, log.children[0]) }
-                else { log.appendChild(el) }
-            }
-        });
     </script>
     <div id='buttons'>
         <div style="width:300px;height:35px;text-align:center;">
             <button onclick="btnStartTestSession()">Start test session</button><br>
         </div>
     </div>
-    <div id='log'></div>
 </body></html>
-

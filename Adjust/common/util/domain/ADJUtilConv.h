@@ -9,42 +9,41 @@
 #import <Foundation/Foundation.h>
 
 #import "ADJStringMap.h"
-#import "ADJResultNN.h"
-#import "ADJOptionalFailsNN.h"
-#import "ADJInputLogMessageData.h"
-#import "ADJUtilMap.h"
+#import "ADJOptionalFails.h"
+#import "ADJLogger.h"
 
 @interface ADJUtilConv : NSObject
 
 + (NSTimeInterval)convertToSecondsWithMilliseconds:(NSUInteger)milliseconds;
 
-+ (nonnull ADJResultNN<NSNumber *> *)
+// string to numbers
++ (nonnull ADJResult<NSNumber *> *)
     convertToIntegerNumberWithStringValue:(nonnull NSString *)stringValue;
-+ (nonnull ADJResultNN<NSNumber *> *)
++ (nonnull ADJResult<NSNumber *> *)
     convertToLLNumberWithStringValue:(nonnull NSString *)stringValue;
-+ (nonnull ADJResultNN<NSNumber *> *)
++ (nonnull ADJResult<NSNumber *> *)
     convertToDoubleNumberWithStringValue:(nonnull NSString *)stringValue;
 
+// to and from base 64
 + (nullable NSString *)convertToBase64StringWithDataValue:(nullable NSData *)dataValue;
 + (nullable NSData *)convertToDataWithBase64String:(nullable NSString *)base64String;
 
-+ (nonnull ADJResultNN<NSData *> *)
-    convertToJsonDataWithJsonFoundationValue:(nonnull id)jsonFoundationValue;
-+ (nonnull ADJResultNN<id> *)
-    convertToFoundationObjectWithJsonString:(nonnull NSString *)jsonString;
-+ (nonnull ADJResultNN<id> *)convertToJsonFoundationValueWithJsonData:(nonnull NSData *)jsonData;
+// string map convertions
++ (nullable ADJStringMap *)
+    clientStringMapWithKeyValueArray:(nullable NSArray *)keyValueArray
+    logger:(nonnull ADJLogger *)logger
+    processingFailMessage:(nonnull NSString *)processingFailMessage
+    addingFailMessage:(nonnull NSString *)addingFailMessage
+    emptyFailMessage:(nonnull NSString *)emptyFailMessage;
 
-+ (nonnull id)convertToFoundationObject:(nonnull id)foundationObject;
-
-+ (nonnull ADJOptionalFailsNN<ADJResultNL<ADJStringMap *> *> *)
-    convertToStringMapWithKeyValueArray:(nullable NSArray<NSString *> *)keyValueArray;
-
-+ (nonnull ADJOptionalFailsNN<ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
-    convertToStringMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray<NSString *> *)nameKeyStringValueArray;
-
-+ (nonnull ADJOptionalFailsNN<ADJResultNL<NSDictionary<NSString *, ADJStringKeyDict> *> *> *)
-    convertToNumberBooleanMapCollectionByNameBuilderWithNameKeyValueArray:
-        (nullable NSArray *)nameKeyNumberBooleanValueArray;
+// nameKeyValueArray maps [name, key, value] to <name, <key, value>>
+// name, key and value need to be string
++ (nonnull ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *)
+    jsonStringFromNameKeyStringValueArray:
+    (nullable NSArray<NSString *> *)nameKeyStringValueArray;
+// name and key need to be string, value needs to boolean
++ (nonnull ADJOptionalFails<ADJResult<ADJNonEmptyString *> *> *)
+    jsonStringFromNameKeyBooleanValueArray:
+    (nullable NSArray<NSString *> *)nameKeyBooleanValueArray;
 
 @end

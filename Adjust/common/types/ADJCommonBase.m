@@ -12,7 +12,8 @@
 
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source {
+                                   loggerName:(nonnull NSString *)loggerName
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJCommonBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -21,8 +22,7 @@
     
     self = [super init];
     
-    _logger = [loggerFactory createLoggerWithSource:source];
-    _source = source;
+    _logger = [loggerFactory createLoggerWithName:loggerName];
     
     return self;
 }

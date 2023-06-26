@@ -41,12 +41,13 @@ static NSString *const kColumnValue = @"value";
 @implementation ADJSQLiteStoragePropertiesBase
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName
                             metadataTypeValue:(nonnull NSString *)metadataTypeValue
-                      initialDefaultDataValue:(nonnull id)initialDefaultDataValue {
+                      initialDefaultDataValue:(nonnull id)initialDefaultDataValue
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJSQLiteStoragePropertiesBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -54,7 +55,7 @@ static NSString *const kColumnValue = @"value";
     }
     
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:source
+                             loggerName:loggerName
                         storageExecutor:storageExecutor
                  sqliteDatabaseProvider:sqliteController
                               tableName:tableName
@@ -84,22 +85,24 @@ static NSString *const kColumnValue = @"value";
 - (void)updateInMemoryOnlyWithNewDataValue:(nonnull id)newDataValue {
     [self.logger debugDev:@"Updating value in memory"
                      key1:@"inMemoryDataValue"
-                   value1:[self.inMemoryDataValue description]
+             stringValue1:[self.inMemoryDataValue description]
                      key2:@"newDataValue"
-                   value2:[newDataValue description]];
+             stringValue2:[newDataValue description]];
 
     self.inMemoryDataValue = newDataValue;
 }
 
 - (void)updateInStorageOnlyWithNewDataValue:(nonnull id)newDataValue {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"update in storage only"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf updateInStorageSyncWithSqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                                        newDataValue:newDataValue];
-    } source:@"update in storage only"];
+    }];
 }
 
 - (BOOL)updateInTransactionWithsSQLiteDb:(nonnull ADJSQLiteDb *)sqliteDb
@@ -123,7 +126,7 @@ static NSString *const kColumnValue = @"value";
     }
     [self.logger debugDev:@"Inserted new data values in update transaction"
                       key:@"newDataValue"
-                    value:[newDataValue description]];
+              stringValue:[newDataValue description]];
 
     return YES;
 }
@@ -150,7 +153,7 @@ static NSString *const kColumnValue = @"value";
     ADJIoData *_Nonnull ioData =
         [[ADJIoData alloc] initWithIoDataBuilder:ioDataBuilder];
 
-    ADJResultNN<id> *_Nonnull valueFromIoDataResult =
+    ADJResult<id> *_Nonnull valueFromIoDataResult =
         [self concreteGenerateValueFromIoData:ioData];
 
     if (valueFromIoDataResult.fail != nil) {
@@ -158,10 +161,10 @@ static NSString *const kColumnValue = @"value";
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
             [logBuilder withFail:valueFromIoDataResult.fail
                            issue:ADJIssueStorageIo];
-            [logBuilder withKey:@"io data" value:[ioData description]];
+            [logBuilder withKey:@"io data" stringValue:[ioData description]];
         }];
     } else {
-        _inMemoryDataValue = valueFromIoDataResult.value;
+        self.inMemoryDataValue = valueFromIoDataResult.value;
     }
 
     return valueFromIoDataResult.fail != nil;
@@ -209,7 +212,7 @@ static int const kInsertValueFieldPosition = 3;
 }
 
 #pragma mark - Abstract
-- (nonnull ADJResultNN<id> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResult<id> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -342,7 +345,7 @@ static int const kInsertValueFieldPosition = 3;
         [self.logger debugDev:
          @"Cannot count rows without a prepared statement from the select query"
                          key:@"selectCountSql"
-                       value:selectCountSql
+                  stringValue:selectCountSql
                     issueType:ADJIssueStorageIo];
         return;
     }
@@ -355,19 +358,19 @@ static int const kInsertValueFieldPosition = 3;
         [self.logger debugDev:
          @"Cannot count rows from Select queryCursor without a queryCursor from the select query"
                           key:@"selectCountSql"
-                        value:selectCountSql
+                  stringValue:selectCountSql
                     issueType:ADJIssueStorageIo];
         [selectCountStatement closeStatement];
         return;
     }
     
     NSNumber *_Nullable countNumber = [selectCountStatement numberIntForColumnIndex:0];
-    
+
     [self.logger debugDev:@"table read with count number"
                      key1:@"tableName"
-                   value1:self.tableName
+             stringValue1:self.tableName
                      key2:@"countNumber"
-                   value2:countNumber.description];
+             stringValue2:countNumber != nil ? [countNumber description] : nil];
     
     [selectCountStatement closeStatement];
 }

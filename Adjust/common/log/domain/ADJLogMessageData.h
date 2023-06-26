@@ -13,7 +13,7 @@
 @interface ADJLogMessageData : NSObject
 // instantiation
 - (nonnull instancetype)initWithInputData:(nonnull ADJInputLogMessageData *)inputData
-                        sourceDescription:(nonnull NSString *)sourceDescription
+                               loggerName:(nonnull NSString *)loggerName
                                  idString:(nonnull NSString *)idString
                           runningThreadId:(nullable NSString *)runningThreadId
 NS_DESIGNATED_INITIALIZER;
@@ -22,14 +22,13 @@ NS_DESIGNATED_INITIALIZER;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJInputLogMessageData *inputData;
-@property (nonnull, readonly, strong, nonatomic) NSString *sourceDescription;
+@property (nonnull, readonly, strong, nonatomic) NSString *loggerName;
 @property (nonnull, readonly, strong, nonatomic) NSString *idString;
 @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
 
 // public API
 - (nonnull NSMutableDictionary <NSString *, id>*)generateFoundationDictionary;
 
-+ (nonnull NSString *)generateJsonStringFromFoundationDictionary:
-    (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
+- (nullable NSString *)runningThreadIdCoalesce;
 
 @end

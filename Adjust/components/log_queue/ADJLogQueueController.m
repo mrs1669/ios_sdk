@@ -27,21 +27,23 @@
 
 @implementation ADJLogQueueController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                      storage:(nonnull ADJLogQueueStorage *)storage
-                             threadController:(nonnull ADJThreadController *)threadController
-                                        clock:(nonnull ADJClock *)clock
-                              backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
-                      sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"LogQueueController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    storage:(nonnull ADJLogQueueStorage *)storage
+    threadController:(nonnull ADJThreadController *)threadController
+    clock:(nonnull ADJClock *)clock
+    backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"LogQueueController"];
     _storageWeak = storage;
     _clockWeak = clock;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                             sourceLoggerName:self.logger.name];
 
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
-                                                             sourceDescription:self.source
+                                                              sourceLoggerName:self.logger.name
                                                          threadExecutorFactory:threadController];
 
     _logQueueStateAndTracker =
@@ -55,54 +57,64 @@
 #pragma mark Public API
 - (void)addLogPackageDataToSendWithData:(nonnull ADJLogPackageData *)logPackageData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add log package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleLogPackageAddedToSendWithData:logPackageData];
-    } source:@"add log package"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
 - (void)sdkResponseCallbackWithResponseData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"received sdk response"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResponseWithData:sdkResponseData];
-    } source:@"received sdk response"];
+    }];
 }
 
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk init"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleSdkInit];
-    } source:@"sdk init"];
+    }];
 }
 
 #pragma mark - ADJPausingSubscriber
 - (void)didResumeSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"resume sending"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResumeSending];
-    } source:@"resume sending"];
+    }];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"pause sending"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf.logQueueStateAndTracker pauseSending];
-    } source:@"pause sending"];
+    }];
 }
 
 #pragma mark Internal Methods
@@ -124,13 +136,13 @@
                                                 packageQueueCount:[storage count]
                                                 hasPackageAtFront:packageAtFront != nil];
     if (sendPackageAtFront) {
-        NSString *_Nonnull source =
+        NSString *_Nonnull from =
         [NSString stringWithFormat:@"%@ added",
          [logPackageDataToAdd generateShortDescription]];
 
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:source];
+                           from:from];
     }
 }
 
@@ -150,7 +162,7 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"sdk init"];
+                           from:@"sdk init"];
     }
 }
 
@@ -172,7 +184,7 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"resume sending"];
+                           from:@"resume sending"];
     }
 }
 
@@ -205,7 +217,7 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"handle response"];
+                           from:@"handle response"];
     }
 }
 
@@ -222,18 +234,19 @@
 
 - (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"delay end"
+                                 delayTimeMilli:delayData.delay
+                                          block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf handleDelayEndWithSource:delayData.source];
-    }
-                                delayTimeMilli:delayData.delay
-                                        source:@"delay end"];
+        [strongSelf handleDelayEndFrom:delayData.from];
+    }];
 }
 
-- (void)handleDelayEndWithSource:(nonnull NSString *)source {
-    [self.logger debugDev:@"Delay ended" from:source];
+- (void)handleDelayEndFrom:(nonnull NSString *)from {
+    [self.logger debugDev:@"Delay ended" from:from];
 
     ADJLogQueueStorage *_Nullable storage = self.storageWeak;
     if (storage == nil) {
@@ -251,25 +264,26 @@
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
                           storage:storage
-                           source:@"handle delay end"];
+                           from:@"handle delay end"];
     }
 }
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
                     storage:(nonnull ADJLogQueueStorage *)storage
-                     source:(nonnull NSString *)source {
+                       from:(nonnull NSString *)from
+{
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package when it is nil"
                           key:ADJLogFromKey
-                        value:source
+                  stringValue:from
                     issueType:ADJIssueInvalidInput];
         return;
     }
 
     [self.logger debugDev:@"To send sdk package"
-                     from:source
+                     from:from
                       key:@"package"
-                    value:[packageToSend generateShortDescription].stringValue];
+              stringValue:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
     [self generateSendingParametersWithStorage:storage];
@@ -310,7 +324,7 @@
         return sendingParameters;
     }
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
                   resultFail:nowResult.fail

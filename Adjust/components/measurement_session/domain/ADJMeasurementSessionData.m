@@ -32,136 +32,136 @@ static NSString *const kTimeSpentMilliKey = @"timeSpentMilli";
 
 @implementation ADJMeasurementSessionData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
-    ADJResultNN<ADJTallyCounter *> *_Nonnull sessionCountResult =
+    ADJResult<ADJTallyCounter *> *_Nonnull sessionCountResult =
         [ADJTallyCounter
          instanceFromIoDataValue:[ioDataMap pairValueWithKey:kSessionCountKey]];
     if (sessionCountResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from io data map with invalid session count"
-                                        key:@"session count fail"
-                                  otherFail:sessionCountResult.fail];
+                                      key:@"session count fail"
+                                otherFail:sessionCountResult.fail];
     }
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull lastActivityTimestampResult =
+    ADJResult<ADJTimestampMilli *> *_Nonnull lastActivityTimestampResult =
         [ADJTimestampMilli instanceFromIoDataValue:
              [ioDataMap pairValueWithKey:kLastActivityTimestampMilliKey]];
     if (lastActivityTimestampResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from io data map with invalid last activity timestamp"
-                                        key:@"last activity timestamp fail"
-                                  otherFail:lastActivityTimestampResult.fail];
+                                      key:@"last activity timestamp fail"
+                                otherFail:lastActivityTimestampResult.fail];
     }
 
-    ADJResultNN<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
+    ADJResult<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
         [ADJTimeLengthMilli instanceFromIoDataValue:
          [ioDataMap pairValueWithKey:kSessionLengthMilliKey]];
     if (sessionLengthResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from io data map with invalid session length"
-                                        key:@"session length fail"
-                                  otherFail:sessionLengthResult.fail];
+                                      key:@"session length fail"
+                                otherFail:sessionLengthResult.fail];
     }
 
-    ADJResultNN<ADJTimeLengthMilli *> *_Nonnull timeSpentResult =
+    ADJResult<ADJTimeLengthMilli *> *_Nonnull timeSpentResult =
         [ADJTimeLengthMilli instanceFromIoDataValue:
          [ioDataMap pairValueWithKey:kTimeSpentMilliKey]];
     if (timeSpentResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from io data map with invalid time spent"
-                                        key:@"time spent fail"
-                                  otherFail:timeSpentResult.fail];
+                                      key:@"time spent fail"
+                                otherFail:timeSpentResult.fail];
     }
 
-    return [ADJResultNN okWithValue:[[ADJMeasurementSessionData alloc]
-                                     initWithSessionCount:sessionCountResult.value
-                                     lastActivityTimestampMilli:lastActivityTimestampResult.value
-                                     sessionLengthMilli:sessionLengthResult.value
-                                     timeSpentMilli:timeSpentResult.value]];
+    return [ADJResult okWithValue:[[ADJMeasurementSessionData alloc]
+                                   initWithSessionCount:sessionCountResult.value
+                                   lastActivityTimestampMilli:lastActivityTimestampResult.value
+                                   sessionLengthMilli:sessionLengthResult.value
+                                   timeSpentMilli:timeSpentResult.value]];
 }
 
-+ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionData *> *)
     instanceFromBuilder:(nonnull ADJMeasurementSessionDataBuilder *)measurementSessionDataBuilder
 {
     ADJTallyCounter *_Nullable sessionCount = measurementSessionDataBuilder.sessionCount;
     if (sessionCount == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from builder without session count"];
     }
 
     ADJTimestampMilli *_Nullable lastActivityTimestampMilli =
         measurementSessionDataBuilder.lastActivityTimestampMilli;
     if (lastActivityTimestampMilli == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from builder without last activity timestamp"];
     }
 
     ADJTimeLengthMilli *_Nullable sessionLengthMilli =
         measurementSessionDataBuilder.sessionLengthMilli;
     if (sessionLengthMilli == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from builder without session length"];
     }
 
     ADJTimeLengthMilli *_Nullable timeSpentMilli = measurementSessionDataBuilder.timeSpentMilli;
     if (timeSpentMilli == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create instance from builder without time spent"];
     }
 
-    return [ADJResultNN okWithValue:[[ADJMeasurementSessionData alloc]
-                                     initWithSessionCount:sessionCount
-                                     lastActivityTimestampMilli:lastActivityTimestampMilli
-                                     sessionLengthMilli:sessionLengthMilli
-                                     timeSpentMilli:timeSpentMilli]];
+    return [ADJResult okWithValue:[[ADJMeasurementSessionData alloc]
+                                   initWithSessionCount:sessionCount
+                                   lastActivityTimestampMilli:lastActivityTimestampMilli
+                                   sessionLengthMilli:sessionLengthMilli
+                                   timeSpentMilli:timeSpentMilli]];
 }
 
-+ (nonnull ADJResultNN<ADJMeasurementSessionData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionData *> *)
     instanceFromV4WithActivityState:(nonnull ADJV4ActivityState *)v4ActivityState
 {
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull sessionCountIntResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull sessionCountIntResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:v4ActivityState.sessionCountNumberInt];
     if (sessionCountIntResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create session data instance with invalid session count"
-                                        key:@"session count fail"
-                                  otherFail:sessionCountIntResult.fail];
+                                      key:@"session count fail"
+                                otherFail:sessionCountIntResult.fail];
     }
     ADJTallyCounter *_Nonnull sessionCount =
         [[ADJTallyCounter alloc] initWithCountValue:sessionCountIntResult.value];
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull lastActivityTimestampResult =
+    ADJResult<ADJTimestampMilli *> *_Nonnull lastActivityTimestampResult =
         [ADJTimestampMilli instanceWithNumberDoubleSecondsSince1970:
          v4ActivityState.lastActivityNumberDouble];
     if (lastActivityTimestampResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot create session data instance with invalid last activity timestamp"
-                                        key:@"last activity timestamp fail"
-                                  otherFail:lastActivityTimestampResult.fail];
+                                      key:@"last activity timestamp fail"
+                                otherFail:lastActivityTimestampResult.fail];
     }
 
-    ADJResultNN<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
+    ADJResult<ADJTimeLengthMilli *> *_Nonnull sessionLengthResult =
         [ADJTimeLengthMilli instanceWithNumberDoubleSeconds:
          v4ActivityState.sessionLengthNumberDouble];
     if (sessionLengthResult.fail != nil) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Cannot create session data instance with invalid session length"
                 key:@"session length fail"
                 otherFail:sessionLengthResult.fail];
     }
 
-    ADJResultNN<ADJTimeLengthMilli *> *_Nonnull timeSpentResult =
+    ADJResult<ADJTimeLengthMilli *> *_Nonnull timeSpentResult =
         [ADJTimeLengthMilli instanceWithNumberDoubleSeconds:v4ActivityState.timeSpentNumberDouble];
     if (timeSpentResult.fail != nil) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Cannot create session data instance with invalid time spent"
                 key:@"time spent fail"
                 otherFail:timeSpentResult.fail];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJMeasurementSessionData alloc]
              initWithSessionCount:sessionCount
              lastActivityTimestampMilli:lastActivityTimestampResult.value

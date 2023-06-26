@@ -26,8 +26,9 @@ NSString *const ADJThirdPartySharingControllerClientActionHandlerId = @"ThirdPar
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
-    self = [super initWithLoggerFactory:loggerFactory source:@"ThirdPartySharingController"];
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ThirdPartySharingController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
 

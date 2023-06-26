@@ -15,7 +15,7 @@
 #import "ADJConstantsParam.h"
 #import "ADJTallyCounter.h"
 #import "ADJUtilSys.h"
-#import "ADJResultNN.h"
+#import "ADJResult.h"
 
 #pragma mark Private class
 @implementation ADJSdkPackageCreatingPublisher @end
@@ -58,7 +58,7 @@
         (nonnull ADJMeasurementSessionStateStorage *)measurementSessionStateStorage
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"SdkPackageBuilder"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SdkPackageBuilder"];
     _clock = clock;
     _clientSdk = [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
     _clientConfigData = clientConfigData;
@@ -105,15 +105,15 @@
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAdRevenueNetworkKey
-                         packageParamValueSerializable:clientAdRevenueData.adRevenueNetwork];
+                         packageParamValueSerializable:clientAdRevenueData.network];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAdRevenueUnitKey
-                         packageParamValueSerializable:clientAdRevenueData.adRevenueUnit];
+                         packageParamValueSerializable:clientAdRevenueData.unit];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamAdRevenuePlacementKey
-                         packageParamValueSerializable:clientAdRevenueData.adRevenuePlacement];
+                         packageParamValueSerializable:clientAdRevenueData.placement];
 
     ADJStringMap *_Nonnull parameters =
     [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
@@ -245,7 +245,7 @@
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamEventTokenKey
-                         packageParamValueSerializable:clientEventData.eventId];
+                         packageParamValueSerializable:clientEventData.eventToken];
 
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamEventDeduplicationKey
@@ -362,13 +362,16 @@
         }
     }
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamThirdPartySharingGranularOptionsKey
-                         packageParamValueSerializable:clientThirdPartySharingData.stringGranularOptionsByName];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamThirdPartySharingGranularOptionsKey
+     packageParamValueSerializable:clientThirdPartySharingData.granularOptionsByNameJsonString];
 
-    [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
-                                                   key:ADJParamThirdPartySharingPartnerSharingSettingsKey
-                         packageParamValueSerializable:clientThirdPartySharingData.stringPartnerSharingSettingsByName];
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamThirdPartySharingPartnerSharingSettingsKey
+     packageParamValueSerializable:
+         clientThirdPartySharingData.partnerSharingSettingsByNameJsonString];
 
     ADJStringMap *_Nonnull parameters = [self publishAndGenerateParametersWithParametersBuilder:parametersBuilder
                                                                                            path:ADJThirdPartySharingPackageDataPath];
@@ -497,7 +500,7 @@
                                                    key:ADJParamCalledAtKey
                          packageParamValueSerializable:apiTimestamp];
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Cannot inject created at sending parameter in package"
                    resultFail:nowResult.fail
@@ -515,7 +518,7 @@
     if (deviceController == nil) {
         [self.logger debugDev:@"Cannot inject device info for package without a reference to device controller"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -531,7 +534,7 @@
                              packageParamValueSerializable:[deviceController nonKeychainUuid]];
     }
 
-    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+    ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
         [deviceController getSessionDeviceIdsSync];
     if (sessionDeviceIdsDataResult.fail != nil) {
         [self.logger debugDev:@"Could not obtain session device ids"
@@ -630,7 +633,7 @@
     if (eventStateStorage == nil) {
         [self.logger debugDev:@"Cannot inject event data for package without a reference to event state storage"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         return;
     }
@@ -654,7 +657,7 @@
          @"Cannot inject global callback parameters for package"
          " without a reference to global callback parameters storage"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         globalCallbackParametersMap = nil;
     } else {
@@ -679,7 +682,7 @@
          @"Cannot inject global partner parameters for package"
          " without a reference to global partner parameters storage"
                           key:@"path"
-                        value:path
+                  stringValue:path
                     issueType:ADJIssueWeakReference];
         globalPartnerParametersMap = nil;
     } else {

@@ -14,6 +14,7 @@
 #import "ADJNonNegativeInt.h"
 #import "ADJAdjustAttributionSubscriber.h"
 #import "ADJAdjustLogSubscriber.h"
+#import "ADJAdjustInternal.h"
 
 @interface ADJClientCustomEndpointData : NSObject
 // instantiation
@@ -31,8 +32,11 @@ NS_DESIGNATED_INITIALIZER;
 
 @interface ADJClientConfigData : NSObject
 // instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
-                                                     logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
+    logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -45,16 +49,20 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
 @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *externalDeviceId;
-@property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
+@property (nullable, readonly, strong, nonatomic)
+    ADJClientCustomEndpointData *clientCustomEndpointData;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
 @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
 @property (readonly, assign, nonatomic) BOOL canSendInBackground;
-@property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
-@property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+@property (nullable, readonly, strong, nonatomic)
+    ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+@property (nullable, readonly, strong, nonatomic)
+    id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+@property (nullable, readonly, strong, nonatomic)
+    NSDictionary<NSString *, id<ADJInternalCallback>> *internalConfigSubscriptions;
 
 // public api
 - (nonnull ADJNonEmptyString *)environment;
 
 @end
-

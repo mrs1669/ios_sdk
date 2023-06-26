@@ -41,69 +41,43 @@
     return oneInstance;
 }
 
-+ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-{
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull nnIntResult =
-        [ADJNonNegativeInt instanceFromOptionalIoDataValue:ioDataValue];
-
-    if (nnIntResult.fail != nil) {
-        return [ADJResultNL failWithMessage:@"Cannot convert from io value to time length"
-                                        key:@"io value to nnInt fail"
-                                  otherFail:nnIntResult.fail];
-    }
-    if (nnIntResult.value == nil) {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    return [ADJResultNL okWithValue:
-            [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:nnIntResult.value]];
-}
-
-+ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
++ (nonnull ADJResult<ADJTimeLengthMilli *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
 {
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull nnIntResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull nnIntResult =
         [ADJNonNegativeInt instanceFromIoDataValue:ioDataValue];
 
-    if (nnIntResult.fail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create time length instance"
-                                        key:@"nnInt io value fail"
-                                  otherFail:nnIntResult.fail];
+    if (nnIntResult.wasInputNil) {
+        return [ADJResult nilInputWithMessage:
+                @"Cannot create time length with nil io value"];
     }
 
-    return [ADJResultNN okWithValue:
+    if (nnIntResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Cannot create time length instance"
+                                      key:@"nnInt io value fail"
+                                otherFail:nnIntResult.fail];
+    }
+
+    return [ADJResult okWithValue:
             [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:nnIntResult.value]];
 }
 
-+ (nonnull ADJResultNL<ADJTimeLengthMilli *> *)
-    instanceWithOptionalNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
-{
-    if (numberDoubleSeconds == nil) {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    return [ADJResultNL instanceFromNN:^ADJResultNN *_Nonnull(NSNumber *_Nullable value) {
-        return [ADJTimeLengthMilli instanceWithNumberDoubleSeconds:value];
-    }
-                               nlValue:numberDoubleSeconds];
-}
-
-+ (nonnull ADJResultNN<ADJTimeLengthMilli *> *)
++ (nonnull ADJResult<ADJTimeLengthMilli *> *)
     instanceWithNumberDoubleSeconds:(nullable NSNumber *)numberDoubleSeconds
 {
     if (numberDoubleSeconds == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult nilInputWithMessage:
                 @"Cannot create time length with nil number double seconds"];
     }
 
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull millisecondsSpanResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull millisecondsSpanResult =
         [ADJNonNegativeInt
          instanceFromIntegerNumber:
-             @(numberDoubleSeconds.doubleValue * ADJSecondToMilliDouble)];
+             [NSNumber numberWithDouble:numberDoubleSeconds.doubleValue * ADJSecondToMilliDouble]];
     if (millisecondsSpanResult.fail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create time length instance"
-                               builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
+        return [ADJResult failWithMessage:@"Cannot create time length instance"
+                              wasInputNil:NO
+                             builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
             [resultFailBuilder withKey:@"key convertion fail"
                              otherFail:millisecondsSpanResult.fail];
             [resultFailBuilder withKey:@"number double seconds"
@@ -111,7 +85,7 @@
         }];
     }
     
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:millisecondsSpanResult.value]];
 }
 

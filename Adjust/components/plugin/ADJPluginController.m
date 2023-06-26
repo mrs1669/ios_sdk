@@ -30,7 +30,7 @@
 @implementation ADJPluginController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"PluginController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"PluginController"];
 
     _pluginPackageSendingPublisher = [[ADJPluginPackageSendingPublisher alloc] init];
     _pluginForegroundPublisher = [[ADJPluginForegroundPublisher alloc] init];
@@ -58,21 +58,21 @@
         if (objectInstance == nil) {
             [self.logger debugDev:@"Could not find plugin"
                               key:@"plugin class name"
-                            value:pluginClassName];
+                      stringValue:pluginClassName];
             continue;
         }
 
         if (! [objectInstance conformsToProtocol:@protocol(ADJAdjustPlugin)]) {
             [self.logger debugDev:@"Could not cast class name to plugin"
                               key:@"plugin class name"
-                            value:pluginClassName
+                      stringValue:pluginClassName
                         issueType:ADJIssuePluginOrigin];
             continue;
         }
 
         id<ADJAdjustPlugin> _Nonnull pluginInstance = (id<ADJAdjustPlugin>)objectInstance;
 
-        ADJLogger *_Nonnull loggerForPlugin = [loggerFactory createLoggerWithSource:[pluginInstance source]];
+        ADJLogger *_Nonnull loggerForPlugin = [loggerFactory createLoggerWithName:[pluginInstance name]];
 
         ADJPluginLogger *_Nonnull pluginLogger = [[ADJPluginLogger alloc] initWithLogger:loggerForPlugin];
 
@@ -82,9 +82,9 @@
 
         [self.logger debugDev:@"Found plugin"
                          key1:@"plugin class name"
-                       value1:pluginClassName
+                 stringValue1:pluginClassName
                          key2:@"plugin name"
-                       value2:[pluginInstance source]];
+                 stringValue2:[pluginInstance name]];
     }
 }
 
@@ -98,17 +98,17 @@
         return;
     }
 
-    NSDictionary<NSString *, NSString *> *_Nonnull parametersFoundationMap =
-        [sdkPackageData.parameters foundationStringMap];
+    NSDictionary<NSString *, NSString *> *_Nonnull parametersDto =
+        [sdkPackageData.parameters jsonStringDictionary];
 
     ADJStringMap *_Nonnull parametersToAddStringMap =
         [[ADJStringMap alloc] initWithStringMapBuilder:parametersToAdd];
 
-    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddFoundationMutableMap =
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull parametersToAddDto =
         [NSMutableDictionary dictionaryWithDictionary:
-         [parametersToAddStringMap foundationStringMap]];
+         [parametersToAddStringMap jsonStringDictionary]];
 
-    NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddFoundationMutableMap =
+    NSMutableDictionary<NSString *, NSString *> *_Nonnull headersToAddDto =
         [[NSMutableDictionary alloc] init];
 
     [self.pluginPackageSendingPublisher.publisher notifySubscribersWithSubscriberBlock:
@@ -117,18 +117,18 @@
 
         [subscriber willSendSdkPackageWithClientSdk:sdkPackageData.clientSdk
                                                path:sdkPackageData.path
-                                 readOnlyParameters:parametersFoundationMap
-                                    parametersToAdd:parametersToAddFoundationMutableMap
-                                       headersToAdd:headersToAddFoundationMutableMap];
+                                 readOnlyParameters:parametersDto
+                                    parametersToAdd:parametersToAddDto
+                                       headersToAdd:headersToAddDto];
     }];
 
     [self
-     transferExternalParametersWithFoundationMapToRead:parametersToAddFoundationMutableMap
+     transferExternalParametersWithFoundationMapToRead:parametersToAddDto
      parametersToWrite:parametersToAdd
      source:@"Plugin sending Sdk Package parameters"];
 
     [self
-     transferExternalParametersWithFoundationMapToRead:headersToAddFoundationMutableMap
+     transferExternalParametersWithFoundationMapToRead:headersToAddDto
      parametersToWrite:headersToAdd
      source:@"Plugin sending Sdk Package headers"];
 
@@ -163,13 +163,13 @@
         [foundationMapToRead copy];
 
     for (NSString *_Nonnull readKey in foundationMapToReadCopy) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyToWriteResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull keyToWriteResult =
             [ADJNonEmptyString instanceFromString:readKey];
 
         if (keyToWriteResult.fail != nil) {
             [self.logger debugDev:@"Invalid key for parameter"
                               key:ADJLogFromKey
-                            value:source
+                      stringValue:source
                        resultFail:keyToWriteResult.fail
                         issueType:ADJIssueInvalidInput];;
 
@@ -178,13 +178,13 @@
 
         NSString *_Nonnull readValue = [foundationMapToReadCopy objectForKey:readKey];
 
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueToWriteResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull valueToWriteResult =
             [ADJNonEmptyString instanceFromString:readValue];
 
         if (valueToWriteResult.fail != nil) {
             [self.logger debugDev:@"Invalid value for parameter"
                               key:ADJLogFromKey
-                            value:source
+                      stringValue:source
                        resultFail:valueToWriteResult.fail
                         issueType:ADJIssueInvalidInput];
 

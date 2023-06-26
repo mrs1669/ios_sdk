@@ -13,22 +13,13 @@
 #import "ADJNonEmptyString.h"
 
 @interface ADJMoneyAmountBase : NSObject<
-    NSCopying,
     ADJPackageParamValueSerializable,
     ADJIoValueSerializable
 >
 // instantiation
-+ (nonnull ADJResultNN<ADJMoneyAmountBase *> *)instanceFromIoValue:
-    (nullable ADJNonEmptyString *)ioValue;
-
-+ (nonnull ADJResultNL<ADJMoneyAmountBase *> *)instanceFromOptionalIoValue:
++ (nonnull ADJResult<ADJMoneyAmountBase *> *)instanceFromIoValue:
     (nullable ADJNonEmptyString *)ioValue;
 
 - (nonnull instancetype)init;
 
-// public properties
-@property (nonnull, readonly, strong, nonatomic) NSNumber *numberValue;
-@property (readonly, assign, nonatomic) double doubleValue;
-
 @end
-

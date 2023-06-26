@@ -60,7 +60,8 @@
     instanceRootBag:(nonnull id<ADJInstanceRootBag>)instanceRootBag
     preSdkInitRootBag:(nonnull id<ADJPreSdkInitRootBag>)preSdkInitRootBag
 {
-    self = [super initWithLoggerFactory:instanceRootBag.logController source:@"PostSdkInitRoot"];
+    self = [super initWithLoggerFactory:instanceRootBag.logController
+                             loggerName:@"PostSdkInitRoot"];
     _clientConfig = clientConfig;
 
     _subscribingGatePublisher = [[ADJSubscribingGatePublisher alloc]
@@ -84,9 +85,11 @@
         [[ADJClientSubscriptionsController alloc]
          initWithLoggerFactory:loggerFactory
          threadController:instanceRootBag.threadController
+         attributionStateStorage:storageRoot.attributionStateStorage
          clientReturnExecutor:preSdkInitRootBag.clientReturnExecutor
          adjustAttributionSubscriber:clientConfig.adjustAttributionSubscriber
          adjustLogSubscriber:clientConfig.adjustLogSubscriber
+         internalConfigSubscriptions:clientConfig.internalConfigSubscriptions
          doNotOpenDeferredDeeplink:clientConfig.doNotOpenDeferredDeeplink];
 
     _pausingController = [[ADJPausingController alloc]
@@ -255,6 +258,8 @@
     [publisherController subscribeToPublisher:self.reachabilityController];
     [publisherController subscribeToPublisher:self.measurementSessionController];
     [publisherController subscribeToPublisher:self.measurementLifecycleController];
+    // Add when adid is merged
+    //[publisherController subscribeToPublisher:self.adidController];
 }
 
 @end

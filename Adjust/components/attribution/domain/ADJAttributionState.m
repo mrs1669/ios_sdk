@@ -63,7 +63,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
                              initialStateData:(nonnull ADJAttributionStateData *)initialStateData
               doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"AttributionState"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"AttributionState"];
     _stateData = initialStateData;
     _doNotInitiateAttributionFromSdk = doNotInitiateAttributionFromSdk;
 
@@ -81,9 +81,9 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 
     [self.logger debugDev:@"Ask in found in non attribution response"
                      key1:@"askIn"
-                   value1:askIn.description
+             stringValue1:askIn.description
                      key2:@"sdkResponse"
-                   value2:[nonAttributionResponse description]];
+             stringValue2:[nonAttributionResponse description]];
 
     if (self.stateData.isAsking) {
         [self.logger debugDev:
@@ -98,7 +98,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
             initWithChangedStateData:self.stateData
             delayData:[[ADJDelayData alloc]
                        initWithDelay:askIn
-                       source:@"received accepted non attribution response"]
+                       from:@"received accepted non attribution response"]
             startAsking:YES];
 }
 
@@ -109,9 +109,9 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
     if (askIn != nil) {
         [self.logger debugDev:@"Ask in found in attribution response"
                          key1:@"askIn"
-                       value1:askIn.description
+                 stringValue1:askIn.description
                          key2:@"sdkResponse"
-                       value2:[attributionResponse description]];
+                 stringValue2:[attributionResponse description]];
 
         if (! self.stateData.isAsking) {
             [self.logger debugDev:
@@ -123,7 +123,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
                     delayData:
                         [[ADJDelayData alloc]
                          initWithDelay:askIn
-                         source:@"unexpected state when received an accepted attribution response"]
+                         from:@"unexpected state when received an accepted attribution response"]
                     startAsking:YES];
         }
 
@@ -131,7 +131,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
                 initWithChangedStateData:nil
                 delayData:[[ADJDelayData alloc]
                            initWithDelay:askIn
-                           source:@"received an accepted attribution response"]
+                           from:@"received an accepted attribution response"]
                 startAsking:YES];
     }
 
@@ -152,7 +152,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 
     self.stateData = [self.stateData withInstallSessionTracked];
 
-    if ([self canStartAskingFromSdkWithSource:@"installSessionTracked"]) {
+    if ([self canStartAskingFromSdkFrom:@"installSessionTracked"]) {
         return [self startAskingNow];
     }
 
@@ -165,7 +165,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
 - (nullable ADJAttributionStateOutputData *)sdkStart {
     self.hasSdkStart = YES;
 
-    if ([self canStartAskingFromSdkWithSource:@"sdkStart"]) {
+    if ([self canStartAskingFromSdkFrom:@"sdkStart"]) {
         return [self startAskingNow];
     }
 
@@ -190,7 +190,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
        return;
    }
 
-   ADJOptionalFailsNN<ADJAttributionData *> *_Nonnull receivedAttributionOptFails =
+   ADJOptionalFails<ADJAttributionData *> *_Nonnull receivedAttributionOptFails =
        [ADJAttributionData instanceFromJson:attributionJson
                                        adid:attributionResponseData.adid];
    for (ADJResultFail *_Nonnull optionalFail in receivedAttributionOptFails.optionalFails) {
@@ -209,57 +209,57 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
    self.stateData = [self.stateData withAvailableAttribution:receivedAttributionOptFails.value];
 }
 
-- (BOOL)canStartAskingFromSdkWithSource:(nonnull NSString *)source {
+- (BOOL)canStartAskingFromSdkFrom:(nonnull NSString *)from {
     if (self.doNotInitiateAttributionFromSdk) {
-        return [self logCannotStartAskingWithSource:source
+        return [self logCannotStartAskingFrom:from
                                              why:@"it has been configured to not do so"];
     }
 
     if (! self.hasSdkStart) {
-        return [self logCannotStartAskingWithSource:source
+        return [self logCannotStartAskingFrom:from
                                              why:@"the sdk has not started yet"];
     }
 
     if ([self.stateData isAskingStatus]) {
-        return [self logCannotStartAskingWithSource:source
+        return [self logCannotStartAskingFrom:from
                                                 why:@"is already asking attribution"];
     }
 
     if ([self.stateData waitingForInstallSessionTrackingStatus]) {
-        return [self logCannotStartAskingWithSource:source
+        return [self logCannotStartAskingFrom:from
                                                 why:@"is waiting for install tracking"];
     }
 
     if ([self.stateData unavailableAttribution]) {
-        return [self logCannotStartAskingWithSource:source
+        return [self logCannotStartAskingFrom:from
                                                 why:@"the attribution is unavailable"];
     }
 
     if ([self.stateData hasAttributionStatus]) {
-        return [self logCannotStartAskingWithSource:source
+        return [self logCannotStartAskingFrom:from
                                                 why:@"it already has the attribution"];
     }
 
     if (! [self.stateData canAskStatus]) {
         [self.logger debugDev:@"Unexpected Attribution Status to start asking"
                 expectedValue:ADJAttributionStateStatusCanAsk
-                  actualValue:[self.stateData attributionStateStatus]
+            actualStringValue:[self.stateData attributionStateStatus]
                     issueType:ADJIssueLogicError];
     }
 
     [self.logger debugDev:@"Can start asking"
-                     from:source];
+                     from:from];
 
     return YES;
 }
 
-- (BOOL)logCannotStartAskingWithSource:(nonnull NSString *)source
-                                   why:(nonnull NSString *)why
+- (BOOL)logCannotStartAskingFrom:(nonnull NSString *)from
+                             why:(nonnull NSString *)why
 {
     [self.logger debugDev:@"Cannot start asking"
-                     from:source
+                     from:from
                       key:ADJLogWhyKey
-                    value:why];
+              stringValue:why];
     return NO;
 }
 

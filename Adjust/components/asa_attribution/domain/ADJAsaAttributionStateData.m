@@ -35,39 +35,39 @@ static NSString *const kErrorReasonKey = @"errorReason";
 
 @implementation ADJAsaAttributionStateData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJAsaAttributionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData
 {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJAsaAttributionStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
-                value:[ADJResultNN
+                value:[ADJResult
                        failWithMessage:@"Cannot create asa attribution state data from io data"
                        key:@"unexpected metadata type value fail"
                        otherFail:unexpectedMetadataTypeValueFail]];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedValidAsaClickResponseResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull hasReceivedValidAsaClickResponseResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedValidAsaClickResponseKey]];
     if (hasReceivedValidAsaClickResponseResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
-                value:[ADJResultNN
+                value:[ADJResult
                        failWithMessage:@"Cannot create asa attribution state data from io data"
                        key:@"hasReceivedValidAsaClickResponse fail"
                        otherFail:hasReceivedValidAsaClickResponseResult.fail]];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull hasReceivedAdjustAttributionResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull hasReceivedAdjustAttributionResult =
         [ADJBooleanWrapper instanceFromIoValue:
          [ioData.propertiesMap pairValueWithKey:kHasReceivedAdjustAttributionKey]];
     if (hasReceivedAdjustAttributionResult.fail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
-                value:[ADJResultNN
+                value:[ADJResult
                        failWithMessage:@"Cannot create asa attribution state data from io data"
                        key:@"hasReceivedAdjustAttributionResult fail"
                        otherFail:hasReceivedAdjustAttributionResult.fail]];
@@ -78,10 +78,10 @@ static NSString *const kErrorReasonKey = @"errorReason";
 
     NSArray<ADJResultFail *> *_Nullable optionalFails = nil;
 
-    ADJResultNL<ADJTimestampMilli *> *_Nonnull cacheReadTimestampResult =
-        [ADJTimestampMilli instanceFromOptionalIoDataValue:
+    ADJResult<ADJTimestampMilli *> *_Nonnull cacheReadTimestampResult =
+        [ADJTimestampMilli instanceFromIoDataValue:
          [ioData.propertiesMap pairValueWithKey:kCacheReadTimestampKey]];
-    if (cacheReadTimestampResult.fail != nil) {
+    if (cacheReadTimestampResult.failNonNilInput != nil) {
         optionalFails =
             [NSArray arrayWithObject:
              [[ADJResultFail alloc]
@@ -94,9 +94,9 @@ static NSString *const kErrorReasonKey = @"errorReason";
     ADJNonEmptyString *_Nullable errorReason =
         [ioData.propertiesMap pairValueWithKey:kErrorReasonKey];
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFails
-            value:[ADJResultNN okWithValue:
+            value:[ADJResult okWithValue:
                    [[ADJAsaAttributionStateData alloc]
                     initWithHasReceivedValidAsaClickResponse:
                         hasReceivedValidAsaClickResponseResult.value.boolValue

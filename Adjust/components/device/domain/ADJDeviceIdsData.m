@@ -25,40 +25,42 @@ static NSString *const kUuidKey = @"uuid";
 
 @implementation ADJDeviceIdsData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJDeviceIdsData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
++ (nonnull ADJResult<ADJDeviceIdsData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJDeviceIdsDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create device ids data from io data"
-                                        key:@"unexpected metadata type value fail"
-                                  otherFail:unexpectedMetadataTypeValueFail];
+        return [ADJResult failWithMessage:@"Cannot create device ids data from io data"
+                                      key:@"unexpected metadata type value fail"
+                                otherFail:unexpectedMetadataTypeValueFail];
     }
 
     ADJNonEmptyString *_Nullable uuid = [ioData.propertiesMap pairValueWithKey:kUuidKey];
 
-    return [ADJResultNN okWithValue:[[ADJDeviceIdsData alloc] initWithUuid:uuid]];
+    return [ADJResult okWithValue:[[ADJDeviceIdsData alloc] initWithUuid:uuid]];
 }
 
-+ (nonnull ADJResultNL<ADJDeviceIdsData *> *)
++ (nonnull ADJResult<ADJDeviceIdsData *> *)
     instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
 {
     if (v4ActivityState == nil) {
-        return [ADJResultNL okWithoutValue];
+        return [ADJResult nilInputWithMessage:
+                @"Cannot create Device Ids with nil v4 activity state"];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull v4UuidResult =
-         [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.uuid];
+    ADJResult<ADJNonEmptyString *> *_Nonnull v4UuidResult =
+         [ADJNonEmptyString instanceFromString:v4ActivityState.uuid];
+    if (v4UuidResult.wasInputNil) {
+        return [ADJResult nilInputWithMessage:
+                @"Cannot create Device Ids with nil uuid in v4 activity state"];
+    }
+
     if (v4UuidResult.fail != nil) {
-        return [ADJResultNL failWithMessage:@"Cannot parse uuid from v4 activity state"
-                                        key:@"uuid parse fail"
-                                  otherFail:v4UuidResult.fail];
+        return [ADJResult failWithMessage:@"Cannot parse uuid from v4 activity state"
+                                      key:@"uuid parse fail"
+                                otherFail:v4UuidResult.fail];
     }
 
-    if (v4UuidResult.value == nil) {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    return [ADJResultNL okWithValue:v4UuidResult.value];
+    return [ADJResult okWithValue:v4UuidResult.value];
 }
 
 

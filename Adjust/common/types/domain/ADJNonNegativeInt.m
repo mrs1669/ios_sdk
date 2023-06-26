@@ -38,87 +38,57 @@
     return oneInstance;
 }
 
-+ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
++ (nonnull ADJResult<ADJNonNegativeInt *> *)
     instanceFromIntegerNumber:(nullable NSNumber *)integerNumber
 {
     if (integerNumber == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult nilInputWithMessage:
                 @"Cannot create non negative int with nil integer number"];
     }
 
     if (integerNumber.integerValue < 0) {
-        return [ADJResultNN failWithMessage:
-                [self failMessageWithNegativeIntegerNumber:integerNumber]];
+        return [ADJResult failWithMessage:@"Cannot create non negative int with negative value"
+                                      key:ADJLogActualKey
+                              stringValue:integerNumber.description];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJNonNegativeInt alloc] initWithUIntegerValue:integerNumber.unsignedIntegerValue]];
 }
 
-+ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
-    instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber
-{
-    if (integerNumber == nil) {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    if (integerNumber.integerValue < 0) {
-        return [ADJResultNL failWithMessage:
-                [self failMessageWithNegativeIntegerNumber:integerNumber]];
-    }
-
-    return [ADJResultNL okWithValue:
-            [[ADJNonNegativeInt alloc] initWithUIntegerValue:integerNumber.unsignedIntegerValue]];
-
-}
-+ (nonnull NSString *)
-    failMessageWithNegativeIntegerNumber:(nonnull NSNumber *)negativeIntegerNumber
-{
-    return [NSString stringWithFormat:
-            @"Cannot create non negative int with negative value: %@",
-            [ADJUtilF integerFormat:negativeIntegerNumber.integerValue]];
-}
-
-+ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
++ (nonnull ADJResult<ADJNonNegativeInt *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
 {
     if (ioDataValue == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult nilInputWithMessage:
                 @"Cannot create non negative int with nil io value"];
     }
 
-    ADJResultNN<NSNumber *> *_Nonnull integerNumberResult =
+    ADJResult<NSNumber *> *_Nonnull integerNumberResult =
         [ADJUtilConv convertToIntegerNumberWithStringValue:ioDataValue.stringValue];
     if (integerNumberResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
-                    @"Cannot create non negative int from io data value"
-                                        key:@"integer from io value fail"
-                                  otherFail:integerNumberResult.fail];
+        return [ADJResult failWithMessage:
+                @"Cannot create non negative int from io data value"
+                                      key:@"integer from io value fail"
+                                otherFail:integerNumberResult.fail];
     }
 
     return [self instanceFromIntegerNumber:integerNumberResult.value];
 }
-+ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue
-{
-    if (ioDataValue == nil) {
-        return [ADJResultNL okWithoutValue];
+
++ (nonnull ADJResult<ADJNonNegativeInt *> *)instanceFromObject:(nullable id)objectValue {
+    if (objectValue == nil) {
+        return [ADJResult nilInputWithMessage:@"Cannot create non negative int with nil object"];
     }
 
-    ADJResultNN<NSNumber *> *_Nonnull integerNumberResult =
-        [ADJUtilConv convertToIntegerNumberWithStringValue:ioDataValue.stringValue];
-    if (integerNumberResult.fail != nil) {
-        return [ADJResultNL failWithMessage:@"Cannot convert io value to nnInt"
-                                        key:@"convert io value to integer fail"
-                                  otherFail:integerNumberResult.fail];
+    if (! [objectValue isKindOfClass:[NSNumber class]]) {
+        return [ADJResult
+                failWithMessage:@"Cannot create non negative int from non-NSNumber object"
+                key:ADJLogActualKey
+                stringValue:NSStringFromClass([objectValue class])];
     }
 
-    return [self instanceFromOptionalIntegerNumber:integerNumberResult.value];
-}
-+ (nonnull NSString *)
-    failMessageFromConversionWithFailMessage:(nonnull NSString *)failMessage
-{
-    return [NSString stringWithFormat:@"Could not convert from string to integer: %@", failMessage];
+    return [ADJNonNegativeInt instanceFromIntegerNumber:(NSNumber *)objectValue];
 }
 
 - (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue {

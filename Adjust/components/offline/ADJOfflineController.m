@@ -32,7 +32,7 @@
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"ADJOfflineController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"OfflineController"];
 
     _offlinePublisher = [[ADJOfflinePublisher alloc]
                          initWithSubscriberProtocol:@protocol(ADJOfflineSubscriber)

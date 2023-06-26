@@ -14,12 +14,11 @@
 #import "ADJConstantsParam.h"
 #import "ADJUtilMap.h"
 #import "ADJUtilR.h"
-#import "ADJValueWO.h"
 #import "ADJUtilObj.h"
+#import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConsoleLogger.h"
-
-//#import "ADJResultFail.h"
 
 #pragma mark Fields
 
@@ -55,7 +54,7 @@
     adjustAttributionStateStorage:
         (nonnull ADJAttributionStateStorage *)adjustAttributionStateStorage
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"AsaAttributionController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"AsaAttributionController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _logQueueControllerWeak = logQueueController;
     _mainQueueControllerWeak = mainQueueController;
@@ -63,8 +62,9 @@
     _clock = clock;
     _asaAttributionConfig = asaAttributionConfig;
 
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
 
     _canReadToken = [ADJAsaAttributionController
                      initialCanReadTokenWithClientConfig:clientConfigData
@@ -75,7 +75,7 @@
 
     _isInDelay = NO;
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull asaClickCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull asaClickCountResult =
         [mainQueueController.trackedPackages asaClickCount];
     _mainQueueContainsAsaClickPackage = asaClickCountResult.value != nil
         && asaClickCountResult.value.uIntegerValue > 0;
@@ -108,9 +108,12 @@
     [logger debugWithMessage:@"Initial canReadToken values"
                 builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
      {
-        [logBuilder withKey:@"canReadTokenFromClient" value:@(canReadTokenFromClient).description];
-        [logBuilder withKey:@"canReadTokenFromConfig" value:@(canReadTokenFromConfig).description];
-        [logBuilder withKey:@"hasMininumOsVersion" value:@(hasMininumOsVersion).description];
+        [logBuilder withKey:@"canReadTokenFromClient"
+                      stringValue:[ADJUtilF boolFormat:canReadTokenFromClient]];
+        [logBuilder withKey:@"canReadTokenFromConfig"
+                stringValue:[ADJUtilF boolFormat:canReadTokenFromConfig]];
+        [logBuilder withKey:@"hasMininumOsVersion"
+                stringValue:[ADJUtilF boolFormat:hasMininumOsVersion]];
     }];
 
     return canReadTokenFromClient && canReadTokenFromConfig && hasMininumOsVersion;
@@ -123,13 +126,15 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"keep alive ping"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    } source:@"keep alive ping"];
+    }];
 }
 
 #pragma mark - ADJSdkStartSubscriber
@@ -139,13 +144,15 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"sdk start"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          strongSelf.asaAttributionConfig.libraryMaxReadAttempts];
-    } source:@"sdk start"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -159,25 +166,27 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received asa click response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAsaClickPackage];
-    } source:@"received asa click response"];
+    }];
 }
 
 #pragma mark - ADJAttributionSubscriber
-- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData
-             previousAttribution:(nullable ADJAttributionData *)previousAttribution
-{
+- (void)attributionWithStateData:(nonnull ADJAttributionStateData *)attributionStateData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"handle adjust attribution"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAdjustAttributionStateData:attributionStateData];
-    } source:@"handle adjust attribution"];
+    }];
 }
 
 #pragma mark - ADJSdkPackageSendingSubscriber
@@ -239,9 +248,9 @@
 
     [self.logger debugDev:@"Has Finished Reading Asa Attribution?"
                      key1:@"hasReceivedAdjustAttribution"
-                   value1:@(stateData.hasReceivedAdjustAttribution).description
+             stringValue1:[ADJUtilF boolFormat:stateData.hasReceivedAdjustAttribution]
                      key2:@"hasReceivedValidAsaClickResponse"
-                   value2:@(stateData.hasReceivedValidAsaClickResponse).description];
+             stringValue2:[ADJUtilF boolFormat:stateData.hasReceivedValidAsaClickResponse]];
 
     if (hasFinishedReadingAsaAttribution) {
         self.isFinishedReading = YES;
@@ -269,7 +278,7 @@
 
     ADJAsaAttributionStateData *_Nonnull currentStateData = [self.storage readOnlyStoredDataValue];
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
         [self readAsaAttributionToken];
 
     if (asaAttributionTokenResult.fail != nil) {
@@ -294,7 +303,7 @@
     if (hasReadTokenUpdatedCacheOne) {
         tokenToWrite = asaAttributionTokenResult.value;
 
-        ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult =
+        ADJResult<ADJTimestampMilli *> *_Nonnull nowResult =
             [self.clock nonMonotonicNowTimestamp];
         if (nowResult.fail != nil) {
             [self.logger debugDev:@"Failed now timestamp when refreshing token"
@@ -314,12 +323,11 @@
     ADJNonEmptyString *_Nullable errorReasonToWrite;
 
     if (asaAttributionTokenResult.fail != nil) {
-        ADJNonEmptyString *_Nonnull errorMessage =
-            [[ADJNonEmptyString alloc] initWithConstStringValue:
-             [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-              [asaAttributionTokenResult.fail foundationDictionary]]];
+        ADJNonEmptyString *_Nullable errorMessage =
+            [self toJsonStringWithFail:asaAttributionTokenResult.fail];
 
-        if (! [ADJUtilObj objectEquals:errorMessage
+        if (errorMessage != nil &&
+            ! [ADJUtilObj objectEquals:errorMessage
                                  other:currentStateData.errorReason])
         {
             errorReasonToWrite = errorMessage;
@@ -342,35 +350,54 @@
 
     return YES;
 }
+- (nullable ADJNonEmptyString *)toJsonStringWithFail:(nonnull ADJResultFail *)resultFail {
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
+        [ADJUtilJson toStringFromDictionary:[resultFail toJsonDictionary]];
+    for (ADJResultFail *_Nonnull optFail in jsonStringOptFails.optionalFails) {
+        [self.logger debugDev:@"Issue while converting fail to string"
+                   resultFail:optFail
+                    issueType:ADJIssueLogicError];
+    }
 
-// TODO return Result
-//- (nullable ADJInputLogMessageData *)readAsaAttributionTokenWithWO:
-- (nonnull ADJResultNN<ADJNonEmptyString *> *)readAsaAttributionToken {
+    ADJResult<ADJNonEmptyString *> *_Nonnull jsonStringResult =
+        [ADJNonEmptyString instanceFromString:jsonStringOptFails.value];
+    if (jsonStringResult.fail != nil) {
+        [self.logger debugDev:@"Invalid json string from fail"
+                   resultFail:jsonStringResult.fail
+                    issueType:ADJIssueLogicError];
+
+        return nil;
+    }
+
+    return jsonStringResult.value;
+}
+
+- (nonnull ADJResult<ADJNonEmptyString *> *)readAsaAttributionToken {
     // any error that happens before trying to read the Asa Attribution Token
     //  won't change during the current app execution,
     //  so it can be assumed that the token can't be read
     if (self.asaAttributionConfig.timeoutPerAttempt == nil) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:@"Cannot attempt to read token without a timeout"];
+        return [ADJResult failWithMessage:@"Cannot attempt to read token without a timeout"];
     }
 
     Class _Nullable classFromName = NSClassFromString(@"AAAttribution");
     if (classFromName == nil) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:@"Could not detect AAAttribution class"];
+        return [ADJResult failWithMessage:@"Could not detect AAAttribution class"];
     }
 
     SEL _Nullable methodSelector = NSSelectorFromString(@"attributionTokenWithError:");
     if (! [classFromName respondsToSelector:methodSelector]) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:@"Could not detect attributionTokenWithError: method"];
+        return [ADJResult failWithMessage:@"Could not detect attributionTokenWithError: method"];
     }
 
     IMP _Nullable methodImplementation = [classFromName methodForSelector:methodSelector];
 
     if (! methodImplementation) {
         self.canReadToken = NO;
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not detect attributionTokenWithError: method implementation"];
     }
 
@@ -380,24 +407,27 @@
 
     __block NSString *_Nullable asaAttributionTokenString;
 
-    BOOL readAsaAttributionTokenFinishedSuccessfully =
-    [self.executor
-     executeSynchronouslyWithTimeout:self.asaAttributionConfig.timeoutPerAttempt
-     blockToExecute:^{
-        // TODO: cache in a dispatch_once: methodImplementation, classFromName and methodSelector
-        asaAttributionTokenString = func(classFromName, methodSelector, &error);
-    } source:@"read AAAttribution attributionTokenWithError with timeout"];
+    ADJResultFail *_Nullable execFail  =
+        [self.executor
+         executeSynchronouslyFrom:@"read AAAttribution attributionTokenWithError with timeout"
+         timeout:self.asaAttributionConfig.timeoutPerAttempt
+         block:^{
+            // TODO: cache in a dispatch_once: methodImplementation, classFromName and methodSelector
+            asaAttributionTokenString = func(classFromName, methodSelector, &error);
+        }];
 
-    if (! readAsaAttributionTokenFinishedSuccessfully) {
-        return [ADJResultNN failWithMessage:
-                @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"];
+    if (execFail != nil) {
+        return [ADJResult failWithMessage:
+                @"Could not make or finish the [AAAttribution attributionTokenWithError:] call"
+                                        key:@"exec fail"
+                                  otherFail:execFail];
     }
 
     if (asaAttributionTokenString != nil) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull asaAttributionTokenResult =
             [ADJNonEmptyString instanceFromString:asaAttributionTokenString];
         if (asaAttributionTokenResult.fail != nil) {
-            return [ADJResultNN
+            return [ADJResult
                     failWithMessage:@"Cannot parse asaAttributionToken"
                     key:@"neString fail"
                     otherFail:asaAttributionTokenResult.fail];
@@ -420,8 +450,8 @@
         }
     }
 
-    return [ADJResultNN failWithMessage:@"from [AAAttribution attributionTokenWithError:]"
-                                  error:error];
+    return [ADJResult failWithMessage:@"from [AAAttribution attributionTokenWithError:]"
+                                error:error];
 }
 
 - (void)retryWithAttemptsLeft:(nonnull ADJNonNegativeInt *)attemptsLeft {
@@ -447,7 +477,10 @@
     self.isInDelay = YES;
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"retry asa attribution"
+                                 delayTimeMilli:self.asaAttributionConfig.delayBetweenAttempts
+                                          block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -455,9 +488,7 @@
 
         [strongSelf processAsaAttibutionWithAttemptsLeft:
          [[ADJNonNegativeInt alloc] initWithUIntegerValue:nextNumberOfAttemptsLeft]];
-    }
-                                delayTimeMilli:self.asaAttributionConfig.delayBetweenAttempts
-                                        source:@"retry asa attribution"];
+    }];
 }
 
 - (void)trackAsaClickWithStateData:(nonnull ADJAsaAttributionStateData *)stateData {
@@ -517,7 +548,7 @@
     ADJLogPackageData *_Nonnull logPackage =
     [sdkPackageBuilder buildLogPackageWithMessage:errorMessage
                                          logLevel:ADJAdjustLogLevelError
-                                        logSource:self.source];
+                                        logSource:self.logger.name];
 
     [logQueueController addLogPackageDataToSendWithData:logPackage];
 }

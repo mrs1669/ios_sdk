@@ -22,9 +22,10 @@ static NSString *const kLaunchedDeeplinkStateTableName = @"launched_deeplink_sta
 
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"LaunchedDeeplinkStateStorage"
+                             loggerName:@"LaunchedDeeplinkStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kLaunchedDeeplinkStateTableName
@@ -36,7 +37,7 @@ static NSString *const kLaunchedDeeplinkStateTableName = @"launched_deeplink_sta
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJLaunchedDeeplinkStateData *> *)
+- (nonnull ADJResult<ADJLaunchedDeeplinkStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
     return [ADJLaunchedDeeplinkStateData instanceFromIoData:ioData];
@@ -63,14 +64,10 @@ concreteGenerateIoDataFromValue:(nonnull ADJLaunchedDeeplinkStateData *)dataValu
         return;
     }
 
-    [self.logger debugDev:@"Read v4 activity state"
-                      key:@"activity_state"
-                    value:[v4ActivityState description]];
+    ADJResult<ADJNonEmptyString *> *_Nonnull v4LaunchedDeeplinkResult =
+        [ADJNonEmptyString instanceFromString:v4ActivityState.launchedDeeplink];
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull v4LaunchedDeeplinkResult =
-        [ADJNonEmptyString instanceFromOptionalString:v4ActivityState.launchedDeeplink];
-
-    if (v4LaunchedDeeplinkResult.fail != nil) {
+    if (v4LaunchedDeeplinkResult.failNonNilInput != nil) {
         [self.logger debugDev:@"Invalid v4 lauched deeplink detected"
                    resultFail:v4LaunchedDeeplinkResult.fail
                     issueType:ADJIssueStorageIo];

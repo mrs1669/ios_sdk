@@ -7,19 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0742D41729F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 0742D41629F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m */; };
 		0A530ED02891524E00FD7EFB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530ECF2891524E00FD7EFB /* AppDelegate.m */; };
 		0A530ED62891524E00FD7EFB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530ED52891524E00FD7EFB /* ViewController.m */; };
 		0A530ED92891524E00FD7EFB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A530ED72891524E00FD7EFB /* Main.storyboard */; };
 		0A530EDB2891524F00FD7EFB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A530EDA2891524F00FD7EFB /* Assets.xcassets */; };
 		0A530EDE2891524F00FD7EFB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A530EDC2891524F00FD7EFB /* LaunchScreen.storyboard */; };
 		0A530EE12891524F00FD7EFB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A530EE02891524F00FD7EFB /* main.m */; };
-		0A7ED6F42892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED6EE2892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m */; };
-		0A7ED6F52892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED6F02892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */; };
 		0A7ED6F62892B07F00CC20DE /* ATAAdjustCommandExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7ED6F22892B07F00CC20DE /* ATAAdjustCommandExecutor.m */; };
 		0A7ED78C2892B35F00CC20DE /* libAdjust.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A530EFE289152A000FD7EFB /* libAdjust.a */; };
 		0A7ED78D2892B35F00CC20DE /* libAdjustTestLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A530EEC2891526800FD7EFB /* libAdjustTestLibrary.a */; };
 		0A7ED78E2892B35F00CC20DE /* libAdjustTestOptionsLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7ED6ED2892B05600CC20DE /* libAdjustTestOptionsLibrary.a */; };
+		6FAB5E2C2A4335FD005E4F22 /* ATAAdjustCallbacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB5E2B2A4335FD005E4F22 /* ATAAdjustCallbacks.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,11 +105,23 @@
 			remoteGlobalIDString = 0AB7AFB62892AEAA00FE60CF;
 			remoteInfo = AdjustTestOptionsLibrary;
 		};
+		6FAB5E352A4335FE005E4F22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0755868029092F1000A3AD50;
+			remoteInfo = AdjustSdkWebBridge;
+		};
+		6FAB5E372A4335FE005E4F22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 073D9ECD29B62C6900C755F7;
+			remoteInfo = AdjustSdkWebBridgeStatic;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0742D41529F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATAAdjustLaunchedDeeplinkCallback.h; sourceTree = "<group>"; };
-		0742D41629F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustLaunchedDeeplinkCallback.m; sourceTree = "<group>"; };
 		0A530ECB2891524E00FD7EFB /* AdjustTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdjustTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A530ECE2891524E00FD7EFB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0A530ECF2891524E00FD7EFB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -125,12 +135,10 @@
 		0A530EE72891526800FD7EFB /* AdjustTestLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestLibrary.xcodeproj; path = ../AdjustTestLibrary/AdjustTestLibrary.xcodeproj; sourceTree = "<group>"; };
 		0A530EF5289152A000FD7EFB /* Adjust.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Adjust.xcodeproj; path = ../../Adjust.xcodeproj; sourceTree = "<group>"; };
 		0A7ED6E82892B05600CC20DE /* AdjustTestOptionsLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AdjustTestOptionsLibrary.xcodeproj; path = ../AdjustTestOptionsLibrary/AdjustTestOptionsLibrary.xcodeproj; sourceTree = "<group>"; };
-		0A7ED6EE2892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustAttributionSendAllSubscriber.m; sourceTree = "<group>"; };
 		0A7ED6EF2892B07F00CC20DE /* ATAAdjustCommandExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATAAdjustCommandExecutor.h; sourceTree = "<group>"; };
-		0A7ED6F02892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustAttributionDeferredDeeplinkSubscriber.m; sourceTree = "<group>"; };
-		0A7ED6F12892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATAAdjustAttributionDeferredDeeplinkSubscriber.h; sourceTree = "<group>"; };
 		0A7ED6F22892B07F00CC20DE /* ATAAdjustCommandExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustCommandExecutor.m; sourceTree = "<group>"; };
-		0A7ED6F32892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATAAdjustAttributionSendAllSubscriber.h; sourceTree = "<group>"; };
+		6FAB5E2A2A4335FD005E4F22 /* ATAAdjustCallbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ATAAdjustCallbacks.h; sourceTree = "<group>"; };
+		6FAB5E2B2A4335FD005E4F22 /* ATAAdjustCallbacks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ATAAdjustCallbacks.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,12 +178,8 @@
 		0A530ECD2891524E00FD7EFB /* AdjustTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				0A7ED6F12892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.h */,
-				0A7ED6F02892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m */,
-				0A7ED6F32892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.h */,
-				0A7ED6EE2892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m */,
-				0742D41529F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.h */,
-				0742D41629F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m */,
+				6FAB5E2A2A4335FD005E4F22 /* ATAAdjustCallbacks.h */,
+				6FAB5E2B2A4335FD005E4F22 /* ATAAdjustCallbacks.m */,
 				0A7ED6EF2892B07F00CC20DE /* ATAAdjustCommandExecutor.h */,
 				0A7ED6F22892B07F00CC20DE /* ATAAdjustCommandExecutor.m */,
 				0A530ECE2891524E00FD7EFB /* AppDelegate.h */,
@@ -209,6 +213,8 @@
 				0742D41F29F92ED70096482F /* libAdjustSdk.a */,
 				0742D42129F92ED70096482F /* libAdjustSdkTv.a */,
 				0742D42329F92ED70096482F /* libAdjustSdkIm.a */,
+				6FAB5E362A4335FE005E4F22 /* AdjustSdkWebBridge.framework */,
+				6FAB5E382A4335FE005E4F22 /* libAdjustSdkWebBridge.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -363,6 +369,20 @@
 			remoteRef = 0A7ED6EC2892B05600CC20DE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		6FAB5E362A4335FE005E4F22 /* AdjustSdkWebBridge.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AdjustSdkWebBridge.framework;
+			remoteRef = 6FAB5E352A4335FE005E4F22 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6FAB5E382A4335FE005E4F22 /* libAdjustSdkWebBridge.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAdjustSdkWebBridge.a;
+			remoteRef = 6FAB5E372A4335FE005E4F22 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -403,13 +423,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FAB5E2C2A4335FD005E4F22 /* ATAAdjustCallbacks.m in Sources */,
 				0A7ED6F62892B07F00CC20DE /* ATAAdjustCommandExecutor.m in Sources */,
 				0A530ED62891524E00FD7EFB /* ViewController.m in Sources */,
-				0A7ED6F52892B07F00CC20DE /* ATAAdjustAttributionDeferredDeeplinkSubscriber.m in Sources */,
-				0742D41729F92ED70096482F /* ATAAdjustLaunchedDeeplinkCallback.m in Sources */,
 				0A530ED02891524E00FD7EFB /* AppDelegate.m in Sources */,
 				0A530EE12891524F00FD7EFB /* main.m in Sources */,
-				0A7ED6F42892B07F00CC20DE /* ATAAdjustAttributionSendAllSubscriber.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

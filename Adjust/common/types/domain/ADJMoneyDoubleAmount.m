@@ -16,6 +16,9 @@
 //#import "ADJResultFail.h"
 
 #pragma mark Fields
+#pragma mark - Private constants
+static NSString *const kDoubleIoValuePrefix = @"llf";
+
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) NSNumber *doubleNumberValue;
@@ -23,61 +26,54 @@
 
 @implementation ADJMoneyDoubleAmount
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
-    instanceFromIoLlfValue:(nonnull NSString *)ioLlfValue
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
+    instanceFromIoMoneyDoubleAmountSubValue:(nonnull NSString *)ioMoneyDoubleAmountSubValue
 {
-    ADJResultNN<NSNumber *> *_Nonnull doubleNumberValueResult =
-        [self convertToDoubleNumberWithIoLlfValue:ioLlfValue];
+    ADJResult<NSNumber *> *_Nonnull doubleNumberValueResult =
+        [self convertToDoubleNumberWithIoMoneyDoubleAmountSubValue:ioMoneyDoubleAmountSubValue];
 
     if (doubleNumberValueResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not obtain double number from llf string value"
-                                        key:@"convert to double from llf string value fail"
-                                  otherFail:doubleNumberValueResult.fail];
+                                      key:@"convert to double from llf string value fail"
+                                otherFail:doubleNumberValueResult.fail];
     }
     return [self instanceFromDoubleNumberValue:doubleNumberValueResult.value];
 }
 
-+ (nonnull ADJResultNN<ADJMoneyDoubleAmount *> *)
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
     instanceFromDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
 {
     if (doubleNumberValue == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult nilInputWithMessage:
                 @"Cannot create money amount with nil double number value"];
     }
 
     if ([ADJUtilF isNotANumber:doubleNumberValue]) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:@"Cannot create money amount with NaN double number: %@",
                  doubleNumberValue.description]];
     }
 
     if (doubleNumberValue.doubleValue != 0.0 && ! isnormal(doubleNumberValue.doubleValue)) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:@"Cannot create money amount with"
                  " double number that is not normal, while not being 0.0: %@",
                  doubleNumberValue.description]];
     }
 
     if (doubleNumberValue.doubleValue < 0.0) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 [NSString stringWithFormat:
                  @"Cannot create money amount with negative double number: %@",
                  doubleNumberValue.description]];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJMoneyDoubleAmount alloc] initWithDoubleNumberValue:doubleNumberValue]];
 }
 
-+ (nonnull ADJResultNL<ADJMoneyDoubleAmount *> *)
-    instanceFromOptionalDoubleNumberValue:(nullable NSNumber *)doubleNumberValue
-{
-    return [ADJResultNL instanceFromNN:^ADJResultNN * _Nonnull(NSNumber *_Nullable value) {
-        return [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:value];
-    } nlValue:doubleNumberValue];
-}
-
+#pragma mark - Private constructors
 - (nonnull instancetype)initWithDoubleNumberValue:(nonnull NSNumber *)doubleNumberValue {
     self = [super init];
     
@@ -87,15 +83,12 @@
 }
 
 #pragma mark Public API
-#pragma mark - ADJMoneyAmount
-- (nonnull NSNumber *)numberValue {
-    return self.doubleNumberValue;
++ (nullable NSString *)ioMoneyDoubleAmountSubValueWithIoValue:
+    (nonnull ADJNonEmptyString *)ioValue
+{
+    return [ioValue.stringValue hasPrefix:kDoubleIoValuePrefix] ?
+        [ioValue.stringValue substringFromIndex:3] : nil;
 }
-
-- (double)doubleValue {
-    return self.doubleNumberValue.doubleValue;
-}
-
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
@@ -109,7 +102,8 @@
     long long longBits = *longBitsPtr;
     
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
-            [NSString stringWithFormat:@"llf%@",
+            [NSString stringWithFormat:@"%@%@",
+             kDoubleIoValuePrefix,
              [ADJUtilF longLongFormat:longBits]]];
 }
 
@@ -146,16 +140,16 @@
 }
 
 #pragma mark Internal Methods
-+ (nonnull ADJResultNN<NSNumber *> *)convertToDoubleNumberWithIoLlfValue:
-    (nonnull NSString *)ioLlfValue
++ (nonnull ADJResult<NSNumber *> *)convertToDoubleNumberWithIoMoneyDoubleAmountSubValue:
+    (nonnull NSString *)ioMoneyDoubleAmountSubValue
 {
-    ADJResultNN<NSNumber *> *_Nonnull llNumberResult =
-        [ADJUtilConv convertToLLNumberWithStringValue:ioLlfValue];
+    ADJResult<NSNumber *> *_Nonnull llNumberResult =
+        [ADJUtilConv convertToLLNumberWithStringValue:ioMoneyDoubleAmountSubValue];
     if (llNumberResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
-                    @"Could not convert first to ll number, before converting to double"
-                                        key:@"string to ll number fail"
-                                  otherFail:llNumberResult.fail];
+        return [ADJResult failWithMessage:
+                @"Could not convert first to ll number, before converting to double"
+                                      key:@"string to ll number fail"
+                                otherFail:llNumberResult.fail];
     }
     
     long long llValue = llNumberResult.value.longLongValue;
@@ -164,7 +158,7 @@
     
     double doubleValue = *(doublePtr);
     
-    return [ADJResultNN okWithValue:@(doubleValue)];
+    return [ADJResult okWithValue:@(doubleValue)];
 }
 
 + (BOOL)isDoubleValidWithValue:(double)doubleValue {

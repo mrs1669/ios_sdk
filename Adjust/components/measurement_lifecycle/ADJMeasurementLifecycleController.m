@@ -8,12 +8,18 @@
 
 #import "ADJMeasurementLifecycleController.h"
 
+#import "ADJAppStartSubscriber.h"
+#import "ADJSdkStartSubscriber.h"
+#import "ADJMeasurementLifecycleSubscriber.h"
+#import "ADJKeepAlivePingSubscriber.h"
+
 #import "ADJMeasurementLifecycleState.h"
 #import "ADJTimerCycle.h"
 
 #pragma mark Private class
-@implementation ADJMeasurementLifecyclePublisher @end
+@implementation ADJAppStartPublisher @end
 @implementation ADJSdkStartPublisher @end
+@implementation ADJMeasurementLifecyclePublisher @end
 @implementation ADJKeepAlivePingPublisher @end
 
 #pragma mark Fields
@@ -30,10 +36,10 @@
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJMeasurementLifecycleState *state;
 @property (nonnull, readonly, strong, nonatomic) ADJTimerCycle *resumedSessionTimer;
+@property (nonnull, readonly, strong, nonatomic) ADJAppStartPublisher *appStartPublisher;
+@property (nonnull, readonly, strong, nonatomic) ADJSdkStartPublisher *sdkStartPublisher;
 @property (nonnull, readonly, strong, nonatomic)
     ADJMeasurementLifecyclePublisher *measurementLifecyclePublisher;
-@property (nonnull, readonly, strong, nonatomic)
-    ADJSdkStartPublisher *sdkStartPublisher;
 @property (nonnull, readonly, strong, nonatomic) ADJKeepAlivePingPublisher *keepAlivePingPublisher;
 
 @end
@@ -50,11 +56,15 @@
     resumedSessionTimerInterval:(nonnull ADJTimeLengthMilli *)resumedSessionTimerInterval
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementLifecycleController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MeasurementLifecycleController"];
     _clientExecutorWeak = clientExecutor;
     _measurementSessionControllerWeak = measurementSessionController;
     _resumedSessionTimerStart = resumedSessionTimerStart;
     _resumedSessionTimerInterval = resumedSessionTimerInterval;
+
+    _appStartPublisher = [[ADJAppStartPublisher alloc]
+                          initWithSubscriberProtocol:@protocol(ADJAppStartSubscriber)
+                          controller:publisherController];
 
     _sdkStartPublisher = [[ADJSdkStartPublisher alloc]
                           initWithSubscriberProtocol:@protocol(ADJSdkStartSubscriber)
@@ -86,7 +96,7 @@
 - (void)ccSdkActiveWithStatus:(nonnull NSString *)status {
     [self.logger debugDev:@"Handling ccSdkActiveWithStatus"
                       key:@"status"
-                    value:status];
+              stringValue:status];
 
     ADJMeasurementLifecycleStateOutputData *_Nullable output;
     if (ADJSdkActiveStatusActive == status) {
@@ -113,15 +123,28 @@
 - (void)ccHandleSideEffects:(nullable ADJMeasurementLifecycleStateOutputData *)output {
     if (output == nil) { return; }
 
+    if (output.appStarted) {
+        [self ccHandleAppStart];
+    }
+
     if (output.sdkStarted) {
         [self ccHandleSdkStart];
     }
 
-    if (output.measurementPaused) {
-        [self ccPauseMeasurement];
-    } else {
-        [self ccResumeMeasurementWithDidSdkStart:output.sdkStarted];
+    if (output.measurementResumedOrElsePaused != nil) {
+        if (output.measurementResumedOrElsePaused.boolValue) {
+            [self ccResumeMeasurementWithDidSdkStart:output.sdkStarted];
+        } else {
+            [self ccPauseMeasurement];
+        }
     }
+}
+
+- (void)ccHandleAppStart {
+    [self.appStartPublisher notifySubscribersWithSubscriberBlock:
+     ^(id<ADJAppStartSubscriber> _Nonnull subscriber) {
+        [subscriber ccAppStart];
+    }];
 }
 
 - (void)ccHandleSdkStart {

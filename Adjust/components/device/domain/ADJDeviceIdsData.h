@@ -11,7 +11,6 @@
 #import "ADJIoDataSerializable.h"
 #import "ADJIoData.h"
 #import "ADJNonEmptyString.h"
-#import "ADJOptionalFailsNL.h"
 #import "ADJV4ActivityState.h"
 
 // public constants
@@ -23,9 +22,9 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJDeviceIdsData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJResultNN<ADJDeviceIdsData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
++ (nonnull ADJResult<ADJDeviceIdsData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-+ (nonnull ADJResultNL<ADJDeviceIdsData *> *)
++ (nonnull ADJResult<ADJDeviceIdsData *> *)
     instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState;
 
 - (nonnull instancetype)initWithInitialState;

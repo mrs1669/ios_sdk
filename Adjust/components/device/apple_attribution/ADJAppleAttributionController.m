@@ -13,7 +13,7 @@
 @implementation ADJAppleAttributionController
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-    self = [super initWithLoggerFactory:loggerFactory source:@"ADJAppleAttributionController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ADJAppleAttributionController"];
     
     return self;
 }

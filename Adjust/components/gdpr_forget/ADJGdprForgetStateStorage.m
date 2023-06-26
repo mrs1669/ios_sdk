@@ -18,7 +18,7 @@ static NSString *const kGdprForgetStateStorageTableName = @"gdpr_forget_state";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"GdprForgetStateStorage"
+                             loggerName:@"GdprForgetStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kGdprForgetStateStorageTableName
@@ -30,7 +30,7 @@ static NSString *const kGdprForgetStateStorageTableName = @"gdpr_forget_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJGdprForgetStateData *> *)
+- (nonnull ADJResult<ADJGdprForgetStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
     return [ADJGdprForgetStateData instanceFromIoData:ioData];

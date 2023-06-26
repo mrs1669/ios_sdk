@@ -14,7 +14,7 @@
 #pragma mark - Public properties
 /* .h
  @property (nullable, readonly, strong, nonatomic) NSNumber *enabledOrElseDisabledSharingNumberBool;
- @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *granularOptionsByNameArray;
+ @property (nullable, readonly, strong, nonatomic) NSArray *granularOptionsByNameArray;
  @property (nullable, readonly, strong, nonatomic) NSArray *partnerSharingSettingsByNameArray;
  */
 
@@ -73,7 +73,7 @@
 }
 
 #pragma mark - Generated properties
-- (nullable NSArray<NSString *> *)granularOptionsByNameArray {
+- (nullable NSArray *)granularOptionsByNameArray {
     @synchronized (self.granularOptionsByNameArrayMut) {
         if (self.granularOptionsByNameArrayMut.count == 0) {
             return nil;

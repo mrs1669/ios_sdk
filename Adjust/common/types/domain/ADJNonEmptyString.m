@@ -19,60 +19,34 @@
 
 @implementation ADJNonEmptyString
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJNonEmptyString *> *)
++ (nonnull ADJResult<ADJNonEmptyString *> *)
     instanceFromString:(nullable NSString *)stringValue
 {
     if (stringValue == nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create string with null"];
+        return [ADJResult nilInputWithMessage:@"Cannot create string with null"];
     }
 
     if ([stringValue length] == 0) {
-        return [ADJResultNN failWithMessage:@"Cannot create empty string"];
+        return [ADJResult failWithMessage:@"Cannot create empty string"];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJNonEmptyString alloc] initWithConstStringValue:stringValue]];
 }
-+ (nonnull ADJResultNN<ADJNonEmptyString *> *)
++ (nonnull ADJResult<ADJNonEmptyString *> *)
     instanceFromObject:(nullable id)objectValue
 {
     if (objectValue == nil) {
-        return [ADJNonEmptyString instanceFromString:(NSString *)objectValue];
+        return [ADJResult nilInputWithMessage:@"Cannot create string with null object"];
     }
 
     if (! [objectValue isKindOfClass:[NSString class]]) {
-        return [ADJResultNN failWithMessage:@"Cannot create string from non-string object"];
+        return [ADJResult failWithMessage:@"Cannot create string from non-string object"
+                                      key:ADJLogActualKey
+                              stringValue:NSStringFromClass([objectValue class])];
     }
 
     return [ADJNonEmptyString instanceFromString:(NSString *)objectValue];
-}
-
-+ (nonnull ADJResultNL<ADJNonEmptyString *> *)
-    instanceFromOptionalString:(nullable NSString *)stringValue
-{
-    if (stringValue == nil) {
-        return [ADJResultNL okWithoutValue];
-    }
-
-    if ([stringValue length] == 0) {
-        return [ADJResultNL failWithMessage:@"Cannot create empty string"];
-    }
-
-    return [ADJResultNL okWithValue:
-            [[ADJNonEmptyString alloc] initWithConstStringValue:stringValue]];
-}
-+ (nonnull ADJResultNL<ADJNonEmptyString *> *)
-    instanceFromOptionalObject:(nullable id)objectValue
-{
-    if (objectValue == nil) {
-        return [ADJNonEmptyString instanceFromOptionalString:nil];
-    }
-
-    if (! [objectValue isKindOfClass:[NSString class]]) {
-        return [ADJResultNL failWithMessage:@"Cannot create string from non-string object"];
-    }
-
-    return [ADJNonEmptyString instanceFromOptionalString:(NSString *)objectValue];
 }
 
 - (nonnull instancetype)initWithConstStringValue:(nonnull NSString *)constStringValue {

@@ -25,8 +25,17 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJClientEventData : NSObject<ADJClientActionIoDataInjectable>
 // instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustEvent:(nullable ADJAdjustEvent *)adjustEvent
-                                                    logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientWithLogger:(nonnull ADJLogger *)logger
+    adjustEvent:(nullable ADJAdjustEvent *)adjustEvent
+    externalCallbackParameterKeyValueArray:
+        (nullable NSArray *)externalCallbackParameterKeyValueArray
+    externalPartnerParameterKeyValueArray:
+        (nullable NSArray *)externalPartnerParameterKeyValueArray
+    externalCallbackParametersStringMap:
+        (nullable ADJStringMap *)externalCallbackParametersStringMap
+    externalPartnerParametersStringMap:(nullable ADJStringMap *)externalPartnerParametersStringMap
+    externalRevenue:(nullable ADJMoney *)externalRevenue;
 
 + (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
                                                                  logger:(nonnull ADJLogger *)logger;
@@ -34,7 +43,7 @@ NS_ASSUME_NONNULL_END
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
-@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *eventId;
+@property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *eventToken;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *deduplicationId;
 @property (nullable, readonly, strong, nonatomic) ADJMoney *revenue;
 @property (nullable, readonly, strong, nonatomic) ADJStringMap *callbackParameters;

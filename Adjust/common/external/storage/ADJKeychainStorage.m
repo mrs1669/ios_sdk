@@ -13,11 +13,8 @@
 
 @implementation ADJKeychainStorage
 #pragma mark Instantiation
-- (nonnull instancetype)
-    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-{
-    self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"ADJKeychainStorage"];
+- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ADJKeychainStorage"];
 
     return self;
 }
@@ -45,10 +42,10 @@
         return nil;
     }
 
-    NSString *_Nonnull stringValue =
+    NSString *_Nullable stringValue =
         [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull stringResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull stringResult =
         [ADJNonEmptyString instanceFromString:stringValue];
     if (stringResult.fail != nil) {
         [self.logger debugDev:@"Invalid value in generic password keychain"

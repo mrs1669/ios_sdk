@@ -38,7 +38,7 @@
     attributionBackoffStrategy:(nonnull ADJBackoffStrategy *)attributionBackoffStrategy
     startsAsking:(BOOL)startsAsking
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"AttributionTracker"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"AttributionTracker"];
     _backoffStrategy = attributionBackoffStrategy;
 
     _isInDelay = NO;
@@ -156,7 +156,7 @@
 - (nullable ADJDelayData *)delayDataWithRetryIn:(nullable ADJTimeLengthMilli *)retryIn {
     // when retry_in is present, use it without backoff calculations
     if (retryIn != nil) {
-        return [[ADJDelayData alloc] initWithDelay:retryIn source:@"retry_in"];
+        return [[ADJDelayData alloc] initWithDelay:retryIn from:@"retry_in"];
     }
 
     // increase the number of retries for backoff calculation
@@ -167,7 +167,7 @@
         [self.backoffStrategy
          calculateBackoffTimeWithRetries:self.retriesSinceLastSuccessSend.countValue];
 
-    return [[ADJDelayData alloc] initWithDelay:backoffTime source:@"backoff"];
+    return [[ADJDelayData alloc] initWithDelay:backoffTime from:@"backoff"];
 }
 
 @end

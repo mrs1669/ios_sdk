@@ -10,13 +10,13 @@
 
 @implementation ADJMeasurementConsentResponseData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJMeasurementConsentResponseData *> *)
++ (nonnull ADJOptionalFails<ADJMeasurementConsentResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     measurementConsentPackageData:
         (nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
 {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJMeasurementConsentResponseData alloc]
                    initWithBuilder:sdkResponseDataBuilder

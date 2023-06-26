@@ -8,6 +8,7 @@
 
 #import "ATOAdjustTestOptions.h"
 
+#import "ADJResult.h"
 #import "ADJSdkConfigDataBuilder.h"
 #import "ADJSdkConfigData.h"
 #import "ADJNetworkEndpointData.h"
@@ -538,12 +539,12 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"foregroundTimerIntervalMilli"
                                        value:adjustTestOptions.foregroundTimerIntervalMilli.description];
 
-        ADJResultNN<ADJNonNegativeInt *> *_Nonnull foregroundTimerIntervalMilliNumberResult =
+        ADJResult<ADJNonNegativeInt *> *_Nonnull foregroundTimerIntervalMilliNumberResult =
             [ADJNonNegativeInt instanceFromIntegerNumber:
              adjustTestOptions.foregroundTimerIntervalMilli];
         if (foregroundTimerIntervalMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid foregroundTimerIntervalMilliNumber"
-                  failDict:[foregroundTimerIntervalMilliNumberResult.fail foundationDictionary]];
+                  failDict:[foregroundTimerIntervalMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.foregroundTimerIntervalMilli =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
@@ -556,12 +557,12 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"foregroundTimerStartMilli"
                                        value:adjustTestOptions.foregroundTimerStartMilli.description];
 
-        ADJResultNN<ADJNonNegativeInt *> *_Nonnull foregroundTimerStartMilliNumberResult =
+        ADJResult<ADJNonNegativeInt *> *_Nonnull foregroundTimerStartMilliNumberResult =
             [ADJNonNegativeInt instanceFromIntegerNumber:
              adjustTestOptions.foregroundTimerStartMilli];
         if (foregroundTimerStartMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid foregroundTimerStartMilliNumber"
-                  failDict:[foregroundTimerStartMilliNumberResult.fail foundationDictionary]];
+                  failDict:[foregroundTimerStartMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.foregroundTimerStartMilli =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
@@ -574,12 +575,12 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"minSdkSessionIntervalMilli"
                                        value:adjustTestOptions.minSdkSessionIntervalMilli.description];
 
-        ADJResultNN<ADJNonNegativeInt *> *_Nonnull minSdkSessionIntervalMilliNumberResult =
+        ADJResult<ADJNonNegativeInt *> *_Nonnull minSdkSessionIntervalMilliNumberResult =
             [ADJNonNegativeInt instanceFromIntegerNumber:
              adjustTestOptions.minSdkSessionIntervalMilli];
         if (minSdkSessionIntervalMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid minSdkSessionIntervalMilliNumber"
-                  failDict:[minSdkSessionIntervalMilliNumberResult.fail foundationDictionary]];
+                  failDict:[minSdkSessionIntervalMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.minMeasurementSessionIntervalMilli =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
@@ -610,14 +611,14 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
                                          key:@"overwriteFirstSdkSessionIntervalMilli"
                                        value:adjustTestOptions.overwriteFirstSdkSessionIntervalMilli.description];
 
-        ADJResultNN<ADJNonNegativeInt *> *_Nonnull
+        ADJResult<ADJNonNegativeInt *> *_Nonnull
         overwriteFirstSdkSessionIntervalMilliNumberResult =
             [ADJNonNegativeInt
                 instanceFromIntegerNumber:
                  adjustTestOptions.overwriteFirstSdkSessionIntervalMilli];
         if (overwriteFirstSdkSessionIntervalMilliNumberResult.fail != nil) {
             [ATOLogger log:@"Invalid overwriteFirstSdkSessionIntervalMilliNumber"
-                failDict:[overwriteFirstSdkSessionIntervalMilliNumberResult.fail foundationDictionary]];
+                failDict:[overwriteFirstSdkSessionIntervalMilliNumberResult.fail toJsonDictionary]];
         } else {
             sdkConfigDataBuilder.overwriteFirstSdkSessionInterval =
                 [[ADJTimeLengthMilli alloc] initWithMillisecondsSpan:
@@ -745,6 +746,7 @@ static NSString *baseLocalEmulatorIp = @"127.0.0.1";
 
     // always use test connection
     //CACHED_ADJUST_TEST_OPTIONS.useTestConnection = true;
+    // do not use current lifecycle status, test usually provides foreground call
     cachedTestOptions.doNotReadCurrentLifecycleStatus = YES;
     // do not initiate attribution request from SDK by default
     cachedTestOptions.doNotInitiateAttributionFromSdk = YES;

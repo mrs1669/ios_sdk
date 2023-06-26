@@ -17,11 +17,13 @@
  @property (nullable, readonly, strong, nonatomic) NSNumber *revenueAmountDoubleNumber;
  @property (nullable, readonly, strong, nonatomic) NSString *revenueCurrency;
  @property (nullable, readonly, strong, nonatomic) NSNumber *adImpressionsCountIntegerNumber;
- @property (nullable, readonly, strong, nonatomic) NSString *adRevenueNetwork;
- @property (nullable, readonly, strong, nonatomic) NSString *adRevenueUnit;
- @property (nullable, readonly, strong, nonatomic) NSString *adRevenuePlacement;
- @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *callbackParameterKeyValueArray;
- @property (nullable, readonly, strong, nonatomic) NSArray<NSString *> *partnerParameterKeyValueArray;
+ @property (nullable, readonly, strong, nonatomic) NSString *network;
+ @property (nullable, readonly, strong, nonatomic) NSString *unit;
+ @property (nullable, readonly, strong, nonatomic) NSString *placement;
+ @property (nullable, readonly, strong, nonatomic)
+     NSArray<NSString *> *callbackParameterKeyValueArray;
+ @property (nullable, readonly, strong, nonatomic)
+     NSArray<NSString *> *partnerParameterKeyValueArray;
  */
 
 @interface ADJAdjustAdRevenue ()
@@ -73,16 +75,16 @@
                                                            classObject:[NSNumber class]];
 }
 
-- (void)setAdRevenueNetwork:(nonnull NSString *)adRevenueNetwork {
-    _adRevenueNetwork = [ADJUtilObj copyStringWithInput:adRevenueNetwork];
+- (void)setNetwork:(nonnull NSString *)network {
+    _network = [ADJUtilObj copyStringWithInput:network];
 }
 
-- (void)setAdRevenueUnit:(nonnull NSString *)adRevenueUnit {
-    _adRevenueUnit = [ADJUtilObj copyStringWithInput:adRevenueUnit];
+- (void)setUnit:(nonnull NSString *)unit {
+    _unit = [ADJUtilObj copyStringWithInput:unit];
 }
 
-- (void)setAdRevenuePlacement:(nonnull NSString *)adRevenuePlacement {
-    _adRevenuePlacement = [ADJUtilObj copyStringWithInput:adRevenuePlacement];
+- (void)setPlacement:(nonnull NSString *)placement {
+    _placement = [ADJUtilObj copyStringWithInput:placement];
 }
 
 - (void)addCallbackParameterWithKey:(nonnull NSString *)key

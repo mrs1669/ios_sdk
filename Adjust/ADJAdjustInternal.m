@@ -19,6 +19,31 @@
 static ADJEntryRoot *entryRootInstance = nil;
 static dispatch_once_t entryRootOnceToken = 0;
 
+NSString *const ADJInternalAttributionSubscriberV5000Key = @"internalAttributionSubscriberV5000";
+NSString *const ADJInternalLogSubscriberV5000Key = @"internalLogSubscriberV5000";
+
+NSString *const ADJReadAttributionMethodName = @"readAttribution";
+NSString *const ADJChangedAttributionMethodName = @"changedAttribution";
+
+NSString *const ADJLoggedMessageMethodName = @"loggedMessage";
+NSString *const ADJLoggedMessagesPreInitMethodName = @"loggedMessagesPreInit";
+
+NSString *const ADJFailedMethodName = @"failed";
+
+NSString *const ADJAttributionGetterReadMethodName = @"getAttributionRead";
+NSString *const ADJAttributionGetterFailedMethodName = @"getAttributionFailed";
+
+NSString *const ADJDeviceIdsGetterReadMethodName = @"getDeviceIdsRead";
+NSString *const ADJDeviceIdsGetterFailedMethodName = @"getDeviceIdsFailed";
+
+NSString *const ADJLaunchedDeeplinkGetterReadMethodName = @"getLaunchedDeeplinkRead";
+NSString *const ADJLaunchedDeeplinkGetterFailedMethodName = @"getLaunchedDeeplinkFailed";
+
+NSString *const ADJInternalCallbackStringSuffix = @"_string";
+NSString *const ADJInternalCallbackAdjustDataSuffix = @"_adjustData";
+NSString *const ADJInternalCallbackNsDictionarySuffix = @"_nsDictionary";
+NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
+
 @implementation ADJAdjustInternal
 
 + (nonnull id<ADJAdjustInstance>)sdkInstanceForClientId:(nullable NSString *)clientId {
@@ -40,19 +65,85 @@ static dispatch_once_t entryRootOnceToken = 0;
 #endif
 }
 
-+ (nonnull NSString *)sdkVersion {
-    return ADJClientSdk;
++ (void)
+    initSdkForClientId:(nullable NSString *)clientId
+    adjustConfig:(nonnull ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot initSdkWithConfig:adjustConfig
+        internalConfigSubscriptions:internalConfigSubscriptions];
+}
+
++ (void)adjustAttributionWithClientId:(nullable NSString *)clientId
+                     internalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot adjustAttributionWithInternalCallback:internalCallback];
+}
++ (void)adjustDeviceIdsWithClientId:(nullable NSString *)clientId
+                   internalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot adjustDeviceIdsWithInternalCallback:internalCallback];
+}
++ (void)
+    trackEventForClientId:(nullable NSString *)clientId
+    adjustEvent:(nonnull ADJAdjustEvent *)adjustEvent
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot
+     trackEvent:adjustEvent
+     callbackParameterKeyValueArray:callbackParameterKeyValueArray
+     partnerParameterKeyValueArray:partnerParameterKeyValueArray];
 }
 
 + (void)
-    setSdkPrefix:(nullable NSString *)sdkPrefix
-    fromInstanceWithClientId:(nullable NSString *)clientId
+    trackThirdPartySharingForClientId:(nullable NSString *)clientId
+    adjustThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray
 {
-    [[ADJAdjustInternal entryRootForClientId:clientId] setSdkPrefix:sdkPrefix];
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot trackThirdPartySharing:adjustThirdPartySharing
+              granularOptionsByNameArray:granularOptionsByNameArray
+       partnerSharingSettingsByNameArray:partnerSharingSettingsByNameArray];
 }
 
-+ (nonnull NSString *)sdkVersionWithSdkPrefix:(nullable NSString *)sdkPrefix {
-    return [ADJUtilSys clientSdkWithPrefix:sdkPrefix];
++ (void)
+    trackAdRevenueForClientId:(nullable NSString *)clientId
+    adjustAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
+{
+    ADJInstanceRoot *_Nonnull instanceRoot =
+        [[ADJAdjustInternal entryRootForClientId:clientId] instanceForClientId:clientId];
+
+    [instanceRoot
+     trackAdRevenue:adjustAdRevenue
+     callbackParameterKeyValueArray:callbackParameterKeyValueArray
+     partnerParameterKeyValueArray:partnerParameterKeyValueArray];
+}
+
++ (nonnull NSString *)currentSdkVersion {
+    return [ADJUtilSys clientSdkWithPrefix:[ADJEntryRoot sdkPrefix]];
+}
+
++ (void)setSdkPrefix:(nullable NSString *)sdkPrefix {
+    [ADJEntryRoot setSdkPrefix:sdkPrefix];
 }
 
 // Resets the sdk state, as if it was not initialized or used before.

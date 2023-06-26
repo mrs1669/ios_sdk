@@ -11,7 +11,7 @@
 @import Adjust;
 #import "ADJAdjustBridge.h"
 
-@interface ViewController ()
+@interface ViewController () <ADJAdjustLogSubscriber>
 
 @property(strong,nonatomic) WKWebView *webView;
 
@@ -36,7 +36,21 @@
     [self.webView loadRequest:request];
     [self.view addSubview:self.webView];
 
-    [[ADJAdjustBridge alloc] augmentHybridWKWebView:self.webView];
+    [ADJAdjustBridge instanceWithWKWebView:self.webView
+                       adjustJsLogSubscriber:self];
+}
+
+- (void)didLogWithMessage:(nonnull NSString *)logMessage
+                 logLevel:(nonnull ADJAdjustLogLevel)logLevel
+{
+    NSLog(@"bridge: %@", logMessage);
+}
+
+- (void)didLogMessagesPreInitWithArray:
+    (nonnull NSArray<ADJAdjustLogMessageData *> *)preInitLogMessageArray
+{
+    NSLog(@"didLogMessagesPreInitWithArray count %@", @(preInitLogMessageArray.count));
 }
 
 @end
+

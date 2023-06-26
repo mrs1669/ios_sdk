@@ -25,8 +25,9 @@ NSString *const ADJBillingSubscriptionControllerClientActionHandlerId = @"Billin
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
-    self = [super initWithLoggerFactory:loggerFactory source:@"BillingSubscriptionController"];
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"BillingSubscriptionController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
 

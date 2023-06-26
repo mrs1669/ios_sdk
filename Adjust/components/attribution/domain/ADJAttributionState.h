@@ -11,7 +11,6 @@
 #import "ADJCommonBase.h"
 #import "ADJAttributionResponseData.h"
 #import "ADJAttributionStateData.h"
-#import "ADJValueWO.h"
 #import "ADJSessionResponseData.h"
 #import "ADJSdkResponseData.h"
 #import "ADJDelayData.h"

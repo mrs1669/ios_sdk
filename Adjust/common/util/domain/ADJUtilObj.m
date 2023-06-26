@@ -18,23 +18,18 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 @implementation ADJUtilObj
 
 + (nullable NSString *)copyStringWithInput:(nullable id)inputValue {
-
-    if (inputValue == nil || ![inputValue isKindOfClass:[NSString class]]) {
+    if (inputValue == nil || ! [inputValue isKindOfClass:[NSString class]]) {
         return nil;
     }
 
-    if ([inputValue isKindOfClass:[NSString class]]) {
-        return [inputValue copy];
-    }
-
-    return [inputValue description];
+    return [inputValue copy];
 }
 
 + (nonnull id)copyStringOrNSNullWithInput:(nullable id)inputValue {
     id _Nullable copyStringOrNil = [self copyObjectWithInput:inputValue
                                                  classObject:[NSString class]];
 
-    return copyStringOrNil != nil ? copyStringOrNil : [NSNull null];
+    return [ADJUtilObj idOrNsNull:copyStringOrNil];
 }
 
 + (nullable id)copyObjectWithInput:(nullable id)inputValue
@@ -44,6 +39,10 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     }
 
     return nil;
+}
+
++ (nonnull id)idOrNsNull:(nullable id)idObject {
+    return idObject == nil ? [NSNull null] : idObject;
 }
 
 + (BOOL)objectEquals:(nullable id)one other:(nullable id)other {
@@ -74,17 +73,10 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     return result;
 }
 
-+ (nonnull NSString *)formatInlineKeyValuesWithName:(nonnull NSString *)name
-                                      keyValueArray:(nonnull NSArray<NSString *> *)keyValueArray {
-    return [self formatKeyValuesWithName:name
-         formatCStringKeyAndAppendEquals:NO
-                           keyValueArray:keyValueArray
-                     stringKeyDictionary:nil
-                          vaKeyValueList:nil];
-}
-
-+ (nonnull NSString *)formatInlineKeyValuesWithName:(nonnull NSString *)name
-                                stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary {
++ (nonnull NSString *)
+    formatInlineKeyValuesWithName:(nonnull NSString *)name
+    stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary
+{
     return [self formatKeyValuesWithName:name
          formatCStringKeyAndAppendEquals:NO
                            keyValueArray:nil
@@ -92,24 +84,9 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
                           vaKeyValueList:nil];
 }
 
-+ (nonnull NSString *)formatNewlineKeyValuesWithName:(nonnull NSString *)name, ... {
-    NSString *result;
-    va_list vaKeyValueList;
-    va_start(vaKeyValueList, name);
-
-    result = [self formatKeyValuesWithName:name
-           formatCStringKeyAndAppendEquals:YES
-                             keyValueArray:nil
-                       stringKeyDictionary:nil
-                            vaKeyValueList:vaKeyValueList];
-
-    va_end(vaKeyValueList);
-
-    return result;
-}
-
 + (nonnull NSString *)formatNewlineKeyValuesWithName:(nonnull NSString *)name
-                                       keyValueArray:(nonnull NSArray<NSString *> *)keyValueArray {
+                                       keyValueArray:(nonnull NSArray<NSString *> *)keyValueArray
+{
     return [self formatKeyValuesWithName:name
          formatCStringKeyAndAppendEquals:YES
                            keyValueArray:keyValueArray
@@ -117,8 +94,10 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
                           vaKeyValueList:nil];
 }
 
-+ (nonnull NSString *)formatNewlineKeyValuesWithName:(nonnull NSString *)name
-                                 stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary {
++ (nonnull NSString *)
+    formatNewlineKeyValuesWithName:(nonnull NSString *)name
+    stringKeyDictionary:(nonnull NSDictionary<NSString *, id> *)stringKeyDictionary
+{
     return [self formatKeyValuesWithName:name
          formatCStringKeyAndAppendEquals:YES
                            keyValueArray:nil
@@ -127,15 +106,17 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
 }
 
 #pragma mark Internal Methods
-+ (nonnull NSString *)formatKeyValuesWithName:(nonnull NSString *)name
-              formatCStringKeyAndAppendEquals:(BOOL)formatCStringKeyAndAppendEquals
-                                keyValueArray:(nullable NSArray<NSString *> *)keyValueArray
-                          stringKeyDictionary:(nullable NSDictionary<NSString *, id> *)stringKeyDictionary
-                               vaKeyValueList:(va_list)vaKeyValueList {
++ (nonnull NSString *)
+    formatKeyValuesWithName:(nonnull NSString *)name
+    formatCStringKeyAndAppendEquals:(BOOL)formatCStringKeyAndAppendEquals
+    keyValueArray:(nullable NSArray<NSString *> *)keyValueArray
+    stringKeyDictionary:(nullable NSDictionary<NSString *, id> *)stringKeyDictionary
+    vaKeyValueList:(va_list)vaKeyValueList
+{
     NSMutableString *_Nonnull sb =
         [name length] == 0
-        ? [NSMutableString stringWithString:@"/"]
-        : [NSMutableString stringWithFormat:@"%@ /", name];
+        ? [NSMutableString stringWithString:@"<"]
+        : [NSMutableString stringWithFormat:@"%@ <", name];
 
     if (keyValueArray != nil && (keyValueArray.count % 2) != 0) {
         [sb appendFormat:@"Invalid array key value of size %@>",
@@ -229,9 +210,9 @@ static NSString *const kCStringKeyValuesFormat = @"\n\t%-30s %@";
     }
 
     if (formatCStringKeyAndAppendEquals) {
-        [sb appendString:@"\n\\"];
+        [sb appendString:@"\n>"];
     } else {
-        [sb appendString:@"\\"];
+        [sb appendString:@">"];
     }
 
     if (emptyKeysSb != nil) {

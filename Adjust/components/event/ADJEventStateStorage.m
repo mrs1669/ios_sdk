@@ -16,9 +16,10 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"EventStateStorage"
+                             loggerName:@"EventStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kEventStateStorageTableName
@@ -30,7 +31,7 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJEventStateData *> *)
+- (nonnull ADJResult<ADJEventStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
     return [ADJEventStateData instanceFromIoData:ioData];
@@ -50,19 +51,39 @@ static NSString *const kEventStateStorageTableName = @"event_state";
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJOptionalFailsNL<ADJEventStateData *> *_Nonnull eventStateDataOptFails =
-        [ADJEventStateData instanceFromV4WithActivityState:[v4FilesData v4ActivityState]];
-    for (ADJResultFail *_Nonnull optionalFail in eventStateDataOptFails.optionalFails) {
-        [self.logger debugDev:@"Could not parse value for v4 event"
-                   resultFail:optionalFail
-                    issueType:ADJIssueStorageIo];
-    }
+    ADJEventStateData *_Nullable eventStateData =
+        [self eventStateFromV4WithActivityState:[v4FilesData v4ActivityState]];
 
-    if (eventStateDataOptFails.value == nil) {
+    if (eventStateData == nil) {
         return;
     }
 
-    [self updateWithNewDataValue:eventStateDataOptFails.value];
+    [self updateWithNewDataValue:eventStateData];
+}
+
+- (nullable ADJEventStateData *)
+    eventStateFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
+{
+    if (v4ActivityState == nil) {
+        return nil;
+    }
+
+    ADJResult<ADJNonNegativeInt *> *_Nonnull eventCountIntResult =
+        [ADJNonNegativeInt instanceFromIntegerNumber:v4ActivityState.eventCountNumberInt];
+
+    if (eventCountIntResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Invalid event count from v4 activity state"
+                   resultFail:eventCountIntResult.fail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (eventCountIntResult.value == nil) {
+        return nil;
+    }
+
+    return [[ADJEventStateData alloc]
+            initWithEventCount:
+                [[ADJTallyCounter alloc] initWithCountValue:eventCountIntResult.value]];
 }
 
 @end

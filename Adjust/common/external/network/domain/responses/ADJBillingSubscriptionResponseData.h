@@ -13,7 +13,7 @@
 
 @interface ADJBillingSubscriptionResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJBillingSubscriptionResponseData *> *)
++ (nonnull ADJOptionalFails<ADJBillingSubscriptionResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     billingSubscriptionPackageData:
         (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData;

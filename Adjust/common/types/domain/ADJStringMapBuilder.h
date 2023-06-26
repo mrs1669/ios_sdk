@@ -18,10 +18,6 @@
 - (nonnull instancetype)initWithStringMap:(nonnull ADJStringMap *)stringMap;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
-// public propertis
-//@property (nonnull, readonly, strong, nonatomic)
-//    NSMutableDictionary<NSString *, ADJNonEmptyString*> *mapBuilder;
-
 // public api  
 - (nullable ADJNonEmptyString *)addPairWithValue:(nonnull ADJNonEmptyString *)value
                                              key:(nonnull NSString *)key;
@@ -41,6 +37,6 @@
 
 - (BOOL)isEmpty;
 
-- (nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)mapCopy;
+- (nonnull NSDictionary<NSString *, ADJNonEmptyString*> *)mapCast;
 
 @end

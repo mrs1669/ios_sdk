@@ -12,17 +12,18 @@
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *delay;
- @property (nonnull, readonly, strong, nonatomic) NSString *source;
+ @property (nonnull, readonly, strong, nonatomic) NSString *from;
  */
 
 @implementation ADJDelayData
 #pragma mark Instantiation
 - (nonnull instancetype)initWithDelay:(nonnull ADJTimeLengthMilli *)delay
-                               source:(nonnull NSString *)source {
+                                 from:(nonnull NSString *)from
+{
     self = [super init];
     
     _delay = delay;
-    _source = source;
+    _from = from;
     
     return self;
 }

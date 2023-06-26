@@ -63,7 +63,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     minMeasurementSessionInterval:
         (nonnull ADJTimeLengthMilli *)minMeasurementSessionInterval
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementSessionState"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MeasurementSessionState"];
     _stateData = initialMeasurementSessionStateData;
     _minMeasurementSessionInterval = minMeasurementSessionInterval;
     _overwriteFirstSdkSessionInterval = overwriteFirstSdkSessionInterval;
@@ -80,13 +80,13 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     if (self.measurementSessionStatus != kPreSdkStartStatus) {
         [self.logger debugDev:@"Not in the expected status at sdk start"
                 expectedValue:kPreSdkStartStatus
-                  actualValue:self.measurementSessionStatus
+            actualStringValue:self.measurementSessionStatus
                     issueType:ADJIssueUnexpectedInput];
         return nil;
     }
 
     return [self changeToActiveSessionWithExternalNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                            source:@"sdk start"];
+                                                            from:@"sdk start"];
 }
 
 - (nullable ADJMeasurementSessionStateOutputData *)resumeMeasurementWithNowTimestamp:
@@ -95,13 +95,13 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     if (self.measurementSessionStatus != kActiveSessionStatus) {
         [self.logger debugDev:@"Not in the expected status at resume measurement"
                 expectedValue:kActiveSessionStatus
-                  actualValue:self.measurementSessionStatus
+            actualStringValue:self.measurementSessionStatus
                     issueType:ADJIssueUnexpectedInput];
         return nil;
     }
 
     return [self changeToActiveSessionWithExternalNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                                    source:@"resume measurement"];
+                                                                    from:@"resume measurement"];
 }
 
 - (nullable ADJMeasurementSessionStateOutputData *)pauseMeasurementWithNowTimestamp:
@@ -110,13 +110,13 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     if (self.measurementSessionStatus != kPausedSessionStatus) {
         [self.logger debugDev:@"Not in the expected status at pause measurement"
                 expectedValue:kPausedSessionStatus
-                  actualValue:self.measurementSessionStatus
+            actualStringValue:self.measurementSessionStatus
                     issueType:ADJIssueUnexpectedInput];
         return nil;
     }
 
     return [self changeToPauseSessionWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                           source:@"pause measurement"];
+                                                           from:@"pause measurement"];
 }
 
 - (nullable ADJMeasurementSessionStateOutputData *)keepAlivePingWithNonMonotonicNowTimestamp:
@@ -124,19 +124,19 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 {
     return
         [self updateIntevalsInActiveSessionWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                                 source:@"keep alive ping"];
+                                                                 from:@"keep alive ping"];
 }
 
 #pragma mark Internal Methods
 - (nullable ADJMeasurementSessionStateOutputData *)
     changeToActiveSessionWithExternalNonMonotonicNowTimestamp:
         (nonnull ADJTimestampMilli *)externalNonMonotonicNowTimestamp
-    source:(nonnull NSString *)source
+    from:(nonnull NSString *)from
 {
     [self.logger debugDev:@"Changing to ActiveState"
-                     from:source
+                     from:from
                       key:@"status"
-                    value:self.measurementSessionStatus];
+              stringValue:self.measurementSessionStatus];
 
     ADJTimestampMilli *_Nonnull nonMonotonicNowTimestamp =
         [self overwriteNowTimestampOnFirstSdkSession:externalNonMonotonicNowTimestamp];
@@ -158,7 +158,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
                                             nonMonotonicNowTimestamp:nonMonotonicNowTimestamp];
     }
 
-    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
+    ADJResult<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
         [ADJMeasurementSessionData instanceFromBuilder:sessionDataBuilder];
     if (newMeasurementSessionDataResult.fail != nil) {
         [self.logger debugDev:@"Cannot change to Active Session with invalid measurement session"
@@ -210,9 +210,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
         [self.logger debugDev:
          @"Create a new session, because there was enough interval since the last activity"
                          key1:@"intervalSinceLastActivity"
-                       value1:intervalSinceLastActivity.description
+                 stringValue1:intervalSinceLastActivity.description
                          key2:@"minMeasurementSessionInterval"
-                       value2:self.minMeasurementSessionInterval.description];
+                 stringValue2:self.minMeasurementSessionInterval.description];
 
         packageSessionData =
             [self processNewSessionWithBuilder:builder];
@@ -220,9 +220,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
         [self.logger debugDev:@"Will not create a new session,"
          " because there was not enough interval since the last activity"
                          key1:@"intervalSinceLastActivity"
-                       value1:intervalSinceLastActivity.description
+                 stringValue1:intervalSinceLastActivity.description
                          key2:@"minMeasurementSessionInterval"
-                       value2:self.minMeasurementSessionInterval.description];
+                 stringValue2:self.minMeasurementSessionInterval.description];
 
         [self increaseSessionLengthWithBuilder:builder
                      intervalSinceLastActivity:intervalSinceLastActivity];
@@ -263,7 +263,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 
     [self.logger debugDev:@"Trying to overwrite First Sdk Session Interval"
                       key:@"overwriteFirstSdkSessionInterval"
-                    value:self.overwriteFirstSdkSessionInterval.description];
+              stringValue:self.overwriteFirstSdkSessionInterval.description];
 
     // no matter what, the overwrite value should be cleared after the first possible use
     ADJTimeLengthMilli *_Nonnull firstSdkSessionInterval = self.overwriteFirstSdkSessionInterval;
@@ -283,10 +283,11 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
                      builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
      {
         [logBuilder withKey:@"externalNonMonotonicNowTimestamp"
-                      value:externalNonMonotonicNowTimestamp.description];
-        [logBuilder withKey:@"overwrittenNowTimestamp" value:overwrittenNowTimestamp.description];
+                stringValue:externalNonMonotonicNowTimestamp.description];
+        [logBuilder withKey:@"overwrittenNowTimestamp"
+                stringValue:overwrittenNowTimestamp.description];
         [logBuilder withKey:@"lastActivityTimestamp"
-                      value:
+                stringValue:
          self.stateData.measurementSessionData.lastActivityTimestampMilli.description];
     }];
 
@@ -296,15 +297,15 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 - (nullable ADJMeasurementSessionStateOutputData *)
     changeToPauseSessionWithNonMonotonicNowTimestamp:
         (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp
-    source:(nonnull NSString *)source
+    from:(nonnull NSString *)from
 {
     ADJMeasurementSessionStateOutputData *_Nullable outputData =
         [self updateIntevalsInActiveSessionWithNonMonotonicNowTimestamp:nonMonotonicNowTimestamp
-                                                                 source:source];
+                                                                 from:from];
     if (outputData == nil) { return nil; }
 
     [self.logger debugDev:@"Changing to pause session from active"
-                     from:source];
+                     from:from];
 
     self.measurementSessionStatus = kPausedSessionStatus;
 
@@ -314,13 +315,13 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 - (nullable ADJMeasurementSessionStateOutputData *)
     updateIntevalsInActiveSessionWithNonMonotonicNowTimestamp:
         (nonnull ADJTimestampMilli *)nonMonotonicNowTimestamp
-    source:(nonnull NSString *) source
+    from:(nonnull NSString *)from
 {
     if (self.measurementSessionStatus != kActiveSessionStatus) {
         [self.logger debugDev:@"Cannot update intervals in non-active session"
-                         from:source
+                         from:from
                           key:@"status"
-                        value:self.measurementSessionStatus];
+                  stringValue:self.measurementSessionStatus];
         return nil;
     }
 
@@ -353,7 +354,7 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
     [self increaseTimeSpentWithBuilder:measurementSessionDataBuilder
              intervalSinceLastActivity:intervalSinceLastActivity];
 
-    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
+    ADJResult<ADJMeasurementSessionData *> *_Nonnull newMeasurementSessionDataResult =
         [ADJMeasurementSessionData instanceFromBuilder:measurementSessionDataBuilder];
 
     if (newMeasurementSessionDataResult.fail != nil) {
@@ -390,9 +391,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 
     [self.logger debugDev:@"Session length increased"
                      key1:@"interval"
-                   value1:intervalSinceLastActivity.description
+             stringValue1:intervalSinceLastActivity.description
                      key2:@"session lenght"
-                   value2:builder.sessionLengthMilli.description];
+             stringValue2:builder.sessionLengthMilli.description];
 }
 
 - (void)
@@ -413,9 +414,9 @@ static NSString *const kPausedSessionStatus = @"PausedSession";
 
     [self.logger debugDev:@"Time Spent increased"
                      key1:@"interval"
-                   value1:intervalSinceLastActivity.description
+             stringValue1:intervalSinceLastActivity.description
                      key2:@"time spent"
-                   value2:builder.timeSpentMilli.description];
+             stringValue2:builder.timeSpentMilli.description];
 }
 
 @end

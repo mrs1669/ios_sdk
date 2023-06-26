@@ -27,26 +27,26 @@ static NSString *const kIsSdkActiveKey = @"isSdkActive";
 
 @implementation ADJSdkActiveStateData
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJSdkActiveStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
++ (nonnull ADJResult<ADJSdkActiveStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJSdkActiveStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
-                                        key:@"unexpected metadata type value fail"
-                                  otherFail:unexpectedMetadataTypeValueFail];
+        return [ADJResult failWithMessage:@"Cannot create sdk active state data from io data"
+                                      key:@"unexpected metadata type value fail"
+                                otherFail:unexpectedMetadataTypeValueFail];
     }
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull isSdkActiveResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull isSdkActiveResult =
         [ADJBooleanWrapper
             instanceFromIoValue:[ioData.propertiesMap pairValueWithKey:kIsSdkActiveKey]];
 
     if (isSdkActiveResult.fail != nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create sdk active state data from io data"
-                                        key:@"isSdkActive fail"
-                                  otherFail:isSdkActiveResult.fail];
+        return [ADJResult failWithMessage:@"Cannot create sdk active state data from io data"
+                                      key:@"isSdkActive fail"
+                                otherFail:isSdkActiveResult.fail];
     }
 
-    return [ADJResultNN okWithValue:
+    return [ADJResult okWithValue:
             [[ADJSdkActiveStateData alloc] initWithIsActiveSdk:isSdkActiveResult.value.boolValue]];
 }
 

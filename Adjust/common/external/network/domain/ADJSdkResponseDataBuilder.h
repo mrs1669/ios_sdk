@@ -11,7 +11,7 @@
 #import "ADJSdkPackageData.h"
 #import "ADJStringMapBuilder.h"
 #import "ADJSdkResponseData.h"
-#import "ADJOptionalFailsNN.h"
+#import "ADJOptionalFails.h"
 #import "ADJSdkPackageSender.h"
 
 @interface ADJSdkResponseDataBuilder : NSObject
@@ -24,7 +24,7 @@
 @property (nonnull, readonly, strong, nonatomic) id<ADJSdkPackageData> sourcePackage;
 @property (nonnull, readonly, strong, nonatomic) ADJStringMapBuilder *sendingParameters;
 @property (nonnull, readonly, strong, nonatomic) id<ADJSdkResponseCallbackSubscriber> sourceCallback;
-@property (nullable, readwrite, strong, nonatomic) NSDictionary *jsonDictionary;
+@property (nullable, readwrite, strong, nonatomic) NSDictionary<NSString *, id> *jsonDictionary;
 
 // public api
 - (BOOL)didReceiveJsonResponse;
@@ -33,7 +33,6 @@
 
 - (NSUInteger)retries;
 
-- (nonnull ADJOptionalFailsNN<id<ADJSdkResponseData>> *)buildSdkResponseData;
+- (nonnull ADJOptionalFails<id<ADJSdkResponseData>> *)buildSdkResponseData;
 
 @end
-

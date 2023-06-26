@@ -37,9 +37,9 @@ NSString *const ADJAdRevenuePackageDataPath = @"ad_revenue";
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSdkPackageBaseData
 - (nonnull ADJNonEmptyString *)concreteGenerateShortDescription {
-    ADJNonEmptyString *_Nullable adRevenueSource = [self.parameters pairValueWithKey:ADJParamAdRevenueSourceKey];
+    ADJNonEmptyString *_Nullable source = [self.parameters pairValueWithKey:ADJParamAdRevenueSourceKey];
 
-    if (adRevenueSource == nil) {
+    if (source == nil) {
         return [[ADJNonEmptyString alloc]
                 initWithConstStringValue:@"Ad Revenue without source"];
     }
@@ -47,7 +47,7 @@ NSString *const ADJAdRevenuePackageDataPath = @"ad_revenue";
     return [[ADJNonEmptyString alloc]
             initWithConstStringValue:
                 [NSString stringWithFormat:
-                 @"Ad Revenue with source: %@", adRevenueSource]];
+                 @"Ad Revenue with source: %@", source]];
 }
 
 @end

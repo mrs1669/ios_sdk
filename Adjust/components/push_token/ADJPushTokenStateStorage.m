@@ -22,7 +22,7 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"PushTokenStateStorage"
+                             loggerName:@"PushTokenStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kPushTokenStateTableName
@@ -34,7 +34,7 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJPushTokenStateData *> *)
+- (nonnull ADJResult<ADJPushTokenStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
     return [ADJPushTokenStateData instanceFromIoData:ioData];
@@ -47,7 +47,6 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
 #pragma mark Public API
 #pragma mark - ADJSQLiteStorage
 - (nullable NSString *)sqlStringForOnUpgrade:(nonnull ADJNonNegativeInt *)oldVersion {
-
     // nothing to upgrade from (yet)
     return nil;
 }
@@ -62,22 +61,36 @@ static NSString *const kPushTokenStateTableName = @"push_token_state";
 
     [self.logger debugDev:@"Read v4 activity state"
                       key:@"activity_state"
-                    value:[v4ActivityState description]];
+              stringValue:[v4ActivityState description]];
 
-    ADJOptionalFailsNL<ADJPushTokenStateData *> *_Nonnull stateDataOptFails =
-        [ADJPushTokenStateData instanceFromExternalWithPushTokenString:v4ActivityState.pushToken];
-    for (ADJResultFail *_Nonnull optionalFail in stateDataOptFails.optionalFails) {
-        [self.logger debugDev:@"Could not parse value for v4 push token"
-                   resultFail:optionalFail
-                    issueType:ADJIssueStorageIo];
-    }
+    ADJPushTokenStateData *_Nullable pushTokenState =
+        [self pushTokenStateWithV4String:v4ActivityState.pushToken];
 
-    if (stateDataOptFails.value == nil) {
-        [self.logger debugDev:@"Did not find valid v4 push token to migrate"];
+    if (pushTokenState == nil) {
         return;
     }
 
-    [self updateWithNewDataValue:stateDataOptFails.value];
+    [self updateWithNewDataValue:pushTokenState];
+}
+
+- (nullable ADJPushTokenStateData *)
+    pushTokenStateWithV4String:(nullable NSString *)pushTokenV4String
+{
+    ADJResult<ADJNonEmptyString *> *_Nullable pushTokenResult =
+        [ADJNonEmptyString instanceFromString:pushTokenV4String];
+
+    if (pushTokenResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Could not read push token state from v4"
+                   resultFail:pushTokenResult.fail
+                    issueType:ADJIssueStorageIo];
+    }
+
+    if (pushTokenResult.value == nil) {
+        return nil;
+    }
+
+    return [[ADJPushTokenStateData alloc]
+            initWithLastPushTokenString:pushTokenResult.value];
 }
 
 @end

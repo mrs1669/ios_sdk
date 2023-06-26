@@ -10,7 +10,7 @@
 
 #import "ADJCommonBase.h"
 #import "ADJSdkPackageSenderFactory.h"
-#import "ADJSdkInitSubscriber.h"
+#import "ADJAppStartSubscriber.h"
 #import "ADJPublishingGateSubscriber.h"
 #import "ADJLifecycleSubscriber.h"
 #import "ADJThreadExecutorFactory.h"
@@ -26,14 +26,11 @@
 @interface ADJGdprForgetController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
     // subscriptions
-    ADJSdkInitSubscriber,
+    ADJAppStartSubscriber,
     ADJPublishingGateSubscriber,
     ADJLifecycleSubscriber,
     ADJSdkResponseSubscriber
 >
-
-// publishers
-@property (nonnull, readonly, strong, nonatomic) ADJGdprForgetPublisher *gdprForgetPublisher;
 
 // instantiation
 - (nonnull instancetype)

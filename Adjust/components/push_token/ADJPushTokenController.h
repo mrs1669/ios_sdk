@@ -23,10 +23,11 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJPushTokenController : ADJCommonBase <ADJClientActionHandler>
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                        pushTokenStateStorage:(nonnull ADJPushTokenStateStorage *)pushTokenStateStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    pushTokenStateStorage:(nonnull ADJPushTokenStateStorage *)pushTokenStateStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 // public api
 - (void)ccTrackPushTokenWithClientData:(nonnull ADJClientPushTokenData *)clientPushTokenData;

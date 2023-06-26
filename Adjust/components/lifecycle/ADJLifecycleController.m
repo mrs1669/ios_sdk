@@ -71,7 +71,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
                                clientExecutor:(nonnull ADJSingleThreadExecutor *)clientExecutor
                           publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"LifecycleController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"LifecycleController"];
     _threadController = threadController;
     _clientExecutor = clientExecutor;
 
@@ -85,7 +85,7 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
     if (! doNotReadCurrentLifecycleStatus) {
 #if defined(ADJUST_IM)
-        [self ccChangeTo:YES onlyChangeFromNil:NO source:kImStartForeground];
+        [self ccChangeTo:YES onlyChangeFromNil:NO from:kImStartForeground];
 #else
         [self ccReadInitialApplicationState];
 #endif
@@ -100,11 +100,11 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
 #pragma mark Public API
 - (void)ccForeground {
-    [self ccChangeTo:YES onlyChangeFromNil:NO source:kClientForeground];
+    [self ccChangeTo:YES onlyChangeFromNil:NO from:kClientForeground];
 }
 
 - (void)ccBackground {
-    [self ccChangeTo:NO onlyChangeFromNil:NO source:kClientBackground];
+    [self ccChangeTo:NO onlyChangeFromNil:NO from:kClientBackground];
 }
 
 #pragma mark - NSNotificationCenter subscriptions
@@ -177,36 +177,40 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 #pragma mark - Internal Methods
 - (void)putInForegroundWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
+    [self.clientExecutor executeInSequenceWithLogger:self.logger
+                                                    from:@"put in foreground"
+                                                   block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf ccChangeTo:YES onlyChangeFromNil:NO source:source];
-    } source:@"put in foreground"];
+        [strongSelf ccChangeTo:YES onlyChangeFromNil:NO from:source];
+    }];
 }
 - (void)putInBackgroundWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
+    [self.clientExecutor executeInSequenceWithLogger:self.logger
+                                                    from:@"put in background"
+                                                   block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf ccChangeTo:NO onlyChangeFromNil:NO source:source];
-    } source:@"put in background"];
+        [strongSelf ccChangeTo:NO onlyChangeFromNil:NO from:source];
+    }];
 }
 
 - (void)
     ccChangeTo:(BOOL)foregroundOrElseBackground
     onlyChangeFromNil:(BOOL)onlyChangeFromNil
-    source:(nonnull NSString *)source
+    from:(nonnull NSString *)from
 {
     if (self.foregroundOrElseBackground != nil
         && self.foregroundOrElseBackground.boolValue == foregroundOrElseBackground)
     {
         [self.logger debugDev:
             @"Did not change, since it was already in the same lifecycle state"
-                         from:source
+                         from:from
                           key:@"lifecycle state"
-                        value:foregroundOrElseBackground ? @"foreground" : @"background"];
+                  stringValue:foregroundOrElseBackground ? @"foreground" : @"background"];
         return;
     }
 
@@ -316,31 +320,32 @@ NSString *const kSceneDidEnterBackgroundNotification = @"SceneDidEnterBackground
 
         [strongSelf.logger debugDev:@"Shared UIApplication state to read"
                                 key:@"UIApplicationState"
-                              value:[ADJUtilF integerFormat:application.applicationState]];
+                        stringValue:[ADJUtilF integerFormat:application.applicationState]];
 
         UIApplicationState applicationState = application.applicationState;
 
-        [strongSelf.clientExecutor executeAsyncWithBlock:^{
+        [strongSelf.clientExecutor executeAsyncWithLogger:strongSelf.logger
+                                                     from:@"ReadInitialApplicationState"
+                                                    block:^{
             if (UIApplicationStateBackground == applicationState) {
                 [strongSelf ccChangeTo:NO
                      onlyChangeFromNil:YES
-                                source:kApplicationStateBackground];
+                                from:kApplicationStateBackground];
             } else if (UIApplicationStateActive == applicationState) {
                 [strongSelf ccChangeTo:YES
                      onlyChangeFromNil:YES
-                                source:kApplicationStateActive];
+                                from:kApplicationStateActive];
             } else if (UIApplicationStateInactive == applicationState) {
                 [strongSelf ccChangeTo:YES
                      onlyChangeFromNil:YES
-                                source:kApplicationStateInactive];
+                                from:kApplicationStateInactive];
             } else {
                 [strongSelf.logger debugDev:
                  @"Could not detect applicationState from main thread"
                                   issueType:ADJIssueInvalidInput];
             }
-        } source:@"ReadInitialApplicationState"];
+        }];
     }];
 }
 
 @end
-

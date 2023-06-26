@@ -10,38 +10,100 @@
 
 #import "ADJSessionDeviceIdsData.h"
 #import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 #import "ADJConsoleLogger.h"
 #import "ADJAdjustLogMessageData.h"
 #import "ADJClientLaunchedDeeplinkData.h"
 
 @interface ADJClientCallbacksController ()
+#pragma mark - Injected dependencies
+@property (nullable, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
+
 @end
 
 @implementation ADJClientCallbacksController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory {
-
-    self = [super initWithLoggerFactory:loggerFactory source:@"ClientCallbacksController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ClientCallbacksController"];
+    _clientReturnExecutor = clientReturnExecutor;
 
     return self;
 }
 
 #pragma mark Public API
-- (void)failWithAdjustCallback:(nullable id<ADJAdjustCallback>)adjustCallback
-          clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-          cannotPerformMessage:(nonnull NSString *)cannotPerformMessage
+- (void)failWithAdjustCallback:(nonnull id<ADJAdjustCallback>)adjustCallback
+             cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail
+                          from:(nonnull NSString *)from
 {
-    [clientReturnExecutor executeClientReturnWithBlock:^{
+    __block NSString *_Nonnull cannotPerformMessage =
+        [self cannotPerformMessageWithFail:cannotPerformFail from:from];
+
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
         [adjustCallback didFailWithAdjustCallbackMessage:cannotPerformMessage];
     }];
 }
+- (void)failWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+                  failMethodName:(nonnull NSString *)failMethodName
+               cannotPerformFail:(nonnull ADJResultFail *)cannotPerformFail
+                            from:(nonnull NSString *)from
+{
+    __block NSString *_Nonnull cannotPerformMessage =
+        [self cannotPerformMessageWithFail:cannotPerformFail from:from];
 
-- (void)ccAttributionWithCallback:(nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
-             clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-          attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
+    __block NSDictionary<NSString *, id> *_Nonnull callbackData =
+        [NSDictionary dictionaryWithObjectsAndKeys:cannotPerformMessage, failMethodName, nil];
+
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
+        [internalCallback didInternalCallbackWithData:callbackData];
+    }];
+}
+- (nonnull NSString *)cannotPerformMessageWithFail:(nonnull ADJResultFail *)cannotPerformFail
+                                              from:(nonnull NSString *)from
+{
+    ADJOptionalFails<NSString *> *_Nonnull cannotPerformMessageOptFails =
+        [ADJUtilJson toStringFromDictionary:[cannotPerformFail toJsonDictionary]];
+    for (ADJResultFail *_Nonnull optFail in cannotPerformMessageOptFails.optionalFails) {
+        [self.logger debugDev:@"Could not parse json dictionary of fail"
+                         from:from
+                   resultFail:optFail
+                    issueType:ADJIssueLogicError];
+    }
+
+    return cannotPerformMessageOptFails.value;
+}
+
+- (void)
+    ccAttributionWithCallback:
+        (nonnull id<ADJAdjustAttributionCallback>)adjustAttributionCallback
+    attributionStateReadOnlyStorage:
+        (nonnull ADJAttributionStateStorage *)attributionStateReadOnlyStorage
+{
+    [self ccAttributionWithAdjustCallback:adjustAttributionCallback
+                         internalCallback:nil
+          attributionStateReadOnlyStorage:attributionStateReadOnlyStorage];
+}
+- (void)
+    ccAttributionWithInternalCallback:
+        (nonnull id<ADJInternalCallback>)internalCallback
+    attributionStateReadOnlyStorage:
+        (nonnull ADJAttributionStateStorage *)attributionStateReadOnlyStorage
+{
+    [self ccAttributionWithAdjustCallback:nil
+                         internalCallback:internalCallback
+          attributionStateReadOnlyStorage:attributionStateReadOnlyStorage];
+}
+- (void)
+    ccAttributionWithAdjustCallback:
+        (nullable id<ADJAdjustAttributionCallback>)adjustCallback
+    internalCallback:(nullable id<ADJInternalCallback>)internalCallback
+    attributionStateReadOnlyStorage:
+        (nonnull ADJAttributionStateStorage *)attributionStateReadOnlyStorage
 {
     ADJAttributionStateData *_Nonnull attributionStateData =
-    [attributionStateStorage readOnlyStoredDataValue];
+        [attributionStateReadOnlyStorage readOnlyStoredDataValue];
     ADJAttributionData *_Nullable attributionData = attributionStateData.attributionData;
 
     if (attributionData != nil) {
@@ -49,33 +111,68 @@
 
         ADJAdjustAttribution *_Nonnull adjustAttribution = [attributionData toAdjustAttribution];
 
-        [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustAttributionCallback didReadWithAdjustAttribution:adjustAttribution];
-        }];
+        if (adjustCallback != nil) {
+            [self.clientReturnExecutor executeClientReturnWithBlock:^{
+                [adjustCallback didReadWithAdjustAttribution:adjustAttribution];
+            }];
+        }
+
+        if (internalCallback != nil) {
+            ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+                [attributionData
+                 buildInternalCallbackDataWithMethodName:ADJAttributionGetterReadMethodName];
+            for (ADJResultFail *_Nonnull optionalFail in callbackDataOptFails.optionalFails) {
+                [self.logger debugDev:
+                 @"Issue while building attribution callback data for getter read"
+                           resultFail:optionalFail
+                            issueType:ADJIssueNonNativeIntegration];
+            }
+
+            __block NSDictionary<NSString *, id> *_Nonnull callbackData =
+                callbackDataOptFails.value;
+            [self.clientReturnExecutor executeClientReturnWithBlock:^{
+                [internalCallback didInternalCallbackWithData:callbackData];
+            }];
+        }
+
         return;
     }
 
+    NSString *_Nonnull clientFailMessage;
     if ([attributionStateData unavailableStatus]) {
         [self.logger debugDev:@"Returning fail on client attribution callback"
          " because it is not available from the backend"];
-        [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustAttributionCallback didFailWithAdjustCallbackMessage:
-             @"Cannot read attribution data because it is not available from the backend"];
-        }];
+        clientFailMessage =
+            @"Cannot read attribution data because it is not available from the backend";
     } else {
         [self.logger debugDev:@"Returning fail on client attribution callback"
          " because it still waiting"];
-        [clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustAttributionCallback didFailWithAdjustCallbackMessage:
-             @"Cannot read attribution data because it still waiting."
-             " Please try again later or subscribe for attribution at sdk init"];
+        clientFailMessage = @"Cannot read attribution data because it still waiting."
+            " Please try again later or subscribe for attribution at sdk init";
+    }
+
+    if (adjustCallback != nil) {
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [adjustCallback didFailWithAdjustCallbackMessage:clientFailMessage];
+        }];
+    }
+
+    if (internalCallback != nil) {
+        __block NSDictionary<NSString *, id> *_Nonnull callbackData =
+            [NSDictionary dictionaryWithObjectsAndKeys:
+             clientFailMessage, ADJAttributionGetterFailedMethodName, nil];
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [internalCallback didInternalCallbackWithData:callbackData];
         }];
     }
 }
 
-- (void)ccLaunchedDeepLinkWithCallback:(nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
-                  clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-          LaunchedDeeplinkStateStorage:(nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage
+- (void)
+    ccLaunchedDeepLinkWithCallback:
+        (nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
+    clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    LaunchedDeeplinkStateStorage:
+        (nonnull ADJLaunchedDeeplinkStateStorage *)launchedDeeplinkStateStorage
 {
     ADJLaunchedDeeplinkStateData *_Nonnull launchedDeeplinkStateData =
     [launchedDeeplinkStateStorage readOnlyStoredDataValue];
@@ -97,11 +194,11 @@
     }
 }
 
-- (void)ccDeviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
-           clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
-               deviceController:(nonnull ADJDeviceController *)deviceController
+- (void)
+    ccDeviceIdsWithAdjustCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
+    deviceController:(nonnull ADJDeviceController *)deviceController
 {
-    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+    ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
         [deviceController getSessionDeviceIdsSync];
 
     if (sessionDeviceIdsDataResult.fail != nil) {
@@ -112,7 +209,7 @@
         NSString *_Nonnull callbackFailMessage =
             [ADJConsoleLogger clientCallbackFormatMessageWithLog:inputLog];
 
-        [clientReturnExecutor executeClientReturnWithBlock:^{
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
             [adjustDeviceIdsCallback didFailWithAdjustCallbackMessage:callbackFailMessage];
         }];
         return;
@@ -120,9 +217,76 @@
 
     ADJAdjustDeviceIds *_Nonnull adjustDeviceIds =
         [sessionDeviceIdsDataResult.value toAdjustDeviceIds];
-    [clientReturnExecutor executeClientReturnWithBlock:^{
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
         [adjustDeviceIdsCallback didReadWithAdjustDeviceIds:adjustDeviceIds];
     }];
+}
+- (void)ccDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback
+               deviceController:(nonnull ADJDeviceController *)deviceController
+{
+    [self ccDeviceIdsWithAdjustCallback:nil
+                       internalCallback:internalCallback
+                       deviceController:deviceController];
+}
+- (void)
+    ccDeviceIdsWithAdjustCallback:(nullable id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
+    internalCallback:(nullable id<ADJInternalCallback>)internalCallback
+    deviceController:(nonnull ADJDeviceController *)deviceController
+{
+    ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+        [deviceController getSessionDeviceIdsSync];
+
+    if (sessionDeviceIdsDataResult.fail != nil) {
+        ADJInputLogMessageData *_Nonnull inputLog =
+            [self.logger noticeClient:@"Cannot get device ids for callback"
+                           resultFail:sessionDeviceIdsDataResult.fail];
+
+        NSString *_Nonnull callbackFailMessage =
+            [ADJConsoleLogger clientCallbackFormatMessageWithLog:inputLog];
+
+
+        if (adjustDeviceIdsCallback != nil) {
+            [self.clientReturnExecutor executeClientReturnWithBlock:^{
+                [adjustDeviceIdsCallback didFailWithAdjustCallbackMessage:callbackFailMessage];
+            }];
+        }
+        if (internalCallback != nil) {
+            __block NSDictionary<NSString *, id> *_Nonnull callbackData =
+                [NSDictionary dictionaryWithObjectsAndKeys:
+                 callbackFailMessage, ADJDeviceIdsGetterFailedMethodName, nil];
+           [self.clientReturnExecutor executeClientReturnWithBlock:^{
+               [internalCallback didInternalCallbackWithData:callbackData];
+            }];
+        }
+        return;
+    }
+
+    ADJAdjustDeviceIds *_Nonnull adjustDeviceIds =
+        [sessionDeviceIdsDataResult.value toAdjustDeviceIds];
+
+    if (adjustDeviceIdsCallback != nil) {
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [adjustDeviceIdsCallback didReadWithAdjustDeviceIds:adjustDeviceIds];
+        }];
+    }
+
+    if (internalCallback != nil) {
+        ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
+            [sessionDeviceIdsDataResult.value
+             buildInternalCallbackDataWithMethodName:ADJDeviceIdsGetterReadMethodName];
+        for (ADJResultFail *_Nonnull optionalFail in callbackDataOptFails.optionalFails) {
+            [self.logger debugDev:
+             @"Issue while building device ids callback data for getter read"
+                       resultFail:optionalFail
+                        issueType:ADJIssueNonNativeIntegration];
+        }
+
+        __block NSDictionary<NSString *, id> *_Nonnull callbackData =
+            callbackDataOptFails.value;
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [internalCallback didInternalCallbackWithData:callbackData];
+        }];
+    }
 }
 
 @end

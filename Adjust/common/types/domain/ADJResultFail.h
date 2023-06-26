@@ -37,7 +37,7 @@ NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (nonnull NSDictionary<NSString *, id> *)foundationDictionary;
+- (nonnull NSDictionary<NSString *, id> *)toJsonDictionary;
 
 @end
 

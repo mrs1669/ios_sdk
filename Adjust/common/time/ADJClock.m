@@ -20,7 +20,7 @@
 }
 
 #pragma mark Public API
-- (nonnull ADJResultNN<ADJTimestampMilli *> *)nonMonotonicNowTimestamp {
+- (nonnull ADJResult<ADJTimestampMilli *> *)nonMonotonicNowTimestamp {
     return [ADJTimestampMilli
             instanceWithTimeIntervalSecondsSince1970:[NSDate.date timeIntervalSince1970]];
 }

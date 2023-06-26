@@ -13,7 +13,7 @@
 
 @interface ADJAttributionResponseData : ADJSdkResponseBaseData
 // instantiation
-+ (nonnull ADJOptionalFailsNN<ADJAttributionResponseData *> *)
++ (nonnull ADJOptionalFails<ADJAttributionResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     attributionPackageData:(nonnull ADJAttributionPackageData *)attributionPackageData;
 

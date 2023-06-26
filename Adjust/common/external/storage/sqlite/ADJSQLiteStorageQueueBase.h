@@ -20,14 +20,14 @@
 @interface ADJSQLiteStorageQueueBase<E> : ADJSQLiteStorageBase
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName
                             metadataTypeValue:(nonnull NSString *)metadataTypeValue;
 
 // protected abstract
-- (nonnull ADJResultNN<E> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData;
+- (nonnull ADJResult<E> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull E)element;
 

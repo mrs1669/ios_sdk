@@ -20,7 +20,7 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"AttributionStateStorage"
+                             loggerName:@"AttributionStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kAttributionStateStorageTableName
@@ -32,10 +32,10 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJAttributionStateData *> *)concreteGenerateValueFromIoData:
+- (nonnull ADJResult<ADJAttributionStateData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJOptionalFailsNN<ADJResultNN<ADJAttributionStateData *> *> *_Nonnull
+    ADJOptionalFails<ADJResult<ADJAttributionStateData *> *> *_Nonnull
     attributionStateDataOptFails = [ADJAttributionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in attributionStateDataOptFails.optionalFails) {
@@ -62,20 +62,92 @@ static NSString *const kAttributionStateStorageTableName = @"attribution_state";
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJOptionalFailsNL<ADJAttributionStateData *> *_Nonnull stateDataOptFails =
-        [ADJAttributionStateData instanceFromV4WithAttribution:[v4FilesData v4Attribution]];
+    ADJAttributionStateData *_Nullable attributionStateData =
+        [self attributionStateFromV4:[v4FilesData v4Attribution]];
 
-    for (ADJResultFail *_Nonnull optionalFail in stateDataOptFails.optionalFails) {
-        [self.logger debugDev:@"Could not parse value for v4 attribution"
-                   resultFail:optionalFail
-                    issueType:ADJIssueStorageIo];
-    }
-
-    if (stateDataOptFails.value == nil) {
+    if (attributionStateData == nil) {
         return;
     }
 
-    [self updateWithNewDataValue:stateDataOptFails.value];
+    [self updateWithNewDataValue:attributionStateData];
+}
+
+- (nullable ADJAttributionStateData *)
+    attributionStateFromV4:(nullable ADJV4Attribution *)v4Attribution
+{
+    if (v4Attribution == nil) {
+        return nil;
+    }
+
+    ADJAttributionData *_Nullable attributionData =
+        [self attributionFromV4:v4Attribution];
+
+    if (attributionData == nil) {
+        return nil;
+    }
+
+    return [ADJAttributionStateData instanceFromMigratedV4Attribution:attributionData];
+}
+
+#define convV4String(field) \
+    ADJResult<ADJNonEmptyString *> *_Nonnull field ## Result =      \
+        [ADJNonEmptyString instanceFromString:v4Attribution.field]; \
+    if (field ## Result.failNonNilInput != nil) {                   \
+        [self.logger debugDev:@"Invalid field from v4 attribution"  \
+                   resultFail:field ## Result.fail                  \
+                  issueType:ADJIssueStorageIo];                     \
+    }                                                               \
+    if (field ## Result.value != nil) {     \
+        hasAtLeastOneValidField = YES;      \
+    }                                       \
+
+- (nonnull ADJAttributionData *)attributionFromV4:(nonnull ADJV4Attribution *)v4Attribution {
+    BOOL hasAtLeastOneValidField = NO;
+
+    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:v4Attribution.costAmount];
+    if (costAmountDoubleResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Invalid cost amount from v4 attribution"
+                   resultFail:costAmountDoubleResult.fail
+                    issueType:ADJIssueStorageIo];
+    }
+    if (costAmountDoubleResult.value != nil) {
+        hasAtLeastOneValidField = YES;
+    }
+
+    convV4String(trackerToken)
+    convV4String(trackerName)
+    convV4String(network)
+    convV4String(campaign)
+    convV4String(adgroup)
+    convV4String(creative)
+    convV4String(clickLabel)
+    // TODO: adid to be extracted from attribution
+    convV4String(adid)
+    convV4String(costType)
+    convV4String(costCurrency)
+
+    if (! hasAtLeastOneValidField) {
+        return nil;
+    }
+
+    return [[ADJAttributionData alloc]
+            initWithTrackerToken:trackerTokenResult.value
+            trackerName:trackerNameResult.value
+            network:networkResult.value
+            campaign:campaignResult.value
+            adgroup:adgroupResult.value
+            creative:creativeResult.value
+            clickLabel:clickLabelResult.value
+            // TODO: adid to be extracted from attribution
+            adid:adidResult.value
+            // deeplink and state not coming from v4
+            // TODO: confirm that assumption is correct
+            deeplink:nil
+            state:nil
+            costType:costTypeResult.value
+            costAmount:costAmountDoubleResult.value
+            costCurrency:costCurrencyResult.value];
 }
 
 @end

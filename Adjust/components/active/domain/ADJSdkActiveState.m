@@ -30,7 +30,7 @@ ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
                            sdkActiveStateData:(nonnull ADJSdkActiveStateData *)sdkActiveStateData
                               isGdprForgotten:(BOOL)isGdprForgotten {
 
-    self = [super initWithLoggerFactory:loggerFactory source:@"SdkActiveState"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SdkActiveState"];
 
     _sdkActiveStateData = sdkActiveStateData;
     _isSdkForgotten = isGdprForgotten;
@@ -63,7 +63,7 @@ ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     } else {
         [self.logger debugDev:@"Found unknown sdk active status"
                           key:@"sdkActiveStatus"
-                        value:sdkActiveStatus
+                  stringValue:sdkActiveStatus
                     issueType:ADJIssueLogicError];
     }
 
@@ -72,22 +72,16 @@ ADJSdkActiveStatus const ADJSdkActiveStatusForgotten = @"FORGOTTEN";
     return YES;
 }
 
-- (nullable ADJInputLogMessageData *)canPerformActionOrElseErrorLogWithClientSource:
-    (nonnull NSString *)clientSource
-{
+- (nullable ADJResultFail *)canPerformActionClientAction {
     ADJSdkActiveStatus _Nonnull sdkActiveStatus = [self sdkActiveStatus];
 
     if (ADJSdkActiveStatusForgotten == sdkActiveStatus) {
-        return [self.logger errorClient:@"Sdk cannot perform action."
-                " Sdk was forgotten in accordance with GDPR law"
-                                   key:ADJLogFromKey
-                                  value:clientSource];
+        return [[ADJResultFail alloc]
+                initWithMessage:@"Sdk was forgotten in accordance with GDPR law"];
     }
 
     if (ADJSdkActiveStatusInactive == sdkActiveStatus) {
-        return [self.logger errorClient:@"Sdk cannot perform action. Sdk is currently inactive"
-                                    key:ADJLogFromKey
-                                  value:clientSource];
+        return [[ADJResultFail alloc] initWithMessage:@"Sdk is currently inactive"];
     }
 
     return nil;

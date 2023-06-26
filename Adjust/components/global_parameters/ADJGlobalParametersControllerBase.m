@@ -11,6 +11,7 @@
 #import "ADJUtilSys.h"
 #import "ADJClientActionData.h"
 #import "ADJUtilF.h"
+#import "ADJConstants.h"
 
 @interface ADJGlobalParametersControllerBase ()
 #pragma mark - Injected dependencies
@@ -21,10 +22,12 @@
 
 @implementation ADJGlobalParametersControllerBase
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
-                         globalParametersType:(nonnull NSString *)globalParametersType
-                   sqliteStorageStringMapBase:(nonnull ADJSQLiteStorageStringMapBase *)sqliteStorageStringMapBase {
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    loggerName:(nonnull NSString *)loggerName
+    globalParametersType:(nonnull NSString *)globalParametersType
+    sqliteStorageStringMapBase:(nonnull ADJSQLiteStorageStringMapBase *)sqliteStorageStringMapBase
+{
     // prevents direct creation of instance, needs to be invoked by subclass
     if ([self isMemberOfClass:[ADJGlobalParametersControllerBase class]]) {
         [self doesNotRecognizeSelector:_cmd];
@@ -32,7 +35,7 @@
     }
 
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:source];
+                             loggerName:loggerName];
 
     _sqliteStorageStringMapBaseWeak = sqliteStorageStringMapBase;
 
@@ -41,36 +44,41 @@
     return self;
 }
 
-+ (nonnull ADJOptionalFailsNL<ADJStringMap *> *)
++ (nullable ADJStringMap *)
     paramsInstanceFromV4WithSessionParameters:
         (nullable NSDictionary<NSString *, NSString *> *)sessionParameters
+    from:(nonnull NSString *)from
+    logger:(nonnull ADJLogger *)logger
 {
     if (sessionParameters == nil) {
-        return [[ADJOptionalFailsNL alloc] initWithOptionalFails:nil value:nil];
+        return nil;
     }
 
-    NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
     ADJStringMapBuilder *_Nonnull sessionParametersBuilder =
         [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     for (NSString *_Nonnull key in sessionParameters) {
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull keyResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull keyResult =
             [ADJNonEmptyString instanceFromString:key];
         if (keyResult.fail != nil) {
-            [optionalFailsMut addObject:[[ADJResultFail alloc]
-                                         initWithMessage:@"Invalid session parameter key"
-                                         key:@"key parsing fail"
-                                         otherFail:keyResult.fail]];
+            [logger debugWithMessage:@"Invalid session parameter key"
+                        builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+                [logBuilder withKey:ADJLogFromKey stringValue:from];
+                [logBuilder withFail:keyResult.fail issue:ADJIssueStorageIo];
+            }];
             continue;
         }
 
-        ADJResultNN<ADJNonEmptyString *> *_Nonnull valueResult =
+        ADJResult<ADJNonEmptyString *> *_Nonnull valueResult =
             [ADJNonEmptyString instanceFromString:[sessionParameters objectForKey:key]];
         if (valueResult.fail != nil) {
-            [optionalFailsMut addObject:[[ADJResultFail alloc]
-                                         initWithMessage:@"Invalid session parameter value"
-                                         key:@"value parsing fail"
-                                         otherFail:valueResult.fail]];
+            [logger debugWithMessage:@"Invalid session parameter value"
+                        builderBlock:^(ADJLogBuilder * _Nonnull logBuilder) {
+                [logBuilder withKey:ADJLogFromKey stringValue:from];
+                [logBuilder withKey:@"session parameter key"
+                        stringValue:keyResult.value.stringValue];
+                [logBuilder withFail:keyResult.fail issue:ADJIssueStorageIo];
+            }];
             continue;
         }
 
@@ -79,14 +87,10 @@
     }
 
     if ([sessionParametersBuilder countPairs] == 0) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:optionalFailsMut
-                value:nil];
+        return nil;
     }
 
-    return [[ADJOptionalFailsNL alloc]
-            initWithOptionalFails:optionalFailsMut
-            value:[[ADJStringMap alloc] initWithStringMapBuilder:sessionParametersBuilder]];
+    return [[ADJStringMap alloc] initWithStringMapBuilder:sessionParametersBuilder];
 }
 
 #pragma mark Public API
@@ -116,7 +120,7 @@
     if (storage == nil) {
         [self.logger debugDev:@"Cannot add global parameter without a reference to storage"
                           key:@"parameter type"
-                        value:self.globalParametersType
+                  stringValue:self.globalParametersType
                     issueType:ADJIssueWeakReference];
         return NO;
     }
@@ -128,7 +132,7 @@
         [self.logger noticeClient:
          @"Cannot add global parameter since the same key/value is already present"
                               key:@"parameter type"
-                            value:self.globalParametersType];
+                      stringValue:self.globalParametersType];
         return NO;
     }
 
@@ -140,11 +144,11 @@
         [self.logger infoClient:
          @"Added global parameter with key already present, value will be overwritten"
                             key:@"parameter type"
-                          value:self.globalParametersType];
+                    stringValue:self.globalParametersType];
     } else {
         [self.logger infoClient:@"Added global parameter"
                             key:@"parameter type"
-                          value:self.globalParametersType];
+                    stringValue:self.globalParametersType];
     }
 
     return YES;
@@ -158,7 +162,7 @@
     if (storage == nil) {
         [self.logger debugDev:@"Cannot remove global parameter without a reference to storage"
                           key:@"parameter type"
-                        value:self.globalParametersType
+                  stringValue:self.globalParametersType
                     issueType:ADJIssueWeakReference];
         return NO;
     }
@@ -170,11 +174,11 @@
     if (removedValue != nil) {
         [self.logger infoClient:@"Removed global parameter"
                             key:@"parameter type"
-                          value:self.globalParametersType];
+                    stringValue:self.globalParametersType];
     } else {
         [self.logger noticeClient:@"Cannot remove global parameter without key being present"
                               key:@"parameter type"
-                            value:self.globalParametersType];
+                      stringValue:self.globalParametersType];
     }
 
     return YES;
@@ -188,7 +192,7 @@
     if (storage == nil) {
         [self.logger debugDev:@"Cannot clear global parameters without a reference to storage"
                           key:@"parameter type"
-                        value:self.globalParametersType];
+                  stringValue:self.globalParametersType];
         return NO;
     }
 
@@ -197,9 +201,9 @@
 
     [self.logger infoClient:@"Cleared %@ global %@ parameters"
                        key1:@"cleared values count"
-                     value1:[ADJUtilF uIntegerFormat:clearedKeys].description
+               stringValue1:[ADJUtilF uIntegerFormat:clearedKeys].description
                        key2:@"parameter type"
-                     value2:self.globalParametersType];
+               stringValue2:self.globalParametersType];
 
     return YES;
 }
@@ -215,7 +219,7 @@
         [self.logger debugDev:
          @"Cannot handle global parameter client action without clientActionType"
                           key:@"parameter type"
-                        value:self.globalParametersType];
+                  stringValue:self.globalParametersType];
         return NO;
     }
 
@@ -272,9 +276,9 @@
     [self.logger debugDev:
      @"Cannot handle global parameter client action with unknown client action type"
                      key1:@"parameter type"
-                   value1:self.globalParametersType
+             stringValue1:self.globalParametersType
                      key2:@"clientActionType"
-                   value2:clientActionType.stringValue
+             stringValue2:clientActionType.stringValue
                 issueType:ADJIssueInvalidInput];
 
     return NO;

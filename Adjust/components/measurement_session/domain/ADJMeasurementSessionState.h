@@ -11,7 +11,6 @@
 #import "ADJCommonBase.h"
 #import "ADJTimeLengthMilli.h"
 #import "ADJMeasurementSessionStateData.h"
-#import "ADJValueWO.h"
 #import "ADJMeasurementSessionData.h"
 #import "ADJPackageSessionData.h"
 #import "ADJTimestampMilli.h"

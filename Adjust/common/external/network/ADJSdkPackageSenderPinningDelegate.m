@@ -51,9 +51,10 @@ static const unsigned char kEcDsaSecp384r1Asn1Header[] =
 @implementation ADJSdkPackageSenderPinningDelegate
 #pragma mark Instantiation
 - (nonnull instancetype) initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                 publicKeyHash:(nonnull ADJNonEmptyString *)publicKeyHash {
+                                 publicKeyHash:(nonnull ADJNonEmptyString *)publicKeyHash
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"SdkPackageSenderPinningDelegate"];
+                             loggerName:@"SdkPackageSenderPinningDelegate"];
     _publicKeyHash = publicKeyHash;
 
     return self;
@@ -100,7 +101,7 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
 
     [self.logger debugDev:@"Server trust validated certificates"
                       key:@"certificates count"
-                    value:[ADJUtilF intFormat:(int)SecTrustGetCertificateCount(serverTrust)]];
+              stringValue:[ADJUtilF intFormat:(int)SecTrustGetCertificateCount(serverTrust)]];
 
     SecCertificateRef _Nullable serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0);
 
@@ -321,9 +322,9 @@ didReceiveChallenge:(nonnull NSURLAuthenticationChallenge *)challenge
 
         [self.logger debugDev:@"Cannot evaluate trust from SecTrustEvaluate"
                          key1:@"OSStatus"
-                       value1:[ADJUtilF intFormat:(int)evaluateReturn]
+                 stringValue1:[ADJUtilF intFormat:(int)evaluateReturn]
                          key2:@"SecTrustResultType"
-                       value2:[ADJUtilF uIntFormat:(unsigned int)resultType]
+                 stringValue2:[ADJUtilF uIntFormat:(unsigned int)resultType]
                     issueType:ADJIssueNetworkRequest];
         return NO;
     }

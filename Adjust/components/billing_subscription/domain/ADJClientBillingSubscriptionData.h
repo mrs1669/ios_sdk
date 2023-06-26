@@ -25,11 +25,17 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJClientBillingSubscriptionData : NSObject<ADJClientActionIoDataInjectable>
 // instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustBillingSubscription:(nullable ADJAdjustBillingSubscription *)adjustBillingSubscription
-                                                                  logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientWithLogger:(nonnull ADJLogger *)logger
+    adjustBillingSubscription:(nullable ADJAdjustBillingSubscription *)adjustBillingSubscription
+    externalCallbackParameterKeyValueArray:
+        (nullable NSArray *)externalCallbackParameterKeyValueArray
+    externalPartnerParameterKeyValueArray:
+        (nullable NSArray *)externalPartnerParameterKeyValueArray;
 
-+ (nullable instancetype)instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
-                                                                 logger:(nonnull ADJLogger *)logger;
++ (nullable instancetype)
+    instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
+    logger:(nonnull ADJLogger *)logger;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 

@@ -22,7 +22,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"DeviceIdsStorage"
+                             loggerName:@"DeviceIdsStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kDeviceIdsStorageTableName
@@ -34,7 +34,7 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJDeviceIdsData *> *)concreteGenerateValueFromIoData:
+- (nonnull ADJResult<ADJDeviceIdsData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
     return [ADJDeviceIdsData instanceFromIoData:ioData];
@@ -54,17 +54,16 @@ static NSString *const kDeviceIdsStorageTableName = @"device_ids";
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJResultNL<ADJDeviceIdsData *> *_Nonnull deviceIdsDataResult =
+    ADJResult<ADJDeviceIdsData *> *_Nonnull deviceIdsDataResult =
         [ADJDeviceIdsData instanceFromV4WithActivityState:[v4FilesData v4ActivityState]];
+    if (deviceIdsDataResult.wasInputNil) {
+        return;
+    }
     if (deviceIdsDataResult.fail != nil) {
         [self.logger debugDev:@"Cannot migrate v4 device ids"
                    resultFail:deviceIdsDataResult.fail
                     issueType:ADJIssueStorageIo];
 
-        return;
-    }
-
-    if (deviceIdsDataResult.value == nil) {
         return;
     }
 

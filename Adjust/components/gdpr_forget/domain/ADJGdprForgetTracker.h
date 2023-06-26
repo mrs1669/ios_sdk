@@ -16,8 +16,10 @@
 
 @interface ADJGdprForgetTracker : ADJCommonBase
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
+    startsAsking:(BOOL)startsAsking;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJTallyCounter *retriesSinceLastSuccessSend;
@@ -25,17 +27,13 @@
 // public api
 - (BOOL)sendWhenStartTracking;
 
-- (void)stopTracking;
-
-- (BOOL)sendWhenAppWentToForeground;
-
-- (void)pauseTrackingWhenAppWentToBackground;
+- (BOOL)resumeSendingWhenAppWentToForeground;
+- (void)pauseSendingWhenAppWentToBackground;
 
 - (BOOL)sendWhenDelayEnded;
 
 - (nullable ADJDelayData *)
-delayTrackingWhenReceivedGdprForgetResponseWithData:
-(nonnull ADJGdprForgetResponseData *)gdprForgetResponse;
+    delayTrackingWhenReceivedGdprForgetResponseWithData:
+        (nonnull ADJGdprForgetResponseData *)gdprForgetResponse;
 
 @end
-

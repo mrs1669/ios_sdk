@@ -24,7 +24,7 @@
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (nonnull ADJResultNN<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync;
+- (nonnull ADJResult<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync;
 
 - (void)invalidateCache;
 

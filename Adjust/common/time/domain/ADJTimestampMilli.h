@@ -13,32 +13,21 @@
 #import "ADJTimeLengthMilli.h"
 #import "ADJIoData.h"
 #import "ADJNonEmptyString.h"
-#import "ADJResultNL.h"
-#import "ADJResultNN.h"
+#import "ADJResult.h"
 
 @interface ADJTimestampMilli : NSObject<NSCopying,
     ADJIoValueSerializable,
     ADJPackageParamValueSerializable
 >
 // instantiation
-+ (nonnull ADJResultNL<ADJTimestampMilli *> *)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
-
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
++ (nonnull ADJResult<ADJTimestampMilli *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
++ (nonnull ADJResult<ADJTimestampMilli *> *)
     instanceWithNumberDoubleSecondsSince1970:(nullable NSNumber *)numberDoubleSecondsSince1970;
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
++ (nonnull ADJResult<ADJTimestampMilli *> *)
     instanceWithTimeIntervalSecondsSince1970:(NSTimeInterval)timeIntervalSecondsSince1970;
 
-+ (nonnull ADJResultNL<ADJTimestampMilli *> *)
-    instanceWithOptionalNumberDoubleSecondsSince1970:
-        (nullable NSNumber *)numberDoubleSecondsSince1970;
-/*
-+ (nonnull ADJResultNN<ADJTimestampMilli *> *)
-    instanceWithNSDateValue:(nullable NSDate *)nsDateValue;
-*/
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties

@@ -17,7 +17,7 @@
 - (nonnull instancetype)init NS_DESIGNATED_INITIALIZER;
 
 // public api
-- (nonnull ADJResultNN<ADJTimestampMilli *> *)nonMonotonicNowTimestamp;
+- (nonnull ADJResult<ADJTimestampMilli *> *)nonMonotonicNowTimestamp;
 
 - (nullable ADJRelativeTimestamp *)monotonicRelativeTimestamp;
 

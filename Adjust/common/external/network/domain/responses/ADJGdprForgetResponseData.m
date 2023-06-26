@@ -10,12 +10,12 @@
 
 @implementation ADJGdprForgetResponseData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJGdprForgetResponseData *> *)
++ (nonnull ADJOptionalFails<ADJGdprForgetResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     gdprForgetPackageData:(nonnull ADJGdprForgetPackageData *)gdprForgetPackageData
 {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJGdprForgetResponseData alloc] initWithBuilder:sdkResponseDataBuilder
                                                gdprForgetPackageData:gdprForgetPackageData

@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_END
 - (nonnull instancetype)initWithMessage:(nonnull NSString *)message
                                   level:(nonnull ADJAdjustLogLevel)level
                          callerThreadId:(nullable NSString *)callerThreadId
-                      callerDescription:(nullable NSString *)callerDescription
+                             fromCaller:(nullable NSString *)fromCaller
                         runningThreadId:(nullable NSString *)runningThreadId;
 
 - (nonnull instancetype)
@@ -69,12 +69,12 @@ NS_ASSUME_NONNULL_END
     level:(nonnull ADJAdjustLogLevel)level
     issueType:(nullable ADJIssue)issueType
     callerThreadId:(nullable NSString *)callerThreadId
-    callerDescription:(nullable NSString *)callerDescription
+    fromCaller:(nullable NSString *)fromCaller
     runningThreadId:(nullable NSString *)runningThreadId
     resultFail:(nullable ADJResultFail *)resultFail
     messageParams:(nullable NSDictionary<NSString *, id> *)messageParams
     sdkPackageParams:(nullable NSDictionary<NSString *, NSString *> *)sdkPackageParams
-NS_DESIGNATED_INITIALIZER;
+    NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -82,12 +82,12 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonnull, readonly, strong, nonatomic) NSString *message;
 @property (nonnull, readonly, strong, nonatomic) NSString *level;
 @property (nullable, readonly, strong, nonatomic) NSString *callerThreadId;
-@property (nullable, readonly, strong, nonatomic) NSString *callerDescription;
+@property (nullable, readonly, strong, nonatomic) NSString *fromCaller;
 @property (nullable, readonly, strong, nonatomic) NSString *runningThreadId;
 @property (nullable, readonly, strong, nonatomic) ADJIssue issueType;
 @property (nullable, readonly, strong, nonatomic) ADJResultFail * resultFail;
 @property (nullable, readonly, strong, nonatomic) NSDictionary<NSString *, id> *messageParams;
-@property (nullable, readwrite, strong, nonatomic)
+@property (nullable, readonly, strong, nonatomic)
     NSDictionary<NSString *, NSString *> *sdkPackageParams;
 
 @end
@@ -105,21 +105,21 @@ NS_DESIGNATED_INITIALIZER;
 - (void)subject:(nonnull NSString *)subject;
 - (void)why:(nonnull NSString *)why;
 - (void)fail:(nonnull ADJResultFail *)resultFail;
-- (void)sdkPackageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams;
+- (void)packageParams:(nonnull NSDictionary<NSString *, NSString *> *)sdkPackageParams;
 
 - (void)withExpected:(nonnull NSString *)expectedValue
-              actual:(nullable NSString *)actualValue;
+   actualStringValue:(nullable NSString *)actualStringValue;
 
 - (void)withFail:(nonnull ADJResultFail *)resultFail
            issue:(nonnull ADJIssue)issueType;
 
 - (void)withSubject:(nonnull NSString *)subject
-              value:(nonnull NSString *)value;
-
-- (void)withSubject:(nonnull NSString *)subject
                 why:(nonnull NSString *)why;
 
 - (void)withKey:(nonnull NSString *)key
-          value:(nullable id)value;
+    stringValue:(nullable NSString *)stringValue;
+
+- (void)withKey:(nonnull NSString *)key
+      jsonArray:(nonnull NSArray<id> *)jsonArray;
 
 @end

@@ -13,8 +13,8 @@
 #import "ADJAdjustLogMessageData.h"
 #import "ADJConstants.h"
 #import "ADJUtilObj.h"
-
-//#import "ADJResultFail.h"
+#import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 
 #pragma mark Fields
 @interface ADJConsoleLogger ()
@@ -68,17 +68,6 @@
 
     // save log message to process when SDK gets initialised
     [self.preSdkInitLogArray addObject:logMessageData];
-
-    // print error log, when it's in debug mode, even in production environment
-    /*
-     #ifdef DEBUG
-     if ([messageLogLevel isEqualToString:ADJAdjustLogLevelError]) {
-     [self printLogMessage:logMessage
-     source:source
-     messageLogLevel:messageLogLevel];
-     }
-     #endif
-     */
 }
 
 - (void)didSdkInitWithIsSandboxEnvironment:(BOOL)isSandboxEnvironment
@@ -175,18 +164,18 @@
     buildClientLogParamsWithStringBuilder:(nonnull NSMutableString *)stringBuilder
     inputLogMessageData:(nonnull ADJInputLogMessageData *)inputLogMessageData
 {
-    if (inputLogMessageData.messageParams != nil) {
-        [stringBuilder appendFormat:@" %@",
-         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-          inputLogMessageData.messageParams]];
-    }
+    [stringBuilder appendString:
+     [ADJUtilF
+      emptyFallbackWithFormat:@"%@"
+      string:inputLogMessageData.messageParams == nil ? nil :
+         [[ADJUtilJson toStringFromDictionary:inputLogMessageData.messageParams] value]]];
 
-    if (inputLogMessageData.resultFail != nil) {
-        [stringBuilder appendFormat:@" %@:%@",
-         ADJLogFailKey,
-         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-          [inputLogMessageData.resultFail foundationDictionary]]];
-    }
+    [stringBuilder appendString:
+     [ADJUtilF
+      emptyFallbackWithFormat:@" fail:%@"
+      string:inputLogMessageData.resultFail == nil ? nil :
+         [[ADJUtilJson toStringFromDictionary:[inputLogMessageData.resultFail
+                                               toJsonDictionary]] value]]];
 
     return [stringBuilder description];
 }
@@ -194,81 +183,64 @@
 - (nonnull NSString *)devFormatMessage:(nonnull ADJLogMessageData *)logMessageData
                           isPreSdkInit:(BOOL)isPreSdkInit
 {
-    NSMutableDictionary <NSString *, id> *_Nonnull foundationDictionary =
-        [logMessageData generateFoundationDictionary];
+    NSString *_Nonnull issueFormat = [ADJUtilF
+                                      emptyFallbackWithFormat:@"{%@}"
+                                      string:logMessageData.inputData.issueType];
 
-    [foundationDictionary removeObjectForKey:ADJLogIssueKey];
-    NSString *_Nonnull issueFormat = logMessageData.inputData.issueType == nil ? @"" :
-        [NSString stringWithFormat:@"{%@}", logMessageData.inputData.issueType];
+    NSString *_Nonnull fromCallerFormat = [ADJUtilF
+                                           emptyFallbackWithFormat:@" %@"
+                                           string:logMessageData.inputData.fromCaller];
 
-    [foundationDictionary removeObjectForKey:ADJLogCallerDescriptionKey];
-    NSString *_Nonnull callerDescriptionFormat = logMessageData.inputData.callerDescription == nil ? @"" :
-        [NSString stringWithFormat:@" %@", logMessageData.inputData.callerDescription];
+    // optional fails of json dictionary to string conversions are being ignored
+    //  might be possible to do something with them in the future
+    NSString *_Nonnull paramsFormat =
+        [ADJUtilF
+         emptyFallbackWithFormat:@"%@"
+         string:logMessageData.inputData.messageParams == nil ? nil :
+            [[ADJUtilJson toStringFromDictionary:logMessageData.inputData.messageParams] value]];
 
+    NSString *_Nonnull failResultFormat =
+        [ADJUtilF
+         emptyFallbackWithFormat:@"fail:%@"
+         string:logMessageData.inputData.resultFail == nil ? nil :
+            [[ADJUtilJson toStringFromDictionary:[logMessageData.inputData.resultFail
+                                                  toJsonDictionary]] value]];
 
-    id _Nullable paramsFoundationDictionary =
-        [foundationDictionary objectForKey:ADJLogParamsKey];
-    [foundationDictionary removeObjectForKey:ADJLogParamsKey];
-    NSString *_Nonnull paramsFormat = paramsFoundationDictionary == nil ? @"" :
-        [NSString stringWithFormat:@"%@",
-         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-          paramsFoundationDictionary]];
+    NSString *_Nonnull sdkPackageParamsFormat =
+        [ADJUtilF
+         emptyFallbackWithFormat:@"sdkPkg:%@"
+         string:logMessageData.inputData.sdkPackageParams == nil ? nil :
+             [ADJUtilObj
+              formatNewlineKeyValuesWithName:@""
+              stringKeyDictionary:logMessageData.inputData.sdkPackageParams]];
 
-    id _Nullable failResultFoundationDictionary =
-        [foundationDictionary objectForKey:ADJLogFailKey];
-    [foundationDictionary removeObjectForKey:ADJLogFailKey];
-    NSString *_Nonnull failResultFormat = failResultFoundationDictionary == nil ? @"" :
-        [NSString stringWithFormat:@"fail:%@",
-         [ADJLogMessageData generateJsonStringFromFoundationDictionary:
-          failResultFoundationDictionary]];
-
-    NSDictionary<NSString *, NSString *> *_Nullable sdkPackageParamsFoundationDictionary =
-        logMessageData.inputData.sdkPackageParams;
-    [foundationDictionary removeObjectForKey:ADJLogSdkPackageParamsKey];
-
-    NSString *_Nonnull sdkPackageParamsFormat = sdkPackageParamsFoundationDictionary == nil ? @"" :
-        [NSString stringWithFormat:@"sdkPkg:%@",
-         [ADJConsoleLogger formatSdkPackageParams:sdkPackageParamsFoundationDictionary]];
-
-
-    [foundationDictionary removeObjectForKey:ADJLogLevelKey];
     ADJAdjustLogLevel _Nonnull clientLogLevelFormat =
         [ADJConsoleLogger clientLogLevelFormat:logMessageData.inputData.level];
 
-    [foundationDictionary removeObjectForKey:ADJLogInstanceIdKey];
     NSString *_Nonnull instanceIdFormat =
         [NSString stringWithFormat:@"_%@", logMessageData.idString];
 
-    [foundationDictionary removeObjectForKey:ADJLogCallerThreadIdKey];
-    [foundationDictionary removeObjectForKey:ADJLogRunningThreadIdKey];
     NSString *_Nonnull threadIdFormat = [ADJConsoleLogger threadIdFormat:logMessageData];
 
     NSString *_Nonnull preInitFormat = !isPreSdkInit ? @"" : @"PreInit";
 
 
-    [foundationDictionary removeObjectForKey:ADJLogSourceKey];
-    [foundationDictionary removeObjectForKey:ADJLogMessageKey];
-    NSString *_Nonnull restFormat = [foundationDictionary count] == 0 ? @"" :
-        [NSString stringWithFormat:@"rest:%@",
-         [ADJLogMessageData generateJsonStringFromFoundationDictionary:foundationDictionary]];
-
     NSString *_Nonnull collectionsFormat =
         paramsFormat.length
             + failResultFormat.length
-            + restFormat.length
             + sdkPackageParamsFormat.length == 0 ? @"" :
-        [NSString stringWithFormat:@" %@%@%@%@",
-         paramsFormat, failResultFormat, restFormat, sdkPackageParamsFormat];
+        [NSString stringWithFormat:@" %@%@%@",
+         paramsFormat, failResultFormat, sdkPackageParamsFormat];
 
     /**
-     [source]{issue} message callerDescription {params}fail:{fail}rest:{rest} clientLevel_instanceId<threadId>PreInit
+     [loggerName]{issue} message fromCaller {params}fail:{fail}rest:{rest} clientLevel_instanceId<threadId>PreInit
      */
     return [NSString stringWithFormat:@"[%@]%@ %@%@%@ %@%@%@%@",
-            logMessageData.sourceDescription,
+            logMessageData.loggerName,
             issueFormat,
 
             logMessageData.inputData.message,
-            callerDescriptionFormat,
+            fromCallerFormat,
 
             collectionsFormat,
 
@@ -311,11 +283,7 @@
 }
 
 + (nonnull NSString *)threadIdFormat:(nonnull ADJLogMessageData *)logMessageData {
-    NSString *_Nullable runningThreadId =
-        logMessageData.inputData.runningThreadId != nil ?
-        logMessageData.inputData.runningThreadId
-        : logMessageData.runningThreadId != nil ?
-        logMessageData.runningThreadId : nil;
+    NSString *_Nullable runningThreadId = [logMessageData runningThreadIdCoalesce];
     NSString *_Nullable callingThreadId = logMessageData.inputData.callerThreadId;
 
     if (callingThreadId == nil) {

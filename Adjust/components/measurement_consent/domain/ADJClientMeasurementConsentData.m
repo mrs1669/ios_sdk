@@ -39,7 +39,7 @@ static NSString *const kWasMeasurementConsentActivatedKey = @"wasMeasurementCons
     ADJNonEmptyString *_Nullable ioValue = [propertiesMap
                                             pairValueWithKey:kWasMeasurementConsentActivatedKey];
 
-    ADJResultNN<ADJBooleanWrapper *> *_Nonnull wasMeasurementConsentActivatedResult =
+    ADJResult<ADJBooleanWrapper *> *_Nonnull wasMeasurementConsentActivatedResult =
         [ADJBooleanWrapper instanceFromIoValue:ioValue];
     if (wasMeasurementConsentActivatedResult.fail != nil) {
         [logger debugDev:

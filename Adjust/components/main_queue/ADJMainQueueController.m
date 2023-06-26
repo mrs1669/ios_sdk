@@ -32,7 +32,8 @@
 #pragma mark - Internal variables
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkPackageSender *sender;
-@property (nonnull, readonly, strong, nonatomic) ADJMainQueueStateAndTracker *mainQueueStateAndTracker;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJMainQueueStateAndTracker *mainQueueStateAndTracker;
 
 @end
 
@@ -46,15 +47,15 @@
     backoffStrategy:(nonnull ADJBackoffStrategy *)backoffStrategy
     sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"MainQueueController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MainQueueController"];
     _storage = mainQueueStorage;
     _clockWeak = clock;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                            sourceLoggerName:self.logger.name];
 
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
-                                                             sourceDescription:self.source
+                                                             sourceLoggerName:self.logger.name
                                                          threadExecutorFactory:threadController];
 
     _mainQueueStateAndTracker =
@@ -69,103 +70,131 @@
 }
 
 #pragma mark Public API
-- (void)addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
-                      sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    addAdRevenuePackageToSendWithData:(nonnull ADJAdRevenuePackageData *)adRevenuePackageData
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add ad revenue package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:adRevenuePackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add ad revenue package"];
+    }];
 }
 
-- (void)addBillingSubscriptionPackageToSendWithData:
-(nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
-                                sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    addBillingSubscriptionPackageToSendWithData:
+        (nonnull ADJBillingSubscriptionPackageData *)billingSubscriptionPackageData
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add billing subscription package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:billingSubscriptionPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add billing subscription package"];
+    }];
 }
 
 - (void)addClickPackageToSendWithData:(nonnull ADJClickPackageData *)clickPackageData
-                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add click package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:clickPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add click package"];
+    }];
 }
 
 - (void)addEventPackageToSendWithData:(nonnull ADJEventPackageData *)eventPackageData
-                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                  sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add event package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:eventPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add event package"];
+    }];
 }
 
 - (void)addInfoPackageToSendWithData:(nonnull ADJInfoPackageData *)infoPackageData
-                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                 sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add info package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:infoPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add info package"];
+    }];
 }
 
-- (void)addMeasurementConsentPackageToSendWithData:(nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
-                               sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    addMeasurementConsentPackageToSendWithData:
+        (nonnull ADJMeasurementConsentPackageData *)measurementConsentPackageData
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add measurement consent package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:measurementConsentPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add measurement consent package"];
+    }];
 }
 
-
 - (void)addSessionPackageToSendWithData:(nonnull ADJSessionPackageData *)sessionPackageData
-                    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+                    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add session package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:sessionPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add session package"];
+    }];
 }
 
-- (void)addThirdPartySharingPackageToSendWithData:
-(nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
-                              sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction {
+- (void)
+    addThirdPartySharingPackageToSendWithData:
+        (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
+    sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
+{
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"add third party sharing package"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf addSdkPackageToSendWithData:thirdPartySharingPackageData
                             sqliteStorageAction:sqliteStorageAction];
-    } source:@"add third party sharing package"];
+    }];
 }
 
 - (nonnull NSString *)defaultTargetUrl {
@@ -175,44 +204,52 @@
 #pragma mark - ADJSdkResponseCallbackSubscriber
 - (void)sdkResponseCallbackWithResponseData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk response"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResponseWithData:sdkResponseData];
-    } source:@"sdk response"];
+    }];
 }
 
 #pragma mark - ADJSdkInitSubscriber
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk init"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleSdkInit];
-    } source:@"sdk init"];
+    }];
 }
 
 #pragma mark - ADJPausingSubscriber
 - (void)didResumeSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"resume sending"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleResumeSending];
-    } source:@"resume sending"];
+    }];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"pause sending"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf.mainQueueStateAndTracker pauseSending];
-    } source:@"pause sending"];
+    }];
 }
 
 #pragma mark - ADJOfflineSubscriber
@@ -222,12 +259,14 @@
 
 - (void)didSdkBecomeOffline {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk become offline"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf.mainQueueStateAndTracker pauseSending];
-    } source:@"sdk become offline"];
+    }];
 }
 
 #pragma mark Internal Methods
@@ -248,11 +287,11 @@
                                                      hasPackageAtFront:packageAtFront != nil];
 
     if (sendPackageAtFront) {
-        NSString *_Nonnull source = [NSString stringWithFormat:@"%@ added",
+        NSString *_Nonnull from = [NSString stringWithFormat:@"%@ added",
                                      [sdkPackageDataToAdd generateShortDescription]];
 
         [self sendPackageWithData:packageAtFront
-                           source:source];
+                           from:from];
     }
 }
 
@@ -265,7 +304,7 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"sdk init"];
+                           from:@"sdk init"];
     }
 }
 
@@ -278,7 +317,7 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"resume sending"];
+                           from:@"resume sending"];
     }
 }
 
@@ -303,7 +342,7 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"handle response"];
+                           from:@"handle response"];
     }
 }
 
@@ -330,11 +369,12 @@
         [self.logger debugWithMessage:
          @"Unexpected difference between package from response and removed at position in front"
                          builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"package from response" value:sourceResponsePackage.description];
+            [logBuilder withKey:@"package from response"
+                    stringValue:sourceResponsePackage.description];
             [logBuilder withKey:@"position at front"
-                          value:positionAtFront.description];
+                    stringValue:positionAtFront.description];
             [logBuilder withKey:@"element at position at front"
-                          value:removedSdkPackage != nil ? [removedSdkPackage description] : nil];
+                    stringValue:removedSdkPackage != nil ? [removedSdkPackage description] : nil];
             [logBuilder issue:ADJIssueStorageIo];
         }];
         return;
@@ -349,9 +389,9 @@
     if (! [sourceResponsePackage isEqual:[self.storage elementAtFront]]) {
         [self.logger debugDev:@"Unexpected difference between packages from response and at front"
                          key1:@"package from response"
-                       value1:sourceResponsePackage.description
+                 stringValue1:sourceResponsePackage.description
                          key2:@"package at front"
-                       value2:[self.storage elementAtFront].description
+                 stringValue2:[self.storage elementAtFront].description
                     issueType:ADJIssueStorageIo];
         return nil;
     }
@@ -362,11 +402,12 @@
         [self.logger debugWithMessage:
          @"Unexpected difference between package from response and at position in front"
                          builderBlock:^(ADJLogBuilder *_Nonnull logBuilder) {
-            [logBuilder withKey:@"package from response" value:sourceResponsePackage.description];
+            [logBuilder withKey:@"package from response"
+                    stringValue:sourceResponsePackage.description];
             [logBuilder withKey:@"position at front"
-                          value:positionAtFront != nil ? positionAtFront.description : nil];
+                    stringValue:positionAtFront != nil ? positionAtFront.description : nil];
             [logBuilder withKey:@"element at position at front"
-                          value:
+                    stringValue:
              elementAtFrontPosition != nil ? [elementAtFrontPosition description] : nil];
             [logBuilder issue:ADJIssueStorageIo];
         }];
@@ -378,20 +419,20 @@
 
 - (void)delaySendWithData:(nonnull ADJDelayData *)delayData {
     __typeof(self) __weak weakSelf = self;
-    [self.executor
-     scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"delay end"
+                           delayTimeMilli:delayData.delay
+                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
-        [strongSelf handleDelayEndWithSource:delayData.source];
-    }
-     delayTimeMilli:delayData.delay
-     source:@"delay end"];
+        [strongSelf handleDelayEndWithSource:delayData.from];
+    }];
 }
 
-- (void)handleDelayEndWithSource:(nonnull NSString *)source {
+- (void)handleDelayEndWithSource:(nonnull NSString *)from {
     [self.logger debugDev:@"Delay ended"
-                     from:source];
+                     from:from];
 
     id<ADJSdkPackageData> _Nullable packageAtFront = [self.storage elementAtFront];
 
@@ -401,23 +442,23 @@
 
     if (sendPackageAtFront) {
         [self sendPackageWithData:packageAtFront
-                           source:@"handle delay end"];
+                           from:@"handle delay end"];
     }
 }
 
 - (void)sendPackageWithData:(nullable id<ADJSdkPackageData>)packageToSend
-                     source:(nonnull NSString *)source
+                       from:(nonnull NSString *)from
 {
     if (packageToSend == nil) {
         [self.logger debugDev:@"Cannot send package it is nil"
-                         from:source];
+                         from:from];
         return;
     }
 
     [self.logger debugDev:@"To send sdk package"
-                     from:source
+                     from:from
                       key:@"package"
-                    value:[packageToSend generateShortDescription].stringValue];
+              stringValue:[packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters =
         [self generateSendingParametersWithStorage:self.storage];
@@ -427,8 +468,11 @@
                        responseCallback:self];
 }
 
-- (nonnull ADJStringMapBuilder *)generateSendingParametersWithStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage {
-    ADJStringMapBuilder *_Nonnull sendingParameters = [[ADJStringMapBuilder alloc] initWithEmptyMap];
+- (nonnull ADJStringMapBuilder *)
+    generateSendingParametersWithStorage:(nonnull ADJMainQueueStorage *)mainQueueStorage
+{
+    ADJStringMapBuilder *_Nonnull sendingParameters =
+        [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     [ADJSdkPackageBuilder
      injectAttemptsWithParametersBuilder:sendingParameters
@@ -456,7 +500,7 @@
         return sendingParameters;
     }
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
                   resultFail:nowResult.fail

@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_END
 
 @interface ADJSdkActiveStateData : NSObject<ADJIoDataSerializable>
 // instantiation
-+ (nonnull ADJResultNN<ADJSdkActiveStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
++ (nonnull ADJResult<ADJSdkActiveStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull instancetype)initWithInitialState;
 

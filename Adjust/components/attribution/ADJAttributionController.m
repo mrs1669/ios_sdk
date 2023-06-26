@@ -30,7 +30,6 @@
 @property (nonnull, readonly, strong, nonatomic) ADJAttributionState *attributionState;
 @property (nullable, readwrite, strong, nonatomic)
     ADJAttributionPackageData *attributionPackageToSend;
-@property (readwrite, assign, nonatomic) BOOL canPublish;
 
 @end
 
@@ -60,7 +59,7 @@
                                 doNotInitiateAttributionFromSdk:doNotInitiateAttributionFromSdk
                                             publisherController:publisherController];
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull firstSessionCountResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull firstSessionCountResult =
         [mainQueueTrackedPackages firstSessionCount];
     BOOL hasTrackedInstallSession = firstSessionCountResult.value != nil
         && firstSessionCountResult.value.uIntegerValue == 0;
@@ -82,7 +81,7 @@
     doNotInitiateAttributionFromSdk:(BOOL)doNotInitiateAttributionFromSdk
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"AttributionController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"AttributionController"];
     _storage = attributionStateStorage;
     _clock = clock;
     _sdkPackageBuilderWeak = sdkPackageBuilder;
@@ -92,10 +91,10 @@
                              controller:publisherController];
     
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                             sourceLoggerName:self.logger.name];
     
     _sender = [sdkPackageSenderFactory createSdkPackageSenderWithLoggerFactory:loggerFactory
-                                                             sourceDescription:self.source
+                                                              sourceLoggerName:self.logger.name
                                                          threadExecutorFactory:threadController];
 
     ADJAttributionStateData *_Nonnull initialStateData =
@@ -113,8 +112,6 @@
 
     _attributionPackageToSend = nil;
 
-    _canPublish = NO;
-
     return self;
 }
 
@@ -125,7 +122,7 @@
         [self.logger debugDev:
          @"Cannot process response data with that is not an attribution"
                 expectedValue:NSStringFromClass([ADJAttributionResponseData class])
-                  actualValue:NSStringFromClass([sdkResponseData class])
+            actualStringValue:NSStringFromClass([sdkResponseData class])
                     issueType:ADJIssueLogicError];
         return;
     }
@@ -134,12 +131,14 @@
         (ADJAttributionResponseData *)sdkResponseData;
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received attribution response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
         [strongSelf attributionResponseWithData:attributionResponseData];
-    } source:@"received attribution response"];
+    }];
 }
 - (void)attributionResponseWithData:(nonnull ADJAttributionResponseData *)attributionResponse {
     ADJDelayData *_Nullable delay =
@@ -163,23 +162,6 @@
     [self handleSideEffectsWithOutputData:output source:@"attributionResponse from state"];
 }
 
-#pragma mark - ADJPublishingGateSubscriber
-- (void)ccAllowedToPublishNotifications {
-    __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-
-        strongSelf.canPublish = YES;
-
-        ADJAttributionStateData *_Nonnull stateData = [strongSelf.storage readOnlyStoredDataValue];
-
-        [strongSelf handlePublishWithStateData:stateData
-                           previousAttribution:stateData.attributionData
-                                        source:@"allowed to publish"];
-    } source:@"allowed to publish"];
-}
-
 #pragma mark - ADJSdkResponseSubscriber
 - (void)didReceiveSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     if (sdkResponseData.shouldRetry) {
@@ -193,12 +175,14 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received sdk response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleAcceptedNonAttributionResponse:sdkResponseData];
-    } source:@"received sdk response"];
+    }];
 }
 /**
  The order checked here is important.
@@ -230,7 +214,9 @@
 #pragma mark - ADJSdkStartSubscriber
 - (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"sdk start"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -238,36 +224,42 @@
             [strongSelf.attributionState sdkStart];
 
         [strongSelf handleSideEffectsWithOutputData:outputData source:@"sdk start"];
-    } source:@"sdk start"];
+    }];
 }
 
 #pragma mark - ADJPausingSubscriber
 - (void)didResumeSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"resume sending"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         if ([strongSelf.attributionTracker sendWhenSdkResumingSending]) {
             [strongSelf sendAttributionWithSource:@"ResumeSending"];
         }
-    } source:@"resume sending"];
+    }];
 }
 
 - (void)didPauseSendingWithSource:(nonnull NSString *)source {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"pause sending"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf.attributionTracker pauseSending];
-    } source:@"pause sending"];
+    }];
 }
 
 #pragma mark Internal Methods
 - (void)installSessionTrackedAtLoad {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"install session tracked at load"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -276,7 +268,7 @@
 
         [strongSelf handleSideEffectsWithOutputData:outputData
                                              source:@"install session tracked at load"];
-    } source:@"install session tracked at load"];
+    }];
 }
 
 - (void)handleSideEffectsWithOutputData:(nullable ADJAttributionStateOutputData *)outputData
@@ -286,12 +278,7 @@
         return;
     }
 
-    ADJAttributionData *_Nullable previousAttribution =
-        [self handleChangedStateData:outputData.changedStateData];
-
-    [self handlePublishWithStateData:outputData.changedStateData
-                 previousAttribution:previousAttribution
-                              source:source];
+    [self handleChangedStateData:outputData.changedStateData];
 
     [self handleDelay:outputData.delayData
                source:source];
@@ -299,34 +286,19 @@
     [self handleAskingCommand:outputData.startAsking source:source];
 }
 
-- (nullable ADJAttributionData *)handleChangedStateData:
+- (void)handleChangedStateData:
     (nullable ADJAttributionStateData *)changedStateData
 {
-    if (changedStateData == nil) { return nil; }
-
-    ADJAttributionStateData *_Nonnull stateDataBeforeUpdate =
-        [self.storage readOnlyStoredDataValue];
+    if (changedStateData == nil) { return; }
 
     [self.storage updateWithNewDataValue:changedStateData];
 
-    return stateDataBeforeUpdate.attributionData;
-}
-
-- (void)handlePublishWithStateData:(nullable ADJAttributionStateData *)stateData
-               previousAttribution:(nullable ADJAttributionData *)previousAttribution
-                            source:(nonnull NSString *)source
-{
-    if (stateData == nil) { return; }
-    if (! self.canPublish) { return; }
-
-    [self.logger debugDev:@"Publishing attribution state"
-                     from:source];
+    [self.logger debugDev:@"Publishing attribution state"];
 
     [self.attributionPublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJAttributionSubscriber> _Nonnull subscriber)
      {
-        [subscriber attributionWithStateData:stateData
-                         previousAttribution:previousAttribution];
+        [subscriber attributionWithStateData:changedStateData];
     }];
 }
 
@@ -342,22 +314,23 @@
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
+    [self.executor scheduleInSequenceWithLogger:self.logger
+                                           from:@"delay end"
+                                 delayTimeMilli:delayData.delay
+                                          block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         [strongSelf handleDelayEndWithData:delayData source:source];
-    }
-                                delayTimeMilli:delayData.delay
-                                        source:@"delay end"];
+    }];
 }
 - (void)handleDelayEndWithData:(nonnull ADJDelayData *)delayData
                         source:(nonnull NSString *)source
 {
     [self.logger debugDev:@"Delay ended"
                      from:source
-                      key:@"delayReason"
-                    value:delayData.source];
+                      key:@"delay from"
+              stringValue:delayData.from];
 
     if ([self.attributionTracker sendWhenDelayEnded]) {
         [self sendAttributionWithSource:@"Delay ended"];
@@ -383,7 +356,7 @@
     [self.logger debugDev:@"To send sdk package"
                      from:source
                       key:@"package"
-                    value:[attributionPackage generateShortDescription].stringValue];
+              stringValue:[attributionPackage generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters = [self generateSendingParameters];
 
@@ -396,7 +369,7 @@
     ADJStringMapBuilder *_Nonnull sendingParameters =
         [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [self.clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
                   resultFail:nowResult.fail

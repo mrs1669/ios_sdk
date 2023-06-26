@@ -26,15 +26,15 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
 
 @implementation ADJMeasurementSessionStateData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *)
++ (nonnull ADJOptionalFails<ADJResult<ADJMeasurementSessionStateData *> *> *)
     instanceFromIoData:(nonnull ADJIoData *)ioData
 {
     ADJResultFail *_Nullable unexpectedMetadataTypeValueFail =
         [ioData isExpectedMetadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue];
     if (unexpectedMetadataTypeValueFail != nil) {
-        return [[ADJOptionalFailsNN alloc]
+        return [[ADJOptionalFails alloc]
                 initWithOptionalFails:nil
-                value:[ADJResultNN
+                value:[ADJResult
                        failWithMessage:@"Cannot create measurement session state data from io data"
                        key:@"unexpected metadata type value fail"
                        otherFail:unexpectedMetadataTypeValueFail]];
@@ -46,7 +46,7 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
         [ioData mapWithName:kMeasurementSessionDataMapName];
 
     if (measurementSessionDataMap != nil) {
-        ADJResultNN<ADJMeasurementSessionData *> *_Nonnull measurementSessionDataResult =
+        ADJResult<ADJMeasurementSessionData *> *_Nonnull measurementSessionDataResult =
             [ADJMeasurementSessionData instanceFromIoDataMap:measurementSessionDataMap];
         if (measurementSessionDataResult.fail != nil) {
             optionalFails = [NSArray arrayWithObject:
@@ -61,30 +61,31 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
         }
     }
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFails
-            value:[ADJResultNN okWithValue:
+            value:[ADJResult okWithValue:
                    [[ADJMeasurementSessionStateData alloc]
                     initWithMeasurementSessionData:measurementSessionData]]];
 }
 
-+ (nonnull ADJResultNL<ADJMeasurementSessionStateData *> *)
++ (nonnull ADJResult<ADJMeasurementSessionStateData *> *)
     instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState
 {
     if (v4ActivityState == nil) {
-        return [ADJResultNL okWithoutValue];
+        return [ADJResult nilInputWithMessage:
+                @"Cannot create session data wiht nil v4 activity state"];
     }
 
-    ADJResultNN<ADJMeasurementSessionData *> *_Nonnull sessionDataResult =
+    ADJResult<ADJMeasurementSessionData *> *_Nonnull sessionDataResult =
         [ADJMeasurementSessionData instanceFromV4WithActivityState:v4ActivityState];
     if (sessionDataResult.fail != nil) {
-        return [ADJResultNL failWithMessage:@"Could not create session data from activity state"
-                                        key:@"session data fail"
-                                  otherFail:sessionDataResult.fail];
+        return [ADJResult failWithMessage:@"Could not create session data from activity state"
+                                      key:@"session data fail"
+                                otherFail:sessionDataResult.fail];
     }
 
-    return [ADJResultNL okWithValue:[[ADJMeasurementSessionStateData alloc]
-                                     initWithMeasurementSessionData:sessionDataResult.value]];
+    return [ADJResult okWithValue:[[ADJMeasurementSessionStateData alloc]
+                                   initWithMeasurementSessionData:sessionDataResult.value]];
 }
 
 - (nonnull instancetype)initWithIntialState {

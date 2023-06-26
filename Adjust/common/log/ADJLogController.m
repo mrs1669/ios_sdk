@@ -88,8 +88,8 @@
 }
 
 #pragma mark - ADJLoggerFactory
-- (nonnull ADJLogger *)createLoggerWithSource:(nonnull NSString *)source {
-    return [[ADJLogger alloc] initWithSource:source
+- (nonnull ADJLogger *)createLoggerWithName:(nonnull NSString *)loggerName {
+    return [[ADJLogger alloc] initWithName:loggerName
                                 logCollector:self
                                   instanceId:self.instanceId];
 }
@@ -102,14 +102,17 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [commonExecutor executeInSequenceWithBlock:^{
+    [commonExecutor executeInSequenceFrom:@"sdk init"
+                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
-        [strongSelf.consoleLogger didSdkInitWithIsSandboxEnvironment:clientConfigData.isSandboxEnvironmentOrElseProduction
-                                                            doLogAll:clientConfigData.doLogAll
-                                                         doNotLogAny:clientConfigData.doNotLogAny];
-    } source:@"sdk init"];
+
+        [strongSelf.consoleLogger
+         didSdkInitWithIsSandboxEnvironment:
+             clientConfigData.isSandboxEnvironmentOrElseProduction
+         doLogAll:clientConfigData.doLogAll
+         doNotLogAny:clientConfigData.doNotLogAny];
+    }];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -120,24 +123,25 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [commonExecutor executeInSequenceWithBlock:^{
+    [commonExecutor executeInSequenceFrom:@"allowed to publish notifications"
+                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
+
         strongSelf.canPublish = YES;
-        
+
         NSArray<ADJLogMessageData *> *_Nonnull preInitLogMessageArray =
             [strongSelf.logMessageDataArray copy];
-        
+
         [strongSelf.logPublisher notifySubscribersWithSubscriberBlock:
          ^(id<ADJLogSubscriber> _Nonnull subscriber)
          {
             [subscriber didLogMessagesPreInitWithArray:preInitLogMessageArray];
         }];
-        
+
         // can flush memory stored logs
         [strongSelf.logMessageDataArray removeAllObjects];
-    } source:@"allowed to publish notifications"];
+    }];
 }
 
 @end

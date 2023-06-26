@@ -18,28 +18,26 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"MeasurementSessionStateStorage"
+                             loggerName:@"MeasurementSessionStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kMeasurementSessionStateStorageTableName
                       metadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
-                initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc] initWithIntialState]];
-    /*
-     [[ADJMeasurementSessionStateData alloc] initWithIntialStateWithNewUuid:
-     [[ADJNonEmptyString alloc] initWithValidatedStringValue:
-     [ADJUtilSys generateUuid]]]];*/
+                initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc]
+                                         initWithIntialState]];
 
     return self;
 }
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJMeasurementSessionStateData *> *)
+- (nonnull ADJResult<ADJMeasurementSessionStateData *> *)
     concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData
 {
-    ADJOptionalFailsNN<ADJResultNN<ADJMeasurementSessionStateData *> *> *_Nonnull
+    ADJOptionalFails<ADJResult<ADJMeasurementSessionStateData *> *> *_Nonnull
     resultDataOptFails = [ADJMeasurementSessionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in resultDataOptFails.optionalFails) {
@@ -66,18 +64,18 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJResultNL<ADJMeasurementSessionStateData *> *_Nonnull sessionStateDataResult =
+    ADJResult<ADJMeasurementSessionStateData *> *_Nonnull sessionStateDataResult =
         [ADJMeasurementSessionStateData instanceFromV4WithActivityState:
          [v4FilesData v4ActivityState]];
+
+    if (sessionStateDataResult.wasInputNil) {
+        return;
+    }
 
     if (sessionStateDataResult.fail != nil) {
         [self.logger debugDev:@"Cannot migrate measurement session from v4"
                    resultFail:sessionStateDataResult.fail
                     issueType:ADJIssueStorageIo];
-        return;
-    }
-
-    if (sessionStateDataResult.value == nil) {
         return;
     }
 

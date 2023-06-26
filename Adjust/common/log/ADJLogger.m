@@ -9,7 +9,7 @@
 #import "ADJLogger.h"
 
 #import "ADJAdjustLogMessageData.h"
-#import "ADJUtilF.h"
+#import "ADJUtilObj.h"
 #import "ADJConstants.h"
 #import "ADJLocalThreadController.h"
 //#import <os/log.h>
@@ -24,13 +24,13 @@
 
 @implementation ADJLogger
 #pragma mark Constructors
-- (nonnull instancetype)initWithSource:(nonnull NSString *)source
-                          logCollector:(nonnull id<ADJLogCollector>)logCollector
-                            instanceId:(nonnull ADJInstanceIdData *)instanceId
+- (nonnull instancetype)initWithName:(nonnull NSString *)name
+                        logCollector:(nonnull id<ADJLogCollector>)logCollector
+                          instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
     self = [super init];
     
-    _source = source;
+    _name = name;
     _logCollectorWeak = logCollector;
     _instanceId = instanceId;
     
@@ -46,13 +46,13 @@
 - (nonnull ADJInputLogMessageData *)
     traceThreadChangeWithCallerThreadId:(nonnull NSString *)callerThreadId
     runningThreadId:(nonnull NSString *)runningThreadId
-    callerDescription:(nonnull NSString *)callerDescription
+    fromCaller:(nonnull NSString *)fromCaller
 {
     return [self logWithInput: [[ADJInputLogMessageData alloc]
                                 initWithMessage:@"New thread"
                                 level:ADJAdjustLogLevelTrace
                                 callerThreadId:callerThreadId
-                                callerDescription:callerDescription
+                                fromCaller:fromCaller
                                 runningThreadId:runningThreadId]];
 }
 
@@ -76,41 +76,41 @@
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
                             key:ADJLogFromKey
-                          value:from];
+                      jsonValue:from];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
-                                       value:(nullable NSString *)value
+                                 stringValue:(nullable NSString *)stringValue
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                      jsonValue:[ADJUtilObj idOrNsNull:stringValue]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         from:(nonnull NSString *)from
                                          key:(nonnull NSString *)key
-                                       value:(nullable NSString *)value
+                                 stringValue:(nullable NSString *)stringValue
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
                            key1:ADJLogFromKey
-                         value1:from
+                     jsonValue1:from
                            key2:key
-                         value2:[ADJUtilF stringOrNsNull:value]];
+                     jsonValue2:[ADJUtilObj idOrNsNull:stringValue]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         key1:(nonnull NSString *)key1
-                                      value1:(nullable NSString *)value1
+                                stringValue1:(nullable NSString *)stringValue1
                                         key2:(nonnull NSString *)key2
-                                      value2:(nullable NSString *)value2
+                                stringValue2:(nullable NSString *)stringValue2
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelDebug
                            key1:key1
-                         value1:[ADJUtilF stringOrNsNull:value1]
+                     jsonValue1:[ADJUtilObj idOrNsNull:stringValue1]
                            key2:key2
-                         value2:[ADJUtilF stringOrNsNull:value2]];
+                     jsonValue2:[ADJUtilObj idOrNsNull:stringValue2]];
 }
 
 #pragma mark - debug dev with issue
@@ -136,8 +136,22 @@
                                messageParams:nil]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
+                                        from:(nonnull NSString *)from
+                                  resultFail:(nullable ADJResultFail *)resultFail
+                                   issueType:(nonnull ADJIssue)issueType
+{
+    return [self logWithInput:[[ADJInputLogMessageData alloc]
+                               initWithMessage:message
+                               level:ADJAdjustLogLevelDebug
+                               issueType:issueType
+                               resultFail:resultFail
+                               messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
+                                              from, ADJLogFromKey, nil]]];
+}
+
+- (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                expectedValue:(nonnull NSString *)expectedValue
-                                 actualValue:(nullable NSString *)actualValue
+                           actualStringValue:(nullable NSString *)actualStringValue
                                    issueType:(nonnull ADJIssue)issueType
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
@@ -148,7 +162,8 @@
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
                                     expectedValue, ADJLogExpectedKey,
-                                    [ADJUtilF stringOrNsNull:actualValue], ADJLogActualKey, nil]]];
+                                    [ADJUtilObj idOrNsNull:actualStringValue], ADJLogActualKey,
+                                    nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                      subject:(nonnull NSString *)subject
@@ -167,7 +182,7 @@
 
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
-                                       value:(nullable NSString *)value
+                                 stringValue:(nullable NSString *)stringValue
                                    issueType:(nonnull ADJIssue)issueType
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
@@ -177,13 +192,13 @@
                                resultFail:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    [ADJUtilF stringOrNsNull:value], key, nil]]];
+                                    [ADJUtilObj idOrNsNull:stringValue], key, nil]]];
 }
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                          key:(nonnull NSString *)key
-                                       value:(nullable NSString *)value
+                                 stringValue:(nullable NSString *)stringValue
                                   resultFail:(nonnull ADJResultFail *)resultFail
-                                   issueType:(nonnull ADJIssue)issueType
+                                   issueType:(nullable ADJIssue)issueType
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
                                initWithMessage:message
@@ -192,15 +207,15 @@
                                resultFail:resultFail
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    [ADJUtilF stringOrNsNull:value], key, nil]]];
+                                    [ADJUtilObj idOrNsNull:stringValue], key, nil]]];
 }
 
 - (nonnull ADJInputLogMessageData *)debugDev:(nonnull NSString *)message
                                         key1:(nonnull NSString *)key1
-                                      value1:(nullable NSString *)value1
+                                stringValue1:(nullable NSString *)stringValue1
                                         key2:(nonnull NSString *)key2
-                                      value2:(nullable NSString *)value2
-                                   issueType:(nonnull ADJIssue)issueType
+                                stringValue2:(nullable NSString *)stringValue2
+                                   issueType:(nullable ADJIssue)issueType
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
                                initWithMessage:message
@@ -209,8 +224,8 @@
                                resultFail:nil
                                messageParams:
                                    [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    [ADJUtilF stringOrNsNull:value1], key1,
-                                    [ADJUtilF stringOrNsNull:value2], key2, nil]]];
+                                    [ADJUtilObj idOrNsNull:stringValue1], key1,
+                                    [ADJUtilObj idOrNsNull:stringValue2], key2, nil]]];
 }
 
 #pragma mark - info client
@@ -219,25 +234,25 @@
 }
 - (nonnull ADJInputLogMessageData *)infoClient:(nonnull NSString *)message
                                            key:(nonnull NSString *)key
-                                         value:(nullable NSString *)value
+                                   stringValue:(nullable NSString *)stringValue
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelInfo
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                      jsonValue:[ADJUtilObj idOrNsNull:stringValue]];
 }
 - (nonnull ADJInputLogMessageData *)infoClient:(nonnull NSString *)message
                                           key1:(nonnull NSString *)key1
-                                        value1:(nullable NSString *)value1
+                                  stringValue1:(nullable NSString *)stringValue1
                                           key2:(nonnull NSString *)key2
-                                        value2:(nullable NSString *)value2
+                                  stringValue2:(nullable NSString *)stringValue2
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelInfo
                            key1:key1
-                         value1:[ADJUtilF stringOrNsNull:value1]
+                     jsonValue1:[ADJUtilObj idOrNsNull:stringValue1]
                            key2:key2
-                         value2:[ADJUtilF stringOrNsNull:value2]];
+                     jsonValue2:[ADJUtilObj idOrNsNull:stringValue2]];
 }
 
 #pragma mark - notice client
@@ -246,12 +261,12 @@
 }
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
                                              key:(nonnull NSString *)key
-                                           value:(nullable NSString *)value
+                                     stringValue:(nullable NSString *)stringValue
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelNotice
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                      jsonValue:[ADJUtilObj idOrNsNull:stringValue]];
 }
 - (nonnull ADJInputLogMessageData *)noticeClient:(nonnull NSString *)message
                                       resultFail:(nonnull ADJResultFail *)resultFail
@@ -270,23 +285,23 @@
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                             key:(nonnull NSString *)key
-                                          value:(nullable NSString *)value
+                                    stringValue:(nullable NSString *)stringValue
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelError
                             key:key
-                          value:[ADJUtilF stringOrNsNull:value]];
+                      jsonValue:[ADJUtilObj idOrNsNull:stringValue]];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                   expectedValue:(nonnull NSString *)expectedValue
-                                    actualValue:(nullable NSString *)actualValue
+                              actualStringValue:(nullable NSString *)actualStringValue
 {
     return [self logWithMessage:message
                        logLevel:ADJAdjustLogLevelError
                            key1:ADJLogExpectedKey
-                         value1:expectedValue
+                     jsonValue1:expectedValue
                            key2:ADJLogActualKey
-                         value2:[ADJUtilF stringOrNsNull:actualValue]];
+                     jsonValue2:[ADJUtilObj idOrNsNull:actualStringValue]];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                      resultFail:(nonnull ADJResultFail *)resultFail
@@ -299,8 +314,20 @@
                                messageParams:nil]];
 }
 - (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
+                                           from:(nonnull NSString *)from
+                                     resultFail:(nullable ADJResultFail *)resultFail
+{
+    return [self logWithInput:[[ADJInputLogMessageData alloc]
+                               initWithMessage:message
+                               level:ADJAdjustLogLevelError
+                               issueType:nil
+                               resultFail:resultFail
+                               messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
+                                              from, ADJLogFromKey, nil]]];
+}
+- (nonnull ADJInputLogMessageData *)errorClient:(nonnull NSString *)message
                                             key:(nonnull NSString *)key
-                                          value:(nullable NSString *)value
+                                    stringValue:(nullable NSString *)stringValue
                                      resultFail:(nonnull ADJResultFail *)resultFail
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
@@ -309,7 +336,7 @@
                                issueType:nil
                                resultFail:resultFail
                                messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
-                                              [ADJUtilF stringOrNsNull:value], key, nil]]];
+                                              [ADJUtilObj idOrNsNull:stringValue], key, nil]]];
 }
 
 #pragma mark Internal methods
@@ -328,7 +355,7 @@
 
     ADJLogMessageData *_Nonnull logMessageData = [[ADJLogMessageData alloc]
                                                   initWithInputData:inputLogMessageData
-                                                  sourceDescription:self.source
+                                                  loggerName:self.name
                                                   idString:self.instanceId.idString
                                                   runningThreadId:runningThreadId];
 
@@ -338,7 +365,7 @@
 }
 
 - (nonnull ADJInputLogMessageData *)logWithMessage:(nonnull NSString *)message
-              logLevel:(nonnull ADJAdjustLogLevel)logLevel
+                                          logLevel:(nonnull ADJAdjustLogLevel)logLevel
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc] initWithMessage:message
                                                                         level:logLevel
@@ -350,27 +377,28 @@
 - (nonnull ADJInputLogMessageData *)logWithMessage:(nonnull NSString *)message
                                           logLevel:(nonnull ADJAdjustLogLevel)logLevel
                                                key:(nonnull NSString *)key
-                                             value:(nonnull id)value
+                                         jsonValue:(nonnull id)jsonValue
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
                                initWithMessage:message
                                level:logLevel
                                messageParams:[[NSDictionary alloc]
-                                              initWithObjectsAndKeys:value, key, nil]]];
+                                              initWithObjectsAndKeys:jsonValue, key, nil]]];
 }
 
 - (nonnull ADJInputLogMessageData *)logWithMessage:(nonnull NSString *)message
                                           logLevel:(nonnull ADJAdjustLogLevel)logLevel
                                               key1:(nonnull NSString *)key1
-                                            value1:(nonnull id)value1
+                                        jsonValue1:(nonnull id)jsonValue1
                                               key2:(nonnull NSString *)key2
-                                            value2:(nonnull id)value2
+                                        jsonValue2:(nonnull id)jsonValue2
 {
     return [self logWithInput:[[ADJInputLogMessageData alloc]
                                initWithMessage:message
                                level:logLevel
                                messageParams:[[NSDictionary alloc] initWithObjectsAndKeys:
-                                              value1, key1, value2, key2, nil]]];
+                                              jsonValue1, key1,
+                                              jsonValue2, key2, nil]]];
 }
 
 @end

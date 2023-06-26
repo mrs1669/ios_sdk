@@ -13,6 +13,9 @@
 #import "ADJConstants.h"
 #import "ADJConstantsParam.h"
 #import "ADJMoneyDoubleAmount.h"
+#import "ADJAdjustInternal.h"
+#import "ADJUtilF.h"
+#import "ADJUtilJson.h"
 
 #pragma mark Fields
 #pragma mark - Public properties
@@ -43,6 +46,7 @@ static NSString *const kCampaignKey = @"campaign";
 static NSString *const kAdgroupKey = @"adgroup";
 static NSString *const kCreativeKey = @"creative";
 static NSString *const kClickLabelKey = @"clickLabel";
+// TODO: adid to be extracted from attribution
 static NSString *const kAdidKey = @"adid";
 static NSString *const kDeeplinkKey = @"deeplink";
 static NSString *const kStateKey = @"state";
@@ -52,26 +56,16 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
 
 @implementation ADJAttributionData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
++ (nonnull ADJOptionalFails<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap
 {
-    ADJNonEmptyString *_Nullable costAmountIoValue = [ioDataMap pairValueWithKey:kCostAmountKey];
-    ADJResultNL<ADJMoneyAmountBase *> *_Nonnull costAmountResult =
-        [ADJMoneyAmountBase instanceFromOptionalIoValue:costAmountIoValue];
+    ADJResult<ADJMoneyDoubleAmount *> *_Nonnull costAmountResult =
+        [self extractCostAmountWithIoValue:[ioDataMap pairValueWithKey:kCostAmountKey]];
 
-    NSArray<ADJResultFail *> *optionalFails = nil;
-
-    if (costAmountResult.fail != nil) {
-        optionalFails = [NSArray arrayWithObject:
-                         [[ADJResultFail alloc]
-                          initWithMessage:@"Cannot use invalid cost amount in attribution data"
-                            " from io data map"
-                          key:@"costAmount fail"
-                          otherFail:costAmountResult.fail]];
-    }
-
-    return [[ADJOptionalFailsNN alloc]
-            initWithOptionalFails:optionalFails
+    return [[ADJOptionalFails alloc]
+            initWithOptionalFails:
+                costAmountResult.failNonNilInput != nil
+                ? [NSArray arrayWithObject:costAmountResult.fail] : nil
             value:[[ADJAttributionData alloc]
                    initWithTrackerToken:[ioDataMap pairValueWithKey:kTrackerTokenKey]
                    trackerName:[ioDataMap pairValueWithKey:kTrackerNameKey]
@@ -80,6 +74,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    adgroup:[ioDataMap pairValueWithKey:kAdgroupKey]
                    creative:[ioDataMap pairValueWithKey:kCreativeKey]
                    clickLabel:[ioDataMap pairValueWithKey:kClickLabelKey]
+                   // TODO: adid to be extracted from attribution
                    adid:[ioDataMap pairValueWithKey:kAdidKey]
                    deeplink:[ioDataMap pairValueWithKey:kDeeplinkKey]
                    state:[ioDataMap pairValueWithKey:kStateKey]
@@ -88,101 +83,32 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    costCurrency:[ioDataMap pairValueWithKey:kCostCurrencyKey]]];
 }
 
-#define convV4String(field) \
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull field ## Result =                \
-        [ADJNonEmptyString instanceFromOptionalString:v4Attribution.field];     \
-    if (field ## Result.fail != nil) {                                                  \
-        [optFailsMut addObject:[[ADJResultFail alloc]                                   \
-                                initWithMessage:@"Invalid value from v4 attribution"    \
-                                key:@"field fail"                                       \
-                                otherFail:field ## Result.fail]];                       \
-    }                                                                                   \
-    if (field ## Result.value != nil) {     \
-        hasAtLeastOneValidField = YES;      \
-    }                                       \
-
-+ (nonnull ADJOptionalFailsNL<ADJAttributionData *> *)
-    instanceFromV4WithAttribution:(nonnull ADJV4Attribution *)v4Attribution
-{
-    NSMutableArray<ADJResultFail *> *_Nonnull optFailsMut = [[NSMutableArray alloc] init];
-
-    BOOL hasAtLeastOneValidField = NO;
-
-    ADJResultNL<ADJMoneyDoubleAmount *> *_Nonnull costAmountDoubleResult =
-        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:v4Attribution.costAmount];
-    if (costAmountDoubleResult.fail != nil) {
-        [optFailsMut addObject:[[ADJResultFail alloc]
-                                initWithMessage:@"Invalid value from v4 attribution"
-                                key:@"cost amount double fail"
-                                otherFail:costAmountDoubleResult.fail]];
-    }
-    if (costAmountDoubleResult.value != nil) {
-        hasAtLeastOneValidField = YES;
-    }
-
-    convV4String(trackerToken)
-    convV4String(trackerName)
-    convV4String(network)
-    convV4String(campaign)
-    convV4String(adgroup)
-    convV4String(creative)
-    convV4String(clickLabel)
-    convV4String(adid)
-    convV4String(costType)
-    convV4String(costCurrency)
-
-    if (! hasAtLeastOneValidField) {
-        return [[ADJOptionalFailsNL alloc]
-                initWithOptionalFails:optFailsMut
-                value:nil];
-    }
-
-    return [[ADJOptionalFailsNL alloc]
-            initWithOptionalFails:optFailsMut
-            value:[[ADJAttributionData alloc]
-                   initWithTrackerToken:trackerTokenResult.value
-                   trackerName:trackerNameResult.value
-                   network:networkResult.value
-                   campaign:campaignResult.value
-                   adgroup:adgroupResult.value
-                   creative:creativeResult.value
-                   clickLabel:clickLabelResult.value
-                   adid:adidResult.value
-                   // deeplink and state not coming from v4
-                   // TODO: confirm that assumption is correct
-                   deeplink:nil
-                   state:nil
-                   costType:costTypeResult.value
-                   costAmount:costAmountDoubleResult.value
-                   costCurrency:costCurrencyResult.value]];
-}
-
 #define extrJsonCall(dictKey) \
     [ADJAttributionData extractStringWithDictionary:attributionJson     \
                                                 key:(dictKey)           \
                                    optionalFailsMut:optionalFailsMut]   \
 
 
-+ (nonnull ADJOptionalFailsNN<ADJAttributionData *> *)
+// TODO: adid to be extracted from attribution
++ (nonnull ADJOptionalFails<ADJAttributionData *> *)
     instanceFromJson:(nonnull NSDictionary *)attributionJson
     adid:(nonnull ADJNonEmptyString *)adid
 {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
 
-    ADJResultNL<NSNumber *> *_Nonnull costAmountDoubleNumberResult =
+    ADJResult<NSNumber *> *_Nonnull costAmountDoubleNumberResult =
         [ADJUtilMap extractDoubleNumberWithDictionary:attributionJson
                                                   key:ADJParamAttributionCostAmountKey];
-    if (costAmountDoubleNumberResult.fail != nil) {
+    if (costAmountDoubleNumberResult.failNonNilInput != nil) {
         [optionalFailsMut addObject:
          [[ADJResultFail alloc]
           initWithMessage:@"Cannot parse double value for cost amount from number"
           key:@"double number fail"
           otherFail:costAmountDoubleNumberResult.fail]];
     }
-    ADJResultNL<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
-        [ADJMoneyDoubleAmount instanceFromOptionalDoubleNumberValue:
-         costAmountDoubleNumberResult.value];
-    if (costAmountDoubleResult.fail != nil) {
+    ADJResult<ADJMoneyDoubleAmount *> *_Nullable costAmountDoubleResult =
+        [ADJMoneyDoubleAmount instanceFromDoubleNumberValue:costAmountDoubleNumberResult.value];
+    if (costAmountDoubleResult.failNonNilInput != nil) {
         [optionalFailsMut addObject:
          [[ADJResultFail alloc]
           initWithMessage:@"Cannot parse money value for cost amount from double number"
@@ -190,7 +116,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
           otherFail:costAmountDoubleResult.fail]];
     }
 
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJAttributionData alloc]
                    initWithTrackerToken:extrJsonCall(ADJParamAttributionTrackerTokenKey)
@@ -200,6 +126,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    adgroup:extrJsonCall(ADJParamAttributionAdGroupKey)
                    creative:extrJsonCall(ADJParamAttributionCreativeKey)
                    clickLabel:extrJsonCall(ADJParamAttributionClickLableKey)
+                   // TODO: adid to be extracted from attribution
                    adid:adid
                    deeplink:extrJsonCall(ADJParamAttributionDeeplinkKey)
                    state:extrJsonCall(ADJParamAttributionStateKey)
@@ -208,12 +135,6 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                    costCurrency:extrJsonCall(ADJParamAttributionCostCurrencyKey)]];
 }
 
-- (nullable instancetype)init {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
-#pragma mark - Private constructors
 - (nonnull instancetype)initWithTrackerToken:(nullable ADJNonEmptyString *)trackerToken
                                  trackerName:(nullable ADJNonEmptyString *)trackerName
                                      network:(nullable ADJNonEmptyString *)network
@@ -221,11 +142,12 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
                                      adgroup:(nullable ADJNonEmptyString *)adgroup
                                     creative:(nullable ADJNonEmptyString *)creative
                                   clickLabel:(nullable ADJNonEmptyString *)clickLabel
+// TODO: adid to be extracted from attribution
                                         adid:(nullable ADJNonEmptyString *)adid
                                     deeplink:(nullable ADJNonEmptyString *)deeplink
                                        state:(nullable ADJNonEmptyString *)state
                                     costType:(nullable ADJNonEmptyString *)costType
-                                  costAmount:(nullable ADJMoneyAmountBase *)costAmount
+                                  costAmount:(nullable ADJMoneyDoubleAmount *)costAmount
                                 costCurrency:(nullable ADJNonEmptyString *)costCurrency
 {
     self = [super init];
@@ -237,6 +159,7 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     _adgroup = adgroup;
     _creative = creative;
     _clickLabel = clickLabel;
+    // TODO: adid to be extracted from attribution
     _adid = adid;
     _deeplink = deeplink;
     _state = state;
@@ -247,33 +170,104 @@ static NSString *const kCostCurrencyKey = @"costCurrency";
     return self;
 }
 
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 #pragma mark Public API
 - (nonnull ADJAdjustAttribution *)toAdjustAttribution {
     ADJAdjustAttribution *_Nonnull adjustAttribution = [[ADJAdjustAttribution alloc] init];
     
-    adjustAttribution.trackerToken = [ADJAttributionData coallesceToEmptyStringWithValue:self.trackerToken];
-    adjustAttribution.trackerName = [ADJAttributionData coallesceToEmptyStringWithValue:self.trackerName];
-    adjustAttribution.network = [ADJAttributionData coallesceToEmptyStringWithValue:self.network];
-    adjustAttribution.campaign = [ADJAttributionData coallesceToEmptyStringWithValue:self.campaign];
-    adjustAttribution.adgroup = [ADJAttributionData coallesceToEmptyStringWithValue:self.adgroup];
-    adjustAttribution.creative = [ADJAttributionData coallesceToEmptyStringWithValue:self.creative];
-    adjustAttribution.clickLabel = [ADJAttributionData coallesceToEmptyStringWithValue:self.clickLabel];
-    adjustAttribution.adid = [ADJAttributionData coallesceToEmptyStringWithValue:self.adid];
-    adjustAttribution.deeplink = [ADJAttributionData coallesceToEmptyStringWithValue:self.deeplink];
-    adjustAttribution.state = [ADJAttributionData coallesceToEmptyStringWithValue:self.state];
-    adjustAttribution.costType = [ADJAttributionData coallesceToEmptyStringWithValue:self.costType];
-    adjustAttribution.costAmount = self.costAmount != nil ? self.costAmount.doubleValue : -1.0;
-    adjustAttribution.costCurrency = [ADJAttributionData coallesceToEmptyStringWithValue:self.costCurrency];
+    adjustAttribution.trackerToken = [ADJUtilF stringValueOrNil:self.trackerToken];
+    adjustAttribution.trackerName = [ADJUtilF stringValueOrNil:self.trackerName];
+    adjustAttribution.network = [ADJUtilF stringValueOrNil:self.network];
+    adjustAttribution.campaign = [ADJUtilF stringValueOrNil:self.campaign];
+    adjustAttribution.adgroup = [ADJUtilF stringValueOrNil:self.adgroup];
+    adjustAttribution.creative = [ADJUtilF stringValueOrNil:self.creative];
+    adjustAttribution.clickLabel = [ADJUtilF stringValueOrNil:self.clickLabel];
+    // TODO: adid to be extracted from attribution
+    adjustAttribution.adid = [ADJUtilF stringValueOrNil:self.adid];
+    adjustAttribution.deeplink = [ADJUtilF stringValueOrNil:self.deeplink];
+    adjustAttribution.state = [ADJUtilF stringValueOrNil:self.state];
+    adjustAttribution.costType = [ADJUtilF stringValueOrNil:self.costType];
+    adjustAttribution.costAmount = self.costAmount != nil ? self.costAmount.doubleNumberValue : nil;
+    adjustAttribution.costCurrency = [ADJUtilF stringValueOrNil:self.costCurrency];
     
     return adjustAttribution;
+}
+
+- (nonnull ADJOptionalFails<NSDictionary<NSString *, id> *> *)
+    buildInternalCallbackDataWithMethodName:(nonnull NSString *)methodName
+{
+    NSMutableDictionary<NSString *, id> *_Nonnull callbackDataMut =
+        [[NSMutableDictionary alloc] init];
+
+    ADJAdjustAttribution *_Nonnull adjustAttribution = [self toAdjustAttribution];
+    [callbackDataMut setObject:adjustAttribution
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackAdjustDataSuffix]];
+
+    NSDictionary<NSString *, id> *_Nonnull jsonDictionary =
+        [ADJAttributionData toJsonDictionaryWithAdjustAttribution:adjustAttribution];
+    [callbackDataMut setObject:jsonDictionary
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackNsDictionarySuffix]];
+
+    ADJOptionalFails<NSString *> *_Nonnull jsonStringOptFails =
+        [ADJUtilJson toStringFromDictionary:jsonDictionary];
+    [callbackDataMut setObject:jsonStringOptFails.value
+                        forKey:[NSString stringWithFormat:@"%@%@",
+                                methodName, ADJInternalCallbackJsonStringSuffix]];
+
+    return [[ADJOptionalFails alloc] initWithOptionalFails:jsonStringOptFails.optionalFails
+                                                       value:callbackDataMut];
+}
+
++ (nonnull NSDictionary<NSString *, id> *)toJsonDictionaryWithAdjustAttribution:
+    (nonnull ADJAdjustAttribution *)adjustAttribution
+{
+    NSMutableDictionary<NSString *, id> *_Nonnull jsonDictionaryMut =
+        [[NSMutableDictionary alloc] initWithCapacity:13];
+
+    // keys in ioData match the AdjustAttribution names, so might just well use them
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.trackerToken]
+                          forKey:kTrackerTokenKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.trackerName]
+                          forKey:kTrackerNameKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.network]
+                          forKey:kNetworkKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.campaign]
+                          forKey:kCampaignKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.adgroup]
+                          forKey:kAdgroupKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.creative]
+                          forKey:kCreativeKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.clickLabel]
+                          forKey:kClickLabelKey];
+    // TODO: adid to be extracted from attribution
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.adid]
+                          forKey:kAdidKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.deeplink]
+                          forKey:kDeeplinkKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.state]
+                          forKey:kStateKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.costType]
+                          forKey:kCostTypeKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.costAmount]
+                          forKey:kCostAmountKey];
+    [jsonDictionaryMut setObject:[ADJUtilObj idOrNsNull:adjustAttribution.costCurrency]
+                          forKey:kCostCurrencyKey];
+
+    return jsonDictionaryMut;
 }
 
 #pragma mark - ADJIoDataMapBuilderInjectable
 
 #define injectIoData(keyValue, ioValue)                         \
-[ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder    \
-key:keyValue            \
-ioValueSerializable:ioValue]            \
+     [ADJUtilMap injectIntoIoDataBuilderMap:ioDataMapBuilder    \
+                                        key:keyValue            \
+                        ioValueSerializable:ioValue]            \
 
 - (void)injectIntoIoDataMapBuilder:(nonnull ADJStringMapBuilder *)ioDataMapBuilder {
     injectIoData(kTrackerTokenKey, self.trackerToken);
@@ -283,6 +277,7 @@ ioValueSerializable:ioValue]            \
     injectIoData(kAdgroupKey, self.adgroup);
     injectIoData(kCreativeKey, self.creative);
     injectIoData(kClickLabelKey, self.clickLabel);
+    // TODO: adid to be extracted from attribution
     injectIoData(kAdidKey, self.adid);
     injectIoData(kDeeplinkKey, self.deeplink);
     injectIoData(kStateKey, self.state);
@@ -302,6 +297,7 @@ ioValueSerializable:ioValue]            \
             kAdgroupKey, self.adgroup,
             kCreativeKey, self.creative,
             kClickLabelKey, self.clickLabel,
+            // TODO: adid to be extracted from attribution
             kAdidKey, self.adid,
             kDeeplinkKey, self.deeplink,
             kStateKey, self.state,
@@ -315,21 +311,22 @@ ioValueSerializable:ioValue]            \
     NSUInteger hashCode = ADJInitialHashCode;
     
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.trackerToken];
+        [ADJUtilObj objecNullableHash:self.trackerToken];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.trackerName];
+        [ADJUtilObj objecNullableHash:self.trackerName];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.network];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.campaign];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.adgroup];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.creative];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.clickLabel];
+    // TODO: adid to be extracted from attribution
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.adid];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.deeplink];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.state];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.costType];
     hashCode = ADJHashCodeMultiplier * hashCode + [ADJUtilObj objecNullableHash:self.costAmount];
     hashCode = ADJHashCodeMultiplier * hashCode +
-    [ADJUtilObj objecNullableHash:self.costCurrency];
+        [ADJUtilObj objecNullableHash:self.costCurrency];
     
     return hashCode;
 }
@@ -345,23 +342,24 @@ ioValueSerializable:ioValue]            \
     
     ADJAttributionData *other = (ADJAttributionData *)object;
     return [ADJUtilObj objectEquals:self.trackerToken other:other.trackerToken]
-    && [ADJUtilObj objectEquals:self.trackerName other:other.trackerName]
-    && [ADJUtilObj objectEquals:self.network other:other.network]
-    && [ADJUtilObj objectEquals:self.campaign other:other.campaign]
-    && [ADJUtilObj objectEquals:self.adgroup other:other.adgroup]
-    && [ADJUtilObj objectEquals:self.creative other:other.creative]
-    && [ADJUtilObj objectEquals:self.clickLabel other:other.clickLabel]
-    && [ADJUtilObj objectEquals:self.adid other:other.adid]
-    && [ADJUtilObj objectEquals:self.deeplink other:other.deeplink]
-    && [ADJUtilObj objectEquals:self.state other:other.state]
-    && [ADJUtilObj objectEquals:self.costType other:other.costType]
-    && [ADJUtilObj objectEquals:self.costAmount other:other.costAmount]
-    && [ADJUtilObj objectEquals:self.costCurrency other:other.costCurrency];
+        && [ADJUtilObj objectEquals:self.trackerName other:other.trackerName]
+        && [ADJUtilObj objectEquals:self.network other:other.network]
+        && [ADJUtilObj objectEquals:self.campaign other:other.campaign]
+        && [ADJUtilObj objectEquals:self.adgroup other:other.adgroup]
+        && [ADJUtilObj objectEquals:self.creative other:other.creative]
+        && [ADJUtilObj objectEquals:self.clickLabel other:other.clickLabel]
+        // TODO: adid to be extracted from attribution
+        && [ADJUtilObj objectEquals:self.adid other:other.adid]
+        && [ADJUtilObj objectEquals:self.deeplink other:other.deeplink]
+        && [ADJUtilObj objectEquals:self.state other:other.state]
+        && [ADJUtilObj objectEquals:self.costType other:other.costType]
+        && [ADJUtilObj objectEquals:self.costAmount other:other.costAmount]
+        && [ADJUtilObj objectEquals:self.costCurrency other:other.costCurrency];
 }
 
 #pragma mark Internal Methods
-+ (nonnull NSString *)coallesceToEmptyStringWithValue:(nullable ADJNonEmptyString *)value {
-    return value != nil ? value.stringValue : @"";
++ (nonnull NSString *)stringValueOrNil:(nullable ADJNonEmptyString *)value {
+    return value != nil ? value.stringValue : nil;
 }
 
 + (nullable ADJNonEmptyString *)
@@ -369,11 +367,11 @@ ioValueSerializable:ioValue]            \
     key:(nonnull NSString *)key
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {
-    ADJResultNL<NSString *> *_Nonnull extractedNsStringResult =
+    ADJResult<NSString *> *_Nonnull extractedNsStringResult =
         [ADJUtilMap extractStringValueWithDictionary:jsonDictionary
                                                  key:key];
 
-    if (extractedNsStringResult.fail != nil) {
+    if (extractedNsStringResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull failBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot extract string value from json"];
@@ -384,9 +382,9 @@ ioValueSerializable:ioValue]            \
         [optionalFailsMut addObject:[failBuilder build]];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull stringResult =
-        [ADJNonEmptyString instanceFromOptionalString:extractedNsStringResult.value];
-    if (stringResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull stringResult =
+        [ADJNonEmptyString instanceFromString:extractedNsStringResult.value];
+    if (stringResult.failNonNilInput != nil) {
         ADJResultFailBuilder *_Nonnull failBuilder =
             [[ADJResultFailBuilder alloc] initWithMessage:
              @"Cannot parse string from extracted json value"];
@@ -398,6 +396,26 @@ ioValueSerializable:ioValue]            \
     }
 
     return stringResult.value;
+}
+
++ (nonnull ADJResult<ADJMoneyDoubleAmount *> *)
+    extractCostAmountWithIoValue:(nullable ADJNonEmptyString *)ioValue
+{
+    if (ioValue == nil) {
+        return [ADJResult nilInputWithMessage:@"Cannot extract cost amount from nil io value"];
+    }
+
+    NSString *_Nullable ioMoneyDoubleAmountSubValue =
+        [ADJMoneyDoubleAmount ioMoneyDoubleAmountSubValueWithIoValue:ioValue];
+
+    if (ioMoneyDoubleAmountSubValue == nil) {
+        return [ADJResult failWithMessage:@"Cost amount did not match expected double sub type"
+                                      key:ADJLogActualKey
+                              stringValue:ioValue.stringValue];
+    }
+
+    return [ADJMoneyDoubleAmount
+            instanceFromIoMoneyDoubleAmountSubValue:ioMoneyDoubleAmountSubValue];;
 }
 
 @end

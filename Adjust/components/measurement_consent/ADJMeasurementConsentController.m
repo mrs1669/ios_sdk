@@ -25,9 +25,9 @@ NSString *const ADJMeasurementConsentControllerClientActionHandlerId = @"Measure
 
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                             sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController {
-
-    self = [super initWithLoggerFactory:loggerFactory source:@"MeasurementConsentController"];
+                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"MeasurementConsentController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _mainQueueControllerWeak = mainQueueController;
 

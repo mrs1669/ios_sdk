@@ -22,8 +22,7 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                    instanceId:(nonnull ADJInstanceIdData *)instanceId
 {
-    self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"ADJV4RestMigration"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ADJV4RestMigration"];
     _instanceId = instanceId;
     return self;
 }

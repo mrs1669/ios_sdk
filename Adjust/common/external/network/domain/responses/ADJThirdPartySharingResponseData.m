@@ -10,13 +10,13 @@
 
 @implementation ADJThirdPartySharingResponseData
 #pragma mark Instantiation
-+ (nonnull ADJOptionalFailsNN<ADJThirdPartySharingResponseData *> *)
++ (nonnull ADJOptionalFails<ADJThirdPartySharingResponseData *> *)
     instanceWithBuilder:(nonnull ADJSdkResponseDataBuilder *)sdkResponseDataBuilder
     thirdPartySharingPackageData:
         (nonnull ADJThirdPartySharingPackageData *)thirdPartySharingPackageData
 {
     NSMutableArray<ADJResultFail *> *_Nonnull optionalFailsMut = [[NSMutableArray alloc] init];
-    return [[ADJOptionalFailsNN alloc]
+    return [[ADJOptionalFails alloc]
             initWithOptionalFails:optionalFailsMut
             value:[[ADJThirdPartySharingResponseData alloc]
                    initWithBuilder:sdkResponseDataBuilder

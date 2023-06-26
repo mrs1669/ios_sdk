@@ -10,7 +10,6 @@
 
 #import "ADJCommonBase.h"
 #import "ADJSdkPackageSenderFactory.h"
-#import "ADJPublishingGateSubscriber.h"
 #import "ADJSdkStartSubscriber.h"
 #import "ADJSdkResponseSubscriber.h"
 #import "ADJPausingSubscriber.h"
@@ -28,7 +27,6 @@
 @interface ADJAttributionController : ADJCommonBase<
     ADJSdkResponseCallbackSubscriber,
     // subscriptions
-    ADJPublishingGateSubscriber,
     ADJSdkStartSubscriber,
     ADJSdkResponseSubscriber,
     ADJPausingSubscriber

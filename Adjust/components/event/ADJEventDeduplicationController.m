@@ -23,10 +23,12 @@
 
 @implementation ADJEventDeduplicationController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-                maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication {
-    self = [super initWithLoggerFactory:loggerFactory source:@"EventDeduplicationController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+    maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"EventDeduplicationController"];
     _eventDeduplicationStorageWeak = eventDeduplicationStorage;
     
     if (maxCapacityEventDeduplication != nil) {
@@ -34,7 +36,7 @@
         
         [self.logger debugDev:@"Overwriting max capacity event deduplication"
                           key:@"changed_max_capacity"
-                        value:_maxCapacityEventDeduplication.description];
+                  stringValue:_maxCapacityEventDeduplication.description];
     } else {
         _maxCapacityEventDeduplication =
         [[ADJNonNegativeInt alloc]
@@ -42,7 +44,7 @@
         
         [self.logger debugDev:@"Falling back to default max capacity event deduplication"
                           key:@"default_max_capacity"
-                        value:_maxCapacityEventDeduplication.description];
+                  stringValue:_maxCapacityEventDeduplication.description];
     }
     
     _deduplicationIdSet =
@@ -88,7 +90,7 @@
          " It will remove enough of the oldest added deduplication ids"
          " before adding the new one"
                             key:@"limit"
-                          value:self.maxCapacityEventDeduplication.description];
+                    stringValue:self.maxCapacityEventDeduplication.description];
         
         [self removeOldestDeduplicationIdsWithStorage:storage
                   oldestDeduplicationIdsToRemoveCount:excessDeduplicationIdsCount + 1];
@@ -112,7 +114,7 @@
         [self.logger debugDev:@"Event deduplication id list was loaded above limit."
          " They will removed from oldest order"
                           key:@"excessDeduplicationIdsCount"
-                        value:[ADJUtilF integerFormat:excessDeduplicationIdsCount]];
+                  stringValue:[ADJUtilF integerFormat:excessDeduplicationIdsCount]];
         [self removeOldestDeduplicationIdsWithStorage:storage
                   oldestDeduplicationIdsToRemoveCount:(NSUInteger)excessDeduplicationIdsCount];
     }
@@ -129,7 +131,7 @@
         {
             [self.logger debugDev:@"Found unexpected duplicated id in storage, removing it"
                               key:@"unexpected duplicated id"
-                            value:deduplicationIdElement.deduplicationId.stringValue
+                      stringValue:deduplicationIdElement.deduplicationId.stringValue
                         issueType:ADJIssueStorageIo];
             [storage removeElementByPosition:elementPosition sqliteStorageAction:nil];
         } else {

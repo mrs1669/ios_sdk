@@ -16,9 +16,10 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
-                             sqliteController:(nonnull ADJSQLiteController *)sqliteController {
+                             sqliteController:(nonnull ADJSQLiteController *)sqliteController
+{
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"AsaAttributionStateStorage"
+                             loggerName:@"AsaAttributionStateStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kAsaAttributionStateStorageTableName
@@ -30,10 +31,10 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStoragePropertiesBase
-- (nonnull ADJResultNN<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
+- (nonnull ADJResult<ADJAsaAttributionStateData *> *)concreteGenerateValueFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJOptionalFailsNN<ADJResultNN<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
+    ADJOptionalFails<ADJResult<ADJAsaAttributionStateData *> *> *_Nonnull resultOptFails =
         [ADJAsaAttributionStateData instanceFromIoData:ioData];
 
     for (ADJResultFail *_Nonnull optionalFail in resultOptFails.optionalFails) {

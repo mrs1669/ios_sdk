@@ -13,13 +13,13 @@
 @interface ADJDelayData : NSObject
 // instantiation
 - (nonnull instancetype)initWithDelay:(nonnull ADJTimeLengthMilli *)delay
-                               source:(nonnull NSString *)source
+                                 from:(nonnull NSString *)from
     NS_DESIGNATED_INITIALIZER;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJTimeLengthMilli *delay;
-@property (nonnull, readonly, strong, nonatomic) NSString *source;
+@property (nonnull, readonly, strong, nonatomic) NSString *from;
 
 @end

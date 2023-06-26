@@ -18,7 +18,7 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"LogQueueStorage"
+                             loggerName:@"LogQueueStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kLogQueueStorageTableName
@@ -29,26 +29,26 @@ static NSString *const kLogQueueStorageTableName = @"log_queue";
 
 #pragma mark Protected Methods
 #pragma mark - Concrete ADJSQLiteStorageQueueBase
-- (nonnull ADJResultNN<ADJLogPackageData *> *)concreteGenerateElementFromIoData:
+- (nonnull ADJResult<ADJLogPackageData *> *)concreteGenerateElementFromIoData:
     (nonnull ADJIoData *)ioData
 {
-    ADJResultNN<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
-    [ADJSdkPackageBaseData instanceFromIoData:ioData];
+    ADJResult<ADJSdkPackageBaseData *> *_Nonnull sdkPackageDataResult =
+        [ADJSdkPackageBaseData instanceFromIoData:ioData];
     if (sdkPackageDataResult.fail != nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not parse sdk package data from io data for an expected log package"
-                                        key:@"sdkPackageData fail"
-                                  otherFail:sdkPackageDataResult.fail];
+                                      key:@"sdkPackageData fail"
+                                otherFail:sdkPackageDataResult.fail];
     }
 
     if (! [sdkPackageDataResult.value isKindOfClass:[ADJLogPackageData class]]) {
-        return [ADJResultNN
+        return [ADJResult
                 failWithMessage:@"Unexpected non log package"
                 key:@"package read short description"
                 stringValue:[sdkPackageDataResult.value generateShortDescription].stringValue];
     }
 
-    return (ADJResultNN<ADJLogPackageData *> *)sdkPackageDataResult;
+    return (ADJResult<ADJLogPackageData *> *)sdkPackageDataResult;
 }
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromElement:(nonnull ADJLogPackageData *)element {

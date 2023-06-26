@@ -16,7 +16,7 @@
 @interface ADJSQLiteStoragePropertiesBase<D> : ADJSQLiteStorageBase
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName
@@ -34,7 +34,7 @@
                             newDataValue:(nonnull D)newDataValue;
 
 // protected abstract
-- (nonnull ADJResultNN<D> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData;
+- (nonnull ADJResult<D> *)concreteGenerateValueFromIoData:(nonnull ADJIoData *)ioData;
 
 - (nonnull ADJIoData *)concreteGenerateIoDataFromValue:(nonnull D)dataValue;
 

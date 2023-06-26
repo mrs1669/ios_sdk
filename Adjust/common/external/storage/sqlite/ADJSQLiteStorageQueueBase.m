@@ -34,7 +34,7 @@ static NSString *const kColumnValue = @"value";
 @implementation ADJSQLiteStorageQueueBase
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                       source:(nonnull NSString *)source
+                                   loggerName:(nonnull NSString *)loggerName
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController
                                     tableName:(nonnull NSString *)tableName
@@ -47,7 +47,7 @@ static NSString *const kColumnValue = @"value";
     }
 
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:source
+                             loggerName:loggerName
                         storageExecutor:storageExecutor
                  sqliteDatabaseProvider:sqliteController
                               tableName:tableName
@@ -205,7 +205,10 @@ static NSString *const kColumnValue = @"value";
     sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor
+     executeInSequenceWithLogger:self.logger
+     from:@"remove element by position in storage only"
+     block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
@@ -215,7 +218,7 @@ static NSString *const kColumnValue = @"value";
         [strongSelf removeElementByPosition:elementPositionToRemove
                                    sqliteDb:[strongSelf.sqliteDatabaseProvider sqliteDb]
                         sqliteStorageAction:sqliteStorageAction];
-    } source:@"remove element by position in storage only"];
+    }];
 }
 
 - (void)removeAllElements {
@@ -229,13 +232,15 @@ static NSString *const kColumnValue = @"value";
 
     // in storage
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"remove all elements"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         ADJSQLiteDb *_Nonnull sqliteDb = [strongSelf.sqliteDatabaseProvider sqliteDb];
         [sqliteDb executeStatements:strongSelf.deleteAllSql.stringValue];
-    } source:@"remove all elements"];
+    }];
 }
 
 - (void)updateMetadataWithMap:(nonnull ADJStringMap *)newMetadataMap {
@@ -343,7 +348,7 @@ static NSString *const kColumnValue = @"value";
     if (atLeastOneElementAdded) {
         [self.logger debugDev:@"Read elements to the queue"
                           key:@"count"
-                        value:[self count].description];
+                  stringValue:[self count].description];
     } else {
         [self.logger debugDev:@"Did not read any element to the queue"];
     }
@@ -406,7 +411,7 @@ static int const kInsertValueFieldPosition = 4;
 }
 
 #pragma mark - Abstract
-- (nonnull ADJResultNN<id> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
+- (nonnull ADJResult<id> *)concreteGenerateElementFromIoData:(nonnull ADJIoData *)ioData {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -430,7 +435,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
     addReadDataToInMemoryQueueWithIoData:(nonnull ADJIoData *)readIoData
     currentElementPositionNumber:(nonnull NSNumber *)currentElementPositionNumber
 {
-    ADJResultNN<ADJNonNegativeInt *> *_Nonnull elementPositionToAddResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull elementPositionToAddResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:currentElementPositionNumber];
 
     if (elementPositionToAddResult.fail != nil) {
@@ -441,7 +446,8 @@ static int const kDeleteElementPositionFieldPosition = 1;
                                 why:@"failed to parse from number"];
             [logBuilder withFail:elementPositionToAddResult.fail
                            issue:ADJIssueStorageIo];
-            [logBuilder withKey:@"metadata type" value:self.metadataTypeValue];
+            [logBuilder withKey:@"metadata type"
+                    stringValue:self.metadataTypeValue];
         }];
 
         return nil;
@@ -454,7 +460,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
          return elementPositionToAdd;
      }
 
-    ADJResultNN<id> *lastReadElementResult = [self concreteGenerateElementFromIoData:readIoData];
+    ADJResult<id> *lastReadElementResult = [self concreteGenerateElementFromIoData:readIoData];
     if (lastReadElementResult.fail != nil) {
         [self.logger debugWithMessage:@"Cannot add element to memory queue"
                          builderBlock:^(ADJLogBuilder * _Nonnull logBuilder)
@@ -462,9 +468,9 @@ static int const kDeleteElementPositionFieldPosition = 1;
             [logBuilder withFail:lastReadElementResult.fail
                            issue:ADJIssueStorageIo];
             [logBuilder withKey:@"element position"
-                          value:elementPositionToAddResult.value.description];
+                    stringValue:elementPositionToAddResult.value.description];
             [logBuilder withKey:@"metadata type"
-                          value:self.metadataTypeValue];
+                    stringValue:self.metadataTypeValue];
         }];
 
         return nil;
@@ -535,7 +541,9 @@ static int const kDeleteElementPositionFieldPosition = 1;
         sqliteStorageAction:(nullable ADJSQLiteStorageActionBase *)sqliteStorageAction
 {
     __typeof(self) __weak weakSelf = self;
-    [self.storageExecutor executeInSequenceWithBlock:^{
+    [self.storageExecutor executeInSequenceWithLogger:self.logger
+                                                     from:@"add element to storage"
+                                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) {
             [ADJUtilSys finalizeAtRuntime:sqliteStorageAction];
@@ -546,7 +554,7 @@ static int const kDeleteElementPositionFieldPosition = 1;
                               newElement:newElement
                       newElementPosition:newElementPosition
                      sqliteStorageAction:sqliteStorageAction];
-    } source:@"add element to storage"];
+    }];
 }
 
 - (void)addElementToSqliteDb:(nonnull ADJSQLiteDb *)sqliteDb

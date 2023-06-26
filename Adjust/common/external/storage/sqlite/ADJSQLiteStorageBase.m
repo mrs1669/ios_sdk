@@ -26,7 +26,7 @@
 #pragma mark Instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-    source:(nonnull NSString *)source
+    loggerName:(nonnull NSString *)loggerName
     storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
     sqliteDatabaseProvider:(nonnull id<ADJSQLiteDatabaseProvider>)sqliteDatabaseProvider
     tableName:(nonnull NSString *)tableName
@@ -38,7 +38,7 @@
         return nil;
     }
 
-    self = [super initWithLoggerFactory:loggerFactory source:source];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:loggerName];
     _storageExecutor = storageExecutor;
     _sqliteDatabaseProvider = sqliteDatabaseProvider;
     _tableName = tableName;
@@ -55,7 +55,8 @@
 #pragma mark - ADJSQLiteStorage
 - (void)readIntoMemorySync:(nonnull ADJSQLiteDb *)sqliteDb {
     [self.logger debugDev:@"Trying to read data from table in database to memory"
-                      key:@"table name" value:self.tableName];
+                      key:@"table name"
+              stringValue:self.tableName];
 
     if ([self transactReadIntoMemory:sqliteDb]) {
         [self.logger debugDev:@"Read data to memory"];
@@ -95,7 +96,7 @@
 {
     NSString *_Nullable fieldString = [selectStatement stringForColumnIndex:columnIndex];
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull fieldValueResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull fieldValueResult =
         [ADJNonEmptyString instanceFromString:fieldString];
 
     if (fieldValueResult.fail != nil) {
@@ -142,7 +143,7 @@
 
 #pragma mark - NSObject
  - (nonnull NSString *)description {
-     return self.source;
+     return self.logger.name;
  }
 
 #pragma mark Internal Methods
@@ -156,7 +157,7 @@
         [self.logger debugDev:
          @"Cannot read value from Db without a prepared statement from the select query"
                           key:@"selectSql"
-                        value:self.selectSql.stringValue
+                  stringValue:self.selectSql.stringValue
                     issueType:ADJIssueStorageIo];
         [sqliteDb rollback];
         return NO;
@@ -168,7 +169,7 @@
         [self.logger debugDev:
          @"Was not able to step to first row of select statement. It could be empty"
                           key:@"selectSql"
-                        value:self.selectSql.stringValue];
+                  stringValue:self.selectSql.stringValue];
         [selectStatement closeStatement];
         [sqliteDb rollback];
         return NO;

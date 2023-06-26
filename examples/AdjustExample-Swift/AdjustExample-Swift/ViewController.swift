@@ -79,7 +79,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - Actions
 
     func eventTracking() {
-        let event = ADJAdjustEvent(eventId: "7j4kwr")
+        let event = ADJAdjustEvent(eventToken: "7j4kwr")
         ADJAdjust.instance().trackEvent(event)
     }
 

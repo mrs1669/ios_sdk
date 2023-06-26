@@ -9,7 +9,6 @@
 #import "ADJSessionDeviceIdsController.h"
 
 #import <UIKit/UIKit.h>
-#import "ADJValueWO.h"
 #import "ADJUtilF.h"
 #import "ADJConstants.h"
 
@@ -23,9 +22,9 @@
 
 #pragma mark - Internal variables
 @property (nullable, readwrite, strong, nonatomic)
-    ADJResultNN<ADJSessionDeviceIdsData *> *sessionDeviceIdsDataResultCached;
+    ADJResult<ADJSessionDeviceIdsData *> *sessionDeviceIdsDataResultCached;
 @property (nullable, readwrite, strong, nonatomic)
-    ADJResultNL<ADJNonEmptyString *> *identifierForVendorResultCached;
+    ADJResult<ADJNonEmptyString *> *identifierForVendorResultCached;
 
 @end
 
@@ -37,10 +36,12 @@
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                             timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
-                                 canCacheData:(BOOL)canCacheData {
-    self = [super initWithLoggerFactory:loggerFactory source:@"SessionDeviceIdsController"];
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+                                 canCacheData:(BOOL)canCacheData
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SessionDeviceIdsController"];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
     _timeoutPerAttempt = timeoutPerAttempt;
     _canCacheData = canCacheData;
 
@@ -62,39 +63,40 @@
     _canUseCacheData = NO;
 }
 
-- (nonnull ADJResultNN<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync {
+- (nonnull ADJResult<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync {
     if (_canUseCacheData) {
         return self.sessionDeviceIdsDataResultCached;
     }
 
     if (self.timeoutPerAttempt == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot attempt to read session device ids without timeout per attempt"];
     }
 
-    __block ADJResultNL<ADJNonEmptyString *> *_Nonnull identifierForVendorResult =
+    __block ADJResult<ADJNonEmptyString *> *_Nonnull identifierForVendorResult =
         [self getIdentifierForVendorWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
-    __block ADJResultNL<ADJNonEmptyString *> *_Nonnull advertisingIdentifierResult =
+    __block ADJResult<ADJNonEmptyString *> *_Nonnull advertisingIdentifierResult =
         [self getAdvertisingIdentifierWithTimeoutPerAttempt:self.timeoutPerAttempt];
 
     if (identifierForVendorResult.value == nil && advertisingIdentifierResult.value == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Could not obtain either identifier for vendor or advertising identifier"
+                              wasInputNil:NO
                                builderBlock:^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
-            if (identifierForVendorResult.fail != nil) {
+            if (identifierForVendorResult.failNonNilInput != nil) {
                 [resultFailBuilder withKey:@"advertising identifier fail"
                                  otherFail:identifierForVendorResult.fail];
             }
-            if (advertisingIdentifierResult.fail != nil) {
+            if (advertisingIdentifierResult.failNonNilInput != nil) {
                 [resultFailBuilder withKey:@"identifier for vendor fail"
                                      otherFail:advertisingIdentifierResult.fail];
             }
         }];
     }
 
-    ADJResultNN<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
-        [ADJResultNN okWithValue:
+    ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
+        [ADJResult okWithValue:
          [[ADJSessionDeviceIdsData alloc]
           initWithAdvertisingIdentifier:advertisingIdentifierResult.value
           identifierForVendor:identifierForVendorResult.value]];
@@ -108,20 +110,19 @@
 }
 
 #pragma mark Internal Methods
-- (nonnull ADJResultNL<ADJNonEmptyString *> *)
+- (nonnull ADJResult<ADJNonEmptyString *> *)
     getIdentifierForVendorWithTimeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
 {
     if (self.identifierForVendorResultCached != nil) {
         return self.identifierForVendorResultCached;
     }
 
-    __block ADJValueWO<ADJResultNL<ADJNonEmptyString *> *> *_Nonnull identifierForVendorResultWO =
-        [[ADJValueWO alloc] init];
+    __block ADJResult<ADJNonEmptyString *> *_Nullable identifierForVendorResult = nil;
 
-    BOOL readIdentifierForVendorFinishedSuccessfully =
-        [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                        blockToExecute:
-         ^{
+    ADJResultFail *_Nullable execFail =
+        [self.executor executeSynchronouslyFrom:@"read system idfv with timeout"
+                                        timeout:timeoutPerAttempt
+                                          block:^{
             NSUUID *_Nullable identifierForVendor = UIDevice.currentDevice.identifierForVendor;
             // According to https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor?language=objc
             //  'If the value is nil, wait and get the value again later.
@@ -129,69 +130,81 @@
             //   but before the user has unlocked the device.'
             // TODO: is it worth to consider retrying here?
             if (identifierForVendor == nil) {
-                [identifierForVendorResultWO setNewValue:[ADJResultNL okWithoutValue]];
+                identifierForVendorResult =
+                    [ADJResult nilInputWithMessage:
+                     @"UIDevice currentDevice identifierForVendor was nil"];
             } else {
-                [identifierForVendorResultWO setNewValue:
-                 [ADJNonEmptyString instanceFromOptionalString:
-                  [UIDevice.currentDevice.identifierForVendor UUIDString]]];
+                identifierForVendorResult =
+                    [ADJNonEmptyString instanceFromString:identifierForVendor.UUIDString];
             }
-        } source:@"read system idfv with timeout"];
+        }];
 
-    if (! readIdentifierForVendorFinishedSuccessfully) {
-        return [ADJResultNL failWithMessage:
-                @"Could not read Advertising for Vendor synchronously within timeout"];
+    if (execFail != nil) {
+        return [ADJResult failWithMessage:
+                @"Failed to execute block to read Advertising for Vendor synchronously"
+                                        key:@"exec fail"
+                                  otherFail:execFail];
     }
-
-    ADJResultNL<ADJNonEmptyString *> *_Nullable identifierForVendorResult =
-        [identifierForVendorResultWO changedValue];
-
     if (identifierForVendorResult == nil) {
-        return [ADJResultNL failWithMessage:
-                @"Could not obtain Advertising for Vendor result"];
+        return [ADJResult failWithMessage:
+                @"Failed to finish block to read Advertising for Vendor synchronously"];
     }
+
+    // TODO: add retry with 5 second delay, for 5 times async
+    if (identifierForVendorResult.wasInputNil) {
+        return identifierForVendorResult;
+    }
+
+    if (identifierForVendorResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Invalid identifierForVendor UUID"
+                                      key:@"UUID string parse fail"
+                                otherFail:identifierForVendorResult.fail];
+    }
+
+    if ([identifierForVendorResult.value.stringValue isEqualToString:ADJAppleUUIDZeros]) {
+        return [ADJResult nilInputWithMessage:@"identifierForVendor UUID was equal to zeros"];
+    }
+
+    self.identifierForVendorResultCached = identifierForVendorResult;
 
     return identifierForVendorResult;
 }
 
-- (nonnull ADJResultNL<ADJNonEmptyString *> *)
+- (nonnull ADJResult<ADJNonEmptyString *> *)
     getAdvertisingIdentifierWithTimeoutPerAttempt:(nonnull ADJTimeLengthMilli *)timeoutPerAttempt
 {
-    __block ADJValueWO<ADJResultNL<ADJNonEmptyString *> *> *_Nonnull advertisingIdentifierResultWO =
-        [[ADJValueWO alloc] init];
+    __block ADJResult<ADJNonEmptyString *> *_Nullable advertisingIdentifierResult = nil;
 
-    BOOL readAdvertisingIdentifierFinishedSuccessfully =
-        [self.executor executeSynchronouslyWithTimeout:timeoutPerAttempt
-                                        blockToExecute:
-         ^{
-            ADJResultNL<ADJNonEmptyString *> *_Nonnull advertisingIdentifierResult =
+    ADJResultFail *_Nullable execFail =
+        [self.executor executeSynchronouslyFrom:@"read system idfa"
+                                        timeout:timeoutPerAttempt
+                                          block:^{
+            advertisingIdentifierResult =
                 [ADJSessionDeviceIdsController readAdvertisingIdentifier];
-            [advertisingIdentifierResultWO setNewValue:advertisingIdentifierResult];
-        } source:@"read system idfa"];
+        }];
 
-    if (! readAdvertisingIdentifierFinishedSuccessfully) {
-        return [ADJResultNL failWithMessage:
-                @"Could not read Advertising Identifier synchronously within timeout"];
+    if (execFail != nil) {
+        return [ADJResult failWithMessage:
+                @"Failed to execute block to read Advertising Identifier synchronously"
+                                      key:@"exec fail"
+                                otherFail:execFail];
     }
-
-    ADJResultNL<ADJNonEmptyString *> *_Nullable advertisingIdentifierResult =
-        [advertisingIdentifierResultWO changedValue];
-
     if (advertisingIdentifierResult == nil) {
-        return [ADJResultNL failWithMessage:
-                @"Could not obtain Advertising Identifier result"];
+        return [ADJResult failWithMessage:
+                @"Failed to finish block to read Advertising Identifier synchronously"];
     }
 
     return advertisingIdentifierResult;
 }
 
 // return [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-+ (nonnull ADJResultNL<ADJNonEmptyString *> *)readAdvertisingIdentifier {
++ (nonnull ADJResult<ADJNonEmptyString *> *)readAdvertisingIdentifier {
     NSString *_Nonnull className =
         [ADJUtilF joinString:@"A", @"S", @"identifier", @"manager", nil];
 
     Class _Nullable adSupportClass = NSClassFromString(className);
     if (adSupportClass == nil) {
-        return [ADJResultNL failWithMessage:@"Cannot find indentifier manager class"];
+        return [ADJResult failWithMessage:@"Cannot find indentifier manager class"];
     }
 
 #pragma clang diagnostic push
@@ -199,43 +212,47 @@
     NSString *_Nonnull keyManager = [ADJUtilF joinString:@"shared", @"manager", nil];
     SEL selManager = NSSelectorFromString(keyManager);
     if (![adSupportClass respondsToSelector:selManager]) {
-        return [ADJResultNL failWithMessage:
+        return [ADJResult failWithMessage:
                 @"Cannot detected shared instance of indentifier manager"];
     }
 
     id _Nullable manager = [adSupportClass performSelector:selManager];
     if (manager == nil) {
-        return [ADJResultNL failWithMessage:@"Invalid instance of indentifier manager"];
+        return [ADJResult failWithMessage:@"Invalid instance of indentifier manager"];
     }
 
     NSString *_Nonnull keyIdentifier = [ADJUtilF joinString:@"advertising", @"identifier", nil];
     SEL selIdentifier = NSSelectorFromString(keyIdentifier);
     if (! [manager respondsToSelector:selIdentifier]) {
-        return [ADJResultNL failWithMessage:@"Cannot detected advertising identifier method"];
+        return [ADJResult failWithMessage:@"Cannot detected advertising identifier method"];
     }
 
     id _Nullable identifier = [manager performSelector:selIdentifier];
     if (identifier == nil) {
-        return [ADJResultNL failWithMessage:@"Invalid instance of advertising identifier"];
+        return [ADJResult failWithMessage:@"Invalid instance of advertising identifier"];
     }
 #pragma clang diagnostic pop
     if (! [identifier isKindOfClass:[NSUUID class]]) {
-        return [ADJResultNL failWithMessage:@"Invalid type of advertising identifier"
-                                        key:@"advertising identifier class"
-                                stringValue:NSStringFromClass([identifier class])];
+        return [ADJResult failWithMessage:@"Invalid type of advertising identifier"
+                                      key:@"advertising identifier class"
+                              stringValue:NSStringFromClass([identifier class])];
     }
 
-    NSUUID *_Nonnull identifierUuid = (NSUUID *)identifier;
+    ADJResult<ADJNonEmptyString *> *_Nonnull idForAdvertisersResult =
+        [ADJNonEmptyString instanceFromString:((NSUUID *)identifier).UUIDString];
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull idForAdvertisersResult =
-        [ADJNonEmptyString instanceFromOptionalString:identifierUuid.UUIDString];
-
-    if (idForAdvertisersResult.fail != nil || idForAdvertisersResult.value == nil) {
+    if (idForAdvertisersResult.wasInputNil) {
         return idForAdvertisersResult;
     }
 
-    if ([idForAdvertisersResult.value.stringValue isEqualToString:ADJIdForAdvertisersZeros]) {
-        return [ADJResultNL okWithoutValue];
+    if (idForAdvertisersResult.fail != nil) {
+        return [ADJResult failWithMessage:@"Invaild advertising identifier UUID"
+                                      key:@"UUID parse fail"
+                                otherFail:idForAdvertisersResult.fail];
+    }
+
+    if ([idForAdvertisersResult.value.stringValue isEqualToString:ADJAppleUUIDZeros]) {
+        return [ADJResult nilInputWithMessage:@"idForAdvertisersResult was equal to zeros"];
     }
 
     return idForAdvertisersResult;

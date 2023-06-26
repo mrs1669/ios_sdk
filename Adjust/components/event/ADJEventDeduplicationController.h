@@ -12,9 +12,10 @@
 
 @interface ADJEventDeduplicationController : ADJCommonBase
 // instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-                maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication;
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+    maxCapacityEventDeduplication:(nullable ADJNonNegativeInt *)maxCapacityEventDeduplication;
 
 // public api
 - (BOOL)ccContainsDeduplicationId:(nonnull ADJNonEmptyString *)deduplicationId;

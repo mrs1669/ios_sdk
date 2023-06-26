@@ -60,18 +60,18 @@
     return [appSupportDirPathBase stringByAppendingPathComponent:path];
 }
 
-+ (nonnull ADJResultNN<NSNumber *> *)createDirWithPath:(nonnull NSString *)path {
++ (nonnull ADJResult<NSNumber *> *)createDirWithPath:(nonnull NSString *)path {
     NSError *_Nullable errorPtr = nil;
     BOOL dirCreated = [[NSFileManager defaultManager] createDirectoryAtPath:path
                                                 withIntermediateDirectories:YES
                                                                  attributes:nil
                                                                       error:&errorPtr];
     if (dirCreated) {
-        return [ADJResultNN okWithValue:@(dirCreated)];
+        return [ADJResult okWithValue:[NSNumber numberWithBool:dirCreated]];
     }
 
-    return [ADJResultNN failWithMessage:@"NSFileManager createDirectory returned false"
-                                  error:errorPtr];
+    return [ADJResult failWithMessage:@"NSFileManager createDirectory returned false"
+                                error:errorPtr];
 }
 
 @end

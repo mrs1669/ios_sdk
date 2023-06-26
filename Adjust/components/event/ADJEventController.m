@@ -29,13 +29,15 @@ ADJMainQueueController *mainQueueControllerWeak;
 
 @implementation ADJEventController
 #pragma mark Instantiation
-- (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                            sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                            eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
-                    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
-                          mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
-                maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication {
-    self = [super initWithLoggerFactory:loggerFactory source:@"EventController"];
+- (nonnull instancetype)
+    initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    sdkPackageBuilder:(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    eventStateStorage:(nonnull ADJEventStateStorage *)eventStateStorage
+    eventDeduplicationStorage:(nonnull ADJEventDeduplicationStorage *)eventDeduplicationStorage
+    mainQueueController:(nonnull ADJMainQueueController *)mainQueueController
+    maxCapacityEventDeduplication:(nonnull ADJNonNegativeInt *)maxCapacityEventDeduplication
+{
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"EventController"];
     _sdkPackageBuilderWeak = sdkPackageBuilder;
     _eventStateStorageWeak = eventStateStorage;
     _mainQueueControllerWeak = mainQueueController;
@@ -87,7 +89,7 @@ ADJMainQueueController *mainQueueControllerWeak;
 {
     [self.logger debugDev:@"Trying to track event"
                       key:@"event token"
-                value:clientEventData.eventId.stringValue];
+              stringValue:clientEventData.eventToken.stringValue];
 
     if (! [self canTrackEventWithDeduplicationId:clientEventData.deduplicationId]) {
         [ADJUtilSys finalizeAtRuntime:clientActionRemoveStorageAction];
@@ -133,7 +135,7 @@ ADJMainQueueController *mainQueueControllerWeak;
         [self.logger infoClient:
          @"Event won't be tracked, since it has a previously used deduplication id"
                             key:@"deduplication id"
-                          value:deduplicationId.stringValue];
+                    stringValue:deduplicationId.stringValue];
         return NO;
     }
 
@@ -142,7 +144,7 @@ ADJMainQueueController *mainQueueControllerWeak;
     [self.logger debugDev:
      @"Saving deduplication id to avoid tracking an event with the same value in the future"
                       key:@"deduplication id"
-                    value:deduplicationId.stringValue];
+              stringValue:deduplicationId.stringValue];
 
     return YES;
 }
@@ -164,7 +166,7 @@ ADJMainQueueController *mainQueueControllerWeak;
 
     [self.logger debugDev:@"Event count incremented"
                       key:@"event count"
-                    value:newEventStateData.eventCount.description];
+              stringValue:newEventStateData.eventCount.description];
 }
 
 @end

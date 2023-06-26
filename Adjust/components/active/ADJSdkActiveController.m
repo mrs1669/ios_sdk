@@ -35,7 +35,7 @@
     isForgotten:(BOOL)isForgotten
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"SdkActiveController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"SdkActiveController"];
     _storage = activeStateStorage;
     _clientExecutor = clientExecutor;
 
@@ -63,43 +63,39 @@
     return [self.sdkActiveState trySdkInit];
 }
 
-- (BOOL)ccCanPerformActionWithClientSource:(nonnull NSString *)clientSource {
-    return [self ccCanPerformActionOrElseErrorLogWithClientSource:clientSource] == nil;
-}
-
-- (nullable ADJInputLogMessageData *)ccCanPerformActionOrElseErrorLogWithClientSource:
-    (nonnull NSString *)clientSource
-{
-    return [self.sdkActiveState canPerformActionOrElseErrorLogWithClientSource:clientSource];
+- (nullable ADJResultFail *)ccCanPerformClientAction {
+    return [self.sdkActiveState canPerformActionClientAction];
 }
 
 - (void)ccInactivateSdk {
     ADJActivityStateOutputData *_Nullable output = [self.sdkActiveState inactivateSdk];
-    [self ccHandleSideEffectsWithOutputData:output source:@"ccInactivateSdk"];
+    [self ccHandleSideEffectsWithOutputData:output from:@"ccInactivateSdk"];
 }
 
 - (void)ccReactivateSdk {
     ADJActivityStateOutputData *_Nullable output = [self.sdkActiveState reactivateSdk];
-    [self ccHandleSideEffectsWithOutputData:output source:@"ccReactivateSdk"];
+    [self ccHandleSideEffectsWithOutputData:output from:@"ccReactivateSdk"];
 }
 
 - (BOOL)ccGdprForgetDevice {
     ADJActivityStateOutputData *_Nullable output = [self.sdkActiveState forgottenFromClient];
-    return [self ccHandleSideEffectsWithOutputData:output source:@"ccGdprForgetDevice"];
+    return [self ccHandleSideEffectsWithOutputData:output from:@"ccGdprForgetDevice"];
 }
 
 #pragma mark - ADJGdprForgetSubscriber
 - (void)didGdprForget {
     __typeof(self) __weak weakSelf = self;
-    [self.clientExecutor executeInSequenceWithBlock:^{
+    [self.clientExecutor executeInSequenceWithLogger:self.logger
+                                                    from:@"didGdprForget"
+                                                   block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         ADJActivityStateOutputData *_Nullable outputData =
             [strongSelf.sdkActiveState forgottenFromEvent];
 
-        [strongSelf ccHandleSideEffectsWithOutputData:outputData source:@"didGdprForget"];
-    } source:@"didGdprForget"];
+        [strongSelf ccHandleSideEffectsWithOutputData:outputData from:@"didGdprForget"];
+    }];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
@@ -109,42 +105,39 @@
     ADJSdkActiveStatus _Nonnull sdkActiveStatus = [self.sdkActiveState sdkActiveStatus];
 
     [self ccHandleEventWithSdkActiveStatus:sdkActiveStatus
-                                    source:@"ccAllowedToPublishNotifications"];
+                                      from:@"ccAllowedToPublishNotifications"];
 }
 
 #pragma mark Internal Methods
 - (BOOL)ccHandleSideEffectsWithOutputData:(nullable ADJActivityStateOutputData *)outputData
-                                   source:(nonnull NSString *)source
+                                     from:(nonnull NSString *)from
 {
     if (outputData == nil) { return NO; }
 
-    [self ccHandleStateUpdateWithChangedStateData:outputData.changedStateData
-                                           source:source];
+    [self ccHandleStateUpdateWithChangedStateData:outputData.changedStateData];
 
     [self ccHandleEventWithSdkActiveStatus:outputData.sdkActiveStatus
-                                    source:source];
+                                      from:from];
 
     return YES;
 }
 
-- (void)ccHandleStateUpdateWithChangedStateData:(nullable ADJSdkActiveStateData *)stateData
-                                         source:(nonnull NSString *)source
-{
+- (void)ccHandleStateUpdateWithChangedStateData:(nullable ADJSdkActiveStateData *)stateData {
     if (stateData == nil) { return; }
 
     [self.storage updateWithNewDataValue:stateData];
 }
 
 - (void)ccHandleEventWithSdkActiveStatus:(nullable ADJSdkActiveStatus)sdkActiveStatus
-                                  source:(nonnull NSString *)source
+                                    from:(nonnull NSString *)from
 {
     if (sdkActiveStatus == nil) { return; }
     if (! self.canPublish) { return; }
 
     [self.logger debugDev:@"Publishing Sdk Active Status"
-                     from:source
+                     from:from
                       key:@"sdkActiveStatusEvent"
-                    value:sdkActiveStatus];
+              stringValue:sdkActiveStatus];
 
     [self.sdkActivePublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJSdkActiveSubscriber> _Nonnull subscriber) {

@@ -18,7 +18,7 @@ NSString *const ADJGlobalParametersTypePartner = @"partner";
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                                       storage:(nonnull ADJGlobalPartnerParametersStorage *)storage {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"GlobalPartnerParametersController"
+                             loggerName:@"GlobalPartnerParametersController"
                    globalParametersType:ADJGlobalParametersTypePartner
              sqliteStorageStringMapBase:storage];
 

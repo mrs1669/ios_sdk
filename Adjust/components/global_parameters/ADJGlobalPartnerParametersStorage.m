@@ -21,7 +21,7 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
                               storageExecutor:(nonnull ADJSingleThreadExecutor *)storageExecutor
                              sqliteController:(nonnull ADJSQLiteController *)sqliteController {
     self = [super initWithLoggerFactory:loggerFactory
-                                 source:@"GlobalPartnerParametersStorage"
+                             loggerName:@"GlobalPartnerParametersStorage"
                         storageExecutor:storageExecutor
                        sqliteController:sqliteController
                               tableName:kGlobalPartnerParametersStorageTableName];
@@ -39,20 +39,17 @@ static NSString *const kGlobalPartnerParametersStorageTableName = @"global_partn
 - (void)migrateFromV4WithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
-    ADJOptionalFailsNL<ADJStringMap *> *_Nonnull partnerParamsOptFails =
-        [ADJGlobalParametersControllerBase paramsInstanceFromV4WithSessionParameters:
-         [v4FilesData v4SessionPartnerParameters]];
-    for (ADJResultFail *_Nonnull optionalFail in partnerParamsOptFails.optionalFails) {
-        [self.logger debugDev:@"Could not parse value for v4 session partner parameters migration"
-                   resultFail:optionalFail
-                    issueType:ADJIssueStorageIo];
-    }
+    ADJStringMap *_Nullable partnerParams =
+        [ADJGlobalParametersControllerBase
+         paramsInstanceFromV4WithSessionParameters:[v4FilesData v4SessionPartnerParameters]
+             from:@"global partner parameters"
+         logger:self.logger];
 
-    if (partnerParamsOptFails.value == nil) {
+    if (partnerParams == nil) {
         return;
     }
 
-    [self replaceAllWithStringMap:partnerParamsOptFails.value
+    [self replaceAllWithStringMap:partnerParams
               sqliteStorageAction:nil];
 }
 

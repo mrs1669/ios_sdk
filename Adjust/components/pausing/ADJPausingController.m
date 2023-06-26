@@ -49,15 +49,16 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
 
-    self = [super initWithLoggerFactory:loggerFactory source:@"PausingController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"PausingController"];
     _canSendInBackground = canSendInBackground;
 
     _pausingPublisher = [[ADJPausingPublisher alloc]
                          initWithSubscriberProtocol:@protocol(ADJPausingSubscriber)
                          controller:publisherController];
 
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
 
     _pausingState = [[ADJPausingState alloc] initWithLoggerFactory:loggerFactory
                                                canSendInBackground:canSendInBackground];
@@ -69,83 +70,93 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
 #pragma mark - ADJPublishingGateSubscriber
 - (void)ccAllowedToPublishNotifications {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"allowed to publish notifications"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishPauseOrElseResume =
-        [strongSelf.pausingState publishPauseOrElseResumeWhenCanPublish];
+            [strongSelf.pausingState publishPauseOrElseResumeWhenCanPublish];
 
         if (publishPauseOrElseResume) {
             [strongSelf publishPauseSendingWithSource:ADJFromCanPublish];
         } else {
             [strongSelf publishResumeSendingWithSource:ADJFromCanPublish];
         }
-    } source:@"allowed to publish notifications"];
+    }];
 }
 
 #pragma mark - ADJOfflineSubscriber
 - (void)didSdkBecomeOnline {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk become online"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishResume =
-        [strongSelf.pausingState publishResumeWhenOnlineWithSource:ADJResumeFromSdkOnline];
+            [strongSelf.pausingState publishResumeWhenOnlineWithSource:ADJResumeFromSdkOnline];
 
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkOnline];
         }
-    } source:@"sdk become online"];
+    }];
 }
 
 - (void)didSdkBecomeOffline {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk become offline"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishPause =
-        [strongSelf.pausingState publishPauseWhenOfflineWithSource:ADJPauseFromSdkOffline];
+            [strongSelf.pausingState publishPauseWhenOfflineWithSource:ADJPauseFromSdkOffline];
 
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromSdkOffline];
         }
-    } source:@"sdk become offline"];
+    }];
 }
 
 #pragma mark - ADJReachabilitySubscriber
 - (void)didBecomeReachable {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"become reachable"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishResume =
-        [strongSelf.pausingState
-         publishResumeWhenNetworkIsReachableWithSource:ADJResumeFromNetworkReachable];
+            [strongSelf.pausingState
+             publishResumeWhenNetworkIsReachableWithSource:ADJResumeFromNetworkReachable];
 
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromNetworkReachable];
         }
-    } source:@"become reachable"];
+    }];
 }
 
 - (void)didBecomeUnreachable {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"become unreachable"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishPause =
-        [strongSelf.pausingState
-         publishPauseWhenNetworkIsUnreachableWithSource:ADJPauseFromNetworkUnreachable];
+            [strongSelf.pausingState
+             publishPauseWhenNetworkIsUnreachableWithSource:ADJPauseFromNetworkUnreachable];
 
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromNetworkUnreachable];
         }
-    } source:@"become unreachable"];
+    }];
 }
 
 #pragma mark - ADJLifecycleSubscriber
@@ -155,18 +166,20 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"foreground"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishResume =
-        [strongSelf.pausingState
-         publishResumeWhenForegroundWithSource:ADJResumeFromForeground];
+            [strongSelf.pausingState
+             publishResumeWhenForegroundWithSource:ADJResumeFromForeground];
 
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromForeground];
         }
-    } source:@"foreground"];
+    }];
 }
 
 - (void)ccDidBackground {
@@ -175,62 +188,68 @@ NSString *const ADJPauseFromNetworkUnreachable = @"NetworkUnreachable";
     }
 
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"background"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishPause =
-        [strongSelf.pausingState
-         publishPauseWhenBackgroundWithSource:ADJPauseFromBackground];
+            [strongSelf.pausingState
+             publishPauseWhenBackgroundWithSource:ADJPauseFromBackground];
 
         if (publishPause) {
             [self publishPauseSendingWithSource:ADJPauseFromBackground];
         }
-    } source:@"background"];
+    }];
 }
 
 #pragma mark - ADJSdkStartSubscriber
 - (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk start"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         BOOL publishResume =
-        [strongSelf.pausingState
-         publishResumeWhenSdkStartWithSource:ADJResumeFromSdkStart];
+            [strongSelf.pausingState
+             publishResumeWhenSdkStartWithSource:ADJResumeFromSdkStart];
 
         if (publishResume) {
             [self publishResumeSendingWithSource:ADJResumeFromSdkStart];
         }
-    } source:@"sdk start"];
+    }];
 }
 
 #pragma mark - ADJSdkActiveSubscriber
 - (void)ccSdkActiveWithStatus:(nonnull ADJSdkActiveStatus)status {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"sdk active"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         if ([ADJSdkActiveStatusActive isEqualToString:status]) {
             BOOL publishResume =
-            [strongSelf.pausingState
-             publishResumeWhenSdkActiveWithSource:ADJResumeFromSdkActive];
+                [strongSelf.pausingState
+                 publishResumeWhenSdkActiveWithSource:ADJResumeFromSdkActive];
 
             if (publishResume) {
                 [self publishResumeSendingWithSource:ADJResumeFromSdkActive];
             }
         } else {
             BOOL publishPause =
-            [strongSelf.pausingState
-             publishPauseWhenSdkNotActiveWithSource:ADJPauseFromSdkNotActive];
+                [strongSelf.pausingState
+                 publishPauseWhenSdkNotActiveWithSource:ADJPauseFromSdkNotActive];
 
             if (publishPause) {
                 [self publishPauseSendingWithSource:ADJPauseFromSdkNotActive];
             }
         }
-    } source:@"sdk active"];
+    }];
 }
 
 #pragma mark Internal Methods

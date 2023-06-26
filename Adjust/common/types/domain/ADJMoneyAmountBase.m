@@ -14,45 +14,36 @@
 #import "ADJMoneyDecimalAmount.h"
 
 #pragma mark Fields
-#pragma mark - Public properties
-/* .h
- @property (nonnull, readonly, strong, nonatomic) NSNumber *numberValue;
- @property (readonly, assign, nonatomic) double doubleValue;
- */
-
 @implementation ADJMoneyAmountBase
 #pragma mark Instantiation
-+ (nonnull ADJResultNN<ADJMoneyAmountBase *> *)
++ (nonnull ADJResult<ADJMoneyAmountBase *> *)
     instanceFromIoValue:(nullable ADJNonEmptyString *)ioValue
 {
     if (ioValue == nil) {
-        return [ADJResultNN failWithMessage:@"Cannot create money amount with nil string value"];
+        return [ADJResult nilInputWithMessage:@"Cannot create money amount with nil string value"];
     }
-
-    if ([ioValue.stringValue hasPrefix:@"llf"]) {
-        return (ADJResultNN<ADJMoneyAmountBase *> *)
-            [ADJMoneyDoubleAmount instanceFromIoLlfValue:
-             [ioValue.stringValue substringFromIndex:3]];
+    {
+        NSString *_Nullable ioMoneyDoubleAmountSubValue =
+            [ADJMoneyDoubleAmount ioMoneyDoubleAmountSubValueWithIoValue:ioValue];
+        if (ioMoneyDoubleAmountSubValue != nil) {
+            return (ADJResult<ADJMoneyAmountBase *> *)
+            [ADJMoneyDoubleAmount
+             instanceFromIoMoneyDoubleAmountSubValue:ioMoneyDoubleAmountSubValue];
+        }
     }
-
-    if ([ioValue.stringValue hasPrefix:@"dec"]) {
-        return (ADJResultNN<ADJMoneyAmountBase *> *)
-            [ADJMoneyDecimalAmount instanceFromIoDecValue:
-             [ioValue.stringValue substringFromIndex:3]];
+    {
+        NSString *_Nullable ioMoneyDecimalAmountSubValue =
+            [ADJMoneyDecimalAmount ioMoneyDecimalAmountSubValueWithIoValue:ioValue];
+        if (ioMoneyDecimalAmountSubValue != nil) {
+            return (ADJResult<ADJMoneyAmountBase *> *)
+            [ADJMoneyDecimalAmount
+             instanceFromIoMoneyDecimalAmountSubValue:ioMoneyDecimalAmountSubValue];
+        }
     }
-
-    return [ADJResultNN failWithMessage:
+    return [ADJResult failWithMessage:
             [NSString stringWithFormat:
                  @"Cannot create money amount without a valid io data value prefix: %@",
             ioValue.stringValue]];
-}
-
-+ (nonnull ADJResultNL<ADJMoneyAmountBase *> *)instanceFromOptionalIoValue:
-    (nullable ADJNonEmptyString *)ioValue
-{
-    return [ADJResultNL instanceFromNN:^ADJResultNN *_Nonnull(ADJNonEmptyString *_Nullable value) {
-        return [ADJMoneyAmountBase instanceFromIoValue:value];
-    } nlValue:ioValue];
 }
 
 - (nonnull instancetype)init {

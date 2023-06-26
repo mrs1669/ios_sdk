@@ -11,28 +11,24 @@
 #import "ADJGdprForgetState.h"
 #import "ADJGdprForgetTracker.h"
 #import "ADJSingleThreadExecutor.h"
-#import "ADJValueWO.h"
 
 #pragma mark Private class
 @implementation ADJGdprForgetPublisher @end
 
-#pragma mark Fields
-/* .h
- @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetPublisher *gdprForgetPublisher;
- */
-
 @interface ADJGdprForgetController ()
 #pragma mark - Injected dependencies
-@property (nullable, readonly, weak, nonatomic) ADJGdprForgetStateStorage *gdprForgetStateStorageWeak;
+@property (nonnull, readonly, strong, nonatomic) ADJGdprForgetStateStorage *storage;
 @property (nullable, readwrite, weak, nonatomic) ADJSdkPackageBuilder *sdkPackageBuilderWeak;
 @property (nullable, readwrite, weak, nonatomic) ADJClock *clockWeak;
 
 #pragma mark - Internal variables
+@property (nonnull, readonly, strong, nonatomic) ADJGdprForgetPublisher *gdprForgetPublisher;
 @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetState *gdprForgetState;
 @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetTracker *gdprForgetTracker;
 @property (nonnull, readonly, strong, nonatomic) ADJSingleThreadExecutor *executor;
 @property (nullable, readwrite, strong, nonatomic) ADJSdkPackageSender *sender;
-@property (nullable, readwrite, strong, nonatomic) ADJGdprForgetPackageData *previousAttemptedPackage;
+@property (nullable, readwrite, strong, nonatomic) ADJGdprForgetPackageData *packageToSend;
+@property (readwrite, assign, nonatomic) BOOL canPublish;
 
 @end
 
@@ -45,70 +41,74 @@
     gdprForgetBackoffStrategy:(nonnull ADJBackoffStrategy *)gdprForgetBackoffStrategy
     publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"GdprForgetController"];
-    _gdprForgetStateStorageWeak = gdprForgetStateStorage;
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"GdprForgetController"];
+    _storage = gdprForgetStateStorage;
     _sdkPackageBuilderWeak = nil;
     _clockWeak = nil;
-    
+
+    ADJGdprForgetStateData *_Nonnull initialStateData =
+        [gdprForgetStateStorage readOnlyStoredDataValue];
+
     _gdprForgetPublisher = [[ADJGdprForgetPublisher alloc]
                             initWithSubscriberProtocol:@protocol(ADJGdprForgetSubscriber)
                             controller:publisherController];
     
-    _gdprForgetState = [[ADJGdprForgetState alloc] initWithLoggerFactory:loggerFactory];
+    _gdprForgetState = [[ADJGdprForgetState alloc]
+                        initWithLoggerFactory:loggerFactory
+                        initialStateData:initialStateData];
     
-    _gdprForgetTracker = [[ADJGdprForgetTracker alloc] initWithLoggerFactory:loggerFactory
-                                                   gdprForgetBackoffStrategy:gdprForgetBackoffStrategy];
+    _gdprForgetTracker = [[ADJGdprForgetTracker alloc]
+                          initWithLoggerFactory:loggerFactory
+                          gdprForgetBackoffStrategy:gdprForgetBackoffStrategy
+                          startsAsking:[initialStateData isAsking]];
     
-    _executor = [threadExecutorFactory createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                                 sourceDescription:self.source];
+    _executor = [threadExecutorFactory
+                 createSingleThreadExecutorWithLoggerFactory:loggerFactory
+                 sourceLoggerName:self.logger.name];
     
     _sender = nil;
     
-    _previousAttemptedPackage = nil;
+    _packageToSend = nil;
     
     return self;
 }
 
-- (void)ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
-(nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
-                                                  clock:(nonnull ADJClock *)clock
-                                          loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
-                                  threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
-                                sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory {
+- (void)
+    ccSetDependenciesAtSdkInitWithSdkPackageBuilder:
+        (nonnull ADJSdkPackageBuilder *)sdkPackageBuilder
+    clock:(nonnull ADJClock *)clock
+    loggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
+    threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
+    sdkPackageSenderFactory:(nonnull id<ADJSdkPackageSenderFactory>)sdkPackageSenderFactory
+{
     self.sdkPackageBuilderWeak = sdkPackageBuilder;
     self.clockWeak = clock;
     
     self.sender = [sdkPackageSenderFactory
                    createSdkPackageSenderWithLoggerFactory:loggerFactory
-                   sourceDescription:self.source
+                   sourceLoggerName:self.logger.name
                    threadExecutorFactory:threadExecutorFactory];
 }
 
 #pragma mark Public API
 - (BOOL)isForgotten {
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage =
-    self.gdprForgetStateStorageWeak;
-    if (gdprForgetStateStorage == nil) {
-        [self.logger debugDev:@"Cannot get isForgotten without a reference to storage"
-                    issueType:ADJIssueWeakReference];
-        
-        return NO;
-    }
-    
-    ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
-    [gdprForgetStateStorage readOnlyStoredDataValue];
-    
-    return [currentGdprForgetStateData isForgotten];
+    return [[self.storage readOnlyStoredDataValue] isForgotten];
 }
 
 - (void)forgetDevice {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"forget device"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
-        [strongSelf processForgetDevice];
-    } source:@"forget device"];
+        ADJGdprForgetStateOutputData *_Nullable output =
+            [strongSelf.gdprForgetState forgottenByClient];
+
+        [strongSelf handleSideEffectsWithOutputData:output
+                                         from:@"client forget device"];
+    }];
 }
 
 #pragma mark - ADJSdkResponseCallbackSubscriber
@@ -117,70 +117,84 @@
         [self.logger debugDev:
          @"Cannot process response data with that is not an gdpr forget"
                 expectedValue:NSStringFromClass([ADJGdprForgetResponseData class])
-                  actualValue:NSStringFromClass([sdkResponseData class])
+            actualStringValue:NSStringFromClass([sdkResponseData class])
                     issueType:ADJIssueLogicError];
         return;
     }
     
     ADJGdprForgetResponseData *_Nonnull gdprForgetResponseData =
-    (ADJGdprForgetResponseData *)sdkResponseData;
+        (ADJGdprForgetResponseData *)sdkResponseData;
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"received gdpr forget response"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
-        [strongSelf processGdprForgetResponseInStateWithData:gdprForgetResponseData];
-        
-        [strongSelf processGdprForgetResponseInTrackerWithData:gdprForgetResponseData];
-    } source:@"received gdpr forget response"];
+        [strongSelf gdprResponseWithData:gdprForgetResponseData];
+    }];
 }
 
-#pragma mark - ADJSdkInitSubscriber
-- (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
+#pragma mark - ADJAppStartSubscriber
+- (void)ccAppStart {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"app start"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
-        [strongSelf processSdkInit];
-    } source:@"sdk init"];
+
+        ADJGdprForgetStateOutputData *_Nullable output = [strongSelf.gdprForgetState appStart];
+
+        [strongSelf handleSideEffectsWithOutputData:output
+                                               from:@"app start"];
+    }];
 }
 
 #pragma mark - ADJPublishingGateSubscriber
 - (void)ccAllowedToPublishNotifications {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"allowed to publish notifications"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
-        [strongSelf.gdprForgetState canStartPublish];
-    } source:@"allowed to publish notifications"];
+
+        strongSelf.canPublish = YES;
+
+        ADJGdprForgetStateData *_Nonnull stateData = [strongSelf.storage readOnlyStoredDataValue];
+
+        [strongSelf handlePublishWithStatus:[stateData status]
+                                       from:@"allowed to publish"];
+    }];
 }
 
 #pragma mark - ADJLifecycleSubscriber
 - (void)ccDidForeground {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"foreground"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
-        [strongSelf processForegroundInState];
-        
-        [strongSelf processForegroundInTracker];
-    } source:@"foreground"];
+
+        if ([strongSelf.gdprForgetTracker resumeSendingWhenAppWentToForeground]) {
+            [strongSelf sendPackageFrom:@"DidForeground"];
+        }
+    }];
 }
 
 - (void)ccDidBackground {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"background"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
-        
-        [strongSelf.gdprForgetState appWentToTheBackground];
-        
-        [strongSelf.gdprForgetTracker pauseTrackingWhenAppWentToBackground];
-    } source:@"background"];
+
+        [strongSelf.gdprForgetTracker pauseSendingWhenAppWentToBackground];
+    }];
 }
 
 #pragma mark - ADJSdkResponseSubscriber
@@ -191,272 +205,134 @@
     }
     
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                          from:@"received opt out sdk response"
+                                         block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
         
-        [strongSelf processOptOut];
-    } source:@"received opt out sdk response"];
+        ADJGdprForgetStateOutputData *_Nullable output =
+            [strongSelf.gdprForgetState receivedOptOut];
+
+        [strongSelf handleSideEffectsWithOutputData:output
+                                               from:@"opt out"];
+    }];
 }
 
 #pragma mark Internal Methods
-- (void)processForgetDevice {
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage = self.gdprForgetStateStorageWeak;
-    if (gdprForgetStateStorage == nil) {
-        [self.logger debugDev:@"Cannot forget device without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
-    [gdprForgetStateStorage readOnlyStoredDataValue];
-
-    ADJValueWO<ADJGdprForgetStateData *> *_Nonnull changedGdprForgetStateDataWO =
-    [[ADJValueWO alloc] init];
-
-    ADJValueWO<NSString *> *_Nonnull gdprForgetStatusEventWO = [[ADJValueWO alloc] init];
-    
-    BOOL shouldStartTracking = [self.gdprForgetState  shouldStartTrackingWhenForgottenByClientWithCurrentStateData:currentGdprForgetStateData
-                                                                                      changedGdprForgetStateDataWO:changedGdprForgetStateDataWO
-                                                                                           gdprForgetStatusEventWO:gdprForgetStatusEventWO];
-    
-    [self handleStartingStateSideEffectsWithShouldStart:shouldStartTracking
-                             changedGdprForgetStateData:[changedGdprForgetStateDataWO changedValue]
-                                  gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
-                                 gdprForgetStateStorage:gdprForgetStateStorage
-                                      sourceDescription:@"forgetDevice"];
-}
-
-- (void)processGdprForgetResponseInStateWithData:(nonnull ADJGdprForgetResponseData *)gdprForgetResponseData {
-    // state does not change when GdprForget was not processed by the backend
-    if (! gdprForgetResponseData.processedByServer) {
-        return;
-    }
-    
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage =
-    self.gdprForgetStateStorageWeak;
-    if (gdprForgetStateStorage == nil) {
-        [self.logger debugDev:
-         @"Cannot process gdpr forget response in state without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
-    [gdprForgetStateStorage readOnlyStoredDataValue];
-    ADJValueWO<ADJGdprForgetStateData *> *_Nonnull changedGdprForgetStateDataWO =
-    [[ADJValueWO alloc] init];
-    ADJValueWO<NSString *> *_Nonnull gdprForgetStatusEventWO = [[ADJValueWO alloc] init];
-    
-    BOOL shouldStopTracking =
-    [self.gdprForgetState
-     shouldStopTrackingWhenReceivedProcessedGdprResponseWithCurrentStateData:
-         currentGdprForgetStateData
-     changedGdprForgetStateDataWO:changedGdprForgetStateDataWO
-     gdprForgetStatusEventWO:gdprForgetStatusEventWO];
-    
-    [self
-     handleStoppingStateSideEffectsWithShouldStop:shouldStopTracking
-     changedGdprForgetStateData:[changedGdprForgetStateDataWO changedValue]
-     gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
-     gdprForgetStateStorage:gdprForgetStateStorage];
-}
-
-- (void)processGdprForgetResponseInTrackerWithData:(nonnull ADJGdprForgetResponseData *)gdprForgetResponseData {
+- (void)gdprResponseWithData:(nonnull ADJGdprForgetResponseData *)gdprForgetResponseData {
     ADJDelayData *_Nullable delayData =
-    [self.gdprForgetTracker
-     delayTrackingWhenReceivedGdprForgetResponseWithData:gdprForgetResponseData];
-    
-    if (delayData == nil) {
-        // remove previous attempted package cache,
-        //  since it won't be delayed to send the same one
-        self.previousAttemptedPackage = nil;
-        return;
-    }
-    
-    __typeof(self) __weak weakSelf = self;
-    [self.executor scheduleInSequenceWithBlock:^{
-        __typeof(weakSelf) __strong strongSelf = weakSelf;
-        if (strongSelf == nil) { return; }
-        
-        BOOL sendGdprForget = [strongSelf.gdprForgetTracker sendWhenDelayEnded];
-        
-        if (sendGdprForget) {
-            [strongSelf sendGdprForgetWithSourceDescription:@"DelayEnd"];
-        }
-    }
-                                delayTimeMilli:delayData.delay
-                                        source:@"send gdpr forget"];
-}
+        [self.gdprForgetTracker
+         delayTrackingWhenReceivedGdprForgetResponseWithData:gdprForgetResponseData];
 
-- (void)processSdkInit {
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage =
-    self.gdprForgetStateStorageWeak;
-    if (gdprForgetStateStorage == nil) {
-        [self.logger debugDev:@"Cannot handle sdk init without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
-    [gdprForgetStateStorage readOnlyStoredDataValue];
-    ADJValueWO<NSString *> *_Nonnull gdprForgetStatusEventWO = [[ADJValueWO alloc] init];
-    
-    BOOL shouldStartTracking =
-    [self.gdprForgetState
-     shouldStartTrackingWhenSdkInitWithCurrentStateData:currentGdprForgetStateData
-     gdprForgetStatusEventWO:gdprForgetStatusEventWO];
-    
-    [self handleStartingStateSideEffectsWithShouldStart:shouldStartTracking
-                             changedGdprForgetStateData:nil
-                                  gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
-                                 gdprForgetStateStorage:gdprForgetStateStorage
-                                      sourceDescription:@"SdkInit"];
-}
+    if (delayData != nil) {
+        __typeof(self) __weak weakSelf = self;
+        [self.executor scheduleInSequenceWithLogger:self.logger
+                                               from:@"gdpr forget response delay"
+                                     delayTimeMilli:delayData.delay
+                                              block:^{
+            __typeof(weakSelf) __strong strongSelf = weakSelf;
+            if (strongSelf == nil) { return; }
 
-- (void)processForegroundInState {
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage =
-    self.gdprForgetStateStorageWeak;
-    if (gdprForgetStateStorage == nil) {
-        [self.logger debugDev:@"Cannot foreground without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
-    [gdprForgetStateStorage readOnlyStoredDataValue];
-    
-    BOOL shouldStartTracking =
-    [self.gdprForgetState
-     shouldStartTrackingWhenAppWentToTheForegroundWithCurrentStateData:
-         currentGdprForgetStateData];
-    
-    [self handleStartingStateSideEffectsWithShouldStart:shouldStartTracking
-                             changedGdprForgetStateData:nil
-                                  gdprForgetStatusEvent:nil
-                                 gdprForgetStateStorage:gdprForgetStateStorage
-                                      sourceDescription:@"Foreground"];
-}
+            [strongSelf.logger debugDev:@"Delay ended"
+                                   from:@"gdpr forget response delay"
+                                    key:@"delay from"
+                            stringValue:delayData.from];
 
-- (void)processForegroundInTracker {
-    BOOL sendGdprForget = [self.gdprForgetTracker sendWhenAppWentToForeground];
-    
-    if (sendGdprForget) {
-        [self sendGdprForgetWithSourceDescription:@"Foreground"];
-    }
-}
-
-- (void)processOptOut {
-    ADJGdprForgetStateStorage *_Nullable gdprForgetStateStorage =
-    self.gdprForgetStateStorageWeak;
-    if (gdprForgetStateStorage == nil) {
-        [self.logger debugDev:@"Cannot handle sdk init without a reference to the storage"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJGdprForgetStateData *_Nonnull currentGdprForgetStateData =
-    [gdprForgetStateStorage readOnlyStoredDataValue];
-    ADJValueWO<ADJGdprForgetStateData *> *_Nonnull changedGdprForgetStateDataWO =
-    [[ADJValueWO alloc] init];
-    ADJValueWO<NSString *> *_Nonnull gdprForgetStatusEventWO = [[ADJValueWO alloc] init];
-    
-    BOOL shouldStopTracking =
-    [self.gdprForgetState
-     shouldStopTrackingWhenReceivedOptOutWithCurrentStateData:currentGdprForgetStateData
-     changedGdprForgetStateDataWO:changedGdprForgetStateDataWO
-     gdprForgetStatusEventWO:gdprForgetStatusEventWO];
-    
-    [self
-     handleStoppingStateSideEffectsWithShouldStop:shouldStopTracking
-     changedGdprForgetStateData:[changedGdprForgetStateDataWO changedValue]
-     gdprForgetStatusEvent:[gdprForgetStatusEventWO changedValue]
-     gdprForgetStateStorage:gdprForgetStateStorage];
-}
-
-- (void)handleStartingStateSideEffectsWithShouldStart:(BOOL)shouldStartTracking
-                           changedGdprForgetStateData:(nullable ADJGdprForgetStateData *)changedGdprForgetStateData
-                                gdprForgetStatusEvent:(nullable NSString *)gdprForgetStatusEvent
-                               gdprForgetStateStorage:(nullable ADJGdprForgetStateStorage *)gdprForgetStateStorage
-                                    sourceDescription:(nonnull NSString *)sourceDescription {
-    if (shouldStartTracking) {
-        BOOL sendGdprForget = [self.gdprForgetTracker sendWhenStartTracking];
-        
-        if (sendGdprForget) {
-            [self sendGdprForgetWithSourceDescription:sourceDescription];
-        }
-    }
-    
-    [self handleStateSideEffectsWithChangedGdprForgetStateData:changedGdprForgetStateData
-                                         gdprForgetStatusEvent:gdprForgetStatusEvent
-                                        gdprForgetStateStorage:gdprForgetStateStorage];
-}
-
-- (void)handleStoppingStateSideEffectsWithShouldStop:(BOOL)shouldStopTracking
-                          changedGdprForgetStateData:(nullable ADJGdprForgetStateData *)changedGdprForgetStateData
-                               gdprForgetStatusEvent:(nullable NSString *)gdprForgetStatusEvent
-                              gdprForgetStateStorage:(nullable ADJGdprForgetStateStorage *)gdprForgetStateStorage {
-    if (shouldStopTracking) {
-        [self.gdprForgetTracker stopTracking];
-    }
-    
-    [self handleStateSideEffectsWithChangedGdprForgetStateData:changedGdprForgetStateData
-                                         gdprForgetStatusEvent:gdprForgetStatusEvent
-                                        gdprForgetStateStorage:gdprForgetStateStorage];
-}
-
-- (void)handleStateSideEffectsWithChangedGdprForgetStateData:(nullable ADJGdprForgetStateData *)changedGdprForgetStateData
-                                       gdprForgetStatusEvent:(nullable NSString *)gdprForgetStatusEvent
-                                      gdprForgetStateStorage:(nullable ADJGdprForgetStateStorage *)gdprForgetStateStorage {
-    if (changedGdprForgetStateData != nil) {
-        [gdprForgetStateStorage updateWithNewDataValue:changedGdprForgetStateData];
-    }
-    
-    if (gdprForgetStatusEvent != nil) {
-        [self.gdprForgetPublisher notifySubscribersWithSubscriberBlock:
-         ^(id<ADJGdprForgetSubscriber> _Nonnull subscriber)
-         {
-            [subscriber didGdprForget];
+            if ([strongSelf.gdprForgetTracker sendWhenDelayEnded]) {
+                [strongSelf sendPackageFrom:@"Delay ended"];
+            }
         }];
+        return;
+    }
+
+    // nil delay implies accepted package
+
+    // -> should not usee the same package again
+    self.packageToSend  = nil;
+
+    ADJGdprForgetStateOutputData *_Nullable output =
+        [self.gdprForgetState receivedAcceptedGdprResponse];
+
+    [self handleSideEffectsWithOutputData:output
+                                     from:@"gdpr forget response from state"];
+}
+
+- (void)handleSideEffectsWithOutputData:(nullable ADJGdprForgetStateOutputData *)outputData
+                                   from:(nonnull NSString *)from
+{
+    if (outputData == nil) { return; }
+
+    [self handleChangedStateData:outputData.changedStateData];
+
+    [self handlePublishWithStatus:outputData.status
+                             from:from];
+
+    [self handleTrackingCommand:outputData.startTracking from:from];
+}
+
+- (void)handleChangedStateData:(nullable ADJGdprForgetStateData *)changedStateData {
+    if (changedStateData == nil) { return; }
+
+    [self.storage updateWithNewDataValue:changedStateData];
+}
+
+- (void)handlePublishWithStatus:(nullable ADJGdprForgetStatus)status
+                           from:(nonnull NSString *)from
+{
+    if (status == nil) { return; }
+    if (! self.canPublish) { return; }
+
+    [self.logger debugDev:@"Publishing gdpr forget state"
+                     from:from];
+
+    // the actual status value is not used by any of the subscribers
+    //  so, it is not being published. If it that changes, add it
+    [self.gdprForgetPublisher notifySubscribersWithSubscriberBlock:
+     ^(id<ADJGdprForgetSubscriber> _Nonnull subscriber)
+     {
+        [subscriber didGdprForget];
+    }];
+}
+
+- (void)handleTrackingCommand:(BOOL)startTracking
+                         from:(nonnull NSString *)from
+{
+    if (! startTracking) { return; }
+
+    if ([self.gdprForgetTracker sendWhenStartTracking]) {
+        [self sendPackageFrom:from];
     }
 }
 
-- (void)sendGdprForgetWithSourceDescription:(nonnull NSString *)sourceDescription {
-    if (self.previousAttemptedPackage == nil) {
+- (void)sendPackageFrom:(nonnull NSString *)from {
+    if (self.packageToSend == nil) {
         ADJSdkPackageBuilder *_Nullable sdkPackageBuilder = self.sdkPackageBuilderWeak;
-        
         if (sdkPackageBuilder == nil) {
-            [self.logger debugDev:@"Cannot forget device without a reference to package builder"
+            [self.logger debugDev:
+                @"Cannot send gdpr forget without a reference to package builder"
                         issueType:ADJIssueWeakReference];
             return;
         }
-        
-        self.previousAttemptedPackage = [sdkPackageBuilder buildGdprForgetPackage];
+
+        self.packageToSend = [sdkPackageBuilder buildGdprForgetPackage];
     }
-    
-    if (self.sender == nil) {
-        [self.logger debugDev:@"Cannot send package without before sender dependency at sdk init"
-                    issueType:ADJIssueWeakReference];
-        return;
-    }
-    
-    ADJGdprForgetPackageData *_Nonnull gdprForgetPackageData = self.previousAttemptedPackage;
-    
+
     [self.logger debugDev:@"To send sdk package"
-                     from:sourceDescription
+                     from:from
                       key:@"package"
-                    value:[gdprForgetPackageData generateShortDescription].stringValue];
+              stringValue:[self.packageToSend generateShortDescription].stringValue];
 
     ADJStringMapBuilder *_Nonnull sendingParameters = [self generateSendingParameters];
-    
-    [self.sender sendSdkPackageWithData:gdprForgetPackageData
+
+    [self.sender sendSdkPackageWithData:self.packageToSend
                       sendingParameters:sendingParameters
                        responseCallback:self];
 }
 
 - (nonnull ADJStringMapBuilder *)generateSendingParameters {
     ADJStringMapBuilder *_Nonnull sendingParameters =
-    [[ADJStringMapBuilder alloc] initWithEmptyMap];
+        [[ADJStringMapBuilder alloc] initWithEmptyMap];
 
     [ADJSdkPackageBuilder
      injectAttemptsWithParametersBuilder:sendingParameters
@@ -470,7 +346,7 @@
         return sendingParameters;
     }
 
-    ADJResultNN<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
+    ADJResult<ADJTimestampMilli *> *_Nonnull nowResult = [clock nonMonotonicNowTimestamp];
     if (nowResult.fail != nil) {
         [self.logger debugDev:@"Invalid now timestamp when injecting sent at"
                    resultFail:nowResult.fail

@@ -27,8 +27,16 @@ NS_ASSUME_NONNULL_END
 @interface ADJClientAdRevenueData : NSObject<ADJClientActionIoDataInjectable>
 // instantiation
 + (nullable instancetype)
-    instanceFromClientWithAdjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
-    logger:(nonnull ADJLogger *)logger;
+    instanceFromClientWithLogger:(nonnull ADJLogger *)logger
+    adjustAdRevenue:(nullable ADJAdjustAdRevenue *)adjustAdRevenue
+    externalCallbackParameterKeyValueArray:
+        (nullable NSArray *)externalCallbackParameterKeyValueArray
+    externalPartnerParameterKeyValueArray:
+        (nullable NSArray *)externalPartnerParameterKeyValueArray
+    externalCallbackParametersStringMap:
+        (nullable ADJStringMap *)externalCallbackParametersStringMap
+    externalPartnerParametersStringMap:(nullable ADJStringMap *)externalPartnerParametersStringMap
+externalRevenue:(nullable ADJMoney *)externalRevenue;
 
 + (nullable instancetype)
     instanceFromClientActionInjectedIoDataWithData:(nonnull ADJIoData *)clientActionInjectedIoData
@@ -40,9 +48,9 @@ NS_ASSUME_NONNULL_END
 @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *source;
 @property (nullable, readonly, strong, nonatomic) ADJMoney *revenue;
 @property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *adImpressionsCount;
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adRevenueNetwork;
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adRevenueUnit;
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adRevenuePlacement;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *network;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *unit;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *placement;
 @property (nullable, readonly, strong, nonatomic) ADJStringMap *callbackParameters;
 @property (nullable, readonly, strong, nonatomic) ADJStringMap *partnerParameters;
 

@@ -65,12 +65,13 @@ static NSString *const kSubscriptionUrlUS = @"https://subscription.us.adjust.com
                                    extraPath:(nullable NSString *)extraPath
                        urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
                                dataResidency:(nullable AdjustDataResidency)dataResidency
-                     clientCustomEndpointUrl:(nullable ADJNonEmptyString *)clientCustomEndpointUrl {
-
+                     clientCustomEndpointUrl:(nullable ADJNonEmptyString *)clientCustomEndpointUrl
+{
     self = [super init];
 
     _urlOverwrite = urlOverwrite;
     _extraPath = extraPath;
+    _clientCustomEndpointUrl = clientCustomEndpointUrl;
     
     NSString *_Nullable urlStrategyDomain =
     urlStrategyBaseDomain != nil ? urlStrategyBaseDomain.stringValue : nil;

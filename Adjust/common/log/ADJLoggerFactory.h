@@ -10,6 +10,6 @@
 
 @protocol ADJLoggerFactory <NSObject>
 
-- (nonnull ADJLogger *)createLoggerWithSource:(nonnull NSString *)source;
+- (nonnull ADJLogger *)createLoggerWithName:(nonnull NSString *)loggerName;
 
 @end

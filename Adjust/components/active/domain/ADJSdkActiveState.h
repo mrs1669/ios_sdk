@@ -11,7 +11,6 @@
 #import "ADJCommonBase.h"
 #import "ADJSdkActiveStateData.h"
 #import "ADJLogger.h"
-#import "ADJValueWO.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -41,8 +40,7 @@ NS_ASSUME_NONNULL_END
 // public api
 - (BOOL)trySdkInit;
 
-- (nullable ADJInputLogMessageData *)canPerformActionOrElseErrorLogWithClientSource:
-    (nonnull NSString *)clientSource;
+- (nullable ADJResultFail *)canPerformActionClientAction;
 
 - (nullable ADJActivityStateOutputData *)inactivateSdk;
 - (nullable ADJActivityStateOutputData *)reactivateSdk;

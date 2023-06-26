@@ -30,7 +30,7 @@ NSUInteger const ADJHashCodeMultiplier = 37;
 
 NSUInteger const ADJDefaultMaxCapacityEventDeduplication = 10;
 
-NSString *const ADJIdForAdvertisersZeros = @"00000000-0000-0000-0000-000000000000";
+NSString *const ADJAppleUUIDZeros = @"00000000-0000-0000-0000-000000000000";
 
 // IoData metadata
 NSString *const ADJMetadataVersionKey = @"METADATA_VERSION";
@@ -52,10 +52,10 @@ NSString *const ADJLogMessageKey = @"message";
 NSString *const ADJLogLevelKey = @"level";
 NSString *const ADJLogIssueKey = @"issue";
 NSString *const ADJLogParamsKey = @"params";
-NSString *const ADJLogSourceKey = @"source";
+NSString *const ADJLogLoggerNameKey = @"logger_name";
 NSString *const ADJLogCallerThreadIdKey = @"callerId";
 NSString *const ADJLogRunningThreadIdKey = @"runningId";
-NSString *const ADJLogCallerDescriptionKey = @"callerDescription";
+NSString *const ADJLogFromCallerKey = @"from_caller";
 NSString *const ADJLogInstanceIdKey = @"instanceId";
 NSString *const ADJLogIsPreSdkInitKey = @"isPreSdkInit";
 NSString *const ADJLogFailKey = @"fail";

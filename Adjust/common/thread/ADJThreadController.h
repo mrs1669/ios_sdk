@@ -11,14 +11,12 @@
 #import "ADJCommonBase.h"
 #import "ADJThreadExecutorFactory.h"
 #import "ADJClientReturnExecutor.h"
-#import "ADJConcurrentThreadExecutor.h"
 #import "ADJTeardownFinalizer.h"
 #import "ADJTimeLengthMilli.h"
 
 @interface ADJThreadController : ADJCommonBase<
     ADJThreadExecutorFactory,
     ADJClientReturnExecutor,
-    ADJConcurrentThreadExecutor,
     ADJTeardownFinalizer
 >
 // instantiation

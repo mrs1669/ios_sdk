@@ -22,13 +22,18 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
  @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *externalDeviceId;
- @property (nullable, readonly, strong, nonatomic) ADJClientCustomEndpointData *clientCustomEndpointData;
+ @property (nullable, readonly, strong, nonatomic)
+     ADJClientCustomEndpointData *clientCustomEndpointData;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
  @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
  @property (readonly, assign, nonatomic) BOOL canSendInBackground;
- @property (nullable, readonly, strong, nonatomic) ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
- @property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
+     ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+ @property (nullable, readonly, strong, nonatomic)
+     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
  @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
+     NSDictionary<NSString *, id<ADJInternalCallback>> *internalConfigSubscriptions;
  */
 
 #pragma mark - Private constants
@@ -37,14 +42,18 @@ static NSString *const kDomainValidationRegexString =
 
 @implementation ADJClientConfigData
 #pragma mark Instantiation
-+ (nullable instancetype)instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
-                                                     logger:(nonnull ADJLogger *)logger {
++ (nullable instancetype)
+    instanceFromClientWithAdjustConfig:(nullable ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
+    logger:(nonnull ADJLogger *)logger
+{
     if (adjustConfig == nil) {
         [logger errorClient:@"Cannot create config with null adjust config value"];
         return nil;
     }
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull appTokenResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull appTokenResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.appToken];
     if (appTokenResult.fail != nil) {
         [logger errorClient:@"Cannot create config with invalid app token"
@@ -52,7 +61,7 @@ static NSString *const kDomainValidationRegexString =
         return nil;
     }
 
-    ADJResultNN<ADJNonEmptyString *> *_Nonnull environmentResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull environmentResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.environment];
     if (environmentResult.fail != nil) {
         [logger errorClient:@"Cannot create config with invalid environment"
@@ -69,13 +78,13 @@ static NSString *const kDomainValidationRegexString =
         [logger errorClient:@"Cannot create config with unexpected environment value"
               expectedValue:[NSString stringWithFormat:@"%@ or %@",
                              ADJEnvironmentSandbox, ADJEnvironmentProduction]
-                actualValue:environmentResult.value.stringValue];
+          actualStringValue:environmentResult.value.stringValue];
         return nil;
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull defaultTrackerResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.defaultTracker];
-    if (defaultTrackerResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull defaultTrackerResult =
+        [ADJNonEmptyString instanceFromString:adjustConfig.defaultTracker];
+    if (defaultTrackerResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid default tracker"
                   resultFail:defaultTrackerResult.fail];
     }
@@ -92,40 +101,38 @@ static NSString *const kDomainValidationRegexString =
         [ADJClientConfigData urlStrategyDomainWithClientData:adjustConfig.urlStrategyDomain
         logger:logger];
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
+    ADJResult<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
         [ADJClientConfigData dataResidencyWithClientData:adjustConfig.dataResidency];
-    if (dataResidencyResult.fail != nil) {
+    if (dataResidencyResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid data residency"
                   resultFail:dataResidencyResult.fail];
     }
     AdjustDataResidency _Nullable dataResidency =
-        dataResidencyResult != nil ? dataResidencyResult.value.stringValue : nil;
+        dataResidencyResult.value != nil ? dataResidencyResult.value.stringValue : nil;
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull externalDeviceIdResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.externalDeviceId];
-    if (externalDeviceIdResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull externalDeviceIdResult =
+        [ADJNonEmptyString instanceFromString:adjustConfig.externalDeviceId];
+    if (externalDeviceIdResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid external device id"
                   resultFail:externalDeviceIdResult.fail];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointUrl];
-    if (customEndpointUrlResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
+        [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointUrl];
+    if (customEndpointUrlResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid custom endpoint url"
                   resultFail:customEndpointUrlResult.fail];
     }
 
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull customEndpointPublicKeyHashResult =
-        [ADJNonEmptyString instanceFromOptionalString:adjustConfig.customEndpointPublicKeyHash];
-    if (customEndpointPublicKeyHashResult.fail != nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointPublicKeyHashResult =
+        [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointPublicKeyHash];
+    if (customEndpointPublicKeyHashResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid custom endpoint public key hash"
                   resultFail:customEndpointPublicKeyHashResult.fail];
     }
 
     ADJClientCustomEndpointData *_Nullable clientCustomEndpointData = nil;
-    if (customEndpointPublicKeyHashResult.value != nil
-        && customEndpointUrlResult.value == nil)
-    {
+    if (customEndpointPublicKeyHashResult.value != nil && customEndpointUrlResult.value == nil) {
         [logger noticeClient:@"Cannot configure certificate pinning"
          " without a custom endpoint"];
     } else if (customEndpointUrlResult.value != nil) {
@@ -147,10 +154,10 @@ static NSString *const kDomainValidationRegexString =
         adjustConfig.canSendInBackgroundNumberBool != nil
         && adjustConfig.canSendInBackgroundNumberBool.boolValue;
 
-    ADJResultNL<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
+    ADJResult<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
         [ADJNonNegativeInt
-         instanceFromOptionalIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt];
-    if (eventIdDeduplicationMaxCapacityResult.fail != nil) {
+         instanceFromIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt];
+    if (eventIdDeduplicationMaxCapacityResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot configure invalid max deduplication event capacity"
                   resultFail:eventIdDeduplicationMaxCapacityResult.fail];
     }
@@ -169,7 +176,8 @@ static NSString *const kDomainValidationRegexString =
             canSendInBackground:canSendInBackground
             eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
             adjustAttributionSubscriber:adjustConfig.adjustAttributionSubscriber
-            adjustLogSubscriber:adjustConfig.adjustLogSubscriber];
+            adjustLogSubscriber:adjustConfig.adjustLogSubscriber
+            internalConfigSubscriptions:internalConfigSubscriptions];
 }
 
 - (nullable instancetype)init {
@@ -195,6 +203,8 @@ static NSString *const kDomainValidationRegexString =
     adjustAttributionSubscriber:
         (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
 {
     self = [super init];
 
@@ -213,7 +223,8 @@ static NSString *const kDomainValidationRegexString =
     _eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
     _adjustLogSubscriber = adjustLogSubscriber;
-
+    _internalConfigSubscriptions = internalConfigSubscriptions;
+    
     return self;
 }
 
@@ -244,9 +255,9 @@ static NSString *const kDomainValidationRegexString =
     return productionEnvironment;
 }
 
-+ (nonnull ADJResultNN<NSRegularExpression *> *)domainValidationRegex {
++ (nonnull ADJResult<NSRegularExpression *> *)domainValidationRegex {
     static dispatch_once_t onceExcludedRegexInstanceToken;
-    static ADJResultNN<NSRegularExpression *> *result;
+    static ADJResult<NSRegularExpression *> *result;
 
     dispatch_once(&onceExcludedRegexInstanceToken, ^{
         NSError *error = nil;
@@ -257,9 +268,9 @@ static NSString *const kDomainValidationRegexString =
                                                         error:&error];
 
         if (regex != nil) {
-            result = [ADJResultNN okWithValue:regex];
+            result = [ADJResult okWithValue:regex];
         } else {
-            result = [ADJResultNN failWithMessage:
+            result = [ADJResult failWithMessage:
                       @"NSRegularExpression regularExpression with excluded deeplinks pattern"
                       " returned nil"
                       error:error];
@@ -267,7 +278,7 @@ static NSString *const kDomainValidationRegexString =
     });
 
     if (result == nil) {
-        return [ADJResultNN failWithMessage:
+        return [ADJResult failWithMessage:
                 @"NSRegularExpression regularExpression with excluded deeplinks pattern"
                 " result was not set in dispatch_once"];
     }
@@ -279,19 +290,18 @@ static NSString *const kDomainValidationRegexString =
     urlStrategyDomainWithClientData:(nullable NSString *)urlStrategyDomain
     logger:(nonnull ADJLogger *)logger
 {
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull urlStrategyDomainResult =
-        [ADJNonEmptyString instanceFromOptionalString:urlStrategyDomain];
+    ADJResult<ADJNonEmptyString *> *_Nonnull urlStrategyDomainResult =
+        [ADJNonEmptyString instanceFromString:urlStrategyDomain];
 
-    if (urlStrategyDomainResult.fail != nil) {
-        [logger noticeClient:@"Cannot set invalid URL strategy domain"
-                  resultFail:urlStrategyDomainResult.fail];
-        return nil;
-    }
     if (urlStrategyDomainResult.value == nil) {
+        if (urlStrategyDomainResult.failNonNilInput != nil) {
+            [logger noticeClient:@"Cannot set invalid URL strategy domain"
+                      resultFail:urlStrategyDomainResult.fail];
+        }
         return nil;
     }
 
-    ADJResultNN<NSRegularExpression *> *_Nonnull domainValidationRegexResult =
+    ADJResult<NSRegularExpression *> *_Nonnull domainValidationRegexResult =
         [ADJClientConfigData domainValidationRegex];
 
     if (domainValidationRegexResult.fail != nil) {
@@ -308,19 +318,19 @@ static NSString *const kDomainValidationRegexString =
     {
         [logger noticeClient:@"Cannot use URL strategy domain that does not match expected pattern"
                          key:@"URL strategy domain"
-                       value:urlStrategyDomainResult.value.stringValue];
+                 stringValue:urlStrategyDomainResult.value.stringValue];
         return nil;
     }
 
     return urlStrategyDomainResult.value;
 }
 
-+ (nonnull ADJResultNL<ADJNonEmptyString *> *)
++ (nonnull ADJResult<ADJNonEmptyString *> *)
     dataResidencyWithClientData:(nullable NSString *)dataResidency
 {
-    ADJResultNL<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
-        [ADJNonEmptyString instanceFromOptionalString:dataResidency];
-    if (dataResidencyResult.fail != nil || dataResidencyResult.value == nil) {
+    ADJResult<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
+        [ADJNonEmptyString instanceFromString:dataResidency];
+    if (dataResidencyResult.fail != nil) {
         return dataResidencyResult;
     }
 
@@ -331,9 +341,9 @@ static NSString *const kDomainValidationRegexString =
         return dataResidencyResult;
     }
 
-    return [ADJResultNL failWithMessage:@"Cannot use data residency that is not expected"
-                                    key:@"data residency"
-                            stringValue:dataResidencyResult.value.stringValue];
+    return [ADJResult failWithMessage:@"Cannot use data residency that is not expected"
+                                  key:@"data residency"
+                          stringValue:dataResidencyResult.value.stringValue];
 }
 
 @end

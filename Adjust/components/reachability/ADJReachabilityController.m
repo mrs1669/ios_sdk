@@ -72,11 +72,11 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
                                targetEndpoint:(nonnull NSString *)targetEndpoint
                           publisherController:(nonnull ADJPublisherController *)publisherController
 {
-    self = [super initWithLoggerFactory:loggerFactory source:@"ReachabilityController"];
+    self = [super initWithLoggerFactory:loggerFactory loggerName:@"ReachabilityController"];
     _targetEndpoint = targetEndpoint;
 
     _executor = [threadController createSingleThreadExecutorWithLoggerFactory:loggerFactory
-                                                            sourceDescription:self.source];
+                                                            sourceLoggerName:self.logger.name];
 
     _reachabilityPublisher = [[ADJReachabilityPublisher alloc]
                               initWithSubscriberProtocol:@protocol(ADJReachabilitySubscriber)
@@ -93,14 +93,16 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 #pragma mark - ADJSdkStartSubscriber
 - (void)ccSdkStart {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeAsyncWithBlock:^{
+    [self.executor executeAsyncWithLogger:self.logger
+                                     from:@"sdk start"
+                                    block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
         // TODO: possibly use private queue
         [strongSelf startNetworkReachabilityWithDispatchQueue:
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
-    } source:@"sdk start"];
+    }];
 }
 
 #pragma mark Internal Methods
@@ -321,7 +323,9 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
 
 - (void)reachabilityChangedWithFlags:(SCNetworkReachabilityFlags)flags {
     __typeof(self) __weak weakSelf = self;
-    [self.executor executeInSequenceWithBlock:^{
+    [self.executor executeInSequenceWithLogger:self.logger
+                                              from:@"reachability changed"
+                                             block:^{
         __typeof(weakSelf) __strong strongSelf = weakSelf;
         if (strongSelf == nil) { return; }
 
@@ -329,7 +333,7 @@ static void ADJReachabilityCallback(SCNetworkReachabilityRef target,
         [strongSelf reachableNetworkWithFlags:flags];
 
         [strongSelf updateAndPublishWithReachability:reachableNetworkFromFlags];
-    } source:@"reachability changed"];
+    }];
 }
 
 - (void)stopNetworkReachability {

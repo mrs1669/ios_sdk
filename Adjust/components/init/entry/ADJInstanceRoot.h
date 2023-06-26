@@ -12,6 +12,7 @@
 #import "ADJInstanceIdData.h"
 #import "ADJInstanceRootBag.h"
 #import "ADJEntryRootBag.h"
+#import "ADJAdjustInternal.h"
 
 @interface ADJInstanceRoot : NSObject <
     ADJAdjustInstance,
@@ -25,6 +26,28 @@
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public api
-- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
-@end
+- (void)
+    initSdkWithConfig:(nonnull ADJAdjustConfig *)adjustConfig
+    internalConfigSubscriptions:
+        (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions;
 
+- (void)adjustAttributionWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
+- (void)adjustDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
+
+- (void)
+    trackEvent:(nonnull ADJAdjustEvent *)adjustEvent
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
+
+- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
+    granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
+    partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;
+
+- (void)
+    trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
+    callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
+    partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
+
+- (void)finalizeAtTeardownWithBlock:(nullable void (^)(void))closeStorageBlock;
+
+@end

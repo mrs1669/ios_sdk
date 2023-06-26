@@ -11,8 +11,7 @@
 #import "ADJPackageParamValueSerializable.h"
 #import "ADJIoValueSerializable.h"
 #import "ADJNonEmptyString.h"
-#import "ADJResultNL.h"
-#import "ADJResultNN.h"
+#import "ADJResult.h"
 
 @interface ADJNonNegativeInt : NSObject<
     NSCopying,
@@ -23,20 +22,16 @@
 + (nonnull instancetype)instanceAtZero;
 + (nonnull instancetype)instanceAtOne;
 
-+ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
++ (nonnull ADJResult<ADJNonNegativeInt *> *)
     instanceFromIntegerNumber:(nullable NSNumber *)integerNumber;
 
-+ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
-    instanceFromOptionalIntegerNumber:(nullable NSNumber *)integerNumber;
-
-+ (nonnull ADJResultNN<ADJNonNegativeInt *> *)
++ (nonnull ADJResult<ADJNonNegativeInt *> *)
     instanceFromIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
 
-+ (nonnull ADJResultNL<ADJNonNegativeInt *> *)
-    instanceFromOptionalIoDataValue:(nullable ADJNonEmptyString *)ioDataValue;
++ (nonnull ADJResult<ADJNonNegativeInt *> *)instanceFromObject:(nullable id)objectValue;
 
 - (nonnull instancetype)initWithUIntegerValue:(NSUInteger)uIntegerValue
-NS_DESIGNATED_INITIALIZER;
+    NS_DESIGNATED_INITIALIZER;
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties
@@ -45,6 +40,7 @@ NS_DESIGNATED_INITIALIZER;
 // public api
 - (nonnull ADJNonEmptyString *)toNonEmptyString;
 
+// TODO: remove non-used integer comparison
 - (NSComparisonResult)compare:(nonnull ADJNonNegativeInt *)nonNegativeInt;
 
 - (BOOL)isZero;
