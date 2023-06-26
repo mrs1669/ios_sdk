@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         ADJAdjust.instance().initSdk(with: adjustConfig)
 
-        let event = ADJAdjustEvent.init(eventId: "d8bf3k")
+        let event = ADJAdjustEvent.init(eventToken: "d8bf3k")
         ADJAdjust.instance().trackEvent(event)
 
         let launchedDeeplink = ADJAdjustLaunchedDeeplink(string: "https://github.com/")
