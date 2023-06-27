@@ -101,6 +101,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     adjustCommand(thirdPartySharing)
     adjustCommand(measurementConsent)
     adjustCommand(getLastDeeplink)
+    adjustCommand(getAdid)
     [self logError:@"method name %@ not found", methodName];
 }
 
@@ -139,6 +140,13 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [adjustConfig setAdjustAttributionSubscriber:
          [ATAAdjustCallbacks
           adjustAttributionSubscriberWithTestLibrary:self.testLibrary
+          extraPath:self.extraPathTestOptions]];
+    }
+
+    if ([self containsKey:@"adidSubscriptionSendAll"]) {
+        [adjustConfig setAdjustIdentifierSubscriber:
+         [ATAAdjustCallbacks
+          adjustIdentifierSubscriberWithTestLibrary:self.testLibrary
           extraPath:self.extraPathTestOptions]];
     }
 
@@ -331,6 +339,14 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
      adjustLaunchedDeeplinkWithCallback:
          [ATAAdjustCallbacks
           adjustLaunchedDeeplinkGetterWithTestLibrary:self.testLibrary
+          extraPath:self.extraPathTestOptions]];
+}
+
+- (void)getAdid {
+    [[ADJAdjust instance]
+     adjustIdentifierWithCallback:
+         [ATAAdjustCallbacks
+          adjustIdentifierGetterWithTestLibrary:self.testLibrary
           extraPath:self.extraPathTestOptions]];
 }
 
