@@ -15,24 +15,24 @@
 #pragma mark - Public properties
 /* .h
  @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *appToken;
- @property (readonly, assign, nonatomic) BOOL isSandboxEnvironmentOrElseProduction;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *defaultTracker;
- @property (readonly, assign, nonatomic) BOOL doLogAll;
- @property (readonly, assign, nonatomic) BOOL doNotLogAny;
- @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
- @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *externalDeviceId;
- @property (nullable, readonly, strong, nonatomic)
-     ADJClientCustomEndpointData *clientCustomEndpointData;
- @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
- @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
- @property (readonly, assign, nonatomic) BOOL canSendInBackground;
+ @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
  @property (nullable, readonly, strong, nonatomic)
      ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+ @property (readonly, assign, nonatomic) BOOL doLogAll;
+ @property (readonly, assign, nonatomic) BOOL doNotLogAny;
+ @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
+ @property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
+ @property (readonly, assign, nonatomic) BOOL isSandboxEnvironmentOrElseProduction;
+ @property (readonly, assign, nonatomic) BOOL canSendInBackground;
  @property (nullable, readonly, strong, nonatomic)
-     id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
+     ADJClientCustomEndpointData *clientCustomEndpointData;
+ @property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
  @property (nullable, readonly, strong, nonatomic)
      id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+ @property (nullable, readonly, strong, nonatomic)
+     id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
  @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
  @property (nullable, readonly, strong, nonatomic)
      NSDictionary<NSString *, id<ADJInternalCallback>> *internalConfigSubscriptions;
@@ -50,6 +50,7 @@ static NSString *const kDomainValidationRegexString =
         (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
     logger:(nonnull ADJLogger *)logger
 {
+    // - mandatory
     if (adjustConfig == nil) {
         [logger errorClient:@"Cannot create config with null adjust config value"];
         return nil;
@@ -84,33 +85,13 @@ static NSString *const kDomainValidationRegexString =
         return nil;
     }
 
+    // - optional
     ADJResult<ADJNonEmptyString *> *_Nonnull defaultTrackerResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.defaultTracker];
     if (defaultTrackerResult.failNonNilInput != nil) {
         [logger noticeClient:@"Cannot set invalid default tracker"
                   resultFail:defaultTrackerResult.fail];
     }
-
-    BOOL doNotLogAny =
-        adjustConfig.doNotLogAnyNumberBool != nil
-        && adjustConfig.doNotLogAnyNumberBool.boolValue;
-
-    BOOL doLogAll =
-        adjustConfig.doLogAllNumberBool != nil
-        && adjustConfig.doLogAllNumberBool.boolValue;
-
-    ADJNonEmptyString *_Nullable urlStrategyDomain =
-        [ADJClientConfigData urlStrategyDomainWithClientData:adjustConfig.urlStrategyDomain
-        logger:logger];
-
-    ADJResult<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
-        [ADJClientConfigData dataResidencyWithClientData:adjustConfig.dataResidency];
-    if (dataResidencyResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot set invalid data residency"
-                  resultFail:dataResidencyResult.fail];
-    }
-    AdjustDataResidency _Nullable dataResidency =
-        dataResidencyResult.value != nil ? dataResidencyResult.value.stringValue : nil;
 
     ADJResult<ADJNonEmptyString *> *_Nonnull externalDeviceIdResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.externalDeviceId];
@@ -119,30 +100,25 @@ static NSString *const kDomainValidationRegexString =
                   resultFail:externalDeviceIdResult.fail];
     }
 
-    ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
-        [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointUrl];
-    if (customEndpointUrlResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot set invalid custom endpoint url"
-                  resultFail:customEndpointUrlResult.fail];
+    ADJNonEmptyString *_Nullable urlStrategyDomain =
+        [ADJClientConfigData urlStrategyDomainWithClientData:adjustConfig.urlStrategyDomain
+        logger:logger];
+
+    ADJResult<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
+        [ADJNonNegativeInt
+         instanceFromIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt];
+    if (eventIdDeduplicationMaxCapacityResult.failNonNilInput != nil) {
+        [logger noticeClient:@"Cannot configure invalid max deduplication event capacity"
+                  resultFail:eventIdDeduplicationMaxCapacityResult.fail];
     }
 
-    ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointPublicKeyHashResult =
-        [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointPublicKeyHash];
-    if (customEndpointPublicKeyHashResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot set invalid custom endpoint public key hash"
-                  resultFail:customEndpointPublicKeyHashResult.fail];
-    }
+    BOOL doLogAll =
+        adjustConfig.doLogAllNumberBool != nil
+        && adjustConfig.doLogAllNumberBool.boolValue;
 
-    ADJClientCustomEndpointData *_Nullable clientCustomEndpointData = nil;
-    if (customEndpointPublicKeyHashResult.value != nil && customEndpointUrlResult.value == nil) {
-        [logger noticeClient:@"Cannot configure certificate pinning"
-         " without a custom endpoint"];
-    } else if (customEndpointUrlResult.value != nil) {
-        clientCustomEndpointData =
-            [[ADJClientCustomEndpointData alloc]
-             initWithUrl:customEndpointUrlResult.value
-             publicKeyHash:customEndpointPublicKeyHashResult.value];
-    }
+    BOOL doNotLogAny =
+        adjustConfig.doNotLogAnyNumberBool != nil
+        && adjustConfig.doNotLogAnyNumberBool.boolValue;
 
     BOOL doNotOpenDeferredDeeplink =
         adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
@@ -156,29 +132,54 @@ static NSString *const kDomainValidationRegexString =
         adjustConfig.canSendInBackgroundNumberBool != nil
         && adjustConfig.canSendInBackgroundNumberBool.boolValue;
 
-    ADJResult<ADJNonNegativeInt *> *_Nonnull eventIdDeduplicationMaxCapacityResult =
-        [ADJNonNegativeInt
-         instanceFromIntegerNumber:adjustConfig.eventIdDeduplicationMaxCapacityNumberInt];
-    if (eventIdDeduplicationMaxCapacityResult.failNonNilInput != nil) {
-        [logger noticeClient:@"Cannot configure invalid max deduplication event capacity"
-                  resultFail:eventIdDeduplicationMaxCapacityResult.fail];
+    ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
+        [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointUrl];
+    if (customEndpointUrlResult.failNonNilInput != nil) {
+        [logger noticeClient:@"Cannot set invalid custom endpoint url"
+                  resultFail:customEndpointUrlResult.fail];
     }
+    ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointPublicKeyHashResult =
+        [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointPublicKeyHash];
+    if (customEndpointPublicKeyHashResult.failNonNilInput != nil) {
+        [logger noticeClient:@"Cannot set invalid custom endpoint public key hash"
+                  resultFail:customEndpointPublicKeyHashResult.fail];
+    }
+    ADJClientCustomEndpointData *_Nullable clientCustomEndpointData = nil;
+    if (customEndpointPublicKeyHashResult.value != nil && customEndpointUrlResult.value == nil) {
+        [logger noticeClient:@"Cannot configure certificate pinning"
+         " without a custom endpoint"];
+    } else if (customEndpointUrlResult.value != nil) {
+        clientCustomEndpointData =
+            [[ADJClientCustomEndpointData alloc]
+             initWithUrl:customEndpointUrlResult.value
+             publicKeyHash:customEndpointPublicKeyHashResult.value];
+    }
+
+    ADJResult<ADJNonEmptyString *> *_Nonnull dataResidencyResult =
+        [ADJClientConfigData dataResidencyWithClientData:adjustConfig.dataResidency];
+    if (dataResidencyResult.failNonNilInput != nil) {
+        [logger noticeClient:@"Cannot set invalid data residency"
+                  resultFail:dataResidencyResult.fail];
+    }
+    AdjustDataResidency _Nullable dataResidency =
+        dataResidencyResult.value != nil ? dataResidencyResult.value.stringValue : nil;
+
     return [[ADJClientConfigData alloc]
             initWithAppToken:appTokenResult.value
-            isSandboxEnvironmentOrElseProduction:isSandboxEnvironment
             defaultTracker:defaultTrackerResult.value
+            externalDeviceId:externalDeviceIdResult.value
+            urlStrategyBaseDomain:urlStrategyDomain
+            eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
             doLogAll:doLogAll
             doNotLogAny:doNotLogAny
-            urlStrategyBaseDomain:urlStrategyDomain
-            dataResidency:dataResidency
-            externalDeviceId:externalDeviceIdResult.value
-            clientCustomEndpointData:clientCustomEndpointData
             doNotOpenDeferredDeeplink:doNotOpenDeferredDeeplink
             doNotReadAsaAttribution:doNotReadAsaAttribution
+            isSandboxEnvironmentOrElseProduction:isSandboxEnvironment
             canSendInBackground:canSendInBackground
-            eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
-            adjustIdentifierSubscriber:adjustConfig.adjustIdentifierSubscriber
+            clientCustomEndpointData:clientCustomEndpointData
+            dataResidency:dataResidency
             adjustAttributionSubscriber:adjustConfig.adjustAttributionSubscriber
+            adjustIdentifierSubscriber:adjustConfig.adjustIdentifierSubscriber
             adjustLogSubscriber:adjustConfig.adjustLogSubscriber
             internalConfigSubscriptions:internalConfigSubscriptions];
 }
@@ -191,22 +192,22 @@ static NSString *const kDomainValidationRegexString =
 #pragma mark - Private constructors
 - (nonnull instancetype)
     initWithAppToken:(nonnull ADJNonEmptyString *)appToken
-    isSandboxEnvironmentOrElseProduction:(BOOL)isSandboxEnvironmentOrElseProduction
     defaultTracker:(nullable ADJNonEmptyString *)defaultTracker
+    externalDeviceId:(nullable ADJNonEmptyString *)externalDeviceId
+    urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
+    eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
     doLogAll:(BOOL)doLogAll
     doNotLogAny:(BOOL)doNotLogAny
-    urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
-    dataResidency:(nullable AdjustDataResidency)dataResidency
-    externalDeviceId:(nullable ADJNonEmptyString *)externalDeviceId
-    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
     doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
     doNotReadAsaAttribution:(BOOL)doNotReadAsaAttribution
+    isSandboxEnvironmentOrElseProduction:(BOOL)isSandboxEnvironmentOrElseProduction
     canSendInBackground:(BOOL)canSendInBackground
-    eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
-    adjustIdentifierSubscriber:
-        (nonnull id<ADJAdjustIdentifierSubscriber>)adjustIdentifierSubscriber
+    clientCustomEndpointData:(nullable ADJClientCustomEndpointData *)clientCustomEndpointData
+    dataResidency:(nullable AdjustDataResidency)dataResidency
     adjustAttributionSubscriber:
         (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
+    adjustIdentifierSubscriber:
+        (nonnull id<ADJAdjustIdentifierSubscriber>)adjustIdentifierSubscriber
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
     internalConfigSubscriptions:
         (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)internalConfigSubscriptions
@@ -214,30 +215,30 @@ static NSString *const kDomainValidationRegexString =
     self = [super init];
 
     _appToken = appToken;
-    _isSandboxEnvironmentOrElseProduction = isSandboxEnvironmentOrElseProduction;
     _defaultTracker = defaultTracker;
+    _externalDeviceId = externalDeviceId;
+    _urlStrategyBaseDomain = urlStrategyBaseDomain;
+    _eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
     _doLogAll = doLogAll;
     _doNotLogAny = doNotLogAny;
-    _urlStrategyBaseDomain = urlStrategyBaseDomain;
-    _dataResidency = dataResidency;
-    _externalDeviceId = externalDeviceId;
-    _clientCustomEndpointData = clientCustomEndpointData;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;
     _doNotReadAsaAttribution = doNotReadAsaAttribution;
+    _isSandboxEnvironmentOrElseProduction = isSandboxEnvironmentOrElseProduction;
     _canSendInBackground = canSendInBackground;
-    _eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
-    _adjustIdentifierSubscriber = adjustIdentifierSubscriber;
+    _clientCustomEndpointData = clientCustomEndpointData;
+    _dataResidency = dataResidency;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
+    _adjustIdentifierSubscriber = adjustIdentifierSubscriber;
     _adjustLogSubscriber = adjustLogSubscriber;
     _internalConfigSubscriptions = internalConfigSubscriptions;
-    
+
     return self;
 }
 
 #pragma mark Public API
 - (nonnull ADJNonEmptyString *)environment {
     return self.isSandboxEnvironmentOrElseProduction ?
-    [ADJClientConfigData sandboxEnvironment] : [ADJClientConfigData productionEnvironment];
+        [ADJClientConfigData sandboxEnvironment] : [ADJClientConfigData productionEnvironment];
 }
 
 #pragma mark Internal Methods
