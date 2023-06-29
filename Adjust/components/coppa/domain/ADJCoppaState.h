@@ -11,18 +11,21 @@
 #import "ADJCommonBase.h"
 #import "ADJCoppaStateData.h"
 
+@interface ADJCoppaStateOutputData : NSObject
+@property (nullable, readonly, strong, nonatomic) ADJCoppaStateData *changedStateData;
+
+@property (readonly, assign, nonatomic) BOOL trackTPSbeforeDeactivate;
+@property (readonly, assign, nonatomic) BOOL deactivateTPSafterTracking;
+
+@end
+
 @interface ADJCoppaState : ADJCommonBase
 // instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              initialStateData:(nonnull ADJCoppaStateData *)initialStateData;
 
 // public api
-- (nullable ADJCoppaStateData *)
-    sdkInitWithClientIsCoppaEnabled:(nullable ADJBooleanWrapper *)clientIsCoppaEnabled;
-
-- (BOOL)shouldTrackTPSbeforeDeactivateWithChangedStateData:(nullable ADJCoppaStateData *)stateData;
-
-- (BOOL)shouldDeactivateTPSafterTracking;
+- (nullable ADJCoppaStateOutputData *)
+    sdkInitWithWasCoppaEnabledByClient:(BOOL)wasCoppaEnabledByClient;
 
 @end
-

@@ -15,6 +15,7 @@
 #import "ADJKeychainStorage.h"
 #import "ADJSQLiteController.h"
 #import "ADJClientActionStorage.h"
+#import "ADJCoppaStateStorage.h"
 #import "ADJDeviceIdsStorage.h"
 #import "ADJEventStateStorage.h"
 #import "ADJPushTokenStateStorage.h"
@@ -49,6 +50,7 @@
 @property (nonnull, readonly, strong, nonatomic)
     ADJAsaAttributionStateStorage *asaAttributionStateStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *clientActionStorage;
+@property (nonnull, readonly, strong, nonatomic) ADJCoppaStateStorage *coppaStateStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJDeviceIdsStorage *deviceIdsStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenStateStorage *pushTokenStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJEventStateStorage *eventStateStorage;

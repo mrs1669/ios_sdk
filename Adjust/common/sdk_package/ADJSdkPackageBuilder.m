@@ -624,6 +624,13 @@
     [ADJUtilMap injectIntoPackageParametersWithBuilder:parametersBuilder
                                                    key:ADJParamExternalDeviceIdKey
                          packageParamValueSerializable:self.clientConfigData.externalDeviceId];
+
+    if (self.clientConfigData.isCoppaEnabled) {
+        [ADJUtilMap
+         injectIntoPackageParametersWithBuilder:parametersBuilder
+         key:ADJParamFFCoppaKey
+         packageParamValueSerializable:[ADJBooleanWrapper instanceFromBool:YES]];
+    }
 }
 
 - (void)injectEventStateFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

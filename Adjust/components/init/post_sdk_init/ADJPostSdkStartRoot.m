@@ -159,7 +159,8 @@ NSDictionary<NSString *, id<ADJClientActionHandler>> *clientHandlerMapById;
     (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
 {
     [self.thirdPartySharingController
-     ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData];
+     ccTrackThirdPartySharingWithClientData:clientThirdPartySharingData
+     storageAction:nil];
 }
 
 - (void)ccAddGlobalCallbackParameterWithClientData:

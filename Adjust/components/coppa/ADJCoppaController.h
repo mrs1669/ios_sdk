@@ -1,5 +1,5 @@
 //
-//  ADJCoppaCompliantController.h
+//  ADJCoppaController.h
 //  Adjust
 //
 //  Created by Pedro Silva on 28.06.23.
@@ -13,7 +13,7 @@
 #import "ADJThirdPartySharingController.h"
 #import "ADJCoppaStateStorage.h"
 
-@interface ADJCoppaCompliantController : ADJCommonBase<
+@interface ADJCoppaController : ADJCommonBase<
     // subscriptions
     ADJSdkInitSubscriber
 >
@@ -23,6 +23,5 @@
     thirdPartySharingController:
         (nonnull ADJThirdPartySharingController *)thirdPartySharingController
     coppaStateStorage:(nonnull ADJCoppaStateStorage *)coppaStateStorage;
-
 
 @end

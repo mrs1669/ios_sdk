@@ -28,6 +28,7 @@ FOUNDATION_EXPORT NSString *const ADJParamAppTokenKey;
 FOUNDATION_EXPORT NSString *const ADJParamEnvironmentKey;
 FOUNDATION_EXPORT NSString *const ADJParamDefaultTrackerKey;
 FOUNDATION_EXPORT NSString *const ADJParamExternalDeviceIdKey;
+FOUNDATION_EXPORT NSString *const ADJParamFFCoppaKey;
 
 // response
 FOUNDATION_EXPORT NSString *const ADJParamMessageKey;

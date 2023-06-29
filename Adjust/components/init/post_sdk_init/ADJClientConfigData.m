@@ -20,6 +20,7 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
  @property (nullable, readonly, strong, nonatomic)
      ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+ @property (readonly, assign, nonatomic) BOOL isCoppaEnabled;
  @property (readonly, assign, nonatomic) BOOL doLogAll;
  @property (readonly, assign, nonatomic) BOOL doNotLogAny;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
@@ -112,6 +113,10 @@ static NSString *const kDomainValidationRegexString =
                   resultFail:eventIdDeduplicationMaxCapacityResult.fail];
     }
 
+    BOOL isCoppaEnabled =
+        adjustConfig.isCoppaComplianceEnabledNumberBool != nil
+        && adjustConfig.isCoppaComplianceEnabledNumberBool.boolValue;
+
     BOOL doLogAll =
         adjustConfig.doLogAllNumberBool != nil
         && adjustConfig.doLogAllNumberBool.boolValue;
@@ -170,6 +175,7 @@ static NSString *const kDomainValidationRegexString =
             externalDeviceId:externalDeviceIdResult.value
             urlStrategyBaseDomain:urlStrategyDomain
             eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
+            isCoppaEnabled:isCoppaEnabled
             doLogAll:doLogAll
             doNotLogAny:doNotLogAny
             doNotOpenDeferredDeeplink:doNotOpenDeferredDeeplink
@@ -196,6 +202,7 @@ static NSString *const kDomainValidationRegexString =
     externalDeviceId:(nullable ADJNonEmptyString *)externalDeviceId
     urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
     eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
+    isCoppaEnabled:(BOOL)isCoppaEnabled
     doLogAll:(BOOL)doLogAll
     doNotLogAny:(BOOL)doNotLogAny
     doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
@@ -219,6 +226,7 @@ static NSString *const kDomainValidationRegexString =
     _externalDeviceId = externalDeviceId;
     _urlStrategyBaseDomain = urlStrategyBaseDomain;
     _eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
+    _isCoppaEnabled = isCoppaEnabled;
     _doLogAll = doLogAll;
     _doNotLogAny = doNotLogAny;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;

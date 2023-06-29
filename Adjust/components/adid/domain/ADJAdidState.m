@@ -15,7 +15,6 @@
 @end
 
 @implementation ADJAdidState
-
 #pragma mark Instantiation
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                              initialStateData:(nonnull ADJAdidStateData *)initialStateData

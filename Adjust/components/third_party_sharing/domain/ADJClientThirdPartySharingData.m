@@ -158,6 +158,13 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
             partnerSharingSettingsByNameJsonString:partnerSharingSettingsByNameJsonString];
 }
 
++ (nonnull instancetype)instanceFromCoppaToDisable {
+    return [[ADJClientThirdPartySharingData alloc]
+            initWithEnabledOrElseDisabledSharing:[ADJBooleanWrapper instanceFromBool:NO]
+            granularOptionsByNameJsonString:nil
+            partnerSharingSettingsByNameJsonString:nil];
+}
+
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
