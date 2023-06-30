@@ -16,6 +16,8 @@ static NSString *const kEnabledKey = @"enabled";
 static NSString *const kIsGdprForgottenKey = @"isGdprForgotten";
 static NSString *const kAskingAttributionKey = @"askingAttribution";
 static NSString *const kIsThirdPartySharingDisabledKey = @"isThirdPartySharingDisabled";
+static NSString *const kIsThirdPartySharingDisabledForCoppaKey =
+    @"isThirdPartySharingDisabledForCoppa";
 static NSString *const kUuidKey = @"uuid";
 static NSString *const kDeviceTokenKey = @"deviceToken";
 static NSString *const kPushTokenKey = @"pushToken";
@@ -41,6 +43,9 @@ static NSString *const kLaunchedDeeplinkKey = @"launchedDeeplink";
  @property (nullable, readonly, strong, nonatomic) NSNumber *askingAttributionNumberBool;
  //@property (nonatomic, assign) BOOL isThirdPartySharingDisabled;
  @property (nullable, readonly, strong, nonatomic) NSNumber *isThirdPartySharingDisabledNumberBool;
+ // @property (nonatomic, assign) BOOL isThirdPartySharingDisabledForCoppa;
+ @property (nullable, readonly, strong, nonatomic)
+     NSNumber *isThirdPartySharingDisabledForCoppaNumberBool;
  //@property (nonatomic, copy) NSString *uuid;
  @property (nullable, readonly, strong, nonatomic) NSString *uuid;
  //@property (nonatomic, copy) NSString *deviceToken;
@@ -137,6 +142,11 @@ static NSString *const kLaunchedDeeplinkKey = @"launchedDeeplink";
         _isThirdPartySharingDisabledNumberBool =
         [NSNumber numberWithBool:[decoder decodeBoolForKey:kIsThirdPartySharingDisabledKey]];
     }
+    if ([decoder containsValueForKey:kIsThirdPartySharingDisabledForCoppaKey]) {
+        _isThirdPartySharingDisabledForCoppaNumberBool =
+            [NSNumber numberWithBool:
+             [decoder decodeBoolForKey:kIsThirdPartySharingDisabledForCoppaKey]];
+    }
     if ([decoder containsValueForKey:kDeviceTokenKey]) {
         _deviceToken = [decoder decodeObjectForKey:kDeviceTokenKey];
     }
@@ -170,6 +180,8 @@ static NSString *const kLaunchedDeeplinkKey = @"launchedDeeplink";
             kIsGdprForgottenKey, self.isGdprForgottenNumberBool,
             kAskingAttributionKey, self.askingAttributionNumberBool,
             kIsThirdPartySharingDisabledKey, self.isThirdPartySharingDisabledNumberBool,
+            kIsThirdPartySharingDisabledForCoppaKey,
+                self.isThirdPartySharingDisabledForCoppaNumberBool,
             kUuidKey, self.uuid,
             kDeviceTokenKey, self.deviceToken,
             kPushTokenKey, self.pushToken,
