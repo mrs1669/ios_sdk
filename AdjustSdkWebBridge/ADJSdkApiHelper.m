@@ -68,6 +68,13 @@
     }
 
     if ([self trueLoggedWithJsParameters:jsParameters
+                                     key:ADJWBIsCoppaComplianceEnabledConfigKey
+                                    from:ADJWBAdjustConfigName])
+    {
+        [adjustConfig enableCoppaCompliance];
+    }
+
+    if ([self trueLoggedWithJsParameters:jsParameters
                                      key:ADJWBDoLogAllConfigKey
                                     from:ADJWBAdjustConfigName])
     {
