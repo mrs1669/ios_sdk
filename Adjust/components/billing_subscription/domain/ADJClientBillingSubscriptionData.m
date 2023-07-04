@@ -64,6 +64,10 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
                  resultFail:priceResult.fail];
         return nil;
     }
+    if ([priceResult.value.amount isNegative]) {
+        [logger infoClient:@"Price amount of billing subscription found to be negative."
+         " Its validity will be determined server side"];
+    }
 
     ADJResult<ADJNonEmptyString *> *_Nonnull transactionIdResult =
         [ADJNonEmptyString instanceFromString:adjustBillingSubscription.transactionId];

@@ -22,4 +22,6 @@
 
 - (nonnull instancetype)init;
 
+- (BOOL)isNegative;
+
 @end

@@ -115,6 +115,10 @@ static dispatch_once_t adRevenueSourceSetOnceToken = 0;
         }
         revenue = revenueResult.value;
     }
+    if (revenue != nil && [revenue.amount isNegative]) {
+        [logger infoClient:@"Ad revenue amount found to be negative."
+         " Its validity will be determined server side"];
+    }
 
     ADJResult<ADJNonNegativeInt *> *_Nonnull adImpressionsCountResult =
         [ADJNonNegativeInt instanceFromIntegerNumber:
