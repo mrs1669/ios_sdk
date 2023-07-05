@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const ADJInternalAttributionSubscriberV5000Key;
 FOUNDATION_EXPORT NSString *const ADJInternalLogSubscriberV5000Key;
 
-FOUNDATION_EXPORT NSString *const ADJReadAdjustIdentifierdMethodName;
+FOUNDATION_EXPORT NSString *const ADJReadAdjustIdentifierMethodName;
 FOUNDATION_EXPORT NSString *const ADJChangedAdjustIdentifierMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJReadAttributionMethodName;

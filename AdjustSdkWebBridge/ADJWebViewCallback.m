@@ -308,7 +308,7 @@
     [webViewCallback
      execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
      callbackId:self.adjustIdentifierSubscriberCallbackId
-     methodName:ADJReadAdjustIdentifierdMethodName
+     methodName:ADJReadAdjustIdentifierMethodName
      jsonStringParameter:adid];
 }
 

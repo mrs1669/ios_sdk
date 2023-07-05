@@ -22,7 +22,7 @@ static dispatch_once_t entryRootOnceToken = 0;
 NSString *const ADJInternalAttributionSubscriberV5000Key = @"internalAttributionSubscriberV5000";
 NSString *const ADJInternalLogSubscriberV5000Key = @"internalLogSubscriberV5000";
 
-NSString *const ADJReadAdjustIdentifierdMethodName = @"readAdjustIdentifier";
+NSString *const ADJReadAdjustIdentifierMethodName = @"readAdjustIdentifier";
 NSString *const ADJChangedAdjustIdentifierMethodName = @"changedAdjustIdentifier";
 
 NSString *const ADJReadAttributionMethodName = @"readAttribution";

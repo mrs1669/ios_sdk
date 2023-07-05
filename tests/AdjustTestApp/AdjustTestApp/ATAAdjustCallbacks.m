@@ -216,7 +216,7 @@
 #pragma mark - ADJAdjustIdentifierSubscriber
 - (void)didReadWithAdjustIdentifier:(nonnull NSString *)adid {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
-                                        value:ADJReadAdjustIdentifierdMethodName];
+                                        value:ADJReadAdjustIdentifierMethodName];
     [self.testLibraryWeak addInfoToSend:@"adid" value:adid];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
