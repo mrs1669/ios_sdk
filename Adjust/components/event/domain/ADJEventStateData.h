@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nonnull ADJResult<ADJEventStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-- (nonnull instancetype)initWithIntialState;
+- (nonnull instancetype)initWithInitialState;
 
 - (nonnull instancetype)initWithEventCount:(nonnull ADJTallyCounter *)eventCount;
 

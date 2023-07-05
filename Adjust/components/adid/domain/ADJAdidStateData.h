@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nonnull ADJResult<ADJAdidStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-- (nonnull instancetype)initWithIntialState;
+- (nonnull instancetype)initWithInitialState;
 
 - (nonnull instancetype)initWithAdid:(nullable ADJNonEmptyString *)adid;
 

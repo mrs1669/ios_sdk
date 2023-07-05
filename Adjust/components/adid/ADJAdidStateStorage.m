@@ -24,7 +24,7 @@ static NSString *const kAdidStateStorageTableName = @"adid_state";
                        sqliteController:sqliteController
                               tableName:kAdidStateStorageTableName
                       metadataTypeValue:ADJAdidStateDataMetadataTypeValue
-                initialDefaultDataValue:[[ADJAdidStateData alloc] initWithIntialState]];
+                initialDefaultDataValue:[[ADJAdidStateData alloc] initWithInitialState]];
 
     return self;
 }

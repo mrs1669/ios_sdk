@@ -24,7 +24,7 @@ static NSString *const kEventStateStorageTableName = @"event_state";
                        sqliteController:sqliteController
                               tableName:kEventStateStorageTableName
                       metadataTypeValue:ADJEventStateDataMetadataTypeValue
-                initialDefaultDataValue:[[ADJEventStateData alloc] initWithIntialState]];
+                initialDefaultDataValue:[[ADJEventStateData alloc] initWithInitialState]];
 
     return self;
 }

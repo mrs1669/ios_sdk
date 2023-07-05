@@ -40,7 +40,7 @@ static NSString *const kAdidKey = @"adid";
     return [ADJResult okWithValue:[[ADJAdidStateData alloc] initWithAdid:adid]];
 }
 
-- (nonnull instancetype)initWithIntialState {
+- (nonnull instancetype)initWithInitialState {
     return [self initWithAdid:nil];
 }
 

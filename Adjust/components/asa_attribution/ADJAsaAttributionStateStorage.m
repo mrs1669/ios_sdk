@@ -24,7 +24,7 @@ static NSString *const kAsaAttributionStateStorageTableName = @"asa_attribution_
                        sqliteController:sqliteController
                               tableName:kAsaAttributionStateStorageTableName
                       metadataTypeValue:ADJAsaAttributionStateDataMetadataTypeValue
-                initialDefaultDataValue:[[ADJAsaAttributionStateData alloc] initWithIntialState]];
+                initialDefaultDataValue:[[ADJAsaAttributionStateData alloc] initWithInitialState]];
 
     return self;
 }

@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJResult<ADJMeasurementSessionStateData *> *)
     instanceFromV4WithActivityState:(nullable ADJV4ActivityState *)v4ActivityState;
 
-- (nonnull instancetype)initWithIntialState;
+- (nonnull instancetype)initWithInitialState;
 
 - (nonnull instancetype)
     initWithMeasurementSessionData:(nullable ADJMeasurementSessionData *)measurementSessionData

@@ -27,7 +27,7 @@ static NSString *const kMeasurementSessionStateStorageTableName = @"sdk_session_
                               tableName:kMeasurementSessionStateStorageTableName
                       metadataTypeValue:ADJMeasurementSessionStateDataMetadataTypeValue
                 initialDefaultDataValue:[[ADJMeasurementSessionStateData alloc]
-                                         initWithIntialState]];
+                                         initWithInitialState]];
 
     return self;
 }

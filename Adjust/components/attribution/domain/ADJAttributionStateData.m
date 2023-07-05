@@ -121,11 +121,11 @@ static NSString *const kAttributionDataMapName = @"2_ATTRIBUTION_MAP";
             // and that the attribution received is available
             //  otherwise it would be null from 'ADJAttributionData instanceFromV4'
             unavailableAttribution:NO
-            // it starts by default by not asking, should be the same in 'initWithIntialState'
+            // it starts by default by not asking, should be the same in 'initWithInitialState'
             isAsking:NO];
 }
 
-- (nonnull instancetype)initWithIntialState {
+- (nonnull instancetype)initWithInitialState {
     return [self initWithAttributionData:nil
                    installSessionTracked:NO
                   unavailableAttribution:NO

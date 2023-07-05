@@ -88,7 +88,7 @@ static NSString *const kMeasurementSessionDataMapName = @"2_SDK_SESSION_MAP";
                                    initWithMeasurementSessionData:sessionDataResult.value]];
 }
 
-- (nonnull instancetype)initWithIntialState {
+- (nonnull instancetype)initWithInitialState {
     return [self initWithMeasurementSessionData:nil];
 }
 

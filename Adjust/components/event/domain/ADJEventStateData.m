@@ -48,7 +48,7 @@ static NSString *const kEventCountKey = @"eventCount";
             [[ADJEventStateData alloc] initWithEventCount:eventCountResult.value]];
 }
 
-- (nonnull instancetype)initWithIntialState {
+- (nonnull instancetype)initWithInitialState {
     return [self initWithEventCount:[ADJTallyCounter instanceStartingAtZero]];
 }
 

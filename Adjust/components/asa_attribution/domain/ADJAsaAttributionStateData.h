@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_END
 + (nullable ADJAsaAttributionStateData *)instanceFromV4WithUserDefaults:
     (nonnull ADJV4UserDefaultsData *)v4UserDefaultsData;
 
-- (nonnull instancetype)initWithIntialState;
+- (nonnull instancetype)initWithInitialState;
 
 - (nonnull instancetype)initWithHasReceivedValidAsaClickResponse:(BOOL)hasReceivedValidAsaClickResponse
                                     hasReceivedAdjustAttribution:(BOOL)hasReceivedAdjustAttribution
