@@ -16,6 +16,7 @@
 #import "ADJAdjustAdRevenue.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustBillingSubscription.h"
 
 #import "ATAAdjustCallbacks.h"
 
@@ -102,6 +103,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     adjustCommand(measurementConsent)
     adjustCommand(getLastDeeplink)
     adjustCommand(getAdid)
+    adjustCommand(trackSubscription)
     [self logError:@"method name %@ not found", methodName];
 }
 
@@ -354,6 +356,68 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
          [ATAAdjustCallbacks
           adjustIdentifierGetterWithTestLibrary:self.testLibrary
           extraPath:self.extraPathTestOptions]];
+}
+
+- (void)trackSubscription {
+    NSString *_Nullable revenueString = [self firstParameterValueWithKey:@"revenue"];
+    NSNumber *_Nullable revenueNumber = [self strictParseNumberDoubleWithString:revenueString];
+    NSDecimalNumber *_Nullable revenueDecimalNumber = nil;
+    if (revenueNumber != nil) {
+        revenueDecimalNumber = [[NSDecimalNumber alloc] initWithDouble:revenueNumber.doubleValue];
+    }
+
+    NSString *_Nullable currency = [self firstParameterValueWithKey:@"currency"];
+
+    NSString *_Nullable transactionId = [self firstParameterValueWithKey:@"transactionId"];
+
+    NSString *_Nullable receiptString = [self firstParameterValueWithKey:@"receipt"];
+    NSData *_Nullable receiptData = nil;
+    if (receiptString != nil) {
+        receiptData = [receiptString dataUsingEncoding:NSUTF8StringEncoding];
+    }
+
+    ADJAdjustBillingSubscription *_Nonnull adjustBillingSubscription =
+        [[ADJAdjustBillingSubscription alloc]
+         initWithPriceDecimalNumber:revenueDecimalNumber
+         currency:currency
+         transactionId:transactionId
+         receiptData:receiptData];
+
+    if ([self containsKey:@"transactionDate"]) {
+        NSString *_Nullable transactionDateString =
+            [self firstParameterValueWithKey:@"transactionDate"];
+        NSNumber *_Nullable transactionDateDouble =
+            [self strictParseNumberDoubleWithString:transactionDateString];
+        if (transactionDateDouble != nil) {
+            [adjustBillingSubscription setTransactionDate:
+             [NSDate dateWithTimeIntervalSince1970:transactionDateDouble.doubleValue]];
+        }
+    }
+
+    if ([self containsKey:@"salesRegion"]) {
+        [adjustBillingSubscription setSalesRegion:
+         [self firstParameterValueWithKey:@"salesRegion"]];
+    }
+
+    if ([self containsKey:@"callbackParams"]) {
+        [self iterateWithKey:@"callbackParams"
+                      source:@"billing subscription"
+               keyValueBlock:^(NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
+            [adjustBillingSubscription addCallbackParameterWithKey:key value:value];
+        }];
+    }
+
+    if ([self containsKey:@"partnerParams"]) {
+        [self iterateWithKey:@"partnerParams"
+                      source:@"billing subscription"
+               keyValueBlock:^(NSString * _Nonnull key,
+                               NSString * _Nonnull value) {
+            [adjustBillingSubscription addPartnerParameterWithKey:key value:value];
+        }];
+    }
+
+    [[ADJAdjust instance] trackBillingSubscription:adjustBillingSubscription];
 }
 
 - (void)gdprForgetMe {
