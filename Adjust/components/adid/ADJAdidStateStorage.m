@@ -52,7 +52,7 @@ static NSString *const kAdidStateStorageTableName = @"adid_state";
                   v4UserDefaultsData:(nonnull ADJV4UserDefaultsData *)v4UserDefaultsData
 {
     ADJAdidStateData *_Nullable adidStateData =
-        [self adidStateFromV4WithActivityState:[v4FilesData v4ActivityState]];
+    [self adidStateFromV4WithActivityState:[v4FilesData v4ActivityState]];
 
     if (adidStateData == nil) {
         return;
@@ -69,7 +69,7 @@ static NSString *const kAdidStateStorageTableName = @"adid_state";
     }
 
     ADJResult<ADJNonEmptyString *> *_Nonnull adidResult =
-        [ADJNonEmptyString instanceFromString:v4ActivityState.adid];
+    [ADJNonEmptyString instanceFromString:v4ActivityState.adid];
 
     if (adidResult.failNonNilInput != nil) {
         [self.logger debugDev:@"Invalid adid from v4 activity state"
@@ -85,3 +85,4 @@ static NSString *const kAdidStateStorageTableName = @"adid_state";
 }
 
 @end
+

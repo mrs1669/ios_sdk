@@ -27,6 +27,7 @@
 @end
 
 @implementation ADJAdidController
+
 #pragma mark Instantiation
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
@@ -72,7 +73,7 @@
 #pragma mark Internal Methods
 - (void)receivedSdkResponseWithData:(nonnull id<ADJSdkResponseData>)sdkResponseData {
     ADJAdidStateData *_Nullable updatedStateData =
-        [self.state updateStateWithReceivedAdid:sdkResponseData.adid];
+    [self.state updateStateWithReceivedAdid:sdkResponseData.adid];
     if (updatedStateData == nil) {
         return;
     }
@@ -87,3 +88,4 @@
 }
 
 @end
+
