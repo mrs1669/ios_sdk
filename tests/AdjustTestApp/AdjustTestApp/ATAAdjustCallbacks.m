@@ -127,7 +127,7 @@
 - (void)didFailWithAdjustCallbackMessage:(nonnull NSString *)message {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
                                         value:ADJLaunchedDeeplinkGetterFailedMethodName];
-    [self.testLibraryWeak addInfoToSend:@"value" value:message];
+    [self.testLibraryWeak addInfoToSend:@"fail_message" value:message];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
 
@@ -204,7 +204,7 @@
 - (void)didFailWithAdjustCallbackMessage:(nonnull NSString *)message {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
                                         value:ADJAdjustIdentifierGetterFailedMethodName];
-    [self.testLibraryWeak addInfoToSend:@"value" value:message];
+    [self.testLibraryWeak addInfoToSend:@"fail_message" value:message];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
 
