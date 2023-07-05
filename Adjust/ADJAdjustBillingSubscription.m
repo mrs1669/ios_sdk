@@ -86,7 +86,7 @@
 }
 
 #pragma mark - Generated properties
-- (nullable NSArray<NSString *> *)callbackParameters {
+- (nullable NSArray<NSString *> *)callbackParameterKeyValueArray {
     @synchronized (self.callbackParametersMut) {
         if (self.callbackParametersMut.count == 0) {
             return nil;
@@ -95,7 +95,7 @@
     }
 }
 
-- (nullable NSArray<NSString *> *)partnerParameters {
+- (nullable NSArray<NSString *> *)partnerParameterKeyValueArray {
     @synchronized (self.partnerParametersMut) {
         if (self.partnerParametersMut.count == 0) {
             return nil;
