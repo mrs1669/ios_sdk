@@ -13,7 +13,8 @@
 
 @interface TestLibraryBridge () <
     AdjustCommandBulkJsonParametersDelegate,
-    WKScriptMessageHandler>
+    WKScriptMessageHandler
+>
 
 @property (nonnull, readonly, strong, nonatomic) ATLTestLibrary *testLibrary;
 @property (nonnull, readonly, strong, nonatomic) WKWebView *webView;
@@ -31,11 +32,11 @@
     }
 
     ADJResult<NSString *> *_Nonnull scriptSourceResult =
-        [TestLibraryBridge getTestLibraryWebBridgeScript];
+    [TestLibraryBridge getTestLibraryWebBridgeScript];
 
     if (scriptSourceResult.fail != nil) {
         NSString *_Nullable failString =
-            [self toStringWithJsonDictionary:scriptSourceResult.fail.toJsonDictionary];
+        [self toStringWithJsonDictionary:scriptSourceResult.fail.toJsonDictionary];
         NSLog(@"Cannot generate script for test libray web bridge: %@", failString);
         return nil;
     }
@@ -52,11 +53,12 @@
 
     return bridge;
 }
+
 + (nonnull ADJResult<NSString *> *)getTestLibraryWebBridgeScript {
     NSBundle *_Nonnull sourceBundle = [NSBundle bundleForClass:self.class];
     // requires that the file 'TestLibraryBridge.js' is in the same location/folder
     NSString *_Nullable scriptPath = [sourceBundle pathForResource:@"TestLibraryBridge"
-                                                                  ofType:@"js"];
+                                                            ofType:@"js"];
     if  (scriptPath == nil) {
         return [ADJResult failWithMessage:
                 @"Cannot obtain test library bridge js path from bundle"];
@@ -69,7 +71,7 @@
     if (adjustScript == nil) {
         return [ADJResult failWithMessage:@"Cannot read test library bridge js file"
                               wasInputNil:NO
-                               builderBlock:
+                             builderBlock:
                 ^(ADJResultFailBuilder * _Nonnull resultFailBuilder) {
             [resultFailBuilder withError:error];
             [resultFailBuilder withKey:@"test library bridge js path"
@@ -102,7 +104,7 @@
 
 - (void)executeCommandInArrayPosition:(NSUInteger)arrayPosition {
     [self execJsCallbackWithCallbackMethodName:@"execCommandInPosition"
-                         jsonParameter:
+                                 jsonParameter:
      [NSString stringWithFormat:@"%lu", (unsigned long)arrayPosition]];
 }
 
@@ -111,8 +113,8 @@
     jsonParameter:(nonnull NSString *)jsonParameter
 {
     NSString *_Nonnull jsExecCommand =
-        [NSString stringWithFormat:@"TestLibrary.callback_%@(%@);",
-         callbackMethodName, jsonParameter];
+    [NSString stringWithFormat:@"TestLibrary.callback_%@(%@);",
+     callbackMethodName, jsonParameter];
 
     [self execJsWithExecCommand:jsExecCommand];
 }
@@ -165,7 +167,7 @@
     NSString *_Nonnull parametersString = (NSString *)parametersObject;
 
     NSDictionary<NSString *, id> *_Nullable jsParameters =
-        [TestLibraryBridge toDictionaryFromJsonString:parametersString];
+    [TestLibraryBridge toDictionaryFromJsonString:parametersString];
     if (jsParameters == nil) {
         NSLog(@"Could not convert parameters to dictionary from method %@", methodName);
         return;
@@ -179,8 +181,8 @@
 
     if ([methodName isEqualToString:@"addTestDirectory"]) {
         NSString *_Nullable directoryName =
-            [TestLibraryBridge stringWithJsParameters:jsParameters
-                                                  key:@"_directoryName"];
+        [TestLibraryBridge stringWithJsParameters:jsParameters
+                                              key:@"_directoryName"];
         if (directoryName == nil) {
             NSLog(@"Could not get 'directoryName' from 'addTestDirectory'");
             return;
@@ -188,8 +190,8 @@
         [self.testLibrary addTestDirectory:directoryName];
     } else if ([methodName isEqualToString:@"addTest"]) {
         NSString *_Nullable testName =
-            [TestLibraryBridge stringWithJsParameters:jsParameters
-                                                  key:@"_testName"];
+        [TestLibraryBridge stringWithJsParameters:jsParameters
+                                              key:@"_testName"];
         if (testName == nil) {
             NSLog(@"Could not get 'testName' from 'addTest'");
             return;
@@ -197,13 +199,13 @@
         [self.testLibrary addTest:testName];
     } else if ([methodName isEqualToString:@"addInfoToSend"]) {
         NSString *_Nullable key =
-            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_key"];
+        [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_key"];
         if (key == nil) {
             NSLog(@"Could not get 'key' from 'addInfoToSend'");
             return;
         }
         NSString *_Nullable value =
-            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_value"];
+        [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_value"];
         if (value == nil) {
             NSLog(@"Could not get 'value' from 'addInfoToSend'");
             return;
@@ -211,13 +213,13 @@
         [self.testLibrary addInfoToSend:key value:value];
     } else if ([methodName isEqualToString:@"addInfoHeaderToSend"]) {
         NSString *_Nullable key =
-            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_key"];
+        [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_key"];
         if (key == nil) {
             NSLog(@"Could not get 'key' from 'addInfoHeaderToSend'");
             return;
         }
         NSString *_Nullable value =
-            [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_value"];
+        [TestLibraryBridge stringWithJsParameters:jsParameters key:@"_value"];
         if (value == nil) {
             NSLog(@"Could not get 'value' from 'addInfoHeaderToSend'");
             return;
@@ -227,8 +229,8 @@
         [self.testLibrary sendInfoToServer:self.extraPathTestOptions];
     } else if ([methodName isEqualToString:@"startTestSession"]) {
         NSString *_Nullable sdkVersion =
-            [TestLibraryBridge stringWithJsParameters:jsParameters
-                                                  key:@"_sdkVersion"];
+        [TestLibraryBridge stringWithJsParameters:jsParameters
+                                              key:@"_sdkVersion"];
         if (sdkVersion == nil) {
             NSLog(@"Could not get 'sdkVersion' from 'startTestSession'");
             return;
@@ -236,24 +238,24 @@
         [self.testLibrary startTestSession:sdkVersion];
     } else if ([methodName isEqualToString:@"teardown"]) {
         NSString *_Nullable testOptionsParametersString =
-            [TestLibraryBridge jsonStringWithJsParameters:jsParameters
-                                                      key:@"_testOptionsParameters"];
+        [TestLibraryBridge jsonStringWithJsParameters:jsParameters
+                                                  key:@"_testOptionsParameters"];
         if (testOptionsParametersString == nil) {
             NSLog(@"Could not get 'testOptionsParameters' from 'teardown'");
             return;
         }
 
         NSDictionary<NSString *, id> *_Nullable testOptionsParameters =
-            [TestLibraryBridge toDictionaryFromJsonString:testOptionsParametersString];
+        [TestLibraryBridge toDictionaryFromJsonString:testOptionsParametersString];
         if (testOptionsParameters == nil) {
             NSLog(@"Could not convert test options parameters to dictionary");
             return;
         }
 
         self.extraPathTestOptions =
-            [ATOAdjustTestOptions
-             teardownAndExecuteTestOptionsCommandWithUrlOverwrite:baseUrl
-             commandParameters:testOptionsParameters];
+        [ATOAdjustTestOptions
+         teardownAndExecuteTestOptionsCommandWithUrlOverwrite:baseUrl
+         commandParameters:testOptionsParameters];
     } else if ([methodName isEqualToString:@"jsFail"]) {
         NSLog(@"Js failed: %@", parametersString);
     } else {
@@ -271,9 +273,9 @@
         NSError *_Nullable errorPtr = nil;
         // If the object will not produce valid JSON then an exception will be thrown
         NSData *_Nullable jsonData =
-            [NSJSONSerialization dataWithJSONObject:jsonDictionary
-                                            options:0
-                                              error:&errorPtr];
+        [NSJSONSerialization dataWithJSONObject:jsonDictionary
+                                        options:0
+                                          error:&errorPtr];
 
         if (jsonData == nil) {
             NSLog(@"Could not convert json dictionary to data (%@)",
@@ -282,7 +284,7 @@
         }
 
         NSString *_Nullable jsonString =
-            [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         if (jsonString == nil) {
             NSLog(@"Could not convert json data to string");
         }
@@ -306,7 +308,7 @@
     NSError *_Nullable errorPtr = nil;
 
     id _Nullable jsonObject =
-        [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&errorPtr];
+    [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&errorPtr];
 
     if (jsonObject == nil) {
         NSLog(@"Cannot convert json data to object, %@ (%@)",
@@ -328,7 +330,7 @@
     key:(nonnull NSString *)key
 {
     id _Nullable typeObject =
-        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
+    [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
 
     if (typeObject == nil) {
         NSLog(@"Type of expected string field is nil");
@@ -364,7 +366,7 @@
     key:(nonnull NSString *)key
 {
     id _Nullable typeObject =
-        [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
+    [jsParameters objectForKey:[NSString stringWithFormat:@"%@Type", key]];
 
     if (typeObject == nil) {
         NSLog(@"Type of expected json string field is nil");
@@ -396,3 +398,4 @@
 }
 
 @end
+
