@@ -77,7 +77,7 @@
 }
 
 #pragma mark - ADJAdidSubscriber
-- (void)onAdidChangeWithValue:(nonnull ADJNonEmptyString *)changedAdid {
+- (void)onAdidUpdateWithValue:(nonnull ADJNonEmptyString *)updatedAdid {
     __block id<ADJAdjustIdentifierSubscriber> localAdjustIdentifierSubscriber =
         self.adjustIdentifierSubscriber;
 
@@ -85,10 +85,10 @@
         return;
     }
 
-    [self.logger debugDev:@"Notifying client on changed adid"];
+    [self.logger debugDev:@"Notifying client on updated adid"];
 
     [self.clientReturnExecutor executeClientReturnWithBlock:^{
-        [localAdjustIdentifierSubscriber didChangeWithAdjustIdentifier:changedAdid.stringValue];
+        [localAdjustIdentifierSubscriber didUpdateWithAdjustIdentifier:updatedAdid.stringValue];
     }];
 }
 
@@ -108,7 +108,7 @@
 
     self.cachedAttributionData = attributionStateData.attributionData;
 
-    [self notifyClientWithChangedAttribution:attributionStateData.attributionData];
+    [self notifyClientWithUpdatedAttribution:attributionStateData.attributionData];
 
     [self openDeferredDeeplink:attributionStateData.attributionData.deeplink];
 }
@@ -225,7 +225,7 @@
     }
 }
 
-- (void)notifyClientWithChangedAttribution:(nonnull ADJAttributionData *)attributionData {
+- (void)notifyClientWithUpdatedAttribution:(nonnull ADJAttributionData *)attributionData {
     __block id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
         self.adjustAttributionSubscriber;
 
@@ -237,23 +237,23 @@
         return;
     }
 
-    [self.logger debugDev:@"Notifying client on changed attribution"];
+    [self.logger debugDev:@"Notifying client on updated attribution"];
 
     if (localAdjustAttributionSubscriber != nil) {
         __block ADJAdjustAttribution *_Nonnull adjustAttribution =
             [attributionData toAdjustAttribution];
 
         [self.clientReturnExecutor executeClientReturnWithBlock:^{
-            [localAdjustAttributionSubscriber didChangeWithAdjustAttribution:adjustAttribution];
+            [localAdjustAttributionSubscriber didUpdateWithAdjustAttribution:adjustAttribution];
         }];
     }
 
     if (internalAttributionCallback != nil) {
         ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
             [attributionData
-             buildInternalCallbackDataWithMethodName:ADJChangedAttributionMethodName];
+             buildInternalCallbackDataWithMethodName:ADJUpdatedAttributionMethodName];
         for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {
-            [self.logger debugDev:@"Issue while building changed attribution internal callback"
+            [self.logger debugDev:@"Issue while building updated attribution internal callback"
                        resultFail:optFail
                         issueType:ADJIssueNonNativeIntegration];
         }

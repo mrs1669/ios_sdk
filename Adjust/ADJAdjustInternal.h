@@ -27,10 +27,10 @@ FOUNDATION_EXPORT NSString *const ADJInternalAttributionSubscriberV5000Key;
 FOUNDATION_EXPORT NSString *const ADJInternalLogSubscriberV5000Key;
 
 FOUNDATION_EXPORT NSString *const ADJReadAdjustIdentifierMethodName;
-FOUNDATION_EXPORT NSString *const ADJChangedAdjustIdentifierMethodName;
+FOUNDATION_EXPORT NSString *const ADJUpdatedAdjustIdentifierMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJReadAttributionMethodName;
-FOUNDATION_EXPORT NSString *const ADJChangedAttributionMethodName;
+FOUNDATION_EXPORT NSString *const ADJUpdatedAttributionMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJLoggedMessageMethodName;
 FOUNDATION_EXPORT NSString *const ADJLoggedMessagesPreInitMethodName;

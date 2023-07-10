@@ -13,7 +13,7 @@
 
 @protocol ADJAdidSubscriber <NSObject>
 
-- (void)onAdidChangeWithValue:(nonnull ADJNonEmptyString *)changedAdid;
+- (void)onAdidUpdateWithValue:(nonnull ADJNonEmptyString *)updatedAdid;
 
 @end
 

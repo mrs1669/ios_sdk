@@ -12,6 +12,6 @@
 
 - (void)didReadWithAdjustIdentifier:(nonnull NSString *)adid;
 
-- (void)didChangeWithAdjustIdentifier:(nonnull NSString *)adid;
+- (void)didUpdateWithAdjustIdentifier:(nonnull NSString *)adid;
 
 @end

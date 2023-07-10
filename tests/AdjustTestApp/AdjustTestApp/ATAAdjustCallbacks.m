@@ -137,9 +137,9 @@
 @implementation ATAAdjustAttributionSendAllSubscriber
 
 #pragma mark - ADJAdjustAttributionSubscriber
-- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+- (void)didUpdateWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
-                                        value:ADJChangedAttributionMethodName];
+                                        value:ADJUpdatedAttributionMethodName];
     [self addInfoWithAttribution:adjustAttribution];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
@@ -174,9 +174,9 @@
 @implementation ATAAdjustAttributionDeferredDeeplinkSubscriber
 
 #pragma mark - ADJAdjustAttributionSubscriber
-- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+- (void)didUpdateWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
-                                        value:ADJChangedAttributionMethodName];
+                                        value:ADJUpdatedAttributionMethodName];
     [self addNullableStringWithKey:@"deeplink" value:adjustAttribution.deeplink];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
@@ -221,10 +221,10 @@
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
 
-- (void)didChangeWithAdjustIdentifier:(nonnull NSString *)adid {
+- (void)didUpdateWithAdjustIdentifier:(nonnull NSString *)adid {
 
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
-                                        value:ADJChangedAdjustIdentifierMethodName];
+                                        value:ADJUpdatedAdjustIdentifierMethodName];
     [self.testLibraryWeak addInfoToSend:@"adid" value:adid];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }

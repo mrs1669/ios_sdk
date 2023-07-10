@@ -23,10 +23,10 @@ NSString *const ADJInternalAttributionSubscriberV5000Key = @"internalAttribution
 NSString *const ADJInternalLogSubscriberV5000Key = @"internalLogSubscriberV5000";
 
 NSString *const ADJReadAdjustIdentifierMethodName = @"readAdjustIdentifier";
-NSString *const ADJChangedAdjustIdentifierMethodName = @"changedAdjustIdentifier";
+NSString *const ADJUpdatedAdjustIdentifierMethodName = @"updatedAdjustIdentifier";
 
 NSString *const ADJReadAttributionMethodName = @"readAttribution";
-NSString *const ADJChangedAttributionMethodName = @"changedAttribution";
+NSString *const ADJUpdatedAttributionMethodName = @"updatedAttribution";
 
 NSString *const ADJLoggedMessageMethodName = @"loggedMessage";
 NSString *const ADJLoggedMessagesPreInitMethodName = @"loggedMessagesPreInit";

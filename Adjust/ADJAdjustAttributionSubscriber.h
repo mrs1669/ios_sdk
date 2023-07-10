@@ -14,6 +14,6 @@
 
 - (void)didReadWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution;
 
-- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution;
+- (void)didUpdateWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution;
 
 @end

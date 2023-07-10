@@ -83,7 +83,7 @@
     [self.adidPublisher notifySubscribersWithSubscriberBlock:
      ^(id<ADJAdidSubscriber> _Nonnull subscriber)
      {
-        [subscriber onAdidChangeWithValue:updatedStateData.adid];
+        [subscriber onAdidUpdateWithValue:updatedStateData.adid];
     }];
 }
 

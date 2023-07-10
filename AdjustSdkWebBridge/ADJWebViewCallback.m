@@ -312,7 +312,7 @@
      jsonStringParameter:adid];
 }
 
-- (void)didChangeWithAdjustIdentifier:(nonnull NSString *)adid {
+- (void)didUpdateWithAdjustIdentifier:(nonnull NSString *)adid {
     ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
     if (webViewCallback == nil) {
         // TODO: log weak ref fail, maybe to adjust internal?
@@ -322,7 +322,7 @@
     [webViewCallback
      execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
      callbackId:self.adjustIdentifierSubscriberCallbackId
-     methodName:ADJChangedAdjustIdentifierMethodName
+     methodName:ADJUpdatedAdjustIdentifierMethodName
      jsonStringParameter:adid];
 }
 
@@ -387,19 +387,19 @@
         return;
     }
 
-    id _Nullable didChangeAdjustAttributonJsonStringValue =
+    id _Nullable didUpdateAdjustAttributonJsonStringValue =
         [data objectForKey:[NSString stringWithFormat:@"%@%@",
-                            ADJChangedAttributionMethodName,
+                            ADJUpdatedAttributionMethodName,
                             ADJInternalCallbackJsonStringSuffix]];
 
-    if (didChangeAdjustAttributonJsonStringValue != nil
-        && [didChangeAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
+    if (didUpdateAdjustAttributonJsonStringValue != nil
+        && [didUpdateAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
     {
         [webViewCallback
          execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
          callbackId:self.attributionSubscriberCallbackId
-         methodName:ADJChangedAttributionMethodName
-         jsonNonStringParameter:(NSString *)didChangeAdjustAttributonJsonStringValue];
+         methodName:ADJUpdatedAttributionMethodName
+         jsonNonStringParameter:(NSString *)didUpdateAdjustAttributonJsonStringValue];
         return;
     }
 
