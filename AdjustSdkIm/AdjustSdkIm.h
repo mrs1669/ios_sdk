@@ -26,8 +26,8 @@ FOUNDATION_EXPORT const unsigned char AdjustSdkImVersionString[];
 #import <AdjustSdkIm/ADJAdjustDeviceIdsCallback.h>
 #import <AdjustSdkIm/ADJAdjustEvent.h>
 #import <AdjustSdkIm/ADJAdjustForegroundSubscriber.h>
-//#import <AdjustSdkIm/ADJAdjustIdentifierCallback.h>
-//#import <AdjustSdkIm/ADJAdjustIdentifierSubscriber.h>
+#import <AdjustSdkIm/ADJAdjustIdentifierCallback.h>
+#import <AdjustSdkIm/ADJAdjustIdentifierSubscriber.h>
 #import <AdjustSdkIm/ADJAdjustInstance.h>
 #import <AdjustSdkIm/ADJAdjustInternal.h>
 #import <AdjustSdkIm/ADJAdjustLaunchedDeeplink.h>

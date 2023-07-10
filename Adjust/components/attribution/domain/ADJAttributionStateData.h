@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJAttributionStateData *)
     instanceFromMigratedV4Attribution:(nonnull ADJAttributionData *)migratedAttribution;
 
-- (nonnull instancetype)initWithIntialState;
+- (nonnull instancetype)initWithInitialState;
 
 - (nonnull instancetype)initWithAttributionData:(nullable ADJAttributionData *)attributionData
                           installSessionTracked:(BOOL)installSessionTracked

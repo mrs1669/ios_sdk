@@ -21,6 +21,7 @@
 #import "ADJEventDeduplicationStorage.h"
 #import "ADJGlobalCallbackParametersStorage.h"
 #import "ADJGlobalPartnerParametersStorage.h"
+#import "ADJAdidStateStorage.h"
 #import "ADJAttributionStateStorage.h"
 #import "ADJAsaAttributionStateStorage.h"
 #import "ADJLogQueueStorage.h"
@@ -42,22 +43,29 @@
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJKeychainStorage *keychainStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJSQLiteController *sqliteController;
-
-@property (nonnull, readonly, strong, nonatomic) ADJAttributionStateStorage *attributionStateStorage;
-@property (nonnull, readonly, strong, nonatomic) ADJAsaAttributionStateStorage *asaAttributionStateStorage;
+@property (nonnull, readonly, strong, nonatomic) ADJAdidStateStorage *adidStateStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJAttributionStateStorage *attributionStateStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJAsaAttributionStateStorage *asaAttributionStateStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *clientActionStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJDeviceIdsStorage *deviceIdsStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJPushTokenStateStorage *pushTokenStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJEventStateStorage *eventStateStorage;
-@property (nonnull, readonly, strong, nonatomic) ADJEventDeduplicationStorage *eventDeduplicationStorage;
-@property (nonnull, readonly, strong, nonatomic) ADJGlobalCallbackParametersStorage *globalCallbackParametersStorage;
-@property (nonnull, readonly, strong, nonatomic) ADJGlobalPartnerParametersStorage *globalPartnerParametersStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJEventDeduplicationStorage *eventDeduplicationStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJGlobalCallbackParametersStorage *globalCallbackParametersStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJGlobalPartnerParametersStorage *globalPartnerParametersStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJGdprForgetStateStorage *gdprForgetStateStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJLogQueueStorage *logQueueStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJMainQueueStorage *mainQueueStorage;
 @property (nonnull, readonly, strong, nonatomic) ADJSdkActiveStateStorage *sdkActiveStateStorage;
-@property (nonnull, readonly, strong, nonatomic) ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
-@property (nonnull, readonly, strong, nonatomic) ADJLaunchedDeeplinkStateStorage *launchedDeeplinkStateStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJMeasurementSessionStateStorage *measurementSessionStateStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJLaunchedDeeplinkStateStorage *launchedDeeplinkStateStorage;
 
 // public api
 - (void)finalizeAtTeardownWithCloseStorageBlock:(nullable void (^)(void))closeStorageBlock;

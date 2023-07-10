@@ -28,8 +28,13 @@
     ATAAdjustCallbackBase<ADJAdjustAttributionSubscriber> @end
 @interface ATAAdjustAttributionDeferredDeeplinkSubscriber :
     ATAAdjustCallbackBase<ADJAdjustAttributionSubscriber> @end
+@interface ATAAdjustIdentifierGetter :
+    ATAAdjustCallbackBase<ADJAdjustIdentifierCallback> @end
+@interface ATAAdjustIdentifierSubscriber :
+    ATAAdjustCallbackBase<ADJAdjustIdentifierSubscriber> @end
 
 @implementation ATAAdjustCallbacks
+
 + (nonnull id<ADJAdjustLaunchedDeeplinkCallback>)
     adjustLaunchedDeeplinkGetterWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
     extraPath:(nonnull NSString *)extraPath
@@ -53,9 +58,28 @@
     return [[ATAAdjustAttributionDeferredDeeplinkSubscriber alloc] initWithTestLibrary:testLibrary
                                                                              extraPath:extraPath];
 }
+
++ (nonnull id<ADJAdjustIdentifierCallback>)
+    adjustIdentifierGetterWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
+    extraPath:(nonnull NSString *)extraPath
+{
+    return [[ATAAdjustIdentifierGetter alloc] initWithTestLibrary:testLibrary
+                                                        extraPath:extraPath];
+}
+
++ (nonnull id<ADJAdjustIdentifierSubscriber>)
+    adjustIdentifierSubscriberWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
+    extraPath:(nonnull NSString *)extraPath
+{
+    return [[ATAAdjustIdentifierSubscriber alloc] initWithTestLibrary:testLibrary
+                                                            extraPath:extraPath];
+}
+
 @end
 
+
 @implementation ATAAdjustCallbackBase
+
 - (nonnull instancetype)initWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
                                   extraPath:(nonnull NSString *)extraPath
 {
@@ -86,7 +110,10 @@
 }
 
 @end
+
+
 @implementation ATAAdjustLaunchedDeeplinkGetter
+
 #pragma mark - ADJAdjustLaunchedDeeplinkCallback
 - (void)didReadWithAdjustLaunchedDeeplink:(nonnull NSString *)adjustLaunchedDeeplink {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
@@ -100,16 +127,19 @@
 - (void)didFailWithAdjustCallbackMessage:(nonnull NSString *)message {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
                                         value:ADJLaunchedDeeplinkGetterFailedMethodName];
-    [self.testLibraryWeak addInfoToSend:@"value" value:message];
+    [self.testLibraryWeak addInfoToSend:@"fail_message" value:message];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
+
 @end
 
+
 @implementation ATAAdjustAttributionSendAllSubscriber
+
 #pragma mark - ADJAdjustAttributionSubscriber
-- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+- (void)didUpdateWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
-                                        value:ADJChangedAttributionMethodName];
+                                        value:ADJUpdatedAttributionMethodName];
     [self addInfoWithAttribution:adjustAttribution];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
@@ -120,7 +150,9 @@
     [self addInfoWithAttribution:adjustAttribution];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
+
 #pragma mark Internal Methods
+
 - (void)addInfoWithAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self addNullableStringWithKey:@"tracker_token" value:adjustAttribution.trackerToken];
     [self addNullableStringWithKey:@"tracker_name" value:adjustAttribution.trackerName];
@@ -135,13 +167,16 @@
     [self addNullableNumberWithKey:@"cost_amount" value:adjustAttribution.costAmount];
     [self addNullableStringWithKey:@"cost_currency" value:adjustAttribution.costCurrency];
 }
+
 @end
 
+
 @implementation ATAAdjustAttributionDeferredDeeplinkSubscriber
+
 #pragma mark - ADJAdjustAttributionSubscriber
-- (void)didChangeWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
+- (void)didUpdateWithAdjustAttribution:(nonnull ADJAdjustAttribution *)adjustAttribution {
     [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
-                                        value:ADJChangedAttributionMethodName];
+                                        value:ADJUpdatedAttributionMethodName];
     [self addNullableStringWithKey:@"deeplink" value:adjustAttribution.deeplink];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
@@ -152,4 +187,46 @@
     [self addNullableStringWithKey:@"deeplink" value:adjustAttribution.deeplink];
     [self.testLibraryWeak sendInfoToServer:self.extraPath];
 }
+
+@end
+
+
+@implementation ATAAdjustIdentifierGetter
+
+#pragma mark - ADJAdjustIdentifierCallback
+- (void)didReadWithAdjustIdentifier:(nonnull NSString *)adid {
+    [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
+                                        value:ADJAdjustIdentifierGetterReadMethodName];
+    [self.testLibraryWeak addInfoToSend:@"value" value:adid];
+    [self.testLibraryWeak sendInfoToServer:self.extraPath];
+}
+
+- (void)didFailWithAdjustCallbackMessage:(nonnull NSString *)message {
+    [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
+                                        value:ADJAdjustIdentifierGetterFailedMethodName];
+    [self.testLibraryWeak addInfoToSend:@"fail_message" value:message];
+    [self.testLibraryWeak sendInfoToServer:self.extraPath];
+}
+
+@end
+
+
+@implementation ATAAdjustIdentifierSubscriber
+
+#pragma mark - ADJAdjustIdentifierSubscriber
+- (void)didReadWithAdjustIdentifier:(nonnull NSString *)adid {
+    [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
+                                        value:ADJReadAdjustIdentifierMethodName];
+    [self.testLibraryWeak addInfoToSend:@"adid" value:adid];
+    [self.testLibraryWeak sendInfoToServer:self.extraPath];
+}
+
+- (void)didUpdateWithAdjustIdentifier:(nonnull NSString *)adid {
+
+    [self.testLibraryWeak addInfoHeaderToSend:@"method_name"
+                                        value:ADJUpdatedAdjustIdentifierMethodName];
+    [self.testLibraryWeak addInfoToSend:@"adid" value:adid];
+    [self.testLibraryWeak sendInfoToServer:self.extraPath];
+}
+
 @end

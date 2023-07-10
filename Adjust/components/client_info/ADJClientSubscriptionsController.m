@@ -17,8 +17,13 @@
 @interface ADJClientSubscriptionsController ()
 #pragma mark - Injected dependencies
 @property (nullable, readonly, strong, nonatomic) ADJThreadController *threadController;
-@property (nonnull, readonly, strong, nonatomic) ADJAttributionStateStorage *attributionStateStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJAdidStateStorage *adidStateStorage;
+@property (nonnull, readonly, strong, nonatomic)
+    ADJAttributionStateStorage *attributionStateStorage;
 @property (nullable, readonly, strong, nonatomic) id<ADJClientReturnExecutor> clientReturnExecutor;
+@property (nullable, readonly, strong, nonatomic)
+    id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
 @property (nullable, readonly, strong, nonatomic)
     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
@@ -36,8 +41,11 @@
 - (nonnull instancetype)
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     threadController:(nonnull ADJThreadController *)threadController
+    adidStateStorage:(nonnull ADJAdidStateStorage *)adidStateStorage
     attributionStateStorage:(nonnull ADJAttributionStateStorage *)attributionStateStorage
     clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor
+    adjustIdentifierSubscriber:
+        (nonnull id<ADJAdjustIdentifierSubscriber>)adjustIdentifierSubscriber
     adjustAttributionSubscriber:
         (nullable id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber
     adjustLogSubscriber:(nullable id<ADJAdjustLogSubscriber>)adjustLogSubscriber
@@ -47,8 +55,10 @@
 {
     self = [super initWithLoggerFactory:loggerFactory loggerName:@"ClientSubscriptionsController"];
     _threadController = threadController;
+    _adidStateStorage = adidStateStorage;
     _attributionStateStorage = attributionStateStorage;
     _clientReturnExecutor = clientReturnExecutor;
+    _adjustIdentifierSubscriber = adjustIdentifierSubscriber;
     _adjustAttributionSubscriber = adjustAttributionSubscriber;
     _adjustLogSubscriber = adjustLogSubscriber;
     _internalConfigSubscriptions = internalConfigSubscriptions;
@@ -62,8 +72,24 @@
 #pragma mark Public API
 #pragma mark - ADJSdkInitSubscriber
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData {
+    [self ccNotifyClientOnSdkInitForAdid];
     [self ccNotifyClientOnSdkInitForAttribution];
-    //[self ccNotifyClientOnSdkInitForAdid];
+}
+
+#pragma mark - ADJAdidSubscriber
+- (void)onAdidUpdateWithValue:(nonnull ADJNonEmptyString *)updatedAdid {
+    __block id<ADJAdjustIdentifierSubscriber> localAdjustIdentifierSubscriber =
+        self.adjustIdentifierSubscriber;
+
+    if (localAdjustIdentifierSubscriber == nil) {
+        return;
+    }
+
+    [self.logger debugDev:@"Notifying client on updated adid"];
+
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
+        [localAdjustIdentifierSubscriber didUpdateWithAdjustIdentifier:updatedAdid.stringValue];
+    }];
 }
 
 #pragma mark - ADJAttributionSubscriber
@@ -82,7 +108,7 @@
 
     self.cachedAttributionData = attributionStateData.attributionData;
 
-    [self notifyClientWithChangedAttribution:attributionStateData.attributionData];
+    [self notifyClientWithUpdatedAttribution:attributionStateData.attributionData];
 
     [self openDeferredDeeplink:attributionStateData.attributionData.deeplink];
 }
@@ -126,6 +152,29 @@
 }
 
 #pragma mark Internal Methods
+- (void)ccNotifyClientOnSdkInitForAdid {
+    __block id<ADJAdjustIdentifierSubscriber> localAdjustIdentifierSubscriber =
+        self.adjustIdentifierSubscriber;
+
+    if (localAdjustIdentifierSubscriber == nil) {
+        return;
+    }
+
+    ADJAdidStateData *_Nonnull adidStateData = [self.adidStateStorage readOnlyStoredDataValue];
+
+    if (adidStateData.adid == nil) {
+        [self.logger debugDev:@"Not notifying client on init without read adid"];
+        return;
+    }
+
+    [self.logger debugDev:@"Notifying client on init with read adid"];
+
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
+        [localAdjustIdentifierSubscriber
+         didReadWithAdjustIdentifier:adidStateData.adid.stringValue];
+    }];
+}
+
 - (void)ccNotifyClientOnSdkInitForAttribution {
     __block id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
         self.adjustAttributionSubscriber;
@@ -176,7 +225,7 @@
     }
 }
 
-- (void)notifyClientWithChangedAttribution:(nonnull ADJAttributionData *)attributionData {
+- (void)notifyClientWithUpdatedAttribution:(nonnull ADJAttributionData *)attributionData {
     __block id<ADJAdjustAttributionSubscriber> localAdjustAttributionSubscriber =
         self.adjustAttributionSubscriber;
 
@@ -188,23 +237,23 @@
         return;
     }
 
-    [self.logger debugDev:@"Notifying client on changed attribution"];
+    [self.logger debugDev:@"Notifying client on updated attribution"];
 
     if (localAdjustAttributionSubscriber != nil) {
         __block ADJAdjustAttribution *_Nonnull adjustAttribution =
             [attributionData toAdjustAttribution];
 
         [self.clientReturnExecutor executeClientReturnWithBlock:^{
-            [localAdjustAttributionSubscriber didChangeWithAdjustAttribution:adjustAttribution];
+            [localAdjustAttributionSubscriber didUpdateWithAdjustAttribution:adjustAttribution];
         }];
     }
 
     if (internalAttributionCallback != nil) {
         ADJOptionalFails<NSDictionary<NSString *, id> *> *_Nonnull callbackDataOptFails =
             [attributionData
-             buildInternalCallbackDataWithMethodName:ADJChangedAttributionMethodName];
+             buildInternalCallbackDataWithMethodName:ADJUpdatedAttributionMethodName];
         for (ADJResultFail *_Nonnull optFail in callbackDataOptFails.optionalFails) {
-            [self.logger debugDev:@"Issue while building changed attribution internal callback"
+            [self.logger debugDev:@"Issue while building updated attribution internal callback"
                        resultFail:optFail
                         issueType:ADJIssueNonNativeIntegration];
         }

@@ -18,6 +18,7 @@
 #import "ADJAdjustAttribution.h"
 #import "ADJAdjustLaunchedDeeplink.h"
 #import "ADJAdjustThirdPartySharing.h"
+#import "ADJAdjustIdentifierSubscriber.h"
 #import "ADJAdjustAttributionSubscriber.h"
 
 #import "ADJAdjust.h"
@@ -294,7 +295,8 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         }
 
         ADJAdjustConfig *_Nonnull adjustConfig =
-            [self.sdkApiHelper adjustConfigWithParametersJsonDictionary:jsParameters];
+            [self.sdkApiHelper adjustConfigWithParametersJsonDictionary:jsParameters
+                                                       instanceIdString:instanceIdString];
 
         NSDictionary<NSString *, id<ADJInternalCallback>> *_Nullable internalConfigSubscriptions =
             [self.sdkApiHelper
@@ -438,6 +440,14 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         [adjustInstance activateMeasurementConsent];
     } else if ([ADJWBInactivateMeasurementConsentMethodName isEqualToString:methodName]) {
         [adjustInstance inactivateMeasurementConsent];
+    } else if ([ADJWBGetAdjustIdentifierAsyncMethodName isEqualToString:methodName]) {
+        id<ADJAdjustIdentifierCallback> _Nullable adjustIdentifierGetterCallback =
+            [self.sdkApiHelper
+             adjustIdentifierGetterCallbackWithJsParameters:jsParameters
+             instanceIdString:instanceIdString];
+        if (adjustIdentifierGetterCallback != nil) {
+            [adjustInstance adjustIdentifierWithCallback:adjustIdentifierGetterCallback];
+        }
     } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
         [adjustInstance trackLaunchedDeeplink:
          [self.sdkApiHelper adjustLaunchedDeeplinkWithJsParameters:jsParameters]];

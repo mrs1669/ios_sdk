@@ -25,6 +25,9 @@ FOUNDATION_EXPORT NSString *const ADJWBOnlineModeMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBActivateMeasurementConsentMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBInactivateMeasurementConsentMethodName;
 
+FOUNDATION_EXPORT NSString *const ADJWBGetAdjustIdentifierAsyncMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBAdjustIdentifierAsyncGetterCallbackKey;
+
 FOUNDATION_EXPORT NSString *const ADJWBGetAdjustAttributionAsyncMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionAsyncGetterCallbackKey;
 
@@ -68,6 +71,7 @@ FOUNDATION_EXPORT NSString *const ADJWBCanSendInBackgroundConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBDoNotOpenDeferredDeeplinkConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBDoNotReadAppleSearchAdsAttributionConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBEventIdDeduplicationMaxCapacityConfigKey;
+FOUNDATION_EXPORT NSString *const ADJWBAdjustIdentifierSubscriberCallbackConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionSubscriberCallbackConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBAdjustLogSubscriberCallbackConfigKey;
 

@@ -191,8 +191,7 @@ NSString *const ADJAttributionStatusWaiting = @"Waiting";
    }
 
    ADJOptionalFails<ADJAttributionData *> *_Nonnull receivedAttributionOptFails =
-       [ADJAttributionData instanceFromJson:attributionJson
-                                       adid:attributionResponseData.adid];
+       [ADJAttributionData instanceFromJson:attributionJson];
    for (ADJResultFail *_Nonnull optionalFail in receivedAttributionOptFails.optionalFails) {
        [self.logger debugDev:@"Failed processing value in attribution json response"
                   resultFail:optionalFail

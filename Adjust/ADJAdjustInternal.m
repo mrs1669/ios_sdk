@@ -22,13 +22,19 @@ static dispatch_once_t entryRootOnceToken = 0;
 NSString *const ADJInternalAttributionSubscriberV5000Key = @"internalAttributionSubscriberV5000";
 NSString *const ADJInternalLogSubscriberV5000Key = @"internalLogSubscriberV5000";
 
+NSString *const ADJReadAdjustIdentifierMethodName = @"readAdjustIdentifier";
+NSString *const ADJUpdatedAdjustIdentifierMethodName = @"updatedAdjustIdentifier";
+
 NSString *const ADJReadAttributionMethodName = @"readAttribution";
-NSString *const ADJChangedAttributionMethodName = @"changedAttribution";
+NSString *const ADJUpdatedAttributionMethodName = @"updatedAttribution";
 
 NSString *const ADJLoggedMessageMethodName = @"loggedMessage";
 NSString *const ADJLoggedMessagesPreInitMethodName = @"loggedMessagesPreInit";
 
 NSString *const ADJFailedMethodName = @"failed";
+
+NSString *const ADJAdjustIdentifierGetterReadMethodName = @"getAdjustIdentifierRead";
+NSString *const ADJAdjustIdentifierGetterFailedMethodName = @"getAdjustIdentifierFailed";
 
 NSString *const ADJAttributionGetterReadMethodName = @"getAttributionRead";
 NSString *const ADJAttributionGetterFailedMethodName = @"getAttributionFailed";

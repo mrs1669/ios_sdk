@@ -11,6 +11,21 @@
 #import "ADJUtilF.h"
 #import "ADJUtilJson.h"
 
+@interface ADJAdjustIdentifierSubscriberCallback : NSObject<ADJAdjustIdentifierSubscriber>
+
+- (nonnull instancetype)
+    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
+    adjustIdentifierSubscriberCallbackId:(nonnull NSString *)adjustIdentifierSubscriberCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+@property (nullable, readonly, weak, nonatomic) ADJWebViewCallback *webViewCallbackWeak;
+@property (nonnull, readonly, strong, nonatomic) NSString *adjustIdentifierSubscriberCallbackId;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceIdString;
+
+@end
+
 @interface ADJAttributionSubscriberInternalCallback : NSObject<ADJInternalCallback>
 
 - (nonnull instancetype)
@@ -22,6 +37,20 @@
 
 @property (nullable, readonly, weak, nonatomic) ADJWebViewCallback *webViewCallbackWeak;
 @property (nonnull, readonly, strong, nonatomic) NSString *attributionSubscriberCallbackId;
+@property (nonnull, readonly, strong, nonatomic) NSString *instanceIdString;
+
+@end
+
+@interface ADJAdjustIdentifierGetterCallback : NSObject<ADJAdjustIdentifierCallback>
+- (nonnull instancetype)
+    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
+    adjustIdentifierGetterCallbackId:(nonnull NSString *)adjustIdentifierGetterCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+@property (nullable, readonly, weak, nonatomic) ADJWebViewCallback *webViewCallbackWeak;
+@property (nonnull, readonly, strong, nonatomic) NSString *adjustIdentifierGetterCallbackId;
 @property (nonnull, readonly, strong, nonatomic) NSString *instanceIdString;
 
 @end
@@ -79,7 +108,17 @@
     return nil;
 }
 
-#pragma mark - Public API
+#pragma mark Public API
+- (nonnull id<ADJAdjustIdentifierSubscriber>)
+    adjustIdentifierSubscriberCallbackWithId:
+        (nonnull NSString *)adjustIdentifierSubscriberCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    return [[ADJAdjustIdentifierSubscriberCallback alloc]
+            initWithWebViewCallback:self
+            adjustIdentifierSubscriberCallbackId:adjustIdentifierSubscriberCallbackId
+            instanceIdString:instanceIdString];
+}
 
 - (nonnull id<ADJInternalCallback>)
     attributionSubscriberInternalCallbackWithId:
@@ -89,6 +128,17 @@
     return [[ADJAttributionSubscriberInternalCallback alloc]
             initWithWebViewCallback:self
             attributionSubscriberCallbackId:attributionSubscriberCallbackId
+            instanceIdString:instanceIdString];
+}
+
+- (nonnull id<ADJAdjustIdentifierCallback>)
+    adjustIdentifierGetterCallbackWithId:
+        (nonnull NSString *)adjustIdentifierGetterCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    return [[ADJAdjustIdentifierGetterCallback alloc]
+            initWithWebViewCallback:self
+            adjustIdentifierGetterCallbackId:adjustIdentifierGetterCallbackId
             instanceIdString:instanceIdString];
 }
 
@@ -229,6 +279,55 @@
 
 @end
 
+@implementation ADJAdjustIdentifierSubscriberCallback
+#pragma mark Instantiation
+- (nonnull instancetype)
+    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
+    adjustIdentifierSubscriberCallbackId:(nonnull NSString *)adjustIdentifierSubscriberCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    self = [super init];
+    _webViewCallbackWeak = webViewCallback;
+    _adjustIdentifierSubscriberCallbackId = adjustIdentifierSubscriberCallbackId;
+    _instanceIdString = instanceIdString;
+
+    return self;
+}
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (void)didReadWithAdjustIdentifier:(nonnull NSString *)adid {
+    ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
+    if (webViewCallback == nil) {
+        // TODO: log weak ref fail, maybe to adjust internal?
+        return;
+    }
+
+    [webViewCallback
+     execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
+     callbackId:self.adjustIdentifierSubscriberCallbackId
+     methodName:ADJReadAdjustIdentifierMethodName
+     jsonStringParameter:adid];
+}
+
+- (void)didUpdateWithAdjustIdentifier:(nonnull NSString *)adid {
+    ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
+    if (webViewCallback == nil) {
+        // TODO: log weak ref fail, maybe to adjust internal?
+        return;
+    }
+
+    [webViewCallback
+     execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
+     callbackId:self.adjustIdentifierSubscriberCallbackId
+     methodName:ADJUpdatedAdjustIdentifierMethodName
+     jsonStringParameter:adid];
+}
+
+@end
+
 @implementation ADJAttributionSubscriberInternalCallback
 
 #pragma mark Instantiation
@@ -288,19 +387,19 @@
         return;
     }
 
-    id _Nullable didChangeAdjustAttributonJsonStringValue =
+    id _Nullable didUpdateAdjustAttributonJsonStringValue =
         [data objectForKey:[NSString stringWithFormat:@"%@%@",
-                            ADJChangedAttributionMethodName,
+                            ADJUpdatedAttributionMethodName,
                             ADJInternalCallbackJsonStringSuffix]];
 
-    if (didChangeAdjustAttributonJsonStringValue != nil
-        && [didChangeAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
+    if (didUpdateAdjustAttributonJsonStringValue != nil
+        && [didUpdateAdjustAttributonJsonStringValue isKindOfClass:[NSString class]])
     {
         [webViewCallback
          execJsCallbackSubscriberWithInstanceIdString:self.instanceIdString
          callbackId:self.attributionSubscriberCallbackId
-         methodName:ADJChangedAttributionMethodName
-         jsonNonStringParameter:(NSString *)didChangeAdjustAttributonJsonStringValue];
+         methodName:ADJUpdatedAttributionMethodName
+         jsonNonStringParameter:(NSString *)didUpdateAdjustAttributonJsonStringValue];
         return;
     }
 
@@ -313,6 +412,59 @@
 }
 
 @end
+
+@implementation ADJAdjustIdentifierGetterCallback
+#pragma mark Instantiation
+- (nonnull instancetype)
+    initWithWebViewCallback:(nonnull ADJWebViewCallback *)webViewCallback
+    adjustIdentifierGetterCallbackId:(nonnull NSString *)adjustIdentifierGetterCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString
+{
+    self = [super init];
+    _webViewCallbackWeak = webViewCallback;
+    _adjustIdentifierGetterCallbackId = adjustIdentifierGetterCallbackId;
+    _instanceIdString = instanceIdString;
+
+    return self;
+}
+
+- (nullable instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+#pragma mark Public API
+#pragma mark - ADJAdjustIdentifierCallback
+- (void)didReadWithAdjustIdentifier:(nonnull NSString *)adid {
+    ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
+    if (webViewCallback == nil) {
+        // TODO: log weak ref fail, maybe to adjust internal?
+        return;
+    }
+
+    [webViewCallback
+     execJsCallbackGetterWithInstanceIdString:self.instanceIdString
+     callbackId:self.adjustIdentifierGetterCallbackId
+     methodName:ADJAdjustIdentifierGetterReadMethodName
+     jsonStringParameter:adid];
+}
+
+- (void)didFailWithAdjustCallbackMessage:(nonnull NSString *)message {
+    ADJWebViewCallback *_Nullable webViewCallback = self.webViewCallbackWeak;
+    if (webViewCallback == nil) {
+        // TODO: log weak ref fail, maybe to adjust internal?
+        return;
+    }
+
+    [webViewCallback
+     execJsCallbackGetterWithInstanceIdString:self.instanceIdString
+     callbackId:self.adjustIdentifierGetterCallbackId
+     methodName:ADJAdjustIdentifierGetterFailedMethodName
+     jsonStringParameter:message];
+}
+
+@end
+
 
 @implementation ADJAttributionGetterInternalCallback
 

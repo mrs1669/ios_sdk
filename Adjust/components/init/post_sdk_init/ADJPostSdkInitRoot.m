@@ -81,12 +81,20 @@
     id<ADJLoggerFactory> _Nonnull loggerFactory = instanceRootBag.logController;
 
     // [INDEPENDENT] Independent objects initialization section.
+    _adidController = [[ADJAdidController alloc]
+                       initWithLoggerFactory:loggerFactory
+                       adidStateStorage:storageRoot.adidStateStorage
+                       threadController:instanceRootBag.threadController
+                       publisherController:instanceRootBag.publisherController];
+
     _clientSubscriptionsController =
         [[ADJClientSubscriptionsController alloc]
          initWithLoggerFactory:loggerFactory
          threadController:instanceRootBag.threadController
+         adidStateStorage:storageRoot.adidStateStorage
          attributionStateStorage:storageRoot.attributionStateStorage
          clientReturnExecutor:preSdkInitRootBag.clientReturnExecutor
+         adjustIdentifierSubscriber:clientConfig.adjustIdentifierSubscriber
          adjustAttributionSubscriber:clientConfig.adjustAttributionSubscriber
          adjustLogSubscriber:clientConfig.adjustLogSubscriber
          internalConfigSubscriptions:clientConfig.internalConfigSubscriptions
@@ -258,8 +266,7 @@
     [publisherController subscribeToPublisher:self.reachabilityController];
     [publisherController subscribeToPublisher:self.measurementSessionController];
     [publisherController subscribeToPublisher:self.measurementLifecycleController];
-    // Add when adid is merged
-    //[publisherController subscribeToPublisher:self.adidController];
+    [publisherController subscribeToPublisher:self.adidController];
 }
 
 @end

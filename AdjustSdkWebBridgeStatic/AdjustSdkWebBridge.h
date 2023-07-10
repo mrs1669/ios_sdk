@@ -26,8 +26,8 @@ FOUNDATION_EXPORT const unsigned char AdjustSdkWebBridgeVersionString[];
 #import <AdjustSdkWebBridge/ADJAdjustDeviceIdsCallback.h>
 #import <AdjustSdkWebBridge/ADJAdjustEvent.h>
 #import <AdjustSdkWebBridge/ADJAdjustForegroundSubscriber.h>
-//#import <AdjustSdkWebBridge/ADJAdjustIdentifierCallback.h>
-//#import <AdjustSdkWebBridge/ADJAdjustIdentifierSubscriber.h>
+#import <AdjustSdkWebBridge/ADJAdjustIdentifierCallback.h>
+#import <AdjustSdkWebBridge/ADJAdjustIdentifierSubscriber.h>
 #import <AdjustSdkWebBridge/ADJAdjustInstance.h>
 #import <AdjustSdkWebBridge/ADJAdjustInternal.h>
 #import <AdjustSdkWebBridge/ADJAdjustLaunchedDeeplink.h>

@@ -297,6 +297,20 @@
     }];
 }
 
+- (void)adjustIdentifierWithCallback:
+    (nonnull id<ADJAdjustIdentifierCallback>)adjustIdentifierCallback
+{
+    [self ccExecuteFrom:@"adjustIdentifierWithCallback"
+         adjustCallback:adjustIdentifierCallback
+               preBlock:^(ADJPreSdkInitRoot *_Nonnull preSdkInitRoot)
+     {
+        [preSdkInitRoot.clientCallbacksController
+         ccAdidWithAdjustCallback:adjustIdentifierCallback
+         adidStateReadOnlyStorage:preSdkInitRoot.storageRoot.adidStateStorage];
+    }];
+
+}
+
 - (void)deviceIdsWithCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback {
     [self ccExecuteFrom:@"deviceIdsWithCallback"
          adjustCallback:adjustDeviceIdsCallback

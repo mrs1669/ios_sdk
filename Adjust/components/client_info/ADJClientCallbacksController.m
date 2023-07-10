@@ -168,6 +168,33 @@
 }
 
 - (void)
+    ccAdidWithAdjustCallback:(nonnull id<ADJAdjustIdentifierCallback>)adjustIdentifierCallback
+    adidStateReadOnlyStorage:(nonnull ADJAdidStateStorage *)adidStateReadOnlyStorage
+{
+    ADJAdidStateData *_Nonnull adidStateData =
+        [adidStateReadOnlyStorage readOnlyStoredDataValue];
+
+    if (adidStateData.adid != nil) {
+        [self.logger debugDev:@"Returning adid to client in callback"];
+
+        [self.clientReturnExecutor executeClientReturnWithBlock:^{
+            [adjustIdentifierCallback didReadWithAdjustIdentifier:
+             adidStateData.adid.stringValue];
+        }];
+
+        return;
+    }
+
+    [self.logger debugDev:
+     @"Returning fail on client adid callback because it is not available yet"];
+
+    [self.clientReturnExecutor executeClientReturnWithBlock:^{
+        [adjustIdentifierCallback didFailWithAdjustCallbackMessage:
+         @"Cannot read adjust identifier because it has not been obtained yet from the backend"];
+    }];
+}
+
+- (void)
     ccLaunchedDeepLinkWithCallback:
         (nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback
     clientReturnExecutor:(nonnull id<ADJClientReturnExecutor>)clientReturnExecutor

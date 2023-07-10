@@ -27,10 +27,17 @@
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
-- (nonnull ADJAdjustConfig *)adjustConfigWithParametersJsonDictionary:
-    (nonnull NSDictionary<NSString *, id> *)jsParameters;
+- (nonnull ADJAdjustConfig *)
+    adjustConfigWithParametersJsonDictionary:
+        (nonnull NSDictionary<NSString *, id> *)jsParameters
+    instanceIdString:(nonnull NSString *)instanceIdString;
 - (nullable NSDictionary<NSString *, id<ADJInternalCallback>> *)
     extractInternalConfigSubscriptionsWithJsParameters:
+        (nonnull NSDictionary<NSString *, id> *)jsParameters
+    instanceIdString:(nonnull NSString *)instanceIdString;
+
+- (nonnull id<ADJAdjustIdentifierCallback>)
+    adjustIdentifierGetterCallbackWithJsParameters:
         (nonnull NSDictionary<NSString *, id> *)jsParameters
     instanceIdString:(nonnull NSString *)instanceIdString;
 

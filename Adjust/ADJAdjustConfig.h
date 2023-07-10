@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol ADJAdjustIdentifierSubscriber;
 @protocol ADJAdjustAttributionSubscriber;
 @protocol ADJAdjustLogSubscriber;
 
@@ -44,7 +45,10 @@ NS_DESIGNATED_INITIALIZER;
 - (void)doNotReadAppleSearchAdsAttribution;
 - (void)allowSendingFromBackground;
 - (void)setEventIdDeduplicationMaxCapacity:(int)eventIdDeduplicationMaxCapacity;
-- (void)setAdjustAttributionSubscriber:(nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber;
+- (void)setAdjustIdentifierSubscriber:
+    (nonnull id<ADJAdjustIdentifierSubscriber>)adjustIdentifierSubscriber;
+- (void)setAdjustAttributionSubscriber:
+    (nonnull id<ADJAdjustAttributionSubscriber>)adjustAttributionSubscriber;
 - (void)setAdjustLogSubscriber:(nonnull id<ADJAdjustLogSubscriber>)adjustLogSubscriber;
 
 // public properties
@@ -59,11 +63,15 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doNotLogAnyNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
+@property (nullable, readonly, strong, nonatomic)
+    NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
 @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
-@property (nullable, readonly, strong, nonatomic) id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+@property (nullable, readonly, strong, nonatomic)
+    NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
+@property (nullable, readonly, strong, nonatomic)
+    id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
+@property (nullable, readonly, strong, nonatomic)
+    id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
 
 @end
-

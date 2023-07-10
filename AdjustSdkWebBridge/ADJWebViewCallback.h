@@ -12,6 +12,9 @@
 
 #import "ADJLogger.h"
 #import "ADJAdjustInternal.h"
+#import "ADJAdjustCallback.h"
+#import "ADJAdjustIdentifierSubscriber.h"
+#import "ADJAdjustIdentifierCallback.h"
 
 @interface ADJWebViewCallback : NSObject
 - (nonnull instancetype)initWithWebView:(nonnull WKWebView *)webView
@@ -19,9 +22,19 @@
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 
+- (nonnull id<ADJAdjustIdentifierSubscriber>)
+    adjustIdentifierSubscriberCallbackWithId:
+        (nonnull NSString *)adjustIdentifierSubscriberCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString;
+
 - (nonnull id<ADJInternalCallback>)
     attributionSubscriberInternalCallbackWithId:
         (nonnull NSString *)attributionSubscriberCallbackId
+    instanceIdString:(nonnull NSString *)instanceIdString;
+
+- (nonnull id<ADJAdjustIdentifierCallback>)
+    adjustIdentifierGetterCallbackWithId:
+        (nonnull NSString *)adjustIdentifierGetterCallbackId
     instanceIdString:(nonnull NSString *)instanceIdString;
 
 - (nonnull id<ADJInternalCallback>)

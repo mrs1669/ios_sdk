@@ -11,7 +11,9 @@
 #import "ADJClientReturnExecutor.h"
 #import "ADJAdjustAttributionCallback.h"
 #import "ADJAdjustDeviceIdsCallback.h"
+#import "ADJAdjustIdentifierCallback.h"
 #import "ADJAdjustLaunchedDeeplinkCallback.h"
+#import "ADJAdidStateStorage.h"
 #import "ADJLaunchedDeeplinkStateStorage.h"
 #import "ADJDeviceController.h"
 #import "ADJAdjustCallback.h"
@@ -43,6 +45,10 @@
         (nonnull id<ADJInternalCallback>)internalCallback
     attributionStateReadOnlyStorage:
         (nonnull ADJAttributionStateStorage *)attributionStateReadOnlyStorage;
+
+- (void)
+    ccAdidWithAdjustCallback:(nonnull id<ADJAdjustIdentifierCallback>)adjustIdentifierCallback
+    adidStateReadOnlyStorage:(nonnull ADJAdidStateStorage *)adidStateReadOnlyStorage;
 
 - (void)
     ccDeviceIdsWithAdjustCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback

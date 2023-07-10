@@ -116,7 +116,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
     }
 
     ADJAsaAttributionStateData *_Nonnull initialStateData =
-        [[ADJAsaAttributionStateData alloc] initWithIntialState];
+        [[ADJAsaAttributionStateData alloc] initWithInitialState];
 
     // only update HasReceivedValidAsaClickResponse from initial state
     return [[ADJAsaAttributionStateData alloc]
@@ -127,7 +127,7 @@ static NSString *const kErrorReasonKey = @"errorReason";
             errorReason:initialStateData.errorReason];
 }
 
-- (nonnull instancetype)initWithIntialState {
+- (nonnull instancetype)initWithInitialState {
     return [self initWithHasReceivedValidAsaClickResponse:NO
                              hasReceivedAdjustAttribution:NO
                                               cachedToken:nil

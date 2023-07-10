@@ -27,10 +27,8 @@ NS_ASSUME_NONNULL_END
 + (nonnull ADJOptionalFails<ADJAttributionData *> *)
     instanceFromIoDataMap:(nonnull ADJStringMap *)ioDataMap;
 
-// TODO: adid to be extracted from attribution
 + (nonnull ADJOptionalFails<ADJAttributionData *> *)
-    instanceFromJson:(nonnull NSDictionary *)attributionJson
-    adid:(nonnull ADJNonEmptyString *)adid;
+    instanceFromJson:(nonnull NSDictionary *)attributionJson;
 
 - (nonnull instancetype)initWithTrackerToken:(nullable ADJNonEmptyString *)trackerToken
                                  trackerName:(nullable ADJNonEmptyString *)trackerName
@@ -39,8 +37,6 @@ NS_ASSUME_NONNULL_END
                                      adgroup:(nullable ADJNonEmptyString *)adgroup
                                     creative:(nullable ADJNonEmptyString *)creative
                                   clickLabel:(nullable ADJNonEmptyString *)clickLabel
-// TODO: adid to be extracted from attribution
-                                        adid:(nullable ADJNonEmptyString *)adid
                                     deeplink:(nullable ADJNonEmptyString *)deeplink
                                        state:(nullable ADJNonEmptyString *)state
                                     costType:(nullable ADJNonEmptyString *)costType
@@ -57,8 +53,6 @@ NS_ASSUME_NONNULL_END
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adgroup;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *creative;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *clickLabel;
-// TODO: adid to be extracted from attribution
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *adid;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *deeplink;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *state;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *costType;

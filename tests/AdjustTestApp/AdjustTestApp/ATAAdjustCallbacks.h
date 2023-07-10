@@ -12,6 +12,8 @@
 
 #import "ADJAdjustLaunchedDeeplinkCallback.h"
 #import "ADJAdjustAttributionSubscriber.h"
+#import "ADJAdjustIdentifierCallback.h"
+#import "ADJAdjustIdentifierSubscriber.h"
 
 @interface ATAAdjustCallbacks : NSObject
 
@@ -27,5 +29,12 @@
     adjustAttributionDeferredDeeplinkSubscriberWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
     extraPath:(nonnull NSString *)extraPath;
 
-@end
++ (nonnull id<ADJAdjustIdentifierCallback>)
+    adjustIdentifierGetterWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
+    extraPath:(nonnull NSString *)extraPath;
 
++ (nonnull id<ADJAdjustIdentifierSubscriber>)
+    adjustIdentifierSubscriberWithTestLibrary:(nonnull ATLTestLibrary *)testLibrary
+    extraPath:(nonnull NSString *)extraPath;
+
+@end
