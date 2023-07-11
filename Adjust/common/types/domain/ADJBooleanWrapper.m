@@ -101,14 +101,16 @@ NSString *const ADJBooleanFalseJsonString = @"false";
     }
 
     if (! [objectValue isKindOfClass:[NSNumber class]]) {
-        return [ADJResult failWithMessage:@"Cannot create string from non-NSNumber object"
+        return [ADJResult failWithMessage:
+                @"Cannot create string from non-NSNumber object for boolean"
                                       key:ADJLogActualKey
                               stringValue:NSStringFromClass([objectValue class])];
     }
 
     NSNumber *_Nonnull booleanNumber = (NSNumber *)objectValue;
 
-    return [ADJResult okWithValue:[ADJBooleanWrapper instanceFromBool:booleanNumber.boolValue]];
+    return [ADJResult okWithValue:
+            [ADJBooleanWrapper instanceFromNumberBoolean:(NSNumber *)objectValue]];
 }
 
 - (nullable instancetype)init {
