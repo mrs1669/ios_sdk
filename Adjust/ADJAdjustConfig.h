@@ -35,6 +35,7 @@ NS_DESIGNATED_INITIALIZER;
 // public api
 - (void)setDefaultTracker:(nonnull NSString *)defaultTracker;
 - (void)enableCoppaCompliance;
+- (void)doesNeedCost;
 - (void)doLogAll;
 - (void)doNotLogAny;
 - (void)setUrlStrategyBaseDomain:(nonnull NSString *)urlStrategyBaseDomain;
@@ -62,6 +63,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
 @property (nullable, readonly, strong, nonatomic) NSString *externalDeviceId;
 @property (readonly, assign, nonatomic) BOOL isCoppaComplianceEnabledFlag;
+@property (readonly, assign, nonatomic) BOOL needsCostFlag;
 @property (readonly, assign, nonatomic) BOOL doLogAllFlag;
 @property (readonly, assign, nonatomic) BOOL doNotLogAnyFlag;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplinkFlag;

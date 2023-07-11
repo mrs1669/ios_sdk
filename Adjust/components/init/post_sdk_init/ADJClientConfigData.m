@@ -21,6 +21,7 @@
  @property (nullable, readonly, strong, nonatomic)
      ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
  @property (nullable, readonly, strong, nonatomic) ADJFlag *isCoppaEnabled;
+ @property (nullable, readonly, strong, nonatomic) ADJFlag *needsCost;
  @property (readonly, assign, nonatomic) BOOL doLogAll;
  @property (readonly, assign, nonatomic) BOOL doNotLogAny;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
@@ -116,6 +117,9 @@ static NSString *const kDomainValidationRegexString =
     ADJFlag *_Nullable isCoppaEnabled =
         [ADJFlag instanceFromBool:adjustConfig.isCoppaComplianceEnabledFlag];
 
+    ADJFlag *_Nullable needsCost =
+        [ADJFlag instanceFromBool:adjustConfig.needsCostFlag];
+
     ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointUrl];
     if (customEndpointUrlResult.failNonNilInput != nil) {
@@ -155,6 +159,7 @@ static NSString *const kDomainValidationRegexString =
             urlStrategyBaseDomain:urlStrategyDomain
             eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
             isCoppaEnabled:isCoppaEnabled
+            needsCost:needsCost
             doLogAll:adjustConfig.doLogAllFlag
             doNotLogAny:adjustConfig.doNotLogAnyFlag
             doNotOpenDeferredDeeplink:adjustConfig.doNotOpenDeferredDeeplinkFlag
@@ -182,6 +187,7 @@ static NSString *const kDomainValidationRegexString =
     urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
     eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
     isCoppaEnabled:(nullable ADJFlag *)isCoppaEnabled
+    needsCost:(nullable ADJFlag *)needsCost
     doLogAll:(BOOL)doLogAll
     doNotLogAny:(BOOL)doNotLogAny
     doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink
@@ -206,6 +212,7 @@ static NSString *const kDomainValidationRegexString =
     _urlStrategyBaseDomain = urlStrategyBaseDomain;
     _eventIdDeduplicationMaxCapacity = eventIdDeduplicationMaxCapacity;
     _isCoppaEnabled = isCoppaEnabled;
+    _needsCost = needsCost;
     _doLogAll = doLogAll;
     _doNotLogAny = doNotLogAny;
     _doNotOpenDeferredDeeplink = doNotOpenDeferredDeeplink;

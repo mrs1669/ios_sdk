@@ -630,6 +630,11 @@
      injectIntoPackageParametersWithBuilder:parametersBuilder
      key:ADJParamFFCoppaKey
      packageParamValueSerializable:self.clientConfigData.isCoppaEnabled];
+
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamNeedsCostKey
+     packageParamValueSerializable:self.clientConfigData.needsCost];
 }
 
 - (void)injectEventStateFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

@@ -25,6 +25,7 @@
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
  @property (nullable, readonly, strong, nonatomic) NSString *externalDeviceId;
  @property (readonly, assign, nonatomic) BOOL isCoppaComplianceEnabledFlag;
+ @property (readonly, assign, nonatomic) BOOL needsCostFlag;
  @property (readonly, assign, nonatomic) BOOL doLogAllFlag;
  @property (readonly, assign, nonatomic) BOOL doNotLogAnyFlag;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplinkFlag;
@@ -70,6 +71,10 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
 
 - (void)enableCoppaCompliance {
     _isCoppaComplianceEnabledFlag = YES;
+}
+
+- (void)doesNeedCost {
+    _needsCostFlag = YES;
 }
 
 - (void)doLogAll {

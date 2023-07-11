@@ -27,6 +27,7 @@ NSString *const ADJParamEnvironmentKey = @"environment";
 NSString *const ADJParamDefaultTrackerKey = @"default_tracker";
 NSString *const ADJParamExternalDeviceIdKey = @"external_device_id";
 NSString *const ADJParamFFCoppaKey = @"ff_coppa";
+NSString *const ADJParamNeedsCostKey = @"needs_cost";
 
 // response
 NSString *const ADJParamMessageKey = @"message";
