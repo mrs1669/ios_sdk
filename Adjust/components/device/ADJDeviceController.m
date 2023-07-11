@@ -63,9 +63,9 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
          canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
 
     _uuidKeychainCache =
-    [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger
-                                             deviceIdsStorage:deviceIdsStorage
-                                              keychainStorage:keychainStorage];
+        [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger
+                                                 deviceIdsStorage:deviceIdsStorage
+                                                  keychainStorage:keychainStorage];
 
     _backgroundTimestamp = nil;
 
