@@ -61,13 +61,12 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
 @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
 @property (nullable, readonly, strong, nonatomic) NSString *externalDeviceId;
-@property (nullable, readonly, strong, nonatomic) NSNumber *isCoppaComplianceEnabledNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSNumber *doNotLogAnyNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
-@property (nullable, readonly, strong, nonatomic)
-    NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
-@property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
+@property (readonly, assign, nonatomic) BOOL isCoppaComplianceEnabledFlag;
+@property (readonly, assign, nonatomic) BOOL doLogAllFlag;
+@property (readonly, assign, nonatomic) BOOL doNotLogAnyFlag;
+@property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplinkFlag;
+@property (readonly, assign, nonatomic) BOOL doNotReadAppleSearchAdsAttributionFlag;
+@property (readonly, assign, nonatomic) BOOL canSendInBackgroundFlag;
 @property (nullable, readonly, strong, nonatomic)
     NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
 @property (nullable, readonly, strong, nonatomic)

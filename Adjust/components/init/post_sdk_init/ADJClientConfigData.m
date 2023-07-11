@@ -20,7 +20,7 @@
  @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
  @property (nullable, readonly, strong, nonatomic)
      ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
- @property (readonly, assign, nonatomic) BOOL isCoppaEnabled;
+ @property (nullable, readonly, strong, nonatomic) ADJFlag *isCoppaEnabled;
  @property (readonly, assign, nonatomic) BOOL doLogAll;
  @property (readonly, assign, nonatomic) BOOL doNotLogAny;
  @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
@@ -113,29 +113,8 @@ static NSString *const kDomainValidationRegexString =
                   resultFail:eventIdDeduplicationMaxCapacityResult.fail];
     }
 
-    BOOL isCoppaEnabled =
-        adjustConfig.isCoppaComplianceEnabledNumberBool != nil
-        && adjustConfig.isCoppaComplianceEnabledNumberBool.boolValue;
-
-    BOOL doLogAll =
-        adjustConfig.doLogAllNumberBool != nil
-        && adjustConfig.doLogAllNumberBool.boolValue;
-
-    BOOL doNotLogAny =
-        adjustConfig.doNotLogAnyNumberBool != nil
-        && adjustConfig.doNotLogAnyNumberBool.boolValue;
-
-    BOOL doNotOpenDeferredDeeplink =
-        adjustConfig.doNotOpenDeferredDeeplinkNumberBool != nil
-        && adjustConfig.doNotOpenDeferredDeeplinkNumberBool.boolValue;
-
-    BOOL doNotReadAsaAttribution =
-        adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool != nil
-        && adjustConfig.doNotReadAppleSearchAdsAttributionNumberBool.boolValue;
-
-    BOOL canSendInBackground =
-        adjustConfig.canSendInBackgroundNumberBool != nil
-        && adjustConfig.canSendInBackgroundNumberBool.boolValue;
+    ADJFlag *_Nullable isCoppaEnabled =
+        [ADJFlag instanceFromBool:adjustConfig.isCoppaComplianceEnabledFlag];
 
     ADJResult<ADJNonEmptyString *> *_Nonnull customEndpointUrlResult =
         [ADJNonEmptyString instanceFromString:adjustConfig.customEndpointUrl];
@@ -176,12 +155,12 @@ static NSString *const kDomainValidationRegexString =
             urlStrategyBaseDomain:urlStrategyDomain
             eventIdDeduplicationMaxCapacity:eventIdDeduplicationMaxCapacityResult.value
             isCoppaEnabled:isCoppaEnabled
-            doLogAll:doLogAll
-            doNotLogAny:doNotLogAny
-            doNotOpenDeferredDeeplink:doNotOpenDeferredDeeplink
-            doNotReadAsaAttribution:doNotReadAsaAttribution
+            doLogAll:adjustConfig.doLogAllFlag
+            doNotLogAny:adjustConfig.doNotLogAnyFlag
+            doNotOpenDeferredDeeplink:adjustConfig.doNotOpenDeferredDeeplinkFlag
+            doNotReadAsaAttribution:adjustConfig.doNotReadAppleSearchAdsAttributionFlag
             isSandboxEnvironmentOrElseProduction:isSandboxEnvironment
-            canSendInBackground:canSendInBackground
+            canSendInBackground:adjustConfig.canSendInBackgroundFlag
             clientCustomEndpointData:clientCustomEndpointData
             dataResidency:dataResidency
             adjustAttributionSubscriber:adjustConfig.adjustAttributionSubscriber
@@ -202,7 +181,7 @@ static NSString *const kDomainValidationRegexString =
     externalDeviceId:(nullable ADJNonEmptyString *)externalDeviceId
     urlStrategyBaseDomain:(nullable ADJNonEmptyString *)urlStrategyBaseDomain
     eventIdDeduplicationMaxCapacity:(nullable ADJNonNegativeInt *)eventIdDeduplicationMaxCapacity
-    isCoppaEnabled:(BOOL)isCoppaEnabled
+    isCoppaEnabled:(nullable ADJFlag *)isCoppaEnabled
     doLogAll:(BOOL)doLogAll
     doNotLogAny:(BOOL)doNotLogAny
     doNotOpenDeferredDeeplink:(BOOL)doNotOpenDeferredDeeplink

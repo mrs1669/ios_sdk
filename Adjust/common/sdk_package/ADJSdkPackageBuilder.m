@@ -16,6 +16,7 @@
 #import "ADJTallyCounter.h"
 #import "ADJUtilSys.h"
 #import "ADJResult.h"
+#import "ADJFlag.h"
 
 #pragma mark Private class
 @implementation ADJSdkPackageCreatingPublisher @end
@@ -625,12 +626,10 @@
                                                    key:ADJParamExternalDeviceIdKey
                          packageParamValueSerializable:self.clientConfigData.externalDeviceId];
 
-    if (self.clientConfigData.isCoppaEnabled) {
-        [ADJUtilMap
-         injectIntoPackageParametersWithBuilder:parametersBuilder
-         key:ADJParamFFCoppaKey
-         packageParamValueSerializable:[ADJBooleanWrapper instanceFromBool:YES]];
-    }
+    [ADJUtilMap
+     injectIntoPackageParametersWithBuilder:parametersBuilder
+     key:ADJParamFFCoppaKey
+     packageParamValueSerializable:self.clientConfigData.isCoppaEnabled];
 }
 
 - (void)injectEventStateFieldsWithParametersBuilder:(nonnull ADJStringMapBuilder *)parametersBuilder

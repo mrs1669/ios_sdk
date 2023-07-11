@@ -12,6 +12,7 @@
 #import "ADJLogger.h"
 #import "ADJNonEmptyString.h"
 #import "ADJNonNegativeInt.h"
+#import "ADJFlag.h"
 #import "ADJAdjustIdentifierSubscriber.h"
 #import "ADJAdjustAttributionSubscriber.h"
 #import "ADJAdjustLogSubscriber.h"
@@ -48,7 +49,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
 @property (nullable, readonly, strong, nonatomic)
     ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
-@property (readonly, assign, nonatomic) BOOL isCoppaEnabled;
+@property (nullable, readonly, strong, nonatomic) ADJFlag *isCoppaEnabled;
 @property (readonly, assign, nonatomic) BOOL doLogAll;
 @property (readonly, assign, nonatomic) BOOL doNotLogAny;
 @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;

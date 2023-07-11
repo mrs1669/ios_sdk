@@ -24,12 +24,12 @@
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointUrl;
  @property (nullable, readonly, strong, nonatomic) NSString *customEndpointPublicKeyHash;
  @property (nullable, readonly, strong, nonatomic) NSString *externalDeviceId;
- @property (nullable, readonly, strong, nonatomic) NSNumber *doLogAllNumberBool;
- @property (nullable, readonly, strong, nonatomic) NSNumber *doNotLogAnyNumberBool;
- @property (nullable, readonly, strong, nonatomic) NSNumber *doNotOpenDeferredDeeplinkNumberBool;
- @property (nullable, readonly, strong, nonatomic)
-     NSNumber *doNotReadAppleSearchAdsAttributionNumberBool;
- @property (nullable, readonly, strong, nonatomic) NSNumber *canSendInBackgroundNumberBool;
+ @property (readonly, assign, nonatomic) BOOL isCoppaComplianceEnabledFlag;
+ @property (readonly, assign, nonatomic) BOOL doLogAllFlag;
+ @property (readonly, assign, nonatomic) BOOL doNotLogAnyFlag;
+ @property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplinkFlag;
+ @property (readonly, assign, nonatomic) BOOL doNotReadAppleSearchAdsAttributionFlag;
+ @property (readonly, assign, nonatomic) BOOL canSendInBackgroundFlag;
  @property (nullable, readonly, strong, nonatomic)
      NSNumber *eventIdDeduplicationMaxCapacityNumberInt;
  @property (nullable, readonly, strong, nonatomic)
@@ -69,14 +69,14 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
 }
 
 - (void)enableCoppaCompliance {
-    _isCoppaComplianceEnabledNumberBool = @(YES);
+    _isCoppaComplianceEnabledFlag = YES;
 }
 
 - (void)doLogAll {
-    _doLogAllNumberBool = @(YES);
+    _doLogAllFlag = YES;
 }
 - (void)doNotLogAny {
-    _doNotLogAnyNumberBool = @(YES);
+    _doNotLogAnyFlag = YES;
 }
 
 - (void)setUrlStrategyBaseDomain:(nonnull NSString *)urlStrategyBaseDomain {
@@ -98,15 +98,15 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
 }
 
 - (void)preventOpenDeferredDeeplink {
-    _doNotOpenDeferredDeeplinkNumberBool = @(YES);
+    _doNotOpenDeferredDeeplinkFlag = YES;
 }
 
 - (void)doNotReadAppleSearchAdsAttribution {
-    _doNotReadAppleSearchAdsAttributionNumberBool = @(YES);
+    _doNotReadAppleSearchAdsAttributionFlag = YES;
 }
 
 - (void)allowSendingFromBackground {
-    _canSendInBackgroundNumberBool = @(YES);
+    _canSendInBackgroundFlag = YES;
 }
 
 - (void)setEventIdDeduplicationMaxCapacity:(int)eventIdDeduplicationMaxCapacity {
