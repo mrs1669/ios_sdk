@@ -195,6 +195,7 @@
         [[ADJCoppaController alloc]
          initWithLoggerFactory:loggerFactory
          thirdPartySharingController:_postSdkStartRoot.thirdPartySharingController
+         deviceController:preSdkInitRootBag.deviceController
          coppaStateStorage:storageRoot.coppaStateStorage];
 
     _measurementSessionController =

@@ -12,6 +12,7 @@
 #import "ADJSdkInitSubscriber.h"
 #import "ADJThirdPartySharingController.h"
 #import "ADJCoppaStateStorage.h"
+#import "ADJDeviceController.h"
 
 @interface ADJCoppaController : ADJCommonBase<
     // subscriptions
@@ -22,6 +23,7 @@
     initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
     thirdPartySharingController:
         (nonnull ADJThirdPartySharingController *)thirdPartySharingController
+    deviceController:(nonnull ADJDeviceController *)deviceController
     coppaStateStorage:(nonnull ADJCoppaStateStorage *)coppaStateStorage;
 
 @end

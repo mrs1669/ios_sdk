@@ -536,11 +536,7 @@
 
     ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
         [deviceController getSessionDeviceIdsSync];
-    if (sessionDeviceIdsDataResult.fail != nil) {
-        [self.logger debugDev:@"Could not obtain session device ids"
-                   resultFail:sessionDeviceIdsDataResult.fail
-                    issueType:ADJIssueExternalApi];
-    } else {
+    if (sessionDeviceIdsDataResult.value != nil) {
         [ADJUtilMap
          injectIntoPackageParametersWithBuilder:parametersBuilder
          key:ADJParamIdfaKey
@@ -550,6 +546,10 @@
          injectIntoPackageParametersWithBuilder:parametersBuilder
          key:ADJParamIdfvKey
          packageParamValueSerializable:sessionDeviceIdsDataResult.value.identifierForVendor];
+    } else if (sessionDeviceIdsDataResult.failNonNilInput != nil) {
+        [self.logger debugDev:@"Could not obtain session device ids"
+                   resultFail:sessionDeviceIdsDataResult.fail
+                    issueType:ADJIssueExternalApi];
     }
 
     ADJDeviceInfoData *_Nonnull deviceInfoData = deviceController.deviceInfoData;

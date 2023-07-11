@@ -18,12 +18,13 @@
 - (nonnull instancetype)
     initWithChangedStateData:(nullable ADJCoppaStateData *)changedStateData
     trackTPSbeforeDeactivate:(BOOL)trackTPSbeforeDeactivate
-    deactivateTPSafterTracking:(BOOL)deactivateTPSafterTracking
+    wasCoppaEnabledByClient:(BOOL)wasCoppaEnabledByClient
 {
     self = [super init];
     _changedStateData = changedStateData;
     _trackTPSbeforeDeactivate = trackTPSbeforeDeactivate;
-    _deactivateTPSafterTracking = deactivateTPSafterTracking;
+    _deactivateTPSafterTracking = wasCoppaEnabledByClient;
+    _deactivateDeviceIds = wasCoppaEnabledByClient;
 
     return self;
 }
@@ -70,7 +71,7 @@
         return [[ADJCoppaStateOutputData alloc]
                 initWithChangedStateData:nil
                 trackTPSbeforeDeactivate:NO
-                deactivateTPSafterTracking:wasCoppaEnabledByClient];
+                wasCoppaEnabledByClient:wasCoppaEnabledByClient];
     }
 
     if (wasCoppaEnabledByClient) {
@@ -83,8 +84,7 @@
     self.stateData = [[ADJCoppaStateData alloc] initWithIsCoppaEnabled:
                       [ADJBooleanWrapper instanceFromBool:wasCoppaEnabledByClient]];
 
-    BOOL trackThenDeactivateTPS = self.stateData.isCoppaEnabled.boolValue;
-    if (trackThenDeactivateTPS) {
+    if (wasCoppaEnabledByClient) {
         [self.logger debugDev:@"Will track Coppa disable TPS, since Coppa is being enabled"];
     } else {
         [self.logger debugDev:@"Won't track Coppa disable TPS, since Coppa is not being enabled"];
@@ -92,8 +92,8 @@
 
     return [[ADJCoppaStateOutputData alloc]
             initWithChangedStateData:self.stateData
-            trackTPSbeforeDeactivate:trackThenDeactivateTPS
-            deactivateTPSafterTracking:trackThenDeactivateTPS];
+            trackTPSbeforeDeactivate:wasCoppaEnabledByClient
+            wasCoppaEnabledByClient:wasCoppaEnabledByClient];
 }
 
 @end

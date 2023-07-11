@@ -13,6 +13,7 @@
 
 @protocol ADJSdkInitSubscriber <NSObject>
 
+// Read comment at CoppaController implementation before adding new subscribers
 - (void)ccOnSdkInitWithClientConfigData:(nonnull ADJClientConfigData *)clientConfigData;
 
 @end

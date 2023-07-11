@@ -16,6 +16,7 @@
 
 @property (readonly, assign, nonatomic) BOOL trackTPSbeforeDeactivate;
 @property (readonly, assign, nonatomic) BOOL deactivateTPSafterTracking;
+@property (readonly, assign, nonatomic) BOOL deactivateDeviceIds;
 
 @end
 
