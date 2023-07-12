@@ -47,17 +47,17 @@
 - (void)adjustLaunchedDeeplinkWithCallback:
 (nonnull id<ADJAdjustLaunchedDeeplinkCallback>)adjustLaunchedDeeplinkCallback;
 
-- (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent;
+- (void)sendEvent:(nonnull ADJAdjustEvent *)adjustEvent;
 
-- (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink;
+- (void)sendLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink;
 
-- (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken;
+- (void)sendPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken;
 
-- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing;
+- (void)sendThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing;
 
-- (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue;
+- (void)sendAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue;
 
-- (void)trackBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription;
+- (void)sendBillingSubscription:(nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription;
 
 - (void)addGlobalCallbackParameterWithKey:(nonnull NSString *)key
                                     value:(nonnull NSString *)value;

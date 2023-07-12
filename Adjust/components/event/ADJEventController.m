@@ -133,7 +133,7 @@ ADJMainQueueController *mainQueueControllerWeak;
 
     if ([self.eventDeduplicationController ccContainsDeduplicationId:deduplicationId]) {
         [self.logger infoClient:
-         @"Event won't be tracked, since it has a previously used deduplication id"
+         @"Event won't be send, since it has a previously used deduplication id"
                             key:@"deduplication id"
                     stringValue:deduplicationId.stringValue];
         return NO;

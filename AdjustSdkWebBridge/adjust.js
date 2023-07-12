@@ -205,26 +205,26 @@ AdjustInstance.prototype.getAdjustAttributionAsync = function(adjustAttributionC
         _adjustAttributionAsyncGetterCallbackType: typeof adjustAttributionCallback});
 }
 
-AdjustInstance.prototype.trackEvent = function(adjustEvent) {
-    this._postMessage("trackEvent", adjustEvent);
+AdjustInstance.prototype.sendEvent = function(adjustEvent) {
+    this._postMessage("sendEvent", adjustEvent);
 };
 
-AdjustInstance.prototype.trackLaunchedDeeplink = function(urlString) {
-    this._postMessage("trackLaunchedDeeplink", {
+AdjustInstance.prototype.sendLaunchedDeeplink = function(urlString) {
+    this._postMessage("sendLaunchedDeeplink", {
         _urlString: urlString, _urlStringType: typeof urlString});
 }
 
-AdjustInstance.prototype.trackPushToken = function(pushTokenString) {
-    this._postMessage("trackPushToken", {
+AdjustInstance.prototype.sendPushToken = function(pushTokenString) {
+    this._postMessage("sendPushToken", {
         _pushTokenString: pushTokenString, _pushTokenStringType: typeof pushTokenString});
 }
 
-AdjustInstance.prototype.trackThirdPartySharing = function(adjustThirdPartySharing) {
-    this._postMessage("trackThirdPartySharing", adjustThirdPartySharing);
+AdjustInstance.prototype.sendThirdPartySharing = function(adjustThirdPartySharing) {
+    this._postMessage("sendThirdPartySharing", adjustThirdPartySharing);
 };
 
-AdjustInstance.prototype.trackAdRevenue = function(adjustAdRevenue) {
-    this._postMessage("trackAdRevenue", adjustAdRevenue);
+AdjustInstance.prototype.sendAdRevenue = function(adjustAdRevenue) {
+    this._postMessage("sendAdRevenue", adjustAdRevenue);
 };
 
 AdjustInstance.prototype.addGlobalCallbackParameter = function(key, value) {

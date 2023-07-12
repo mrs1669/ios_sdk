@@ -34,11 +34,11 @@ NSString *const ADJWBGetAdjustDeviceIdsAsyncMethodName = @"getAdjustDeviceIdsAsy
 NSString *const ADJWBAdjustDeviceIdsAsyncGetterCallbackKey =
     @"_adjustDeviceIdsAsyncGetterCallback";
 
-NSString *const ADJWBTrackEventMethodName = @"trackEvent";
-NSString *const ADJWBTrackLaunchedDeeplinkMethodName = @"trackLaunchedDeeplink";
-NSString *const ADJWBTrackPushTokenMethodName = @"trackPushToken";
-NSString *const ADJWBTrackThirdPartySharingMethodName = @"trackThirdPartySharing";
-NSString *const ADJWBTrackAdRevenueMethodName = @"trackAdRevenue";
+NSString *const ADJWBSendEventMethodName = @"sendEvent";
+NSString *const ADJWBSendLaunchedDeeplinkMethodName = @"sendLaunchedDeeplink";
+NSString *const ADJWBSendPushTokenMethodName = @"sendPushToken";
+NSString *const ADJWBSendThirdPartySharingMethodName = @"sendThirdPartySharing";
+NSString *const ADJWBSendAdRevenueMethodName = @"sendAdRevenue";
 
 NSString *const ADJWBAddGlobalCallbackParameterMethodName = @"addGlobalCallbackParameter";
 NSString *const ADJWBRemoveGlobalCallbackParameterByKeyMethodName = @"removeGlobalCallbackParameterByKey";

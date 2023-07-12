@@ -332,7 +332,7 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         return;
     }
 
-    if ([ADJWBTrackEventMethodName isEqualToString:methodName]) {
+    if ([ADJWBSendEventMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
             [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
                                               expectedName:ADJWBAdjustEventName];
@@ -350,14 +350,14 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         NSArray *_Nullable partnerParameterKeyValueArray =
             [self.sdkApiHelper eventPartnerParameterKeyValueArrayWithJsParameters:jsParameters];
 
-        [ADJAdjustInternal trackEventForClientId:instanceIdString
-                                     adjustEvent:adjustEvent
+        [ADJAdjustInternal sendEventForClientId:instanceIdString
+                                    adjustEvent:adjustEvent
                  callbackParameterKeyValueArray:callbackParameterKeyValueArray
-                   partnerParameterKeyValueArray:partnerParameterKeyValueArray];
+                  partnerParameterKeyValueArray:partnerParameterKeyValueArray];
         return;
     }
 
-    if ([ADJWBTrackThirdPartySharingMethodName isEqualToString:methodName]) {
+    if ([ADJWBSendThirdPartySharingMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
             [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
                                               expectedName:ADJWBAdjustThirdPartySharingName];
@@ -376,14 +376,14 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         NSArray *_Nullable partnerSharingSettingsByNameArray =
             [self.sdkApiHelper tpsPartnerSharingSettingsByNameArrayWithJsParameters:jsParameters];
 
-        [ADJAdjustInternal trackThirdPartySharingForClientId:instanceIdString
-                                     adjustThirdPartySharing:adjustThirdPartySharing
-                                  granularOptionsByNameArray:granularOptionsByNameArray
-                           partnerSharingSettingsByNameArray:partnerSharingSettingsByNameArray];
+        [ADJAdjustInternal sendThirdPartySharingForClientId:instanceIdString
+                                    adjustThirdPartySharing:adjustThirdPartySharing
+                                 granularOptionsByNameArray:granularOptionsByNameArray
+                          partnerSharingSettingsByNameArray:partnerSharingSettingsByNameArray];
         return;
     }
 
-    if ([ADJWBTrackAdRevenueMethodName isEqualToString:methodName]) {
+    if ([ADJWBSendAdRevenueMethodName isEqualToString:methodName]) {
         ADJResultFail *_Nullable objectMatchFail =
             [ADJSdkApiHelper objectMatchesWithJsParameters:jsParameters
                                               expectedName:ADJWBAdjustAdRevenueName];
@@ -404,10 +404,10 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
             [self.sdkApiHelper
              adRevenuePartnerParameterKeyValueArrayWithJsParameters:jsParameters];
 
-        [ADJAdjustInternal trackAdRevenueForClientId:instanceIdString
-                                     adjustAdRevenue:adjustAdRevenue
-                      callbackParameterKeyValueArray:callbackParameterKeyValueArray
-                       partnerParameterKeyValueArray:partnerParameterKeyValueArray];
+        [ADJAdjustInternal sendAdRevenueForClientId:instanceIdString
+                                    adjustAdRevenue:adjustAdRevenue
+                     callbackParameterKeyValueArray:callbackParameterKeyValueArray
+                      partnerParameterKeyValueArray:partnerParameterKeyValueArray];
         return;
 
     }
@@ -448,11 +448,11 @@ static NSString *const kWebBridgeSdkPrefix = @"web-bridge5.00.0";
         if (adjustIdentifierGetterCallback != nil) {
             [adjustInstance adjustIdentifierWithCallback:adjustIdentifierGetterCallback];
         }
-    } else if ([ADJWBTrackLaunchedDeeplinkMethodName isEqualToString:methodName]) {
-        [adjustInstance trackLaunchedDeeplink:
+    } else if ([ADJWBSendLaunchedDeeplinkMethodName isEqualToString:methodName]) {
+        [adjustInstance sendLaunchedDeeplink:
          [self.sdkApiHelper adjustLaunchedDeeplinkWithJsParameters:jsParameters]];
-    } else if ([ADJWBTrackPushTokenMethodName isEqualToString:methodName]) {
-        [adjustInstance trackPushToken:
+    } else if ([ADJWBSendPushTokenMethodName isEqualToString:methodName]) {
+        [adjustInstance sendPushToken:
          [self.sdkApiHelper adjustPushTokenWithJsParameters:jsParameters]];
     } else if ([ADJWBAddGlobalCallbackParameterMethodName isEqualToString:methodName]) {
         [adjustInstance

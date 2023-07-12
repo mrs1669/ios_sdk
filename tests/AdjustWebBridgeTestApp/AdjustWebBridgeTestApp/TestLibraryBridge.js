@@ -360,7 +360,7 @@ AdjustCommandExecutor.prototype.trackEvent = function(params) {
     TestLibrary._firstParam(params, "deduplicationId", function(deduplicationId){
         adjustEvent.setDeduplicationId(deduplicationId); });
     
-    TestLibrary._adjustDefaultInstance().trackEvent(adjustEvent);
+    TestLibrary._adjustDefaultInstance().sendEvent(adjustEvent);
 }
 
 AdjustCommandExecutor.prototype.stop = function() {
@@ -407,12 +407,12 @@ AdjustCommandExecutor.prototype.clearGlobalPartnerParameters = function(params) 
 
 AdjustCommandExecutor.prototype.setPushToken = function(params) {
     const pushToken = TestLibrary._getFirstParam(params, "pushToken");
-    TestLibrary._adjustDefaultInstance().trackPushToken(pushToken);
+    TestLibrary._adjustDefaultInstance().sendPushToken(pushToken);
 }
 
 AdjustCommandExecutor.prototype.openDeeplink = function(params) {
     const deeplink = TestLibrary._getFirstParam(params, "deeplink");
-    TestLibrary._adjustDefaultInstance().trackLaunchedDeeplink(deeplink);
+    TestLibrary._adjustDefaultInstance().sendLaunchedDeeplink(deeplink);
 }
 
 AdjustCommandExecutor.prototype.gdprForgetMe = function(params) {
@@ -448,7 +448,7 @@ AdjustCommandExecutor.prototype.trackAdRevenue = function(params) {
     TestLibrary._firstParam(params, "deduplicationId", function(deduplicationId){
         adjustAdRevenue.setDeduplicationId(deduplicationId);});
     
-    TestLibrary._adjustDefaultInstance().trackAdRevenue(adjustAdRevenue);
+    TestLibrary._adjustDefaultInstance().sendAdRevenue(adjustAdRevenue);
 }
 
 AdjustCommandExecutor.prototype.resume = function(params) {
@@ -475,7 +475,7 @@ AdjustCommandExecutor.prototype.thirdPartySharing = function(params) {
         if (value === "false") { boolValue = false; }
         adjustThirdPartySharing.addPartnerSharingSetting(name, key, boolValue);});
     
-    TestLibrary._adjustDefaultInstance().trackThirdPartySharing(adjustThirdPartySharing);
+    TestLibrary._adjustDefaultInstance().sendThirdPartySharing(adjustThirdPartySharing);
 }
 
 AdjustCommandExecutor.prototype.measurementConsent = function(params) {

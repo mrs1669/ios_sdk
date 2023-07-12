@@ -101,7 +101,7 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
     [instanceRoot adjustDeviceIdsWithInternalCallback:internalCallback];
 }
 + (void)
-    trackEventForClientId:(nullable NSString *)clientId
+    sendEventForClientId:(nullable NSString *)clientId
     adjustEvent:(nonnull ADJAdjustEvent *)adjustEvent
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray
@@ -116,7 +116,7 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
 }
 
 + (void)
-    trackThirdPartySharingForClientId:(nullable NSString *)clientId
+    sendThirdPartySharingForClientId:(nullable NSString *)clientId
     adjustThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
     granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
     partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray
@@ -130,7 +130,7 @@ NSString *const ADJInternalCallbackJsonStringSuffix = @"_jsonString";
 }
 
 + (void)
-    trackAdRevenueForClientId:(nullable NSString *)clientId
+    sendAdRevenueForClientId:(nullable NSString *)clientId
     adjustAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray

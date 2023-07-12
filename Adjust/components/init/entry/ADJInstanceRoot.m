@@ -348,7 +348,7 @@
     }];
 }
 
-- (void)trackEvent:(nonnull ADJAdjustEvent *)adjustEvent {
+- (void)sendEvent:(nonnull ADJAdjustEvent *)adjustEvent {
     [self
      trackEvent:adjustEvent
      callbackParameterKeyValueArray:nil
@@ -377,7 +377,7 @@
     }];
 }
 
-- (void)trackLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink {
+- (void)sendLaunchedDeeplink:(nonnull ADJAdjustLaunchedDeeplink *)adjustLaunchedDeeplink {
     [self ccExecuteFrom:@"trackLaunchedDeeplink"
      clientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                           ADJLogger *_Nonnull logger)
@@ -392,7 +392,7 @@
     }];
 }
 
-- (void)trackPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken {
+- (void)sendPushToken:(nonnull ADJAdjustPushToken *)adjustPushToken {
     [self ccExecuteFrom:@"trackPushToken"
      clientActionsBlock:^(id<ADJClientActionsAPI> _Nonnull clientActionsAPI,
                           ADJLogger *_Nonnull logger)
@@ -407,7 +407,7 @@
     }];
 }
 
-- (void)trackThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing {
+- (void)sendThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing {
     [self
      trackThirdPartySharing:adjustThirdPartySharing
      granularOptionsByNameArray:nil
@@ -433,7 +433,7 @@
     }];
 }
 
-- (void)trackAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue {
+- (void)sendAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue {
     [self
      trackAdRevenue:adjustAdRevenue
      callbackParameterKeyValueArray:nil
@@ -463,7 +463,7 @@
     }];
 }
 
-- (void)trackBillingSubscription:
+- (void)sendBillingSubscription:
     (nonnull ADJAdjustBillingSubscription *)adjustBillingSubscription
 {
     [self ccExecuteFrom:@"trackBillingSubscription"

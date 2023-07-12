@@ -47,7 +47,7 @@
     }
 
     ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc] initWithUrl:v4DeeplinkUrl];
-    [[ADJAdjust instanceForId:self.instanceId.idString] trackLaunchedDeeplink:adjustLaunchedDeeplink];
+    [[ADJAdjust instanceForId:self.instanceId.idString] sendLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)migrateV4PushTokenWithV4FilesData:(nonnull ADJV4FilesData *)v4FilesData
@@ -59,7 +59,7 @@
         if (v4ActivityState.deviceToken != nil) {
             [self.logger debugDev:@"Push token found in v4 Activity state"];
             ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:v4ActivityState.deviceToken];
-            [[ADJAdjust instanceForId:self.instanceId.idString] trackPushToken:adjustPushToken];
+            [[ADJAdjust instanceForId:self.instanceId.idString] sendPushToken:adjustPushToken];
             return;
         }
 
@@ -72,7 +72,7 @@
     if (pushTokenString != nil) {
         [self.logger debugDev:@"Push token string found in v4 user defaults"];
         ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithStringPushToken:pushTokenString];
-        [[ADJAdjust instanceForId:self.instanceId.idString] trackPushToken:adjustPushToken];
+        [[ADJAdjust instanceForId:self.instanceId.idString] sendPushToken:adjustPushToken];
         return;
     }
 
@@ -82,7 +82,7 @@
     if (pushTokenData != nil) {
         [self.logger debugDev:@"Push token data found in v4 user defaults"];
         ADJAdjustPushToken *_Nonnull adjustPushToken = [[ADJAdjustPushToken alloc] initWithDataPushToken:pushTokenData];
-        [[ADJAdjust instanceForId:self.instanceId.idString] trackPushToken:adjustPushToken];
+        [[ADJAdjust instanceForId:self.instanceId.idString] sendPushToken:adjustPushToken];
         return;
     }
 

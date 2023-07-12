@@ -34,11 +34,11 @@ FOUNDATION_EXPORT NSString *const ADJWBAdjustAttributionAsyncGetterCallbackKey;
 FOUNDATION_EXPORT NSString *const ADJWBGetAdjustDeviceIdsAsyncMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBAdjustDeviceIdsAsyncGetterCallbackKey;
 
-FOUNDATION_EXPORT NSString *const ADJWBTrackEventMethodName;
-FOUNDATION_EXPORT NSString *const ADJWBTrackLaunchedDeeplinkMethodName;
-FOUNDATION_EXPORT NSString *const ADJWBTrackPushTokenMethodName;
-FOUNDATION_EXPORT NSString *const ADJWBTrackThirdPartySharingMethodName;
-FOUNDATION_EXPORT NSString *const ADJWBTrackAdRevenueMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBSendEventMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBSendLaunchedDeeplinkMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBSendPushTokenMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBSendThirdPartySharingMethodName;
+FOUNDATION_EXPORT NSString *const ADJWBSendAdRevenueMethodName;
 
 FOUNDATION_EXPORT NSString *const ADJWBAddGlobalCallbackParameterMethodName;
 FOUNDATION_EXPORT NSString *const ADJWBRemoveGlobalCallbackParameterByKeyMethodName;

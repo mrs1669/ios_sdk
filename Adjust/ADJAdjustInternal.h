@@ -72,19 +72,19 @@ NS_ASSUME_NONNULL_END
                    internalCallback:(nonnull id<ADJInternalCallback>)internalCallback;
 
 + (void)
-    trackEventForClientId:(nullable NSString *)clientId
+    sendEventForClientId:(nullable NSString *)clientId
     adjustEvent:(nonnull ADJAdjustEvent *)adjustEvent
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;
 
 + (void)
-    trackThirdPartySharingForClientId:(nullable NSString *)clientId
+    sendThirdPartySharingForClientId:(nullable NSString *)clientId
     adjustThirdPartySharing:(nonnull ADJAdjustThirdPartySharing *)adjustThirdPartySharing
     granularOptionsByNameArray:(nullable NSArray *)granularOptionsByNameArray
     partnerSharingSettingsByNameArray:(nullable NSArray *)partnerSharingSettingsByNameArray;
 
 + (void)
-    trackAdRevenueForClientId:(nullable NSString *)clientId
+    sendAdRevenueForClientId:(nullable NSString *)clientId
     adjustAdRevenue:(nonnull ADJAdjustAdRevenue *)adjustAdRevenue
     callbackParameterKeyValueArray:(nullable NSArray *)callbackParameterKeyValueArray
     partnerParameterKeyValueArray:(nullable NSArray *)partnerParameterKeyValueArray;

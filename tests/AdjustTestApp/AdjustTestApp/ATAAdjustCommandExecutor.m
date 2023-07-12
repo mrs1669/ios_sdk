@@ -248,7 +248,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         [adjustEvent setDeduplicationId:deduplicationId];
     }
 
-    [[ADJAdjust instance] trackEvent:adjustEvent];
+    [[ADJAdjust instance] sendEvent:adjustEvent];
 }
 
 - (void)stop {
@@ -330,7 +330,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     ADJAdjustPushToken *_Nonnull adjustPushToken =
     [[ADJAdjustPushToken alloc] initWithStringPushToken:pushToken];
 
-    [[ADJAdjust instance] trackPushToken:adjustPushToken];
+    [[ADJAdjust instance] sendPushToken:adjustPushToken];
 }
 
 - (void)openDeeplink {
@@ -339,7 +339,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
     ADJAdjustLaunchedDeeplink *_Nonnull adjustLaunchedDeeplink = [[ADJAdjustLaunchedDeeplink alloc]
                                                                   initWithString:openDeeplink];
 
-    [[ADJAdjust instance] trackLaunchedDeeplink:adjustLaunchedDeeplink];
+    [[ADJAdjust instance] sendLaunchedDeeplink:adjustLaunchedDeeplink];
 }
 
 - (void)getLastDeeplink {
@@ -417,7 +417,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         }];
     }
 
-    [[ADJAdjust instance] trackBillingSubscription:adjustBillingSubscription];
+    [[ADJAdjust instance] sendBillingSubscription:adjustBillingSubscription];
 }
 
 - (void)gdprForgetMe {
@@ -482,7 +482,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                                               value:value];
     }];
 
-    [[ADJAdjust instance] trackAdRevenue:adjustAdRevenue];
+    [[ADJAdjust instance] sendAdRevenue:adjustAdRevenue];
 }
 
 - (void)thirdPartySharing {
@@ -524,7 +524,7 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
         }];
     }
 
-    [[ADJAdjust instance] trackThirdPartySharing:adjustThirdPartySharing];
+    [[ADJAdjust instance] sendThirdPartySharing:adjustThirdPartySharing];
 }
 
 - (void)measurementConsent {
