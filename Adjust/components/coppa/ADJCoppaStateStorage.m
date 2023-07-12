@@ -56,9 +56,10 @@ static NSString *const kCoppaStateStorageTableName = @"coppa_state";
         return;
     }
 
-    if (v4ActivityState.isThirdPartySharingDisabledForCoppaNumberBool == nil
-        || ! v4ActivityState.isThirdPartySharingDisabledForCoppaNumberBool)
-    {
+    BOOL coppaNotEnabledInV4 = v4ActivityState.isThirdPartySharingDisabledForCoppaNumberBool == nil
+        || ! v4ActivityState.isThirdPartySharingDisabledForCoppaNumberBool;
+
+    if (coppaNotEnabledInV4) {
         return;
     }
 
