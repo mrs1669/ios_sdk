@@ -24,7 +24,7 @@ static NSString *const kCoppaStateStorageTableName = @"coppa_state";
                        sqliteController:sqliteController
                               tableName:kCoppaStateStorageTableName
                       metadataTypeValue:ADJCoppaStateDataMetadataTypeValue
-                initialDefaultDataValue:[[ADJCoppaStateData alloc] initWithIntialState]];
+                initialDefaultDataValue:[[ADJCoppaStateData alloc] initWithInitialState]];
 
     return self;
 }

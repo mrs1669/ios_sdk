@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_END
 // instantiation
 + (nonnull ADJResult<ADJCoppaStateData *> *)instanceFromIoData:(nonnull ADJIoData *)ioData;
 
-- (nonnull instancetype)initWithIntialState;
+- (nonnull instancetype)initWithInitialState;
 
 - (nonnull instancetype)initWithIsCoppaEnabled:(nonnull ADJBooleanWrapper *)isCoppaEnabled;
 

@@ -50,7 +50,7 @@ static NSString *const kIsCoppaEnabledKey = @"isCoppaEnabled";
             [[ADJCoppaStateData alloc] initWithIsCoppaEnabled:isCoppaEnabledResult.value]];
 }
 
-- (nonnull instancetype)initWithIntialState {
+- (nonnull instancetype)initWithInitialState {
     return [[ADJCoppaStateData alloc]
             initWithIsCoppaEnabled:[ADJBooleanWrapper instanceFromBool:NO]];
 }
