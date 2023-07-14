@@ -35,6 +35,7 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 @property (nonnull, readonly, strong, nonatomic) ADJSessionDeviceIdsController *sessionDeviceIdsController;
 @property (nullable, readwrite, strong, nonatomic) ADJNonEmptyString *uuidKeychainCache;
 @property (nullable, readwrite, strong, nonatomic) ADJRelativeTimestamp *backgroundTimestamp;
+@property (readwrite, assign, nonatomic) BOOL idsDeactivatedForCoppa;
 
 @end
 
@@ -63,16 +64,22 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
          canCacheData:deviceIdsConfigData.cacheValidityPeriod != nil];
 
     _uuidKeychainCache =
-    [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger
-                                             deviceIdsStorage:deviceIdsStorage
-                                              keychainStorage:keychainStorage];
+        [ADJDeviceController syncUuidAndGetUuidKeychainWithLogger:self.logger
+                                                 deviceIdsStorage:deviceIdsStorage
+                                                  keychainStorage:keychainStorage];
 
     _backgroundTimestamp = nil;
+
+    _idsDeactivatedForCoppa = NO;
 
     return self;
 }
 
 #pragma mark Public API
+- (void)ccDeactivateDeviceIdsForCoppa {
+    self.idsDeactivatedForCoppa = YES;
+}
+
 - (nullable ADJNonEmptyString *)keychainUuid {
     return self.uuidKeychainCache;
 }
@@ -87,6 +94,11 @@ static NSString *const kKeychainServiceKey = @"deviceInfo";
 }
 
 - (nonnull ADJResult<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync {
+    if (self.idsDeactivatedForCoppa) {
+        return [ADJResult nilInputWithMessage:
+                @"Cannot attempt to read session device ids when coppa is enabled"];
+    }
+
     return [self.sessionDeviceIdsController getSessionDeviceIdsSync];
 }
 

@@ -25,14 +25,11 @@
     ADJResult<ADJSessionDeviceIdsData *> *sessionDeviceIdsDataResultCached;
 @property (nullable, readwrite, strong, nonatomic)
     ADJResult<ADJNonEmptyString *> *identifierForVendorResultCached;
+@property (readwrite, assign, nonatomic) BOOL canUseCacheData;
 
 @end
 
-@implementation ADJSessionDeviceIdsController {
-#pragma mark - Unmanaged variables
-    volatile BOOL _canUseCacheData;
-}
-
+@implementation ADJSessionDeviceIdsController
 - (nonnull instancetype)initWithLoggerFactory:(nonnull id<ADJLoggerFactory>)loggerFactory
                         threadExecutorFactory:(nonnull id<ADJThreadExecutorFactory>)threadExecutorFactory
                             timeoutPerAttempt:(nullable ADJTimeLengthMilli *)timeoutPerAttempt
@@ -60,11 +57,11 @@
 
 #pragma mark Public API
 - (void)invalidateCache {
-    _canUseCacheData = NO;
+    self.canUseCacheData = NO;
 }
 
 - (nonnull ADJResult<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync {
-    if (_canUseCacheData) {
+    if (self.canUseCacheData) {
         return self.sessionDeviceIdsDataResultCached;
     }
 
@@ -103,7 +100,7 @@
 
     if (self.canCacheData) {
         self.sessionDeviceIdsDataResultCached = sessionDeviceIdsDataResult;
-        _canUseCacheData = YES;
+        self.canUseCacheData = YES;
     }
 
     return sessionDeviceIdsDataResult;

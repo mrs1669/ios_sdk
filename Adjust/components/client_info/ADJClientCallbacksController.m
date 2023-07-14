@@ -225,28 +225,9 @@
     ccDeviceIdsWithAdjustCallback:(nonnull id<ADJAdjustDeviceIdsCallback>)adjustDeviceIdsCallback
     deviceController:(nonnull ADJDeviceController *)deviceController
 {
-    ADJResult<ADJSessionDeviceIdsData *> *_Nonnull sessionDeviceIdsDataResult =
-        [deviceController getSessionDeviceIdsSync];
-
-    if (sessionDeviceIdsDataResult.fail != nil) {
-        ADJInputLogMessageData *_Nonnull inputLog =
-            [self.logger noticeClient:@"Cannot get device ids for callback"
-                           resultFail:sessionDeviceIdsDataResult.fail];
-
-        NSString *_Nonnull callbackFailMessage =
-            [ADJConsoleLogger clientCallbackFormatMessageWithLog:inputLog];
-
-        [self.clientReturnExecutor executeClientReturnWithBlock:^{
-            [adjustDeviceIdsCallback didFailWithAdjustCallbackMessage:callbackFailMessage];
-        }];
-        return;
-    }
-
-    ADJAdjustDeviceIds *_Nonnull adjustDeviceIds =
-        [sessionDeviceIdsDataResult.value toAdjustDeviceIds];
-    [self.clientReturnExecutor executeClientReturnWithBlock:^{
-        [adjustDeviceIdsCallback didReadWithAdjustDeviceIds:adjustDeviceIds];
-    }];
+    [self ccDeviceIdsWithAdjustCallback:adjustDeviceIdsCallback
+                       internalCallback:nil
+                       deviceController:deviceController];
 }
 - (void)ccDeviceIdsWithInternalCallback:(nonnull id<ADJInternalCallback>)internalCallback
                deviceController:(nonnull ADJDeviceController *)deviceController

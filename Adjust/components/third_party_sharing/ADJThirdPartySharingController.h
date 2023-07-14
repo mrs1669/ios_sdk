@@ -27,6 +27,11 @@ NS_ASSUME_NONNULL_END
                           mainQueueController:(nonnull ADJMainQueueController *)mainQueueController;
 
 // public api
-- (void)ccTrackThirdPartySharingWithClientData:(nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData;
+- (void)
+    ccTrackThirdPartySharingWithClientData:
+        (nonnull ADJClientThirdPartySharingData *)clientThirdPartySharingData
+    storageAction:(nullable ADJSQLiteStorageActionBase *)storageAction;
+
+- (void)ccDeactivateFromCoppa;
 
 @end

@@ -183,6 +183,12 @@ if ([methodName isEqualToString:@#adjustMethod]) {      \
                       optionalPublicKeyKeyHash:customEndpointPublicKeyHash];
     }
 
+    if ([self containsKey:@"coppaCompliant"]) {
+        if ([self isValueTrueWithKey:@"coppaCompliant"]) {
+            [adjustConfig enableCoppaCompliance];
+        }
+    }
+
     if ([self isValueTrueWithKey:@"doNotReadAppleSearchAdsAttribution"]) {
         [adjustConfig doNotReadAppleSearchAdsAttribution];
     }

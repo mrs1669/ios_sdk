@@ -19,6 +19,7 @@
      ADJAttributionStateStorage *attributionStateStorage;
  @property (nonnull, readonly, strong, nonatomic)
      ADJAsaAttributionStateStorage *asaAttributionStateStorage;
+ @property (nonnull, readonly, strong, nonatomic) ADJCoppaStateStorage *coppaStateStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJClientActionStorage *clientActionStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJDeviceIdsStorage *deviceIdsStorage;
  @property (nonnull, readonly, strong, nonatomic) ADJPushTokenStateStorage *pushTokenStorage;
@@ -74,6 +75,7 @@
     buildAndInjectStorage(attributionStateStorage, ADJAttributionStateStorage);
     buildAndInjectStorage(asaAttributionStateStorage, ADJAsaAttributionStateStorage);
     buildAndInjectStorage(clientActionStorage, ADJClientActionStorage);
+    buildAndInjectStorage(coppaStateStorage, ADJCoppaStateStorage);
     buildAndInjectStorage(deviceIdsStorage, ADJDeviceIdsStorage);
     buildAndInjectStorage(eventStateStorage, ADJEventStateStorage);
     buildAndInjectStorage(pushTokenStorage, ADJPushTokenStateStorage);

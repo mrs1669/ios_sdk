@@ -65,6 +65,7 @@ NSString *const ADJWBDefaultTrackerConfigKey = @"_defaultTracker";
 NSString *const ADJWBUrlStrategyConfigKey = @"_urlStrategy";
 NSString *const ADJWBCustomEndpointUrlConfigKey = @"_customEndpointUrl";
 NSString *const ADJWBCustomEndpointPublicKeyHashConfigKey = @"_customEndpointPublicKeyHash";
+NSString *const ADJWBIsCoppaComplianceEnabledConfigKey = @"_isCoppaComplianceEnabled";
 NSString *const ADJWBDoLogAllConfigKey = @"_doLogAll";
 NSString *const ADJWBDoNotLogAnyConfigKey = @"_doNotLogAny";
 NSString *const ADJWBCanSendInBackgroundConfigKey = @"_canSendInBackground";

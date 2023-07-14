@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_END
         (nonnull ADJIoData *)clientActionInjectedIoData
     logger:(nonnull ADJLogger *)logger;
 
++ (nonnull instancetype)instanceFromCoppaToDisable;
+
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 // public properties

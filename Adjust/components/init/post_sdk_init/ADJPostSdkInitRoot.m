@@ -35,6 +35,7 @@
      ADJAsaAttributionController *asaAttributionController;
  @property (nonnull, readonly, strong, nonatomic) ADJPostSdkStartRoot *postSdkStartRoot;
  @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
+ @property (nonnull, readonly, strong, nonatomic) ADJCoppaController *coppaController;
  @property (nonnull, readonly, strong, nonatomic)
      ADJMeasurementSessionController *measurementSessionController;
  @property (nonnull, readonly, strong, nonatomic)
@@ -190,6 +191,13 @@
 
     // [DEPENDENT-3] The following objects initialization is dependent on [DEPENDENT-3] section objects.
     // IMPORTANT: DON'T CHANGE THE INITIALIZATION ORDER.
+    _coppaController =
+        [[ADJCoppaController alloc]
+         initWithLoggerFactory:loggerFactory
+         thirdPartySharingController:_postSdkStartRoot.thirdPartySharingController
+         deviceController:preSdkInitRootBag.deviceController
+         coppaStateStorage:storageRoot.coppaStateStorage];
+
     _measurementSessionController =
         [[ADJMeasurementSessionController alloc]
          initWithLoggerFactory:loggerFactory
@@ -267,6 +275,7 @@
     [publisherController subscribeToPublisher:self.measurementSessionController];
     [publisherController subscribeToPublisher:self.measurementLifecycleController];
     [publisherController subscribeToPublisher:self.adidController];
+    [publisherController subscribeToPublisher:self.coppaController];
 }
 
 @end

@@ -275,6 +275,7 @@ function AdjustConfig(appToken, environment) {
     this._urlStrategy = null;
     this._customEndpointUrl = null;
     this._customEndpointPublicKeyHash = null;
+    this._isCoppaComplianceEnabled = null;
     this._doLogAll = null;
     this._doNotLogAny = null;
     this._canSendInBackground = null;
@@ -303,6 +304,10 @@ AdjustConfig.DataResidencyUS = "US";
 AdjustConfig.prototype.setDefaultTracker = function(defaultTracker) {
     this._defaultTracker = defaultTracker;
     this._defaultTrackerType = typeof defaultTracker;
+};
+
+AdjustConfig.prototype.enableCoppaCompliance = function() {
+    this._isCoppaComplianceEnabled = true;
 };
 
 AdjustConfig.prototype.doLogAll = function() {

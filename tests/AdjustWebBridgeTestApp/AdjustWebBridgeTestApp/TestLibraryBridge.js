@@ -282,7 +282,10 @@ AdjustCommandExecutor.prototype.start = function(params) {
     
     TestLibrary._trueFirstParam(params, "sendInBackground", function() {
         adjustConfig.allowSendingFromBackground(); });
-    
+
+    TestLibrary._trueFirstParam(params, "coppaCompliant", function() {
+        adjustConfig.enableCoppaCompliance(); });
+
     TestLibrary._firstParam(params, "configureEventDeduplication", function(maxCapacity) {
         adjustConfig.setEventIdDeduplicationMaxCapacity(parseInt(maxCapacity)); });
     

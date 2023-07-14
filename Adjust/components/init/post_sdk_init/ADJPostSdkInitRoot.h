@@ -14,6 +14,7 @@
 #import "ADJPostSdkInitRootBag.h"
 #import "ADJAdidController.h"
 #import "ADJClientSubscriptionsController.h"
+#import "ADJCoppaController.h"
 #import "ADJPausingController.h"
 #import "ADJLogQueueController.h"
 #import "ADJAttributionController.h"
@@ -37,6 +38,7 @@
     ADJAsaAttributionController *asaAttributionController;
 @property (nonnull, readonly, strong, nonatomic) ADJPostSdkStartRoot *postSdkStartRoot;
 @property (nonnull, readonly, strong, nonatomic) ADJReachabilityController *reachabilityController;
+@property (nonnull, readonly, strong, nonatomic) ADJCoppaController *coppaController;
 @property (nonnull, readonly, strong, nonatomic)
     ADJMeasurementSessionController *measurementSessionController;
 @property (nonnull, readonly, strong, nonatomic)

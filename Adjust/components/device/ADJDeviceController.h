@@ -36,6 +36,7 @@
     deviceIdsConfigData:(nonnull ADJExternalConfigData *)deviceIdsConfigData;
 
 // public api
+- (void)ccDeactivateDeviceIdsForCoppa;
 - (nullable ADJNonEmptyString *)keychainUuid;
 - (nullable ADJNonEmptyString *)nonKeychainUuid;
 - (nonnull ADJResult<ADJSessionDeviceIdsData *> *)getSessionDeviceIdsSync;

@@ -18,6 +18,9 @@
 @property (nullable, readonly, strong, nonatomic) NSNumber *askingAttributionNumberBool;
 //@property (nonatomic, assign) BOOL isThirdPartySharingDisabled;
 @property (nullable, readonly, strong, nonatomic) NSNumber *isThirdPartySharingDisabledNumberBool;
+// @property (nonatomic, assign) BOOL isThirdPartySharingDisabledForCoppa;
+@property (nullable, readonly, strong, nonatomic)
+    NSNumber *isThirdPartySharingDisabledForCoppaNumberBool;
 //@property (nonatomic, copy) NSString *uuid;
 @property (nullable, readonly, strong, nonatomic) NSString *uuid;
 //@property (nonatomic, copy) NSString *deviceToken;

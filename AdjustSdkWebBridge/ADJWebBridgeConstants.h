@@ -65,6 +65,7 @@ FOUNDATION_EXPORT NSString *const ADJWBDefaultTrackerConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBUrlStrategyConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBCustomEndpointUrlConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBCustomEndpointPublicKeyHashConfigKey;
+FOUNDATION_EXPORT NSString *const ADJWBIsCoppaComplianceEnabledConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBDoLogAllConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBDoNotLogAnyConfigKey;
 FOUNDATION_EXPORT NSString *const ADJWBCanSendInBackgroundConfigKey;

@@ -68,6 +68,10 @@ AdjustDataResidency const AdjustDataResidencyUS = @"DataResidencyUS";
     _defaultTracker = [ADJUtilObj copyStringWithInput:defaultTracker];
 }
 
+- (void)enableCoppaCompliance {
+    _isCoppaComplianceEnabledNumberBool = @(YES);
+}
+
 - (void)doLogAll {
     _doLogAllNumberBool = @(YES);
 }

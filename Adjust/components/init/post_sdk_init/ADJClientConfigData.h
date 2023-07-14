@@ -43,24 +43,25 @@ NS_DESIGNATED_INITIALIZER;
 
 // public properties
 @property (nonnull, readonly, strong, nonatomic) ADJNonEmptyString *appToken;
-@property (readonly, assign, nonatomic) BOOL isSandboxEnvironmentOrElseProduction;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *defaultTracker;
-@property (readonly, assign, nonatomic) BOOL doLogAll;
-@property (readonly, assign, nonatomic) BOOL doNotLogAny;
-@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
-@property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
 @property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *externalDeviceId;
-@property (nullable, readonly, strong, nonatomic)
-    ADJClientCustomEndpointData *clientCustomEndpointData;
-@property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
-@property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
-@property (readonly, assign, nonatomic) BOOL canSendInBackground;
+@property (nullable, readonly, strong, nonatomic) ADJNonEmptyString *urlStrategyBaseDomain;
 @property (nullable, readonly, strong, nonatomic)
     ADJNonNegativeInt *eventIdDeduplicationMaxCapacity;
+@property (readonly, assign, nonatomic) BOOL isCoppaEnabled;
+@property (readonly, assign, nonatomic) BOOL doLogAll;
+@property (readonly, assign, nonatomic) BOOL doNotLogAny;
+@property (readonly, assign, nonatomic) BOOL doNotOpenDeferredDeeplink;
+@property (readonly, assign, nonatomic) BOOL doNotReadAsaAttribution;
+@property (readonly, assign, nonatomic) BOOL isSandboxEnvironmentOrElseProduction;
+@property (readonly, assign, nonatomic) BOOL canSendInBackground;
 @property (nullable, readonly, strong, nonatomic)
-    id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
+    ADJClientCustomEndpointData *clientCustomEndpointData;
+@property (nullable, readonly, strong, nonatomic) AdjustDataResidency dataResidency;
 @property (nullable, readonly, strong, nonatomic)
     id<ADJAdjustAttributionSubscriber> adjustAttributionSubscriber;
+@property (nullable, readonly, strong, nonatomic)
+    id<ADJAdjustIdentifierSubscriber> adjustIdentifierSubscriber;
 @property (nullable, readonly, strong, nonatomic) id<ADJAdjustLogSubscriber> adjustLogSubscriber;
 @property (nullable, readonly, strong, nonatomic)
     NSDictionary<NSString *, id<ADJInternalCallback>> *internalConfigSubscriptions;
