@@ -76,6 +76,10 @@ static NSString *const kPartnerParametersMapName = @"PARTNER_PARAMETER_MAP";
     } else {
         revenue = [self revenueWithLogger:logger adjustEvent:adjustEvent];
     }
+    if (revenue != nil && [revenue.amount isNegative]) {
+        [logger infoClient:@"Event revenue amount found to be negative."
+         " Its validity will be determined server side"];
+    }
 
     ADJStringMap *_Nullable callbackParameters = nil;
     if (externalCallbackParametersStringMap != nil) {

@@ -62,13 +62,6 @@ static NSString *const kDoubleIoValuePrefix = @"llf";
                  doubleNumberValue.description]];
     }
 
-    if (doubleNumberValue.doubleValue < 0.0) {
-        return [ADJResult failWithMessage:
-                [NSString stringWithFormat:
-                 @"Cannot create money amount with negative double number: %@",
-                 doubleNumberValue.description]];
-    }
-
     return [ADJResult okWithValue:
             [[ADJMoneyDoubleAmount alloc] initWithDoubleNumberValue:doubleNumberValue]];
 }
@@ -89,6 +82,12 @@ static NSString *const kDoubleIoValuePrefix = @"llf";
     return [ioValue.stringValue hasPrefix:kDoubleIoValuePrefix] ?
         [ioValue.stringValue substringFromIndex:3] : nil;
 }
+
+#pragma mark - ADJMoneyAmountBase
+- (BOOL)isNegative {
+    return self.doubleNumberValue.doubleValue < 0.0;
+}
+
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:

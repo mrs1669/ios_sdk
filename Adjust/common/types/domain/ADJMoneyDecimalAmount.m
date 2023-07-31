@@ -57,25 +57,9 @@ static NSString *const kDecimalIoValuePrefix = @"dec";
                  @"Cannot create money amount with NaN decimal number: %@",
                  decimalNumberValue.description]];
     }
-    
-    BOOL isDecimalNegative =
-        [decimalNumberValue compare:[NSDecimalNumber zero]] == NSOrderedAscending;
-    if (isDecimalNegative) {
-        return [ADJResult failWithMessage:
-                [NSString stringWithFormat:
-                 @"Cannot create money amount with negative decimal number: %@",
-                 decimalNumberValue.description]];
-    }
-    
+
     return [ADJResult okWithValue:
             [[ADJMoneyDecimalAmount alloc] initWithDecimalNumberValue:decimalNumberValue]];
-}
-
-+ (nullable NSString *)ioMoneyDecimalAmountSubValueWithIoValue:
-    (nonnull ADJNonEmptyString *)ioValue
-{
-    return [ioValue.stringValue hasPrefix:kDecimalIoValuePrefix] ?
-        [ioValue.stringValue substringFromIndex:3] : nil;
 }
 
 #pragma mark - Private constructors
@@ -87,6 +71,18 @@ static NSString *const kDecimalIoValuePrefix = @"dec";
 }
 
 #pragma mark Public API
++ (nullable NSString *)ioMoneyDecimalAmountSubValueWithIoValue:
+    (nonnull ADJNonEmptyString *)ioValue
+{
+    return [ioValue.stringValue hasPrefix:kDecimalIoValuePrefix] ?
+        [ioValue.stringValue substringFromIndex:3] : nil;
+}
+
+#pragma mark - ADJMoneyAmountBase
+- (BOOL)isNegative {
+    return [self.decimalNumberValue compare:[NSDecimalNumber zero]] == NSOrderedAscending;
+}
+
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     return [[ADJNonEmptyString alloc] initWithConstStringValue:
