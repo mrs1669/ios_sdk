@@ -111,7 +111,8 @@ static NSString *const kPartnerSharingSettingsByNameJsonStringKey =
     for (ADJResultFail *_Nonnull optionalFail in
          partnerSharingSettingsByNameJsonStringOptFails.optionalFails)
     {
-        [logger noticeClient:@"Issue while partner sharing setting by name to third party sharing"
+        [logger noticeClient:
+         @"Issue while adding partner sharing setting by name to third party sharing"
                   resultFail:optionalFail];
     }
 

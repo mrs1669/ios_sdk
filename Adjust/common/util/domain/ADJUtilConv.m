@@ -292,7 +292,7 @@
             value:[ADJResult okWithValue:jsonStringResult.value]];
 }
 + (nonnull NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)
-    jsonDictionaryFromNameKeyValueArray:(nonnull NSArray<NSString *> *)nameKeyValueArray
+    jsonDictionaryFromNameKeyValueArray:(nonnull NSArray<NSObject *> *)nameKeyValueArray
     stringOrElseBooleanValue:(BOOL)stringOrElseBooleanValue
     optionalFailsMut:(nonnull NSMutableArray<ADJResultFail *> *)optionalFailsMut
 {

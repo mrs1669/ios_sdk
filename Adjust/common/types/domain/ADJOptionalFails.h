@@ -14,7 +14,6 @@
 // public properties
 @property (nonnull, readonly, strong, nonatomic) NSArray<ADJResultFail *> *optionalFails;
 @property (nonnull, readonly, strong, nonatomic) V value;
-@property (readonly, assign, nonatomic) BOOL wasNotNull;
 
 // instantiation
 - (nonnull instancetype)initWithOptionalFails:(nullable NSArray<ADJResultFail *> *)optionalFails

@@ -127,6 +127,7 @@
         NSString *_Nullable stringValue = nil;
 
         // small optimization to avoid extra call in the most common case, string value
+        // TODO: parse string correctly following RFC 4627
         if ([value isKindOfClass:[NSString class]]) {
             stringValue = [NSString stringWithFormat:@"\"%@\"", value];
         } else {

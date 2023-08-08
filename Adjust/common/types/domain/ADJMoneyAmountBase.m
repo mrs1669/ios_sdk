@@ -59,6 +59,12 @@
 }
 
 #pragma mark Public API
+// - implemented by final class
+- (BOOL)isNegative {
+    [self doesNotRecognizeSelector:_cmd];
+    return NO;
+}
+
 #pragma mark - ADJPackageParamValueSerializable
 - (nullable ADJNonEmptyString *)toParamValue {
     [self doesNotRecognizeSelector:_cmd];
