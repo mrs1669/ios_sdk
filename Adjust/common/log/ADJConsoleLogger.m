@@ -36,7 +36,7 @@
 
     _preSdkInitLogArray = [NSMutableArray array];
 
-    _printClientLogs = YES;
+    _printClientLogs = sdkConfigData.assumeDevLogs;
 
     _printDevLogs = sdkConfigData.assumeDevLogs;
 
@@ -91,6 +91,9 @@
     } else if (doLogAll) {
         self.printClientLogs = YES;
         self.printDevLogs = YES;
+    } else {
+        self.printClientLogs = YES;
+        self.printDevLogs = NO;
     }
 
     if (self.printDevLogs || self.printClientLogs) {
