@@ -101,8 +101,6 @@
                               stringValue:NSStringFromClass([objectValue class])];
     }
 
-    NSNumber *_Nonnull booleanNumber = (NSNumber *)objectValue;
-
     return [ADJResult okWithValue:
             [ADJFlag instanceFromNumberBoolean:(NSNumber *)objectValue]];
 }
@@ -186,7 +184,6 @@
         return NO;
     }
 
-    ADJFlag *other = (ADJFlag *)object;
     return YES;
 }
 
