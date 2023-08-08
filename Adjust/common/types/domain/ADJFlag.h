@@ -19,19 +19,6 @@
 
 + (nullable ADJFlag *)instanceFromBool:(BOOL)boolValue;
 
-+ (nonnull ADJResult<ADJFlag *> *)instanceFromBoolWrapper:
-    (nullable ADJBooleanWrapper *)boolWrapperValue;
-
-+ (nonnull ADJResult<ADJFlag *> *)instanceFromNumberBoolean:
-    (nullable NSNumber *)numberBooleanValue;
-
-+ (nonnull ADJResult<ADJFlag *> *)instanceFromIoValue:
-    (nullable ADJNonEmptyString *)ioValue;
-
-+ (nonnull ADJResult<ADJFlag *> *)instanceFromString:(nullable NSString *)stringValue;
-
-+ (nonnull ADJResult<ADJFlag *> *)instanceFromObject:(nullable id)objectValue;
-
 - (nullable instancetype)init NS_UNAVAILABLE;
 
 @end

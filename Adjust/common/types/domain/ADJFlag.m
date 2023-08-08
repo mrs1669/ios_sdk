@@ -19,7 +19,7 @@
 
     return [ADJFlag singleInstance];
 }
-
+/*
 + (nonnull ADJResult<ADJFlag *> *)instanceFromBoolWrapper:
     (nullable ADJBooleanWrapper *)boolWrapperValue
 {
@@ -104,7 +104,7 @@
     return [ADJResult okWithValue:
             [ADJFlag instanceFromNumberBoolean:(NSNumber *)objectValue]];
 }
-
+*/
 
 - (nullable instancetype)init {
     [self doesNotRecognizeSelector:_cmd];
@@ -127,15 +127,6 @@
     return singleInstance;
 }
 
-+ (nonnull ADJResult<ADJFlag *> *)okResultSingleInstance {
-    static dispatch_once_t onceOkResultSingleInstanceToken;
-    static ADJResult<ADJFlag *> * okResultSingleInstance;
-    dispatch_once(&onceOkResultSingleInstanceToken, ^{
-        okResultSingleInstance = [ADJResult okWithValue:[ADJFlag singleInstance]];
-    });
-    return okResultSingleInstance;
-}
-
 + (nonnull ADJNonEmptyString *)trueString {
     static dispatch_once_t onceTrueStringToken;
     static ADJNonEmptyString * trueString;
@@ -146,10 +137,22 @@
     return trueString;
 }
 
+/*
++ (nonnull ADJResult<ADJFlag *> *)okResultSingleInstance {
+    static dispatch_once_t onceOkResultSingleInstanceToken;
+    static ADJResult<ADJFlag *> * okResultSingleInstance;
+    dispatch_once(&onceOkResultSingleInstanceToken, ^{
+        okResultSingleInstance = [ADJResult okWithValue:[ADJFlag singleInstance]];
+    });
+    return okResultSingleInstance;
+}
+
+
 #pragma mark Public API
 - (nonnull NSString *)jsonString {
     return ADJBooleanTrueJsonString;
 }
+ */
 
 #pragma mark - ADJIoValueSerializable
 - (nonnull ADJNonEmptyString *)toIoValue {
